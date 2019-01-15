@@ -1,0 +1,7 @@
+<div>
+  <div>{{layerName.split(':')[1]}}</div>
+  <div>
+    <img [src]="imageToShow" alt="legend" height="20" width="20"
+        *ngIf="isImageLoaded">
+  </div>
+</div>

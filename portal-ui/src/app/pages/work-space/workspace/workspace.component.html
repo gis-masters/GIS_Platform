@@ -1,0 +1,57 @@
+<div class="example-container"
+     [class.example-is-mobile]="mobileQuery.matches">
+
+  <mat-toolbar color="primary">
+    <mat-toolbar-row style="height: 60px">
+      <img src="../../../../assets/images/logo.svg" alt="logo" height="50" width="115">
+      <!--<span>Cool header</span>-->
+
+      <div style="padding-left: 30px">
+        <mat-tab-group color="accent">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="mat-tab-label-content">Карта</span>
+            </ng-template>
+
+            <button mat-icon-button routerLink="/workspace/map"><mat-icon aria-label="label">save</mat-icon></button>
+            <button mat-icon-button><mat-icon aria-label="label">delete</mat-icon></button>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="mat-tab-label-content">Данные</span>
+            </ng-template>
+
+            <button mat-icon-button routerLink="/workspace/data_import">
+              <mat-icon aria-label="label">cloud_download</mat-icon>
+            </button>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+
+      <span class="example-spacer"></span>
+
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="fiz-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>mood</mat-icon>
+    <span>mood</span>
+  </button>
+  <button mat-menu-item disabled>
+    <mat-icon>mood_bad</mat-icon>
+    <span>mood_bad</span>
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>adb</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

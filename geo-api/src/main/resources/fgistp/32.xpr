@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="17.1">
+    <meta>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options>
+            <serialized version="17.1" xml:space="preserve">
+                <serializableOrderedMap>
+                    <entry>
+                        <String>validation.scenarios</String>
+                        <validationScenario-array/>
+                    </entry>
+                </serializableOrderedMap>
+            </serialized>
+        </options>
+    </meta>
+    <projectTree name="32.xpr">
+        <file name="Doc.00000000000.xsd"/>
+        <file name="Doc.10501010000.xsd"/>
+        <file name="Doc.10503000000.xsd"/>
+        <file name="Doc.10504000000.xsd"/>
+        <file name="Doc.10505000000.xsd"/>
+        <file name="Doc.10506000000.xsd"/>
+        <file name="Doc.10507000000.xsd"/>
+        <file name="Doc.10508000000.xsd"/>
+        <file name="Doc.10509000000.xsd"/>
+        <file name="Doc.10601010000.xsd"/>
+        <file name="Doc.10603000000.xsd"/>
+        <file name="Doc.10604000000.xsd"/>
+        <file name="Doc.10605000000.xsd"/>
+        <file name="Doc.10606000000.xsd"/>
+        <file name="Doc.10607000000.xsd"/>
+        <file name="Doc.10608000000.xsd"/>
+        <file name="Doc.10609000000.xsd"/>
+        <file name="Doc.10801000000.xsd"/>
+        <file name="Doc.10802000000.xsd"/>
+        <file name="Doc.10803010000.xsd"/>
+        <file name="Doc.10803050000.xsd"/>
+        <file name="Doc.10804010000.xsd"/>
+        <file name="Doc.10804040000.xsd"/>
+        <file name="Doc.20101000000.xsd"/>
+        <file name="Doc.20104000000.xsd"/>
+        <file name="Doc.20201000000.xsd"/>
+        <file name="Doc.20204000000.xsd"/>
+        <file name="FGISTP-Common.xsd"/>
+        <file name="fgistp.xsd"/>
+        <file name="redefine.xsd"/>
+    </projectTree>
+</project>

@@ -1,0 +1,43 @@
+server:
+  port: 8100
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 50MB
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
+zuul:
+  #  prefix: /api
+  #  include-debug-header: true
+  ignoredServices: '*'
+  sensitive-headers: Cookie,Set-Cookie
+  routes:
+    auth-service:
+      path: /oauth/token/**
+      service-id: http://jwt-service:9000/oauth/token
+
+    gis-db:
+      path: /db/**
+      url: http://geo-api:8088/db/
+
+    organizations:
+      path: /organizations/**
+      url: http://geo-api:8088/organizations/
+
+    # Geoserver
+    geoserver:
+      path: /geoserver/**
+      serviceId: http://geoserver:8080/geoserver/

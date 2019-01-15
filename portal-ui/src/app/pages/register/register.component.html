@@ -1,0 +1,96 @@
+<div class="container">
+
+  <crg-header></crg-header>
+
+  <form [formGroup]="registrationForm"
+        novalidate
+        (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-header>
+        <mat-card-title>Данные об организации</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col-9">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Наименование" formControlName="company"
+                     minlength="5" maxlength="400">
+              <mat-error *ngIf="registrationForm.controls['company'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="full-width">
+              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone">
+              <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-header>
+        <mat-card-title>Данные о пользователе</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Фамилия" formControlName="lastName"
+                     maxlength="100">
+              <mat-error *ngIf="registrationForm.controls['lastName'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Имя" formControlName="firstName"
+                     maxlength="50">
+              <mat-error *ngIf="registrationForm.controls['firstName'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input type="email" matInput placeholder="E-mail" formControlName="email">
+              <mat-error *ngIf="registrationForm.controls['email'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input type="password" matInput placeholder="Пароль" formControlName="password">
+              <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input type="password" matInput placeholder="Подтверждени пароля" formControlName="password_">
+              <mat-error *ngIf="registrationForm.controls['password_'].hasError('required')">
+                Обязательное для заполнения поле
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">Submit</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+
+  <!--<crg-footer></crg-footer>-->
+</div>

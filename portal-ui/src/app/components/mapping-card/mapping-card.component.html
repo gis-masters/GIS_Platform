@@ -1,0 +1,29 @@
+<div>
+  <div class="row" style="margin-top: 10px">
+    <div class="col-6" style="align-self: center">
+      <h6>Выберите слой для импорта данных</h6>
+    </div>
+    <mat-form-field class="col-6">
+      <mat-select placeholder="Целевой слой" [disabled]="tablesP10.length === 0">
+        <mat-option *ngFor="let table of tablesP10" [value]="table.name"
+                    (click)="tableSelected(table.name)">
+          {{table.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row" style="margin-top: 10px; text-align: center">
+    <div class="col-12">
+      <h3 class="mat-h2">Сопоставление атрибутов</h3>
+    </div>
+  </div>
+
+  <div class="container">
+    <div *ngFor="let layer_attribute of layer.attributes" style="margin-bottom: 5px">
+      <crg-mapping-pair [layer_attribute]="layer_attribute"
+                        [layerName]="layer.originalName"
+                        [p10_columns]="p10_columns"></crg-mapping-pair>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<mat-toolbar color="primary" class="import-toolbar">
+  <h6>Импорт данных</h6>
+</mat-toolbar>
+
+<div class="container">
+  <mat-card style="padding: 0">
+    <mat-card-header class="card-header-fiz">
+      <div class="row col-12">
+        <div class="col-6" style="align-self: center">
+          <h5>Выберите рабочую область</h5>
+        </div>
+        <mat-form-field class="col-6">
+          <mat-select placeholder="Рабочая область">
+            <mat-option *ngFor="let item of workspaces" [value]="item" (click)="workspaceSelected(item)">
+              {{item}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content style="padding: 10px 10px 10px 10px">
+      <div class="row">
+        <div class="col-12">
+          <div *ngIf="layers.length == 0">Нет данных для импорта</div>
+          <mat-accordion *ngIf="layers.length > 0">
+            <mat-expansion-panel *ngFor="let layer of layers">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h6>{{layer.originalName}}</h6>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <crg-mapping-card [tablesP10]="tablesP10" [layer]="layer"></crg-mapping-card>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+
+      <div class="row" style="padding-top: 20px">
+        <div class="col-12" style="align-self: center; text-align: center">
+          <button mat-flat-button class="float-left" routerLink="/workspace/data_import">
+            Назад
+          </button>
+          <button mat-flat-button class="float-right" routerLink="/workspace/map"
+                  *ngIf="isImportFinished">
+            &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
+          </button>
+          <button mat-flat-button class="float-right" [disabled]="!importFlow.work_import.isWorkImportReady"
+                  (click)="startWorkImport()"
+                  *ngIf="!isImportFinished">
+            <span *ngIf="!isWorkImportInited">Импортировать</span>
+
+            <img src="../../../../assets/images/loader.gif" alt="logo"
+                 *ngIf="isWorkImportInited"
+                 style="margin-left: 39px; margin-right: 39px" height="27" width="27">
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!--<div class="jumbotron">-->
+    <!--<pre>{{importFlow | json}}</pre>-->
+  <!--</div>-->
+</div>

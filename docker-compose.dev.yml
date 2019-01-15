@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    ports:
+      - 5672:5672
+
+  config:
+    build: config
+    ports:
+      - 8888:8888
+
+  registry:
+    build: registry
+
+  monitoring:
+    build: monitoring
+
+  turbine-stream-service:
+    build: turbine-stream-service
+
+  jwt-service:
+    build: jwt-service
+    ports:
+      - 9000:9000
+
+  geo-api:
+    build: geo-api
+    ports:
+      - 8088:8088
+
+  geo-wrapper:
+    build: geo-wrapper
+
+  gateway:
+    build: gateway
+
+#  portal-ui:
+#    build: portal-ui

@@ -1,0 +1,187 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+#    environment:
+#      RABBITMQ_DEFAULT_USER: $CRG_USER
+#      RABBITMQ_DEFAULT_PASS: $RABBIT_PASS
+
+  database:
+    container_name: database
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: gis_portal
+      POSTGRES_PASSWORD: $DB_PASS
+    ports:
+      - "5432:5432"
+
+  postgis:
+    container_name: postgis
+    image: kartoza/postgis
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: $CRG_USER
+      POSTGRES_PASS: $DB_PASS
+      ALLOW_IP_RANGE: 0.0.0.0/0
+
+  geoserver:
+    container_name: geoserver
+    image: $DOCKER_CRG_HOST/geoserver-jwt
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/dev/docker-scripts/setenv.sh:/usr/local/tomcat/bin/setenv.sh
+      - ~/dev/work-yalta:/opt/yalta
+
+
+
+  config:
+    container_name: crg-config
+    image: $DOCKER_CRG_HOST/crg-config
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  registry:
+    container_name: crg-registry
+    image: $DOCKER_CRG_HOST/crg-registry
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    depends_on:
+      - config
+    ports:
+      - 8761:8761
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  monitoring:
+    container_name: crg-monitoring
+    image: $DOCKER_CRG_HOST/crg-monitoring
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    depends_on:
+      - config
+    ports:
+      - 9090:8080
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  turbine-stream-service:
+    container_name: crg-turbine-service
+    image: $DOCKER_CRG_HOST/crg-turbine-service
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    depends_on:
+      - config
+    ports:
+    - 8989:8989
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  jwt-service:
+    container_name: jwt-service
+    image: $DOCKER_CRG_HOST/jwt-service
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
+    depends_on:
+      - config
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  gateway:
+    container_name: crg-gateway
+    image: $DOCKER_CRG_HOST/crg-gateway
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    depends_on:
+      - config
+    ports:
+      - 8100:8100
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  geo-api:
+    container_name: geo-api
+    image: $DOCKER_CRG_HOST/geo-api
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
+      SPRING_RABBITMQ_HOST: rabbitmq
+      POSTGIS_HOST: postgis:5432
+      POSTGIS_USER: $CRG_USER
+      POSTGIS_PASSWORD: $DB_PASS
+    ports:
+      - "8088:8088"
+    depends_on:
+      - config
+      - database
+      - rabbitmq
+      - geoserver
+      - postgis
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  geo-wrapper:
+    container_name: geo-wrapper
+    image: $DOCKER_CRG_HOST/geo-wrapper
+    restart: always
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
+      SPRING_DATASOURCE_USERNAME: $CRG_USER
+      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+      SPRING_RABBITMQ_HOST: rabbitmq
+      FIZ_GEOSERVER_HOST: gateway:8100
+      FIZ_GEOSERVER_USER: $GEOSERVER_USER
+      FIZ_GEOSERVER_PASSWORD: $GEOSERVER_PASSWORD
+      FIZ_POSTGIS_HOST: postgis:5432
+    depends_on:
+      - config
+      - rabbitmq
+      - geo-api
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+#  portal-ui:
+#    container_name: portal-ui
+#    image: $DOCKER_CRG_HOST/portal-ui
+#    restart: always
+#    depends_on:
+#    - geo-api
+#    - geoserver
+#    ports:
+#    - 80:80

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.opengis.net/gml" 
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="3.2.1.2">
+    <import namespace="http://www.w3.org/XML/1998/namespace"
+        schemaLocation="http://www.w3.org/2001/03/xml.xsd"/>
+    <redefine schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd">
+        <complexType name="AbstractFeatureCollectionType">
+            <complexContent>
+                <extension base="gml:AbstractFeatureCollectionType">
+                    <attribute ref="xml:base"/>
+                </extension>
+            </complexContent>
+        </complexType>
+    </redefine>
+</schema>

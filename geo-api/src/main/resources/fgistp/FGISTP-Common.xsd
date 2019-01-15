@@ -1,0 +1,353 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fgistp="http://fgistp"
+    targetNamespace="http://fgistp" xmlns:gml="http://www.opengis.net/gml">
+    <xs:import namespace="http://www.opengis.net/gml" schemaLocation="redefine.xsd"/>
+    <xs:element name="ADME_Element">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="Regions">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="RegionID">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:length value="2"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="OKTMO">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:maxLength value="11"/>
+                                        <xs:minLength value="8"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="date_t">
+        <xs:annotation>
+            <xs:documentation>Формат времени и дат</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" ref="fgistp:day"/>
+            <xs:element minOccurs="0" ref="fgistp:month"/>
+            <xs:element ref="fgistp:year"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="xrefYear">
+        <xs:annotation>
+            <xs:documentation>Тип: год</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:maxInclusive value="2200"/>
+            <xs:minInclusive value="1400"/>
+            <xs:totalDigits value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="xrefMonth">
+        <xs:annotation>
+            <xs:documentation>Тип: месяц</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:maxInclusive value="34"/>
+            <xs:minInclusive value="01"/>
+            <xs:totalDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="xrefDay">
+        <xs:annotation>
+            <xs:documentation>Тип: день</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:positiveInteger">
+            <xs:maxInclusive value="31"/>
+            <xs:minInclusive value="01"/>
+            <xs:totalDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="year" type="fgistp:xrefYear">
+        <xs:annotation>
+            <xs:documentation>Год.</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="day" type="fgistp:xrefDay">
+        <xs:annotation>
+            <xs:documentation>День публикации.Должен быть введен с ведущим нулем. Например "05", а не "5".</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="month" type="fgistp:xrefMonth">
+        <xs:annotation>
+            <xs:documentation>Месяц. Вводится числовой эквивалент месяца с ведущим нулем..</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:simpleType name="GUID_">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}"
+            />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:attributeGroup name="GUIDs">
+        <xs:attribute name="guid" type="fgistp:GUID_"/>
+        <xs:attribute form="unqualified" name="guidRef" type="fgistp:GUID_"/>
+    </xs:attributeGroup>
+    
+    <xs:attributeGroup name="common.attrib">
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="codepage"/>
+        <xs:attribute name="IDREF" type="xs:IDREF"/>
+        <xs:attribute name="GlobalID" type="fgistp:GUID_"/>
+    </xs:attributeGroup>
+    <xs:complexType name="Zone">
+        <xs:annotation>
+            <xs:documentation>Сведения о видах, назначении и наименованиях планируемых для размещения объектов </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Size" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>Количественный показатель</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="Unit" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Единица измерений</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ContentRestrictions" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Режим использования или ограничения на использование территории</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attributeGroup ref="fgistp:common.attrib"/>
+    </xs:complexType>
+    <xs:complexType name="Object">
+        <xs:annotation>
+            <xs:documentation>Сведения о назначении и наименовании планируемого объекта, его основные характеристики и местоположение</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="Number" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Номер</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Function" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Назначение   объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Наименование объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Technical_environment">
+                <xs:annotation>
+                    <xs:documentation>Характеристика   объекта</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Capacity" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Количественный показатель</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="MeasurementUnit" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Единица измерений</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Description" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="Location">
+                <xs:annotation>
+                    <xs:documentation>Местоположение   объекта   (муниципальный   район, поселение городской округ, населенный пункт)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="fgistp:ADME_Element"/>
+                        <xs:element name="Address" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Zones">
+                <xs:annotation>
+                    <xs:documentation>Вид   зоны с особыми условиями/ количественный показатель</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ZoneRef" type="xs:IDREF"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attributeGroup ref="fgistp:common.attrib"/>
+    </xs:complexType>
+    <xs:element name="xref">
+        <xs:annotation>
+            <xs:documentation>Указатель на идентификатор </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+            <xs:attribute name="linkend" type="xs:IDREF" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="target">
+        <xs:annotation>
+            <xs:documentation>Цель</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="date" type="fgistp:date_t" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Сроки</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="title" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Текст цели</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="fgistp:tasks"/>
+                </xs:sequence>
+                <xs:element minOccurs="0" ref="fgistp:indicators"/>
+                <xs:element ref="fgistp:target" minOccurs="0"/>
+                <xs:element ref="fgistp:xref" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Указатель на идентификатор </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="tasks">
+        <xs:annotation>
+            <xs:documentation>Задачи</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="date" type="fgistp:date_t" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Сроки</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="title" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Текст цели</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="fgistp:indicators"/>
+                    <xs:element ref="fgistp:indicatorsGroup">
+                        <xs:annotation>
+                            <xs:documentation>Группа показателей/индикаторов</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element ref="fgistp:event"/>
+                    <xs:element ref="fgistp:eventGroup">
+                        <xs:annotation>
+                            <xs:documentation>Группа мероприятий</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:choice>
+                <xs:element ref="fgistp:xref" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Указатель на идентификатор </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="event">
+        <xs:annotation>
+            <xs:documentation>Мероприятия</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="date" type="fgistp:date_t">
+                    <xs:annotation>
+                        <xs:documentation>Дата</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="title" type="xs:string"/>
+                <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="fgistp:indicators"/>
+                </xs:sequence>
+                <xs:element ref="fgistp:xref" minOccurs="0"/>
+                <xs:element minOccurs="0" name="objects">
+                    <xs:annotation>
+                        <xs:documentation>Сведения о видах, назначении и наименованиях планируемых для размещения объектов</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element name="object" type="fgistp:Object"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="indicator">
+        <xs:annotation>
+            <xs:documentation>Показатель/индикатор</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element name="units" type="xs:string"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="indicatorsGroup">
+        <xs:annotation>
+            <xs:documentation>Группа показателей/индикаторов</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="title" type="xs:string"/>
+                <xs:element minOccurs="0" name="date" type="fgistp:date_t"/>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref="fgistp:indicators"/>
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="eventGroup">
+        <xs:annotation>
+            <xs:documentation>Группа мероприятий</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="title" type="xs:string"/>
+                <xs:element minOccurs="0" name="date" type="fgistp:date_t"/>
+                <xs:sequence maxOccurs="unbounded">
+                    <xs:element ref="fgistp:event"/>
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attributeGroup ref="fgistp:common.attrib"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="indicators">
+        <xs:annotation>
+            <xs:documentation>Показатель/Индикатор</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="fgistp:indicator"/>
+                <xs:element minOccurs="1" name="value" type="xs:decimal"/>
+                <xs:element ref="fgistp:year"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

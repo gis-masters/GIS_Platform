@@ -1,0 +1,13 @@
+.crg-header {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1vw;
+
+  padding: 20px 10px 20px 10px;
+}
+
+.crg-header-btn {
+  margin-left: 10px;
+  margin-right: 10px;
+}

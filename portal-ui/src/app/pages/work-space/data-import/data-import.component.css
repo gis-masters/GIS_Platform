@@ -1,0 +1,8 @@
+.import-toolbar {
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.my-drop-zone {
+  border: dotted 3px lightgray;
+}

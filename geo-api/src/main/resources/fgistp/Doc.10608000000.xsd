@@ -1,0 +1,98 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://fgistp" xmlns:fgistp="http://fgistp"
+    xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:gml="http://www.opengis.net/gml">
+    <xs:include schemaLocation="fgistp.xsd"/>
+    <xs:import namespace="http://www.opengis.net/gml" schemaLocation="redefine.xsd"/>
+    <xs:annotation>
+        <xs:documentation>Схема территориального планирования Российской Федерации в нескольких областях</xs:documentation>
+    </xs:annotation>
+    <xs:element name="Doc.10608010100">
+        <xs:annotation>
+            <xs:documentation>Положение о территориальном планировании в нескольких областях</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="FeatureCollection">
+                    <xs:annotation>
+                        <xs:documentation>10608030000</xs:documentation>
+                        <xs:documentation>Пространственные данные, отображаемые на картах из состава схемы территориального планирования Российской Федерации в нескольких областях и материалов по ее обоснованию</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="gml:FeatureCollection">
+                                <xs:annotation>
+                                    <xs:documentation>Набор географических объектов</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ObjectCollection">
+                    <xs:annotation>
+                        <xs:documentation>Сведения о видах, назначении и наименованиях планируемых для размещения объектов федерального значения, их основные характеристики, их местоположение</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element name="Object">
+                                <xs:annotation>
+                                    <xs:documentation>Объект федерального значения, информация о его виде, назначении, наименовании, основные характеристики и местоположение</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="fgistp:Object">
+                                            <xs:sequence>
+                                                <xs:element name="ClassID">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Вид объекта</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:simpleType>
+                                                  <xs:union
+                                                  memberTypes="fgistp:AdmBorder_CLASSID                                                             fgistp:AdmeMO_CLASSID                                                             fgistp:AdmeNP_CLASSID                                                             fgistp:AdmeRF_CLASSID                                                             fgistp:AdmeSRF_CLASSID                                                             fgistp:Agriculture_CLASSID                                                             fgistp:AirTransportObj_CLASSID                                                             fgistp:AreaBaseDevelopment_CLASSID                                                             fgistp:AuthorityService_CLASSID                                                             fgistp:Cemetery_CLASSID                                                             fgistp:Culture_CLASSID                                                             fgistp:CustomControl_CLASSID                                                             fgistp:Education_CLASSID                                                             fgistp:ElectricLine_CLASSID                                                             fgistp:ElectricPowerStation_CLASSID                                                             fgistp:ElectricTransformer_CLASSID                                                             fgistp:EmergencyProtectionObj_CLASSID                                                             fgistp:EngProtectionObj_CLASSID                                                             fgistp:EnvDanger_CLASSID                                                             fgistp:EnvMonitoring_CLASSID                                                             fgistp:ForestPark_CLASSID                                                             fgistp:Forest_CLASSID                                                             fgistp:GasFacility_CLASSID                                                             fgistp:GasPipeline_CLASSID                                                             fgistp:HazardArea_CLASSID                                                             fgistp:Health_CLASSID                                                             fgistp:Heritage_CLASSID                                                             fgistp:HydraulicStructures_CLASSID                                                             fgistp:InvestmentZone_CLASSID                                                             fgistp:LandUse_CLASSID                                                             fgistp:Manufacturing_CLASSID                                                             fgistp:MineralArea_CLASSID                                                             fgistp:MineralDep_CLASSID                                                             fgistp:NaturalRiskZone_CLASSID                                                             fgistp:NatureProtectArea_CLASSID                                                             fgistp:OilFacility_CLASSID                                                             fgistp:OilPipeline_CLASSID                                                             fgistp:OtherObject_CLASSID                                                             fgistp:Pipeline_CLASSID                                                             fgistp:Prison_CLASSID                                                             fgistp:PublicTransportLine_CLASSID                                                             fgistp:PublicTransportObj_CLASSID                                                             fgistp:PublicTransportService_CLASSID                                                             fgistp:PublicTransportStops_CLASSID                                                             fgistp:Public_CLASSID                                                             fgistp:RailwayFacility_CLASSID                                                             fgistp:RailwayLine_CLASSID                                                             fgistp:Recreation_CLASSID                                                             fgistp:Resort_CLASSID                                                             fgistp:Road_CLASSID                                                             fgistp:ServiceFacility_CLASSID                                                             fgistp:SewerFacility_CLASSID                                                             fgistp:SewerPipeline_CLASSID                                                             fgistp:Social_CLASSID                                                             fgistp:Sport_CLASSID                                                             fgistp:TelecomFacility_CLASSID                                                             fgistp:TelecomNetworkLine_CLASSID                                                             fgistp:ThermalFacility_CLASSID                                                             fgistp:ThermalPipeline_CLASSID                                                             fgistp:TranspLogisticObj_CLASSID                                                             fgistp:TransportObj_CLASSID                                                             fgistp:WasteFacility_CLASSID                                                             fgistp:WaterFacility_CLASSID                                                             fgistp:WaterPipeline_CLASSID                                                             fgistp:WaterTransportObj_CLASSID                                                             fgistp:WaterWays_CLASSID                                                             fgistp:HeritageArea_CLASSID                                                             fgistp:ResortArea_CLASSID                                                             fgistp:SpecialEconomicArea_CLASSID                                                             fgistp:TechnoRiskArea_CLASSID                                                             fgistp:WildlifeProtection_CLASSID                                                             fgistp:TraditionalArea_CLASSID"
+                                                  />
+                                                  </xs:simpleType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" name="SpecialZoneCollection">
+                    <xs:annotation>
+                        <xs:documentation>Зоны с особыми условиями использования территорий</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded">
+                            <xs:element name="SpecialZone">
+                                <xs:annotation>
+                                    <xs:documentation>Зона с особыми условиями использования территорий</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="fgistp:Zone">
+                                            <xs:sequence>
+                                                <xs:element name="ClassID">
+                                                  <xs:annotation>
+                                                  <xs:documentation>Вид зоны с особыми условиями использования территории</xs:documentation>
+                                                  </xs:annotation>
+                                                  <xs:simpleType>
+                                                  <xs:union
+                                                  memberTypes="fgistp:NatureProtectionZone_CLASSID                                                             fgistp:OtherZone_CLASSID                                                             fgistp:HeritageProtectionZone_CLASSID                                                             fgistp:OtherProtectionZone_CLASSID                                                             fgistp:ProtectionZone_CLASSID                                                             fgistp:ResortProtectionZone_CLASSID                                                             fgistp:SanitaryProtectionZone_CLASSID                                                             fgistp:CoastalProtectionZone_CLASSID                                                             fgistp:DrinkWaterProtectionZone_CLASSID                                                             fgistp:EngProtectionZone_CLASSID                                                             fgistp:EngSanitaryGapZone_CLASSID                                                             fgistp:FishProtectionZone_CLASSID                                                             fgistp:FloodArea_CLASSID                                                             fgistp:Foreshore_CLASSID                                                             fgistp:TranspProtectionZone_CLASSID                                                             fgistp:TranspSanitaryGapZone_CLASSID                                                             fgistp:WaterProtectionZone_CLASSID"
+                                                  />
+                                                  </xs:simpleType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
