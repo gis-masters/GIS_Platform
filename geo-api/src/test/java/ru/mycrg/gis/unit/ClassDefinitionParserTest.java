@@ -44,6 +44,10 @@ public class ClassDefinitionParserTest {
         assertTrue(functionalZone.get().getProperties().get(9).isMultiple());
         assertEquals("Справочник: Статус объекта", functionalZone.get().getProperties().get(18).getTitle());
         assertEquals("Справочник: Значение объекта", functionalZone.get().getProperties().get(19).getTitle());
+
+        EnumerationProperty status = (EnumerationProperty) functionalZone.get().getProperties().get(19);
+
+        assertEquals("Федеральное значение", status.getEnumerations().get(0).getTitle());
         assertNotNull(functionalZone.get().getProperties().get(10).getValueType());
 
         // Check enumeration aliases

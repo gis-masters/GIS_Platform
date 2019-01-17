@@ -69,14 +69,14 @@ public class ClassDefinitionParser {
                     String typeName = entityType.getName();
                     entityType.getProperties()
                             .forEach(simpleProperty -> {
-                                String propertyName = simpleProperty.getName();
+                                // В описание, на предыдущем шаге, я ложил название типа...
+                                String propertyName = simpleProperty.getDescription();
 
-                                if ("CLASSID".equals(propertyName)) {
-                                    propertyName = typeName.replace("Type", "CLASSID");
-                                }
-
-                                getSimpleTypeByName(xsdSimpleTypes, propertyName)
+                                getXsdSimpleTypeByName(xsdSimpleTypes, propertyName)
                                         .ifPresent(simpleType -> setTitle(simpleType.getProperties(), simpleProperty));
+
+                                // Приведем в порядок описание
+                                simpleProperty.setDescription("");
                             });
                 });
     }
@@ -94,7 +94,7 @@ public class ClassDefinitionParser {
         }
     }
 
-    private Optional<XsdSimpleType> getSimpleTypeByName(List<XsdSimpleType> simpleTypes, String propertyName) {
+    private Optional<XsdSimpleType> getXsdSimpleTypeByName(List<XsdSimpleType> simpleTypes, String propertyName) {
         return simpleTypes.stream()
                 .filter(simpleType -> simpleType.getName().equals(propertyName))
                 .findFirst();
@@ -207,6 +207,11 @@ public class ClassDefinitionParser {
                 SimplePropertyBase property = baseOptional.get();
                 property.setName(term.getName());
                 property.setMultiple(element.getMinOccurs() > 0);
+
+                // Ложу сюда название простого типа из xsd схемы, для того чтобы оперется на эту инфу
+                // при вытягивании алиасов для всех перечислений из простых типов.
+                // После чего почищу описание...
+                property.setDescription(term.getTypeDefinition().getName());
 
                 if (term.getAnnotations().isEmpty()) {
                     XSObjectList annotations = ((XSSimpleTypeDecl) term.getTypeDefinition()).getAnnotations();
