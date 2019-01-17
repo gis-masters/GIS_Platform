@@ -33,6 +33,10 @@ zuul:
       path: /db/**
       url: http://geo-api:8088/db/
 
+    gis-rules:
+      path: /fgistp/rules/**
+      url: http://geo-api:8088/fgistp/rules/
+
     organizations:
       path: /organizations/**
       url: http://geo-api:8088/organizations/
