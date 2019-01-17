@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.mycrg.gis.dto.fgistp.FgistpClassType;
+import ru.mycrg.gis.dto.fgistp.EntityType;
 import ru.mycrg.gis.dto.fgistp.FgistpRules;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.fgistp.FgistpRuleNotFoundException;
@@ -33,7 +33,7 @@ public class RuleController {
         } else {
             FgistpRules rules = fgistpRuleService.getRules();
 
-            if (rules.getFgistpClassTypes().isEmpty()) {
+            if (rules.getEntityTypes().isEmpty()) {
                 return fgistpRuleService.updateRules();
             } else {
                 return rules;
@@ -51,7 +51,7 @@ public class RuleController {
 
     @ResponseBody
     @GetMapping("/fgistp/rules/{className}")
-    public FgistpClassType getByName(@PathVariable String className) {
+    public EntityType getByName(@PathVariable String className) {
         log.info("Get rule by name: {}", className);
 
         try {

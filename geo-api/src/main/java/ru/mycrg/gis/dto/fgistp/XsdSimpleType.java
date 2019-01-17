@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FgistpSimpleType {
+public class XsdSimpleType {
 
     private String name;
     private Map<String, String> properties = new HashMap<>();
 
-    public FgistpSimpleType() {}
+    public XsdSimpleType() {}
 
     public String getName() {
         return name;

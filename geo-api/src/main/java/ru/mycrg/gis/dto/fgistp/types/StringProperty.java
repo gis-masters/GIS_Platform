@@ -1,13 +1,17 @@
 package ru.mycrg.gis.dto.fgistp.types;
 
-public class FgistpString extends FgistpBaseType {
+import ru.mycrg.gis.dto.fgistp.ValueType;
+
+public class StringProperty extends SimplePropertyBase {
 
     private Integer minLength = -1;
     private Integer maxLength = -1;
     private String pattern;
-    private String pattern_description = "";
+    private String patternDescription = "";
 
-    public FgistpString() {}
+    public StringProperty() {
+        super(ValueType.STRING);
+    }
 
     public Integer getMinLength() {
         return minLength;
@@ -33,11 +37,11 @@ public class FgistpString extends FgistpBaseType {
         this.pattern = pattern;
     }
 
-    public String getPattern_description() {
-        return pattern_description;
+    public String getPatternDescription() {
+        return patternDescription;
     }
 
-    public void setPattern_description(String pattern_description) {
-        this.pattern_description = pattern_description;
+    public void setPatternDescription(String patternDescription) {
+        this.patternDescription = patternDescription;
     }
 }

@@ -15,10 +15,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
 import ru.mycrg.gis.dto.fgistp.*;
-import ru.mycrg.gis.dto.fgistp.types.FgistpBaseType;
-import ru.mycrg.gis.dto.fgistp.types.FgistpEnumeration;
-import ru.mycrg.gis.dto.fgistp.types.FgistpInteger;
-import ru.mycrg.gis.dto.fgistp.types.FgistpString;
+import ru.mycrg.gis.dto.fgistp.types.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,11 +28,12 @@ import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
 import static org.apache.xerces.xs.XSConstants.ELEMENT_DECLARATION;
 import static org.apache.xerces.xs.XSSimpleTypeDefinition.*;
+import static ru.mycrg.gis.dto.fgistp.ValueType.CHOICE;
 
 @Service
-public class FgistpParser {
+public class ClassDefinitionParser {
 
-    private static Logger log = LoggerFactory.getLogger(FgistpParser.class);
+    private static Logger log = LoggerFactory.getLogger(ClassDefinitionParser.class);
 
     private String TARGET_NAMESPACE = "http://fgistp";
 
@@ -55,7 +53,8 @@ public class FgistpParser {
                     .orElseThrow(() -> new FgistpGrammarException("Not found grammar: " + TARGET_NAMESPACE));
 
             parseComplexTypes(fgistpRules, fgistpGrammar);
-            addEnumerationAlias(fgistpRules, fetchSimpleTypeEnumerationsAlias(file));
+
+            addEnumerationAlias(fgistpRules, fetchEnumerationsAliasesFromXsdSimpleTypes(file));
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 ParserConfigurationException | IOException | SAXException e) {
             log.error("Error parse file: " + file.getName(), e);
@@ -64,43 +63,44 @@ public class FgistpParser {
         return fgistpRules;
     }
 
-    private void addEnumerationAlias(FgistpRules fgistpRules, List<FgistpSimpleType> simpleTypes) {
-        fgistpRules.getFgistpClassTypes()
-                .forEach(complexType -> {
-                    String complexTypeName = complexType.getName();
-                    complexType.getProperties()
-                            .forEach(complexProperty -> {
-                                String propertyName = complexProperty.getName();
+    private void addEnumerationAlias(FgistpRules fgistpRules, List<XsdSimpleType> xsdSimpleTypes) {
+        fgistpRules.getEntityTypes()
+                .forEach(entityType -> {
+                    String typeName = entityType.getName();
+                    entityType.getProperties()
+                            .forEach(simpleProperty -> {
+                                String propertyName = simpleProperty.getName();
 
                                 if ("CLASSID".equals(propertyName)) {
-                                    propertyName = complexTypeName.replace("Type", "CLASSID");
+                                    propertyName = typeName.replace("Type", "CLASSID");
                                 }
 
-                                getSimpleTypeByName(simpleTypes, propertyName)
-                                        .ifPresent(simpleType -> setAlias(simpleType.getProperties(), complexProperty));
+                                getSimpleTypeByName(xsdSimpleTypes, propertyName)
+                                        .ifPresent(simpleType -> setTitle(simpleType.getProperties(), simpleProperty));
                             });
                 });
     }
 
-    private void setAlias(Map<String, String> simpleType, FgistpProperty complexProperty) {
-        if (complexProperty.getBaseType() instanceof FgistpEnumeration) {
-            ((FgistpEnumeration) complexProperty.getBaseType()).getEnumerations()
+    private void setTitle(Map<String, String> simpleType, SimplePropertyBase simpleProperty) {
+        if (simpleProperty.getValueType() == CHOICE) {
+            EnumerationProperty property = (EnumerationProperty) simpleProperty;
+            property.getEnumerations()
                     .forEach(valueAliasProjection -> {
                         String alias = simpleType.get(valueAliasProjection.getValue());
-                        valueAliasProjection.setAlias(alias);
+                        valueAliasProjection.setTitle(alias);
                     });
         } else {
-            log.warn("--- {}", complexProperty.getName());
+            log.warn("--- {}", simpleProperty.getName());
         }
     }
 
-    private Optional<FgistpSimpleType> getSimpleTypeByName(List<FgistpSimpleType> simpleTypes, String propertyName) {
+    private Optional<XsdSimpleType> getSimpleTypeByName(List<XsdSimpleType> simpleTypes, String propertyName) {
         return simpleTypes.stream()
                 .filter(simpleType -> simpleType.getName().equals(propertyName))
                 .findFirst();
     }
 
-    private List<FgistpSimpleType> fetchSimpleTypeEnumerationsAlias(File file)
+    public List<XsdSimpleType> fetchEnumerationsAliasesFromXsdSimpleTypes(File file)
             throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -110,13 +110,13 @@ public class FgistpParser {
         return getSimpleNodes(nodeList);
     }
 
-    private List<FgistpSimpleType> getSimpleNodes(NodeList nodeList) {
-        List<FgistpSimpleType> simpleTypes = new ArrayList<>();
+    private List<XsdSimpleType> getSimpleNodes(NodeList nodeList) {
+        List<XsdSimpleType> simpleTypes = new ArrayList<>();
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE && "xs:simpleType".equals(node.getNodeName())) {
-                FgistpSimpleType simpleType = new FgistpSimpleType();
+                XsdSimpleType simpleType = new XsdSimpleType();
 
                 String nodeName = ((DeferredElementImpl) node).getAttribute("name");
                 simpleType.setName(nodeName);
@@ -158,77 +158,70 @@ public class FgistpParser {
 
     private void parseComplexTypes(FgistpRules fgistpRules, SchemaGrammar schemaGrammar) {
         XSNamedMap complexTypes = schemaGrammar.getComponents(XSTypeDefinition.COMPLEX_TYPE);
-        XSNamedMap simpleTypes = schemaGrammar.getComponents(XSTypeDefinition.SIMPLE_TYPE);
+        // XSNamedMap simpleTypes = schemaGrammar.getComponents(XSTypeDefinition.SIMPLE_TYPE);
 
         XSNamedMap elements = schemaGrammar.getComponents(ELEMENT_DECLARATION);
 
         complexTypes.forEach((key, value) -> {
             XSComplexTypeDecl xsComplexType = (XSComplexTypeDecl) value;
 
-            FgistpClassType fgistpClassType = new FgistpClassType(xsComplexType.getName());
-            fgistpClassType.setAlias(fetchDescription(xsComplexType.getName(), elements));
-            fgistpClassType.setProperties(fetchSequences(xsComplexType));
+            EntityType entityType = new EntityType(xsComplexType.getName());
+            entityType.setTitle(fetchDescription(xsComplexType.getName(), elements));
+            entityType.setProperties(fetchSequences(xsComplexType));
 
-            redefineGeometry(fgistpClassType);
-
-            fgistpRules.addComplexType(fgistpClassType);
+            fgistpRules.addComplexType(entityType);
         });
     }
 
-    private void redefineGeometry(FgistpClassType fgistpClassType) {
-        fgistpClassType
-                .getProperties().stream()
-                .filter(property -> isGeometry(property.getName()))
-                .forEach(property -> {
-                    fgistpClassType.addGeometry(property.getName());
-                });
-
-        fgistpClassType.getProperties().removeIf(property -> isGeometry(property.getName()));
-    }
-
-    private List<FgistpProperty> fetchSequences(XSComplexTypeDecl xsComplexType) {
-        List<FgistpProperty> fgistpProperties = new ArrayList<>();
+    private List<SimplePropertyBase> fetchSequences(XSComplexTypeDecl xsComplexType) {
+        List<SimplePropertyBase> properties = new ArrayList<>();
 
         XSParticleDecl particle = (XSParticleDecl) xsComplexType.getParticle();
-        handleParticle(particle, fgistpProperties);
+        handleParticle(particle, properties);
 
-        return fgistpProperties;
+        return properties;
     }
 
-    private void handleParticle(XSParticleDecl particle, List<FgistpProperty> fgistpProperties) {
+    private void handleParticle(XSParticleDecl particle, List<SimplePropertyBase> properties) {
         if (particle.fType == PARTICLE_MODELGROUP) {
             XSObjectList particles = ((XSModelGroupImpl) particle.getTerm()).getParticles();
             for (Object particleItem : particles) {
-                handleParticle((XSParticleDecl) particleItem, fgistpProperties);
+                handleParticle((XSParticleDecl) particleItem, properties);
             }
         } else if (particle.fType == PARTICLE_ELEMENT) {
-            FgistpProperty property = mapParticleElement(particle);
+            SimplePropertyBase property = mapParticleElement(particle);
             if (property != null) {
-                fgistpProperties.add(property);
+                properties.add(property);
             }
         } else {
             log.warn("Not parsing type: {} yet", particle.getType());
         }
     }
 
-    private FgistpProperty mapParticleElement(XSParticleDecl element) {
+    private SimplePropertyBase mapParticleElement(XSParticleDecl element) {
         XSElementDecl term = (XSElementDecl) element.getTerm();
 
         if (term.getTypeDefinition() instanceof XSSimpleTypeDecl) {
-//            if (term.getName().equals("CONSTR_DEN")) {
-//                log.warn("Look name deeper");
-//            }
+            Optional<SimplePropertyBase> baseOptional = generateType((XSSimpleTypeDecl) term.getTypeDefinition());
+            if (baseOptional.isPresent()) {
+                SimplePropertyBase property = baseOptional.get();
+                property.setName(term.getName());
+                property.setMultiple(element.getMinOccurs() > 0);
 
-            FgistpProperty property = new FgistpProperty(term.getName());
-            property.setAlias(handleAnnotation(term.getAnnotations()));
-            property.setBaseType(generateType((XSSimpleTypeDecl) term.getTypeDefinition()));
-            property.setMinOccurs(element.getMinOccurs());
-            property.setMaxOccurs(element.getMaxOccurs());
+                if (term.getAnnotations().isEmpty()) {
+                    XSObjectList annotations = ((XSSimpleTypeDecl) term.getTypeDefinition()).getAnnotations();
+                    property.setTitle(handleAnnotation(annotations));
+                } else {
+                    property.setTitle(handleAnnotation(term.getAnnotations()));
+                }
 
-            return property;
+                return property;
+            } else {
+                return null;
+            }
         } else {
             if (isGeometry(term.getName())) {
-                return new FgistpProperty(term.getName());
+                return new GeometryProperty(term.getName());
             } else {
                 return null;
             }
@@ -239,94 +232,89 @@ public class FgistpParser {
         return "Polygon".equals(name) || "Curve".equals(name) || "LineString".equals(name) || "Point".equals(name);
     }
 
-    private FgistpBaseType generateType(XSSimpleTypeDecl simpleTypeDecl) {
+    private Optional<SimplePropertyBase> generateType(XSSimpleTypeDecl simpleTypeDecl) {
         if (simpleTypeDecl.getName() == null) {
             log.warn("Look name deeper: {}", simpleTypeDecl.getBaseType().getName());
-            return null;
+            return Optional.empty();
         }
 
         // Simple string like a "Name" without restrictions
         if (simpleTypeDecl.getName().contains("string")) {
-            return new FgistpString();
+            return Optional.of(new StringProperty());
         }
 
         if (!simpleTypeDecl.getLexicalEnumeration().isEmpty()) {
-            FgistpEnumeration fgistpEnumeration = new FgistpEnumeration();
+            EnumerationProperty enumerationProperty = new EnumerationProperty();
 
             for (int i = 0; i < simpleTypeDecl.getLexicalEnumeration().size(); i++) {
                 XSDecimal xsDecimal = (XSDecimal) simpleTypeDecl.getActualEnumeration().get(i);
-                fgistpEnumeration.addValue(xsDecimal.getInt());
+                enumerationProperty.addValue(xsDecimal.getInt());
             }
 
-            return fgistpEnumeration;
+            return Optional.of(enumerationProperty);
         } else if (simpleTypeDecl.getBaseType().getName().contains("nteger")) {
-            FgistpInteger fgistpInteger = new FgistpInteger();
+            IntegerProperty integerProperty = new IntegerProperty();
 
-            setStringValues(simpleTypeDecl, fgistpInteger);
-            setIntegerValues(simpleTypeDecl, fgistpInteger);
+            setIntegerValues(simpleTypeDecl, integerProperty);
 
-            return fgistpInteger;
+            return Optional.of(integerProperty);
         } else if (simpleTypeDecl.getBaseType().getName().contains("string")) {
-            FgistpString fgistpString = new FgistpString();
+            StringProperty stringProperty = new StringProperty();
 
-            setStringValues(simpleTypeDecl, fgistpString);
+            setStringValues(simpleTypeDecl, stringProperty);
 
-            return fgistpString;
+            return Optional.of(stringProperty);
         } else if (simpleTypeDecl.getName().contains("double")) {
-            FgistpInteger fgistpInteger = new FgistpInteger();
+            IntegerProperty integerProperty = new IntegerProperty();
 
-            setStringValues(simpleTypeDecl, fgistpInteger);
-            setIntegerValues(simpleTypeDecl, fgistpInteger);
-
-            return fgistpInteger;
+            return Optional.of(integerProperty);
 
         } else if (simpleTypeDecl.getBaseType().getName().contains("decimal")) {
-            FgistpInteger fgistpInteger = new FgistpInteger();
+            IntegerProperty integerProperty = new IntegerProperty();
 
-            setStringValues(simpleTypeDecl, fgistpInteger);
-            setIntegerValues(simpleTypeDecl, fgistpInteger);
+            setIntegerValues(simpleTypeDecl, integerProperty);
 
-            return fgistpInteger;
+            return Optional.of(integerProperty);
 
         } else {
             log.warn("Not implemented yet");
 
-            return null;
+            return Optional.empty();
         }
     }
 
-    private void setIntegerValues(XSSimpleTypeDecl simpleTypeDecl, FgistpInteger fgistpInteger) {
+    private void setIntegerValues(XSSimpleTypeDecl simpleTypeDecl, IntegerProperty integerProperty) {
         XSObject facetMinInclusive = simpleTypeDecl.getFacet(FACET_MININCLUSIVE);
         if (facetMinInclusive != null) {
-            fgistpInteger.setMinInclusive(((XSFacet) facetMinInclusive).getIntFacetValue());
+            integerProperty.setMinInclusive(((XSFacet) facetMinInclusive).getIntFacetValue());
         }
 
         XSObject facetMaxInclusive = simpleTypeDecl.getFacet(FACET_MAXINCLUSIVE);
         if (facetMaxInclusive != null) {
-            fgistpInteger.setMaxInclusive(((XSFacet) facetMaxInclusive).getIntFacetValue());
+            integerProperty.setMaxInclusive(((XSFacet) facetMaxInclusive).getIntFacetValue());
         }
 
         XSObject facetTotal = simpleTypeDecl.getFacet(FACET_TOTALDIGITS);
         if (facetTotal != null) {
-            fgistpInteger.setTotalDigits(((XSFacet) facetTotal).getIntFacetValue());
+            integerProperty.setTotalDigits(((XSFacet) facetTotal).getIntFacetValue());
         }
     }
 
-    private void setStringValues(XSSimpleTypeDecl simpleTypeDecl, FgistpString fgistpString) {
+    private void setStringValues(XSSimpleTypeDecl simpleTypeDecl, StringProperty stringProperty) {
         XSObject facetMinLength = simpleTypeDecl.getFacet(FACET_MINLENGTH);
         if (facetMinLength != null) {
-            fgistpString.setMinLength(((XSFacet) facetMinLength).getIntFacetValue());
+            stringProperty.setMinLength(((XSFacet) facetMinLength).getIntFacetValue());
         }
 
         XSObject facetMaxLength = simpleTypeDecl.getFacet(FACET_MAXLENGTH);
         if (facetMaxLength != null) {
-            fgistpString.setMaxLength(((XSFacet) facetMaxLength).getIntFacetValue());
+            stringProperty.setMaxLength(((XSFacet) facetMaxLength).getIntFacetValue());
         }
 
         XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
         if (facetPattern != null) {
             String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
-            fgistpString.setPattern(pattern);
+            stringProperty.setPattern(pattern);
         }
     }
 

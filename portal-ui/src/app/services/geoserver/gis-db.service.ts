@@ -3,15 +3,15 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {WorkImport} from './import.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ServerPropertiesService} from "../server-properties.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GisDbService {
 
-  hostUrl = 'http://localhost:8088';
-
   constructor(private http: HttpClient,
+              private serverProp: ServerPropertiesService,
               private logger: NGXLogger) {
   }
 
@@ -23,6 +23,8 @@ export class GisDbService {
     return this.http.get<TableProjection[]>(this.makeUrl(dbName, schema));
   }
 
+  // TODO: Где брать название БД пользователя, и целевой схемы?
+  // В СУБД под каждую организацию создается отдельная БД. Под каждый проект(рабочую область) создается схема
   doWorkImport(workImport: WorkImport) {
     const payload = {
       dbName: 'gis',
@@ -33,14 +35,14 @@ export class GisDbService {
 
     this.logger.info('payload: ', payload);
 
-    return this.http.post(this.hostUrl + '/db/import', payload);
+    return this.http.post(this.serverProp.baseUrl + '/db/import', payload);
   }
 
   private makeUrl(dbName: string, schema: string) {
     if (schema) {
-      return this.hostUrl + '/db/' + dbName + '/tables?schema=' + schema;
+      return this.serverProp.baseUrl + '/db/' + dbName + '/tables?schema=' + schema;
     } else {
-      return this.hostUrl + '/db/' + dbName + '/tables';
+      return this.serverProp.baseUrl + '/db/' + dbName + '/tables';
     }
   }
 }

@@ -4,10 +4,8 @@ import {Injectable} from '@angular/core';
 import {catchError} from 'rxjs/operators';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
-import {TokenStorageService} from '../token-storage.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
-import {GeoStyle} from './styles.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +17,6 @@ export class LayersService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
-              private tokenStorage: TokenStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('LayersService start');
   }

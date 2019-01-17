@@ -11934,12 +11934,9 @@
         </xs:annotation>
         <xs:restriction base="xs:positiveInteger">
             <xs:enumeration value="1" fgistp:username="I-а (Высокое, св. 1,2 МПа)"/>
-            <xs:enumeration value="2"
-                fgistp:username="I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))"/>
-            <xs:enumeration value="3"
-                fgistp:username="II (Высокое, св. 0,3 до 0,6 МПа включительно)"/>
-            <xs:enumeration value="4"
-                fgistp:username="III (Среднее, св. 0,1 до 0,3 МПа включительно)"/>
+            <xs:enumeration value="2" fgistp:username="I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))"/>
+            <xs:enumeration value="3" fgistp:username="II (Высокое, св. 0,3 до 0,6 МПа включительно)"/>
+            <xs:enumeration value="4" fgistp:username="III (Среднее, св. 0,1 до 0,3 МПа включительно)"/>
             <xs:enumeration value="5" fgistp:username="IV (Низкое, до 0,1 МПа включительно)"/>
         </xs:restriction>
     </xs:simpleType>

@@ -11,6 +11,7 @@ import {TransformationService} from '../../../services/geoserver/transformation.
 import {GisDbService, TableProjection} from '../../../services/geoserver/gis-db.service';
 import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImport} from '../../../services/geoserver/import.service';
 import {GeoDataStore, GeoWorkspace, GeoWorkspaceItem, WorkspacesService} from '../../../services/geoserver/workspaces.service';
+import {GisClassDefinition, GisService} from "../../../services/gis/rules.service";
 
 @Component({
   selector: 'crg-data-mapping',
@@ -23,7 +24,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
   workspaces = [];
   layers: LayerItem[] = [];
-  tablesP10: TableProjection[] = [];
+  complexTypes: any = [];
   importFlow: ImportFlow;
 
   isImportFinished = false;
@@ -36,6 +37,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               private gisDbService: GisDbService,
               private authService: AuthService,
               private stylesService: StylesService,
+              private ruleService: GisService,
               private layersService: LayersService,
               private router: Router,
               private logger: NGXLogger) {
@@ -75,6 +77,12 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
           this.logger.info('All Layers: ', this.layers);
         });
+
+    this.ruleService.getRules()
+        .subscribe((data: GisClassDefinition) => {
+          this.logger.info(' +++ rules: ', data);
+
+        });
   }
 
   ngOnDestroy(): void {
@@ -103,19 +111,19 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
 
     // TODO: В СУБД под каждую организацию создается отдельная БД. Под каждый проект(рабочую область) создается схема
-    this.gisDbService.getDbTables('gis', 'fiz')
-        .subscribe((projection: TableProjection[]) => {
-          let i = 0;
-          projection.forEach(value => {
-            if (value.name.includes('_point')) {
-              i++;
-            }
-          });
-
-          this.logger.info(' --- ', projection.length - i);
-
-          this.tablesP10 = projection;
-        });
+    // this.gisDbService.getDbTables('gis', 'fiz')
+    //     .subscribe((projection: TableProjection[]) => {
+    //       let i = 0;
+    //       projection.forEach(value => {
+    //         if (value.name.includes('_point')) {
+    //           i++;
+    //         }
+    //       });
+    //
+    //       this.logger.info(' --- ', projection.length - i);
+    //
+    //       this.tablesP10 = projection;
+    //     });
   }
 
   startWorkImport() {

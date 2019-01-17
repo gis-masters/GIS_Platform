@@ -13,6 +13,7 @@ export class ServerPropertiesService {
   private _geoServerUrl = this._baseUrl + '/geoserver';
   private _authServerUrl = this._baseUrl + '/oauth/token';
   private _organizationsUrl = this._baseUrl + '/organizations';
+  private _rulesUrl = this._baseUrl + '/fgistp/rules';
 
   constructor() {
   }
@@ -64,4 +65,13 @@ export class ServerPropertiesService {
   set organizationsUrl(value: string) {
     this._organizationsUrl = value;
   }
+
+  get rulesUrl(): string {
+    return this._rulesUrl;
+  }
+
+  set rulesUrl(value: string) {
+    this._rulesUrl = value;
+  }
+
 }

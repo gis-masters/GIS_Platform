@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.gis.dto.fgistp.FgistpClassType;
+import ru.mycrg.gis.dto.fgistp.EntityType;
 import ru.mycrg.gis.entity.XsdRule;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class RuleUtil {
     private static Logger log = LoggerFactory.getLogger(RuleUtil.class);
 
     @NotNull
-    XsdRule mapClassToEntity(FgistpClassType classType) {
+    XsdRule mapClassToEntity(EntityType classType) {
         XsdRule xsdRule = new XsdRule();
         xsdRule.setClassName(classType.getName());
 
@@ -34,21 +34,21 @@ public class RuleUtil {
         return xsdRule;
     }
 
-    public FgistpClassType mapEntityToClass(XsdRule xsdRule) {
+    public EntityType mapEntityToClass(XsdRule xsdRule) {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
             JsonNode classRule = xsdRule.getClassRule();
-            return mapper.readValue(classRule.toString(), FgistpClassType.class);
+            return mapper.readValue(classRule.toString(), EntityType.class);
         } catch (IOException e) {
             log.warn("Failed convert JSON / Error: {}", e.getMessage());
         }
 
-        return new FgistpClassType(xsdRule.getClassName());
+        return new EntityType(xsdRule.getClassName());
     }
 
     @Nullable
-    private String getJson(FgistpClassType classType) throws JsonProcessingException {
+    private String getJson(EntityType classType) throws JsonProcessingException {
         return new ObjectMapper().writer()
                 .withDefaultPrettyPrinter()
                 .writeValueAsString(classType);

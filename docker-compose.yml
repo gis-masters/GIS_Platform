@@ -142,6 +142,8 @@ services:
       POSTGIS_PASSWORD: $DB_PASS
     ports:
       - "8088:8088"
+    volumes:
+      - /opt/fgistp:/opt/fgistp
     depends_on:
       - config
       - database

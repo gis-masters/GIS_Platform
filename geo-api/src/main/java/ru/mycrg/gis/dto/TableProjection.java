@@ -1,6 +1,6 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.gis.dto.fgistp.FgistpClassType;
+import ru.mycrg.gis.dto.fgistp.EntityType;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class TableProjection {
 
     private String name;
     private List<ColumnProjection> columns;
-    private FgistpClassType fgistpClassType = new FgistpClassType();
+    private EntityType entityType = new EntityType();
 
     public TableProjection(String name, List<ColumnProjection> columns) {
         this.name = name;
@@ -31,11 +31,11 @@ public class TableProjection {
         this.columns = columns;
     }
 
-    public FgistpClassType getFgistpClassType() {
-        return fgistpClassType;
+    public EntityType getEntityType() {
+        return entityType;
     }
 
-    public void setFgistpClassType(FgistpClassType fgistpClassType) {
-        this.fgistpClassType = fgistpClassType;
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
     }
 }

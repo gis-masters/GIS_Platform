@@ -1,8 +1,12 @@
 package ru.mycrg.gis.dto.fgistp.types;
 
-public class FgistpInteger extends FgistpString {
+import ru.mycrg.gis.dto.fgistp.ValueType;
 
-    public FgistpInteger() {}
+public class IntegerProperty extends SimplePropertyBase {
+
+    public IntegerProperty() {
+        super(ValueType.INT);
+    }
 
     private Integer minInclusive = -1;
     private Integer maxInclusive = -1;

@@ -3,7 +3,7 @@ package ru.mycrg.gis.unit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.mycrg.gis.dto.fgistp.FgistpClassType;
+import ru.mycrg.gis.dto.fgistp.EntityType;
 import ru.mycrg.gis.entity.XsdRule;
 import ru.mycrg.gis.service.fgistp.RuleUtil;
 
@@ -22,10 +22,10 @@ public class RuleUtilTest {
         xsdRule.setClassRule(mapper.readTree(data));
 
         RuleUtil ruleUtil = new RuleUtil();
-        FgistpClassType result = ruleUtil.mapEntityToClass(xsdRule);
+        EntityType result = ruleUtil.mapEntityToClass(xsdRule);
 
         assertEquals("NaturalRiskZone_Type", result.getName());
-        assertEquals("Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»", result.getAlias());
+        assertEquals("Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»", result.getTitle());
     }
 
 }
