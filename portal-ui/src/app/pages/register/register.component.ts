@@ -4,6 +4,8 @@ import {Component} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
+import { FormControl } from '@angular/forms';
+import { ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'crg-register',
@@ -18,16 +20,14 @@ export class RegisterComponent {
     lastName: [null, Validators.required],
     firstName: [null, Validators.required],
     email: [null, Validators.required],
-    password: [null, Validators.required],
+    password: [null, Validators.required, Validators.minLength(6)],
     password_: [null, Validators.required],
   });
-
   constructor(private fb: FormBuilder,
               private router: Router,
               private logger: NGXLogger,
               private snackBar: MatSnackBar,
               private authService: AuthService) {}
-
   onSubmit() {
     if (this.registrationForm.valid) {
       this.authService
@@ -46,5 +46,4 @@ export class RegisterComponent {
       alert('Not valid!');
     }
   }
-
 }
