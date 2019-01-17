@@ -1,29 +1,22 @@
 package ru.mycrg.gis.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.dto.TableProjection;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.mycrg.gis.dto.fgistp.FgistpClassType;
 import ru.mycrg.gis.dto.fgistp.FgistpRules;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.service.GisStorageDaoService;
-import ru.mycrg.gis.service.WorkImport;
 import ru.mycrg.gis.service.fgistp.FgistpRuleNotFoundException;
 import ru.mycrg.gis.service.fgistp.FgistpRuleService;
 
-import java.util.List;
-
 @Controller
-public class FgistpController {
+public class RuleController {
 
-    private static Logger log = LoggerFactory.getLogger(FgistpController.class);
+    private static Logger log = LoggerFactory.getLogger(RuleController.class);
 
     @Autowired
     private FgistpRuleService fgistpRuleService;
@@ -33,7 +26,19 @@ public class FgistpController {
     public FgistpRules getRules() {
         log.info("Request /fgistp/rules");
 
-        return fgistpRuleService.getRules();
+        if (fgistpRuleService.isXsdRulesEmpty()) {
+            log.warn("Not found rules in DB. Try generate new from default source.");
+
+            return fgistpRuleService.loadRulesFromXsdSchema();
+        } else {
+            FgistpRules rules = fgistpRuleService.getRules();
+
+            if (rules.getFgistpClassTypes().isEmpty()) {
+                return fgistpRuleService.updateRules();
+            } else {
+                return rules;
+            }
+        }
     }
 
     @ResponseBody

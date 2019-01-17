@@ -9,4 +9,6 @@ public interface IFgistpRuleHolder {
 
     FgistpClassType getRuleByClassName(String name);
 
+    boolean isXsdRulesEmpty();
+
 }

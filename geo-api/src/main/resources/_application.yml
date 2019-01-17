@@ -8,7 +8,7 @@ spring:
       detection-strategy: annotated
   datasource:
     platform: postgres
-#    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
     username: postgres
     password: 314
   jpa:
@@ -21,5 +21,5 @@ spring:
       # Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
       hibernate.temp.use_jdbc_metadata_defaults: false
   rabbitmq:
-#    host: localhost
+    host: localhost
     port: 5672

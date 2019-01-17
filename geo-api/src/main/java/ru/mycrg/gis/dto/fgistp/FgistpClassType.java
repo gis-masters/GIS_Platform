@@ -5,6 +5,7 @@ import java.util.List;
 
 public class FgistpClassType extends NameAliasProjection {
 
+    private NameAliasProjection group = new NameAliasProjection();
     private List<FgistpProperty> properties = new ArrayList<>();
     private List<String> geometryTypes = new ArrayList<>();
 
@@ -32,5 +33,13 @@ public class FgistpClassType extends NameAliasProjection {
 
     public void addGeometry(String type) {
         geometryTypes.add(type);
+    }
+
+    public NameAliasProjection getGroup() {
+        return group;
+    }
+
+    public void setGroup(NameAliasProjection group) {
+        this.group = group;
     }
 }
