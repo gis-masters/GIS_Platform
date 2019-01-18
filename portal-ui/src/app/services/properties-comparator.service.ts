@@ -17,10 +17,8 @@ export class PropertiesComparatorService {
     // Задаем цепочку. Да неочень красиво, мне нравится юзать Builder - но лень.
     // Например: http://sh2533.blogspot.com/2012/03/chain-of-responsibility.html
 
-    // TODO: Сопоставление геометрии
-    // this.initialComparison.setNext(geometryComparison);
-
-    this.initialComparison.setNext(lastComparison);
+    this.initialComparison.setNext(geometryComparison);
+    geometryComparison.setNext(lastComparison);
   }
 
   /**

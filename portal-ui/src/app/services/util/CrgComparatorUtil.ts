@@ -36,6 +36,7 @@ export class DirectComparison implements CrgComparison {
 export class GeometryComparison implements CrgComparison {
   private comparison: CrgComparison;
 
+  // TODO: Сопоставление геометрии
   compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
     let result = null;
 
