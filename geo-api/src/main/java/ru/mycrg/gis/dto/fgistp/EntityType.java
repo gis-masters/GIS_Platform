@@ -10,6 +10,7 @@ public class EntityType {
     private String name;
     private String title;
     private String description;
+    private String tableName;
     private List<SimplePropertyBase> properties = new ArrayList<>();
 
     public EntityType() {}
@@ -20,6 +21,10 @@ public class EntityType {
 
     // TODO: Validation rules here
     // Inheritance other EntityType
+
+    public void addProperty(SimplePropertyBase property) {
+        properties.add(property);
+    }
 
     public List<SimplePropertyBase> getProperties() {
         return properties;
@@ -51,5 +56,13 @@ public class EntityType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

@@ -104,4 +104,8 @@ public abstract class SimplePropertyBase {
     public void setValueType(ValueType valueType) {
         this.valueType = valueType;
     }
+
+    public boolean isGeometry() {
+        return this.valueType == ValueType.GEOMETRY;
+    }
 }

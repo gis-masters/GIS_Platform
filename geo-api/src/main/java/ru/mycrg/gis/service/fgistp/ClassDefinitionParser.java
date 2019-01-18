@@ -33,7 +33,7 @@ import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
 import static org.apache.xerces.xs.XSConstants.ELEMENT_DECLARATION;
 import static org.apache.xerces.xs.XSSimpleTypeDefinition.*;
-import static ru.mycrg.gis.dto.fgistp.ValueType.CHOICE;
+import static ru.mycrg.gis.service.fgistp.EntityTypeUtil.*;
 
 @Service
 public class ClassDefinitionParser {
@@ -60,66 +60,15 @@ public class ClassDefinitionParser {
             parseComplexTypes(fgistpRules, fgistpGrammar);
 
             addEnumerationAlias(fgistpRules, fetchEnumerationsAliasesFromXsdSimpleTypes(file));
-
             fillDescription(fgistpRules.getEntityTypes());
+            joinGeometry(fgistpRules.getEntityTypes());
+            addDbTableName(fgistpRules.getEntityTypes());
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 ParserConfigurationException | IOException | SAXException e) {
             log.error("Error parse file: " + file.getName(), e);
         }
 
         return fgistpRules;
-    }
-
-    private void fillDescription(List<EntityType> entityTypes) {
-        entityTypes.forEach(entityType -> {
-            String originTitle = entityType.getTitle();
-            if (originTitle != null) {
-                String[] split = originTitle.split("«");
-                if (split.length > 1) {
-                    String newTitle = split[1];
-                    entityType.setTitle(newTitle.substring(0, newTitle.length() - 1));
-                }
-            }
-
-            entityType.setDescription(originTitle);
-        });
-    }
-
-    private void addEnumerationAlias(FgistpRules fgistpRules, List<XsdSimpleType> xsdSimpleTypes) {
-        fgistpRules.getEntityTypes()
-                .forEach(entityType -> {
-                    String typeName = entityType.getName();
-                    entityType.getProperties()
-                            .forEach(simpleProperty -> {
-                                // В описание, на предыдущем шаге, я ложил название типа...
-                                String propertyName = simpleProperty.getDescription();
-
-                                getXsdSimpleTypeByName(xsdSimpleTypes, propertyName)
-                                        .ifPresent(simpleType -> setTitle(simpleType.getProperties(), simpleProperty));
-
-                                // Приведем в порядок описание
-                                simpleProperty.setDescription("");
-                            });
-                });
-    }
-
-    private void setTitle(Map<String, String> simpleType, SimplePropertyBase simpleProperty) {
-        if (simpleProperty.getValueType() == CHOICE) {
-            EnumerationProperty property = (EnumerationProperty) simpleProperty;
-            property.getEnumerations()
-                    .forEach(valueAliasProjection -> {
-                        String alias = simpleType.get(valueAliasProjection.getValue());
-                        valueAliasProjection.setTitle(alias);
-                    });
-        } else {
-            log.warn("--- {}", simpleProperty.getName());
-        }
-    }
-
-    private Optional<XsdSimpleType> getXsdSimpleTypeByName(List<XsdSimpleType> simpleTypes, String propertyName) {
-        return simpleTypes.stream()
-                .filter(simpleType -> simpleType.getName().equals(propertyName))
-                .findFirst();
     }
 
     public List<XsdSimpleType> fetchEnumerationsAliasesFromXsdSimpleTypes(File file)

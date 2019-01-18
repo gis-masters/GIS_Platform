@@ -3,7 +3,9 @@ package ru.mycrg.gis.unit;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 import ru.mycrg.gis.dto.fgistp.EntityType;
+import ru.mycrg.gis.dto.fgistp.ValueType;
 import ru.mycrg.gis.dto.fgistp.XsdSimpleType;
+import ru.mycrg.gis.dto.fgistp.types.GeometryProperty;
 import ru.mycrg.gis.dto.fgistp.types.SimplePropertyBase;
 import ru.mycrg.gis.dto.fgistp.FgistpRules;
 import ru.mycrg.gis.dto.fgistp.types.EnumerationProperty;
@@ -38,6 +40,7 @@ public class XsdParserTest {
         SimplePropertyBase property4 = functionalZone.get().getProperties().get(4);
 
         assertEquals("Функциональные зоны", functionalZone.get().getTitle());
+        assertEquals("functionalzone", functionalZone.get().getTableName());
         assertEquals("Класс объектов «Функциональные зоны»", functionalZone.get().getDescription());
         assertEquals(21, functionalZone.get().getProperties().size());
         assertFalse(property4.isMultiple());
@@ -63,6 +66,24 @@ public class XsdParserTest {
         assertEquals(35, classId.getEnumerations().size());
         assertEquals("Жилые зоны", classId.getEnumerations().get(0).getTitle());
         assertEquals("Иные зоны", classId.getEnumerations().get(34).getTitle());
+
+        // Test Geometry
+        Optional<SimplePropertyBase> fzGeometry = functionalZone.get().getProperties().stream()
+                .filter(SimplePropertyBase::isGeometry)
+                .findFirst();
+
+        assertTrue(fzGeometry.isPresent());
+        assertEquals(1, ((GeometryProperty) fzGeometry.get()).getAllowedValues().size());
+
+        Optional<SimplePropertyBase> hGeometry = entityTypes.stream()
+                .filter(entityType -> entityType.getName().equals("Hydro_Type"))
+                .findFirst().get()
+                .getProperties().stream()
+                .filter(SimplePropertyBase::isGeometry)
+                .findFirst();
+
+        assertTrue(hGeometry.isPresent());
+        assertEquals(4, ((GeometryProperty) hGeometry.get()).getAllowedValues().size());
     }
 
     @Test
