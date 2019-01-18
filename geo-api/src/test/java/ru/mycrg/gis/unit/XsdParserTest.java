@@ -15,10 +15,10 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-public class ClassDefinitionParserTest {
+public class XsdParserTest {
 
     @Test
-    public void xsdComplexTypesParsingTest() throws Exception {
+    public void complexTypesParsingTest() throws Exception {
         File file = ResourceUtils.getFile("classpath:fgistp/fgistp.xsd");
 
         ClassDefinitionParser parser = new ClassDefinitionParser();
@@ -37,7 +37,8 @@ public class ClassDefinitionParserTest {
 
         SimplePropertyBase property4 = functionalZone.get().getProperties().get(4);
 
-        assertEquals("Класс объектов «Функциональные зоны»", functionalZone.get().getTitle());
+        assertEquals("Функциональные зоны", functionalZone.get().getTitle());
+        assertEquals("Класс объектов «Функциональные зоны»", functionalZone.get().getDescription());
         assertEquals(21, functionalZone.get().getProperties().size());
         assertFalse(property4.isMultiple());
         assertEquals(7, ((EnumerationProperty) property4).getEnumerations().size());
@@ -65,7 +66,7 @@ public class ClassDefinitionParserTest {
     }
 
     @Test
-    public void xsdSimpleTypesParsingTest() throws Exception {
+    public void simpleTypesParsingTest() throws Exception {
         File file = ResourceUtils.getFile("classpath:fgistp/fgistp.xsd");
 
         ClassDefinitionParser parser = new ClassDefinitionParser();

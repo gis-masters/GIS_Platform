@@ -14,7 +14,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
-import ru.mycrg.gis.dto.fgistp.*;
+import ru.mycrg.gis.dto.fgistp.EntityType;
+import ru.mycrg.gis.dto.fgistp.FgistpRules;
+import ru.mycrg.gis.dto.fgistp.XsdSimpleType;
 import ru.mycrg.gis.dto.fgistp.types.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +24,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
@@ -55,12 +60,29 @@ public class ClassDefinitionParser {
             parseComplexTypes(fgistpRules, fgistpGrammar);
 
             addEnumerationAlias(fgistpRules, fetchEnumerationsAliasesFromXsdSimpleTypes(file));
+
+            fillDescription(fgistpRules.getEntityTypes());
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 ParserConfigurationException | IOException | SAXException e) {
             log.error("Error parse file: " + file.getName(), e);
         }
 
         return fgistpRules;
+    }
+
+    private void fillDescription(List<EntityType> entityTypes) {
+        entityTypes.forEach(entityType -> {
+            String originTitle = entityType.getTitle();
+            if (originTitle != null) {
+                String[] split = originTitle.split("«");
+                if (split.length > 1) {
+                    String newTitle = split[1];
+                    entityType.setTitle(newTitle.substring(0, newTitle.length() - 1));
+                }
+            }
+
+            entityType.setDescription(originTitle);
+        });
     }
 
     private void addEnumerationAlias(FgistpRules fgistpRules, List<XsdSimpleType> xsdSimpleTypes) {
