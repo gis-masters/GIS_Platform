@@ -4,7 +4,8 @@ import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
-import {ColumnProjection} from './gis-db.service';
+import {ColumnProjection} from "./gis-db.service";
+import {SimpleProperty} from "../gis/rules.service";
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {ServerPropertiesService} from '../server-properties.service';
@@ -338,21 +339,27 @@ export class WorkImport {
     this.updateWorkImportState();
   }
 
-  addMapping(layerName: string, source: LayerAttribute, target: ColumnProjection) {
+  addMapping(layerName: string, source: LayerAttribute, targetProperty: SimpleProperty) {
     const newMapping = {
       source: source,
-      target: target
+      target: {
+        name: targetProperty.name,
+        type: targetProperty.name
+      }
     };
 
     this.getTaskByLayerName(layerName)
         .mapping.push(newMapping);
   }
 
-  updateMapping(layerName: string, source: LayerAttribute, newColumn: ColumnProjection) {
+  updateMapping(layerName: string, source: LayerAttribute, property: SimpleProperty) {
     this.getTaskByLayerName(layerName).mapping
         .forEach((mapItem: MappingItem) => {
           if (mapItem.source.name === source.name) {
-            mapItem.target = newColumn;
+            mapItem.target = {
+              name: property.name,
+              type: property.name
+            };
           }
         });
   }
@@ -406,11 +413,11 @@ export class WorkImport {
 }
 
 export const AS_IS_TYPE = {
-  name: 'Импортировать как есть',
-  type: 'AsIs',
+  title: 'Импортировать как есть',
+  name: 'AsIs',
 };
 
 export const NOT_IMPORT = {
-  name: 'Не импортировать',
-  type: 'NotImport',
+  title: 'Не импортировать',
+  name: 'NotImport',
 };

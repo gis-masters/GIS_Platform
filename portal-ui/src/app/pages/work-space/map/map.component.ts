@@ -39,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.createMap();
 
     this.layersService.getAll()
-      .pipe(filter(value => !!value['layers']))
+      .pipe(filter(value => value && !!value['layers']))
       .subscribe((geoLayer: GeoLayer) => {
         this.logger.info('layersService.getAll: ', geoLayer.layers);
 

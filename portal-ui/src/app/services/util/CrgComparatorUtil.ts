@@ -1,5 +1,5 @@
-import {CrgComparison} from '../fiz-comparator.service';
-import {ColumnProjection} from '../geoserver/gis-db.service';
+import {SimpleProperty} from "../gis/rules.service";
+import {CrgComparison} from '../properties-comparator.service';
 import {AS_IS_TYPE, LayerAttribute} from '../geoserver/import.service';
 
 /**
@@ -9,18 +9,18 @@ import {AS_IS_TYPE, LayerAttribute} from '../geoserver/import.service';
 export class DirectComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, columns: ColumnProjection[]): ColumnProjection {
+  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
     let result = null;
-    columns.forEach((column: ColumnProjection) => {
-      if (source.name.toLowerCase() === column.name.toLowerCase()) {
-        result = column;
+    properties.forEach((property: SimpleProperty) => {
+      if (source.name.toLowerCase() === property.name.toLowerCase()) {
+        result = property;
       }
     });
 
     if (result) {
       return result;
     } else {
-      return this.comparison.compare(source, columns);
+      return this.comparison.compare(source, properties);
     }
   }
 
@@ -36,19 +36,19 @@ export class DirectComparison implements CrgComparison {
 export class GeometryComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, columns: ColumnProjection[]): ColumnProjection {
+  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
     let result = null;
 
     if (source.binding.includes('MultiPolygon') ||
         source.binding.includes('MultiLineString') ||
         source.binding.includes('Point')) {
-      result = columns.find((column: ColumnProjection) => column.type === 'geometry');
+      // result = properties.find((property: SimpleProperty) => property.type === 'geometry');
     }
 
     if (result) {
       return result;
     } else {
-      return this.comparison.compare(source, columns);
+      return this.comparison.compare(source, properties);
     }
   }
 
@@ -60,13 +60,16 @@ export class GeometryComparison implements CrgComparison {
 
 /**
  * Последний компаратор в цепочке.
- * Посути определяет дефолтное значение если подобрать сопостовление не получилось.
+ * Посути определяет дефолтное значение если подобрать сопоставление не получилось.
  * Для него не задается "следующего" по цепочке.
  */
 export class LastComparison implements CrgComparison {
 
-  compare(source: LayerAttribute, columns: ColumnProjection[]): ColumnProjection {
-    return AS_IS_TYPE;
+  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+    return {
+      name: AS_IS_TYPE.name,
+      title: AS_IS_TYPE.title
+    };
   }
 
   setNext(comparison: CrgComparison) {

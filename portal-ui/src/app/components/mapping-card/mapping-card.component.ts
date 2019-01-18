@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
+import {EntityType, SimpleProperty} from "../../services/gis/rules.service";
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ColumnProjection, TableProjection} from '../../services/geoserver/gis-db.service';
 import {ImportService, LayerItem, AS_IS_TYPE, NOT_IMPORT} from '../../services/geoserver/import.service';
 
 @Component({
@@ -11,9 +11,9 @@ import {ImportService, LayerItem, AS_IS_TYPE, NOT_IMPORT} from '../../services/g
 export class MappingCardComponent implements OnInit, OnChanges {
 
   @Input() layer: LayerItem;
-  @Input() tablesP10: TableProjection[];
+  @Input() entityTypes: EntityType[];
 
-  p10_columns: ColumnProjection[] = [];
+  typeProperties: SimpleProperty[] = [];
 
   constructor(private logger: NGXLogger,
               private importService: ImportService) {
@@ -22,23 +22,25 @@ export class MappingCardComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.logger.info('Init: ', this.layer);
 
-    this.p10_columns.push(AS_IS_TYPE, NOT_IMPORT);
+    this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
+    this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // this.logger.info('--- ', changes['tablesP10'].currentValue);
+    // this.logger.info('--- ', changes['entityTypes'].currentValue);
   }
 
-  tableSelected(selectedTable: string) {
-    this.importService.importFlow.setTable(this.layer.originalName, selectedTable);
+  tapeSelected(selected: string) {
+    let selectedType = this.entityTypes.find((type: EntityType) => type.name === selected);
 
-    this.p10_columns = [];
-    this.p10_columns.push(AS_IS_TYPE, NOT_IMPORT);
-    this.tablesP10
-        .find((table: TableProjection) => table.name === selectedTable)
-        .columns.forEach((columnProjection: ColumnProjection) => {
-          this.p10_columns.push(columnProjection);
-        });
+    this.importService.importFlow.setTable(this.layer.originalName, selectedType.tableName);
+    this.typeProperties = [];
+    this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
+    this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
+
+    selectedType.properties.forEach((property: SimpleProperty) => {
+      this.typeProperties.push(property);
+    });
   }
 
 }

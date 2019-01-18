@@ -1,9 +1,9 @@
 import {NGXLogger} from 'ngx-logger';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ColumnProjection} from '../../services/geoserver/gis-db.service';
-import {FizComparatorService} from '../../services/fiz-comparator.service';
+import {SimpleProperty} from "../../services/gis/rules.service";
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImportService, LayerAttribute} from '../../services/geoserver/import.service';
+import {PropertiesComparatorService} from '../../services/properties-comparator.service';
 
 @Component({
   selector: 'crg-mapping-pair',
@@ -14,35 +14,35 @@ export class MappingPairComponent implements OnInit, OnChanges {
 
   @Input() layer_attribute: LayerAttribute;
   @Input() layerName: string;
-  @Input() p10_columns: ColumnProjection[];
+  @Input() properties: SimpleProperty[];
 
   columnForm: FormGroup;
 
   constructor(private logger: NGXLogger,
               private importService: ImportService,
-              private crgComparator: FizComparatorService,
+              private crgComparator: PropertiesComparatorService,
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.columnForm = this.formBuilder.group({
-      columnFiz: [this.p10_columns[0]]
+      columnFiz: [this.properties[0]]
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const columnChanged = changes['p10_columns'];
-    if (columnChanged && !columnChanged.isFirstChange()) {
+    const propertiesChanged = changes['properties'];
+    if (propertiesChanged && !propertiesChanged.isFirstChange()) {
       this.setIdenticalColumn();
     }
   }
 
   // Подбираем и устанавливаем наиболее похожий столбец
   private setIdenticalColumn() {
-    const bestCompareColumn = this.crgComparator.compare(this.layer_attribute, this.p10_columns);
+    const bestCompareProperty = this.crgComparator.compare(this.layer_attribute, this.properties);
 
-    this.importService.importFlow.work_import.addMapping(this.layerName, this.layer_attribute, bestCompareColumn);
+    this.importService.importFlow.work_import.addMapping(this.layerName, this.layer_attribute, bestCompareProperty);
 
-    this.columnForm.controls['columnFiz'].patchValue(bestCompareColumn);
+    this.columnForm.controls['columnFiz'].patchValue(bestCompareProperty);
   }
 
   typeToString(type: string) {
@@ -56,7 +56,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   columnChanged() {
-    const newItem = this.columnForm.controls['columnFiz'].value as ColumnProjection;
+    const newItem = this.columnForm.controls['columnFiz'].value as SimpleProperty;
 
     this.importService.importFlow.work_import.updateMapping(this.layerName, this.layer_attribute, newItem);
   }

@@ -2,6 +2,7 @@ import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {ValueTitleProjection} from "../geoserver/projections";
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -15,27 +16,45 @@ export class GisService {
     logger.info('LayersService start');
   }
 
-  getRules(): Observable<EntityType[] | any> {
+  getRules(): Observable<EntityDefinition[] | any> {
     return this.http
-               .get<EntityType[]>(this.serverProp.rulesUrl);
+               .get<EntityDefinition[]>(this.serverProp.rulesUrl);
   }
 
 }
 
-// export interface ClassDefinition {
-//   fgistpClassTypes: GisClassType;
-// }
+export interface EntityDefinition {
+  entityTypes: EntityType[];
+}
 
 export interface EntityType {
   name: string;
   title: string;
   description: string;
-  properties: any;
+  properties: SimpleProperty[];
+  tableName: string;
 }
 
 export interface SimpleProperty {
   name: string;
   title: string;
-  description: string;
+  description?: string;
 
+  required?: boolean;
+  hidden?: boolean;
+  isMultiple?: boolean;
+
+  updateability?: any;
+  choice?: any;
+  valueType?: any;
+
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  patternDescription?: string;
+  minInclusive?: number;
+  maxInclusive?: number;
+  totalDigits?: number;
+  allowedValues?: string[];
+  enumerations?: ValueTitleProjection;
 }

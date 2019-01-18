@@ -3,15 +3,15 @@ import {filter} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {environment} from '../../../../environments/environment';
+import {GisDbService} from '../../../services/geoserver/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
+import {EntityDefinition, GisService} from "../../../services/gis/rules.service";
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {GeoStyle, StylesService} from '../../../services/geoserver/styles.service';
 import {TransformationService} from '../../../services/geoserver/transformation.service';
-import {GisDbService, TableProjection} from '../../../services/geoserver/gis-db.service';
-import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImport} from '../../../services/geoserver/import.service';
 import {GeoDataStore, GeoWorkspace, GeoWorkspaceItem, WorkspacesService} from '../../../services/geoserver/workspaces.service';
-import {GisClassDefinition, GisService} from "../../../services/gis/rules.service";
+import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImport} from '../../../services/geoserver/import.service';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -24,7 +24,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
   workspaces = [];
   layers: LayerItem[] = [];
-  complexTypes: any = [];
+  entityTypes: any = [];
   importFlow: ImportFlow;
 
   isImportFinished = false;
@@ -79,9 +79,8 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
 
     this.ruleService.getRules()
-        .subscribe((data: GisClassDefinition) => {
-          this.logger.info(' +++ rules: ', data);
-
+        .subscribe((entityTypesDefinition: EntityDefinition) => {
+          this.entityTypes = entityTypesDefinition.entityTypes;
         });
   }
 
@@ -122,7 +121,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     //
     //       this.logger.info(' --- ', projection.length - i);
     //
-    //       this.tablesP10 = projection;
+    //       this.entityTypes = projection;
     //     });
   }
 

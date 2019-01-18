@@ -4,10 +4,10 @@
       <h6>Выберите слой для импорта данных</h6>
     </div>
     <mat-form-field class="col-6">
-      <mat-select placeholder="Целевой слой" [disabled]="tablesP10.length === 0">
-        <mat-option *ngFor="let table of tablesP10" [value]="table.name"
-                    (click)="tableSelected(table.name)">
-          {{table.name}}
+      <mat-select placeholder="Целевой слой" [disabled]="entityTypes.length === 0">
+        <mat-option *ngFor="let tape of entityTypes" [value]="tape.name"
+                    (click)="tapeSelected(tape.name)">
+          {{tape.title}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -23,7 +23,7 @@
     <div *ngFor="let layer_attribute of layer.attributes" style="margin-bottom: 5px">
       <crg-mapping-pair [layer_attribute]="layer_attribute"
                         [layerName]="layer.originalName"
-                        [p10_columns]="p10_columns"></crg-mapping-pair>
+                        [properties]="typeProperties"></crg-mapping-pair>
     </div>
   </div>
 </div>

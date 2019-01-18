@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
+import {SimpleProperty} from "./gis/rules.service";
 import {LayerAttribute} from './geoserver/import.service';
-import {ColumnProjection} from './geoserver/gis-db.service';
 import {DirectComparison, GeometryComparison, LastComparison} from './util/CrgComparatorUtil';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FizComparatorService {
+export class PropertiesComparatorService {
 
   private initialComparison: CrgComparison = new DirectComparison();
 
@@ -16,8 +16,11 @@ export class FizComparatorService {
 
     // Задаем цепочку. Да неочень красиво, мне нравится юзать Builder - но лень.
     // Например: http://sh2533.blogspot.com/2012/03/chain-of-responsibility.html
-    this.initialComparison.setNext(geometryComparison);
-    geometryComparison.setNext(lastComparison);
+
+    // TODO: Сопоставление геометрии
+    // this.initialComparison.setNext(geometryComparison);
+
+    this.initialComparison.setNext(lastComparison);
   }
 
   /**
@@ -25,7 +28,7 @@ export class FizComparatorService {
    * @param source - Наименование исходного столбца.
    * @param columns - Рабочий список столбцов.
    */
-  compare(source: LayerAttribute, columns: ColumnProjection[]): ColumnProjection {
+  compare(source: LayerAttribute, columns: SimpleProperty[]): SimpleProperty {
     return this.initialComparison.compare(source, columns);
   }
 
@@ -42,5 +45,5 @@ export interface CrgComparison {
    */
   setNext(comparison: CrgComparison);
 
-  compare(source: LayerAttribute, columns: ColumnProjection[]): ColumnProjection;
+  compare(source: LayerAttribute, columns: SimpleProperty[]): SimpleProperty;
 }

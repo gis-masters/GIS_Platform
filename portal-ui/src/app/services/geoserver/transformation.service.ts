@@ -36,9 +36,9 @@ export class TransformationService {
 
     const observableTasks = [];
     transforms.forEach((transform: MappingItem) => {
-      if (!(transform.target.type === 'NotImport' || transform.target.type === AS_IS_TYPE.type || transform.target.name === 'objectid')) {
-        observableTasks.push(this.addTransformation(layer.layer.href, transform));
-      }
+      // if (!(transform.target.type === 'NotImport' || transform.target.type === AS_IS_TYPE.type || transform.target.name === 'objectid')) {
+      //   observableTasks.push(this.addTransformation(layer.layer.href, transform));
+      // }
     });
 
     return forkJoin(observableTasks);
@@ -50,7 +50,7 @@ export class TransformationService {
     const payload = {
       type: 'AttributeComputeTransform',
       field: transform.target.name,
-      fieldType: this.getFieldType(transform.target.type),
+      // fieldType: this.getFieldType(transform.target.type),
       cql: transform.source.name
     };
 

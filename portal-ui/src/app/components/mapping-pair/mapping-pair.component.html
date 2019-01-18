@@ -8,8 +8,8 @@
   <form [formGroup]="columnForm" class="col-6">
     <select class="form-control form-control-sm" formControlName="columnFiz" [compareWith]="compareFn"
             (change)="columnChanged()">
-      <option *ngFor="let column of p10_columns" [ngValue]="column">
-        {{column.name}} ({{column.type}})
+      <option *ngFor="let property of properties" [ngValue]="property">
+        {{property.title}} ({{property.name}})
       </option>
     </select>
   </form>

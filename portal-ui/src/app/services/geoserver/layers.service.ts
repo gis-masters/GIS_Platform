@@ -23,10 +23,10 @@ export class LayersService {
 
   getAll(): Observable<GeoLayer | any> {
     return this.http
-      .get<GeoLayer>(this.layersUrl)
-      .pipe(
-        catchError(this.baseService.handleError('getLayers', []))
-      );
+               .get<GeoLayer>(this.layersUrl)
+               .pipe(
+                 catchError(this.baseService.handleError('getLayers', []))
+               );
   }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
