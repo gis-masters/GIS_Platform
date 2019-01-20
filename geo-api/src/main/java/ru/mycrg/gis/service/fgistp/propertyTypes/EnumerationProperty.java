@@ -1,12 +1,13 @@
-package ru.mycrg.gis.dto.fgistp.types;
+package ru.mycrg.gis.service.fgistp.propertyTypes;
 
-import ru.mycrg.gis.dto.fgistp.ValueTitleProjection;
-import ru.mycrg.gis.dto.fgistp.ValueType;
+import ru.mycrg.gis.dto.SimplePropertyDto;
+import ru.mycrg.gis.service.fgistp.ValueTitleProjection;
+import ru.mycrg.gis.service.fgistp.enums.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnumerationProperty extends SimplePropertyBase {
+public class EnumerationProperty extends AbstractProperty {
 
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
 
@@ -16,6 +17,12 @@ public class EnumerationProperty extends SimplePropertyBase {
 
     public EnumerationProperty(String name) {
         super(name);
+    }
+
+    public EnumerationProperty(SimplePropertyDto propertyDto) {
+        super(propertyDto);
+
+        this.enumerations = propertyDto.getEnumerations();
     }
 
     public List<ValueTitleProjection> getEnumerations() {

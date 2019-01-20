@@ -2,20 +2,16 @@ package ru.mycrg.gis.service.fgistp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.dto.fgistp.EntityType;
-import ru.mycrg.gis.dto.fgistp.FgistpRules;
-import ru.mycrg.gis.dto.fgistp.XsdSimpleType;
-import ru.mycrg.gis.dto.fgistp.types.EnumerationProperty;
-import ru.mycrg.gis.dto.fgistp.types.GeometryProperty;
-import ru.mycrg.gis.dto.fgistp.types.SimplePropertyBase;
+import ru.mycrg.gis.service.fgistp.propertyTypes.EnumerationProperty;
+import ru.mycrg.gis.service.fgistp.propertyTypes.GeometryProperty;
+import ru.mycrg.gis.service.fgistp.propertyTypes.AbstractProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static ru.mycrg.gis.dto.fgistp.ValueType.CHOICE;
+import static ru.mycrg.gis.service.fgistp.enums.ValueType.CHOICE;
 
 public class EntityTypeUtil {
 
@@ -59,21 +55,21 @@ public class EntityTypeUtil {
     public static void joinGeometry(List<EntityType> entityTypes) {
         entityTypes.forEach(entityType -> {
             long geometryCounter = entityType.getProperties().stream()
-                    .filter(SimplePropertyBase::isGeometry)
+                    .filter(AbstractProperty::isGeometry)
                     .count();
 
             if (geometryCounter > 1) {
                 GeometryProperty newGeometryProperty = new GeometryProperty();
 
-                List<SimplePropertyBase> properties = entityType.getProperties();
+                List<AbstractProperty> properties = entityType.getProperties();
                 List<String> geometries = new ArrayList<>();
                 properties.stream()
-                        .filter(SimplePropertyBase::isGeometry)
+                        .filter(AbstractProperty::isGeometry)
                         .forEach(propertyBase -> {
                             geometries.addAll(((GeometryProperty) propertyBase).getAllowedValues());
                         });
 
-                properties.removeIf(SimplePropertyBase::isGeometry);
+                properties.removeIf(AbstractProperty::isGeometry);
 
                 newGeometryProperty.setAllowedValues(geometries);
 
@@ -106,7 +102,7 @@ public class EntityTypeUtil {
                 .findFirst();
     }
 
-    private static void setPropertyTitle(Map<String, String> simpleType, SimplePropertyBase simpleProperty) {
+    private static void setPropertyTitle(Map<String, String> simpleType, AbstractProperty simpleProperty) {
         if (simpleProperty.getValueType() == CHOICE) {
             EnumerationProperty property = (EnumerationProperty) simpleProperty;
             property.getEnumerations()

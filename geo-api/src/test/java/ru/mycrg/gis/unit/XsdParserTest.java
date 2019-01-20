@@ -2,13 +2,12 @@ package ru.mycrg.gis.unit;
 
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.gis.dto.fgistp.EntityType;
-import ru.mycrg.gis.dto.fgistp.ValueType;
-import ru.mycrg.gis.dto.fgistp.XsdSimpleType;
-import ru.mycrg.gis.dto.fgistp.types.GeometryProperty;
-import ru.mycrg.gis.dto.fgistp.types.SimplePropertyBase;
-import ru.mycrg.gis.dto.fgistp.FgistpRules;
-import ru.mycrg.gis.dto.fgistp.types.EnumerationProperty;
+import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.XsdSimpleType;
+import ru.mycrg.gis.service.fgistp.propertyTypes.GeometryProperty;
+import ru.mycrg.gis.service.fgistp.propertyTypes.AbstractProperty;
+import ru.mycrg.gis.service.fgistp.FgistpRules;
+import ru.mycrg.gis.service.fgistp.propertyTypes.EnumerationProperty;
 import ru.mycrg.gis.service.fgistp.ClassDefinitionParser;
 
 import java.io.File;
@@ -37,7 +36,7 @@ public class XsdParserTest {
         assertTrue(functionalZone.isPresent());
         assertFalse(functionalZone.get().getProperties().isEmpty());
 
-        SimplePropertyBase property4 = functionalZone.get().getProperties().get(4);
+        AbstractProperty property4 = functionalZone.get().getProperties().get(4);
 
         assertEquals("Функциональные зоны", functionalZone.get().getTitle());
         assertEquals("functionalzone", functionalZone.get().getTableName());
@@ -68,18 +67,18 @@ public class XsdParserTest {
         assertEquals("Иные зоны", classId.getEnumerations().get(34).getTitle());
 
         // Test Geometry
-        Optional<SimplePropertyBase> fzGeometry = functionalZone.get().getProperties().stream()
-                .filter(SimplePropertyBase::isGeometry)
+        Optional<AbstractProperty> fzGeometry = functionalZone.get().getProperties().stream()
+                .filter(AbstractProperty::isGeometry)
                 .findFirst();
 
         assertTrue(fzGeometry.isPresent());
         assertEquals(1, ((GeometryProperty) fzGeometry.get()).getAllowedValues().size());
 
-        Optional<SimplePropertyBase> hGeometry = entityTypes.stream()
+        Optional<AbstractProperty> hGeometry = entityTypes.stream()
                 .filter(entityType -> entityType.getName().equals("Hydro_Type"))
                 .findFirst().get()
                 .getProperties().stream()
-                .filter(SimplePropertyBase::isGeometry)
+                .filter(AbstractProperty::isGeometry)
                 .findFirst();
 
         assertTrue(hGeometry.isPresent());

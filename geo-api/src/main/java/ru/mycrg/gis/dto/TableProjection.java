@@ -1,6 +1,6 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.gis.dto.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.EntityType;
 
 import java.util.List;
 

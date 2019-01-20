@@ -14,10 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
-import ru.mycrg.gis.dto.fgistp.EntityType;
-import ru.mycrg.gis.dto.fgistp.FgistpRules;
-import ru.mycrg.gis.dto.fgistp.XsdSimpleType;
-import ru.mycrg.gis.dto.fgistp.types.*;
+import ru.mycrg.gis.service.fgistp.propertyTypes.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -144,8 +141,8 @@ public class ClassDefinitionParser {
         });
     }
 
-    private List<SimplePropertyBase> fetchSequences(XSComplexTypeDecl xsComplexType) {
-        List<SimplePropertyBase> properties = new ArrayList<>();
+    private List<AbstractProperty> fetchSequences(XSComplexTypeDecl xsComplexType) {
+        List<AbstractProperty> properties = new ArrayList<>();
 
         XSParticleDecl particle = (XSParticleDecl) xsComplexType.getParticle();
         handleParticle(particle, properties);
@@ -153,14 +150,14 @@ public class ClassDefinitionParser {
         return properties;
     }
 
-    private void handleParticle(XSParticleDecl particle, List<SimplePropertyBase> properties) {
+    private void handleParticle(XSParticleDecl particle, List<AbstractProperty> properties) {
         if (particle.fType == PARTICLE_MODELGROUP) {
             XSObjectList particles = ((XSModelGroupImpl) particle.getTerm()).getParticles();
             for (Object particleItem : particles) {
                 handleParticle((XSParticleDecl) particleItem, properties);
             }
         } else if (particle.fType == PARTICLE_ELEMENT) {
-            SimplePropertyBase property = mapParticleElement(particle);
+            AbstractProperty property = mapParticleElement(particle);
             if (property != null) {
                 properties.add(property);
             }
@@ -169,13 +166,13 @@ public class ClassDefinitionParser {
         }
     }
 
-    private SimplePropertyBase mapParticleElement(XSParticleDecl element) {
+    private AbstractProperty mapParticleElement(XSParticleDecl element) {
         XSElementDecl term = (XSElementDecl) element.getTerm();
 
         if (term.getTypeDefinition() instanceof XSSimpleTypeDecl) {
-            Optional<SimplePropertyBase> baseOptional = generateType((XSSimpleTypeDecl) term.getTypeDefinition());
+            Optional<AbstractProperty> baseOptional = generateType((XSSimpleTypeDecl) term.getTypeDefinition());
             if (baseOptional.isPresent()) {
-                SimplePropertyBase property = baseOptional.get();
+                AbstractProperty property = baseOptional.get();
                 property.setName(term.getName());
                 property.setMultiple(element.getMinOccurs() > 0);
 
@@ -208,7 +205,7 @@ public class ClassDefinitionParser {
         return "Polygon".equals(name) || "Curve".equals(name) || "LineString".equals(name) || "Point".equals(name);
     }
 
-    private Optional<SimplePropertyBase> generateType(XSSimpleTypeDecl simpleTypeDecl) {
+    private Optional<AbstractProperty> generateType(XSSimpleTypeDecl simpleTypeDecl) {
         if (simpleTypeDecl.getName() == null) {
             log.warn("Look name deeper: {}", simpleTypeDecl.getBaseType().getName());
             return Optional.empty();

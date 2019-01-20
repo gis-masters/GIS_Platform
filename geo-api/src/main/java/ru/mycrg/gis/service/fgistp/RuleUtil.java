@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.gis.dto.fgistp.EntityType;
+import ru.mycrg.gis.dto.EntityTypeDto;
 import ru.mycrg.gis.entity.XsdRule;
 
 import java.io.IOException;
@@ -20,15 +20,15 @@ public class RuleUtil {
     private static Logger log = LoggerFactory.getLogger(RuleUtil.class);
 
     @NotNull
-    XsdRule mapClassToEntity(EntityType classType) {
+    XsdRule mapClassToEntity(EntityType entityType) {
         XsdRule xsdRule = new XsdRule();
-        xsdRule.setClassName(classType.getName());
+        xsdRule.setClassName(entityType.getName());
 
         try {
-            JsonNode jsonNode = JacksonUtil.toJsonNode(getJson(classType));
+            JsonNode jsonNode = JacksonUtil.toJsonNode(getJson(new EntityTypeDto(entityType)));
             xsdRule.setClassRule(jsonNode);
         } catch (Exception e) {
-            log.warn("Failed get json for: {} / With error: {}", classType.getName(), e.getMessage());
+            log.warn("Failed get json for: {} / With error: {}", entityType.getName(), e.getMessage());
         }
 
         return xsdRule;
@@ -39,7 +39,9 @@ public class RuleUtil {
 
         try {
             JsonNode classRule = xsdRule.getClassRule();
-            return mapper.readValue(classRule.toString(), EntityType.class);
+            EntityTypeDto entityTypeDto = mapper.readValue(classRule.toString(), EntityTypeDto.class);
+
+            return new EntityType(entityTypeDto);
         } catch (IOException e) {
             log.warn("Failed convert JSON / Error: {}", e.getMessage());
         }
@@ -48,7 +50,7 @@ public class RuleUtil {
     }
 
     @Nullable
-    private String getJson(EntityType classType) throws JsonProcessingException {
+    private String getJson(EntityTypeDto classType) throws JsonProcessingException {
         return new ObjectMapper().writer()
                 .withDefaultPrettyPrinter()
                 .writeValueAsString(classType);

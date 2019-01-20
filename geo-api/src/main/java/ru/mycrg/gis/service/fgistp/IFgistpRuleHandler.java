@@ -1,7 +1,5 @@
 package ru.mycrg.gis.service.fgistp;
 
-import ru.mycrg.gis.dto.fgistp.FgistpRules;
-
 public interface IFgistpRuleHandler {
 
     /**

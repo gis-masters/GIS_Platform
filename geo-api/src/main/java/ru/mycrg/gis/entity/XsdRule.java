@@ -2,7 +2,6 @@ package ru.mycrg.gis.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonNodeStringType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 

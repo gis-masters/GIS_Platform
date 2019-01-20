@@ -3,11 +3,11 @@ package ru.mycrg.gis.unit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.mycrg.gis.dto.fgistp.EntityType;
 import ru.mycrg.gis.entity.XsdRule;
+import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.RuleUtil;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
 public class RuleUtilTest {
 

@@ -1,11 +1,12 @@
-package ru.mycrg.gis.dto.fgistp.types;
+package ru.mycrg.gis.service.fgistp.propertyTypes;
 
-import ru.mycrg.gis.dto.fgistp.ValueType;
+import ru.mycrg.gis.dto.SimplePropertyDto;
+import ru.mycrg.gis.service.fgistp.enums.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeometryProperty extends SimplePropertyBase {
+public class GeometryProperty extends AbstractProperty {
 
     private List<String> allowedValues = new ArrayList<>();
 
@@ -17,6 +18,12 @@ public class GeometryProperty extends SimplePropertyBase {
         super("Geometry", ValueType.GEOMETRY);
 
         this.allowedValues.add(name);
+    }
+
+    public GeometryProperty(SimplePropertyDto propertyDto) {
+        super(propertyDto);
+
+        this.allowedValues = propertyDto.getAllowedValues();
     }
 
     public List<String> getAllowedValues() {

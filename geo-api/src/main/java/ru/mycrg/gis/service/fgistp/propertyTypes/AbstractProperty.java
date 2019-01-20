@@ -1,10 +1,11 @@
-package ru.mycrg.gis.dto.fgistp.types;
+package ru.mycrg.gis.service.fgistp.propertyTypes;
 
-import ru.mycrg.gis.dto.fgistp.ChoiceType;
-import ru.mycrg.gis.dto.fgistp.Updateability;
-import ru.mycrg.gis.dto.fgistp.ValueType;
+import ru.mycrg.gis.dto.SimplePropertyDto;
+import ru.mycrg.gis.service.fgistp.enums.ChoiceType;
+import ru.mycrg.gis.service.fgistp.enums.Updateability;
+import ru.mycrg.gis.service.fgistp.enums.ValueType;
 
-public abstract class SimplePropertyBase {
+public abstract class AbstractProperty {
 
     private String name;
     private String title;
@@ -18,20 +19,33 @@ public abstract class SimplePropertyBase {
     private ChoiceType choice;
     private ValueType valueType;
 
-    public SimplePropertyBase() {}
+    public AbstractProperty() {}
 
-    public SimplePropertyBase(String name) {
+    public AbstractProperty(String name) {
         this.name = name;
     }
 
-    public SimplePropertyBase(ValueType valueType) {
+    public AbstractProperty(ValueType valueType) {
         this.valueType = valueType;
     }
 
-    public SimplePropertyBase(String name, ValueType valueType) {
+    public AbstractProperty(String name, ValueType valueType) {
         this.name = name;
         this.valueType = valueType;
     }
+
+    public AbstractProperty(SimplePropertyDto propertyDto) {
+        this.name = propertyDto.getName();
+        this.title = propertyDto.getTitle();
+        this.description = propertyDto.getDescription();
+        this.required = propertyDto.isRequired();
+        this.hidden = propertyDto.isHidden();
+        this.updateability = propertyDto.getUpdateability();
+        this.isMultiple = propertyDto.isMultiple();
+        this.choice = propertyDto.getChoice();
+        this.valueType = propertyDto.getValueType();
+    }
+
 
     public String getName() {
         return name;

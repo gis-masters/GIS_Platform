@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.gis.dto.fgistp.EntityType;
-import ru.mycrg.gis.dto.fgistp.FgistpRules;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.repository.XsdRuleRepository;
@@ -71,6 +69,8 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     }
 
     public FgistpRules updateRules() {
+        log.info("Update rules");
+
         try {
             getRulesFromDb();
             imposeCustomRules();
@@ -106,6 +106,8 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     }
 
     private void getRulesFromDb() {
+        log.info("Get rules from DB");
+
         List<EntityType> classTypes = fgistpRules.getEntityTypes();
 
         xsdRuleRepository
