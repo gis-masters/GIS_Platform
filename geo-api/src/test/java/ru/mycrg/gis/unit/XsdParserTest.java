@@ -33,6 +33,7 @@ public class XsdParserTest {
                 .findFirst();
 
         assertFalse(entityTypes.isEmpty());
+        assertEquals(0, countEmptyTitle(entityTypes));
         assertTrue(functionalZone.isPresent());
         assertFalse(functionalZone.get().getProperties().isEmpty());
 
@@ -85,6 +86,12 @@ public class XsdParserTest {
         assertEquals(4, ((GeometryProperty) hGeometry.get()).getAllowedValues().size());
     }
 
+    private long countEmptyTitle(List<EntityType> entityTypes) {
+        return entityTypes.stream()
+                .filter(entityType -> entityType.getTitle() == null)
+                .count();
+    }
+
     @Test
     public void simpleTypesParsingTest() throws Exception {
         File file = ResourceUtils.getFile("classpath:fgistp/fgistp.xsd");
@@ -96,13 +103,13 @@ public class XsdParserTest {
 
         long typesWithEmptyAlias = xsdSimpleTypes
                 .stream()
-                .filter(this::isAliasEmpty)
+                .filter(this::isSimpleTypesAliasEmpty)
                 .count();
 
         assertEquals(0, typesWithEmptyAlias);
     }
 
-    private boolean isAliasEmpty(XsdSimpleType type) {
+    private boolean isSimpleTypesAliasEmpty(XsdSimpleType type) {
         System.out.println("================== " + type.getName());
 
         final boolean[] isEmpty = {false};
