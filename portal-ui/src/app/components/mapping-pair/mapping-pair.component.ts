@@ -18,6 +18,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   @Input() properties: SimpleProperty[];
 
   columnForm: FormGroup;
+  selectedProperty: SimpleProperty;
 
   constructor(private logger: NGXLogger,
               private importService: ImportService,
@@ -44,6 +45,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
     this.importService.importFlow.work_import.addMapping(this.layerName, this.layer_attribute, bestCompareProperty);
 
     this.columnForm.controls['columnFiz'].patchValue(bestCompareProperty);
+    this.selectedProperty = bestCompareProperty;
   }
 
   typeToString(type: string) {
@@ -57,8 +59,8 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   columnChanged() {
-    const newItem = this.columnForm.controls['columnFiz'].value as SimpleProperty;
+    this.selectedProperty = this.columnForm.controls['columnFiz'].value as SimpleProperty;
 
-    this.importService.importFlow.work_import.updateMapping(this.layerName, this.layer_attribute, newItem);
+    this.importService.importFlow.work_import.updateMapping(this.layerName, this.layer_attribute, this.selectedProperty);
   }
 }

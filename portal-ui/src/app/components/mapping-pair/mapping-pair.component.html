@@ -1,17 +1,22 @@
 <div class="row" [hidden]="layer_attribute.name === 'the_geom'">
 <!--<div class="row" [hidden]="false">-->
   <!--Исходные аттрибуты-->
-  <div class="col-6">
+  <div class="col-3">
     <h6>{{layer_attribute.name}} <span style="color: grey">({{typeToString(layer_attribute.binding)}})</span></h6>
   </div>
 
   <!--Рабочие аттрибуты из Р10-->
-  <form [formGroup]="columnForm" class="col-6">
+  <form [formGroup]="columnForm" class="col-3">
     <select class="form-control form-control-sm" formControlName="columnFiz" [compareWith]="compareFn"
             (change)="columnChanged()">
       <option *ngFor="let property of properties" [ngValue]="property">
-        {{property.title}} ({{property.name}})
+        {{property.name}} <span *ngIf="property.valueType !== undefined"> ({{property.valueType}})</span>
       </option>
     </select>
+
   </form>
+
+  <div class="col-6">
+    <span *ngIf="selectedProperty">{{selectedProperty.title}}</span>
+  </div>
 </div>
