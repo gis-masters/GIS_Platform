@@ -4,6 +4,9 @@ import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.enums.ChoiceType;
 import ru.mycrg.gis.service.fgistp.enums.Updateability;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
+import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
+
+import java.util.List;
 
 public abstract class AbstractProperty {
 
@@ -46,6 +49,7 @@ public abstract class AbstractProperty {
         this.valueType = propertyDto.getValueType();
     }
 
+    public abstract ConstraintViolationImpl validate(String propertyValue);
 
     public String getName() {
         return name;

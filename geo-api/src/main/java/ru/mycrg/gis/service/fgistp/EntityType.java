@@ -10,6 +10,7 @@ import ru.mycrg.gis.service.fgistp.propertyTypes.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Inheritance other EntityType
 public class EntityType {
 
     private static Logger log = LoggerFactory.getLogger(EntityType.class);
@@ -50,7 +51,6 @@ public class EntityType {
     }
 
     // TODO: Validation rules here
-    // Inheritance other EntityType
 
     public void addProperty(AbstractProperty property) {
         properties.add(property);

@@ -2,6 +2,9 @@ package ru.mycrg.gis.service.fgistp.propertyTypes;
 
 import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
+import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
+
+import java.util.List;
 
 public class StringProperty extends AbstractProperty {
 
@@ -21,6 +24,19 @@ public class StringProperty extends AbstractProperty {
         this.maxLength = propertyDto.getMaxLength();
         this.pattern = propertyDto.getPattern();
         this.patternDescription = propertyDto.getPatternDescription();
+    }
+
+    @Override
+    public ConstraintViolationImpl validate(String value) {
+        ConstraintViolationImpl constraintViolation = new ConstraintViolationImpl(getName(), value);
+
+        if (isRequired()) {
+            if (value == null) {
+                constraintViolation.addViolation("Field is required");
+            }
+        }
+
+        return constraintViolation;
     }
 
     public Integer getMinLength() {
