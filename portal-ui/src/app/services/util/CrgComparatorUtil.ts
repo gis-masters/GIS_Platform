@@ -1,6 +1,6 @@
 import {SimpleProperty} from "../gis/rules.service";
 import {CrgComparison} from '../properties-comparator.service';
-import {AS_IS_TYPE, LayerAttribute} from '../geoserver/import.service';
+import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import.service';
 
 /**
  * Первый и самый простой компаратор.
@@ -42,8 +42,43 @@ export class GeometryComparison implements CrgComparison {
 
     if (source.binding.includes('MultiPolygon') ||
         source.binding.includes('MultiLineString') ||
+        source.binding.includes('LineString') ||
+        source.binding.includes('PolySurface') ||
+        source.binding.includes('Curve') ||
         source.binding.includes('Point')) {
-      // result = properties.find((property: SimpleProperty) => property.type === 'geometry');
+      result = {
+        name: 'shape',
+        title: 'shape'
+      } as SimpleProperty;
+    }
+
+    if (result) {
+      return result;
+    } else {
+      return this.comparison.compare(source, properties);
+    }
+  }
+
+  setNext(comparison: CrgComparison) {
+    this.comparison = comparison;
+  }
+
+}
+
+/**
+ * Определяет дефолтный маппинг ObjectId.
+ */
+export class ObjectIdComparison implements CrgComparison {
+  private comparison: CrgComparison;
+
+  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+    let result = null;
+
+    if (source.name.toLowerCase().includes('objectid')) {
+      result = {
+        name: NOT_IMPORT.name,
+        title: NOT_IMPORT.title
+      };
     }
 
     if (result) {

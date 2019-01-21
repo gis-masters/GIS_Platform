@@ -29,4 +29,18 @@ export class GeoUtil {
 
     return firstSplit[0] + '//' + gatewayUrl + '/' + thirdSplit[1];
   }
+
+  static getAliasForBaseType(type: string) {
+    if (type.toLowerCase() === 'string') {
+      return 'Строка';
+    } else if (type.toLowerCase() === 'integer') {
+      return 'Целое';
+    } else if (type.toLowerCase() === 'long') {
+      return 'Целое';
+    } else if (type.toLowerCase() === 'double') {
+      return 'Дробное';
+    } else {
+      return type;
+    }
+  }
 }

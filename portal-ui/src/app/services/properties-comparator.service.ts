@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {SimpleProperty} from "./gis/rules.service";
 import {LayerAttribute} from './geoserver/import.service';
-import {DirectComparison, GeometryComparison, LastComparison} from './util/CrgComparatorUtil';
+import {DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison} from './util/CrgComparatorUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,15 @@ export class PropertiesComparatorService {
 
   constructor() {
     const geometryComparison = new GeometryComparison();
+    const objectIdComparison = new ObjectIdComparison();
     const lastComparison = new LastComparison();
 
     // Задаем цепочку. Да неочень красиво, мне нравится юзать Builder - но лень.
     // Например: http://sh2533.blogspot.com/2012/03/chain-of-responsibility.html
 
     this.initialComparison.setNext(geometryComparison);
-    geometryComparison.setNext(lastComparison);
+    geometryComparison.setNext(objectIdComparison);
+    objectIdComparison.setNext(lastComparison);
   }
 
   /**

@@ -1,4 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
+import {GeoUtil} from "../../services/util/GeoUtil";
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {SimpleProperty} from "../../services/gis/rules.service";
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
@@ -48,7 +49,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   typeToString(type: string) {
     const splitType = type.split('.');
 
-    return splitType[splitType.length - 1];
+    return GeoUtil.getAliasForBaseType(splitType[splitType.length - 1]);
   }
 
   compareFn(c1: any, c2: any): boolean {
