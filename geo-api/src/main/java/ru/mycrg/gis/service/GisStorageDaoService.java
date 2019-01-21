@@ -167,9 +167,9 @@ public class GisStorageDaoService {
     }
 
     private String prepareAlterRequest(ImportTask importTask, String targetSchema, String sourceSchema) {
-//        ALTER TABLE fiz.functionalzone ADD COLUMN fiz6 INTEGER,
-//                                       ADD COLUMN fiz5 INTEGER,
-//                                       ADD COLUMN fiz4 INTEGER;
+//        ALTER TABLE fiz.functionalzone ADD COLUMN IF NOT EXISTS fiz6 INTEGER,
+//                                       ADD COLUMN IF NOT EXISTS fiz5 INTEGER,
+//                                       ADD COLUMN IF NOT EXISTS fiz4 INTEGER;
         String alter = "ALTER TABLE " + targetSchema + "." + importTask.getWorkTableName() + " ";
         StringBuilder columns = new StringBuilder();
 
@@ -178,7 +178,7 @@ public class GisStorageDaoService {
             ColumnProjection target = geoMapping.getTarget();
             if (target.getType().equals(AS_IS)) {
                 columns
-                        .append("ADD COLUMN ")
+                        .append("ADD COLUMN IF NOT EXISTS ")
                         .append(geoMapping.getSource().getName())
                         .append(" ")
                         .append(defineColumnType(geoMapping.getSource().getBinding()))
