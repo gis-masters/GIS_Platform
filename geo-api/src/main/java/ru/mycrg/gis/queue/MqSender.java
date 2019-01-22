@@ -6,13 +6,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.dto.MqOrganizationInit;
+import ru.mycrg.gis.service.fgistp.EntityType;
 
 import static ru.mycrg.gis.config.MqProperties.*;
 
 @Service
-public class MqSender implements MqEvents {
+public class MqSender implements IMqEvents {
 
-    private static final Logger log = LoggerFactory.getLogger(MqEvents.class);
+    private static final Logger log = LoggerFactory.getLogger(IMqEvents.class);
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -26,6 +27,13 @@ public class MqSender implements MqEvents {
         log.info("Send init event: {}", creationDto.toString());
 
         rabbitTemplate.convertAndSend(FANOUT_ORG_INIT, KEY_ORG_INIT, creationDto);
+    }
+
+    @Override
+    public void startValidation(EntityType entityType) {
+        log.info("Queue startValidation: ", entityType.getTableName());
+
+        rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, entityType);
     }
 
 }

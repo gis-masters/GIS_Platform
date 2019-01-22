@@ -4,8 +4,6 @@ import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
 import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
 
-import java.util.List;
-
 public class StringProperty extends AbstractProperty {
 
     private Integer minLength = -1;
@@ -30,10 +28,24 @@ public class StringProperty extends AbstractProperty {
     public ConstraintViolationImpl validate(String value) {
         ConstraintViolationImpl constraintViolation = new ConstraintViolationImpl(getName(), value);
 
-        if (isRequired()) {
-            if (value == null) {
-                constraintViolation.addViolation("Field is required");
+        if (value == null) {
+            if (isRequired()) {
+                constraintViolation.addViolation("Свойство обязательно к заполнению");
             }
+
+            if (minLength != -1) {
+                constraintViolation.addViolation("Минимальная длинна " + minLength);
+            }
+
+            if (maxLength != -1) {
+                constraintViolation.addViolation("Максимальная длинна " + maxLength);
+            }
+
+            if (pattern != null) {
+                constraintViolation.addViolation(patternDescription);
+            }
+        } else {
+
         }
 
         return constraintViolation;

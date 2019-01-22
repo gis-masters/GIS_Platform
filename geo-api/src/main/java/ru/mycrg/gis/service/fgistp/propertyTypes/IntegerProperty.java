@@ -2,6 +2,7 @@ package ru.mycrg.gis.service.fgistp.propertyTypes;
 
 import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
+import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
 
 public class IntegerProperty extends AbstractProperty {
 
@@ -19,6 +20,11 @@ public class IntegerProperty extends AbstractProperty {
         this.maxInclusive = propertyDto.getMaxInclusive();
         this.minInclusive = propertyDto.getMinInclusive();
         this.totalDigits = propertyDto.getTotalDigits();
+    }
+
+    @Override
+    public ConstraintViolationImpl validate(String propertyValue) {
+        return new ConstraintViolationImpl();
     }
 
     public Integer getMinInclusive() {

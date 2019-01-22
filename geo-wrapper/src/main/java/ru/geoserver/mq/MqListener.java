@@ -11,18 +11,19 @@ import ru.geoserver.service.AuthService;
 import ru.geoserver.service.IGeoServer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Service
 public class MqListener {
 
     private static final Logger log = LoggerFactory.getLogger(MqListener.class);
 
-    private final MqEvents mqEvents;
+    private final IMqEvents mqEvents;
     private final IGeoServer geoServer;
     private final AuthService authService;
 
     @Autowired
-    public MqListener(MqEvents mqEvents, IGeoServer geoServer, AuthService authService) {
+    public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService) {
         this.mqEvents = mqEvents;
         this.geoServer = geoServer;
         this.authService = authService;
@@ -44,6 +45,17 @@ public class MqListener {
             }
         } catch (IOException e) {
             log.error("Неудалось создать организацию на геосервере: ", e);
+        }
+    }
+
+    @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
+    public void startValidation(final EntityType entityType) {
+        log.info("startValidation. Получено сообщение");
+
+        try {
+            mqEvents.validationResponse(new ArrayList<>());
+        } catch (Exception e) {
+            log.error("Неудалось провалидировать.", e);
         }
     }
 

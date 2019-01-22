@@ -2,6 +2,7 @@ package ru.mycrg.gis.service.fgistp.propertyTypes;
 
 import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
+import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,11 @@ public class GeometryProperty extends AbstractProperty {
         super(propertyDto);
 
         this.allowedValues = propertyDto.getAllowedValues();
+    }
+
+    @Override
+    public ConstraintViolationImpl validate(String propertyValue) {
+        return new ConstraintViolationImpl();
     }
 
     public List<String> getAllowedValues() {

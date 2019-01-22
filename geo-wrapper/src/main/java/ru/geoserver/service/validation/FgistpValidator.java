@@ -1,8 +1,7 @@
-package ru.mycrg.gis.service.validation;
+package ru.geoserver.service.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.service.fgistp.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;

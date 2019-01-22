@@ -6,9 +6,12 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.geoserver.config.MqProperties;
+import ru.geoserver.service.validation.IConstraintViolation;
+
+import java.util.List;
 
 @Service
-public class MqSender implements MqEvents {
+public class MqSender implements IMqEvents {
 
     private static final Logger log = LoggerFactory.getLogger(MqSender.class);
 
@@ -24,5 +27,12 @@ public class MqSender implements MqEvents {
         log.info("Send created event: {}", msg);
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_ORG_CREATED, MqProperties.KEY_ORG_CREATED, msg);
+    }
+
+    @Override
+    public void validationResponse(List<IConstraintViolation> violations) {
+        log.info("Send validationResponse");
+
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, violations);
     }
 }

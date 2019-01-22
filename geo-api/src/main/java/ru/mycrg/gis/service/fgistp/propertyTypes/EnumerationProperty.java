@@ -3,6 +3,7 @@ package ru.mycrg.gis.service.fgistp.propertyTypes;
 import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.service.fgistp.ValueTitleProjection;
 import ru.mycrg.gis.service.fgistp.enums.ValueType;
+import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,11 @@ public class EnumerationProperty extends AbstractProperty {
         super(propertyDto);
 
         this.enumerations = propertyDto.getEnumerations();
+    }
+
+    @Override
+    public ConstraintViolationImpl validate(String propertyValue) {
+        return new ConstraintViolationImpl();
     }
 
     public List<ValueTitleProjection> getEnumerations() {
