@@ -2,8 +2,8 @@ package unit;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import ru.geoserver.service.GeoServerPermissions;
-import ru.geoserver.service.GeoServerUtil;
+import ru.mycrg.wrapper.service.GeoServerPermissions;
+import ru.mycrg.wrapper.service.GeoServerUtil;
 
 import static junit.framework.TestCase.assertEquals;
 
