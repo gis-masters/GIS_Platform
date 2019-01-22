@@ -1,4 +1,4 @@
-package ru.geoserver.config;
+package ru.mycrg.common.config;
 
 public class MqProperties {
 
@@ -17,5 +17,4 @@ public class MqProperties {
     public static final String FANOUT_VALIDATION_RESULT = "fanout.validation.result";
     public static final String QUEUE_VALIDATION_RESULT = "validation.result";
     public static final String KEY_VALIDATION_RESULT = "key.validation.result";
-
 }

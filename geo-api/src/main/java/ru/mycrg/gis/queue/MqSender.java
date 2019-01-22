@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.gis.dto.MqOrganizationInit;
 
-import static ru.mycrg.gis.config.MqProperties.*;
+import static ru.mycrg.common.config.MqProperties.*;
 
 @Service
 public class MqSender implements IMqEvents {

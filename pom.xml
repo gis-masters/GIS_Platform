@@ -45,7 +45,7 @@
 		<module>jwt-service</module>
         <module>geo-wrapper</module>
         <module>geo-api</module>
-        <module>common</module>
+        <module>common-libs</module>
     </modules>
 
 </project>

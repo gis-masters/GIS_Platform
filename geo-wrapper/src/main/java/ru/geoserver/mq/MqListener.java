@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.geoserver.config.MqProperties;
 import ru.geoserver.dto.MqOrganizationInit;
 import ru.geoserver.service.AuthService;
 import ru.geoserver.service.IGeoServer;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.config.MqProperties;
 
 import java.io.IOException;
 import java.util.ArrayList;

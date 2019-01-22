@@ -10,8 +10,8 @@ import ru.mycrg.common.ValidationResponse;
 import ru.mycrg.gis.service.OrganizationService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
-import static ru.mycrg.gis.config.MqProperties.QUEUE_ORG_CREATED;
-import static ru.mycrg.gis.config.MqProperties.QUEUE_VALIDATION_RESULT;
+import static ru.mycrg.common.config.MqProperties.QUEUE_ORG_CREATED;
+import static ru.mycrg.common.config.MqProperties.QUEUE_VALIDATION_RESULT;
 
 @Component
 @EnableRabbit

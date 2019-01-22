@@ -9,8 +9,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.mycrg.common.config.MqProperties;
 
-import static ru.mycrg.gis.config.MqProperties.*;
+import static ru.mycrg.common.config.MqProperties.*;
 
 @Configuration
 public class RabbitConfiguration {
