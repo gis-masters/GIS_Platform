@@ -8,7 +8,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PostGisStorage {
@@ -19,10 +25,12 @@ public class PostGisStorage {
 
     private final Environment environment;
 
+    private HikariDataSource dataSource;
+
     @Autowired
     public PostGisStorage(JdbcTemplate jdbcTemplate, Environment environment) {
-        this.jdbcTemplate = jdbcTemplate;
         this.environment = environment;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void createDb(final String dbName) throws RuntimeException {
@@ -34,20 +42,51 @@ public class PostGisStorage {
         createExtensionForNewDb(dbName);
     }
 
+    public void getFromTable(final String dbName, final String schema, final String tableName) {
+        log.info(" --- {} / {} / {}", dbName, schema, tableName);
+
+//        try (Statement statement = getConnection(dbName).createStatement()) {
+//            statement.setFetchSize(50);
+//
+//            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + schema + "." + tableName);
+//            while (resultSet.next()) {
+//                log.info("# {}: {}", resultSet.getRow(), resultSet.getString("classid"));
+//            }
+//
+//            log.info(" --- {}", resultSet.getFetchSize());
+
+        try (HikariDataSource datasource = getDatasource(dbName)) {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+            jdbcTemplate.setFetchSize(50);
+
+            List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM " + schema + "." + tableName);
+
+            log.info(" --- {}", list.size());
+        } catch (RuntimeException e) {
+            log.error("Failed get rows: {}", e.getLocalizedMessage());
+
+            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
+        } finally {
+            // dataSource.close();
+        }
+
+        log.info("Successfully {}", "!!!");
+    }
+
+//    public Map<String, Object> getFromTable(final String tableName) throws RuntimeException {
+//        log.info("getAllFromTable: {}", tableName);
+//
+//        jdbcTemplate.setFetchSize(50);
+//
+//        Map<String, Object> result = jdbcTemplate.queryForMap("SELECT * FROM " + tableName);
+//
+//        return result;
+//    }
+
     private void createExtensionForNewDb(final String dbName) {
-        HikariDataSource newDataSource;
-
-        try {
-            newDataSource = new HikariDataSource();
-            newDataSource.setJdbcUrl(getConnectionUrl(dbName));
-            newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-            newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-            newDataSource.setMaximumPoolSize(1);
-
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(newDataSource);
+        try (HikariDataSource datasource = getDatasource(dbName)) {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
             jdbcTemplate.execute("CREATE EXTENSION postgis;");
-
-            newDataSource.close();
         } catch (RuntimeException e) {
             log.warn("Failed create extension: {}", e.getLocalizedMessage());
         }
@@ -58,6 +97,7 @@ public class PostGisStorage {
     // jdbc:postgresql://postgis:5432/postgres
     // jdbc:postgresql://127.0.0.1:5434/postgres
     // jdbc:postgresql://any-other-service-name:5434/postgres
+
     private String getConnectionUrl(String dbName) {
         String result;
 
@@ -67,4 +107,28 @@ public class PostGisStorage {
         log.info("Url to new Db: {}", result);
         return result;
     }
+    private Connection getConnection(String dbName) {
+        dataSource = getDatasource(dbName);
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            log.error("Failed get connection: {}", e.getLocalizedMessage());
+
+            throw new RuntimeException("Failed get connection: " + e.getLocalizedMessage());
+        }
+
+        return connection;
+    }
+
+    private HikariDataSource getDatasource(String dbName) {
+        HikariDataSource newDataSource = new HikariDataSource();
+        newDataSource.setJdbcUrl(getConnectionUrl(dbName));
+        newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
+        newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
+        newDataSource.setMaximumPoolSize(1);
+
+        return newDataSource;
+    }
+
 }

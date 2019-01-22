@@ -1,12 +1,12 @@
-package ru.mycrg.wrapper.service;
+package ru.mycrg.wrapper.service.geoserver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.wrapper.dao.PostGisStorage;
-import ru.mycrg.wrapper.service.rule.RulesService;
-import ru.mycrg.wrapper.service.storage.StorageService;
-import ru.mycrg.wrapper.service.user_role.UsersAndRolesService;
-import ru.mycrg.wrapper.service.workspace.WorkspacesService;
+import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
+import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
+import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
+import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 
 import java.io.IOException;
 

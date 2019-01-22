@@ -86,7 +86,7 @@ public class MapperUtil {
             log.warn("Not described types");
         }
 
-        return null;
+        return dto;
     }
 
     public static EntityType mapXsdRuleToEntityType(XsdRule xsdRule) {

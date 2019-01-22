@@ -1,13 +1,13 @@
-package ru.mycrg.wrapper.service.storage;
+package ru.mycrg.wrapper.service.geoserver.storage;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.service.GeoServerBaseService;
+import ru.mycrg.wrapper.service.geoserver.GeoServerBaseService;
 
 import java.io.IOException;
 
-import static ru.mycrg.wrapper.service.GeoServerConstants.JSON_MEDIA_TYPE;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.JSON_MEDIA_TYPE;
 
 @Service
 public class StorageService extends GeoServerBaseService {

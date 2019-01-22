@@ -15,6 +15,8 @@ public class FizProperties {
     private String geoserverHost;
     private String geoserverUser;
     private String geoserverPassword;
+
+    // TODO: Непонятно зачем это свойство дублирует основной jdbc url.
     private String postgisHost;
 
     public FizProperties() {}

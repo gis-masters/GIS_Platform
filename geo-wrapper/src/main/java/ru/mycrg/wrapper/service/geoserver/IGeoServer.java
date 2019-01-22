@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service;
+package ru.mycrg.wrapper.service.geoserver;
 
 import java.io.IOException;
 

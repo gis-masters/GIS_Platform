@@ -41,9 +41,8 @@ public class GisStorageDaoService {
      * @param workImport Данные импорта
      */
     public void doImport(WorkImport workImport) {
-        // checkWorkImport(workImport);
-
         log.info("Try import {} tasks", workImport.getImportTasks().size());
+
         Statement statement = null;
         try {
             statement = getConnection(workImport.getDbName()).createStatement();
@@ -260,7 +259,6 @@ public class GisStorageDaoService {
 
         return connection;
     }
-
 
     private String getConnectionUrl(String dbName) {
         String result;

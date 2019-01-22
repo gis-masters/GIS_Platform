@@ -1,13 +1,13 @@
-package ru.mycrg.wrapper.service.rule;
+package ru.mycrg.wrapper.service.geoserver.rule;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.service.GeoServerBaseService;
+import ru.mycrg.wrapper.service.geoserver.GeoServerBaseService;
 
 import java.io.IOException;
 
-import static ru.mycrg.wrapper.service.GeoServerConstants.XML_MEDIA_TYPE;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.XML_MEDIA_TYPE;
 
 @Service
 public class RulesService extends GeoServerBaseService {

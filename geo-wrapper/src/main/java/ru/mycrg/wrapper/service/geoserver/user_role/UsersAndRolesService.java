@@ -1,10 +1,10 @@
-package ru.mycrg.wrapper.service.user_role;
+package ru.mycrg.wrapper.service.geoserver.user_role;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.service.GeoServerBaseService;
-import ru.mycrg.wrapper.service.GeoServerConstants;
+import ru.mycrg.wrapper.service.geoserver.GeoServerBaseService;
+import ru.mycrg.wrapper.service.geoserver.GeoServerConstants;
 
 import java.io.IOException;
 
