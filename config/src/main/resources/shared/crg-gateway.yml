@@ -34,8 +34,8 @@ zuul:
       url: http://geo-api:8088/db/
 
     gis-rules:
-      path: /fgistp/rules/**
-      url: http://geo-api:8088/fgistp/rules/
+      path: /fgistp/**
+      url: http://geo-api:8088/fgistp/
 
     organizations:
       path: /organizations/**

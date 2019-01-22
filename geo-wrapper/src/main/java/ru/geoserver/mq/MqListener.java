@@ -9,7 +9,8 @@ import ru.geoserver.config.MqProperties;
 import ru.geoserver.dto.MqOrganizationInit;
 import ru.geoserver.service.AuthService;
 import ru.geoserver.service.IGeoServer;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ValidationResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,11 +51,11 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void startValidation(final EntityType entityType) {
-        log.info("Получено сообщение, startValidation for: {}", entityType.getTableName());
+    public void startValidation(final EntityTypeDto entityTypeDto) {
+        log.info("Получено сообщение, startValidation for: {}", entityTypeDto.getTableName());
 
         try {
-            // mqEvents.validationResponse(new ArrayList<>());
+            mqEvents.validationResponse(new ValidationResponse(true, new ArrayList<>()));
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
         }

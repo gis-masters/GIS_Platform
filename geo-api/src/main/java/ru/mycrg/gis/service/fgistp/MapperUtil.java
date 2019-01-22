@@ -8,29 +8,26 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.*;
-import ru.mycrg.gis.dto.EntityTypeDto;
-import ru.mycrg.gis.dto.SimplePropertyDto;
 import ru.mycrg.gis.entity.XsdRule;
 
 import java.io.IOException;
 import java.util.Optional;
 
-@Service
-public class RuleUtil {
+public class MapperUtil {
 
-    private static Logger log = LoggerFactory.getLogger(RuleUtil.class);
+    private static Logger log = LoggerFactory.getLogger(MapperUtil.class);
 
     @NotNull
-    XsdRule mapClassToEntity(EntityType entityType) {
+    public static XsdRule mapEntityTypeToXsdRule(EntityType entityType) {
         XsdRule xsdRule = new XsdRule();
         xsdRule.setClassName(entityType.getName());
 
         try {
-            JsonNode jsonNode = JacksonUtil.toJsonNode(getJson(new EntityTypeDto(entityType)));
+            JsonNode jsonNode = JacksonUtil.toJsonNode(getJson(mapEntityTypeToDto(entityType)));
             xsdRule.setClassRule(jsonNode);
         } catch (Exception e) {
             log.warn("Failed get json for: {} / With error: {}", entityType.getName(), e.getMessage());
@@ -39,7 +36,60 @@ public class RuleUtil {
         return xsdRule;
     }
 
-    public EntityType mapEntityToClass(XsdRule xsdRule) {
+    public static EntityTypeDto mapEntityTypeToDto(EntityType entityType) {
+        EntityTypeDto dto = new EntityTypeDto();
+        dto.setName(entityType.getName());
+        dto.setTitle(entityType.getTitle());
+        dto.setDescription(entityType.getDescription());
+        dto.setTableName(entityType.getTableName());
+
+        entityType.getProperties().forEach(abstractProperty -> {
+            dto.addProperty(mapPropertyToDto(abstractProperty));
+        });
+
+        return dto;
+    }
+
+    private static SimplePropertyDto mapPropertyToDto(AbstractProperty abstractProperty) {
+        SimplePropertyDto dto = new SimplePropertyDto();
+        dto.setName(abstractProperty.getName());
+        dto.setTitle(abstractProperty.getTitle());
+        dto.setDescription(abstractProperty.getDescription());
+        dto.setRequired(abstractProperty.isRequired());
+        dto.setHidden(abstractProperty.isHidden());
+        dto.setUpdateability(abstractProperty.getUpdateability());
+        dto.setMultiple(abstractProperty.isMultiple());
+        dto.setChoice(abstractProperty.getChoice());
+        dto.setValueType(abstractProperty.getValueType());
+
+        if (abstractProperty.getValueType() == ValueType.STRING) {
+            StringProperty stringProperty = (StringProperty) abstractProperty;
+
+            dto.setMinLength(stringProperty.getMinLength());
+            dto.setMaxLength(stringProperty.getMaxLength());
+            dto.setPattern(stringProperty.getPattern());
+            dto.setPatternDescription(stringProperty.getPatternDescription());
+        } else if (abstractProperty.getValueType() == ValueType.INT) {
+            IntegerProperty integerProperty = (IntegerProperty) abstractProperty;
+            dto.setMaxInclusive(integerProperty.getMaxInclusive());
+            dto.setMinInclusive(integerProperty.getMinInclusive());
+            dto.setTotalDigits(integerProperty.getTotalDigits());
+        } else if (abstractProperty.getValueType() == ValueType.GEOMETRY) {
+            GeometryProperty geometryProperty = (GeometryProperty) abstractProperty;
+            dto.setAllowedValues(geometryProperty.getAllowedValues());
+        } else if (abstractProperty.getValueType() == ValueType.CHOICE) {
+            EnumerationProperty enumerationProperty = (EnumerationProperty) abstractProperty;
+            dto.setEnumerations(enumerationProperty.getEnumerations());
+        } else if (abstractProperty instanceof DoubleProperty) {
+
+        } else {
+            log.warn("Not described types");
+        }
+
+        return null;
+    }
+
+    public static EntityType mapXsdRuleToEntityType(XsdRule xsdRule) {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
@@ -54,7 +104,7 @@ public class RuleUtil {
         return new EntityType(xsdRule.getClassName());
     }
 
-    private EntityType mapDtoToEntityType(EntityTypeDto dto) {
+    static private EntityType mapDtoToEntityType(EntityTypeDto dto) {
         EntityType entityType = new EntityType();
 
         entityType.setName(dto.getName());
@@ -69,7 +119,7 @@ public class RuleUtil {
         return entityType;
     }
 
-    private Optional<AbstractProperty> mapDtoToProperty(SimplePropertyDto propertyDto) {
+    static private Optional<AbstractProperty> mapDtoToProperty(SimplePropertyDto propertyDto) {
         if (propertyDto.getValueType() == ValueType.STRING) {
             StringProperty stringProperty = new StringProperty();
 
@@ -120,7 +170,7 @@ public class RuleUtil {
         }
     }
 
-    private void fillCommonField(AbstractProperty target, SimplePropertyDto dto) {
+    static private void fillCommonField(AbstractProperty target, SimplePropertyDto dto) {
         target.setName(dto.getName());
         target.setTitle(dto.getTitle());
         target.setDescription(dto.getDescription());
@@ -132,7 +182,7 @@ public class RuleUtil {
     }
 
     @Nullable
-    private String getJson(EntityTypeDto classType) throws JsonProcessingException {
+    static private String getJson(EntityTypeDto classType) throws JsonProcessingException {
         return new ObjectMapper().writer()
                 .withDefaultPrettyPrinter()
                 .writeValueAsString(classType);

@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.service.fgistp.parser;
 
 import org.apache.xerces.dom.DeferredElementImpl;
 import org.apache.xerces.impl.dv.xs.XSSimpleTypeDecl;
@@ -14,8 +14,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.common.propertyTypes.*;
+import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +32,7 @@ import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
 import static org.apache.xerces.xs.XSConstants.ELEMENT_DECLARATION;
 import static org.apache.xerces.xs.XSSimpleTypeDefinition.*;
-import static ru.mycrg.gis.service.fgistp.EntityTypeUtil.*;
+import static ru.mycrg.gis.service.fgistp.parser.EntityTypeUtil.*;
 
 @Service
 public class ClassDefinitionParser {

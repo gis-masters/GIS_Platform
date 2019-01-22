@@ -1,6 +1,6 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.service.fgistp.rules;
 
-import ru.mycrg.common.EntityType;
+import ru.mycrg.gis.service.fgistp.EntityType;
 
 public interface IFgistpRuleHolder {
 
@@ -9,5 +9,7 @@ public interface IFgistpRuleHolder {
     EntityType getRuleByClassName(String name);
 
     boolean isXsdRulesEmpty();
+
+    boolean isCacheEmpty();
 
 }

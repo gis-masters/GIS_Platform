@@ -1,35 +1,20 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.propertyTypes.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-// Inheritance other EntityType
-public class EntityType {
+public class EntityTypeDto {
 
     private String name;
     private String title;
     private String description;
     private String tableName;
-    private List<AbstractProperty> properties = new ArrayList<>();
+    private List<SimplePropertyDto> properties = new ArrayList<>();
 
-    public EntityType() {}
+    public EntityTypeDto() {}
 
-    public EntityType(String name) {
-        this.name = name;
-    }
-
-    public void addProperty(AbstractProperty property) {
-        properties.add(property);
-    }
-
-    public List<AbstractProperty> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<AbstractProperty> properties) {
-        this.properties = properties;
+    public void addProperty(SimplePropertyDto propertyDto) {
+        properties.add(propertyDto);
     }
 
     public String getName() {
@@ -62,5 +47,13 @@ public class EntityType {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public List<SimplePropertyDto> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<SimplePropertyDto> properties) {
+        this.properties = properties;
     }
 }

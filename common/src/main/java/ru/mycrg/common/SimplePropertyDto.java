@@ -1,6 +1,5 @@
-package ru.mycrg.gis.dto;
+package ru.mycrg.common;
 
-import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.common.enums.ChoiceType;
 import ru.mycrg.common.enums.Updateability;
 import ru.mycrg.common.enums.ValueType;
@@ -34,39 +33,6 @@ public class SimplePropertyDto {
     private String patternDescription = "";
 
     public SimplePropertyDto() {}
-
-    public SimplePropertyDto(AbstractProperty abstractProperty) {
-        this.name = abstractProperty.getName();
-        this.title = abstractProperty.getTitle();
-        this.description = abstractProperty.getDescription();
-        this.required = abstractProperty.isRequired();
-        this.hidden = abstractProperty.isHidden();
-        this.updateability = abstractProperty.getUpdateability();
-        this.isMultiple = abstractProperty.isMultiple();
-        this.choice = abstractProperty.getChoice();
-        this.valueType = abstractProperty.getValueType();
-
-        if (abstractProperty instanceof StringProperty) {
-            StringProperty stringProperty = (StringProperty) abstractProperty;
-            this.minLength = stringProperty.getMinLength();
-            this.maxLength = stringProperty.getMaxLength();
-            this.pattern = stringProperty.getPattern();
-            this.patternDescription = stringProperty.getPatternDescription();
-        } else if (abstractProperty instanceof IntegerProperty) {
-            IntegerProperty integerProperty = (IntegerProperty) abstractProperty;
-            this.minInclusive = integerProperty.getMinInclusive();
-            this.maxInclusive = integerProperty.getMaxInclusive();
-            this.totalDigits = integerProperty.getTotalDigits();
-        } else if (abstractProperty instanceof GeometryProperty) {
-            GeometryProperty geometryProperty = (GeometryProperty) abstractProperty;
-            this.allowedValues = geometryProperty.getAllowedValues();
-        } else if (abstractProperty instanceof EnumerationProperty) {
-            EnumerationProperty enumerationProperty = (EnumerationProperty) abstractProperty;
-            this.enumerations = enumerationProperty.getEnumerations();
-        } else if (abstractProperty instanceof DoubleProperty) {
-
-        }
-    }
 
     public String getName() {
         return name;

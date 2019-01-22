@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.service.fgistp.parser;
 
 import java.util.HashMap;
 import java.util.List;

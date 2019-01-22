@@ -1,14 +1,11 @@
 package ru.geoserver.mq;
 
-
-import ru.mycrg.common.ConstraintViolation;
-
-import java.util.List;
+import ru.mycrg.common.ValidationResponse;
 
 public interface IMqEvents {
 
     void created(Long msg);
 
-    void validationResponse(List<ConstraintViolation> violations);
+    void validationResponse(ValidationResponse response);
 
 }

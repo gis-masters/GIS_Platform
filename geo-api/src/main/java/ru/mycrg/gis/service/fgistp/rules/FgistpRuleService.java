@@ -1,14 +1,17 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.service.fgistp.rules;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.repository.XsdRuleRepository;
+import ru.mycrg.gis.service.fgistp.MapperUtil;
+import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,16 +32,14 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
     private FgistpRules fgistpRules = new FgistpRules();
 
-    private final RuleUtil ruleUtil;
     private final ClassDefinitionParser parser;
     private final XsdRuleRepository xsdRuleRepository;
     private final CustomRuleRepository customRuleRepository;
 
     @Autowired
-    public FgistpRuleService(ClassDefinitionParser parser, RuleUtil ruleUtil,
+    public FgistpRuleService(ClassDefinitionParser parser,
                              CustomRuleRepository customRuleRepository,
                              XsdRuleRepository xsdRuleRepository) {
-        this.ruleUtil = ruleUtil;
         this.parser = parser;
         this.xsdRuleRepository = xsdRuleRepository;
         this.customRuleRepository = customRuleRepository;
@@ -100,10 +101,15 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         return xsdRuleRepository.count() == 0;
     }
 
+    @Override
+    public boolean isCacheEmpty() {
+        return fgistpRules.getEntityTypes().isEmpty();
+    }
+
     private void persistXsdRules(FgistpRules rules) {
         rules
                 .getEntityTypes()
-                .forEach(classType -> xsdRuleRepository.save(ruleUtil.mapClassToEntity(classType)));
+                .forEach(classType -> xsdRuleRepository.save(MapperUtil.mapEntityTypeToXsdRule(classType)));
     }
 
     private void getRulesFromDb() {
@@ -113,7 +119,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
         xsdRuleRepository
                 .findAll()
-                .forEach(xsdRule -> classTypes.add(ruleUtil.mapEntityToClass(xsdRule)));
+                .forEach(xsdRule -> classTypes.add(MapperUtil.mapXsdRuleToEntityType(xsdRule)));
     }
 
     /**

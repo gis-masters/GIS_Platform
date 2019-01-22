@@ -6,9 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.geoserver.config.MqProperties;
-import ru.mycrg.common.ConstraintViolation;
-
-import java.util.List;
+import ru.mycrg.common.ValidationResponse;
 
 @Service
 public class MqSender implements IMqEvents {
@@ -30,9 +28,9 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void validationResponse(List<ConstraintViolation> violations) {
-        log.info("Send validationResponse");
+    public void validationResponse(ValidationResponse response) {
+        log.info("Send validation response");
 
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, violations);
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
     }
 }
