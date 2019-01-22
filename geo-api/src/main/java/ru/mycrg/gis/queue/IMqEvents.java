@@ -1,7 +1,7 @@
 package ru.mycrg.gis.queue;
 
+import ru.mycrg.common.EntityType;
 import ru.mycrg.gis.dto.MqOrganizationInit;
-import ru.mycrg.gis.service.fgistp.EntityType;
 
 public interface IMqEvents {
 

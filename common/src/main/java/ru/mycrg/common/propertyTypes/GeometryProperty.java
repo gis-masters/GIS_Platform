@@ -1,8 +1,6 @@
-package ru.mycrg.gis.service.fgistp.propertyTypes;
+package ru.mycrg.common.propertyTypes;
 
-import ru.mycrg.gis.dto.SimplePropertyDto;
-import ru.mycrg.gis.service.fgistp.enums.ValueType;
-import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
+import ru.mycrg.common.enums.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +17,6 @@ public class GeometryProperty extends AbstractProperty {
         super("Geometry", ValueType.GEOMETRY);
 
         this.allowedValues.add(name);
-    }
-
-    public GeometryProperty(SimplePropertyDto propertyDto) {
-        super(propertyDto);
-
-        this.allowedValues = propertyDto.getAllowedValues();
-    }
-
-    @Override
-    public ConstraintViolationImpl validate(String propertyValue) {
-        return new ConstraintViolationImpl();
     }
 
     public List<String> getAllowedValues() {

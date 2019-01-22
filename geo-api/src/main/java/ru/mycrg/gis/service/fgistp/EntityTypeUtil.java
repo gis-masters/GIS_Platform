@@ -2,16 +2,17 @@ package ru.mycrg.gis.service.fgistp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.service.fgistp.propertyTypes.EnumerationProperty;
-import ru.mycrg.gis.service.fgistp.propertyTypes.GeometryProperty;
-import ru.mycrg.gis.service.fgistp.propertyTypes.AbstractProperty;
+import ru.mycrg.common.EntityType;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.propertyTypes.EnumerationProperty;
+import ru.mycrg.common.propertyTypes.GeometryProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.mycrg.gis.service.fgistp.enums.ValueType.CHOICE;
+import static ru.mycrg.common.enums.ValueType.CHOICE;
 
 public class EntityTypeUtil {
 

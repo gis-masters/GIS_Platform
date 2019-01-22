@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp.enums;
+package ru.mycrg.common.enums;
 
 public enum ValueType {
     INT,

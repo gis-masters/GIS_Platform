@@ -2,12 +2,12 @@ package ru.mycrg.gis.unit;
 
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.propertyTypes.EnumerationProperty;
+import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.service.fgistp.XsdSimpleType;
-import ru.mycrg.gis.service.fgistp.propertyTypes.GeometryProperty;
-import ru.mycrg.gis.service.fgistp.propertyTypes.AbstractProperty;
 import ru.mycrg.gis.service.fgistp.FgistpRules;
-import ru.mycrg.gis.service.fgistp.propertyTypes.EnumerationProperty;
 import ru.mycrg.gis.service.fgistp.ClassDefinitionParser;
 
 import java.io.File;

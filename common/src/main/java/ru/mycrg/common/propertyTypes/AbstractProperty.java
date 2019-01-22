@@ -1,12 +1,8 @@
-package ru.mycrg.gis.service.fgistp.propertyTypes;
+package ru.mycrg.common.propertyTypes;
 
-import ru.mycrg.gis.dto.SimplePropertyDto;
-import ru.mycrg.gis.service.fgistp.enums.ChoiceType;
-import ru.mycrg.gis.service.fgistp.enums.Updateability;
-import ru.mycrg.gis.service.fgistp.enums.ValueType;
-import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
-
-import java.util.List;
+import ru.mycrg.common.enums.ChoiceType;
+import ru.mycrg.common.enums.Updateability;
+import ru.mycrg.common.enums.ValueType;
 
 public abstract class AbstractProperty {
 
@@ -36,20 +32,6 @@ public abstract class AbstractProperty {
         this.name = name;
         this.valueType = valueType;
     }
-
-    public AbstractProperty(SimplePropertyDto propertyDto) {
-        this.name = propertyDto.getName();
-        this.title = propertyDto.getTitle();
-        this.description = propertyDto.getDescription();
-        this.required = propertyDto.isRequired();
-        this.hidden = propertyDto.isHidden();
-        this.updateability = propertyDto.getUpdateability();
-        this.isMultiple = propertyDto.isMultiple();
-        this.choice = propertyDto.getChoice();
-        this.valueType = propertyDto.getValueType();
-    }
-
-    public abstract ConstraintViolationImpl validate(String propertyValue);
 
     public String getName() {
         return name;

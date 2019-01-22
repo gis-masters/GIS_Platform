@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
 import ru.mycrg.gis.service.fgistp.FgistpRules;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.fgistp.FgistpRuleNotFoundException;

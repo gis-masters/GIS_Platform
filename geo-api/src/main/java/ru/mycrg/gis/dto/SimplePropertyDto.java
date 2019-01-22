@@ -1,19 +1,15 @@
 package ru.mycrg.gis.dto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.service.fgistp.ValueTitleProjection;
-import ru.mycrg.gis.service.fgistp.enums.ChoiceType;
-import ru.mycrg.gis.service.fgistp.enums.Updateability;
-import ru.mycrg.gis.service.fgistp.enums.ValueType;
-import ru.mycrg.gis.service.fgistp.propertyTypes.*;
+import ru.mycrg.common.propertyTypes.ValueTitleProjection;
+import ru.mycrg.common.enums.ChoiceType;
+import ru.mycrg.common.enums.Updateability;
+import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.common.propertyTypes.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimplePropertyDto {
-
-    private static Logger log = LoggerFactory.getLogger(SimplePropertyDto.class);
 
     private String name;
     private String title;
@@ -69,8 +65,6 @@ public class SimplePropertyDto {
             this.enumerations = enumerationProperty.getEnumerations();
         } else if (abstractProperty instanceof DoubleProperty) {
 
-        } else {
-            log.warn("Describe new property here");
         }
     }
 

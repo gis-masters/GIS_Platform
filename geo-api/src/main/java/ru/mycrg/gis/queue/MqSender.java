@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.EntityType;
 import ru.mycrg.gis.dto.MqOrganizationInit;
-import ru.mycrg.gis.service.fgistp.EntityType;
 
 import static ru.mycrg.gis.config.MqProperties.*;
 

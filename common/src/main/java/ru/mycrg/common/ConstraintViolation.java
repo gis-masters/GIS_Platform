@@ -1,17 +1,17 @@
-package ru.mycrg.gis.service.validation;
+package ru.mycrg.common;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstraintViolationImpl implements IConstraintViolation {
+public class ConstraintViolation {
 
     private String name;
     private String value;
     private List<String> violations = new ArrayList<>();
 
-    public ConstraintViolationImpl() {}
+    public ConstraintViolation() {}
 
-    public ConstraintViolationImpl(String name, String value) {
+    public ConstraintViolation(String name, String value) {
         this.name = name;
         this.value = value;
     }

@@ -2,6 +2,8 @@ package ru.geoserver.service.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.common.ConstraintViolation;
+import ru.mycrg.common.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +14,18 @@ public class FgistpValidator implements IValidator {
     private static Logger log = LoggerFactory.getLogger(FgistpValidator.class);
 
     @Override
-    public List<ConstraintViolationImpl> validate(EntityType entityType, Map<String, String> data) {
-        List<ConstraintViolationImpl> violations = new ArrayList<>();
+    public List<ConstraintViolation> validate(EntityType entityType, Map<String, String> data) {
+        List<ConstraintViolation> violations = new ArrayList<>();
 
         entityType.getProperties().forEach(abstractProperty -> {
             String name = abstractProperty.getName();
             if (data.containsKey(name)) {
                 String propertyValue = data.get(name);
 
-                ConstraintViolationImpl violation = abstractProperty.validate(propertyValue);
-                if (!violation.getViolations().isEmpty()) {
-                    violations.add(violation);
-                }
+//                ConstraintViolation violation = abstractProperty.validate(propertyValue);
+//                if (!violation.getViolations().isEmpty()) {
+//                    violations.add(violation);
+//                }
             }
         });
 

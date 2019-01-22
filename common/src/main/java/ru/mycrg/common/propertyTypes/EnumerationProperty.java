@@ -1,9 +1,6 @@
-package ru.mycrg.gis.service.fgistp.propertyTypes;
+package ru.mycrg.common.propertyTypes;
 
-import ru.mycrg.gis.dto.SimplePropertyDto;
-import ru.mycrg.gis.service.fgistp.ValueTitleProjection;
-import ru.mycrg.gis.service.fgistp.enums.ValueType;
-import ru.mycrg.gis.service.validation.ConstraintViolationImpl;
+import ru.mycrg.common.enums.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +15,6 @@ public class EnumerationProperty extends AbstractProperty {
 
     public EnumerationProperty(String name) {
         super(name);
-    }
-
-    public EnumerationProperty(SimplePropertyDto propertyDto) {
-        super(propertyDto);
-
-        this.enumerations = propertyDto.getEnumerations();
-    }
-
-    @Override
-    public ConstraintViolationImpl validate(String propertyValue) {
-        return new ConstraintViolationImpl();
     }
 
     public List<ValueTitleProjection> getEnumerations() {
