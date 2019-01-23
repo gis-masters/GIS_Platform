@@ -37,7 +37,7 @@ public class MqListener {
 
     @RabbitListener(queues = QUEUE_VALIDATION_RESULT)
     public void validationResult(ValidationResponse response) {
-        log.info("Validation response: {}", response.isDone());
+        log.info("Validation response: {}", response.getStatus());
 
         validationService.progress(response);
     }

@@ -25,6 +25,22 @@ public class ValidationResponse {
         return status == ValidationStatus.DONE;
     }
 
+    public boolean isEmpty() {
+        return status == ValidationStatus.EMPTY;
+    }
+
+    public boolean isError() {
+        return status == ValidationStatus.EMPTY;
+    }
+
+    public boolean isPending() {
+        return status == ValidationStatus.PENDING;
+    }
+
+    public ValidationStatus getStatus() {
+        return status;
+    }
+
     public void setStatus(ValidationStatus status) {
         this.status = status;
     }

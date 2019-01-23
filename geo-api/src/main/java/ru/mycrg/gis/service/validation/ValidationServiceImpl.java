@@ -46,5 +46,9 @@ public class ValidationServiceImpl implements IValidationService {
         if (response.isDone()) {
             log.info("Validation done");
         }
+
+        if (response.isEmpty()) {
+            log.info("Try validate empty table!");
+        }
     }
 }

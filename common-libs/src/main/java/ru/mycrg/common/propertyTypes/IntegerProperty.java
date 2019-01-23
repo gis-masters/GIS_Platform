@@ -4,13 +4,12 @@ import ru.mycrg.common.enums.ValueType;
 
 public class IntegerProperty extends AbstractProperty {
 
+    private Integer minInclusive = -1;
+    private Integer maxInclusive = -1;
+
     public IntegerProperty() {
         super(ValueType.INT);
     }
-
-    private Integer minInclusive = -1;
-    private Integer maxInclusive = -1;
-    private Integer totalDigits = -1;
 
     public Integer getMinInclusive() {
         return minInclusive;
@@ -28,11 +27,4 @@ public class IntegerProperty extends AbstractProperty {
         this.maxInclusive = maxInclusive;
     }
 
-    public Integer getTotalDigits() {
-        return totalDigits;
-    }
-
-    public void setTotalDigits(Integer totalDigits) {
-        this.totalDigits = totalDigits;
-    }
 }

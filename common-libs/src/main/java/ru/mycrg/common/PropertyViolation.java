@@ -6,12 +6,12 @@ import java.util.List;
 public class PropertyViolation {
 
     private String name;
-    private String value;
+    private Object value;
     private List<String> errors = new ArrayList<>();
 
     public PropertyViolation() {}
 
-    public PropertyViolation(String name, String value) {
+    public PropertyViolation(String name, Object value) {
         this.name = name;
         this.value = value;
     }
@@ -24,11 +24,11 @@ public class PropertyViolation {
         this.name = name;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -36,8 +36,8 @@ public class PropertyViolation {
         return errors;
     }
 
-    public void addError(String msg) {
-        errors.add(msg);
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 
     public boolean hasErrors() {

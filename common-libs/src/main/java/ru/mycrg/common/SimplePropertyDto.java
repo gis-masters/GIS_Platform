@@ -14,23 +14,23 @@ public class SimplePropertyDto {
     private String title;
     private String description;
 
-    private boolean required;
     private boolean hidden;
+    private boolean isMultiple;
 
     private Updateability updateability;
-    private boolean isMultiple;
     private ChoiceType choice;
     private ValueType valueType;
 
-    private List<ValueTitleProjection> enumerations = new ArrayList<>();
-    private List<String> allowedValues = new ArrayList<>();
+    private boolean required;
+    private Integer minLength = -1;
+    private Integer maxLength = -1;
     private Integer minInclusive = -1;
     private Integer maxInclusive = -1;
     private Integer totalDigits = -1;
-    private Integer minLength = -1;
-    private Integer maxLength = -1;
     private String pattern;
     private String patternDescription = "";
+    private List<ValueTitleProjection> enumerations = new ArrayList<>();
+    private List<String> allowedValues = new ArrayList<>();
 
     public SimplePropertyDto() {}
 

@@ -240,17 +240,18 @@ public class ClassDefinitionParser {
 
             return Optional.of(stringProperty);
         } else if (simpleTypeDecl.getName().contains("double")) {
-            IntegerProperty integerProperty = new IntegerProperty();
+            DoubleProperty doubleProperty = new DoubleProperty();
 
-            return Optional.of(integerProperty);
+            setDoubleValues(simpleTypeDecl, doubleProperty);
+
+            return Optional.of(doubleProperty);
 
         } else if (simpleTypeDecl.getBaseType().getName().contains("decimal")) {
-            IntegerProperty integerProperty = new IntegerProperty();
+            DoubleProperty doubleProperty = new DoubleProperty();
 
-            setIntegerValues(simpleTypeDecl, integerProperty);
+            setDoubleValues(simpleTypeDecl, doubleProperty);
 
-            return Optional.of(integerProperty);
-
+            return Optional.of(doubleProperty);
         } else {
             log.warn("Not implemented yet");
 
@@ -268,10 +269,12 @@ public class ClassDefinitionParser {
         if (facetMaxInclusive != null) {
             integerProperty.setMaxInclusive(((XSFacet) facetMaxInclusive).getIntFacetValue());
         }
+    }
 
+    private void setDoubleValues(XSSimpleTypeDecl simpleTypeDecl, DoubleProperty doubleProperty) {
         XSObject facetTotal = simpleTypeDecl.getFacet(FACET_TOTALDIGITS);
         if (facetTotal != null) {
-            integerProperty.setTotalDigits(((XSFacet) facetTotal).getIntFacetValue());
+            doubleProperty.setTotalDigits(((XSFacet) facetTotal).getIntFacetValue());
         }
     }
 

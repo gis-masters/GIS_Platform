@@ -73,7 +73,6 @@ public class MapperUtil {
             IntegerProperty integerProperty = (IntegerProperty) abstractProperty;
             dto.setMaxInclusive(integerProperty.getMaxInclusive());
             dto.setMinInclusive(integerProperty.getMinInclusive());
-            dto.setTotalDigits(integerProperty.getTotalDigits());
         } else if (abstractProperty.getValueType() == ValueType.GEOMETRY) {
             GeometryProperty geometryProperty = (GeometryProperty) abstractProperty;
             dto.setAllowedValues(geometryProperty.getAllowedValues());
@@ -81,7 +80,8 @@ public class MapperUtil {
             EnumerationProperty enumerationProperty = (EnumerationProperty) abstractProperty;
             dto.setEnumerations(enumerationProperty.getEnumerations());
         } else if (abstractProperty instanceof DoubleProperty) {
-
+            DoubleProperty doubleProperty = (DoubleProperty) abstractProperty;
+            dto.setTotalDigits(doubleProperty.getTotalDigits());
         } else {
             log.warn("Not described types");
         }
@@ -138,7 +138,6 @@ public class MapperUtil {
 
             integerProperty.setMaxInclusive(propertyDto.getMaxInclusive());
             integerProperty.setMinInclusive(propertyDto.getMinInclusive());
-            integerProperty.setTotalDigits(propertyDto.getTotalDigits());
 
             return Optional.of(integerProperty);
         } else if (propertyDto.getValueType() == ValueType.GEOMETRY) {
@@ -161,6 +160,8 @@ public class MapperUtil {
             DoubleProperty doubleProperty = new DoubleProperty();
 
             fillCommonField(doubleProperty, propertyDto);
+
+            doubleProperty.setTotalDigits(propertyDto.getTotalDigits());
 
             return Optional.of(doubleProperty);
         } else {
