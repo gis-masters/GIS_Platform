@@ -28,6 +28,7 @@ public class ValidatorImpl implements IValidator {
     private MaxInclusiveValidation maxInclusiveValidation = new MaxInclusiveValidation();
     private TotalDigitsValidation totalDigitsValidation = new TotalDigitsValidation();
     private IsLongTypeValidation isLongTypeValidation = new IsLongTypeValidation();
+    private EnumerationValidation enumerationValidation = new EnumerationValidation();
 
     @Override
     public ConstraintViolation validate(EntityTypeDto entityType, Map<String, Object> data) {
@@ -88,6 +89,10 @@ public class ValidatorImpl implements IValidator {
         } else if (propertyType.getValueType() == ValueType.DOUBLE) {
             if (!totalDigitsValidation.isValid(value, propertyType)) {
                 violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
+            }
+        } else if (propertyType.getValueType() == ValueType.CHOICE) {
+            if (!enumerationValidation.isValid(value, propertyType)) {
+                violations.add("Значение из списка");
             }
         }
 

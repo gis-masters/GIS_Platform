@@ -5,6 +5,7 @@ import ru.mycrg.common.ConstraintViolation;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
@@ -68,6 +69,16 @@ public class ValidatorTest {
         validDouble.setName("validDouble");
         validDouble.setTotalDigits(10);
 
+        List<ValueTitleProjection> enumerations = new ArrayList<>();
+        enumerations.add(new ValueTitleProjection("1", "t1"));
+        enumerations.add(new ValueTitleProjection("2", "t2"));
+        enumerations.add(new ValueTitleProjection("3", "t3"));
+
+        SimplePropertyDto validEnum = new SimplePropertyDto();
+        validEnum.setValueType(ValueType.CHOICE);
+        validEnum.setName("validEnum");
+        validEnum.setEnumerations(enumerations);
+
         List<SimplePropertyDto> properties = new ArrayList<>();
         properties.add(classId);
         properties.add(shortClassId);
@@ -77,6 +88,7 @@ public class ValidatorTest {
         properties.add(validInt);
         properties.add(notValidInt);
         properties.add(validDouble);
+        properties.add(validEnum);
 
         EntityTypeDto entityType = new EntityTypeDto();
         entityType.setName("Fiz_Type");
@@ -95,6 +107,7 @@ public class ValidatorTest {
         rowFromDb.put("valid_INT", "5");
         rowFromDb.put("not_valid_INT", "not_valid_value");
         rowFromDb.put("validDouble", 3.1415);
+        rowFromDb.put("validEnum", "3");
 
         ConstraintViolation constraintViolation = validator.validate(entityType, rowFromDb);
 
