@@ -5,11 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ValidationRequest;
+import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
-import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
@@ -53,13 +55,14 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void startValidation(final EntityTypeDto entityTypeDto) {
-        log.info("Получено сообщение, startValidation for: {}", entityTypeDto.getTableName());
+    public void startValidation(final ValidationRequest validationRequest) {
+        log.info("Получено сообщение, startValidation");
 
         try {
-            validationService.startValidation(entityTypeDto);
+            validationService.startValidation(validationRequest);
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
+            mqEvents.validationResponse(new ValidationResponse(ValidationStatus.ERROR));
         }
     }
 

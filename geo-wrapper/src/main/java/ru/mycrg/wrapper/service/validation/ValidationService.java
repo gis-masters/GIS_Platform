@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ConstraintViolation;
 import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ValidationRequest;
 import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ValidationService {
@@ -32,11 +32,34 @@ public class ValidationService {
         this.postGisStorage = postGisStorage;
     }
 
-    public void startValidation(EntityTypeDto entityTypeDto) {
-        postGisStorage.getFromTable("gis", "fiz", entityTypeDto.getTableName());
+    public void startValidation(ValidationRequest validationRequest) {
+        EntityTypeDto entityTypeDto = validationRequest.getEntityType();
+        String dbName = validationRequest.getDbName();
+        String schemaName = validationRequest.getSchemaName();
 
-        List<ConstraintViolation> violations = validator.validate(entityTypeDto, new HashMap<>());
+        List<Map<String, Object>> allRows = postGisStorage.fetchAllRows(dbName, schemaName, entityTypeDto.getTableName());
+        if (allRows.isEmpty()) {
+            mqEvents.validationResponse(new ValidationResponse(ValidationStatus.EMPTY));
+        }
 
-        mqEvents.validationResponse(new ValidationResponse(true, violations));
+        List<ConstraintViolation> violations = new ArrayList<>();
+        int i = 0;
+        while (i < allRows.size()) {
+            ConstraintViolation violation = validator.validate(entityTypeDto, allRows.get(i));
+
+            if (i % BATCH_SIZE == 0) {
+                violations.add(violation);
+                mqEvents.validationResponse(
+                        new ValidationResponse(ValidationStatus.PENDING, Collections.unmodifiableList(violations)));
+
+                violations.clear();
+            } else {
+                violations.add(violation);
+            }
+
+            i++;
+        }
+
+        mqEvents.validationResponse(new ValidationResponse(ValidationStatus.DONE, violations));
     }
 }

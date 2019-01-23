@@ -5,39 +5,28 @@ import java.util.List;
 
 public class ConstraintViolation {
 
-    private String name;
-    private String value;
-    private List<String> violations = new ArrayList<>();
+    private String id;
+    private List<PropertyViolation> propertyViolations = new ArrayList<>();
 
     public ConstraintViolation() {}
 
-    public ConstraintViolation(String name, String value) {
-        this.name = name;
-        this.value = value;
+    public ConstraintViolation(String id) {
+        this.id = id;
     }
 
-    public void addViolation(String msg) {
-        this.violations.add(msg);
+    public void addPropertyViolation(PropertyViolation propertyViolation) {
+        this.propertyViolations.add(propertyViolation);
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getValue() {
-        return value;
+    public List<PropertyViolation> getPropertyViolations() {
+        return propertyViolations;
     }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public List<String> getViolations() {
-        return violations;
-    }
-
 }

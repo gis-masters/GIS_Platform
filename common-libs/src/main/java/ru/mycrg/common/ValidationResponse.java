@@ -1,27 +1,32 @@
 package ru.mycrg.common;
 
+import ru.mycrg.common.enums.ValidationStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationResponse {
 
-    private boolean done;
-
+    private ValidationStatus status;
     private List<ConstraintViolation> violations = new ArrayList<>();
 
     public ValidationResponse() {}
 
-    public ValidationResponse(boolean done, List<ConstraintViolation> violations) {
-        this.done = done;
+    public ValidationResponse(ValidationStatus status) {
+        this.status = status;
+    }
+
+    public ValidationResponse(ValidationStatus status, List<ConstraintViolation> violations) {
+        this.status = status;
         this.violations = violations;
     }
 
     public boolean isDone() {
-        return done;
+        return status == ValidationStatus.DONE;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setStatus(ValidationStatus status) {
+        this.status = status;
     }
 
     public List<ConstraintViolation> getViolations() {

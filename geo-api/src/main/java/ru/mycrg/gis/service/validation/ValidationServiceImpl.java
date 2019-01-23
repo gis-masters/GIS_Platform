@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ValidationRequest;
 import ru.mycrg.common.ValidationResponse;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.service.fgistp.EntityType;
@@ -25,15 +26,19 @@ public class ValidationServiceImpl implements IValidationService {
     }
 
     @Override
-    public void initValidation(String className) {
-
+    public void initValidation(String tableName) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
-        EntityType entityType = ruleService.getRuleByClassName(className);
+        EntityType entityType = ruleService.getRuleByClassName(tableName);
 
-        mqSender.startValidation(MapperUtil.mapEntityTypeToDto(entityType));
+        ValidationRequest payload = new ValidationRequest();
+        payload.setDbName("gis");
+        payload.setSchemaName("fiz");
+        payload.setEntityType(MapperUtil.mapEntityTypeToDto(entityType));
+
+        mqSender.startValidation(payload);
     }
 
     @Override
