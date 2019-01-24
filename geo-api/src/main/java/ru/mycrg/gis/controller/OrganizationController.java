@@ -14,12 +14,11 @@ import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.exceptions.OrganizationCreateException;
-import ru.mycrg.gis.queue.MqEvents;
+import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -29,11 +28,11 @@ public class OrganizationController {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
-    private final MqEvents mqEvents;
+    private final IMqEvents mqEvents;
     private final OrganizationService organizationService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService, MqEvents mqEvents) {
+    public OrganizationController(OrganizationService organizationService, IMqEvents mqEvents) {
         this.mqEvents = mqEvents;
         this.organizationService = organizationService;
     }

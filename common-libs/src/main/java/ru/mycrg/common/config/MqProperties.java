@@ -1,0 +1,20 @@
+package ru.mycrg.common.config;
+
+public class MqProperties {
+
+    public static final String FANOUT_ORG_INIT = "fanout.org.init";
+    public static final String QUEUE_ORG_INIT = "org.init";
+    public static final String KEY_ORG_INIT = "init.key";
+
+    public static final String FANOUT_ORG_CREATED = "fanout.org.created";
+    public static final String QUEUE_ORG_CREATED = "org.created";
+    public static final String KEY_ORG_CREATED = "created.key";
+
+    public static final String FANOUT_VALIDATION_START = "fanout.validation.start";
+    public static final String QUEUE_VALIDATION_START = "validation.start";
+    public static final String KEY_VALIDATION_START = "key.validation.start";
+
+    public static final String FANOUT_VALIDATION_RESULT = "fanout.validation.result";
+    public static final String QUEUE_VALIDATION_RESULT = "validation.result";
+    public static final String KEY_VALIDATION_RESULT = "key.validation.result";
+}

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis.dto.TableProjection;
 import ru.mycrg.gis.service.GisStorageDaoService;
 import ru.mycrg.gis.service.WorkImport;
-import ru.mycrg.gis.service.fgistp.FgistpRuleService;
 
 import java.util.List;
 

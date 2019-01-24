@@ -8,7 +8,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 20000
 
 eureka:
   instance:
@@ -17,10 +17,10 @@ eureka:
     serviceUrl:
       defaultZone: http://registry:8761/eureka/
 
-security:
-  oauth2:
-    resource:
-      user-info-uri: http://auth-service:5000/uaa/users/current
+#security:
+#  oauth2:
+#    resource:
+#      user-info-uri: http://auth-service:5000/uaa/users/current
 
 spring:
   rabbitmq:
