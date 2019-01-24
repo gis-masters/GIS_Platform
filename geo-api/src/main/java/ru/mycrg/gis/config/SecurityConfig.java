@@ -32,7 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Bean
@@ -54,15 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .cors().and()
-//                .csrf().disable()
-//                .authorizeRequests()
-//                .anyRequest().permitAll(); //authenticated()
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -77,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Add a filter to validate the tokens with every request
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
-                .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations").permitAll()
+                .antMatchers(HttpMethod.POST, "/organizations").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 

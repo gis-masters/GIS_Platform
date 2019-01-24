@@ -65,11 +65,15 @@ public class FgistpController {
     @ResponseBody
     @GetMapping("/fgistp/validation/{name}")
     public HttpStatus initValidation(@PathVariable String name, Principal principal) {
-        log.info("Request validation: {}", principal);
+        log.info("Request validation: {}", name);
+
+        if (principal != null) {
+            log.info("Principal: {}", principal.getName());
+        }
 
         // validationService.initValidation(name);
 
-        return HttpStatus.OK;
+        return HttpStatus.ACCEPTED;
     }
 
 }
