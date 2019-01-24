@@ -13,6 +13,8 @@ import ru.mycrg.gis.service.validation.IValidationService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
+import java.security.Principal;
+
 @Controller
 public class FgistpController {
 
@@ -62,10 +64,10 @@ public class FgistpController {
 
     @ResponseBody
     @GetMapping("/fgistp/validation/{name}")
-    public HttpStatus initValidation(@PathVariable String name) {
-        log.info("Request validation: {}", name);
+    public HttpStatus initValidation(@PathVariable String name, Principal principal) {
+        log.info("Request validation: {}", principal);
 
-        validationService.initValidation(name);
+        // validationService.initValidation(name);
 
         return HttpStatus.OK;
     }
