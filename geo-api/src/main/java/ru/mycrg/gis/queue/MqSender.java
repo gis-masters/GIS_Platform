@@ -5,14 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ValidationRequest;
 import ru.mycrg.gis.dto.MqOrganizationInit;
 
-import static ru.mycrg.gis.config.MqProperties.*;
+import static ru.mycrg.common.config.MqProperties.*;
 
 @Service
-public class MqSender implements MqEvents {
+public class MqSender implements IMqEvents {
 
-    private static final Logger log = LoggerFactory.getLogger(MqEvents.class);
+    private static final Logger log = LoggerFactory.getLogger(IMqEvents.class);
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -26,6 +27,13 @@ public class MqSender implements MqEvents {
         log.info("Send init event: {}", creationDto.toString());
 
         rabbitTemplate.convertAndSend(FANOUT_ORG_INIT, KEY_ORG_INIT, creationDto);
+    }
+
+    @Override
+    public void startValidation(ValidationRequest payload) {
+        log.info("Queue startValidation");
+
+        rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload);
     }
 
 }

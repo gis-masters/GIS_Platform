@@ -9,7 +9,6 @@ import ru.mycrg.gis.config.GisStorageProperties;
 import ru.mycrg.gis.dto.ColumnProjection;
 import ru.mycrg.gis.dto.TableProjection;
 import ru.mycrg.gis.exceptions.GisException;
-import ru.mycrg.gis.exceptions.GisImportColumnException;
 import ru.mycrg.gis.exceptions.GisSqlException;
 
 import java.sql.*;
@@ -33,6 +32,46 @@ public class GisStorageDaoService {
         this.storageProperties = storageProperties;
     }
 
+    /**
+     * Импорт проходит в три этапа:
+     *  - Очистка таблицы
+     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs"
+     *  - Перенос из исходной таблицы в рабочую
+     *
+     * @param workImport Данные импорта
+     */
+    public void doImport(WorkImport workImport) {
+        log.info("Try import {} tasks", workImport.getImportTasks().size());
+
+        Statement statement = null;
+        try {
+            statement = getConnection(workImport.getDbName()).createStatement();
+
+            List<ImportTask> importTasks = workImport.getImportTasks();
+            for (ImportTask importTask : importTasks) {
+                importTable(workImport, statement, importTask);
+            }
+        } catch (SQLException e) {
+            log.error("Failed get statement: {}", e.getLocalizedMessage());
+
+            throw new GisSqlException("Failed get statement: " + e.getLocalizedMessage());
+        } finally {
+            try {
+                assert statement != null;
+                statement.close();
+                dataSource.close();
+            } catch (SQLException e) {
+                log.error("Failed free resources: ", e.getLocalizedMessage());
+            }
+        }
+    }
+
+    /**
+     * Получить все таблицы по указанным параметрам.
+     * @param dbName Название БД
+     * @param schemaPattern Название схемы.
+     * @return
+     */
     public List<TableProjection> getAllTables(final String dbName, final String schemaPattern) {
         List<TableProjection> tablesProjection = new ArrayList<>();
         try {
@@ -74,41 +113,6 @@ public class GisStorageDaoService {
 
         log.info("Successfully {}", tablesProjection.size());
         return tablesProjection;
-    }
-
-    /**
-     * Импорт проходит в три этапа:
-     *  - Очистка таблицы
-     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs"
-     *  - Перенос из исходной таблицы в рабочую
-     *
-     * @param workImport Данные импорта
-     */
-    public void doImport(WorkImport workImport) {
-        // checkWorkImport(workImport);
-
-        log.info("Try import {} tasks", workImport.getImportTasks().size());
-        Statement statement = null;
-        try {
-            statement = getConnection(workImport.getDbName()).createStatement();
-
-            List<ImportTask> importTasks = workImport.getImportTasks();
-            for (ImportTask importTask : importTasks) {
-                importTable(workImport, statement, importTask);
-            }
-        } catch (SQLException e) {
-            log.error("Failed get statement: {}", e.getLocalizedMessage());
-
-            throw new GisSqlException("Failed get statement: " + e.getLocalizedMessage());
-        } finally {
-            try {
-                assert statement != null;
-                statement.close();
-                dataSource.close();
-            } catch (SQLException e) {
-                log.error("Failed free resources: ", e.getLocalizedMessage());
-            }
-        }
     }
 
     private void importTable(WorkImport workImport, Statement statement, ImportTask importTask) {
@@ -237,34 +241,6 @@ public class GisStorageDaoService {
         return targetColumns + sourceColumns.toString();
     }
 
-    /**
-     * Проверим что импорт содержит обязательные поля.
-     * И вообще существует таблица в которую хотим импортить.
-     */
-    private void checkWorkImport(WorkImport workImport) {
-        log.info("checkWorkImport");
-
-        workImport.getImportTasks().forEach(importTask -> {
-            String workTableName = importTask.getWorkTableName();
-
-//            requiredInfos
-//                    .stream()
-//                    .filter(requiredInfo -> requiredInfo.getTableName().equals(workTableName))
-//                    .findFirst()
-//                    .orElseThrow(() -> new GisImportTableException(workTableName))
-//                    .getColumns().forEach(columnName -> checkColumn(importTask, workTableName, columnName));
-        });
-    }
-
-    private void checkColumn(ImportTask importTask, String workTableName, String columnName) {
-        importTask
-                .getMapping()
-                .stream()
-                .filter(geoMapping -> geoMapping.getTarget().getName().equals(columnName))
-                .findFirst()
-                .orElseThrow(() -> new GisImportColumnException(workTableName, columnName));
-    }
-
     private Connection getConnection(String dbName) {
         dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(getConnectionUrl(dbName));
@@ -283,7 +259,6 @@ public class GisStorageDaoService {
 
         return connection;
     }
-
 
     private String getConnectionUrl(String dbName) {
         String result;
