@@ -39,7 +39,8 @@ public class GeoServer implements IGeoServer {
         usersAndRolesService.createRole(roleName);
         usersAndRolesService.createUser(userName, rawPassword);
         usersAndRolesService.associateUserWithRole(userName, roleName);
-        rulesService.addRule(GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), roleName);
+        rulesService.addLayersRule(GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), roleName);
+        rulesService.addRestRule(roleName);
 
         postGisStorage.createDb("database_" + id);
 

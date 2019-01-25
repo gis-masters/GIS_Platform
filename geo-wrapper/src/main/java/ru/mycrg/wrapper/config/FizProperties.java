@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-// TODO: При следующем удобном случае поменять префикс
+// TODO(2): При следующем удобном случае поменять префикс
 
 @Component
 @ConfigurationProperties(prefix="fiz")
@@ -23,7 +23,8 @@ public class FizProperties {
 
     @NotNull
     public String getGeoserverHost() {
-        return Optional.ofNullable(geoserverHost).orElseThrow(() -> new IllegalStateException("Not set getGeoserverHost"));
+        return Optional.ofNullable(geoserverHost)
+                       .orElseThrow(() -> new IllegalStateException("Not set getGeoserverHost"));
     }
 
     public void setGeoserverHost(String geoserverHost) {
@@ -32,7 +33,8 @@ public class FizProperties {
 
     @NotNull
     public String getPostgisHost() {
-        return Optional.ofNullable(postgisHost).orElseThrow(() -> new IllegalStateException("Not set postgisHost"));
+        return Optional.ofNullable(postgisHost)
+                       .orElseThrow(() -> new IllegalStateException("Not set postgisHost"));
     }
 
     public void setPostgisHost(String postgisHost) {
@@ -41,7 +43,8 @@ public class FizProperties {
 
     @NotNull
     public String getGeoserverUser() {
-        return Optional.ofNullable(geoserverUser).orElseThrow(() -> new IllegalStateException("Not set dbOwnerUser"));
+        return Optional.ofNullable(geoserverUser)
+                       .orElseThrow(() -> new IllegalStateException("Not set dbOwnerUser"));
     }
 
     public void setGeoserverUser(String geoserverUser) {
@@ -50,7 +53,8 @@ public class FizProperties {
 
     @NotNull
     public String getGeoserverPassword() {
-        return Optional.ofNullable(geoserverPassword).orElseThrow(() -> new IllegalStateException("Not set dbOwnerPassword"));
+        return Optional.ofNullable(geoserverPassword)
+                       .orElseThrow(() -> new IllegalStateException("Not set dbOwnerPassword"));
     }
 
     public void setGeoserverPassword(String geoserverPassword) {
