@@ -14,6 +14,7 @@ export class ServerPropertiesService {
   private _authServerUrl = this._baseUrl + '/oauth/token';
   private _organizationsUrl = this._baseUrl + '/organizations';
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
+  private _validationUrl = this._baseUrl + '/fgistp/validation';
 
   constructor() {
   }
@@ -72,6 +73,14 @@ export class ServerPropertiesService {
 
   set rulesUrl(value: string) {
     this._rulesUrl = value;
+  }
+
+  get validationUrl(): string {
+    return this._validationUrl;
+  }
+
+  set validationUrl(value: string) {
+    this._validationUrl = value;
   }
 
 }

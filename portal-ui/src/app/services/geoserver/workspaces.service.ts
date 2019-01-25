@@ -6,7 +6,6 @@ import {catchError, map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {NameHrefProjection} from './projections';
 import {TaskImport, WorkImport} from './import.service';
-import {TokenStorageService} from '../token-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -19,7 +18,6 @@ export class WorkspacesService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
-              private tokenStorage: TokenStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
   }

@@ -1,7 +1,4 @@
-.import-toolbar {
-  height: 40px;
-  margin-bottom: 20px;
-}
+@import url(../../_app/app.component.css);
 
 .card-header-fiz {
   background: rgba(0, 0, 0, .05);
