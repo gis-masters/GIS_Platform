@@ -6,7 +6,26 @@
   <mat-card>
     <div class="row">
 
+      <mat-accordion class="validation_accordion">
+        <mat-expansion-panel *ngFor="let layer of layers"
+                             [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{layer.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          {{layer.href}}
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="nextStep()">Next</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+
     </div>
   </mat-card>
-
 </div>
