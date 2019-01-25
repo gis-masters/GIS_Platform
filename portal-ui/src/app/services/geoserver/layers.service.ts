@@ -1,10 +1,11 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {catchError} from 'rxjs/operators';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
+import {catchError, filter, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {environment} from "../../../environments/environment";
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -21,10 +22,15 @@ export class LayersService {
     logger.info('LayersService start');
   }
 
-  getAll(): Observable<GeoLayer | any> {
+  getAll(): Observable<NameHrefProjection[] | any> {
     return this.http
                .get<GeoLayer>(this.layersUrl)
                .pipe(
+                 filter(value => value && !!value['layers']),
+                 map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
+                 map((layers: NameHrefProjection[]) => {
+                   return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+                 }),
                  catchError(this.baseService.handleError('getLayers', []))
                );
   }
