@@ -3,7 +3,7 @@ import {filter} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {environment} from '../../../../environments/environment';
-import {GisDbService} from '../../../services/geoserver/gis-db.service';
+import {GisDbService} from '../../../services/gis/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {EntityDefinition, GisService} from "../../../services/gis/rules.service";

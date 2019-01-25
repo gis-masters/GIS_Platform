@@ -1,10 +1,14 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
+import {filter, flatMap, map, tap} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material";
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
-import {LayersService} from "../../../services/geoserver/layers.service";
+import {ValidationService} from "../../../services/validation.service";
 import {NameHrefProjection} from "../../../services/geoserver/projections";
+import {DatastoreService} from "../../../services/geoserver/datastore.service";
+import {Layer, LayersService} from "../../../services/geoserver/layers.service";
+import {from, of} from "rxjs";
 
 @Component({
   selector: 'crg-validation',
@@ -37,6 +41,8 @@ export class ValidationComponent implements OnInit {
   constructor(private logger: NGXLogger,
               private router: Router,
               private snackBar: MatSnackBar,
+              private datastoreService: DatastoreService,
+              private validationService: ValidationService,
               private authService: AuthService,
               private layersService: LayersService) {
     // this.authService.validateAuth();
@@ -44,10 +50,21 @@ export class ValidationComponent implements OnInit {
 
   ngOnInit() {
     this.layersService.getAll()
-        .subscribe((layers: NameHrefProjection[]) => {
-          // this.layers = layers;
-
-          this.logger.info('layersService.getAll: ', this.layers);
+        .pipe(
+          flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
+          tap(console.log),
+          filter((layers: Layer[]) => !!layers),
+          tap(console.log),
+          flatMap((layers: Layer[]) => {
+            if (layers && layers[0].resource) {
+              return this.datastoreService.getByLayersResource(layers);
+            } else {
+              this.logger.info('=');
+            }
+          }),
+        )
+        .subscribe((layers: any) => {
+          this.logger.info(' ++++ ', layers);
         });
   }
 
