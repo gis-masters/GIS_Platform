@@ -1,0 +1,15 @@
+import {Layer} from "../geoserver/layers.service";
+
+export class StringUtil {
+
+  // Все свойства обьекта, в том месте где этот метод используется, indefined, хотя в консоле обьект полный.
+  static getHrefFromBlyadskiyJson(layer: Layer): string {
+    let layerAsString = JSON.stringify(layer);
+
+    return layerAsString
+      .split('resource')[1]
+      .split('"href":"')[1]
+      .split('"}')[0]
+      .split('/featuretypes')[0];
+  }
+}

@@ -7,7 +7,6 @@ import {catchError, filter, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {ServerPropertiesService} from '../server-properties.service';
-import {ImportTasks, ImportTaskShort} from "./import.service";
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +42,7 @@ export class LayersService {
    * Получить полную информация о слое
    * @param layer Простое предствление слоя
    */
-  getLayer(layer: NameHrefProjection): Observable<Layer | any> {
+  getLayer(layer: NameHrefProjection): Observable<Layer> {
     return this.http
                .get<Layer>(layer.href);
   }

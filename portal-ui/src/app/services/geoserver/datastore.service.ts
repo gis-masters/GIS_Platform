@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Layer} from "./layers.service";
 import {NameHrefProjection} from "./projections";
+import {StringUtil} from "../util/StringUtil";
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,7 @@ export class DatastoreService {
   }
 
   getByLayerResource(layer: Layer): Observable<any> {
-    const newLayer: Layer = undefined;
-    Object.assign(newLayer, layer);
-
-    this.logger.info(' * - * ', layer, newLayer);
-
-    let url = newLayer.resource.href.split('/featuretypes/')[0];
+    let url = StringUtil.getHrefFromBlyadskiyJson(layer);
 
     this.logger.info(' ------------ ', url);
 

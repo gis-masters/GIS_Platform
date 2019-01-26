@@ -1,6 +1,6 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter, flatMap, map, tap} from "rxjs/operators";
+import {filter, flatMap, tap} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material";
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
@@ -8,7 +8,6 @@ import {ValidationService} from "../../../services/validation.service";
 import {NameHrefProjection} from "../../../services/geoserver/projections";
 import {DatastoreService} from "../../../services/geoserver/datastore.service";
 import {Layer, LayersService} from "../../../services/geoserver/layers.service";
-import {from, of} from "rxjs";
 
 @Component({
   selector: 'crg-validation',
@@ -49,23 +48,37 @@ export class ValidationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.layersService.getAll()
-        .pipe(
-          flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
-          tap(console.log),
-          filter((layers: Layer[]) => !!layers),
-          tap(console.log),
-          flatMap((layers: Layer[]) => {
-            if (layers && layers[0].resource) {
-              return this.datastoreService.getByLayersResource(layers);
-            } else {
-              this.logger.info('=');
-            }
-          }),
-        )
-        .subscribe((layers: any) => {
-          this.logger.info(' ++++ ', layers);
+    let data = [
+      {
+        dbName: 'gis',
+        schemaName: 'fiz',
+        tableName: 'electrictransformer'
+      },
+      {
+        dbName: 'gis',
+        schemaName: 'fiz',
+        tableName: 'electricline'
+      },
+    ];
+
+    this.validationService
+        .validateLayers(data)
+        .subscribe(value => {
+          this.logger.info('---', value);
         });
+
+
+    // this.layersService.getAll()
+    //     .pipe(
+    //       flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
+    //       filter((layers: Layer[]) => !!layers),
+    //       flatMap((layers: Layer[]) => this.datastoreService.getByLayersResource(layers)),
+    //     )
+    //     .subscribe((data: any) => {
+    //       this.logger.info(' -1- ', data);
+    //       this.logger.info(' -1- ', data[0].dataStore);
+    //       this.logger.info(' -1- ', data[0].dataStore.connectionParameters);
+    //     });
   }
 
   setStep(index: number) {
