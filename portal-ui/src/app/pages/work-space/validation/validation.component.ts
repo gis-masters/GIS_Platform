@@ -1,12 +1,12 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter, flatMap, tap} from "rxjs/operators";
+import {filter, flatMap} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material";
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
-import {ValidationService} from "../../../services/validation.service";
-import {NameHrefProjection} from "../../../services/geoserver/projections";
-import {DatastoreService} from "../../../services/geoserver/datastore.service";
+import {ValidationService} from '../../../services/validation.service';
+import {NameHrefProjection} from '../../../services/geoserver/projections';
+import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {Layer, LayersService} from "../../../services/geoserver/layers.service";
 
 @Component({
@@ -16,28 +16,9 @@ import {Layer, LayersService} from "../../../services/geoserver/layers.service";
 })
 export class ValidationComponent implements OnInit {
 
-  private layers: NameHrefProjection[] = [
-    {
-      name: 'functionalZone',
-      href: 'http://',
-    },
-    {
-      name: 'Some other layer',
-      href: 'http://',
-    },
-    {
-      name: 'Some other layer 2',
-      href: 'http://',
-    },
-    {
-      name: 'Electrica',
-      href: 'http://',
-    }
-  ];
+  layers: NameHrefProjection[];
 
   step = 0;
-  endLayer = this.layers.length;
-  layerName;
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -71,7 +52,11 @@ export class ValidationComponent implements OnInit {
 
     this.layersService.getAll()
         .pipe(
-          flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
+          flatMap((layers: NameHrefProjection[]) => {
+            this.layers = layers;
+
+            return this.layersService.getLayers(layers);
+          }),
           filter((layers: Layer[]) => !!layers),
           flatMap((layers: Layer[]) => this.datastoreService.getByLayersResource(layers)),
         )
@@ -95,7 +80,6 @@ export class ValidationComponent implements OnInit {
   }
 
   validButton(index: number) {
-    this.layerName = this.layers[index].name;
-    console.log(this.layerName);
+    console.log(this.layers[index]);
   }
 }

@@ -22,8 +22,8 @@
 
           <mat-action-row>
             <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
-            <button mat-button *ngIf="index < (endLayer - 1) " color="primary" (click)="nextStep()">Следующий</button>
-            <button mat-button *ngIf="index == (endLayer - 1) " color="primary" (click)="nextStep()">Закончить</button>
+            <button mat-button *ngIf="index < (layers.length - 1) " color="primary" (click)="nextStep()">Следующий</button>
+            <button mat-button *ngIf="index == (layers.length - 1) " color="primary" (click)="nextStep()">Закончить</button>
           </mat-action-row>
         </mat-expansion-panel>
       </mat-accordion>
