@@ -7,21 +7,23 @@
     <div class="row">
 
       <mat-accordion class="validation_accordion">
-        <mat-expansion-panel *ngFor="let layer of layers"
-                             [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+        <mat-expansion-panel *ngFor="let layer of layers; let index = index"
+                             [expanded]="step === (index+1)" (opened)="setStep(index+1)" hideToggle>
           <mat-expansion-panel-header>
             <mat-panel-title>
               {{layer.name}}
             </mat-panel-title>
             <mat-panel-description>
-              <mat-icon>account_circle</mat-icon>
+              <button mat-button (click)="validButton(index)" class="validation_button"><mat-icon>map</mat-icon></button>
             </mat-panel-description>
           </mat-expansion-panel-header>
 
           {{layer.href}}
 
           <mat-action-row>
-            <button mat-button color="primary" (click)="nextStep()">Next</button>
+            <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
+            <button mat-button *ngIf="index < (endLayer - 1) " color="primary" (click)="nextStep()">Следующий</button>
+            <button mat-button *ngIf="index == (endLayer - 1) " color="primary" (click)="nextStep()">Закончить</button>
           </mat-action-row>
         </mat-expansion-panel>
       </mat-accordion>
