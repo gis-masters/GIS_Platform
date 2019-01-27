@@ -36,6 +36,8 @@ export class ValidationComponent implements OnInit {
   ];
 
   step = 0;
+  endLayer = this.layers.length;
+  layerName;
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -44,7 +46,7 @@ export class ValidationComponent implements OnInit {
               private validationService: ValidationService,
               private authService: AuthService,
               private layersService: LayersService) {
-    // this.authService.validateAuth();
+    this.authService.validateAuth();
   }
 
   ngOnInit() {
@@ -90,5 +92,10 @@ export class ValidationComponent implements OnInit {
 
   prevStep() {
     this.step--;
+  }
+
+  validButton(index: number) {
+    this.layerName = this.layers[index].name;
+    console.log(this.layerName);
   }
 }
