@@ -48,37 +48,36 @@ export class ValidationComponent implements OnInit {
   }
 
   ngOnInit() {
-    let data = [
-      {
-        dbName: 'gis',
-        schemaName: 'fiz',
-        tableName: 'electrictransformer'
-      },
-      {
-        dbName: 'gis',
-        schemaName: 'fiz',
-        tableName: 'electricline'
-      },
-    ];
-
-    this.validationService
-        .validateLayers(data)
-        .subscribe(value => {
-          this.logger.info('---', value);
-        });
-
-
-    // this.layersService.getAll()
-    //     .pipe(
-    //       flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
-    //       filter((layers: Layer[]) => !!layers),
-    //       flatMap((layers: Layer[]) => this.datastoreService.getByLayersResource(layers)),
-    //     )
-    //     .subscribe((data: any) => {
-    //       this.logger.info(' -1- ', data);
-    //       this.logger.info(' -1- ', data[0].dataStore);
-    //       this.logger.info(' -1- ', data[0].dataStore.connectionParameters);
+    // let data = [
+    //   {
+    //     dbName: 'gis',
+    //     schemaName: 'fiz',
+    //     tableName: 'electrictransformer'
+    //   },
+    //   {
+    //     dbName: 'gis',
+    //     schemaName: 'fiz',
+    //     tableName: 'electricline'
+    //   },
+    // ];
+    //
+    // this.validationService
+    //     .validateLayers(data)
+    //     .subscribe(value => {
+    //       this.logger.info('---', value);
     //     });
+
+    this.layersService.getAll()
+        .pipe(
+          flatMap((layers: NameHrefProjection[]) => this.layersService.getLayers(layers)),
+          filter((layers: Layer[]) => !!layers),
+          flatMap((layers: Layer[]) => this.datastoreService.getByLayersResource(layers)),
+        )
+        .subscribe((data: any) => {
+          this.logger.info(' -1- ', data);
+          this.logger.info(' -1- ', data[0].dataStore);
+          this.logger.info(' -1- ', data[0].dataStore.connectionParameters);
+        });
   }
 
   setStep(index: number) {
