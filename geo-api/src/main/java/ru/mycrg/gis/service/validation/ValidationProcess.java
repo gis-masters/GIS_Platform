@@ -5,17 +5,19 @@ import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ValidationProcess {
 
     private UUID id;
+    private String userName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private ValidationStatus status;
     private ValidationRequestDto request;
-    private List<ValidationMqResponse> responses;
+    private List<ValidationMqResponse> responses = new ArrayList<>();
 
     public ValidationProcess() {
         this.id = UUID.randomUUID();
@@ -61,5 +63,13 @@ public class ValidationProcess {
 
     public void addResponse(ValidationMqResponse response) {
         responses.add(response);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

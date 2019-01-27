@@ -15,6 +15,7 @@ import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,6 +73,8 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
     public FgistpRules updateRules() {
         log.info("Update rules");
+
+        fgistpRules.setEntityTypes(new ArrayList<>());
 
         try {
             getRulesFromDb();

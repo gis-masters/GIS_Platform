@@ -6,9 +6,14 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "validation_result")
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
 public class ValidationResult {
 
     @Id
@@ -16,14 +21,20 @@ public class ValidationResult {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Column
-    private String type;
+    @ManyToOne
+    private User user;
 
     @Column
     private String objectId;
 
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "json")
+    private JsonNode violations;
+
     @Column
-    private String objectId2;
+    private LocalDateTime lastModified;
+
+    public ValidationResult() {}
 
     public long getId() {
         return id;
@@ -33,4 +44,35 @@ public class ValidationResult {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public JsonNode getViolations() {
+        return violations;
+    }
+
+    public void setViolations(JsonNode violations) {
+        this.violations = violations;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
 }
