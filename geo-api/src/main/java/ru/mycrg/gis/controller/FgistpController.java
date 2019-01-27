@@ -5,15 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.service.fgistp.EntityType;
-import ru.mycrg.gis.service.validation.IValidationService;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
+import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
+import ru.mycrg.gis.service.validation.IValidationService;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class FgistpController {
@@ -63,15 +63,11 @@ public class FgistpController {
     }
 
     @ResponseBody
-    @GetMapping("/fgistp/validation/{name}")
-    public HttpStatus initValidation(@PathVariable String name, Principal principal) {
-        log.info("Request validation: {}", name);
+    @PostMapping("/fgistp/validation")
+    public HttpStatus initValidation(@RequestBody List<ValidationRequestDto> request, Principal principal) {
+        log.info("Request validation: {}", request.size());
 
-        if (principal != null) {
-            log.info("Principal: {}", principal.getName());
-        }
-
-        // validationService.initValidation(name);
+        validationService.initValidation(principal.getName(), request);
 
         return HttpStatus.ACCEPTED;
     }

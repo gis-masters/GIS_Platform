@@ -7,10 +7,15 @@ import java.util.List;
 
 public class ValidationResponse {
 
+    private String tableName;
     private ValidationStatus status;
     private List<ConstraintViolation> violations = new ArrayList<>();
 
     public ValidationResponse() {}
+
+    public ValidationResponse(String tableName) {
+        this.tableName = tableName;
+    }
 
     public ValidationResponse(ValidationStatus status) {
         this.status = status;
@@ -51,5 +56,13 @@ public class ValidationResponse {
 
     public void setViolations(List<ConstraintViolation> violations) {
         this.violations = violations;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

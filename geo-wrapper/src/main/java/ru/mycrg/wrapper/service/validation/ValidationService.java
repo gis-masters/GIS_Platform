@@ -37,9 +37,12 @@ public class ValidationService {
         String dbName = validationRequest.getDbName();
         String schemaName = validationRequest.getSchemaName();
 
+        ValidationResponse response = new ValidationResponse(validationRequest.getEntityType().getTableName());
+
         List<Map<String, Object>> allRows = postGisStorage.fetchAllRows(dbName, schemaName, entityTypeDto.getTableName());
         if (allRows.isEmpty()) {
-            mqEvents.validationResponse(new ValidationResponse(ValidationStatus.EMPTY));
+            response.setStatus(ValidationStatus.EMPTY);
+            mqEvents.validationResponse(response);
         }
 
         List<ConstraintViolation> violations = new ArrayList<>();
@@ -47,19 +50,28 @@ public class ValidationService {
         while (i < allRows.size()) {
             ConstraintViolation violation = validator.validate(entityTypeDto, allRows.get(i));
 
-            if (i % BATCH_SIZE == 0) {
-                violations.add(violation);
-                mqEvents.validationResponse(
-                        new ValidationResponse(ValidationStatus.PENDING, Collections.unmodifiableList(violations)));
+            if (i % BATCH_SIZE == 0 || i != 0) {
+                if (!violation.getPropertyViolations().isEmpty()) {
+                    violations.add(violation);
+                }
+
+                response.setStatus(ValidationStatus.PENDING);
+                response.setViolations(Collections.unmodifiableList(violations));
+                mqEvents.validationResponse(response);
 
                 violations.clear();
             } else {
-                violations.add(violation);
+                if (!violation.getPropertyViolations().isEmpty()) {
+                    violations.add(violation);
+                }
             }
 
             i++;
         }
 
-        mqEvents.validationResponse(new ValidationResponse(ValidationStatus.DONE, violations));
+        response.setStatus(ValidationStatus.DONE);
+        response.setViolations(violations);
+
+        mqEvents.validationResponse(response);
     }
 }

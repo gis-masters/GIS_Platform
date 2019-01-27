@@ -28,6 +28,7 @@ public class ValidatorImpl implements IValidator {
     private MaxInclusiveValidation maxInclusiveValidation = new MaxInclusiveValidation();
     private TotalDigitsValidation totalDigitsValidation = new TotalDigitsValidation();
     private IsLongTypeValidation isLongTypeValidation = new IsLongTypeValidation();
+    private IsDoubleTypeValidation isDoubleTypeValidation = new IsDoubleTypeValidation();
     private EnumerationValidation enumerationValidation = new EnumerationValidation();
 
     @Override
@@ -87,12 +88,16 @@ public class ValidatorImpl implements IValidator {
                 violations.add("Значение должно быть числом");
             }
         } else if (propertyType.getValueType() == ValueType.DOUBLE) {
-            if (!totalDigitsValidation.isValid(value, propertyType)) {
-                violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
+            if (isLongTypeValidation.isValid(value, propertyType)) {
+                if (!totalDigitsValidation.isValid(value, propertyType)) {
+                    violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
+                }
+            } else {
+                violations.add("Значение должно быть числом");
             }
         } else if (propertyType.getValueType() == ValueType.CHOICE) {
             if (!enumerationValidation.isValid(value, propertyType)) {
-                violations.add("Значение из списка");
+                violations.add("Значение не соответствует справочному");
             }
         }
 

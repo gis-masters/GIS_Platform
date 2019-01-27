@@ -215,7 +215,11 @@ public class ClassDefinitionParser {
 
         // Simple string like a "Name" without restrictions
         if (simpleTypeDecl.getName().contains("string")) {
-            return Optional.of(new StringProperty());
+            StringProperty stringProperty = new StringProperty();
+
+            setStringValues(simpleTypeDecl, stringProperty);
+
+            return Optional.of(stringProperty);
         }
 
         if (!simpleTypeDecl.getLexicalEnumeration().isEmpty()) {

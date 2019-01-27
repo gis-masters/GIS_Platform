@@ -91,7 +91,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     public EntityType getRuleByClassName(String name) throws FgistpRuleNotFoundException {
         return fgistpRules
                 .getEntityTypes().stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().equals(name))
+                .filter(fgistpClassType -> fgistpClassType.getName().toLowerCase().contains(name.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new FgistpRuleNotFoundException(name));
     }
