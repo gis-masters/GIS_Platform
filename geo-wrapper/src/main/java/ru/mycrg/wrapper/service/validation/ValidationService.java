@@ -50,7 +50,7 @@ public class ValidationService {
         while (i < allRows.size()) {
             ConstraintViolation violation = validator.validate(entityTypeDto, allRows.get(i));
 
-            if (i % BATCH_SIZE == 0 || i != 0) {
+            if (i % BATCH_SIZE == 0) {
                 if (!violation.getPropertyViolations().isEmpty()) {
                     violations.add(violation);
                 }

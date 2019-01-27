@@ -85,7 +85,7 @@ public class ValidatorImpl implements IValidator {
                     violations.add("Значение должно быть менее или равно: " + propertyType.getMaxInclusive());
                 }
             } else {
-                violations.add("Значение должно быть числом");
+                violations.add("Значение должно быть целым числом");
             }
         } else if (propertyType.getValueType() == ValueType.DOUBLE) {
             if (isLongTypeValidation.isValid(value, propertyType)) {
@@ -93,7 +93,7 @@ public class ValidatorImpl implements IValidator {
                     violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
                 }
             } else {
-                violations.add("Значение должно быть числом");
+                violations.add("Значение должно быть дробным числом");
             }
         } else if (propertyType.getValueType() == ValueType.CHOICE) {
             if (!enumerationValidation.isValid(value, propertyType)) {
