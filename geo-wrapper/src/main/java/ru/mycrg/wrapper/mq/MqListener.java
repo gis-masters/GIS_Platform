@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ValidationRequest;
-import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
@@ -55,14 +55,14 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void startValidation(final ValidationRequest validationRequest) {
-        log.info("Получено сообщение, startValidation");
+    public void startValidation(final ValidationMqRequest validationMqRequest) {
+        log.info("Получено сообщение, startValidation: {}", validationMqRequest.getId());
 
         try {
-            validationService.startValidation(validationRequest);
+            validationService.startValidation(validationMqRequest);
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationResponse(ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(ValidationStatus.ERROR));
         }
     }
 

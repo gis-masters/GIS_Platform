@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
@@ -36,7 +36,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = QUEUE_VALIDATION_RESULT)
-    public void validationResult(ValidationResponse response) {
+    public void validationResult(ValidationMqResponse response) {
         log.info("Validation response: {}", response.getStatus());
 
         validationService.progress(response);

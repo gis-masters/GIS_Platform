@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ValidationRequest;
+import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.gis.dto.MqOrganizationInit;
 
 import static ru.mycrg.common.config.MqProperties.*;
@@ -30,7 +30,7 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void startValidation(ValidationRequest payload) {
+    public void startValidation(ValidationMqRequest payload) {
         log.info("Queue startValidation");
 
         rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload);

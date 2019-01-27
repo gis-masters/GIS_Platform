@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ConstraintViolation;
 import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.ValidationRequest;
-import ru.mycrg.common.ValidationResponse;
+import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
@@ -32,14 +32,14 @@ public class ValidationService {
         this.postGisStorage = postGisStorage;
     }
 
-    public void startValidation(ValidationRequest validationRequest) {
-        EntityTypeDto entityTypeDto = validationRequest.getEntityType();
-        String dbName = validationRequest.getDbName();
-        String schemaName = validationRequest.getSchemaName();
-
-        ValidationResponse response = new ValidationResponse(validationRequest.getEntityType().getTableName());
+    public void startValidation(ValidationMqRequest validationMqRequest) {
+        EntityTypeDto entityTypeDto = validationMqRequest.getEntityType();
+        String dbName = validationMqRequest.getDbName();
+        String schemaName = validationMqRequest.getSchemaName();
 
         List<Map<String, Object>> allRows = postGisStorage.fetchAllRows(dbName, schemaName, entityTypeDto.getTableName());
+
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId(), Math.round(allRows.size() / 100));
         if (allRows.isEmpty()) {
             response.setStatus(ValidationStatus.EMPTY);
             mqEvents.validationResponse(response);

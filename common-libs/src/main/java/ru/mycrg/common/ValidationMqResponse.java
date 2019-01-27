@@ -4,24 +4,27 @@ import ru.mycrg.common.enums.ValidationStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class ValidationResponse {
+public class ValidationMqResponse {
 
-    private String tableName;
+    private UUID id;
+    private int batchCounter;
     private ValidationStatus status;
     private List<ConstraintViolation> violations = new ArrayList<>();
 
-    public ValidationResponse() {}
+    public ValidationMqResponse() {}
 
-    public ValidationResponse(String tableName) {
-        this.tableName = tableName;
+    public ValidationMqResponse(UUID id, int batchCounter) {
+        this.id = id;
+        this.batchCounter = batchCounter;
     }
 
-    public ValidationResponse(ValidationStatus status) {
+    public ValidationMqResponse(ValidationStatus status) {
         this.status = status;
     }
 
-    public ValidationResponse(ValidationStatus status, List<ConstraintViolation> violations) {
+    public ValidationMqResponse(ValidationStatus status, List<ConstraintViolation> violations) {
         this.status = status;
         this.violations = violations;
     }
@@ -58,11 +61,12 @@ public class ValidationResponse {
         this.violations = violations;
     }
 
-    public String getTableName() {
-        return tableName;
+    public UUID getId() {
+        return id;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public int getBatchCounter() {
+        return batchCounter;
     }
+
 }
