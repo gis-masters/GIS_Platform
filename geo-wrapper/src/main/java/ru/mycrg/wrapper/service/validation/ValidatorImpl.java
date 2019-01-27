@@ -88,7 +88,7 @@ public class ValidatorImpl implements IValidator {
                 violations.add("Значение должно быть целым числом");
             }
         } else if (propertyType.getValueType() == ValueType.DOUBLE) {
-            if (isLongTypeValidation.isValid(value, propertyType)) {
+            if (isDoubleTypeValidation.isValid(value, propertyType)) {
                 if (!totalDigitsValidation.isValid(value, propertyType)) {
                     violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
                 }
