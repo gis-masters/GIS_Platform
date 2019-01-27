@@ -41,7 +41,7 @@ export class ValidationComponent implements OnInit {
               private snackBar: MatSnackBar,
               private authService: AuthService,
               private layersService: LayersService) {
-    // this.authService.validateAuth();
+    this.authService.validateAuth();
   }
 
   ngOnInit() {
