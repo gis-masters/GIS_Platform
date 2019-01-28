@@ -26,7 +26,7 @@ export class ValidationService {
 
 }
 
-interface ValidationRequest {
+export interface ValidationRequest {
   dbName: string;
   schemaName: string;
   tableName: string;
