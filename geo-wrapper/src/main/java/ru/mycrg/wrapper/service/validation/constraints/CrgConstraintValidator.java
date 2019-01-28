@@ -1,8 +1,6 @@
-package ru.mycrg.wrapper.service.validation;
+package ru.mycrg.wrapper.service.validation.constraints;
 
 import ru.mycrg.common.SimplePropertyDto;
-
-import java.util.Optional;
 
 public interface CrgConstraintValidator {
 

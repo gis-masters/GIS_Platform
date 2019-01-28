@@ -1,12 +1,12 @@
-package ru.mycrg.wrapper.service.validation;
+package ru.mycrg.wrapper.service.validation.constraints;
 
 import ru.mycrg.common.SimplePropertyDto;
 
-public class MinInclusiveValidation extends IsLongTypeValidation implements CrgConstraintValidator {
+public class MaxInclusiveValidation extends IsLongTypeValidation implements CrgConstraintValidator {
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getMinInclusive() == -1) {
+        if (value == null || context.getMaxInclusive() == -1) {
             return true;
         }
 
@@ -15,7 +15,7 @@ public class MinInclusiveValidation extends IsLongTypeValidation implements CrgC
         } else {
             Long valueAsLong = Long.valueOf(String.valueOf(value));
 
-            return valueAsLong >= context.getMinInclusive();
+            return valueAsLong <= context.getMaxInclusive();
         }
     }
 }

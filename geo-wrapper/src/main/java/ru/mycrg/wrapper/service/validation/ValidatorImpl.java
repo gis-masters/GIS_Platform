@@ -8,6 +8,7 @@ import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.wrapper.service.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
