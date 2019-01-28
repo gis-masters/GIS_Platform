@@ -19,6 +19,7 @@ import {MappingPairComponent} from './components/mapping-pair/mapping-pair.compo
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
+import {NgxMaskModule} from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {GeometryPipe} from './pipes/geometry.pipe';
       // serverLoggingUrl: '/api/logs', // send logs to server endpoint
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.WARN
-    })
+    }),
+    NgxMaskModule.forRoot()
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true},
