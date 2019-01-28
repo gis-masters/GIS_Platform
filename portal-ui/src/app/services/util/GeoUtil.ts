@@ -1,4 +1,5 @@
 import {ImportTask, ImportTasks} from '../geoserver/import.service';
+import {ValidationRequest} from "../validation.service";
 
 export class GeoUtil {
 
@@ -42,5 +43,34 @@ export class GeoUtil {
     } else {
       return type;
     }
+  }
+
+  static getDbInfo(connectionParameters: any, layerName: string): ValidationRequest {
+    let dbName = '';
+    let schemaName = '';
+    let tableName = '';
+
+    if (layerName.split(':')[1]) {
+      tableName = layerName.split(':')[1];
+    } else {
+      tableName = layerName;
+    }
+
+    console.log(' ** ', connectionParameters.entry);
+    connectionParameters.entry.forEach((item) => {
+      if (item['@key'] === 'database') {
+        dbName = item['$'];
+      }
+      if (item['@key'] === 'schema') {
+        schemaName = item['$'];
+      }
+    });
+
+    return {
+      dbName: dbName,
+      schemaName: schemaName,
+      tableName: tableName
+    };
+
   }
 }

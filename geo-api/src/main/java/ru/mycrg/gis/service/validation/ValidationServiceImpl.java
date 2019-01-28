@@ -89,6 +89,7 @@ public class ValidationServiceImpl implements IValidationService {
                 ValidationResult validationResult = new ValidationResult();
                 validationResult.setUser(user);
                 validationResult.setLastModified(LocalDateTime.now());
+                validationResult.setTableName(process.getRequest().getTableName());
                 validationResult.setObjectId(constraintViolation.getId());
                 validationResult.setViolations(convertToJson(constraintViolation.getPropertyViolations()));
 
@@ -141,30 +142,4 @@ public class ValidationServiceImpl implements IValidationService {
                 .findFirst();
     }
 
-}
-
-class RegistrationInfo {
-    private UUID id;
-    private ValidationRequestDto requestDto;
-
-    public RegistrationInfo(UUID id, ValidationRequestDto requestDto) {
-        this.id = id;
-        this.requestDto = requestDto;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public ValidationRequestDto getRequestDto() {
-        return requestDto;
-    }
-
-    public void setRequestDto(ValidationRequestDto requestDto) {
-        this.requestDto = requestDto;
-    }
 }
