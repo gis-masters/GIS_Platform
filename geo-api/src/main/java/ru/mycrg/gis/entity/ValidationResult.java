@@ -25,6 +25,9 @@ public class ValidationResult {
     private User user;
 
     @Column
+    private String tableName;
+
+    @Column
     private String objectId;
 
     @Type(type = "jsonb-node")
@@ -74,5 +77,13 @@ public class ValidationResult {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }
