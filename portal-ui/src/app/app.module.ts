@@ -18,6 +18,7 @@ import {MappingCardComponent} from './components/mapping-card/mapping-card.compo
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
+import {NgxMaskModule} from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {JwtInterceptorService} from "./services/jwt-interceptor.service";
       // serverLoggingUrl: '/api/logs', // send logs to server endpoint
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.WARN
-    })
+    }),
+    NgxMaskModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

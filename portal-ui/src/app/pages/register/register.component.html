@@ -27,10 +27,13 @@
           </div>
           <div class="col-3">
             <mat-form-field class="full-width">
-              <input type="tel" onkeyup="this.value=this.value.replace(/[^\d]/g, '')" matInput placeholder="Контактный телефон" formControlName="contactPhone">
+              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone" prefix="+7" mask="(000) 000-00-00" minlength="10">
               <mat-icon matSuffix>phone</mat-icon>
               <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('required')">
                 Обязательное для заполнения поле
+              </mat-error>
+              <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('minlength')">
+                Пожалуйста введите телефонный номер в формате +7 (ххх) ххх-хх-хх
               </mat-error>
             </mat-form-field>
           </div>
@@ -78,12 +81,12 @@
         <div class="row">
           <div class="col">
             <mat-form-field class="full-width">
-              <input type="password" matInput placeholder="Пароль" formControlName="password" minlength="6">
+              <input type="password" matInput placeholder="Пароль" formControlName="password">
               <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
-              <mat-error *ngIf="registrationForm.controls['password'].hasError('minlength')">
-                Пароль должен быть не менее 6 символов
+              <mat-error *ngIf="registrationForm.controls['password'].hasError('pattern')">
+                Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов
               </mat-error>
             </mat-form-field>
           </div>

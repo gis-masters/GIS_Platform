@@ -2,7 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -12,20 +12,14 @@ import {AuthService} from '../../services/auth.service';
 })
 export class RegisterComponent {
 
-
   registrationForm = this.fb.group({
     company: [null, Validators.required],
     contactPhone: [null, Validators.required],
     lastName: [null, Validators.required],
     firstName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
-    passwords: this.fb.group({
-      password: [null, Validators.required],
-      password_: [null,[Validators.required]]
-    })
-    /*password: [null, Validators.required],
-    password_: [null,[Validators.required, this.passValidate]]*/
-
+    password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]],
+    password_: [null,Validators.required]
   });
 
   constructor(private fb: FormBuilder,
