@@ -1,3 +1,4 @@
+<script src="register.component.ts"></script>
 <div class="container">
 
   <crg-header></crg-header>
@@ -19,13 +20,20 @@
               <mat-error *ngIf="registrationForm.controls['company'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
+              <mat-error *ngIf="registrationForm.controls['company'].hasError('minlength')">
+                Наименование должно быть не менее 5 символов
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="col-3">
             <mat-form-field class="full-width">
-              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone">
+              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone" prefix="+7" mask="(000) 000-00-00" minlength="10">
+              <mat-icon matSuffix>phone</mat-icon>
               <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('required')">
                 Обязательное для заполнения поле
+              </mat-error>
+              <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('minlength')">
+                Пожалуйста введите телефонный номер в формате +7 (ххх) ххх-хх-хх
               </mat-error>
             </mat-form-field>
           </div>
@@ -59,8 +67,12 @@
           <div class="col">
             <mat-form-field class="full-width">
               <input type="email" matInput placeholder="E-mail" formControlName="email">
+              <mat-icon matSuffix>mail</mat-icon>
               <mat-error *ngIf="registrationForm.controls['email'].hasError('required')">
                 Обязательное для заполнения поле
+              </mat-error>
+              <mat-error *ngIf="registrationForm.controls['email'].hasError('email')">
+                Не верно введён e-mail
               </mat-error>
             </mat-form-field>
           </div>
@@ -73,14 +85,18 @@
               <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
+              <mat-error *ngIf="registrationForm.controls['password'].hasError('pattern')">
+                Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field class="full-width">
-              <input type="password" matInput placeholder="Подтверждени пароля" formControlName="password_">
+              <input type="password" matInput placeholder="Подтверждение пароля" formControlName="password_">
               <mat-error *ngIf="registrationForm.controls['password_'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
+
             </mat-form-field>
           </div>
         </div>
