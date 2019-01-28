@@ -3,6 +3,7 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ConstraintViolation;
 import ru.mycrg.common.EntityTypeDto;
@@ -33,45 +34,59 @@ public class ValidationService {
     }
 
     public void startValidation(ValidationMqRequest validationMqRequest) {
-        EntityTypeDto entityTypeDto = validationMqRequest.getEntityType();
-        String dbName = validationMqRequest.getDbName();
-        String schemaName = validationMqRequest.getSchemaName();
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
-        List<Map<String, Object>> allRows = postGisStorage.fetchAllRows(dbName, schemaName, entityTypeDto.getTableName());
+        JdbcTemplate jdbcTemplate = postGisStorage.initConnection(validationMqRequest.getDbName());
 
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId(), Math.round(allRows.size() / 100));
-        if (allRows.isEmpty()) {
-            response.setStatus(ValidationStatus.EMPTY);
-            mqEvents.validationResponse(response);
-        }
+        int offsetMultiple = 0;
+        while (true) {
+            response.setBatchNumber(offsetMultiple);
+            response.setViolations(new ArrayList<>());
 
-        List<ConstraintViolation> violations = new ArrayList<>();
-        int i = 0;
-        while (i < allRows.size()) {
-            ConstraintViolation violation = validator.validate(entityTypeDto, allRows.get(i));
+            List<Map<String, Object>> batch = postGisStorage
+                    .fetchBatch(
+                            jdbcTemplate,
+                            validationMqRequest.getSchemaName(),
+                            validationMqRequest.getEntityType().getTableName(),
+                            BATCH_SIZE,
+                            offsetMultiple
+                    );
 
-            if (i % BATCH_SIZE == 0) {
-                if (!violation.getPropertyViolations().isEmpty()) {
-                    violations.add(violation);
-                }
+            if (offsetMultiple == 0 && batch.isEmpty()) {
+                response.setStatus(ValidationStatus.EMPTY);
 
+                mqEvents.validationResponse(response);
+                break;
+            } else if (offsetMultiple > 0 && batch.isEmpty()) {
+                response.setStatus(ValidationStatus.DONE);
+
+                mqEvents.validationResponse(response);
+                break;
+            } else {
                 response.setStatus(ValidationStatus.PENDING);
-                response.setViolations(Collections.unmodifiableList(violations));
+                response.setViolations(validateBatch(batch, validationMqRequest.getEntityType()));
+
                 mqEvents.validationResponse(response);
 
-                violations.clear();
-            } else {
-                if (!violation.getPropertyViolations().isEmpty()) {
-                    violations.add(violation);
-                }
+                offsetMultiple++;
+            }
+        }
+    }
+
+    private List<ConstraintViolation> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
+        List<ConstraintViolation> violations = new ArrayList<>();
+
+        int i = 0;
+        while (i < batch.size()) {
+            ConstraintViolation violation = validator.validate(entityType, batch.get(i));
+
+            if (!violation.getPropertyViolations().isEmpty()) {
+                violations.add(violation);
             }
 
             i++;
         }
 
-        response.setStatus(ValidationStatus.DONE);
-        response.setViolations(violations);
-
-        mqEvents.validationResponse(response);
+        return violations;
     }
 }

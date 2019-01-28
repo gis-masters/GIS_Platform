@@ -9,15 +9,14 @@ import java.util.UUID;
 public class ValidationMqResponse {
 
     private UUID id;
-    private int batchCounter;
+    private int batchNumber = 0;
     private ValidationStatus status;
     private List<ConstraintViolation> violations = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(UUID id, int batchCounter) {
+    public ValidationMqResponse(UUID id) {
         this.id = id;
-        this.batchCounter = batchCounter;
     }
 
     public ValidationMqResponse(ValidationStatus status) {
@@ -65,8 +64,12 @@ public class ValidationMqResponse {
         return id;
     }
 
-    public int getBatchCounter() {
-        return batchCounter;
+    public void setBatchNumber(int batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
+    public int getBatchNumber() {
+        return batchNumber;
     }
 
 }

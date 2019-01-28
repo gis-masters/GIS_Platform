@@ -37,14 +37,20 @@ public class PostGisStorage {
         createExtensionForNewDb(dbName);
     }
 
-    public List<Map<String, Object>> fetchAllRows(final String dbName, final String schema, final String tableName) {
-        log.info("Try select from, db:{} schema: {} table: {}", dbName, schema, tableName);
+    public JdbcTemplate initConnection(final String dbName) {
+        log.info("Try init connection db:{} schema: {}", dbName);
 
-        try (HikariDataSource datasource = getDatasource(dbName)) {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-            jdbcTemplate.setFetchSize(50);
+        return new JdbcTemplate(getDatasource(dbName));
+    }
 
-            return jdbcTemplate.queryForList("SELECT * FROM " + schema + "." + tableName);
+    public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate,
+                                                final String schema, String tableName,
+                                                int limit, int offsetMultiple) {
+        log.info("Try select from table: {} with limit: {} / offsetMultiple: {}", tableName, limit, offsetMultiple);
+
+        try {
+            return jdbcTemplate.queryForList("SELECT * FROM " + schema + "." + tableName +
+                    " ORDER BY objectid LIMIT " + limit + " OFFSET " + limit * offsetMultiple);
         } catch (RuntimeException e) {
             log.error("Failed get rows: {}", e.getLocalizedMessage());
 
