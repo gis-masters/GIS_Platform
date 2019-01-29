@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ConstraintViolation;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.SimplePropertyDto;
@@ -33,11 +33,11 @@ public class ValidatorImpl implements IValidator {
     private EnumerationValidation enumerationValidation = new EnumerationValidation();
 
     @Override
-    public ConstraintViolation validate(EntityTypeDto entityType, Map<String, Object> data) {
-        ConstraintViolation violation = new ConstraintViolation();
+    public ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data) {
+        ObjectValidationResult validationResult = new ObjectValidationResult();
 
         if (data.containsKey(ID_KEY)) {
-            violation.setId(data.get(ID_KEY).toString());
+            validationResult.setObjectId(data.get(ID_KEY).toString());
         } else {
             log.warn("Row not contains id? : {}", ID_KEY);
         }
@@ -49,12 +49,14 @@ public class ValidatorImpl implements IValidator {
                 propertyViolation.setErrors(validateProperty(propertyDto, data.get(name)));
 
                 if (propertyViolation.hasErrors()) {
-                    violation.addPropertyViolation(propertyViolation);
+                    validationResult.addPropertyViolation(propertyViolation);
+                } else {
+                    validationResult.addCorrectProperty(name);
                 }
             }
         });
 
-        return violation;
+        return validationResult;
     }
 
     private List<String> validateProperty(SimplePropertyDto propertyType, Object value) {

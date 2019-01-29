@@ -16,6 +16,7 @@ import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.entity.ValidationResult;
+import ru.mycrg.gis.exceptions.ValidationAlreadyStartedException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.repository.ValidationResultRepository;
@@ -25,6 +26,10 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_DATA;
+import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_USER;
+import static ru.mycrg.gis.service.validation.ValidationRequestType.UNIQE;
 
 @Service
 public class ValidationServiceImpl implements IValidationService {
@@ -55,10 +60,8 @@ public class ValidationServiceImpl implements IValidationService {
             ruleService.updateRules();
         }
 
-        request
-                .stream()
+        request.stream()
                 .map((ValidationRequestDto requestDto) -> initValidationProcess(requestDto, userName))
-                .map(this::preparePayload)
                 .forEach(mqSender::startValidation);
     }
 
@@ -67,10 +70,10 @@ public class ValidationServiceImpl implements IValidationService {
         if (response.isPending() || response.isDone()) {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
-                        process.addResponse(response);
-                        persistResponse(process, response);
-                    },
-                    () -> log.warn("Not found validation process by id: {}", response.getId()));
+                                process.addResponse(response);
+                                persistResponse(process, response);
+                            },
+                            () -> log.warn("Not found validation process by id: {}", response.getId()));
         }
 
         if (response.isEmpty()) {
@@ -80,18 +83,18 @@ public class ValidationServiceImpl implements IValidationService {
 
     @Transactional
     public void persistResponse(ValidationProcess process, ValidationMqResponse response) {
-        if (!response.getViolations().isEmpty()) {
-            log.info("Response has: {} violations", response.getViolations().size());
+        if (!response.getResults().isEmpty()) {
+            log.info("Response has: {} violations", response.getResults().size());
 
             User user = userRepository.findUserByUsername(process.getUserName()).get();
 
-            response.getViolations().forEach(constraintViolation -> {
+            response.getResults().forEach(constraintViolation -> {
                 ValidationResult validationResult = new ValidationResult();
                 validationResult.setUser(user);
                 validationResult.setLastModified(LocalDateTime.now());
                 validationResult.setTableName(process.getRequest().getTableName());
-                validationResult.setObjectId(constraintViolation.getId());
-                validationResult.setViolations(convertToJson(constraintViolation.getPropertyViolations()));
+                validationResult.setObjectId(constraintViolation.getObjectId());
+                validationResult.setViolations(convertToJson(constraintViolation.getViolations()));
 
                 validationResultRepository.save(validationResult);
             });
@@ -113,24 +116,59 @@ public class ValidationServiceImpl implements IValidationService {
         }
     }
 
-    private RegistrationInfo initValidationProcess(ValidationRequestDto requestDto, String userName) {
-        ValidationProcess validationProcess = new ValidationProcess();
-        validationProcess.setUserName(userName);
-        validationProcess.setRequest(requestDto);
+    private Optional<ValidationMqRequest> initValidationProcess(ValidationRequestDto requestDto, String userName) {
+        switch (checkNewRequest(requestDto, userName)) {
+            case UNIQE:
+                log.info("UNIQE request");
 
-        processes.add(validationProcess);
+                ValidationProcess validationProcess = new ValidationProcess();
+                validationProcess.setUserName(userName);
+                validationProcess.setRequest(requestDto);
 
-        return new RegistrationInfo(validationProcess.getId(), requestDto);
+                processes.add(validationProcess);
+
+                return Optional.of(preparePayload(validationProcess.getId(), requestDto));
+            case SAME_USER:
+                // TODO: Слоя могут пересекаться в разных запросах. Например первый запрос от пользователя был
+                // на валидацию слоя: функциональные зоны. А второй запрос более общий: функциональные зоны и др. слоя
+                // На данный момент это не предусматриваем и вернем ошибку HttpStatus.CONFLICT
+                log.info("Ignore request from SAME_USER");
+
+                throw new ValidationAlreadyStartedException("Ожидайте выполнения предыдущего запроса");
+            case SAME_DATA:
+                log.info("SAME_DATA request. Not implemented yet...");
+
+                return Optional.empty();
+            default:
+                log.warn("Validation request unsupported type");
+                return Optional.empty();
+        }
+    }
+
+    private ValidationRequestType checkNewRequest(ValidationRequestDto requestDto, String userName) {
+        var ref = new Object() {
+            ValidationRequestType result = UNIQE;
+        };
+
+        processes.forEach(process -> {
+            if (userName.equals(process.getUserName())) {
+                ref.result = SAME_USER;
+            }
+
+            if (process.getRequest().equals(requestDto)) {
+                ref.result = SAME_DATA;
+            }
+        });
+
+        return ref.result;
     }
 
     @NotNull
-    private ValidationMqRequest preparePayload(RegistrationInfo info) {
-        ValidationRequestDto requestDto = info.getRequestDto();
-
+    private ValidationMqRequest preparePayload(UUID id, ValidationRequestDto requestDto) {
         EntityType entityType = ruleService.getRuleByClassName(requestDto.getTableName());
 
         return new ValidationMqRequest(
-                info.getId(),
+                id,
                 requestDto.getDbName(),
                 requestDto.getSchemaName(),
                 MapperUtil.mapEntityTypeToDto(entityType));

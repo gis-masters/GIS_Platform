@@ -11,7 +11,7 @@ public class ValidationMqResponse {
     private UUID id;
     private int batchNumber = 0;
     private ValidationStatus status;
-    private List<ConstraintViolation> violations = new ArrayList<>();
+    private List<ObjectValidationResult> results = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
@@ -23,9 +23,9 @@ public class ValidationMqResponse {
         this.status = status;
     }
 
-    public ValidationMqResponse(ValidationStatus status, List<ConstraintViolation> violations) {
+    public ValidationMqResponse(ValidationStatus status, List<ObjectValidationResult> results) {
         this.status = status;
-        this.violations = violations;
+        this.results = results;
     }
 
     public boolean isDone() {
@@ -52,12 +52,12 @@ public class ValidationMqResponse {
         this.status = status;
     }
 
-    public List<ConstraintViolation> getViolations() {
-        return violations;
+    public List<ObjectValidationResult> getResults() {
+        return results;
     }
 
-    public void setViolations(List<ConstraintViolation> violations) {
-        this.violations = violations;
+    public void setResults(List<ObjectValidationResult> results) {
+        this.results = results;
     }
 
     public UUID getId() {

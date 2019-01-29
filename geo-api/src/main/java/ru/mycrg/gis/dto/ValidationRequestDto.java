@@ -1,5 +1,7 @@
 package ru.mycrg.gis.dto;
 
+import java.util.Objects;
+
 public class ValidationRequestDto {
 
     private String dbName;
@@ -30,5 +32,20 @@ public class ValidationRequestDto {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ValidationRequestDto that = (ValidationRequestDto) o;
+        return Objects.equals(dbName, that.dbName) &&
+                Objects.equals(schemaName, that.schemaName) &&
+                Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dbName, schemaName, tableName);
     }
 }

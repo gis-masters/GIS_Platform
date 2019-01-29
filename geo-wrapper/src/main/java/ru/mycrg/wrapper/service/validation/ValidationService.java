@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ConstraintViolation;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
@@ -26,6 +26,8 @@ public class ValidationService {
 
     private final int BATCH_SIZE = 100;
 
+    private List<ValidationMqRequest> currentRequests = new ArrayList<>();
+
     @Autowired
     public ValidationService(IValidator validator, IMqEvents mqEvents, PostGisStorage postGisStorage) {
         this.mqEvents = mqEvents;
@@ -34,6 +36,8 @@ public class ValidationService {
     }
 
     public void startValidation(ValidationMqRequest validationMqRequest) {
+        // handleRequests(validationMqRequest);
+
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
         JdbcTemplate jdbcTemplate = postGisStorage.initConnection(validationMqRequest.getDbName());
@@ -41,7 +45,7 @@ public class ValidationService {
         int offsetMultiple = 0;
         while (true) {
             response.setBatchNumber(offsetMultiple);
-            response.setViolations(new ArrayList<>());
+            response.setResults(new ArrayList<>());
 
             List<Map<String, Object>> batch = postGisStorage
                     .fetchBatch(
@@ -63,8 +67,10 @@ public class ValidationService {
                 mqEvents.validationResponse(response);
                 break;
             } else {
+                List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
+
                 response.setStatus(ValidationStatus.PENDING);
-                response.setViolations(validateBatch(batch, validationMqRequest.getEntityType()));
+                response.setResults(violationResults);
 
                 mqEvents.validationResponse(response);
 
@@ -73,20 +79,16 @@ public class ValidationService {
         }
     }
 
-    private List<ConstraintViolation> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
-        List<ConstraintViolation> violations = new ArrayList<>();
+    private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
+        List<ObjectValidationResult> validationResults = new ArrayList<>();
 
         int i = 0;
         while (i < batch.size()) {
-            ConstraintViolation violation = validator.validate(entityType, batch.get(i));
-
-            if (!violation.getPropertyViolations().isEmpty()) {
-                violations.add(violation);
-            }
+            validationResults.add(validator.validate(entityType, batch.get(i)));
 
             i++;
         }
 
-        return violations;
+        return validationResults;
     }
 }
