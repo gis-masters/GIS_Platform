@@ -66,4 +66,14 @@ public class MqListener {
         }
     }
 
+    @RabbitListener(queues = MqProperties.QUEUE_POSTGRE_VALIDATION)
+    public void postgreMsg(char[] any) {
+        StringBuilder objectId = new StringBuilder();
+        for (int i = 0; i < any.length; i++) {
+            objectId.append(Character.toString(any[i]));
+        }
+
+        log.info("Получено сообщение, from postgresql: {}", Integer.valueOf(objectId.toString()));
+    }
+
 }

@@ -44,6 +44,13 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueValidationResult()).to(fanoutExchangeValidationResult());
     }
 
+    // Config "crg postgres" exchange/queue
+    @Bean public Queue queuePostgreValidation() { return new Queue(QUEUE_POSTGRE_VALIDATION, false);}
+    @Bean public FanoutExchange fanoutExchangePostgreValidation() { return new FanoutExchange(FANOUT_POSTGRE_VALIDATION);}
+    @Bean public Binding bindingPostgreValidation() {
+        return BindingBuilder.bind(queuePostgreValidation()).to(fanoutExchangePostgreValidation());
+    }
+
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
