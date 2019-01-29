@@ -137,6 +137,7 @@ services:
       CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_FLYWAY_URL: jdbc:postgresql://database:5432/gis_portal
       POSTGIS_HOST: postgis:5432
       POSTGIS_USER: $CRG_USER
       POSTGIS_PASSWORD: $DB_PASS

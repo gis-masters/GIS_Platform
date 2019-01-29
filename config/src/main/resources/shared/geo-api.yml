@@ -23,3 +23,8 @@ spring:
   rabbitmq:
 #    host: localhost
     port: 5672
+  flyway:
+    enabled: true
+#    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    user: postgres
+    password: 314
