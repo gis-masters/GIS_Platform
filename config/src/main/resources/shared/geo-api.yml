@@ -13,8 +13,8 @@ spring:
     password: 314
   jpa:
     # show-sql: true
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: update
     properties:
       # hibernate.format_sql: true
       # Fix Postgres JPA Error:
