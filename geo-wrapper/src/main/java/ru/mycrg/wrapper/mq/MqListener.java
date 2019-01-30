@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.mq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -10,6 +11,7 @@ import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
+import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
@@ -68,12 +70,21 @@ public class MqListener {
 
     @RabbitListener(queues = MqProperties.QUEUE_POSTGRE_VALIDATION)
     public void postgreMsg(char[] any) {
-        StringBuilder objectId = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         for (char c : any) {
-            objectId.append(c);
+            result.append(c);
         }
 
-        log.info("Получено сообщение, from postgresql: {}", Integer.valueOf(objectId.toString()));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            PostgreEvent postgreEvent = mapper.readValue(result.toString(), PostgreEvent.class);
+
+            log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
+
+//            Thread.sleep(1000);
+        } catch (IOException e) {
+            log.error("Не удалось распарсить сообщение: {}", result);
+        }
     }
 
 }
