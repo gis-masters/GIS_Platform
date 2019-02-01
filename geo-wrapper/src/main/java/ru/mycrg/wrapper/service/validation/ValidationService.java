@@ -56,6 +56,8 @@ public class ValidationService {
                             offsetMultiple
                     );
 
+            // TODO: Возникновение ошибки при обработке пакета не должны прекращать обработку других пакетов? или должны
+            // типа если один с ошибкой то и большая вероятность что другие тоже...
             if (offsetMultiple == 0 && batch.isEmpty()) {
                 response.setStatus(ValidationStatus.EMPTY);
 

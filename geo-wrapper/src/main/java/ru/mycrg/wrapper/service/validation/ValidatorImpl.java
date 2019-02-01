@@ -37,7 +37,12 @@ public class ValidatorImpl implements IValidator {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
         if (data.containsKey(ID_KEY)) {
-            validationResult.setObjectId(data.get(ID_KEY).toString());
+            Object o = data.get(ID_KEY);
+            if (o != null) {
+                validationResult.setObjectId(o.toString());
+            } else {
+                log.info("Failed get ID_KEY: {}", ID_KEY);
+            }
         } else {
             log.warn("Row not contains id? : {}", ID_KEY);
         }

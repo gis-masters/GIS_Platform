@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.entity.ValidationResult;
@@ -26,6 +27,7 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_DATA;
 import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_USER;
@@ -38,8 +40,8 @@ public class ValidationServiceImpl implements IValidationService {
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
-    private final UserRepository userRepository;
-    private final ValidationResultRepository validationResultRepository;
+//    private final UserRepository userRepository;
+//    private final ValidationResultRepository validationResultRepository;
 
     private List<ValidationProcess> processes = new ArrayList<>();
 
@@ -50,8 +52,8 @@ public class ValidationServiceImpl implements IValidationService {
                                  ValidationResultRepository validationResultRepository) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
-        this.userRepository = userRepository;
-        this.validationResultRepository = validationResultRepository;
+//        this.userRepository = userRepository;
+//        this.validationResultRepository = validationResultRepository;
     }
 
     @Override
@@ -70,51 +72,41 @@ public class ValidationServiceImpl implements IValidationService {
         if (response.isPending() || response.isDone()) {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
+                                // TODO После или при добавлении ответа определять завершен ли процесс
                                 process.addResponse(response);
-                                persistResponse(process, response);
                             },
                             () -> log.warn("Not found validation process by id: {}", response.getId()));
         }
 
         if (response.isEmpty()) {
             log.info("Try validate empty table!");
+
+            getProcessById(response.getId())
+                    .ifPresentOrElse(process -> {
+                                process.setStatus(ValidationStatus.EMPTY);
+                            },
+                            () -> log.warn("Not found validation process by id: {}", response.getId()));
+        } else if (response.isError()) {
+            getProcessById(response.getId())
+                    .ifPresentOrElse(process -> {
+                                process.setStatus(ValidationStatus.ERROR);
+                            },
+                            () -> log.warn("Not found validation process by id: {}", response.getId()));
         }
     }
 
-    @Transactional
-    public void persistResponse(ValidationProcess process, ValidationMqResponse response) {
-        if (!response.getResults().isEmpty()) {
-            log.info("Response has: {} violations", response.getResults().size());
-
-            User user = userRepository.findUserByUsername(process.getUserName()).get();
-
-            response.getResults().forEach(constraintViolation -> {
-                ValidationResult validationResult = new ValidationResult();
-                validationResult.setUser(user);
-                validationResult.setLastModified(LocalDateTime.now());
-                validationResult.setTableName(process.getRequest().getTableName());
-                validationResult.setObjectId(constraintViolation.getObjectId());
-                validationResult.setViolations(convertToJson(constraintViolation.getViolations()));
-
-                validationResultRepository.save(validationResult);
-            });
-        } else {
-            log.info("validation result empty");
-        }
-    }
-
-    private JsonNode convertToJson(List<PropertyViolation> propertyViolations) {
-        try {
-            String asString = new ObjectMapper().writer()
-                    .withDefaultPrettyPrinter()
-                    .writeValueAsString(propertyViolations);
-            return JacksonUtil.toJsonNode(asString);
-        } catch (JsonProcessingException e) {
-            log.error("Failed convert to json: {}", e.getMessage());
-
-            return JacksonUtil.toJsonNode("");
-        }
-    }
+//    private JsonNode convertToJson(List<PropertyViolation> propertyViolations) {
+//        try {
+//            String asString = new ObjectMapper().writer()
+//                    .withDefaultPrettyPrinter()
+//                    .writeValueAsString(propertyViolations);
+//            return JacksonUtil.toJsonNode(asString);
+//        } catch (JsonProcessingException e) {
+//            log.error("Failed convert to json: {}", e.getMessage());
+//
+//            return JacksonUtil.toJsonNode("");
+//        }
+//    }
 
     private Optional<ValidationMqRequest> initValidationProcess(ValidationRequestDto requestDto, String userName) {
         switch (checkNewRequest(requestDto, userName)) {
@@ -136,9 +128,19 @@ public class ValidationServiceImpl implements IValidationService {
 
                 throw new ValidationAlreadyStartedException("Ожидайте выполнения предыдущего запроса");
             case SAME_DATA:
-                log.info("SAME_DATA request. Not implemented yet...");
+                log.warn("SAME_DATA request. Not implemented yet... Behavior as UNIQE request");
 
-                return Optional.empty();
+                // TODO: Пришел запрос на теже данные что обрабатываются в данный момент...
+                // мы можем подложить ответ на активный запрос и в этот запрос тоже
+                // в целом валидация по полной таблице происходит за секунд 5
+                // данна ситуация маловероятна, но возможна
+                ValidationProcess process = new ValidationProcess();
+                process.setUserName(userName);
+                process.setRequest(requestDto);
+
+                processes.add(process);
+
+                return Optional.of(preparePayload(process.getId(), requestDto));
             default:
                 log.warn("Validation request unsupported type");
                 return Optional.empty();
@@ -150,7 +152,7 @@ public class ValidationServiceImpl implements IValidationService {
             ValidationRequestType result = UNIQE;
         };
 
-        processes.forEach(process -> {
+        activeProcess().forEach(process -> {
             if (userName.equals(process.getUserName())) {
                 ref.result = SAME_USER;
             }
@@ -178,6 +180,14 @@ public class ValidationServiceImpl implements IValidationService {
         return processes.stream()
                 .filter(processInfo -> processInfo.getId().equals(id))
                 .findFirst();
+
+    }
+
+    private List<ValidationProcess> activeProcess() {
+        return processes
+                .stream()
+                .filter(process -> process.getStatus() == ValidationStatus.PENDING)
+                .collect(Collectors.toList());
     }
 
 }

@@ -38,7 +38,7 @@ public class PostGisStorage {
     }
 
     public JdbcTemplate initConnection(final String dbName) {
-        log.info("Try init connection db:{} schema: {}", dbName);
+        log.info("Try init connection db: {}", dbName);
 
         return new JdbcTemplate(getDatasource(dbName));
     }
@@ -46,11 +46,18 @@ public class PostGisStorage {
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate,
                                                 final String schema, String tableName,
                                                 int limit, int offsetMultiple) {
-        log.info("Try select from table: {} with limit: {} / offsetMultiple: {}", tableName, limit, offsetMultiple);
+        log.info("Table: {} with limit: {} / offsetMultiple: {}", tableName, limit, offsetMultiple);
+
+        String extensionTableName = tableName + "_extension";
 
         try {
-            return jdbcTemplate.queryForList("SELECT * FROM " + schema + "." + tableName +
-                    " ORDER BY objectid LIMIT " + limit + " OFFSET " + limit * offsetMultiple);
+            String rowsNeedingValidation = String.format("select * from %s.%s as target " +
+                    "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
+                    "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
+                    "ORDER BY target.objectid " +
+                    "LIMIT %d OFFSET %d", schema, tableName, schema, extensionTableName, limit, limit * offsetMultiple);
+
+            return jdbcTemplate.queryForList(rowsNeedingValidation);
         } catch (RuntimeException e) {
             log.error("Failed get rows: {}", e.getLocalizedMessage());
 

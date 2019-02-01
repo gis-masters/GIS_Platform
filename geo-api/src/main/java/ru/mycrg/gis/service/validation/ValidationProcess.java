@@ -63,6 +63,10 @@ public class ValidationProcess {
 
     public void addResponse(ValidationMqResponse response) {
         responses.add(response);
+
+        if (response.isDone()) {
+            status = ValidationStatus.DONE;
+        }
     }
 
     public String getUserName() {
