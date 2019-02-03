@@ -1,11 +1,17 @@
 package ru.mycrg.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectValidationResult {
 
     private String objectId;
+
+    @JsonIgnore
+    private String xMin;
+
     private List<PropertyViolation> violations = new ArrayList<>();
     private List<String> correctProperties = new ArrayList<>();
     private String violationAsString = "";
@@ -42,5 +48,13 @@ public class ObjectValidationResult {
 
     public void setViolationAsString(String violationAsString) {
         this.violationAsString = violationAsString;
+    }
+
+    public String getxMin() {
+        return xMin;
+    }
+
+    public void setxMin(String xMin) {
+        this.xMin = xMin;
     }
 }

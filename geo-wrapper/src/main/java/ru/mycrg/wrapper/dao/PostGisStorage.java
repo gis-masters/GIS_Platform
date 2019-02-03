@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.dao;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -53,7 +55,7 @@ public class PostGisStorage {
         String extensionTableName = tableName + "_extension";
 
         try {
-            String rowsNeedingValidation = String.format("select * from %s.%s as target " +
+            String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
                     "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
                     "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
                     "ORDER BY target.objectid " +
@@ -70,20 +72,44 @@ public class PostGisStorage {
     public void saveValidationResults(JdbcTemplate jdbcTemplate,
                                       List<ObjectValidationResult> violationResults,
                                       String schemaName,
-                                      String tableName) {
+                                      String tableName,
+                                      String objectIdKey) {
         log.info("Save validation results for: {}.{} Count: {}", schemaName, tableName, violationResults.size());
 
         String extensionTableName = tableName + "_extension";
 
-        try {
-            String sqlIsRowExist = String.format("");
+        violationResults.forEach(validationResult -> {
+            String objectId = validationResult.getObjectId();
 
-            List<Map<String, Object>> maps = jdbcTemplate.queryForList(sqlIsRowExist);
-        } catch (RuntimeException e) {
-            log.error("Failed get rows: {}", e.getLocalizedMessage());
+            try {
+                String sqlIsRowExist = String.format("SELECT * FROM %s.%s where %s = %s",
+                        schemaName, extensionTableName, objectIdKey, objectId);
 
-            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
-        }
+                List<Map<String, Object>> isRowExist = jdbcTemplate.queryForList(sqlIsRowExist);
+                JsonNode json = Util.convertToJson(validationResult.getViolations());
+                String xMin = validationResult.getxMin();
+
+                if (isRowExist.isEmpty()) { // Add new row
+                    String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, object_id, valid) " +
+                                    "VALUES ('%s', '%s', '%s', '%s');",
+                            schemaName, extensionTableName, json.toString(), xMin, objectId,
+                            validationResult.getViolations().isEmpty());
+
+                    jdbcTemplate.update(sqlAddRow);
+                } else { // Update row
+                    String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin='%s', valid='%s' " +
+                                    "WHERE object_id = %s",
+                            schemaName, extensionTableName, json.toString(), xMin,
+                            validationResult.getViolations().isEmpty(), objectId);
+
+                    jdbcTemplate.update(sqlUpdateRow);
+                }
+            } catch (RuntimeException e) {
+                log.error("Failed save validation result: {}", e.getLocalizedMessage());
+
+                throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
+            }
+        });
     }
 
     public List<Map<String, Object>> getViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
@@ -93,8 +119,8 @@ public class PostGisStorage {
 
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
         try {
-            String sqlRequest = "SELECT * FROM " + schemaName + "." + extensionTableName +
-                    " where valid is false LIMIT " + limit + " OFFSET " + limit * offset;
+            String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT %d OFFSET %d",
+                    schemaName, extensionTableName, limit, limit * offset);
 
             log.info("Get validations: {}/{} / SQL:{}", limit, offset, sqlRequest);
 
@@ -111,8 +137,8 @@ public class PostGisStorage {
 
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
         try {
-            String sqlRequest = "SELECT count(*) FROM " + schemaName + "." + extensionTableName +
-                    " where valid is false";
+            String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
+                    schemaName, extensionTableName);
 
             return jdbcTemplate.queryForObject(sqlRequest, Long.class);
         } catch (RuntimeException e) {

@@ -19,6 +19,7 @@ public class ValidationMqRequest {
         this.dbName = dbName;
         this.schemaName = schemaName;
         this.entityType = entityType;
+        this.tableName = entityType.getTableName();
     }
 
     public String getDbName() {

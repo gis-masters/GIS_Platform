@@ -22,7 +22,8 @@ public class ValidationService {
     private final PostGisStorage postGisStorage;
 
     private final int BATCH_SIZE = 100;
-    private String ID_KEY = "object_id";
+    private String OBJECT_ID = "objectid";
+    private String EXTENSION_ID_KEY = "object_id";
     private String VIOLATIONS_KEY = "violations";
 
     private List<ValidationMqRequest> currentRequests = new ArrayList<>();
@@ -86,7 +87,7 @@ public class ValidationService {
                         jdbcTemplate,
                         violationResults,
                         validationMqRequest.getSchemaName(),
-                        validationMqRequest.getEntityType().getTableName());
+                        validationMqRequest.getEntityType().getTableName(), EXTENSION_ID_KEY);
 
                 offset++;
             }
@@ -106,7 +107,7 @@ public class ValidationService {
         int i = 0;
         while (i < violations.size()) {
             ObjectValidationResult objectValidationResult = new ObjectValidationResult();
-            objectValidationResult.setObjectId(Util.getPropertyId(violations.get(i), ID_KEY));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_ID_KEY));
             objectValidationResult.setViolationAsString(Util.getViolations(violations.get(i), VIOLATIONS_KEY));
 
             results.add(objectValidationResult);
@@ -123,7 +124,8 @@ public class ValidationService {
         int i = 0;
         while (i < batch.size()) {
             ObjectValidationResult objectValidationResult = validator.validate(entityType, batch.get(i));
-            objectValidationResult.setObjectId(Util.getPropertyId(batch.get(i), ID_KEY));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
+            objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));
 
             validationResults.add(objectValidationResult);
 

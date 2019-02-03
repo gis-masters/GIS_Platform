@@ -115,19 +115,6 @@ public class ValidationServiceImpl implements IValidationService {
         }
     }
 
-//    private JsonNode convertToJson(List<PropertyViolation> propertyViolations) {
-//        try {
-//            String asString = new ObjectMapper().writer()
-//                    .withDefaultPrettyPrinter()
-//                    .writeValueAsString(propertyViolations);
-//            return JacksonUtil.toJsonNode(asString);
-//        } catch (JsonProcessingException e) {
-//            log.error("Failed convert to json: {}", e.getMessage());
-//
-//            return JacksonUtil.toJsonNode("");
-//        }
-//    }
-
     private Optional<ValidationMqRequest> initValidationProcess(ValidationRequestDto requestDto, String userName) {
         switch (checkNewRequest(requestDto, userName)) {
             case UNIQE:

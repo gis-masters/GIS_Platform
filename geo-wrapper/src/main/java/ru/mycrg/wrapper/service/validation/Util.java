@@ -1,14 +1,14 @@
 package ru.mycrg.wrapper.service.validation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.PropertyViolation;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,16 +16,16 @@ public class Util {
 
     private static Logger log = LoggerFactory.getLogger(Util.class);
 
-    public static String getPropertyId(Map<String, Object> data, String keyFiled) {
+    public static String getPropertyByKey(Map<String, Object> data, String keyFiled) {
         if (data.containsKey(keyFiled)) {
             Object o = data.get(keyFiled);
             if (o != null) {
                 return o.toString();
             } else {
-                log.info("Failed get keyFiled: {}", keyFiled);
+                log.info("Failed get key: {}", keyFiled);
             }
         } else {
-            log.warn("Row not contains keyFiled? : {}", keyFiled);
+            log.warn("Row not contains key? : {}", keyFiled);
         }
 
         return "";
@@ -38,5 +38,18 @@ public class Util {
         return o != null
                 ? o.toString()
                 : "";
+    }
+
+    public static JsonNode convertToJson(List<PropertyViolation> propertyViolations) {
+        try {
+            String asString = new ObjectMapper().writer()
+                    .withDefaultPrettyPrinter()
+                    .writeValueAsString(propertyViolations);
+            return JacksonUtil.toJsonNode(asString);
+        } catch (JsonProcessingException e) {
+            log.error("Failed convert to json: {}", e.getMessage());
+
+            return JacksonUtil.toJsonNode("");
+        }
     }
 }
