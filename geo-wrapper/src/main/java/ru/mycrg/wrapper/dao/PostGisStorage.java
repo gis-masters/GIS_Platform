@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationMqRequest;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -43,10 +45,10 @@ public class PostGisStorage {
         return new JdbcTemplate(getDatasource(dbName));
     }
 
-    public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate,
-                                                final String schema, String tableName,
-                                                int limit, int offsetMultiple) {
-        log.info("Table: {} with limit: {} / offsetMultiple: {}", tableName, limit, offsetMultiple);
+    public List<Map<String, Object>> fetchBatchOfRowsNeededValidation(JdbcTemplate jdbcTemplate,
+                                                                      final String schema, String tableName,
+                                                                      int limit, int offset) {
+        log.info("Table: {} with limit: {} / offset: {}", tableName, limit, offset);
 
         String extensionTableName = tableName + "_extension";
 
@@ -55,9 +57,49 @@ public class PostGisStorage {
                     "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
                     "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
                     "ORDER BY target.objectid " +
-                    "LIMIT %d OFFSET %d", schema, tableName, schema, extensionTableName, limit, limit * offsetMultiple);
+                    "LIMIT %d OFFSET %d", schema, tableName, schema, extensionTableName, limit, limit * offset);
 
             return jdbcTemplate.queryForList(rowsNeedingValidation);
+        } catch (RuntimeException e) {
+            log.error("Failed get rows: {}", e.getLocalizedMessage());
+
+            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
+        }
+    }
+
+    public void saveValidationResults(JdbcTemplate jdbcTemplate,
+                                      List<ObjectValidationResult> violationResults,
+                                      String schemaName,
+                                      String tableName) {
+        log.info("Save validation results for: {}.{} Count: {}", schemaName, tableName, violationResults.size());
+
+        String extensionTableName = tableName + "_extension";
+
+        try {
+            String sqlIsRowExist = String.format("");
+
+            List<Map<String, Object>> maps = jdbcTemplate.queryForList(sqlIsRowExist);
+        } catch (RuntimeException e) {
+            log.error("Failed get rows: {}", e.getLocalizedMessage());
+
+            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
+        }
+    }
+
+    public List<Map<String, Object>> getViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+        String tableName = validationMqRequest.getTableName();
+        int limit = validationMqRequest.getSize();
+        int offset = validationMqRequest.getPage();
+
+        String extensionTableName = tableName + "_extension";
+        try {
+            String sqlRequest = "SELECT * FROM " + schemaName + "." + extensionTableName +
+                    " where valid is false LIMIT " + limit + " OFFSET " + limit * offset;
+
+            log.info("Get validations: {}/{} / SQL:{}", limit, offset, sqlRequest);
+
+            return jdbcTemplate.queryForList(sqlRequest);
         } catch (RuntimeException e) {
             log.error("Failed get rows: {}", e.getLocalizedMessage());
 
@@ -98,5 +140,4 @@ public class PostGisStorage {
 
         return newDataSource;
     }
-
 }

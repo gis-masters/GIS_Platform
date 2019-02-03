@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
@@ -14,6 +16,7 @@ import ru.mycrg.gis.service.validation.IValidationService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class FgistpController {
@@ -63,13 +66,44 @@ public class FgistpController {
     }
 
     @ResponseBody
-    @PostMapping("/fgistp/validation")
+    @PostMapping("/fgistp/validation/init")
     public HttpStatus initValidation(@RequestBody List<ValidationRequestDto> request, Principal principal) {
         log.info("Request validation: {}", request.size());
 
         validationService.initValidation(principal.getName(), request);
 
         return HttpStatus.ACCEPTED;
+    }
+
+    @ResponseBody
+    @PostMapping("/fgistp/validation")
+    public ValidationMqResponse getValidationResults(
+            @RequestBody ValidationRequestDto request,
+            @RequestParam(required = false, name = "page", defaultValue = "0") String page,
+            @RequestParam(required = false, name = "size", defaultValue = "20") String size,
+            Principal principal) {
+        log.info("Request get validation results: {}/{}", page, size);
+
+        // TODO: плеваться бадреквестом когда данные в дто пусты
+        int nPage;
+        int nSize;
+        try {
+            nPage = Integer.parseInt(page);
+            nSize = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            throw new CrgBadRequestException("Bad request");
+        }
+
+        ValidationMqResponse response = null;
+        try {
+            response = validationService
+                    .getResults(request, nPage, nSize, principal.getName())
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(" -------- {}", e.getLocalizedMessage());
+        }
+
+        return response;
     }
 
 }

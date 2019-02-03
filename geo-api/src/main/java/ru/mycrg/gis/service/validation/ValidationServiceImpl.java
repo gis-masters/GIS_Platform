@@ -1,37 +1,28 @@
 package ru.mycrg.gis.service.validation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
-import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.entity.ValidationResult;
 import ru.mycrg.gis.exceptions.ValidationAlreadyStartedException;
 import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.repository.UserRepository;
-import ru.mycrg.gis.repository.ValidationResultRepository;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_DATA;
-import static ru.mycrg.gis.service.validation.ValidationRequestType.SAME_USER;
-import static ru.mycrg.gis.service.validation.ValidationRequestType.UNIQE;
+import static ru.mycrg.gis.service.validation.ValidationRequestType.*;
 
 @Service
 public class ValidationServiceImpl implements IValidationService {
@@ -40,20 +31,42 @@ public class ValidationServiceImpl implements IValidationService {
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
-//    private final UserRepository userRepository;
-//    private final ValidationResultRepository validationResultRepository;
 
     private List<ValidationProcess> processes = new ArrayList<>();
 
     @Autowired
     public ValidationServiceImpl(MqSender mqSender,
-                                 FgistpRuleService ruleService,
-                                 UserRepository userRepository,
-                                 ValidationResultRepository validationResultRepository) {
+                                 FgistpRuleService ruleService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
-//        this.userRepository = userRepository;
-//        this.validationResultRepository = validationResultRepository;
+    }
+
+    @Override
+    public CompletableFuture<ValidationMqResponse> getResults(ValidationRequestDto request, int page, int size,
+                                                              String userName) {
+        if (ruleService.isCacheEmpty()) {
+            ruleService.updateRules();
+        }
+
+        ValidationProcess validationProcess = new ValidationProcess();
+        validationProcess.setUserName(userName);
+        validationProcess.setRequest(request);
+
+        ValidationMqRequest validationMqRequest = new ValidationMqRequest();
+        validationMqRequest.setId(validationProcess.getId());
+        validationMqRequest.setDbName(request.getDbName());
+        validationMqRequest.setSchemaName(request.getSchemaName());
+        validationMqRequest.setPage(page);
+        validationMqRequest.setSize(size);
+
+        EntityType ruleByClassName = ruleService.getRuleByClassName(request.getTableName());
+        validationMqRequest.setTableName(ruleByClassName.getTableName());
+
+        processes.add(validationProcess);
+
+        mqSender.startValidation(Optional.of(validationMqRequest));
+
+        return validationProcess.getFutureResponse();
     }
 
     @Override
@@ -69,11 +82,16 @@ public class ValidationServiceImpl implements IValidationService {
 
     @Override
     public void progress(ValidationMqResponse response) {
+        if (response.getId() == null) {
+            log.warn("Return invalid response");
+        }
+
         if (response.isPending() || response.isDone()) {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
                                 // TODO После или при добавлении ответа определять завершен ли процесс
                                 process.addResponse(response);
+                                process.getFutureResponse().complete(response);
                             },
                             () -> log.warn("Not found validation process by id: {}", response.getId()));
         }
@@ -84,12 +102,14 @@ public class ValidationServiceImpl implements IValidationService {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
                                 process.setStatus(ValidationStatus.EMPTY);
+                                process.getFutureResponse().complete(response);
                             },
                             () -> log.warn("Not found validation process by id: {}", response.getId()));
         } else if (response.isError()) {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
                                 process.setStatus(ValidationStatus.ERROR);
+                                process.getFutureResponse().complete(response);
                             },
                             () -> log.warn("Not found validation process by id: {}", response.getId()));
         }

@@ -23,6 +23,11 @@ public class ValidationMqResponse {
         this.status = status;
     }
 
+    public ValidationMqResponse(UUID id, ValidationStatus status) {
+        this.id = id;
+        this.status = status;
+    }
+
     public ValidationMqResponse(ValidationStatus status, List<ObjectValidationResult> results) {
         this.status = status;
         this.results = results;
@@ -37,7 +42,7 @@ public class ValidationMqResponse {
     }
 
     public boolean isError() {
-        return status == ValidationStatus.EMPTY;
+        return status == ValidationStatus.ERROR;
     }
 
     public boolean isPending() {

@@ -19,8 +19,6 @@ public class ValidatorImpl implements IValidator {
 
     private static Logger log = LoggerFactory.getLogger(ValidatorImpl.class);
 
-    private String ID_KEY = "objectid";
-
     private RequiredValidation requiredValidation = new RequiredValidation();
     private MinLengthValidation minLengthValidation = new MinLengthValidation();
     private MaxLengthValidation maxLengthValidation = new MaxLengthValidation();
@@ -35,17 +33,6 @@ public class ValidatorImpl implements IValidator {
     @Override
     public ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
-
-        if (data.containsKey(ID_KEY)) {
-            Object o = data.get(ID_KEY);
-            if (o != null) {
-                validationResult.setObjectId(o.toString());
-            } else {
-                log.info("Failed get ID_KEY: {}", ID_KEY);
-            }
-        } else {
-            log.warn("Row not contains id? : {}", ID_KEY);
-        }
 
         entityType.getProperties().forEach(propertyDto -> {
             String name = propertyDto.getName();
@@ -111,4 +98,5 @@ public class ValidatorImpl implements IValidator {
 
         return violations;
     }
+
 }

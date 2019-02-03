@@ -61,10 +61,14 @@ public class MqListener {
         log.info("Получено сообщение, startValidation: {}", validationMqRequest.getId());
 
         try {
-            validationService.startValidation(validationMqRequest);
+            if (validationMqRequest.getEntityType() != null) {
+                validationService.startValidation(validationMqRequest);
+            } else {
+                validationService.getResults(validationMqRequest);
+            }
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(validationMqRequest.getId(), ValidationStatus.ERROR));
         }
     }
 

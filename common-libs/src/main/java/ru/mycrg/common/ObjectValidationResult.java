@@ -8,6 +8,7 @@ public class ObjectValidationResult {
     private String objectId;
     private List<PropertyViolation> violations = new ArrayList<>();
     private List<String> correctProperties = new ArrayList<>();
+    private String violationAsString = "";
 
     public ObjectValidationResult() {}
 
@@ -35,4 +36,11 @@ public class ObjectValidationResult {
         return correctProperties;
     }
 
+    public String getViolationAsString() {
+        return violationAsString;
+    }
+
+    public void setViolationAsString(String violationAsString) {
+        this.violationAsString = violationAsString;
+    }
 }
