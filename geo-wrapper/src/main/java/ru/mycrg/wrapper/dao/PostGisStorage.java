@@ -88,11 +88,10 @@ public class PostGisStorage {
 
     public List<Map<String, Object>> getViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
-        String tableName = validationMqRequest.getTableName();
         int limit = validationMqRequest.getSize();
         int offset = validationMqRequest.getPage();
 
-        String extensionTableName = tableName + "_extension";
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
         try {
             String sqlRequest = "SELECT * FROM " + schemaName + "." + extensionTableName +
                     " where valid is false LIMIT " + limit + " OFFSET " + limit * offset;
@@ -100,6 +99,22 @@ public class PostGisStorage {
             log.info("Get validations: {}/{} / SQL:{}", limit, offset, sqlRequest);
 
             return jdbcTemplate.queryForList(sqlRequest);
+        } catch (RuntimeException e) {
+            log.error("Failed get rows: {}", e.getLocalizedMessage());
+
+            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
+        }
+    }
+
+    public Long countTotalViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+        try {
+            String sqlRequest = "SELECT count(*) FROM " + schemaName + "." + extensionTableName +
+                    " where valid is false";
+
+            return jdbcTemplate.queryForObject(sqlRequest, Long.class);
         } catch (RuntimeException e) {
             log.error("Failed get rows: {}", e.getLocalizedMessage());
 

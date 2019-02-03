@@ -38,12 +38,16 @@ public class ValidationService {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
         JdbcTemplate jdbcTemplate = postGisStorage.initConnection(validationMqRequest.getDbName());
-        List<Map<String, Object>> violations = postGisStorage.getViolations(jdbcTemplate, validationMqRequest);
+        Long totalViolations = postGisStorage.countTotalViolations(jdbcTemplate, validationMqRequest);
+        if (totalViolations > 0) {
+            List<Map<String, Object>> violations = postGisStorage.getViolations(jdbcTemplate, validationMqRequest);
 
-        log.info("Found {} violations", violations.size());
+            log.info("Found {} violations", violations.size());
+            response.setResults(mapToViolations(violations));
+        }
 
+        response.setTotal(totalViolations);
         response.setStatus(ValidationStatus.DONE);
-        response.setResults(mapToViolations(violations));
 
         mqEvents.validationResponse(response);
     }
@@ -55,7 +59,6 @@ public class ValidationService {
 
         int offset = 0;
         while (true) {
-            response.setBatchNumber(offset);
             response.setResults(new ArrayList<>());
 
             List<Map<String, Object>> batch = postGisStorage

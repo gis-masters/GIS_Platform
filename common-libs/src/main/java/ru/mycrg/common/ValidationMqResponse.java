@@ -9,7 +9,7 @@ import java.util.UUID;
 public class ValidationMqResponse {
 
     private UUID id;
-    private int batchNumber = 0;
+    private Long total = 0L;
     private ValidationStatus status;
     private List<ObjectValidationResult> results = new ArrayList<>();
 
@@ -69,12 +69,11 @@ public class ValidationMqResponse {
         return id;
     }
 
-    public void setBatchNumber(int batchNumber) {
-        this.batchNumber = batchNumber;
+    public Long getTotal() {
+        return total;
     }
 
-    public int getBatchNumber() {
-        return batchNumber;
+    public void setTotal(Long total) {
+        this.total = total;
     }
-
 }
