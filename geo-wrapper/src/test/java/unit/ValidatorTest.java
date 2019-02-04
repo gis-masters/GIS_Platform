@@ -99,7 +99,6 @@ public class ValidatorTest {
         entityType.setProperties(properties);
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
-        rowFromDb.put("objectid", "314");
         rowFromDb.put("CLASSID", null);
         rowFromDb.put("CLASSID_short", "short");
         rowFromDb.put("CLASSID_valid", "valid_class_id");
@@ -112,7 +111,6 @@ public class ValidatorTest {
 
         ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
 
-        assertEquals("314", objectValidationResult.getObjectId());
         assertTrue(objectValidationResult.getCorrectProperties().contains("CLASSID_valid"));
         assertEquals(4, objectValidationResult.getCorrectProperties().size());
         assertEquals(5, objectValidationResult.getViolations().size());
