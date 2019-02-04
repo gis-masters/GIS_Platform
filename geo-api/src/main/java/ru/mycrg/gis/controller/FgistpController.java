@@ -91,7 +91,7 @@ public class FgistpController {
             nPage = Integer.parseInt(page);
             nSize = Integer.parseInt(size);
         } catch (NumberFormatException e) {
-            throw new CrgBadRequestException("Bad request");
+            throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
         ValidationMqResponse response = null;

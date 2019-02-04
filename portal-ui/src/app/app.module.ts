@@ -20,6 +20,7 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
+import {ValidationResultsComponent} from './components/validation-results/validation-results.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {NgxMaskModule} from 'ngx-mask';
     LayerListItemComponent,
     MappingPairComponent,
     GeometryPipe,
+    ValidationResultsComponent,
   ],
   imports: [
     BrowserModule,

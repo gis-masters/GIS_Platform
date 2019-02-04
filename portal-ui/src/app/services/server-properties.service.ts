@@ -15,6 +15,7 @@ export class ServerPropertiesService {
   private _organizationsUrl = this._baseUrl + '/organizations';
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
   private _validationUrl = this._baseUrl + '/fgistp/validation';
+  private _initValidationUrl = this._validationUrl + '/init';
 
   constructor() {
   }
@@ -73,6 +74,14 @@ export class ServerPropertiesService {
 
   set rulesUrl(value: string) {
     this._rulesUrl = value;
+  }
+
+  get initValidationUrl(): string {
+    return this._initValidationUrl;
+  }
+
+  set initValidationUrl(value: string) {
+    this._initValidationUrl = value;
   }
 
   get validationUrl(): string {
