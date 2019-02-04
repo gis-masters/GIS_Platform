@@ -21,6 +21,7 @@ import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
 import {ValidationResultsComponent} from './components/validation-results/validation-results.component';
+import { TestGithubComponent } from './components/test-github/test-github.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {ValidationResultsComponent} from './components/validation-results/valida
     MappingPairComponent,
     GeometryPipe,
     ValidationResultsComponent,
+    TestGithubComponent,
   ],
   imports: [
     BrowserModule,

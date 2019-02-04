@@ -1,13 +1,30 @@
-<div class="validation-results-container mat-elevation-z8">
+<div *ngIf="dataSource?.data.length === 0 && !isLoadingResults">
+  <div *ngIf="status === 'DONE'">
+    <h6 class="float-left" style="font-size: inherit">Ошибок нет</h6>
+    <h6 class="float-right" style="font-size: inherit">Время последней проверки: 2019.02.05</h6>
+  </div>
+  <div *ngIf="status === 'ERROR'">
+    <h6 class="float-left" style="font-size: inherit">Ошибка валидации</h6>
+  </div>
+</div>
+
+<div class="validation-results-container mat-elevation-z2">
   <div class="example-loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+  <table mat-table multiTemplateDataRows
+         matSort matSortActive="objectid" matSortDisableClear matSortDirection="desc"
+         [dataSource]="dataSource"
+         *ngIf="dataSource?.data.length > 0">
+    <ng-container matColumnDef="objectid">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{element.objectId}}</td>
+    </ng-container>
 
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-      <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+    <ng-container matColumnDef="violationAsString">
+      <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Ошибки</th>
+      <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{element.violationAsString}}</td>
     </ng-container>
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
@@ -38,4 +55,11 @@
 
     <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
+
+  <mat-paginator [length]="totalElements"
+                 [pageSize]="20"
+                 *ngIf="dataSource?.data.length > 0"></mat-paginator>
+<!--  <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" [pageSize]="10"-->
+<!--                 [length]="totalElements"-->
+<!--                 *ngIf="dataSource?.data.length > 0"></mat-paginator>-->
 </div>
