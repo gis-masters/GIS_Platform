@@ -3,14 +3,18 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
+import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ValidationService {
@@ -38,10 +42,9 @@ public class ValidationService {
     public void getResults(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
-        JdbcTemplate jdbcTemplate = postGisStorage.initConnection(validationMqRequest.getDbName());
-        Long totalViolations = postGisStorage.countTotalViolations(jdbcTemplate, validationMqRequest);
+        Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
         if (totalViolations > 0) {
-            List<Map<String, Object>> violations = postGisStorage.getViolations(jdbcTemplate, validationMqRequest);
+            List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
 
             log.info("Found {} violations", violations.size());
             response.setResults(mapToViolations(violations));
@@ -56,20 +59,12 @@ public class ValidationService {
     public void startValidation(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
-        JdbcTemplate jdbcTemplate = postGisStorage.initConnection(validationMqRequest.getDbName());
-
         int offset = 0;
         while (true) {
             response.setResults(new ArrayList<>());
 
             List<Map<String, Object>> batch = postGisStorage
-                    .fetchBatchOfRowsNeededValidation(
-                            jdbcTemplate,
-                            validationMqRequest.getSchemaName(),
-                            validationMqRequest.getEntityType().getTableName(),
-                            BATCH_SIZE,
-                            offset
-                    );
+                    .fetchBatchOfRowsNeededValidation(validationMqRequest, BATCH_SIZE, offset);
 
             // TODO: Возникновение ошибки при обработке пакета не должны прекращать обработку других пакетов? или должны
             // типа если один с ошибкой то и большая вероятность что другие тоже...
@@ -83,17 +78,13 @@ public class ValidationService {
             } else {
                 List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
 
-                postGisStorage.saveValidationResults(
-                        jdbcTemplate,
-                        violationResults,
-                        validationMqRequest.getSchemaName(),
-                        validationMqRequest.getEntityType().getTableName(), EXTENSION_ID_KEY);
+                postGisStorage.saveValidationResults(validationMqRequest, violationResults, EXTENSION_ID_KEY);
 
                 offset++;
             }
         }
 
-        List<Map<String, Object>> violations = postGisStorage.getViolations(jdbcTemplate, validationMqRequest);
+        List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
 
         response.setStatus(ValidationStatus.DONE);
         response.setResults(mapToViolations(violations));

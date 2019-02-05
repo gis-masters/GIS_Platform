@@ -1,12 +1,11 @@
 /* Structure */
-.example-container {
+.validation-results-container {
   position: relative;
-  min-height: 200px;
 }
 
-.example-table-container {
+.validation-results-table-container {
   position: relative;
-  max-height: 400px;
+  max-height: 600px;
   overflow: auto;
 }
 
@@ -27,12 +26,6 @@ table {
   justify-content: center;
 }
 
-.example-rate-limit-reached {
-  color: #980000;
-  max-width: 360px;
-  text-align: center;
-}
-
 /* Column Widths */
 .mat-column-number,
 .mat-column-state {
@@ -41,4 +34,48 @@ table {
 
 .mat-column-created {
   max-width: 124px;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 50px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+tr.example-detail-row {
+  height: 0;
 }

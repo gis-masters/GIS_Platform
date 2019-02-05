@@ -13,15 +13,15 @@ import {AppComponent} from './pages/_app/app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
-import {FileUploadModule} from 'ng2-file-upload';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
+import {TestGithubComponent} from './components/test-github/test-github.component';
+import {FileUploadModule} from 'ng2-file-upload';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
-import {ValidationResultsComponent} from './components/validation-results/validation-results.component';
-import { TestGithubComponent } from './components/test-github/test-github.component';
+import { ViolationItemViewComponent } from './components/violation-item-view/violation-item-view.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +33,8 @@ import { TestGithubComponent } from './components/test-github/test-github.compon
     LayerListItemComponent,
     MappingPairComponent,
     GeometryPipe,
-    ValidationResultsComponent,
     TestGithubComponent,
+    ViolationItemViewComponent,
   ],
   imports: [
     BrowserModule,

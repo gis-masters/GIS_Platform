@@ -8,19 +8,26 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {map, tap} from "rxjs/operators";
 import {switchMap} from "rxjs/internal/operators/switchMap";
 import {MatPaginator, MatSort} from "@angular/material";
 import {merge} from "rxjs/internal/observable/merge";
 import {startWith} from "rxjs/internal/operators/startWith";
 import {ValidationRequest, ValidationService} from "../../services/validation.service";
 import {NGXLogger} from "ngx-logger";
-import {Observable, of} from "rxjs";
+import {of} from "rxjs";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'crg-test-github',
   templateUrl: './test-github.component.html',
-  styleUrls: ['./test-github.component.css']
+  styleUrls: ['./test-github.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 export class TestGithubComponent implements OnChanges, AfterViewInit {
 
@@ -29,9 +36,10 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   @Input() connectionInfo: ValidationRequest;
   @Output() getConnectionInfo = new EventEmitter<number>();
 
-  displayedColumns: string[] = ['objectid', 'violationAsString'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = ['objectid', 'violationAsString', 'violationAsString2'];
   data: any[] = [];
-
   isLoadingResults = true;
 
   _connectionInfo: ValidationRequest;
@@ -39,8 +47,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   _step: number;
   totalElements = 0;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  expandedElement: any;
 
   constructor(private logger: NGXLogger,
               private validationService: ValidationService) {
@@ -106,7 +113,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   getValidation() {
     if (this._connectionInfo) {
       this.validationService
-          .getValidation(this.connectionInfo, 0, 20)
+          .getValidation(this.connectionInfo, 0, 10)
           .subscribe(response => {
             this.logger.info('!!!!!!!!! ', response);
 
@@ -123,9 +130,12 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
 
 }
 
-export interface GithubIssue {
-  created_at: string;
-  number: string;
-  state: string;
-  title: string;
+export interface Violations {
+  violations: ViolationObject[];
+}
+
+export interface ViolationObject {
+  name: string;
+  value: string;
+  errors: string;
 }
