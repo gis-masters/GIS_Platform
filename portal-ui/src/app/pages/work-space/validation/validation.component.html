@@ -20,14 +20,9 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <crg-validation-results [connectionInfo]="connectionInfo[index]"
-                                  [step]="step" [index]="index + 1"
-                                  (getConnectionInfo)="handleChildEvent($event)">
-          </crg-validation-results>
-
-<!--          <crg-test-github [connectionInfo]="connectionInfo[index]"-->
-<!--                           [step]="step" [index]="index + 1"-->
-<!--                           (getConnectionInfo)="handleChildEvent($event)"></crg-test-github>-->
+          <crg-test-github [connectionInfo]="connectionInfo[index]"
+                           [step]="step" [index]="index + 1"
+                           (getConnectionInfo)="handleChildEvent($event)"></crg-test-github>
 
           <mat-action-row>
             <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>

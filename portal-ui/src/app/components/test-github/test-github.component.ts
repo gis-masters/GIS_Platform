@@ -15,6 +15,7 @@ import {merge} from "rxjs/internal/observable/merge";
 import {startWith} from "rxjs/internal/operators/startWith";
 import {ValidationRequest, ValidationService} from "../../services/validation.service";
 import {NGXLogger} from "ngx-logger";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'crg-test-github',
@@ -55,18 +56,29 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
 
-          this.logger.info(' --- 1');
+          if (this._connectionInfo) {
+            this.logger.info(' --- 1');
 
-          return this.validationService
-                     .getValidation(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
+            return this.validationService
+                       .getValidation(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
+          } else {
+            this.logger.info(' --- 2 emiter');
+            // this.getConnectionInfo.emit(this.index - 1);
+
+            return of();
+          }
         }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
+      ).subscribe(response => {
+        if (response) {
+          this.data = response.results;
+          this.totalElements = response.total;
+          this.status = response.status;
 
-          return data.items;
-        })
-      ).subscribe(data => this.data = data);
+          this.isLoadingResults = false;
+        } else {
+          this.logger.info('!---! ', response);
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

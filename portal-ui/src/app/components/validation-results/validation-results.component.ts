@@ -39,8 +39,6 @@ export class ValidationResultsComponent implements OnChanges, OnInit {
   constructor(private logger: NGXLogger,
               private validationService: ValidationService) {
     this.logger.info('ValidationResultsComponent constructor')
-
-    // this.dataSource = new MatTableDataSource([]);
   }
 
   ngOnInit() {
