@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class ValidationProcess {
 
@@ -18,6 +19,7 @@ public class ValidationProcess {
     private ValidationStatus status;
     private ValidationRequestDto request;
     private List<ValidationMqResponse> responses = new ArrayList<>();
+    private CompletableFuture<ValidationMqResponse> futureResponse = new CompletableFuture<>();
 
     public ValidationProcess() {
         this.id = UUID.randomUUID();
@@ -63,6 +65,10 @@ public class ValidationProcess {
 
     public void addResponse(ValidationMqResponse response) {
         responses.add(response);
+
+        if (response.isDone()) {
+            status = ValidationStatus.DONE;
+        }
     }
 
     public String getUserName() {
@@ -71,5 +77,13 @@ public class ValidationProcess {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public CompletableFuture<ValidationMqResponse> getFutureResponse() {
+        return futureResponse;
+    }
+
+    public void setFutureResponse(CompletableFuture<ValidationMqResponse> futureResponse) {
+        this.futureResponse = futureResponse;
     }
 }

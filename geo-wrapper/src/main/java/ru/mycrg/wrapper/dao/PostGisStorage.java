@@ -1,89 +1,125 @@
 package ru.mycrg.wrapper.dao;
 
-import com.zaxxer.hikari.HikariDataSource;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class PostGisStorage {
 
     private static final Logger log = LoggerFactory.getLogger(PostGisStorage.class);
 
-    private final JdbcTemplate jdbcTemplate;
-
-    private final Environment environment;
+    private DatasourceFactory datasourceFactory;
 
     @Autowired
-    public PostGisStorage(JdbcTemplate jdbcTemplate, Environment environment) {
-        this.environment = environment;
-        this.jdbcTemplate = jdbcTemplate;
+    public PostGisStorage(DatasourceFactory datasourceFactory) {
+        this.datasourceFactory = datasourceFactory;
     }
 
     public void createDb(final String dbName) throws RuntimeException {
-        log.info("Try create db: {}", dbName);
+        log.debug("Try create db: {}", dbName);
 
+        JdbcTemplate jdbcTemplate = initConnection(dbName);
         jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0};", dbName));
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
-        createExtensionForNewDb(dbName);
+        createExtensionForNewDb(jdbcTemplate);
+
+        log.debug("Successfully created");
     }
 
-    public List<Map<String, Object>> fetchAllRows(final String dbName, final String schema, final String tableName) {
-        log.info("Try select from, db:{} schema: {} table: {}", dbName, schema, tableName);
+    public List<Map<String, Object>> fetchBatchOfRowsNeededValidation(ValidationMqRequest validationMqRequest,
+                                                                      int limit, int offset) {
+        String schema = validationMqRequest.getSchemaName();
+        String table = validationMqRequest.getEntityType().getTableName();
+        String extensionTableName = table + "_extension";
 
-        try (HikariDataSource datasource = getDatasource(dbName)) {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-            jdbcTemplate.setFetchSize(50);
+        log.info("Table: {} with limit: {} / offset: {}", extensionTableName, limit, offset);
 
-            return jdbcTemplate.queryForList("SELECT * FROM " + schema + "." + tableName);
-        } catch (RuntimeException e) {
-            log.error("Failed get rows: {}", e.getLocalizedMessage());
+        JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
 
-            throw new RuntimeException("Failed get rows: " + e.getLocalizedMessage());
-        }
+        String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
+                "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
+                "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
+                "ORDER BY target.objectid " +
+                "LIMIT ? OFFSET ?", schema, table, schema, extensionTableName);
+
+        return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
     }
 
-    private void createExtensionForNewDb(final String dbName) {
-        try (HikariDataSource datasource = getDatasource(dbName)) {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-            jdbcTemplate.execute("CREATE EXTENSION postgis;");
-        } catch (RuntimeException e) {
-            log.warn("Failed create extension: {}", e.getLocalizedMessage());
-        }
+    public void saveValidationResults(ValidationMqRequest validationMqRequest,
+                                      List<ObjectValidationResult> violationResults,
+                                      String objectIdKey) {
+        String schema = validationMqRequest.getSchemaName();
+        String table = validationMqRequest.getEntityType().getTableName();
+        String extensionTableName = table + "_extension";
 
-        log.info("Successfully created");
+        log.info("Save validation results for: {}.{} Count: {}", schema, table, violationResults.size());
+
+        JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
+        violationResults.forEach(validationResult -> {
+            String objectId = validationResult.getObjectId();
+
+            String sqlIsRowExist = String.format("SELECT * FROM %s.%s where ? = ?", schema, extensionTableName);
+            var isRowExist = jdbcTemplate.queryForList(sqlIsRowExist, objectIdKey, objectId);
+
+            JsonNode json = Util.convertToJson(validationResult.getViolations());
+            String xMin = validationResult.getxMin();
+
+            if (isRowExist.isEmpty()) { // Add new row
+                String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, valid, object_id) " +
+                                "VALUES ('%s', ?, ?, ?);", schema, extensionTableName, json.toString());
+
+                jdbcTemplate.update(sqlAddRow,
+                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
+            } else { // Update row
+                String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin=?, valid=? " +
+                                "WHERE object_id = ?", schema, extensionTableName, json.toString());
+
+                jdbcTemplate.update(sqlUpdateRow,
+                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
+            }
+        });
     }
 
-    // jdbc:postgresql://postgis:5432/postgres
-    // jdbc:postgresql://127.0.0.1:5434/postgres
-    // jdbc:postgresql://any-other-service-name:5434/postgres
-    private String getConnectionUrl(String dbName) {
-        String result;
+    public List<Map<String, Object>> getViolations(ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+        int limit = validationMqRequest.getSize();
+        int offset = validationMqRequest.getPage();
 
-        String[] splitedUrl = Objects.requireNonNull(environment.getProperty("spring.datasource.url")).split("/");
-        result = splitedUrl[0] + "//" + splitedUrl[2] + "/" + dbName;
+        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
+                schemaName, extensionTableName);
 
-        log.info("Url to new Db: {}", result);
-        return result;
+        return initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest, limit, limit * offset);
     }
 
-    private HikariDataSource getDatasource(String dbName) {
-        HikariDataSource newDataSource = new HikariDataSource();
-        newDataSource.setJdbcUrl(getConnectionUrl(dbName));
-        newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-        newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-        newDataSource.setMaximumPoolSize(1);
+    public Long countTotalViolations(ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
 
-        return newDataSource;
+        String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
+                    schemaName, extensionTableName);
+
+        return initConnection(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
+    }
+
+    private void createExtensionForNewDb(JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.execute("CREATE EXTENSION postgis;");
+    }
+
+    private JdbcTemplate initConnection(final String dbName) {
+        return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
 
 }

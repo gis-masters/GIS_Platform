@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.mq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -10,6 +11,7 @@ import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
+import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
@@ -59,10 +61,33 @@ public class MqListener {
         log.info("Получено сообщение, startValidation: {}", validationMqRequest.getId());
 
         try {
-            validationService.startValidation(validationMqRequest);
+            if (validationMqRequest.getEntityType() != null) {
+                validationService.startValidation(validationMqRequest);
+            } else {
+                validationService.getResults(validationMqRequest);
+            }
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(validationMqRequest.getId(), ValidationStatus.ERROR));
+        }
+    }
+
+    @RabbitListener(queues = MqProperties.QUEUE_POSTGRE_VALIDATION)
+    public void postgreMsg(char[] any) {
+        StringBuilder result = new StringBuilder();
+        for (char c : any) {
+            result.append(c);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            PostgreEvent postgreEvent = mapper.readValue(result.toString(), PostgreEvent.class);
+
+            log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
+
+//            Thread.sleep(1000);
+        } catch (IOException e) {
+            log.error("Не удалось распарсить сообщение: {}", result);
         }
     }
 

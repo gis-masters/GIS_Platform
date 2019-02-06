@@ -7,7 +7,10 @@ public class ValidationMqRequest {
     private UUID id;
     private String dbName;
     private String schemaName;
+    private String tableName;
     private EntityTypeDto entityType;
+    private int page = 0;
+    private int size = 20;
 
     public ValidationMqRequest() {}
 
@@ -16,6 +19,7 @@ public class ValidationMqRequest {
         this.dbName = dbName;
         this.schemaName = schemaName;
         this.entityType = entityType;
+        this.tableName = entityType.getTableName();
     }
 
     public String getDbName() {
@@ -48,5 +52,29 @@ public class ValidationMqRequest {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

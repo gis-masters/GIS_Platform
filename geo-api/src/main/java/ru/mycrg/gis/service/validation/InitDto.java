@@ -4,11 +4,11 @@ import ru.mycrg.gis.dto.ValidationRequestDto;
 
 import java.util.UUID;
 
-class RegistrationInfo {
+class InitDto {
     private UUID id;
     private ValidationRequestDto requestDto;
 
-    public RegistrationInfo(UUID id, ValidationRequestDto requestDto) {
+    public InitDto(UUID id, ValidationRequestDto requestDto) {
         this.id = id;
         this.requestDto = requestDto;
     }

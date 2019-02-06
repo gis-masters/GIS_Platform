@@ -17,4 +17,8 @@ public class MqProperties {
     public static final String FANOUT_VALIDATION_RESULT = "fanout.validation.result";
     public static final String QUEUE_VALIDATION_RESULT = "validation.result";
     public static final String KEY_VALIDATION_RESULT = "key.validation.result";
+
+    public static final String FANOUT_POSTGRE_VALIDATION = "fanout.postgre.validation";
+    public static final String QUEUE_POSTGRE_VALIDATION = "postgre.validation";
+    public static final String KEY_POSTGRE_VALIDATION = "key.postgre.validation";
 }

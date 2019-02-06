@@ -4,15 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ConstraintViolation;
 import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ValidationService {
@@ -24,6 +26,11 @@ public class ValidationService {
     private final PostGisStorage postGisStorage;
 
     private final int BATCH_SIZE = 100;
+    private String OBJECT_ID = "objectid";
+    private String EXTENSION_ID_KEY = "object_id";
+    private String VIOLATIONS_KEY = "violations";
+
+    private List<ValidationMqRequest> currentRequests = new ArrayList<>();
 
     @Autowired
     public ValidationService(IValidator validator, IMqEvents mqEvents, PostGisStorage postGisStorage) {
@@ -32,46 +39,90 @@ public class ValidationService {
         this.postGisStorage = postGisStorage;
     }
 
-    public void startValidation(ValidationMqRequest validationMqRequest) {
-        EntityTypeDto entityTypeDto = validationMqRequest.getEntityType();
-        String dbName = validationMqRequest.getDbName();
-        String schemaName = validationMqRequest.getSchemaName();
+    public void getResults(ValidationMqRequest validationMqRequest) {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
-        List<Map<String, Object>> allRows = postGisStorage.fetchAllRows(dbName, schemaName, entityTypeDto.getTableName());
+        Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
+        if (totalViolations > 0) {
+            List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
 
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId(), Math.round(allRows.size() / 100));
-        if (allRows.isEmpty()) {
-            response.setStatus(ValidationStatus.EMPTY);
-            mqEvents.validationResponse(response);
+            log.info("Found {} violations", violations.size());
+            response.setResults(mapToViolations(violations));
         }
 
-        List<ConstraintViolation> violations = new ArrayList<>();
-        int i = 0;
-        while (i < allRows.size()) {
-            ConstraintViolation violation = validator.validate(entityTypeDto, allRows.get(i));
+        response.setTotal(totalViolations);
+        response.setStatus(ValidationStatus.DONE);
 
-            if (i % BATCH_SIZE == 0) {
-                if (!violation.getPropertyViolations().isEmpty()) {
-                    violations.add(violation);
-                }
+        mqEvents.validationResponse(response);
+    }
 
-                response.setStatus(ValidationStatus.PENDING);
-                response.setViolations(Collections.unmodifiableList(violations));
+    public void startValidation(ValidationMqRequest validationMqRequest) {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
+
+        int offset = 0;
+        while (true) {
+            response.setResults(new ArrayList<>());
+
+            List<Map<String, Object>> batch = postGisStorage
+                    .fetchBatchOfRowsNeededValidation(validationMqRequest, BATCH_SIZE, offset);
+
+            // TODO: Возникновение ошибки при обработке пакета не должны прекращать обработку других пакетов? или должны
+            // типа если один с ошибкой то и большая вероятность что другие тоже...
+            if (offset == 0 && batch.isEmpty()) {
+                response.setStatus(ValidationStatus.EMPTY);
+
                 mqEvents.validationResponse(response);
-
-                violations.clear();
+                break;
+            } else if (offset > 0 && batch.isEmpty()) {
+                break;
             } else {
-                if (!violation.getPropertyViolations().isEmpty()) {
-                    violations.add(violation);
-                }
+                List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
+
+                postGisStorage.saveValidationResults(validationMqRequest, violationResults, EXTENSION_ID_KEY);
+
+                offset++;
             }
+        }
+
+        List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
+
+        response.setStatus(ValidationStatus.DONE);
+        response.setResults(mapToViolations(violations));
+
+        mqEvents.validationResponse(response);
+    }
+
+    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) {
+        List<ObjectValidationResult> results = new ArrayList<>();
+
+        int i = 0;
+        while (i < violations.size()) {
+            ObjectValidationResult objectValidationResult = new ObjectValidationResult();
+            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_ID_KEY));
+            objectValidationResult.setViolationAsString(Util.getViolations(violations.get(i), VIOLATIONS_KEY));
+
+            results.add(objectValidationResult);
 
             i++;
         }
 
-        response.setStatus(ValidationStatus.DONE);
-        response.setViolations(violations);
+        return results;
+    }
 
-        mqEvents.validationResponse(response);
+    private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
+        List<ObjectValidationResult> validationResults = new ArrayList<>();
+
+        int i = 0;
+        while (i < batch.size()) {
+            ObjectValidationResult objectValidationResult = validator.validate(entityType, batch.get(i));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
+            objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));
+
+            validationResults.add(objectValidationResult);
+
+            i++;
+        }
+
+        return validationResults;
     }
 }

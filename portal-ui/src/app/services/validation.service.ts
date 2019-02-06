@@ -1,6 +1,6 @@
 import {NGXLogger} from "ngx-logger";
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {ServerPropertiesService} from "./server-properties.service";
 import {Observable} from "rxjs";
 
@@ -21,7 +21,20 @@ export class ValidationService {
 
   validateLayers(data: ValidationRequest[]): Observable<any> {
     return this.http
-               .post(this.serverProp.validationUrl, data);
+               .post(this.serverProp.initValidationUrl,
+                     JSON.stringify(data),
+                     {headers: {'Content-Type': 'application/json'}});
+  }
+
+  getValidation(data: ValidationRequest, page, size): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    return this.http
+               .post(this.serverProp.validationUrl,
+                     JSON.stringify(data),
+                     {headers: {'Content-Type': 'application/json'}, params: params});
   }
 
 }

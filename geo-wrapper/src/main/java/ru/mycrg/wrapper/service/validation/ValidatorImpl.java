@@ -3,11 +3,12 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ConstraintViolation;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.wrapper.service.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,6 @@ import java.util.Map;
 public class ValidatorImpl implements IValidator {
 
     private static Logger log = LoggerFactory.getLogger(ValidatorImpl.class);
-
-    private String ID_KEY = "objectid";
 
     private RequiredValidation requiredValidation = new RequiredValidation();
     private MinLengthValidation minLengthValidation = new MinLengthValidation();
@@ -32,14 +31,8 @@ public class ValidatorImpl implements IValidator {
     private EnumerationValidation enumerationValidation = new EnumerationValidation();
 
     @Override
-    public ConstraintViolation validate(EntityTypeDto entityType, Map<String, Object> data) {
-        ConstraintViolation violation = new ConstraintViolation();
-
-        if (data.containsKey(ID_KEY)) {
-            violation.setId(data.get(ID_KEY).toString());
-        } else {
-            log.warn("Row not contains id? : {}", ID_KEY);
-        }
+    public ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data) {
+        ObjectValidationResult validationResult = new ObjectValidationResult();
 
         entityType.getProperties().forEach(propertyDto -> {
             String name = propertyDto.getName();
@@ -48,12 +41,14 @@ public class ValidatorImpl implements IValidator {
                 propertyViolation.setErrors(validateProperty(propertyDto, data.get(name)));
 
                 if (propertyViolation.hasErrors()) {
-                    violation.addPropertyViolation(propertyViolation);
+                    validationResult.addPropertyViolation(propertyViolation);
+                } else {
+                    validationResult.addCorrectProperty(name);
                 }
             }
         });
 
-        return violation;
+        return validationResult;
     }
 
     private List<String> validateProperty(SimplePropertyDto propertyType, Object value) {
@@ -103,4 +98,5 @@ public class ValidatorImpl implements IValidator {
 
         return violations;
     }
+
 }

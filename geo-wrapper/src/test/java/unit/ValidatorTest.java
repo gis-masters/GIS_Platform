@@ -1,7 +1,7 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.common.ConstraintViolation;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ValidatorTest {
 
@@ -98,7 +99,6 @@ public class ValidatorTest {
         entityType.setProperties(properties);
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
-        rowFromDb.put("objectid", "314");
         rowFromDb.put("CLASSID", null);
         rowFromDb.put("CLASSID_short", "short");
         rowFromDb.put("CLASSID_valid", "valid_class_id");
@@ -109,13 +109,14 @@ public class ValidatorTest {
         rowFromDb.put("validDouble", 3.1415);
         rowFromDb.put("validEnum", "3");
 
-        ConstraintViolation constraintViolation = validator.validate(entityType, rowFromDb);
+        ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
 
-        assertEquals("314", constraintViolation.getId());
-        assertEquals(5, constraintViolation.getPropertyViolations().size());
-        assertEquals(1, constraintViolation.getPropertyViolations().get(0).getErrors().size());
-        assertEquals(1, constraintViolation.getPropertyViolations().get(1).getErrors().size());
-        assertEquals(1, constraintViolation.getPropertyViolations().get(2).getErrors().size());
+        assertTrue(objectValidationResult.getCorrectProperties().contains("CLASSID_valid"));
+        assertEquals(4, objectValidationResult.getCorrectProperties().size());
+        assertEquals(5, objectValidationResult.getViolations().size());
+        assertEquals(1, objectValidationResult.getViolations().get(0).getErrors().size());
+        assertEquals(1, objectValidationResult.getViolations().get(1).getErrors().size());
+        assertEquals(1, objectValidationResult.getViolations().get(2).getErrors().size());
     }
 
 }

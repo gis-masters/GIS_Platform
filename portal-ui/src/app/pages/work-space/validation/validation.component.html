@@ -3,9 +3,6 @@
 </mat-toolbar>
 
 <div class="container">
-  <mat-card>
-    <div class="row">
-
       <mat-accordion class="validation_accordion">
         <mat-expansion-panel *ngFor="let layer of layers; let index = index"
                              [expanded]="step === (index+1)" (opened)="setStep(index+1)" hideToggle>
@@ -13,12 +10,19 @@
             <mat-panel-title>
               {{layer.name}}
             </mat-panel-title>
+
             <mat-panel-description>
-              <button mat-button (click)="validButton(index)" class="validation_button"><mat-icon>map</mat-icon></button>
+              <button mat-button (click)="initValidation($event, index)" class="validation_button">
+                <mat-icon *ngIf="!isValidationInited[index]" aria-label="label">map</mat-icon>
+                <img src="../../../../assets/images/loader.gif" alt="logo" *ngIf="isValidationInited[index]"
+                     style="margin-left: 3px; margin-right: 3px" height="25" width="25">
+              </button>
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          {{layer.href}}
+          <crg-test-github [connectionInfo]="connectionInfo[index]"
+                           [step]="step" [index]="index + 1"
+                           (getConnectionInfo)="handleChildEvent($event)"></crg-test-github>
 
           <mat-action-row>
             <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
@@ -27,7 +31,4 @@
           </mat-action-row>
         </mat-expansion-panel>
       </mat-accordion>
-
-    </div>
-  </mat-card>
 </div>

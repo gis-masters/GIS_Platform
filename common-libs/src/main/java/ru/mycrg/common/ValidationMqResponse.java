@@ -9,24 +9,28 @@ import java.util.UUID;
 public class ValidationMqResponse {
 
     private UUID id;
-    private int batchCounter;
+    private Long total = 0L;
     private ValidationStatus status;
-    private List<ConstraintViolation> violations = new ArrayList<>();
+    private List<ObjectValidationResult> results = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(UUID id, int batchCounter) {
+    public ValidationMqResponse(UUID id) {
         this.id = id;
-        this.batchCounter = batchCounter;
     }
 
     public ValidationMqResponse(ValidationStatus status) {
         this.status = status;
     }
 
-    public ValidationMqResponse(ValidationStatus status, List<ConstraintViolation> violations) {
+    public ValidationMqResponse(UUID id, ValidationStatus status) {
+        this.id = id;
         this.status = status;
-        this.violations = violations;
+    }
+
+    public ValidationMqResponse(ValidationStatus status, List<ObjectValidationResult> results) {
+        this.status = status;
+        this.results = results;
     }
 
     public boolean isDone() {
@@ -38,7 +42,7 @@ public class ValidationMqResponse {
     }
 
     public boolean isError() {
-        return status == ValidationStatus.EMPTY;
+        return status == ValidationStatus.ERROR;
     }
 
     public boolean isPending() {
@@ -53,20 +57,23 @@ public class ValidationMqResponse {
         this.status = status;
     }
 
-    public List<ConstraintViolation> getViolations() {
-        return violations;
+    public List<ObjectValidationResult> getResults() {
+        return results;
     }
 
-    public void setViolations(List<ConstraintViolation> violations) {
-        this.violations = violations;
+    public void setResults(List<ObjectValidationResult> results) {
+        this.results = results;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public int getBatchCounter() {
-        return batchCounter;
+    public Long getTotal() {
+        return total;
     }
 
+    public void setTotal(Long total) {
+        this.total = total;
+    }
 }
