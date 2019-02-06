@@ -29,7 +29,7 @@ public class PostGisStorage {
     public void createDb(final String dbName) throws RuntimeException {
         log.debug("Try create db: {}", dbName);
 
-        JdbcTemplate jdbcTemplate = initConnection(dbName);
+        JdbcTemplate jdbcTemplate = datasourceFactory.getInitialJdbcTemplate();
         jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0};", dbName));
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
