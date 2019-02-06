@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ValidationRequestDto;
@@ -14,22 +13,25 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.validation.IValidationService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-@Controller
+@RestController
 public class FgistpController {
 
     private static Logger log = LoggerFactory.getLogger(FgistpController.class);
 
-    @Autowired
-    private FgistpRuleService fgistpRuleService;
+    private final FgistpRuleService fgistpRuleService;
+    private final IValidationService validationService;
 
     @Autowired
-    private IValidationService validationService;
+    public FgistpController(FgistpRuleService fgistpRuleService, IValidationService validationService) {
+        this.fgistpRuleService = fgistpRuleService;
+        this.validationService = validationService;
+    }
 
-    @ResponseBody
     @GetMapping("/fgistp/rules")
     public FgistpRules getRules() {
         log.info("Request /fgistp/rules");
@@ -49,7 +51,6 @@ public class FgistpController {
         }
     }
 
-    @ResponseBody
     @GetMapping("/fgistp/rules/update")
     public FgistpRules update() {
         log.info("Request for update rules");
@@ -57,7 +58,6 @@ public class FgistpController {
         return fgistpRuleService.updateRules();
     }
 
-    @ResponseBody
     @GetMapping("/fgistp/rules/{className}")
     public EntityType getByName(@PathVariable String className) {
         log.info("Get rule by name: {}", className);
@@ -65,7 +65,6 @@ public class FgistpController {
         return fgistpRuleService.getRuleByClassName(className);
     }
 
-    @ResponseBody
     @PostMapping("/fgistp/validation/init")
     public HttpStatus initValidation(@RequestBody List<ValidationRequestDto> request, Principal principal) {
         log.info("Request validation: {}", request.size());
@@ -75,16 +74,14 @@ public class FgistpController {
         return HttpStatus.ACCEPTED;
     }
 
-    @ResponseBody
     @PostMapping("/fgistp/validation")
     public ValidationMqResponse getValidationResults(
-            @RequestBody ValidationRequestDto request,
+            @Valid @RequestBody ValidationRequestDto request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "20") String size,
             Principal principal) {
         log.info("Request get validation results: {}/{}", page, size);
 
-        // TODO: плеваться бадреквестом когда данные в дто пусты
         int nPage;
         int nSize;
         try {

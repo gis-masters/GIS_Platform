@@ -6,23 +6,23 @@ import javax.validation.constraints.*;
 
 public class OrganizationCreateDto {
 
-    @NotNull(message = "Please provide organization name")
+    @NotBlank(message = "Please provide organization name")
     @Size(min=5, max=500, message = "No less 5 and no more than 500 characters")
     private String name;
 
-    @NotNull(message = "Please provide phone")
+    @NotBlank(message = "Please provide phone")
     private String phone;
 
-    @NotNull(message = "Please provide user surname")
+    @NotBlank(message = "Please provide user surname")
     @Length(max = 100, message = "No more than 100 characters")
     private String userSurName;
 
-    @NotNull(message = "Please provide user name")
+    @NotBlank(message = "Please provide user name")
     @Length(max = 50, message = "No more than 50 characters")
     private String userName;
 
     @Email
-    @NotNull
+    @NotBlank
     private String email;
 
     //    ^                 # start-of-string
@@ -34,7 +34,6 @@ public class OrganizationCreateDto {
     //    $                 # end-of-string
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
              message = "Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов")
-    @NotNull
     private String password;
 
     public OrganizationCreateDto() {}
