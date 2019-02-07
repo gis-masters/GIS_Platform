@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,10 +20,12 @@ public class DatasourceFactory {
     private Map<String, HikariDataSource> dataSources = new HashMap<>();
 
     private final Environment environment;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DatasourceFactory(Environment environment) {
+    public DatasourceFactory(Environment environment, JdbcTemplate jdbcTemplate) {
         this.environment = environment;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public HikariDataSource getDatasource(String dbName) {
@@ -60,4 +63,7 @@ public class DatasourceFactory {
         return result;
     }
 
+    public JdbcTemplate getInitialJdbcTemplate() {
+        return jdbcTemplate;
+    }
 }

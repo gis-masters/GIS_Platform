@@ -1,11 +1,17 @@
 package ru.mycrg.gis.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 public class ValidationRequestDto {
 
+    @NotBlank(message = "NotBlank database name")
     private String dbName;
+
+    @NotBlank(message = "NotBlank schema name")
     private String schemaName;
+
+    @NotBlank(message = "NotBlank table name")
     private String tableName;
 
     public ValidationRequestDto() {}

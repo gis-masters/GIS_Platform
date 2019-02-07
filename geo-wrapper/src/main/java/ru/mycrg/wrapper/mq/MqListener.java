@@ -84,8 +84,6 @@ public class MqListener {
             PostgreEvent postgreEvent = mapper.readValue(result.toString(), PostgreEvent.class);
 
             log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
-
-//            Thread.sleep(1000);
         } catch (IOException e) {
             log.error("Не удалось распарсить сообщение: {}", result);
         }

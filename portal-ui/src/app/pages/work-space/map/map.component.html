@@ -27,3 +27,25 @@
     <div id="fiz-openLayer-map" class="crg-map"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!--<p-dialog [(visible)]="display"-->
+          <!--[closeOnEscape]="false"-->
+          <!--[resizable]="false"-->
+          <!--[positionTop]="700"-->
+          <!--[contentStyle]="{'overflow':'visible'}"-->
+          <!--[style]="{width: '100%', height: '300px'}">-->
+  <!--<p-header>-->
+    <!--Content here-->
+  <!--</p-header>-->
+
+  <!--<p-footer>-->
+    <!--Footer-->
+  <!--</p-footer>-->
+<!--</p-dialog>-->
+
+<p-sidebar [(visible)]="display" position="bottom" styleClass="ui-sidebar-md"
+           [modal]="false"
+           [showCloseIcon]="false"
+           [dismissible]="true">
+  <crg-layer-objects></crg-layer-objects>
+</p-sidebar>

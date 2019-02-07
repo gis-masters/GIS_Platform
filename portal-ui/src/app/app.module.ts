@@ -6,6 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {MaterialModule} from './material.module';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
+import {PrimeNgModule} from './prime-ng.module';
 
 import {AlertModule} from 'ngx-bootstrap';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
@@ -21,7 +22,8 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
-import { ViolationItemViewComponent } from './components/violation-item-view/violation-item-view.component';
+import {ViolationItemViewComponent} from './components/violation-item-view/violation-item-view.component';
+import {LayerObjectsComponent} from './components/layer-objects/layer-objects.component';
 
 @NgModule({
   declarations: [
@@ -35,12 +37,15 @@ import { ViolationItemViewComponent } from './components/violation-item-view/vio
     GeometryPipe,
     TestGithubComponent,
     ViolationItemViewComponent,
+    LayerObjectsComponent,
   ],
   imports: [
-    BrowserModule,
-    MaterialModule,
-    FileUploadModule,
     AppRoutingModule,
+    MaterialModule,
+    PrimeNgModule,
+
+    BrowserModule,
+    FileUploadModule,
     BrowserAnimationsModule,
     AlertModule.forRoot(),
     ReactiveFormsModule,
