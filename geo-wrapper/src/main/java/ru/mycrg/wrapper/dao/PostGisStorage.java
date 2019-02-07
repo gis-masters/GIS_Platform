@@ -44,8 +44,6 @@ public class PostGisStorage {
         String table = validationMqRequest.getEntityType().getTableName();
         String extensionTableName = table + "_extension";
 
-        log.info("Table: {} with limit: {} / offset: {}", extensionTableName, limit, offset);
-
         JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
 
         String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
@@ -53,6 +51,8 @@ public class PostGisStorage {
                 "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
                 "ORDER BY target.objectid " +
                 "LIMIT ? OFFSET ?", schema, table, schema, extensionTableName);
+
+        log.info("Sql: {}", rowsNeedingValidation);
 
         return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
     }

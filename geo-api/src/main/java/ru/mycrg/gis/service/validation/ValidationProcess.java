@@ -5,9 +5,7 @@ import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class ValidationProcess {
@@ -17,7 +15,7 @@ public class ValidationProcess {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private ValidationStatus status;
-    private ValidationRequestDto request;
+    private Set<ValidationRequestDto> requests = new HashSet<>();
     private List<ValidationMqResponse> responses = new ArrayList<>();
     private CompletableFuture<ValidationMqResponse> futureResponse = new CompletableFuture<>();
 
@@ -29,6 +27,14 @@ public class ValidationProcess {
 
     public UUID getId() {
         return id;
+    }
+
+    public void addRequest(ValidationRequestDto requestDto) {
+        requests.add(requestDto);
+    }
+
+    public Set<ValidationRequestDto> getRequests() {
+        return requests;
     }
 
     public LocalDateTime getStartTime() {
@@ -49,14 +55,6 @@ public class ValidationProcess {
 
     public void setStatus(ValidationStatus status) {
         this.status = status;
-    }
-
-    public ValidationRequestDto getRequest() {
-        return request;
-    }
-
-    public void setRequest(ValidationRequestDto request) {
-        this.request = request;
     }
 
     public List<ValidationMqResponse> getResponses() {

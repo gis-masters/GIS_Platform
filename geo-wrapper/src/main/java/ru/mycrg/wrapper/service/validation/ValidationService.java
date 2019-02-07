@@ -1,17 +1,17 @@
 package ru.mycrg.wrapper.service.validation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ValidationMqRequest;
-import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class ValidationService {
         this.postGisStorage = postGisStorage;
     }
 
-    public void getResults(ValidationMqRequest validationMqRequest) {
+    public void getResults(ValidationMqRequest validationMqRequest) throws IOException {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
 
         Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
@@ -63,43 +63,42 @@ public class ValidationService {
         while (true) {
             response.setResults(new ArrayList<>());
 
-            List<Map<String, Object>> batch = postGisStorage
-                    .fetchBatchOfRowsNeededValidation(validationMqRequest, BATCH_SIZE, offset);
-
-            // TODO: Возникновение ошибки при обработке пакета не должны прекращать обработку других пакетов? или должны
-            // типа если один с ошибкой то и большая вероятность что другие тоже...
-            if (offset == 0 && batch.isEmpty()) {
-                response.setStatus(ValidationStatus.EMPTY);
-
-                mqEvents.validationResponse(response);
+            var batch = postGisStorage.fetchBatchOfRowsNeededValidation(validationMqRequest, BATCH_SIZE, offset);
+            if (batch.isEmpty()) {
                 break;
-            } else if (offset > 0 && batch.isEmpty()) {
-                break;
-            } else {
-                List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
-
-                postGisStorage.saveValidationResults(validationMqRequest, violationResults, EXTENSION_ID_KEY);
-
-                offset++;
             }
+
+            List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
+
+            ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest.getId());
+            pendingResponse.setStatus(ValidationStatus.PENDING);
+            pendingResponse.setResults(violationResults);
+            mqEvents.validationResponse(pendingResponse);
+
+            postGisStorage.saveValidationResults(validationMqRequest, violationResults, EXTENSION_ID_KEY);
+
+            offset++;
         }
 
-        List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
-
         response.setStatus(ValidationStatus.DONE);
-        response.setResults(mapToViolations(violations));
 
         mqEvents.validationResponse(response);
     }
 
-    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) {
+    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
         List<ObjectValidationResult> results = new ArrayList<>();
 
         int i = 0;
         while (i < violations.size()) {
             ObjectValidationResult objectValidationResult = new ObjectValidationResult();
             objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_ID_KEY));
-            objectValidationResult.setViolationAsString(Util.getViolations(violations.get(i), VIOLATIONS_KEY));
+
+            String violationsAsString = Util.getViolations(violations.get(i), VIOLATIONS_KEY);
+
+            ObjectMapper mapper = new ObjectMapper();
+            PropertyViolation[] data = mapper.readValue(violationsAsString, PropertyViolation[].class);
+
+            objectValidationResult.setViolations(List.of(data));
 
             results.add(objectValidationResult);
 

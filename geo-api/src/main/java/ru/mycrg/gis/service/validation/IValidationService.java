@@ -8,9 +8,10 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IValidationService {
 
-    void initValidation(String userName, List<ValidationRequestDto> request);
+    CompletableFuture<ValidationMqResponse> initValidation(String userName, List<ValidationRequestDto> request);
+
+    CompletableFuture<ValidationMqResponse> getResults(ValidationRequestDto request, int page, int size, String userName);
 
     void progress(ValidationMqResponse response);
 
-    CompletableFuture<ValidationMqResponse> getResults(ValidationRequestDto request, int page, int size, String userName);
 }

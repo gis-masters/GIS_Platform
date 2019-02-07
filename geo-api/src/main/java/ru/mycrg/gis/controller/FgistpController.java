@@ -1,9 +1,9 @@
 package ru.mycrg.gis.controller;
 
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ValidationRequestDto;
@@ -16,7 +16,7 @@ import ru.mycrg.gis.service.validation.IValidationService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class FgistpController {
@@ -66,16 +66,18 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public HttpStatus initValidation(@RequestBody List<ValidationRequestDto> request, Principal principal) {
-        log.info("Request validation: {}", request.size());
+    public CompletableFuture<ValidationMqResponse> initValidation(
+            @RequestBody List<ValidationRequestDto> request,
+            Principal principal) {
+        log.debug("Init validation for: {} classes", request.size());
 
-        validationService.initValidation(principal.getName(), request);
+        validateRequest(request);
 
-        return HttpStatus.ACCEPTED;
+        return validationService.initValidation(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation")
-    public ValidationMqResponse getValidationResults(
+    public CompletableFuture<ValidationMqResponse> getValidationResults(
             @Valid @RequestBody ValidationRequestDto request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "20") String size,
@@ -91,16 +93,19 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        ValidationMqResponse response = null;
-        try {
-            response = validationService
-                    .getResults(request, nPage, nSize, principal.getName())
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error(" -------- {}", e.getLocalizedMessage());
-        }
+        return validationService.getResults(request, nPage, nSize, principal.getName());
+    }
 
-        return response;
+    private void validateRequest(List<ValidationRequestDto> request) {
+        request.forEach(requestDto -> {
+            String dbName = requestDto.getDbName();
+            String schemaName = requestDto.getSchemaName();
+            String tableName = requestDto.getTableName();
+
+            if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
+                throw new CrgBadRequestException("Incorrect data");
+            }
+        });
     }
 
 }

@@ -48,12 +48,12 @@ public class ValidationServiceImpl implements IValidationService {
             ruleService.updateRules();
         }
 
-        ValidationProcess validationProcess = new ValidationProcess();
-        validationProcess.setUserName(userName);
-        validationProcess.setRequest(request);
+        ValidationProcess process = new ValidationProcess();
+        process.setUserName(userName);
+        process.addRequest(request);
 
         ValidationMqRequest validationMqRequest = new ValidationMqRequest();
-        validationMqRequest.setId(validationProcess.getId());
+        validationMqRequest.setId(process.getId());
         validationMqRequest.setDbName(request.getDbName());
         validationMqRequest.setSchemaName(request.getSchemaName());
         validationMqRequest.setPage(page);
@@ -62,22 +62,42 @@ public class ValidationServiceImpl implements IValidationService {
         EntityType ruleByClassName = ruleService.getRuleByClassName(request.getTableName());
         validationMqRequest.setTableName(ruleByClassName.getTableName());
 
-        processes.add(validationProcess);
+        processes.add(process);
 
-        mqSender.startValidation(Optional.of(validationMqRequest));
+        mqSender.startValidation(validationMqRequest);
 
-        return validationProcess.getFutureResponse();
+        return process.getFutureResponse();
     }
 
     @Override
-    public void initValidation(String userName, List<ValidationRequestDto> request) {
+    public CompletableFuture<ValidationMqResponse> initValidation(String userName, List<ValidationRequestDto> request) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
+        ValidationProcess process = new ValidationProcess();
+        process.setUserName(userName);
+
         request.stream()
-                .map((ValidationRequestDto requestDto) -> initValidationProcess(requestDto, userName))
-                .forEach(mqSender::startValidation);
+                .distinct()
+                .forEach((ValidationRequestDto requestDto) -> {
+                    process.addRequest(requestDto);
+
+                    ValidationRequestType requestType = checkNewRequest(requestDto, userName);
+                    if (requestType == UNIQE || requestType == SAME_DATA) {
+                        mqSender.startValidation(preparePayload(process.getId(), requestDto));
+                    } else if (requestType == SAME_USER) {
+                        log.info("Ignore request from SAME_USER");
+
+                        throw new ValidationAlreadyStartedException("Ожидайте выполнения предыдущего запроса");
+                    } else {
+                        log.warn("Validation request unsupported type");
+                    }
+                });
+
+        processes.add(process);
+
+        return process.getFutureResponse();
     }
 
     @Override
@@ -115,44 +135,47 @@ public class ValidationServiceImpl implements IValidationService {
         }
     }
 
-    private Optional<ValidationMqRequest> initValidationProcess(ValidationRequestDto requestDto, String userName) {
-        switch (checkNewRequest(requestDto, userName)) {
-            case UNIQE:
-                log.info("UNIQE request");
+//    private ValidationProcess initValidationProcess(ValidationRequestDto requestDto, String userName) {
+//        ValidationProcess process = new ValidationProcess();
+//        process.setUserName(userName);
+////        process.setRequest(requestDto);
+//
+//        processes.add(process);
+//
+//
+//        return process;
 
-                ValidationProcess validationProcess = new ValidationProcess();
-                validationProcess.setUserName(userName);
-                validationProcess.setRequest(requestDto);
-
-                processes.add(validationProcess);
-
-                return Optional.of(preparePayload(validationProcess.getId(), requestDto));
-            case SAME_USER:
-                // TODO: Слоя могут пересекаться в разных запросах. Например первый запрос от пользователя был
-                // на валидацию слоя: функциональные зоны. А второй запрос более общий: функциональные зоны и др. слоя
-                // На данный момент это не предусматриваем и вернем ошибку HttpStatus.CONFLICT
-                log.info("Ignore request from SAME_USER");
-
-                throw new ValidationAlreadyStartedException("Ожидайте выполнения предыдущего запроса");
-            case SAME_DATA:
-                log.warn("SAME_DATA request. Not implemented yet... Behavior as UNIQE request");
-
-                // TODO: Пришел запрос на теже данные что обрабатываются в данный момент...
-                // мы можем подложить ответ на активный запрос и в этот запрос тоже
-                // в целом валидация по полной таблице происходит за секунд 5
-                // данна ситуация маловероятна, но возможна
-                ValidationProcess process = new ValidationProcess();
-                process.setUserName(userName);
-                process.setRequest(requestDto);
-
-                processes.add(process);
-
-                return Optional.of(preparePayload(process.getId(), requestDto));
-            default:
-                log.warn("Validation request unsupported type");
-                return Optional.empty();
-        }
-    }
+//        switch (checkNewRequest(requestDto, userName)) {
+//            case UNIQE:
+//                log.info("UNIQE request");
+//
+//
+//                return Optional.of(preparePayload(process.getId(), requestDto));
+//            case SAME_USER:
+//                // TODO: Слоя могут пересекаться в разных запросах. Например первый запрос от пользователя был
+//                // на валидацию слоя: функциональные зоны. А второй запрос более общий: функциональные зоны и др. слоя
+//                // На данный момент это не предусматриваем и вернем ошибку HttpStatus.CONFLICT
+//                log.info("Ignore request from SAME_USER");
+//
+//                throw new ValidationAlreadyStartedException("Ожидайте выполнения предыдущего запроса");
+//            case SAME_DATA:
+//                log.warn("SAME_DATA request. Not implemented yet... Behavior as UNIQE request");
+//
+//                // TODO: Пришел запрос на теже данные что обрабатываются в данный момент...
+//                // мы можем подложить ответ на активный запрос и в этот запрос тоже
+//                // в целом валидация по полной таблице происходит за секунд 5
+//                // данна ситуация маловероятна, но возможна
+////                ValidationProcess process = new ValidationProcess();
+////                process.setUserName(userName);
+////                process.setRequest(requestDto);
+//
+////                processes.add(process);
+//
+//                return Optional.of(preparePayload(process.getId(), requestDto));
+//            default:
+//                return Optional.empty();
+//        }
+//    }
 
     private ValidationRequestType checkNewRequest(ValidationRequestDto requestDto, String userName) {
         var ref = new Object() {
@@ -164,7 +187,7 @@ public class ValidationServiceImpl implements IValidationService {
                 ref.result = SAME_USER;
             }
 
-            if (process.getRequest().equals(requestDto)) {
+            if (process.getRequests().contains(requestDto)) {
                 ref.result = SAME_DATA;
             }
         });
