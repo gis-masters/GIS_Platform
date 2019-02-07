@@ -1,0 +1,29 @@
+<div>
+  <p-table [columns]="cols" [value]="cars"
+           selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="summary">
+      <ul>
+        <li *ngFor="let car of selectedItems" style="text-align: left">
+          {{car.vin + ' - ' + car.brand + ' - ' + car.year + ' - ' + car.color}}
+        </li>
+      </ul>
+    </ng-template>
+
+  </p-table>
+</div>
