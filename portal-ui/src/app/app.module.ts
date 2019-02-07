@@ -7,6 +7,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material.module';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 
+import {DialogModule} from 'primeng/dialog';
+import {SidebarModule} from 'primeng/sidebar';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+
 import {AlertModule} from 'ngx-bootstrap';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {AppComponent} from './pages/_app/app.component';
@@ -21,7 +25,7 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
-import { ViolationItemViewComponent } from './components/violation-item-view/violation-item-view.component';
+import {ViolationItemViewComponent} from './components/violation-item-view/violation-item-view.component';
 
 @NgModule({
   declarations: [
@@ -37,10 +41,15 @@ import { ViolationItemViewComponent } from './components/violation-item-view/vio
     ViolationItemViewComponent,
   ],
   imports: [
+    // PrimeNg
+    DialogModule,
+    SidebarModule,
+    ScrollPanelModule,
+
+    AppRoutingModule,
     BrowserModule,
     MaterialModule,
     FileUploadModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     AlertModule.forRoot(),
     ReactiveFormsModule,

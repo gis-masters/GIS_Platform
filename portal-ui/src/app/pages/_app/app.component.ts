@@ -9,7 +9,6 @@ import {environment} from '../../../environments/environment';
 })
 export class AppComponent {
 
-
   constructor(private logger: NGXLogger) {
     logger.debug('Version: ', environment);
   }

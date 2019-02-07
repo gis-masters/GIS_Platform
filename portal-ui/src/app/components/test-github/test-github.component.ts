@@ -51,6 +51,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
 
   constructor(private logger: NGXLogger,
               private validationService: ValidationService) {
+    this.logger.info(' --- TestGithubComponent ---');
   }
 
   ngAfterViewInit() {
@@ -63,17 +64,17 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
 
-          if (this._connectionInfo) {
+          // if (this._connectionInfo) {
             this.logger.info(' --- 1');
-
+          //
             return this.validationService
                        .getValidation(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
-          } else {
-            this.logger.info(' --- 2 emiter');
-            // this.getConnectionInfo.emit(this.index - 1);
-
-            return of();
-          }
+          // } else {
+          //   this.logger.info(' --- 2 emiter');
+          //   // this.getConnectionInfo.emit(this.index - 1);
+          //
+          //   return of();
+          // }
         }),
       ).subscribe(response => {
         if (response) {

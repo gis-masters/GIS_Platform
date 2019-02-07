@@ -8,6 +8,8 @@ import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
+import {CommunicationService} from "../../../services/communication.service";
+import {ValidationRequest} from "../../../services/validation.service";
 
 @Component({
   selector: 'crg-map',
@@ -20,10 +22,18 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layerNames = [];
 
+  display: boolean = false;
+  connectionInfo: ValidationRequest = {
+    dbName: 'gis',
+    schemaName: 'fiz',
+    tableName: 'electricline'
+  };
+
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
               private layersService: LayersService,
               private logger: NGXLogger,
+              private communicationService: CommunicationService,
               private openLayers: OpenLayersService,
               private authService: AuthService) {
     this.authService.validateAuth();
@@ -37,15 +47,21 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.createMap();
 
     this.layersService.getAll()
-        .subscribe((layers: NameHrefProjection[]) => {
-          this.layerNames = layers.map((item: NameHrefProjection) => item.name);
+      .subscribe((layers: NameHrefProjection[]) => {
+        this.layerNames = layers.map((item: NameHrefProjection) => item.name);
 
-          this.layerNames.forEach((layerName, index) => {
-            this.openLayers
-                .addLayer(layerName)
-                .setZIndex(layers.length - index);
-          });
+        this.layerNames.forEach((layerName, index) => {
+          this.openLayers
+            .addLayer(layerName)
+            .setZIndex(layers.length - index);
         });
+      });
+
+    this.communicationService
+      .layerObjectsWindowListener()
+      .subscribe((value) => {
+        this.display = value;
+      });
   }
 
   drop(event: CdkDragDrop<string[]>) {
