@@ -106,6 +106,9 @@ public class ValidationServiceImpl implements IValidationService {
             log.warn("Return invalid response");
         }
 
+        // TODO: При валидации не комплитить ответ пустыми данными если при валидации не выявлено ошибок
+        // дожидаться каких либо ошибок либо DONE статуса
+
         if (response.isPending() || response.isDone()) {
             getProcessById(response.getId())
                     .ifPresentOrElse(process -> {
