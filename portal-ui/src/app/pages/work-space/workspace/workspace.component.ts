@@ -3,6 +3,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from "../../../services/auth.service";
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {CommunicationService} from "../../../services/communication.service";
+import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
 
 @Component({
   selector: 'crg-workspace',
@@ -15,6 +16,7 @@ export class WorkspaceComponent implements OnDestroy {
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
+              private openLayersService: OpenLayersService,
               private communicationService: CommunicationService,
               private logger: NGXLogger) {
     this.authService.validateAuth();
@@ -34,5 +36,11 @@ export class WorkspaceComponent implements OnDestroy {
 
   openLayersObjectView() {
     this.communicationService.openLayerObjectsWindow();
+  }
+
+  tryPositionToObject() {
+    this.logger.info(' +++ ');
+
+    this.openLayersService.zoomIn();
   }
 }
