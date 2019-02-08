@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 
 @Service
 public class MqSender implements IMqEvents {
@@ -32,5 +33,12 @@ public class MqSender implements IMqEvents {
         log.info("Send validation response: {}", response.getId());
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
+    }
+
+    @Override
+    public void sandValidationToSave(ViolationsSaveDto payload) {
+        log.info("Send violations to save");
+
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_VIOLATION_SAVE, MqProperties.KEY_VIOLATION_SAVE, payload);
     }
 }

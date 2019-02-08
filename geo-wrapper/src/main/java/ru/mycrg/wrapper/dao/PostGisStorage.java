@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
@@ -38,8 +39,8 @@ public class PostGisStorage {
         log.debug("Successfully created");
     }
 
-    public List<Map<String, Object>> fetchBatchOfRowsNeededValidation(ValidationMqRequest validationMqRequest,
-                                                                      int limit, int offset) {
+    public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(ValidationMqRequest validationMqRequest,
+                                                                        int limit, int offset) {
         String schema = validationMqRequest.getSchemaName();
         String table = validationMqRequest.getEntityType().getTableName();
         String extensionTableName = table + "_extension";
@@ -52,21 +53,19 @@ public class PostGisStorage {
                 "ORDER BY target.objectid " +
                 "LIMIT ? OFFSET ?", schema, table, schema, extensionTableName);
 
-        log.info("Sql: {}", rowsNeedingValidation);
+        log.debug("Sql: {}", rowsNeedingValidation);
 
         return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
     }
 
-    public void saveValidationResults(ValidationMqRequest validationMqRequest,
-                                      List<ObjectValidationResult> violationResults,
-                                      String objectIdKey) {
-        String schema = validationMqRequest.getSchemaName();
-        String table = validationMqRequest.getEntityType().getTableName();
-        String extensionTableName = table + "_extension";
+    public void saveValidationResults(ViolationsSaveDto dto, String objectIdKey) throws NumberFormatException {
+        String schema = dto.getSchemaName();
+        String extensionTableName = dto.getTableName() + "_extension";
+        List<ObjectValidationResult> violationResults = dto.getViolationResults();
 
-        log.info("Save validation results for: {}.{} Count: {}", schema, table, violationResults.size());
+        log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violationResults.size());
 
-        JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
+        JdbcTemplate jdbcTemplate = initConnection(dto.getDbName());
         violationResults.forEach(validationResult -> {
             String objectId = validationResult.getObjectId();
 
@@ -121,5 +120,4 @@ public class PostGisStorage {
     private JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
-
 }

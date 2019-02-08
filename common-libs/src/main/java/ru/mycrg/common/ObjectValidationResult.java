@@ -1,15 +1,17 @@
 package ru.mycrg.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс используется для передачи через очередь и для вывода инфы на UI.
+ * Если на UI не хочется получать лишней инфы (типа поля xMin) то нуно заюзать отдельную DTO
+ * В данном классе никаких JsonIgnore не тыкать
+ */
 public class ObjectValidationResult {
 
     private String objectId;
 
-    @JsonIgnore
     private String xMin;
 
     private List<PropertyViolation> violations = new ArrayList<>();
