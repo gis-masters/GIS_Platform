@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+---
+
+spring:
+  profiles: fiz-dev
+  data:
+    rest:
+      detection-strategy: annotated
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    username: postgres
+    password: 314
+  jpa:
+    properties:
+      hibernate.temp.use_jdbc_metadata_defaults: false
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    user: postgres
+    password: 314
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+server:
+  port: 8088

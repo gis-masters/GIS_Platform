@@ -1,11 +1,22 @@
-server:
-  port: 8100
+spring:
+  profiles:
+    active: fiz-dev
+
+---
 
 spring:
+  profiles: fiz-dev
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 50MB
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://crg-registry:8761/eureka/
 
 hystrix:
   command:
@@ -45,3 +56,6 @@ zuul:
     geoserver:
       path: /geoserver/**
       serviceId: http://geoserver:8080/geoserver/
+
+server:
+  port: 8100

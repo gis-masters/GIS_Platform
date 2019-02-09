@@ -1,10 +1,14 @@
-server:
-  port: 9000
+spring:
+  profiles:
+    active: fiz-dev
+
+---
 
 spring:
+  profiles: fiz-dev
   datasource:
     platform: postgres
-#    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
     username: postgres
     password: 314
 
@@ -13,3 +17,6 @@ security:
     secret: vjp4lLW_QmjMHiUw1OBVRIZH
     admin_name: admin
     admin_pass: geoserver
+
+server:
+  port: 9000
