@@ -35,14 +35,11 @@
 	</dependencyManagement>
 	
 	<modules>
-		<module>config</module>
 		<module>registry</module>
 
 		<module>gateway</module>
-		<module>monitoring</module>
-		<module>turbine-stream-service</module>
-
 		<module>jwt-service</module>
+
         <module>geo-wrapper</module>
         <module>geo-api</module>
         <module>common-libs</module>

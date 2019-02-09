@@ -5,19 +5,8 @@ services:
     ports:
       - 5672:5672
 
-  config:
-    build: config
-    ports:
-      - 8888:8888
-
   registry:
     build: registry
-
-  monitoring:
-    build: monitoring
-
-  turbine-stream-service:
-    build: turbine-stream-service
 
   jwt-service:
     build: jwt-service

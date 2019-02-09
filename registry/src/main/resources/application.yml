@@ -1,6 +1,11 @@
-logging:
-  level:
-    org.springframework.security: INFO
+spring:
+  profiles:
+    active: fiz-dev
+
+---
+
+spring:
+  profiles: fiz-dev
 
 hystrix:
   command:
@@ -14,14 +19,12 @@ eureka:
   instance:
     prefer-ip-address: true
   client:
+    registerWithEureka: false
+    fetchRegistry: false
+    server:
+      waitTimeInMsWhenSyncEmpty: 0
     serviceUrl:
       defaultZone: http://registry:8761/eureka/
 
-#security:
-#  oauth2:
-#    resource:
-#      user-info-uri: http://auth-service:5000/uaa/users/current
-
-spring:
-  rabbitmq:
-    host: rabbitmq
+server:
+  port: 8761

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
 public class PostGisStorage {
 
     private static final Logger log = LoggerFactory.getLogger(PostGisStorage.class);
@@ -41,6 +40,7 @@ public class PostGisStorage {
         log.debug("Successfully created");
     }
 
+    @Transactional
     public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(ValidationMqRequest validationMqRequest,
                                                                         int limit, int offset) {
         String schema = validationMqRequest.getSchemaName();
@@ -60,6 +60,7 @@ public class PostGisStorage {
         return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
     }
 
+    @Transactional
     public void saveValidationResults(ViolationsSaveDto dto, String objectIdKey) throws NumberFormatException {
         String schema = dto.getSchemaName();
         String extensionTableName = dto.getTableName() + "_extension";
@@ -93,6 +94,7 @@ public class PostGisStorage {
         });
     }
 
+    @Transactional
     public List<Map<String, Object>> getViolations(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
@@ -105,6 +107,7 @@ public class PostGisStorage {
         return initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest, limit, limit * offset);
     }
 
+    @Transactional
     public Long countTotalViolations(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
