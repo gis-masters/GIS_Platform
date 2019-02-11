@@ -68,7 +68,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
             this.logger.info(' --- 1');
           //
             return this.validationService
-                       .getValidation(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
+                       .getValidationResults(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
           // } else {
           //   this.logger.info(' --- 2 emiter');
           //   // this.getConnectionInfo.emit(this.index - 1);
@@ -114,7 +114,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   getValidation() {
     if (this._connectionInfo) {
       this.validationService
-          .getValidation(this.connectionInfo, 0, 10)
+          .getValidationResults(this.connectionInfo, 0, 10)
           .subscribe(response => {
             this.logger.info('!!!!!!!!! ', response);
 

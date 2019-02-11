@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {MenuItem} from "primeng/api";
+import {Component, OnInit} from '@angular/core';
 import {NGXLogger} from "ngx-logger";
+import {ValidationService} from "../../services/validation.service";
 
 @Component({
   selector: 'crg-layer-objects',
@@ -10,105 +10,29 @@ import {NGXLogger} from "ngx-logger";
 export class LayerObjectsComponent implements OnInit {
 
   cols = [
-    { field: 'vin', header: 'Vin' },
-    { field: 'year', header: 'Year' },
-    { field: 'brand', header: 'Brand' },
-    { field: 'color', header: 'Color' }
+    { field: 'objectId', header: 'objectId' },
+    { field: 'classId', header: 'classId' },
+    { field: 'violations', header: 'violations' },
+    { field: 'color', header: 'count' }
   ];
 
-  cars = [
-    {
-      vin: '1',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '2',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '3',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '4',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '5',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '6',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '7',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '8',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '9',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '10',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '11',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '12',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '13',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-    {
-      vin: '14',
-      year: '2018',
-      brand: 'BMW',
-      color: 'RED'
-    },
-  ];
   selectedItems: any;
 
-  constructor(private logger: NGXLogger) {
+  vResults = [];
+
+  constructor(private logger: NGXLogger,
+              private validationService: ValidationService) {
     this.logger.info('LayerObjectsComponent constructor');
   }
 
   ngOnInit() {
+    this.validationService
+        .getValidationResults({dbName: 'gis', schemaName: 'fiz', tableName: 'electricline'}, 0, 50)
+        .subscribe(value => {
+          this.logger.info('v: ', value);
+
+          this.vResults = value.results;
+        });
   }
 
 }

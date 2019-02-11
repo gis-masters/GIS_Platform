@@ -9,7 +9,6 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from "../../../services/communication.service";
-import {ValidationRequest} from "../../../services/validation.service";
 
 @Component({
   selector: 'crg-map',
@@ -22,12 +21,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layerNames = [];
 
+  sidebarSize = 'ui-sidebar-md';
+
   display: boolean = false;
-  connectionInfo: ValidationRequest = {
-    dbName: 'gis',
-    schemaName: 'fiz',
-    tableName: 'electricline'
-  };
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,

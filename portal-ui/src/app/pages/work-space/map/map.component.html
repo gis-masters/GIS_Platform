@@ -28,7 +28,7 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<p-sidebar [(visible)]="display" position="bottom" styleClass="ui-sidebar-md"
+<p-sidebar [(visible)]="display" position="bottom" styleClass="{{sidebarSize}}" [style]="{padding:'0'}"
            [modal]="false"
            [showCloseIcon]="true"
            [dismissible]="true">

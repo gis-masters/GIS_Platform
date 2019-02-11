@@ -26,7 +26,7 @@ export class ValidationService {
                      {headers: {'Content-Type': 'application/json'}});
   }
 
-  getValidation(data: ValidationRequest, page, size): Observable<any> {
+  getValidationResults(data: ValidationRequest, page, size): Observable<any> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size);

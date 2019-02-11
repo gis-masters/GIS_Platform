@@ -1,6 +1,8 @@
-<div style="padding-right: 20px">
-  <p-table [columns]="cols" [value]="cars"
-           selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true">
+<div class="crg-features-table">
+  <p-table [columns]="cols" [value]="vResults"
+           selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true"
+           [scrollable]="true" scrollHeight="300px">
+
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns">
@@ -14,15 +16,6 @@
           {{rowData[col.field]}}
         </td>
       </tr>
-    </ng-template>
-
-
-    <ng-template pTemplate="summary">
-      <ul>
-        <li *ngFor="let car of selectedItems" style="text-align: left">
-          {{car.vin + ' - ' + car.brand + ' - ' + car.year + ' - ' + car.color}}
-        </li>
-      </ul>
     </ng-template>
 
   </p-table>
