@@ -71,6 +71,7 @@ public class PostGisStorage {
         JdbcTemplate jdbcTemplate = initConnection(dto.getDbName());
         violationResults.forEach(validationResult -> {
             String objectId = validationResult.getObjectId();
+            String classId = validationResult.getClassId();
 
             String sqlIsRowExist = String.format("SELECT * FROM %s.%s where ? = ?", schema, extensionTableName);
             var isRowExist = jdbcTemplate.queryForList(sqlIsRowExist, objectIdKey, objectId);
@@ -79,17 +80,19 @@ public class PostGisStorage {
             String xMin = validationResult.getxMin();
 
             if (isRowExist.isEmpty()) { // Add new row
-                String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, valid, object_id) " +
-                                "VALUES ('%s', ?, ?, ?);", schema, extensionTableName, json.toString());
+                String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, valid, object_id, class_id) " +
+                                "VALUES ('%s', ?, ?, ?, ?);", schema, extensionTableName, json.toString());
 
                 jdbcTemplate.update(sqlAddRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
+                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(),
+                        Integer.valueOf(objectId), Integer.valueOf(classId));
             } else { // Update row
-                String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin=?, valid=? " +
+                String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin=?, valid=?, class_id=? " +
                                 "WHERE object_id = ?", schema, extensionTableName, json.toString());
 
                 jdbcTemplate.update(sqlUpdateRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
+                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(),
+                        Integer.valueOf(objectId), Integer.valueOf(classId));
             }
         });
     }

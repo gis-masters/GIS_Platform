@@ -111,12 +111,10 @@ public class ValidatorTest {
 
         ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
 
-        assertTrue(objectValidationResult.getCorrectProperties().contains("CLASSID_valid"));
-        assertEquals(4, objectValidationResult.getCorrectProperties().size());
         assertEquals(5, objectValidationResult.getViolations().size());
-        assertEquals(1, objectValidationResult.getViolations().get(0).getErrors().size());
-        assertEquals(1, objectValidationResult.getViolations().get(1).getErrors().size());
-        assertEquals(1, objectValidationResult.getViolations().get(2).getErrors().size());
+        assertEquals(1, objectValidationResult.getViolations().get(0).getErrorTypes().size());
+        assertEquals(1, objectValidationResult.getViolations().get(1).getErrorTypes().size());
+        assertEquals(1, objectValidationResult.getViolations().get(2).getErrorTypes().size());
     }
 
 }

@@ -2,7 +2,11 @@ package ru.mycrg.wrapper.service.validation.constraints;
 
 import ru.mycrg.common.SimplePropertyDto;
 
+import java.util.List;
+
 public class RequiredValidation implements CrgConstraintValidator {
+
+    private final String type = "required";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -10,6 +14,13 @@ public class RequiredValidation implements CrgConstraintValidator {
             return value != null;
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public void validate(Object value, SimplePropertyDto context, List<String> violations) {
+        if (!isValid(value, context)) {
+            violations.add(type);
         }
     }
 }
