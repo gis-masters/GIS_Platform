@@ -39,8 +39,6 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   tryPositionToObject() {
-    this.logger.info(' +++ ');
-
     this.openLayersService.zoomIn();
   }
 }

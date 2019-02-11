@@ -16,7 +16,6 @@ export class ViolationItemViewComponent implements OnInit {
   constructor(private logger: NGXLogger) { }
 
   ngOnInit() {
-    this.logger.info(' +++ ', this.data);
     if (this.data) {
       this.logger.info('-');
     }
