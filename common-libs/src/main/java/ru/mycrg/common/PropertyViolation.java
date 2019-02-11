@@ -7,7 +7,7 @@ public class PropertyViolation {
 
     private String name;
     private Object value;
-    private List<String> errors = new ArrayList<>();
+    private List<String> errorTypes = new ArrayList<>();
 
     public PropertyViolation() {}
 
@@ -32,15 +32,15 @@ public class PropertyViolation {
         this.value = value;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public List<String> getErrorTypes() {
+        return errorTypes;
     }
 
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
+    public void setErrorTypes(List<String> errorTypes) {
+        this.errorTypes = errorTypes;
     }
 
     public boolean hasErrors() {
-        return errors.size() > 0;
+        return errorTypes.size() > 0;
     }
 }

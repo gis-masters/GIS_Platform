@@ -52,8 +52,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
         this.layerNames.forEach((layerName, index) => {
           this.openLayers
-            .addLayer(layerName)
-            .setZIndex(layers.length - index);
+              .addLayerToMap(layerName)
+              .setZIndex(layers.length - index);
         });
       });
 

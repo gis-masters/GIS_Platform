@@ -38,12 +38,10 @@ public class ValidatorImpl implements IValidator {
             String name = propertyDto.getName();
             if (data.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));
-                propertyViolation.setErrors(validateProperty(propertyDto, data.get(name)));
+                propertyViolation.setErrorTypes(validateProperty(propertyDto, data.get(name)));
 
                 if (propertyViolation.hasErrors()) {
                     validationResult.addPropertyViolation(propertyViolation);
-                } else {
-                    validationResult.addCorrectProperty(name);
                 }
             }
         });
@@ -54,46 +52,27 @@ public class ValidatorImpl implements IValidator {
     private List<String> validateProperty(SimplePropertyDto propertyType, Object value) {
         List<String> violations = new ArrayList<>();
 
-        if (!requiredValidation.isValid(value, propertyType)) {
-            violations.add("Свойство обязательно к заполнению");
-        }
+        requiredValidation.validate(value, propertyType, violations);
 
         if (propertyType.getValueType() == ValueType.STRING) {
-            if (!minLengthValidation.isValid(value, propertyType)) {
-                violations.add("Минимальная длинна " + propertyType.getMinLength());
-            }
-
-            if (!maxLengthValidation.isValid(value, propertyType)) {
-                violations.add("Максимальная длинна " + propertyType.getMaxLength());
-            }
-
-            if (!patternValidation.isValid(value, propertyType)) {
-                violations.add(propertyType.getPatternDescription());
-            }
+            minLengthValidation.validate(value, propertyType, violations);
+            maxLengthValidation.validate(value, propertyType, violations);
+            patternValidation.validate(value, propertyType, violations);
         } else if (propertyType.getValueType() == ValueType.INT) {
             if (isLongTypeValidation.isValid(value, propertyType)) {
-                if (!minInclusiveValidation.isValid(value, propertyType)) {
-                    violations.add("Значение должно быть более или равно: " + propertyType.getMinInclusive());
-                }
-
-                if (!maxInclusiveValidation.isValid(value, propertyType)) {
-                    violations.add("Значение должно быть менее или равно: " + propertyType.getMaxInclusive());
-                }
+                minInclusiveValidation.validate(value, propertyType, violations);
+                maxInclusiveValidation.validate(value, propertyType, violations);
             } else {
-                violations.add("Значение должно быть целым числом");
+                isLongTypeValidation.validate(value, propertyType, violations);
             }
         } else if (propertyType.getValueType() == ValueType.DOUBLE) {
             if (isDoubleTypeValidation.isValid(value, propertyType)) {
-                if (!totalDigitsValidation.isValid(value, propertyType)) {
-                    violations.add("Общее кол-во знаков не должно превышать: " + propertyType.getTotalDigits());
-                }
+                totalDigitsValidation.validate(value, propertyType, violations);
             } else {
-                violations.add("Значение должно быть дробным числом");
+                isDoubleTypeValidation.validate(value, propertyType, violations);
             }
         } else if (propertyType.getValueType() == ValueType.CHOICE) {
-            if (!enumerationValidation.isValid(value, propertyType)) {
-                violations.add("Значение не соответствует справочному");
-            }
+            enumerationValidation.validate(value, propertyType, violations);
         }
 
         return violations;

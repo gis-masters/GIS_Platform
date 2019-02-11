@@ -31,11 +31,13 @@ public class ValidationService {
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
      */
     private String OBJECT_ID = "objectid";
+    private String CLASS_ID = "classid";
 
     /**
      * Название колонки(идентификатор обьекта) в таблицах содержащих данные по валидации('_extension')
      */
-    private String EXTENSION_ID_KEY = "object_id";
+    private String EXTENSION_OBJECTID_KEY = "object_id";
+    private String EXTENSION_CLASSID_KEY = "class_id";
 
     /**
      * Название колонки содержащей описание ошибок валидации.
@@ -91,13 +93,14 @@ public class ValidationService {
             offset++;
         }
 
+        // TODO: Недело кончено что посути мы ответили DONE а сохранилось оно или упало неизвестно, но пока упущу этот момент
         response.setStatus(ValidationStatus.DONE);
 
         mqEvents.validationResponse(response);
     }
 
     public void saveViolations(ViolationsSaveDto dto) throws NumberFormatException {
-        postGisStorage.saveValidationResults(dto, EXTENSION_ID_KEY);
+        postGisStorage.saveValidationResults(dto, EXTENSION_OBJECTID_KEY);
     }
 
     private void sendPendingResponse(ValidationMqRequest validationMqRequest,
@@ -115,7 +118,8 @@ public class ValidationService {
         int i = 0;
         while (i < violations.size()) {
             ObjectValidationResult objectValidationResult = new ObjectValidationResult();
-            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_ID_KEY));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_OBJECTID_KEY));
+            objectValidationResult.setClassId(Util.getPropertyByKey(violations.get(i), EXTENSION_CLASSID_KEY));
 
             String violationsAsString = Util.getViolations(violations.get(i), VIOLATIONS_KEY);
 
@@ -139,6 +143,7 @@ public class ValidationService {
         while (i < batch.size()) {
             ObjectValidationResult objectValidationResult = validator.validate(entityType, batch.get(i));
             objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
+            objectValidationResult.setClassId(Util.getPropertyByKey(batch.get(i), CLASS_ID));
             objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));
 
             validationResults.add(objectValidationResult);
