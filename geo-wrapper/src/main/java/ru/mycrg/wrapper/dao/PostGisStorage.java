@@ -35,7 +35,9 @@ public class PostGisStorage {
         jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0};", dbName));
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
-        createExtensionForNewDb(jdbcTemplate);
+        JdbcTemplate jdbcTemplateNewDb = initConnection(dbName);
+
+        createExtensionForNewDb(jdbcTemplateNewDb);
 
         log.debug("Successfully created");
     }

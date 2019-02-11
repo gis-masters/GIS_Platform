@@ -18,5 +18,12 @@ security:
     admin_name: admin
     admin_pass: geoserver
 
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://crg-registry:8761/eureka/
+
 server:
   port: 9000
