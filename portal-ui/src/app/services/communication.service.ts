@@ -7,6 +7,7 @@ import {NGXLogger} from "ngx-logger";
 export class CommunicationService {
 
   @Output() layerObjectsWindow = new EventEmitter<boolean>();
+  @Output() gotoObject = new EventEmitter<string>();
 
   constructor(private logger: NGXLogger) {
 
@@ -18,5 +19,9 @@ export class CommunicationService {
 
   public layerObjectsWindowListener() {
     return this.layerObjectsWindow;
+  }
+
+  public gotoObjectListener() {
+    return this.gotoObject;
   }
 }

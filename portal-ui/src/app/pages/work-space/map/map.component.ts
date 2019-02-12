@@ -54,10 +54,16 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
     this.communicationService
-      .layerObjectsWindowListener()
-      .subscribe((value) => {
-        this.display = value;
-      });
+        .layerObjectsWindowListener()
+        .subscribe((value) => {
+          this.display = value;
+        });
+
+    this.communicationService
+        .gotoObjectListener()
+        .subscribe((objectId) => {
+          this.openLayers.positionToObjectById(objectId);
+        });
   }
 
   drop(event: CdkDragDrop<string[]>) {

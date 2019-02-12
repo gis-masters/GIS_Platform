@@ -38,7 +38,4 @@ export class WorkspaceComponent implements OnDestroy {
     this.communicationService.openLayerObjectsWindow();
   }
 
-  tryPositionToObject() {
-    this.openLayersService.zoomIn();
-  }
 }

@@ -1,17 +1,21 @@
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
+import Point from 'ol/geom/Point.js';
+import MultiLineString from 'ol/geom/MultiLineString.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import ImageWMS from 'ol/source/ImageWMS.js';
+import MousePosition from 'ol/control/MousePosition.js';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import ImageWMS from 'ol/source/ImageWMS.js';
-import Vector from 'ol/source/Vector.js';
-import Rotate from 'ol/control/Rotate.js';
 import {WmsService} from '../geoserver/wms.service';
 import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
-import {WfsService} from "../geoserver/wfs.service";
+import {WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
+import {defaults as defaultControls} from 'ol/control.js';
+import {createStringXY} from 'ol/coordinate.js';
+import {GeometryFactory} from "./GeometryFactory";
 
 export let BEARER_TOKEN = '';
 
@@ -49,6 +53,16 @@ export class OpenLayersService {
     format: new GeoJSON()
   });
 
+  mousePositionControl = new MousePosition({
+    coordinateFormat: createStringXY(4),
+    projection: 'EPSG:4326',
+    // comment the following two lines to have the mouse position
+    // be placed within the map.
+    // className: 'custom-mouse-position',
+    // target: document.getElementById('mouse-position'),
+    undefinedHTML: '&nbsp;'
+  });
+
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
               private wmsService: WmsService,
@@ -76,6 +90,7 @@ export class OpenLayersService {
     });
 
     this._map = new Map({
+      controls: defaultControls().extend([this.mousePositionControl]),
       layers: layers,
       target: 'fiz-openLayer-map',
       view: this.view
@@ -84,24 +99,6 @@ export class OpenLayersService {
 
   addLayerToMap(layerName: string) {
     this.logger.debug('addLayer: ', layerName);
-
-    // let wfsSource = new VectorSource({
-    //   url: this.wfsService.wfsFiz,
-    //   params: {
-    //     'service': 'WFS',
-    //     'version': '1.0.0',
-    //     // 'request': 'GetFeature',
-    //     'typeName': layerName,
-    //     'outputFormat': 'application/json',
-    //   },
-    //   serverType: 'geoserver',
-    //   crossOrigin: 'anonymous',
-    // });
-    // const vectorLayer = new VectorLayer({
-    //   source: wfsSource
-    // });
-    // vectorLayer.setVisible(true);
-
 
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
@@ -222,30 +219,35 @@ export class OpenLayersService {
     this._map = value;
   }
 
-  zoomIn() {
+  positionToObjectById(objectId: any) {
     let view = this._map.getView();
+    let size = this._map.getSize();
 
-    let source = new VectorSource({
-      url: this.wfsService.fwsUrl,
-      params: {
-        'service': 'WFS',
-        'version': '1.0.0',
-        'request': 'GetFeature',
-        'typeName': 'work_workspace:electricline',
-        'outputFormat': 'application/json',
-      },
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous',
-      format: new GeoJSON()
-    });
+    this.logger.info('getProjection: ', view.getProjection());
 
     this.wfsService
-        .getGeoJSON('work_workspace:electricline', '30')
-        .subscribe(value => {
-          this.logger.info(' ---+++ ', value);
-          this.logger.info('geometry', value.features[0]);
+        .getGeoJSON('work_workspace:electrictransformer', objectId)
+        .subscribe((featureCollection: WfsFeatureCollection) => {
+          let feature = featureCollection.features[0];
 
-          // view.fit(polygon, {constrainResolution: false});
+          if (feature.geometry.type === 'Point') {
+            this.logger.info('Point');
+
+            let point = new Point(feature.geometry.coordinates);
+
+            // view.centerOn(feature.geometry.coordinates, size, [570, 500]); // работает
+            view.fit(point, {minResolution: 1});
+            // view.fit(point, {constrainResolution: false}); // не работает для точки
+          } else if (feature.geometry.type === 'MultiLineString') {
+            this.logger.info('MultiLineString');
+
+            let multiLineString = new MultiLineString(feature.geometry.coordinates);
+
+            // view.fit(multiLineString.getCoordinates(), {constrainResolution: false});
+            view.fit(multiLineString, {constrainResolution: false});
+          } else {
+            console.warn('Not supported geometry type: ', feature.geometry);
+          }
         });
   }
 }

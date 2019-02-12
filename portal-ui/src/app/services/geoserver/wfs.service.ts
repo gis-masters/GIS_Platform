@@ -26,11 +26,11 @@ export class WfsService {
   // maxFeatures=50&
   // outputFormat=application%2Fjson
   // &featureID=30
-  getGeoJSON(layerName: string, objectId: string): Observable<any> {
+  getGeoJSON(layerName: string, objectId: string): Observable<WfsFeatureCollection> {
     let url = this.prepareLink(layerName, objectId);
 
     return this.http
-               .get(url);
+               .get<WfsFeatureCollection>(url);
   }
 
   private prepareLink(typeName: string, objectId: string) {
@@ -38,8 +38,10 @@ export class WfsService {
 
     return this._fwsUrl + '/' + workspaceName + '/ows'
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
-                        + '&outputFormat=application%2Fjson&featureID=' + objectId;
+                        + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
+
+  //4326
 
   get fwsUrl(): string {
     return this._fwsUrl;
@@ -48,4 +50,28 @@ export class WfsService {
   set fwsUrl(value: string) {
     this._fwsUrl = value;
   }
+}
+
+export interface WfsFeatureCollection {
+  type: string;
+  features: WfsFeature[];
+  totalFeatures: number;
+  numberMatched: number;
+  numberReturned: number;
+  timeStamp: string;
+  crs: any;
+  bbox: any
+}
+
+export interface WfsFeature {
+  type: string;
+  id: string;
+  geometry: WfsGeometry;
+  geometry_name: string;
+  properties: any;
+}
+
+interface WfsGeometry {
+  type: string;
+  coordinates: any;
 }
