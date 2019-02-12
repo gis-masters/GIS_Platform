@@ -28,9 +28,16 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<p-sidebar [(visible)]="display" position="bottom" styleClass="{{sidebarSize}}" [style]="{padding:'0'}"
+<p-sidebar [(visible)]="isLayerObjectsSidebarShow" position="bottom" styleClass="{{layerObjectsSidebarSize}}" [style]="{padding:'0'}"
            [modal]="false"
            [showCloseIcon]="true"
            [dismissible]="true">
   <crg-layer-objects></crg-layer-objects>
+</p-sidebar>
+
+<p-sidebar [(visible)]="isBugReportSidebarShow" position="right" styleClass="{{bugReportSidebarSize}}" [style]="{padding:'0'}"
+           [modal]="false"
+           [showCloseIcon]="false"
+           [dismissible]="true">
+  <crg-bug-report-sidebar></crg-bug-report-sidebar>
 </p-sidebar>

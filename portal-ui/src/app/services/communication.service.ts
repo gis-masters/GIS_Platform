@@ -6,19 +6,21 @@ import {NGXLogger} from "ngx-logger";
 })
 export class CommunicationService {
 
-  @Output() layerObjectsWindow = new EventEmitter<boolean>();
+  @Output() layerObjectsSidebar = new EventEmitter<boolean>();
+  @Output() bugReportSidebar = new EventEmitter<boolean>();
+
   @Output() gotoObject = new EventEmitter<string>();
 
   constructor(private logger: NGXLogger) {
 
   }
 
-  public openLayerObjectsWindow() {
-    this.layerObjectsWindow.emit(true);
+  public layerObjectsSidebarListener() {
+    return this.layerObjectsSidebar;
   }
 
-  public layerObjectsWindowListener() {
-    return this.layerObjectsWindow;
+  public bugReportSidebarListener() {
+    return this.bugReportSidebar;
   }
 
   public gotoObjectListener() {

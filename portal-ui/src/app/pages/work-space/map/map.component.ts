@@ -21,9 +21,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layerNames = [];
 
-  sidebarSize = 'ui-sidebar-md';
+  isLayerObjectsSidebarShow: boolean = false;
+  layerObjectsSidebarSize = 'ui-sidebar-md';
 
-  display: boolean = false;
+  isBugReportSidebarShow: boolean = false;
+  bugReportSidebarSize = 'ui-sidebar-sm';
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
@@ -54,9 +56,15 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
     this.communicationService
-        .layerObjectsWindowListener()
+        .layerObjectsSidebarListener()
         .subscribe((value) => {
-          this.display = value;
+          this.isLayerObjectsSidebarShow = value;
+        });
+
+    this.communicationService
+        .bugReportSidebarListener()
+        .subscribe((value) => {
+          this.isBugReportSidebarShow = value;
         });
 
     this.communicationService

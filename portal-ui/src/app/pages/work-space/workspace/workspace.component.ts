@@ -34,8 +34,8 @@ export class WorkspaceComponent implements OnDestroy {
     this.authService.logout();
   }
 
-  openLayersObjectView() {
-    this.communicationService.openLayerObjectsWindow();
+  openBugReportSidebar() {
+    this.communicationService.bugReportSidebar.emit(true);
   }
 
 }

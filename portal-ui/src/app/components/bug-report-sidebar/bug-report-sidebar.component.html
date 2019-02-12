@@ -1,0 +1,15 @@
+<div class="p-grid p-align-stretch vertical-container">
+  <div class="p-col">
+    <div style="height: 50px">
+      <button (click)="closeFiz()">X</button>
+    </div>
+
+    <div class="box box box-stretched">
+      <p-tree [value]="layers" selectionMode="multiple" [(selection)]="selectedItem"
+              [style]="{'width':'100%','max-height':'800px','overflow':'auto','padding':'0','border':'none'}"
+              (onNodeSelect)="nodeSelect($event)"
+              (onNodeUnselect)="nodeUnselect($event)">
+      </p-tree>
+    </div>
+  </div>
+</div>
