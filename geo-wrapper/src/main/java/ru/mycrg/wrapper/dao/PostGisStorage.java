@@ -63,7 +63,7 @@ public class PostGisStorage {
     }
 
     @Transactional
-    public void saveValidationResults(ViolationsSaveDto dto, String objectIdKey) throws NumberFormatException {
+    public void saveValidationResults(ViolationsSaveDto dto) throws NumberFormatException {
         String schema = dto.getSchemaName();
         String extensionTableName = dto.getTableName() + "_extension";
         List<ObjectValidationResult> violationResults = dto.getViolationResults();
@@ -71,32 +71,26 @@ public class PostGisStorage {
         log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violationResults.size());
 
         JdbcTemplate jdbcTemplate = initConnection(dto.getDbName());
-        violationResults.forEach(validationResult -> {
-            String objectId = validationResult.getObjectId();
-            String classId = validationResult.getClassId();
+        String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
+                "VALUES (?, to_json(?::json), ?, ?, ?) " +
+                "ON CONFLICT(object_id) DO UPDATE " +
+                "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
+                "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id", schema, extensionTableName);
 
-            String sqlIsRowExist = String.format("SELECT * FROM %s.%s where ? = ?", schema, extensionTableName);
-            var isRowExist = jdbcTemplate.queryForList(sqlIsRowExist, objectIdKey, objectId);
+        jdbcTemplate
+                .batchUpdate(upsert, violationResults, violationResults.size(),
+                        (ps, argument) -> {
+                            int objectId = Integer.valueOf(argument.getObjectId());
+                            int classId = Integer.valueOf(argument.getClassId());
+                            int xMin = Integer.valueOf(argument.getxMin());
+                            JsonNode json = Util.convertToJson(argument.getViolations());
 
-            JsonNode json = Util.convertToJson(validationResult.getViolations());
-            String xMin = validationResult.getxMin();
-
-            if (isRowExist.isEmpty()) { // Add new row
-                String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, valid, object_id, class_id) " +
-                                "VALUES ('%s', ?, ?, ?, ?);", schema, extensionTableName, json.toString());
-
-                jdbcTemplate.update(sqlAddRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(),
-                        Integer.valueOf(objectId), Integer.valueOf(classId));
-            } else { // Update row
-                String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin=?, valid=?, class_id=? " +
-                                "WHERE object_id = ?", schema, extensionTableName, json.toString());
-
-                jdbcTemplate.update(sqlUpdateRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(),
-                        Integer.valueOf(objectId), Integer.valueOf(classId));
-            }
-        });
+                            ps.setInt(1, objectId);
+                            ps.setString(2, json.toString());
+                            ps.setInt(3, xMin);
+                            ps.setBoolean(4, argument.getViolations().isEmpty());
+                            ps.setInt(5, classId);
+                        });
     }
 
     @Transactional
@@ -118,7 +112,7 @@ public class PostGisStorage {
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
-                    schemaName, extensionTableName);
+                schemaName, extensionTableName);
 
         return initConnection(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
     }

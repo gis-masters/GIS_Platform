@@ -100,7 +100,7 @@ public class ValidationService {
     }
 
     public void saveViolations(ViolationsSaveDto dto) throws NumberFormatException {
-        postGisStorage.saveValidationResults(dto, EXTENSION_OBJECTID_KEY);
+        postGisStorage.saveValidationResults(dto);
     }
 
     private void sendPendingResponse(ValidationMqRequest validationMqRequest,
