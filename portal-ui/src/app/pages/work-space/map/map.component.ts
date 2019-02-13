@@ -25,7 +25,7 @@ export class MapComponent implements OnInit, OnDestroy {
   layerObjectsSidebarSize = 'ui-sidebar-md';
 
   isBugReportSidebarShow: boolean = false;
-  bugReportSidebarSize = 'ui-sidebar-sm';
+  bugReportSidebarSize = 'ui-sidebar-md';
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,

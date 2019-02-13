@@ -31,6 +31,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class TestGithubComponent implements OnChanges, AfterViewInit {
 
+  @Input() isActive: boolean;
   @Input() index: number;
   @Input() step: number;
   @Input() connectionInfo: ValidationRequest;
@@ -38,7 +39,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['objectid', 'violationAsString', 'violationAsString2'];
+  displayedColumns: string[] = ['objectid', 'classid', 'violationsCounter'];
   data: any[] = [];
   isLoadingResults = true;
 
@@ -51,7 +52,7 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
 
   constructor(private logger: NGXLogger,
               private validationService: ValidationService) {
-    this.logger.info(' --- TestGithubComponent ---');
+    this.logger.info('TestGithubComponent constructor');
   }
 
   ngAfterViewInit() {
@@ -64,17 +65,12 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
 
-          // if (this._connectionInfo) {
-            this.logger.info(' --- 1');
-          //
+          if (this.isActive && !!this.connectionInfo) {
             return this.validationService
                        .getValidationResults(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
-          // } else {
-          //   this.logger.info(' --- 2 emiter');
-          //   // this.getConnectionInfo.emit(this.index - 1);
-          //
-          //   return of();
-          // }
+          } else {
+            return of(null);
+          }
         }),
       ).subscribe(response => {
         if (response) {
@@ -112,12 +108,12 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   }
 
   getValidation() {
+    this.logger.info(' --- getValidation ---', this._connectionInfo, this.isActive);
+
     if (this._connectionInfo) {
       this.validationService
-          .getValidationResults(this.connectionInfo, 0, 10)
+          .getValidationResults(this.connectionInfo, 0, 25)
           .subscribe(response => {
-            this.logger.info('!!!!!!!!! ', response);
-
             this.data = response.results;
             this.totalElements = response.total;
             this.status = response.status;

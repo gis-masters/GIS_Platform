@@ -24,7 +24,6 @@ import {GeometryPipe} from './pipes/geometry.pipe';
 import {NgxMaskModule} from 'ngx-mask';
 import {ViolationItemViewComponent} from './components/violation-item-view/violation-item-view.component';
 import {LayerObjectsComponent} from './components/layer-objects/layer-objects.component';
-import {BugReportSidebarComponent} from './components/bug-report-sidebar/bug-report-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +38,6 @@ import {BugReportSidebarComponent} from './components/bug-report-sidebar/bug-rep
     TestGithubComponent,
     ViolationItemViewComponent,
     LayerObjectsComponent,
-    BugReportSidebarComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -7,7 +7,7 @@ import {LandingComponent} from './pages/landing/landing.component';
 import {RegisterComponent} from './pages/register/register.component';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {WorkspaceComponent} from './pages/work-space/workspace/workspace.component';
-import {ValidationComponent} from './pages/work-space/validation/validation.component';
+import {ValidationComponent} from './components/validation-report-sidebar/validation.component';
 import {DataImportComponent} from './pages/work-space/data-import/data-import.component';
 import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
 

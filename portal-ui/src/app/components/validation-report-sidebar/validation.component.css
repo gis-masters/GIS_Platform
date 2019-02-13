@@ -1,4 +1,4 @@
-@import url(../../_app/app.component.css);
+@import url(../../pages/_app/app.component.css);
 
 .validation_accordion {
   width: 100%;
@@ -8,4 +8,8 @@
 
 .validation_button {
   margin-left: auto;
+}
+
+.mat-expansion-panel-body {
+  padding: 0;
 }

@@ -2,13 +2,14 @@ import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
 import {filter, flatMap, map} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material";
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../../services/auth.service";
-import {ValidationRequest, ValidationService} from '../../../services/validation.service';
-import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {DatastoreService} from '../../../services/geoserver/datastore.service';
-import {Layer, LayersService} from "../../../services/geoserver/layers.service";
-import {GeoUtil} from "../../../services/util/GeoUtil";
+import {Component, Input, OnInit} from '@angular/core';
+import {AuthService} from "../../services/auth.service";
+import {ValidationRequest, ValidationService} from '../../services/validation.service';
+import {NameHrefProjection} from '../../services/geoserver/projections';
+import {DatastoreService} from '../../services/geoserver/datastore.service';
+import {Layer, LayersService} from "../../services/geoserver/layers.service";
+import {GeoUtil} from "../../services/util/GeoUtil";
+import {CommunicationService} from "../../services/communication.service";
 
 @Component({
   selector: 'crg-validation',
@@ -16,6 +17,8 @@ import {GeoUtil} from "../../../services/util/GeoUtil";
   styleUrls: ['./validation.component.css']
 })
 export class ValidationComponent implements OnInit {
+
+  @Input() isActive: boolean;
 
   connectionInfo: ValidationRequest[] = [];
 
@@ -29,6 +32,7 @@ export class ValidationComponent implements OnInit {
               private snackBar: MatSnackBar,
               private datastoreService: DatastoreService,
               private validationService: ValidationService,
+              private communicationService: CommunicationService,
               private authService: AuthService,
               private layersService: LayersService) {
     this.authService.validateAuth();
@@ -93,5 +97,13 @@ export class ValidationComponent implements OnInit {
     } else {
       this.logger.info('Not fetch layer connections');
     }
+  }
+
+  prepareLayerName(name: string): string {
+    return name.split(':')[1];
+  }
+
+  closeSidebar() {
+    this.communicationService.bugReportSidebar.emit(false);
   }
 }

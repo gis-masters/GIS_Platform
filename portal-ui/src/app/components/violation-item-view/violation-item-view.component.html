@@ -1,8 +1,7 @@
-<div>{{parsedData.violations}}</div>
-<br>
-<div>{{data}}</div>
-
-<!--<div *ngFor="let item of parsedData.violations">-->
-  <!--{{item.name}}-->
-  <!--{{item.errors}}-->
-<!--</div>-->
+<div *ngIf="data">
+  <div *ngFor="let item of data">
+    {{item.name}}
+    {{item.value}}
+    {{item.errorTypes}}
+  </div>
+</div>

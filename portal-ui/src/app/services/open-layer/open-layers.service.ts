@@ -235,8 +235,8 @@ export class OpenLayersService {
 
             let point = new Point(feature.geometry.coordinates);
 
-            // view.centerOn(feature.geometry.coordinates, size, [570, 500]); // работает
-            view.fit(point, {minResolution: 1});
+            view.centerOn(feature.geometry.coordinates, size, [570, 500]); // работает
+            // view.fit(point, {minResolution: 1});
             // view.fit(point, {constrainResolution: false}); // не работает для точки
           } else if (feature.geometry.type === 'MultiLineString') {
             this.logger.info('MultiLineString');

@@ -27,14 +27,14 @@
           <td mat-cell *matCellDef="let element">{{element.objectId}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="violationAsString">
+        <ng-container matColumnDef="classid">
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Название</th>
           <td mat-cell *matCellDef="let element" style="padding-left: 10px">Описание обьекта по classid</td>
         </ng-container>
 
-        <ng-container matColumnDef="violationAsString2">
+        <ng-container matColumnDef="violationsCounter">
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Кол-во ошибок</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 10px">2</td>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px">element.</td>
         </ng-container>
 
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
@@ -42,7 +42,7 @@
           <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
             <div class="example-element-detail"
                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-              <crg-violation-item-view [data]="element.violationAsString"></crg-violation-item-view>
+              <crg-violation-item-view [data]="element.violations"></crg-violation-item-view>
             </div>
           </td>
         </ng-container>
