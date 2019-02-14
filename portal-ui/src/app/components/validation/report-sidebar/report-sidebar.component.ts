@@ -118,4 +118,10 @@ export class ReportSidebarComponent implements OnInit {
   getInfo(name: string, param: string) {
     return this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
   }
+
+  isValidatedAndSuccess(name: string, param: string) {
+    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
+
+    return infoByLayerName.isValidated && infoByLayerName.totalViolations < 1;
+  }
 }

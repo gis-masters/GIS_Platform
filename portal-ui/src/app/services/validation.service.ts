@@ -74,9 +74,9 @@ export class ValidationDataHolder {
   }
 
   addLayers(layers: NameHrefProjection[]) {
-    layers.forEach((layer: NameHrefProjection) => {
-      this.commonInfo.set(layer.name, {isValidated: true, totalViolations: 23, lastValidationDateTime: '02.14.2019 15:00'});
-    });
+    this.commonInfo.set(layers[0].name, {isValidated: true, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
+    this.commonInfo.set(layers[1].name, {isValidated: false, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
+    this.commonInfo.set(layers[2].name, {isValidated: true, totalViolations: 8273, lastValidationDateTime: '02.14.2019 16:00'});
   }
 
   getInfoByLayerName(name: string) {

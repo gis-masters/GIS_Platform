@@ -9,3 +9,9 @@
 .validation_button {
   margin-left: auto;
 }
+
+::ng-deep .validation_accordion .mat-expansion-panel-header {
+  display: grid;
+  height: 50px;
+  padding: 0 10px;
+}

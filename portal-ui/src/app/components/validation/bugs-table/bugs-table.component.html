@@ -20,10 +20,10 @@
              matSort matSortActive="objectid">
 
         <ng-container matColumnDef="objectid">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-left: 34px">ID</th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button (click)="showObject($event, element.objectId)">
-              <mat-icon>map</mat-icon>
+              <mat-icon style="color: yellowgreen">map</mat-icon>
             </button>
             {{element.objectId}}
           </td>
@@ -35,8 +35,14 @@
         </ng-container>
 
         <ng-container matColumnDef="violationsCounter">
-          <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Ошибок</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{element.violations.length}}</td>
+          <th mat-header-cell *matHeaderCellDef>Ошибок</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="violations-counter">{{element.violations.length}}</span>
+            <div class="float-right" style="color: grey">
+              <button mat-icon-button *ngIf="element != expandedElement"><mat-icon>keyboard_arrow_down</mat-icon></button>
+              <button mat-icon-button *ngIf="element == expandedElement"><mat-icon>keyboard_arrow_up</mat-icon></button>
+            </div>
+          </td>
         </ng-container>
 
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
