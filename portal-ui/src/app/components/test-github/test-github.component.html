@@ -14,17 +14,19 @@
   </div>
 
   <div [hidden]="data?.length === 0">
-    <mat-paginator [length]="totalElements" hidden="true"
-                   [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
-
     <div class="validation-results-table-container">
 
       <table mat-table [dataSource]="data" class="example-table" multiTemplateDataRows
-             matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+             matSort matSortActive="objectid">
 
         <ng-container matColumnDef="objectid">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let element">{{element.objectId}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="showObject($event, element.objectId)">
+              <mat-icon>map</mat-icon>
+            </button>
+            {{element.objectId}}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="classid">
@@ -33,8 +35,8 @@
         </ng-container>
 
         <ng-container matColumnDef="violationsCounter">
-          <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Кол-во ошибок</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 10px">element.</td>
+          <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Ошибок</th>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{element.violations.length}}</td>
         </ng-container>
 
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
@@ -47,7 +49,9 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: 20px"></tr>
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            style="height: 20px"></tr>
         <tr mat-row *matRowDef="let element; columns: displayedColumns;"
             class="example-element-row"
             [class.example-expanded-row]="expandedElement === element"
@@ -56,7 +60,8 @@
 
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
       </table>
-      <br>
     </div>
   </div>
+
+  <mat-paginator [length]="totalElements" [pageSize]="defaultPageSize"></mat-paginator>
 </div>

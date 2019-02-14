@@ -8,7 +8,7 @@ import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
-import {CommunicationService} from "../../../services/communication.service";
+import {CommunicationService, ObjectDto} from "../../../services/communication.service";
 
 @Component({
   selector: 'crg-map',
@@ -69,8 +69,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService
         .gotoObjectListener()
-        .subscribe((objectId) => {
-          this.openLayers.positionToObjectById(objectId);
+        .subscribe((objectDto: ObjectDto) => {
+          this.openLayers.positionToObjectById(objectDto);
         });
   }
 

@@ -16,6 +16,7 @@ import {ValidationRequest, ValidationService} from "../../services/validation.se
 import {NGXLogger} from "ngx-logger";
 import {of} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {CommunicationService} from "../../services/communication.service";
 
 @Component({
   selector: 'crg-test-github',
@@ -47,12 +48,13 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   status: string;
   _step: number;
   totalElements = 0;
+  defaultPageSize = 25;
 
   expandedElement: any;
 
   constructor(private logger: NGXLogger,
+              private communicationService: CommunicationService,
               private validationService: ValidationService) {
-    this.logger.info('TestGithubComponent constructor');
   }
 
   ngAfterViewInit() {
@@ -64,10 +66,8 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-
           if (this.isActive && !!this.connectionInfo) {
-            return this.validationService
-                       .getValidationResults(this.connectionInfo, this.paginator.pageIndex, this.paginator.pageSize);
+            return this.validationService.getValidationResults(this.connectionInfo, this.paginator, this.sort);
           } else {
             return of(null);
           }
@@ -79,8 +79,6 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
           this.status = response.status;
 
           this.isLoadingResults = false;
-        } else {
-          this.logger.info('!---! ', response);
         }
       });
   }
@@ -108,11 +106,9 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
   }
 
   getValidation() {
-    this.logger.info(' --- getValidation ---', this._connectionInfo, this.isActive);
-
     if (this._connectionInfo) {
       this.validationService
-          .getValidationResults(this.connectionInfo, 0, 25)
+          .getValidationResults_(this.connectionInfo, 0, this.defaultPageSize, '', 'asc')
           .subscribe(response => {
             this.data = response.results;
             this.totalElements = response.total;
@@ -125,6 +121,11 @@ export class TestGithubComponent implements OnChanges, AfterViewInit {
     }
   }
 
+  showObject(event, objectId: string) {
+    event.stopPropagation();
+
+    this.communicationService.gotoObject.emit({id: objectId, layerName: this._connectionInfo.tableName});
+  }
 }
 
 export interface Violations {

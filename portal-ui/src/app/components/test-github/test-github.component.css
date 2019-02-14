@@ -83,3 +83,17 @@ tr.example-element-row:not(.example-expanded-row):active {
 tr.example-detail-row {
   height: 0;
 }
+
+::ng-deep .validation_accordion .mat-expansion-panel-body {
+  padding: 0;
+}
+
+::ng-deep .validation_accordion .mat-elevation-z8 {
+  box-shadow: none;
+}
+
+::ng-deep .validation_accordion .mat-icon-button {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+}

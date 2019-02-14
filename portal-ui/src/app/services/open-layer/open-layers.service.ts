@@ -2,6 +2,7 @@ import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import Point from 'ol/geom/Point.js';
 import MultiLineString from 'ol/geom/MultiLineString.js';
+import MultiPolygon from 'ol/geom/MultiPolygon.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import ImageWMS from 'ol/source/ImageWMS.js';
 import MousePosition from 'ol/control/MousePosition.js';
@@ -16,6 +17,7 @@ import {WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
 import {defaults as defaultControls} from 'ol/control.js';
 import {createStringXY} from 'ol/coordinate.js';
 import {GeometryFactory} from "./GeometryFactory";
+import {ObjectDto} from "../communication.service";
 
 export let BEARER_TOKEN = '';
 
@@ -219,16 +221,16 @@ export class OpenLayersService {
     this._map = value;
   }
 
-  positionToObjectById(objectId: any) {
+  positionToObjectById(objectDto: ObjectDto) {
     let view = this._map.getView();
     let size = this._map.getSize();
 
-    this.logger.info('getProjection: ', view.getProjection());
-
     this.wfsService
-        .getGeoJSON('work_workspace:electrictransformer', objectId)
+        .getGeoJSON('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
           let feature = featureCollection.features[0];
+
+          this.logger.info('feture ===', feature);
 
           if (feature.geometry.type === 'Point') {
             this.logger.info('Point');
@@ -245,6 +247,12 @@ export class OpenLayersService {
 
             // view.fit(multiLineString.getCoordinates(), {constrainResolution: false});
             view.fit(multiLineString, {constrainResolution: false});
+          } else if (feature.geometry.type === 'MultiPolygon') {
+            this.logger.info('MultiPolygon');
+
+            let multiPolygon = new MultiPolygon(feature.geometry.coordinates);
+
+            view.fit(multiPolygon, {constrainResolution: false});
           } else {
             console.warn('Not supported geometry type: ', feature.geometry);
           }

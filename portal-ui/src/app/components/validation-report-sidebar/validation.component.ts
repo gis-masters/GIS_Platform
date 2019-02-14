@@ -41,7 +41,11 @@ export class ValidationComponent implements OnInit {
   ngOnInit() {
     this.layersService
         .getAll()
-        .subscribe((layers: NameHrefProjection[]) => this.layers = layers);
+        .subscribe((layers: NameHrefProjection[]) => {
+          this.layers = layers;
+
+          this.validationService.validationDataHolder.addLayers(layers);
+        });
   }
 
   setStep(index: number) {
@@ -105,5 +109,13 @@ export class ValidationComponent implements OnInit {
 
   closeSidebar() {
     this.communicationService.bugReportSidebar.emit(false);
+  }
+
+  isLayerCommonInfoExist(name: string, param: string) {
+    return !!this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
+  }
+
+  getInfo(name: string, param: string) {
+    return this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
   }
 }

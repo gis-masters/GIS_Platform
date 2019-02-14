@@ -9,7 +9,7 @@ export class CommunicationService {
   @Output() layerObjectsSidebar = new EventEmitter<boolean>();
   @Output() bugReportSidebar = new EventEmitter<boolean>();
 
-  @Output() gotoObject = new EventEmitter<string>();
+  @Output() gotoObject = new EventEmitter<ObjectDto>();
 
   constructor(private logger: NGXLogger) {
 
@@ -26,4 +26,9 @@ export class CommunicationService {
   public gotoObjectListener() {
     return this.gotoObject;
   }
+}
+
+export interface ObjectDto {
+  id: string;
+  layerName: string;
 }

@@ -1,5 +1,5 @@
 <div>
-  <button mat-button (click)="closeSidebar()">x</button>
+  <a mat-button (click)="closeSidebar()">x</a>
 </div>
 
 <div>
@@ -9,13 +9,20 @@
       <mat-expansion-panel-header>
         <mat-panel-title>{{prepareLayerName(layer.name)}}</mat-panel-title>
 
-        <mat-panel-description>
-          <!--<button mat-button (click)="initValidation($event, index)" class="validation_button">-->
-            <!--<mat-icon *ngIf="!isValidationInited[index]" aria-label="label">map</mat-icon>-->
-            <!--<img src="../../../assets/images/loader.gif" alt="logo" *ngIf="isValidationInited[index]"-->
-                 <!--style="margin-left: 3px; margin-right: 3px" height="25" width="25">-->
-          <!--</button>-->
-        </mat-panel-description>
+        <div class="float-right" *ngIf="isLayerCommonInfoExist(layer.name, 'totalViolations')">
+          <mat-chip-list *ngIf="getInfo(layer.name, 'totalViolations') > 0">
+            <mat-chip>{{getInfo(layer.name, 'totalViolations')}}</mat-chip>
+          </mat-chip-list>
+          <mat-icon *ngIf="getInfo(layer.name, 'totalViolations') === 0">done</mat-icon>
+        </div>
+
+        <!--<mat-panel-description>-->
+          <!--&lt;!&ndash;<button mat-button (click)="initValidation($event, index)" class="validation_button">&ndash;&gt;-->
+            <!--&lt;!&ndash;<mat-icon *ngIf="!isValidationInited[index]" aria-label="label">map</mat-icon>&ndash;&gt;-->
+            <!--&lt;!&ndash;<img src="../../../assets/images/loader.gif" alt="logo" *ngIf="isValidationInited[index]"&ndash;&gt;-->
+                 <!--&lt;!&ndash;style="margin-left: 3px; margin-right: 3px" height="25" width="25">&ndash;&gt;-->
+          <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</mat-panel-description>-->
       </mat-expansion-panel-header>
 
       <div>
