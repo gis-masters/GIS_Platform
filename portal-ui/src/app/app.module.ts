@@ -8,22 +8,23 @@ import {MaterialModule} from './material.module';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import {PrimeNgModule} from './prime-ng.module';
 
+import {NgxMaskModule} from 'ngx-mask';
 import {AlertModule} from 'ngx-bootstrap';
+import {FileUploadModule} from 'ng2-file-upload';
+import {GeometryPipe} from './pipes/geometry.pipe';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {AppComponent} from './pages/_app/app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
-import {TestGithubComponent} from './components/test-github/test-github.component';
-import {FileUploadModule} from 'ng2-file-upload';
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {JwtInterceptorService} from "./services/jwt-interceptor.service";
-import {GeometryPipe} from './pipes/geometry.pipe';
-import {NgxMaskModule} from 'ngx-mask';
-import {ViolationItemViewComponent} from './components/violation-item-view/violation-item-view.component';
+import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
+import {BugsTableComponent} from './components/validation/bugs-table/bugs-table.component';
+import {ReportSidebarComponent} from './components/validation/report-sidebar/report-sidebar.component';
+import {ViolationsViewComponent} from './components/validation/violations-view/violations-view.component';
 import {LayerObjectsComponent} from './components/layer-objects/layer-objects.component';
+import {JwtInterceptorService} from "./services/jwt-interceptor.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -35,8 +36,9 @@ import {LayerObjectsComponent} from './components/layer-objects/layer-objects.co
     LayerListItemComponent,
     MappingPairComponent,
     GeometryPipe,
-    TestGithubComponent,
-    ViolationItemViewComponent,
+    BugsTableComponent,
+    ReportSidebarComponent,
+    ViolationsViewComponent,
     LayerObjectsComponent,
   ],
   imports: [

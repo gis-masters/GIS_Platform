@@ -26,9 +26,9 @@
       </mat-expansion-panel-header>
 
       <div>
-        <crg-test-github [connectionInfo]="connectionInfo[index]"
-                         [step]="step" [index]="index + 1" [isActive]="isActive"
-                         (getConnectionInfo)="handleChildEvent($event)"></crg-test-github>
+        <crg-bugs-table [connectionInfo]="connectionInfo[index]"
+                        [step]="step" [index]="index + 1" [isActive]="isActive"
+                        (getConnectionInfo)="handleChildEvent($event)"></crg-bugs-table>
       </div>
 
       <mat-action-row style="padding: 0">

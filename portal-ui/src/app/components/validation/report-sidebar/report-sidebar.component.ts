@@ -3,20 +3,20 @@ import {Router} from "@angular/router";
 import {filter, flatMap, map} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material";
 import {Component, Input, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
-import {ValidationRequest, ValidationService} from '../../services/validation.service';
-import {NameHrefProjection} from '../../services/geoserver/projections';
-import {DatastoreService} from '../../services/geoserver/datastore.service';
-import {Layer, LayersService} from "../../services/geoserver/layers.service";
-import {GeoUtil} from "../../services/util/GeoUtil";
-import {CommunicationService} from "../../services/communication.service";
+import {AuthService} from "../../../services/auth.service";
+import {ValidationRequest, ValidationService} from '../../../services/validation.service';
+import {NameHrefProjection} from '../../../services/geoserver/projections';
+import {DatastoreService} from '../../../services/geoserver/datastore.service';
+import {Layer, LayersService} from "../../../services/geoserver/layers.service";
+import {GeoUtil} from "../../../services/util/GeoUtil";
+import {CommunicationService} from "../../../services/communication.service";
 
 @Component({
-  selector: 'crg-validation',
-  templateUrl: './validation.component.html',
-  styleUrls: ['./validation.component.css']
+  selector: 'report-sidebar',
+  templateUrl: './report-sidebar.component.html',
+  styleUrls: ['./report-sidebar.component.css']
 })
-export class ValidationComponent implements OnInit {
+export class ReportSidebarComponent implements OnInit {
 
   @Input() isActive: boolean;
 

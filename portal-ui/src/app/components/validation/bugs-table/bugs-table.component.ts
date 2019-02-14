@@ -12,16 +12,16 @@ import {switchMap} from "rxjs/internal/operators/switchMap";
 import {MatPaginator, MatSort} from "@angular/material";
 import {merge} from "rxjs/internal/observable/merge";
 import {startWith} from "rxjs/internal/operators/startWith";
-import {ValidationRequest, ValidationService} from "../../services/validation.service";
+import {ValidationRequest, ValidationService} from "../../../services/validation.service";
 import {NGXLogger} from "ngx-logger";
 import {of} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {CommunicationService} from "../../services/communication.service";
+import {CommunicationService} from "../../../services/communication.service";
 
 @Component({
-  selector: 'crg-test-github',
-  templateUrl: './test-github.component.html',
-  styleUrls: ['./test-github.component.css'],
+  selector: 'crg-bugs-table',
+  templateUrl: './bugs-table.component.html',
+  styleUrls: ['./bugs-table.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
@@ -30,7 +30,7 @@ import {CommunicationService} from "../../services/communication.service";
     ]),
   ]
 })
-export class TestGithubComponent implements OnChanges, AfterViewInit {
+export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   @Input() isActive: boolean;
   @Input() index: number;
