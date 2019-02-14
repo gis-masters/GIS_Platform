@@ -27,11 +27,11 @@ export class WmsService {
     return this._baseUrl + '?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=' + layerName;
   }
 
-  getLegend(layerName: string): Observable<any> {
-    this.logger.info('Try get legend for: ', layerName);
+  getLegend(complexLayerName: string): Observable<any> {
+    // this.logger.info('Try get legend for: ', complexLayerName);
 
     return this.http
-               .get(this.getLinkForLegend(layerName), {responseType: 'blob'})
+               .get(this.getLinkForLegend(complexLayerName), {responseType: 'blob'})
                .pipe(
                  catchError(this.baseService.handleError('getLegend', []))
                );

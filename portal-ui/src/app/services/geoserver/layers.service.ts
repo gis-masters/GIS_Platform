@@ -8,8 +8,9 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
 import {ServerPropertiesService} from '../server-properties.service';
 import {GeoUtil} from "../util/GeoUtil";
-import {ValidationRequest} from "../validation.service";
+import {ValidationRequest} from "../gis/validation.service";
 import {DatastoreService} from "./datastore.service";
+import {FgistpRulesService} from "../gis/fgistp-rules.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class LayersService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
+              private ruleService: FgistpRulesService,
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     logger.info('LayersService start');

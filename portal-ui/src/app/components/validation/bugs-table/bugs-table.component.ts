@@ -12,11 +12,12 @@ import {switchMap} from "rxjs/internal/operators/switchMap";
 import {MatPaginator, MatSort} from "@angular/material";
 import {merge} from "rxjs/internal/observable/merge";
 import {startWith} from "rxjs/internal/operators/startWith";
-import {ValidationRequest, ValidationService} from "../../../services/validation.service";
+import {ValidationRequest, ValidationService} from "../../../services/gis/validation.service";
 import {NGXLogger} from "ngx-logger";
 import {of} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {CommunicationService} from "../../../services/communication.service";
+import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 
 @Component({
   selector: 'crg-bugs-table',
@@ -54,6 +55,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
+              private ruleService: FgistpRulesService,
               private validationService: ValidationService) {
   }
 
@@ -125,6 +127,10 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
     event.stopPropagation();
 
     this.communicationService.gotoObject.emit({id: objectId, layerName: this._connectionInfo.tableName});
+  }
+
+  getClassIdAlias(element) {
+    return this.ruleService.getClassIdAlias(this.connectionInfo.tableName, element);
   }
 }
 

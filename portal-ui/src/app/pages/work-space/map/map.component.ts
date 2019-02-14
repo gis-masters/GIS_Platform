@@ -9,6 +9,8 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService, ObjectDto} from "../../../services/communication.service";
+import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {flatMap} from "rxjs/operators";
 
 @Component({
   selector: 'crg-map',
@@ -19,7 +21,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  layerNames = [];
+  layersComplexName = [];
 
   isLayerObjectsSidebarShow: boolean = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
@@ -33,6 +35,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private logger: NGXLogger,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService,
+              private ruleService: FgistpRulesService,
               private authService: AuthService) {
     this.authService.validateAuth();
 
@@ -44,16 +47,19 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.openLayers.createMap();
 
-    this.layersService.getAll()
-      .subscribe((layers: NameHrefProjection[]) => {
-        this.layerNames = layers.map((item: NameHrefProjection) => item.name);
+    this.ruleService.getRules()
+        .pipe(
+          flatMap((data) => this.layersService.getAll()),
+        )
+        .subscribe((layers: NameHrefProjection[]) => {
+          this.layersComplexName = layers.map((item: NameHrefProjection) => item.name);
 
-        this.layerNames.forEach((layerName, index) => {
-          this.openLayers
-              .addLayerToMap(layerName)
-              .setZIndex(layers.length - index);
+          this.layersComplexName.forEach((complexLayerName, index) => {
+            this.openLayers
+                .addLayerToMap(complexLayerName)
+                .setZIndex(layers.length - index);
+          });
         });
-      });
 
     this.communicationService
         .layerObjectsSidebarListener()
@@ -75,17 +81,20 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.layerNames, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.layersComplexName, event.previousIndex, event.currentIndex);
 
-    this.layerNames.forEach((layerName, index) => {
-      this.openLayers.set_ZIndex(layerName, this.layerNames.length - index);
+    this.layersComplexName.forEach((layerName, index) => {
+      this.openLayers.set_ZIndex(layerName, this.layersComplexName.length - index);
     });
   }
 
   handleSelection(selectionList: MatSelectionList) {
     // Только выбранные галочкой элементы
-    const selectedLayers = selectionList.selectedOptions.selected.map((selectedOption: MatListOption) => selectedOption.getLabel());
-    this.openLayers.changeLayersVisibility(selectedLayers);
+    const nameOfSelectedLayers = selectionList.selectedOptions.selected
+      .map((selectedOption: MatListOption) => {
+        return this.ruleService.getNativeLayerNameByTitle(selectedOption.getLabel());
+      });
+    this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }
 
   updateMapSize() {

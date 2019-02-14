@@ -99,13 +99,13 @@ export class OpenLayersService {
     });
   }
 
-  addLayerToMap(layerName: string) {
-    this.logger.debug('addLayer: ', layerName);
+  addLayerToMap(complexLayerName: string) {
+    this.logger.debug('addLayer: ', complexLayerName);
 
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
         url: this.wmsService.baseUrl,
-        params: {'LAYERS': layerName},
+        params: {'LAYERS': complexLayerName},
         imageLoadFunction: this.fizImageLoadFunction,
         ratio: 1,
         serverType: 'geoserver',
@@ -124,9 +124,9 @@ export class OpenLayersService {
    * Принимает список включенных слоев.
    * Проходит по всем слоям на карте проставляет true для всех переданных слоев и false для всех остальных.
    *
-   * @param layers - Навания включенных слоев.
+   * @param layerNames - Навания включенных слоев.
    */
-  changeLayersVisibility(layers: any[]) {
+  changeLayersVisibility(layerNames: any[]) {
     this._map.getLayers().forEach((vrLayer: any) => {
       const source = vrLayer.getSource();
 
@@ -136,7 +136,7 @@ export class OpenLayersService {
       if (source && source.params_ && source.params_['LAYERS']) {
         const layerName = source.params_['LAYERS'];
         let isExist = false;
-        layers.forEach(value => {
+        layerNames.forEach(value => {
           if (layerName.includes(value)) {
             isExist = true;
           }

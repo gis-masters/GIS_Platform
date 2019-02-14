@@ -1,7 +1,7 @@
 import {GeoUtil} from './GeoUtil';
 import {EntityTypesUtil} from "./EntityTypesUtil";
 import {ImportTask} from '../geoserver/import.service';
-import {EntityType} from "../gis/rules.service";
+import {XsdFeature} from "../gis/fgistp-rules.service";
 
 describe('GeoUtil test', () => {
 
@@ -42,7 +42,7 @@ describe('GeoUtil test', () => {
   });
 
   it('should correct mapping geometry between Layer and EntityType', () => {
-    let entityPoint: EntityType = {
+    let entityPoint: XsdFeature = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -58,7 +58,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    let entityLineString: EntityType = {
+    let entityLineString: XsdFeature = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -74,7 +74,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    let entityPolygon: EntityType = {
+    let entityPolygon: XsdFeature = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -90,7 +90,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    let entityMultiGeometry: EntityType = {
+    let entityMultiGeometry: XsdFeature = {
       name: 'SomeName',
       title: '',
       description: '',

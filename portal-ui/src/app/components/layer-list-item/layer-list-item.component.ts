@@ -1,5 +1,7 @@
+import {NGXLogger} from "ngx-logger";
 import {Component, Input, OnInit} from '@angular/core';
 import {WmsService} from '../../services/geoserver/wms.service';
+import {FgistpRulesService} from "../../services/gis/fgistp-rules.service";
 
 @Component({
   selector: 'crg-layer-list-item',
@@ -8,20 +10,25 @@ import {WmsService} from '../../services/geoserver/wms.service';
 })
 export class LayerListItemComponent implements OnInit {
 
-  @Input() layerName: string;
+  @Input() complexLayerName: string;
 
+  private layerTitle: string;
   imageToShow: any;
   isImageLoaded = false;
 
-  constructor(private wmsService: WmsService) {
+  constructor(private wmsService: WmsService,
+              private ruleService: FgistpRulesService,
+              private logger: NGXLogger) {
   }
 
   ngOnInit(): void {
     this.wmsService
-        .getLegend(this.layerName)
+        .getLegend(this.complexLayerName)
         .subscribe(data => {
           this.createImageFromBlob(data);
         });
+
+    this.layerTitle = this.ruleService.getLayerTitle(this.complexLayerName.split(':')[1]);
   }
 
   private createImageFromBlob(image: Blob) {
@@ -35,4 +42,5 @@ export class LayerListItemComponent implements OnInit {
       reader.readAsDataURL(image);
     }
   }
+
 }

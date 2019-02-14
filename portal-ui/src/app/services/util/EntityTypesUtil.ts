@@ -1,9 +1,9 @@
-import {EntityType, SimpleProperty} from "../gis/rules.service";
+import {XsdFeature, SimpleProperty} from "../gis/fgistp-rules.service";
 import {LayerAttribute, LayerItem} from "../geoserver/import.service";
 
 export class EntityTypesUtil {
 
-  static getEntityGeometry(entityType: EntityType): string[] {
+  static getEntityGeometry(entityType: XsdFeature): string[] {
     let simpleProperty = entityType.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
 
     if (simpleProperty) {
@@ -21,7 +21,7 @@ export class EntityTypesUtil {
 
   // layer = Point, MultiLineString, MultiPolygon
   // entity = Point, LineString, Polygon, Curve
-  static isLayerGeometryCompatible(layerGeometryTypeName: string, entityType: EntityType) {
+  static isLayerGeometryCompatible(layerGeometryTypeName: string, entityType: XsdFeature) {
     const splited = layerGeometryTypeName.split('.');
     const layerGeometryName = splited[splited.length - 1];
 

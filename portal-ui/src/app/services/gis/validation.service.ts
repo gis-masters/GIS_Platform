@@ -3,8 +3,8 @@ import {NGXLogger} from "ngx-logger";
 import {Injectable} from '@angular/core';
 import {MatPaginator, MatSort} from "@angular/material";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {ServerPropertiesService} from "./server-properties.service";
-import {NameHrefProjection} from "./geoserver/projections";
+import {ServerPropertiesService} from "../server-properties.service";
+import {NameHrefProjection} from "../geoserver/projections";
 
 @Injectable({
   providedIn: 'root'

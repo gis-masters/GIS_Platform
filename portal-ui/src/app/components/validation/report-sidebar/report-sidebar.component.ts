@@ -4,12 +4,13 @@ import {filter, flatMap, map} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material";
 import {Component, Input, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
-import {ValidationRequest, ValidationService} from '../../../services/validation.service';
+import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {Layer, LayersService} from "../../../services/geoserver/layers.service";
 import {GeoUtil} from "../../../services/util/GeoUtil";
 import {CommunicationService} from "../../../services/communication.service";
+import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 
 @Component({
   selector: 'report-sidebar',
@@ -22,7 +23,7 @@ export class ReportSidebarComponent implements OnInit {
 
   connectionInfo: ValidationRequest[] = [];
 
-  layers: NameHrefProjection[];
+  layers: NameHrefProjection[] = [];
 
   step = 0;
   isValidationInited: boolean[] = [];
@@ -34,6 +35,7 @@ export class ReportSidebarComponent implements OnInit {
               private validationService: ValidationService,
               private communicationService: CommunicationService,
               private authService: AuthService,
+              private ruleService: FgistpRulesService,
               private layersService: LayersService) {
     this.authService.validateAuth();
   }
@@ -43,7 +45,6 @@ export class ReportSidebarComponent implements OnInit {
         .getAll()
         .subscribe((layers: NameHrefProjection[]) => {
           this.layers = layers;
-
           this.validationService.validationDataHolder.addLayers(layers);
         });
   }
@@ -103,8 +104,8 @@ export class ReportSidebarComponent implements OnInit {
     }
   }
 
-  prepareLayerName(name: string): string {
-    return name.split(':')[1];
+  prepareLayerName(complexLayerName: string): string {
+    return this.ruleService.getLayerTitle(complexLayerName.split(':')[1]);
   }
 
   closeSidebar() {
