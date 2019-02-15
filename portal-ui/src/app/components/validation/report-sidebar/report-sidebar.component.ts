@@ -112,6 +112,10 @@ export class ReportSidebarComponent implements OnInit {
     this.communicationService.bugReportSidebar.emit(false);
   }
 
+  revalidate() {
+    this.logger.info('revalidate');
+  }
+
   isLayerCommonInfoExist(name: string, param: string) {
     return !!this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
   }

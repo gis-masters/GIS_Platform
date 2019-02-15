@@ -94,6 +94,63 @@ export class FgistpRulesService {
 
     return result;
   }
+
+  getPropertyAlias(layerName: string, propertyName: string) {
+    let result;
+    this.getFeatureByName(layerName).properties
+      .forEach((simpleProperty: SimpleProperty) => {
+        if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
+          result = simpleProperty.title;
+        }
+      });
+
+    if (!result) {
+      return propertyName;
+    } else {
+      return result;
+    }
+  }
+
+  /**
+   * По типу ошибки сформируем его описание, выводимое пользователю.
+   * @param errorTypes
+   */
+  getErrorsDescription(errorTypes: string[]) {
+    // TODO: Решили передавать с сервера только тип ошибки а описание формировать на клиенте.
+    // Но если нужно описать ошибку более точно с указанием допустимых границ, например, то получается нужно снова лезть
+    // в правила и высматривать там эти значения (Если бы в момент валидации отдавать не тип ошибки а формировать
+    // сообщение то это бы делалось в одном месте, один раз. И пока не понятно как будет с кастомными правилами)
+
+    let result = [];
+
+    errorTypes.forEach(error => {
+      if (error === 'enumeration') {
+        result.push('Значение не соответствует справочному');
+      } else if (error === 'notDoubleType') {
+        result.push('Значение не является дробным числом');
+      } else if (error === 'notLongType') {
+        result.push('Значение не является целым числом');
+      } else if (error === 'maxInclusive') {
+        result.push('Значение превышает допустимый максимум');
+      } else if (error === 'maxLength') {
+        result.push('Строка превышает допустимую длинну');
+      } else if (error === 'minInclusive') {
+        result.push('Значение менее допустимого значения');
+      } else if (error === 'minLength') {
+        result.push('Строка слишком короткая');
+      } else if (error === 'pattern') {
+        result.push('Строка не соответствует паттерну');
+      } else if (error === 'required') {
+        result.push('Параметр обязателен к заполнению');
+      } else if (error === 'totalDigits') {
+        result.push('Превышено допустимое кол-в знаков');
+      } else {
+        result.push(error);
+      }
+    });
+
+    return result;
+  }
 }
 
 export class FeatureXsdDefinition {

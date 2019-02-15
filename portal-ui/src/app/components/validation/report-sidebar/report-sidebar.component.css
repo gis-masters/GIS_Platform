@@ -15,3 +15,9 @@
   height: 50px;
   padding: 0 10px;
 }
+
+.report-close-icon {
+  color: darkslategrey;
+  font-size: 16px;
+  cursor: pointer;
+}
