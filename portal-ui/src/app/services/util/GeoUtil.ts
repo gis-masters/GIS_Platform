@@ -56,7 +56,6 @@ export class GeoUtil {
       tableName = complexLayerName;
     }
 
-    console.log(' ** ', connectionParameters.entry);
     connectionParameters.entry.forEach((item) => {
       if (item['@key'] === 'database') {
         dbName = item['$'];

@@ -1,9 +1,9 @@
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
+import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 import MultiLineString from 'ol/geom/MultiLineString.js';
 import MultiPolygon from 'ol/geom/MultiPolygon.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
 import ImageWMS from 'ol/source/ImageWMS.js';
 import MousePosition from 'ol/control/MousePosition.js';
 import {NGXLogger} from 'ngx-logger';
@@ -11,12 +11,11 @@ import {Injectable} from '@angular/core';
 import {WmsService} from '../geoserver/wms.service';
 import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
+import {Fill, Stroke, Style} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
+import {WfsFeature, WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
 import {defaults as defaultControls} from 'ol/control.js';
 import {createStringXY} from 'ol/coordinate.js';
-import {GeometryFactory} from "./GeometryFactory";
 import {ObjectDto} from "../communication.service";
 
 export let BEARER_TOKEN = '';
@@ -29,39 +28,11 @@ export class OpenLayersService {
   private _map;
 
   view: View;
-
-  style = new Style({
-    fill: new Fill({
-      color: 'rgba(255, 255, 255, 0.6)'
-    }),
-    stroke: new Stroke({
-      color: '#319FD3',
-      width: 1
-    }),
-    image: new CircleStyle({
-      radius: 5,
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.6)'
-      }),
-      stroke: new Stroke({
-        color: '#319FD3',
-        width: 1
-      })
-    })
-  });
-
-  source2 = new VectorSource({
-    url: 'data/geojson/switzerland.geojson',
-    format: new GeoJSON()
-  });
+  bugObjectLayer: VectorLayer;
 
   mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
     projection: 'EPSG:4326',
-    // comment the following two lines to have the mouse position
-    // be placed within the map.
-    // className: 'custom-mouse-position',
-    // target: document.getElementById('mouse-position'),
     undefinedHTML: '&nbsp;'
   });
 
@@ -73,17 +44,11 @@ export class OpenLayersService {
   }
 
   createMap() {
-    let vectorLayer = new VectorLayer({
-      source: this.source2,
-      style: this.style
-    });
-
     const layers = [
       // Слой подлжка
       new TileLayer({
         source: new OSM()
-      }),
-      vectorLayer
+      })
     ];
 
     this.view = new View({
@@ -129,9 +94,6 @@ export class OpenLayersService {
   changeLayersVisibility(layerNames: any[]) {
     this._map.getLayers().forEach((vrLayer: any) => {
       const source = vrLayer.getSource();
-
-      // this.logger.info(' - ', vrLayer);
-      // this.logger.info(' - - ', source);
 
       if (source && source.params_ && source.params_['LAYERS']) {
         const layerName = source.params_['LAYERS'];
@@ -221,41 +183,78 @@ export class OpenLayersService {
     this._map = value;
   }
 
-  positionToObjectById(objectDto: ObjectDto) {
-    let view = this._map.getView();
-    let size = this._map.getSize();
-
+  /**
+   * Получаем обьект из wfs позиционируемся и подсвечиваем.
+   * @param objectDto
+   */
+  showObject(objectDto: ObjectDto) {
     this.wfsService
         .getGeoJSON('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
-          let feature = featureCollection.features[0];
-
-          this.logger.info('feture ===', feature);
-
-          if (feature.geometry.type === 'Point') {
-            this.logger.info('Point');
-
-            let point = new Point(feature.geometry.coordinates);
-
-            view.centerOn(feature.geometry.coordinates, size, [570, 500]); // работает
-            // view.fit(point, {minResolution: 1});
-            // view.fit(point, {constrainResolution: false}); // не работает для точки
-          } else if (feature.geometry.type === 'MultiLineString') {
-            this.logger.info('MultiLineString');
-
-            let multiLineString = new MultiLineString(feature.geometry.coordinates);
-
-            // view.fit(multiLineString.getCoordinates(), {constrainResolution: false});
-            view.fit(multiLineString, {constrainResolution: false});
-          } else if (feature.geometry.type === 'MultiPolygon') {
-            this.logger.info('MultiPolygon');
-
-            let multiPolygon = new MultiPolygon(feature.geometry.coordinates);
-
-            view.fit(multiPolygon, {constrainResolution: false});
-          } else {
-            console.warn('Not supported geometry type: ', feature.geometry);
-          }
+          this.positionToObject(featureCollection.features[0]);
+          this.paintObject(featureCollection.features[0]);
         });
+  }
+
+  removeBugObjectsLayer() {
+    if (this.bugObjectLayer) {
+      this._map.removeLayer(this.bugObjectLayer);
+    }
+  }
+
+  private positionToObject(feature: WfsFeature) {
+    let view = this._map.getView();
+    let size = this._map.getSize();
+
+    if (feature.geometry.type === 'Point') {
+      view.centerOn(feature.geometry.coordinates, size, [570, 500]);
+    } else if (feature.geometry.type === 'MultiLineString') {
+      view.fit(new MultiLineString(feature.geometry.coordinates), {constrainResolution: false});
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      view.fit(new MultiPolygon(feature.geometry.coordinates), {constrainResolution: false});
+    } else {
+      console.warn('Not supported geometry type: ', feature.geometry);
+    }
+  }
+
+  private paintObject(feature: WfsFeature) {
+    this.removeBugObjectsLayer();
+
+    let drawFeature;
+    if (feature.geometry.type === 'Point') {
+      drawFeature = new Feature({
+        labelPoint: new Point(feature.geometry.coordinates),
+      });
+    } else if (feature.geometry.type === 'MultiLineString') {
+      drawFeature = new Feature({
+        geometry: new MultiLineString(feature.geometry.coordinates),
+      });
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      drawFeature = new Feature({
+        geometry: new MultiPolygon(feature.geometry.coordinates),
+      });
+    }
+    else {
+      console.warn('Not supported geometry type: ', feature.geometry);
+    }
+
+    const vector = new VectorLayer({
+      source: new VectorSource({
+        features: [drawFeature]
+      }),
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.3)'
+        }),
+        stroke: new Stroke({
+          color: '#ff0018',
+          width: 2
+        })
+      })
+    });
+
+    this.bugObjectLayer = vector;
+
+    this._map.addLayer(vector);
   }
 }

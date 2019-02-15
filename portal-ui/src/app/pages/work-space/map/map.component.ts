@@ -76,7 +76,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .gotoObjectListener()
         .subscribe((objectDto: ObjectDto) => {
-          this.openLayers.positionToObjectById(objectDto);
+          this.openLayers.showObject(objectDto);
         });
   }
 

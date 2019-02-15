@@ -11,6 +11,7 @@ import {Layer, LayersService} from "../../../services/geoserver/layers.service";
 import {GeoUtil} from "../../../services/util/GeoUtil";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
 
 @Component({
   selector: 'report-sidebar',
@@ -35,6 +36,7 @@ export class ReportSidebarComponent implements OnInit {
               private validationService: ValidationService,
               private communicationService: CommunicationService,
               private authService: AuthService,
+              private openLayersService: OpenLayersService,
               private ruleService: FgistpRulesService,
               private layersService: LayersService) {
     this.authService.validateAuth();
@@ -109,6 +111,7 @@ export class ReportSidebarComponent implements OnInit {
   }
 
   closeSidebar() {
+    this.openLayersService.removeBugObjectsLayer();
     this.communicationService.bugReportSidebar.emit(false);
   }
 
