@@ -9,15 +9,15 @@
   <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
                [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
     <mat-nav-list>
-      <mat-selection-list #layers cdkDropList (cdkDropListDropped)="drop($event)"
-                          (selectionChange)="handleSelection(layers)">
-        <div *ngIf="layersComplexName.length > 0">
+      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
+                          (selectionChange)="handleSelection(fizLayers)">
+        <div *ngIf="layers.length > 0">
           <mat-list-option class="example-box" style="height: 64px"
-                           *ngFor="let complexName of layersComplexName" cdkDrag>
-            <crg-layer-list-item [complexLayerName]="complexName"></crg-layer-list-item>
+                           *ngFor="let layer of layers" cdkDrag>
+            <crg-layer-list-item [complexLayerName]="layer.complexName"></crg-layer-list-item>
           </mat-list-option>
         </div>
-        <div *ngIf="layersComplexName.length == 0" class="empty-layers">
+        <div *ngIf="layers.length == 0" class="empty-layers">
           <span style="margin-left: 40px; margin-right: 40px">Нет слоев</span>
         </div>
       </mat-selection-list>
@@ -46,7 +46,7 @@
 </p-sidebar>
 
 <p-dialog header="Валидация"
-          [style]="{width: '500px', height: '600px'}"
+          [style]="{width: '450px', height: '500px'}"
           [(visible)]="isValidationDialogShow">
   <crg-validation-dialog [data]="validationDialogData"></crg-validation-dialog>
 </p-dialog>

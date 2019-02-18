@@ -22,7 +22,7 @@ export class ReportSidebarComponent implements OnInit {
 
   @Input() isActive: boolean;
 
-  connectionInfo: ValidationRequest[] = [];
+  connectionInfo: Map<string, ValidationRequest> = new Map<string, ValidationRequest>();
 
   layers: NameHrefProjection[] = [];
 
@@ -44,16 +44,16 @@ export class ReportSidebarComponent implements OnInit {
 
     this.communicationService
         .selectedForValidationLayers$()
-        .subscribe((data: string[]) => this.initValidation(data));
+        .subscribe((data: NameHrefProjection[]) => this.initValidation(data));
   }
 
   ngOnInit() {
-    this.layersService
-        .getAll()
-        .subscribe((layers: NameHrefProjection[]) => {
-          this.layers = layers;
-          this.validationService.validationDataHolder.addLayers(layers);
-        });
+  //   this.layersService
+  //       .getAll()
+  //       .subscribe((layers: NameHrefProjection[]) => {
+  //         this.layers = layers;
+  //         this.validationService.validationDataHolder.addLayers(layers);
+  //       });
   }
 
   setStep(index: number) {
@@ -68,39 +68,38 @@ export class ReportSidebarComponent implements OnInit {
     this.step--;
   }
 
-  initValidation(layerNames: string[]) {
+  initValidation(layerNames: NameHrefProjection[]) {
     this.logger.info('66666666666666', layerNames);
 
     this.isValidationInited = true;
-    setTimeout(() => {
-      this.isValidationInited = false;
-    }, 3000);
+    // setTimeout(() => {
+    //   this.isValidationInited = false;
+    // }, 3000);
 
-    // let projection = this.layers[index];
-    //
-    // if (this.connectionInfo[index]) {
-    //   this.validationService
-    //       .validateLayer(this.connectionInfo[index])
-    //       .subscribe((data: any) => this.handleValidationResponse(data, index));
-    // } else {
-    //   this.layersService.getLayer(projection)
-    //       .pipe(
-    //         filter((layer: Layer) => !!layer),
-    //         flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-    //         map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, projection.name)),
-    //         flatMap((connectionInfo: ValidationRequest) => {
-    //           this.connectionInfo[index] = connectionInfo;
-    //           return this.validationService.validateLayer(connectionInfo);
-    //         }),
-    //       )
-    //       .subscribe((data: any) => this.handleValidationResponse(data, index));
-    // }
+    if (this.connectionInfo.get(layerNames[0].name)) {
+      this.validationService
+          .validateLayer(this.connectionInfo.get(layerNames[0].name))
+          .subscribe((data: any) => this.handleValidationResponse(data));
+    } else {
+      let projection = this.layers.find(value => value.name === layerNames[0].name);
+      this.layersService.getLayer(projection)
+          .pipe(
+            filter((layer: Layer) => !!layer),
+            flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+            map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layerNames[0].name)),
+            flatMap((connectionInfo: ValidationRequest) => {
+              this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
+              return this.validationService.validateLayer(connectionInfo);
+            }),
+          )
+          .subscribe((data: any) => this.handleValidationResponse(data));
+    }
   }
 
-  private handleValidationResponse(data: any, index) {
+  private handleValidationResponse(data: any) {
     this.isValidationInited = false;
 
-    this.logger.info(' * ', data);
+    this.logger.info(' * * * * * *', data);
   }
 
   handleChildEvent(layerIndex: number) {
@@ -108,7 +107,7 @@ export class ReportSidebarComponent implements OnInit {
       this.layersService
           .fetchLayerConnectionInfo(this.layers[layerIndex])
           .subscribe((connectionInfo: ValidationRequest) => {
-            this.connectionInfo[layerIndex] = connectionInfo;
+            this.connectionInfo.set(this.layers[layerIndex].name, connectionInfo);
           })
     } else {
       this.logger.info('Not fetch layer connections');
@@ -137,7 +136,7 @@ export class ReportSidebarComponent implements OnInit {
     return this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
   }
 
-  isValidatedAndSuccess(name: string, param: string) {
+  isValidatedAndSuccess(name: string) {
     let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
 
     return infoByLayerName.isValidated && infoByLayerName.totalViolations < 1;

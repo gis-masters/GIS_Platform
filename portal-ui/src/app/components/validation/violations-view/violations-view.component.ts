@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
 import {NGXLogger} from "ngx-logger";
-import {Violations} from "../bugs-table/bugs-table.component";
+import {Component, Input, OnInit} from '@angular/core';
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 
 @Component({
@@ -19,6 +18,8 @@ export class ViolationsViewComponent implements OnInit {
               private ruleService: FgistpRulesService) {}
 
   ngOnInit() {
+    this.logger.info('safasdfasdfasdf', this.layerName);
+
     this.data.forEach((value: ViolationItem) => {
       this.violationItems.push({
         errors: this.ruleService.getErrorsDescription(value.errorTypes),

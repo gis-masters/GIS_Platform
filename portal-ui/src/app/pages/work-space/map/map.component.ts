@@ -1,16 +1,15 @@
 import {NGXLogger} from 'ngx-logger';
+import {filter} from "rxjs/operators";
 import {Router} from '@angular/router';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {LayersService} from '../../../services/geoserver/layers.service';
+import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService, ObjectDto} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
-import {flatMap} from "rxjs/operators";
 import {ValidationDialogData} from "../../../components/validation/validation-dialog/validation-dialog.component";
 
 @Component({
@@ -22,7 +21,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  layersComplexName = [];
+  layers: CrgLayer[] = [];
 
   isLayerObjectsSidebarShow: boolean = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
@@ -52,15 +51,16 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.createMap();
 
     this.ruleService.getRules()
-        .pipe(
-          flatMap((data) => this.layersService.getAll()),
-        )
-        .subscribe((layers: NameHrefProjection[]) => {
-          this.layersComplexName = layers.map((item: NameHrefProjection) => item.name);
+        .subscribe(value => this.layersService.fetchLayers());
 
-          this.layersComplexName.forEach((complexLayerName, index) => {
+    this.layersService.layers$
+        .pipe(filter(value => !!value && !!value.length))
+        .subscribe((layers: CrgLayer[]) => {
+          this.layers = layers;
+
+          this.layers.forEach((layer, index) => {
             this.openLayers
-                .addLayerToMap(complexLayerName)
+                .addLayerToMap(layer.complexName)
                 .setZIndex(layers.length - index);
           });
         });
@@ -96,10 +96,10 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.layersComplexName, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
 
-    this.layersComplexName.forEach((layerName, index) => {
-      this.openLayers.set_ZIndex(layerName, this.layersComplexName.length - index);
+    this.layers.forEach((layer, index) => {
+      this.openLayers.set_ZIndex(layer.name, this.layers.length - index);
     });
   }
 

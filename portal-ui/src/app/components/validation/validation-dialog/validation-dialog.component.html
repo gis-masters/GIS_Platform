@@ -6,7 +6,7 @@
     </button>
   </mat-form-field>
 
-  <mat-selection-list #fizLayers (selectionChange)="onChange(fizLayers)" dense style="height: 430px">
+  <mat-selection-list #fizLayers (selectionChange)="onChange(fizLayers)" dense style="height: 330px">
     <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm">
       <span>
         {{layer.name}}

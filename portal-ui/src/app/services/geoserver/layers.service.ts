@@ -1,21 +1,29 @@
-import {forkJoin, Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {GeoUtil} from "../util/GeoUtil";
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
-import {catchError, filter, flatMap, map} from 'rxjs/operators';
+import {DatastoreService} from "./datastore.service";
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from "../../../environments/environment";
-import {ServerPropertiesService} from '../server-properties.service';
-import {GeoUtil} from "../util/GeoUtil";
-import {ValidationRequest} from "../gis/validation.service";
-import {DatastoreService} from "./datastore.service";
 import {FgistpRulesService} from "../gis/fgistp-rules.service";
+import {publishReplay} from "rxjs/internal/operators/publishReplay";
+import {ServerPropertiesService} from '../server-properties.service';
+import {catchError, filter, flatMap, map, refCount} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService {
+
+  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>([]);
+  public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
+    .pipe(
+      // компоненты при подписке должны видеть одно последнее значение в потоке
+      publishReplay(1),
+      refCount()
+    );
 
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
 
@@ -29,19 +37,21 @@ export class LayersService {
   }
 
   /**
-   * Получить слоя в простом виде: имя и сслыка на полное представление
+   * Получаем слоя с геосервера.
    */
-  getAll(): Observable<NameHrefProjection[] | any> {
-    return this.http
-               .get<GeoLayer>(this.layersUrl)
-               .pipe(
-                 filter(value => value && !!value['layers']),
-                 map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
-                 map((layers: NameHrefProjection[]) => {
-                   return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
-                 }),
-                 catchError(this.baseService.handleError('getAllLayers', []))
-               );
+  fetchLayers(): void {
+    this.http
+        .get<GeoLayer>(this.layersUrl)
+        .pipe(
+          filter(value => value && !!value['layers']),
+          map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
+          map((layers: NameHrefProjection[]) => {
+            return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+          }),
+          map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
+          catchError(this.baseService.handleError('getAllLayers', []))
+        )
+        .subscribe(this._layers$);
   }
 
   /**
@@ -91,6 +101,31 @@ export class LayersService {
                  map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name)),
                );
   }
+
+  private mergeWithRules(layers: NameHrefProjection[]) {
+    const crgLayers: CrgLayer[] = [];
+
+    layers.forEach((layer: NameHrefProjection) => {
+      let layerName = layer.name.split(':')[1];
+      let layerTitle = this.ruleService.getLayerTitle(layerName);
+
+      crgLayers.push({
+        name: layerName,
+        complexName: layer.name,
+        href: layer.href,
+        title: layerTitle
+      })
+    });
+
+    return crgLayers;
+  }
+}
+
+export interface CrgLayer {
+  name: string;
+  complexName: string;
+  title: string;
+  href: string;
 }
 
 export interface GeoLayer {

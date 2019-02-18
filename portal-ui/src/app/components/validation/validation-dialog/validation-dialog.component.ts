@@ -14,19 +14,24 @@ export class ValidationDialogComponent {
   @Input() data: ValidationDialogData;
 
   filterTerm: string;
-  nameOfSelectedLayers = [];
+  selectedLayers: NameHrefProjection[] = [];
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService) {
   }
 
   onChange(selectionList: MatSelectionList) {
-    this.nameOfSelectedLayers = selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => selectedOption.getLabel());
+    this.selectedLayers = [];
+    selectionList.selectedOptions.selected
+      .map((selectedOption: MatListOption) => {
+        let title = selectedOption.getLabel();
+
+        this.selectedLayers.push(this.data.layers.find(value => value.name === title));
+      });
   }
 
   initValidation() {
-    this.communicationService.selectedForValidation.emit(this.nameOfSelectedLayers);
+    this.communicationService.selectedForValidation.emit(this.selectedLayers);
   }
 
 }

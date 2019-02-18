@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {NGXLogger} from "ngx-logger";
 import {ValidationDialogData} from "../components/validation/validation-dialog/validation-dialog.component";
+import {NameHrefProjection} from "./geoserver/projections";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class CommunicationService {
   @Output() bugReportSidebar = new EventEmitter<boolean>();
 
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
-  @Output() selectedForValidation = new EventEmitter<string[]>();
+  @Output() selectedForValidation = new EventEmitter<NameHrefProjection[]>();
   @Output() editView = new EventEmitter<ObjectDto[]>();
 
   @Output() gotoObject = new EventEmitter<ObjectDto>();
