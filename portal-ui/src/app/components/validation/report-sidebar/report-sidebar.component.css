@@ -20,6 +20,15 @@
   max-height: 36px;
 }
 
+/*::ng-deep .validation_accordion .mat-expansion-panel {*/
+/*  background-color: ghostwhite;*/
+/*}*/
+
+/*::ng-deep .validation_accordion .mat-accordion .mat-expansion-panel:last-of-type {*/
+/*  border-bottom-right-radius: 24px;*/
+/*  border-bottom-left-radius: 24px;*/
+/*}*/
+
 .report-close-icon {
   color: darkslategrey;
   font-size: 16px;

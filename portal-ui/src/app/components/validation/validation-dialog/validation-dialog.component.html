@@ -1,0 +1,24 @@
+<div *ngIf="data">
+  <mat-form-field style="width: 100%">
+    <input matInput type="text" placeholder="Фильтр" [(ngModel)]="filterTerm">
+    <button mat-button *ngIf="filterTerm" matSuffix mat-icon-button aria-label="Clear" (click)="filterTerm=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-selection-list #fizLayers (selectionChange)="onChange(fizLayers)" dense style="height: 430px">
+    <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm">
+      <span>
+        {{layer.name}}
+      </span>
+    </mat-list-option>
+  </mat-selection-list>
+
+  <button mat-stroked-button color="primary" class="float-right" style="margin-top: 10px"
+          [disabled]="fizLayers.selectedOptions.selected.length < 1"
+          (click)="initValidation()">Проверить</button>
+</div>
+
+<div *ngIf="!data || !data.layers">
+  Нет данных
+</div>

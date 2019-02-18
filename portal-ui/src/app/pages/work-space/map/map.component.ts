@@ -11,6 +11,7 @@ import {LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService, ObjectDto} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {flatMap} from "rxjs/operators";
+import {ValidationDialogData} from "../../../components/validation/validation-dialog/validation-dialog.component";
 
 @Component({
   selector: 'crg-map',
@@ -28,6 +29,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   isBugReportSidebarShow: boolean = false;
   bugReportSidebarSize = 'ui-sidebar-md';
+
+  isValidationDialogShow: boolean = false;
+  validationDialogData: ValidationDialogData;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
@@ -62,21 +66,32 @@ export class MapComponent implements OnInit, OnDestroy {
         });
 
     this.communicationService
-        .layerObjectsSidebarListener()
+        .layerObjectsSidebar$()
         .subscribe((value) => {
           this.isLayerObjectsSidebarShow = value;
         });
 
     this.communicationService
-        .bugReportSidebarListener()
+        .bugReportSidebar$()
         .subscribe((value) => {
           this.isBugReportSidebarShow = value;
         });
 
     this.communicationService
-        .gotoObjectListener()
+        .gotoObject$()
         .subscribe((objectDto: ObjectDto) => {
           this.openLayers.showObject(objectDto);
+        });
+
+    this.communicationService
+        .validationDialog$()
+        .subscribe((data: ValidationDialogData) => {
+          if (data && data.layers.length > 0) {
+            this.isValidationDialogShow = true;
+            this.validationDialogData = data;
+          } else {
+            this.logger.warn('Empty data: ', data);
+          }
         });
   }
 

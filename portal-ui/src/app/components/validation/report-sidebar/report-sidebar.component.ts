@@ -1,7 +1,7 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
 import {filter, flatMap, map} from 'rxjs/operators';
-import {MatSnackBar} from "@angular/material";
+import {MatDialog, MatSnackBar} from "@angular/material";
 import {Component, Input, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
 import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
@@ -27,7 +27,7 @@ export class ReportSidebarComponent implements OnInit {
   layers: NameHrefProjection[] = [];
 
   step = 0;
-  isValidationInited: boolean[] = [];
+  isValidationInited = false;
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -36,10 +36,15 @@ export class ReportSidebarComponent implements OnInit {
               private validationService: ValidationService,
               private communicationService: CommunicationService,
               private authService: AuthService,
+              private dialog: MatDialog,
               private openLayersService: OpenLayersService,
               private ruleService: FgistpRulesService,
               private layersService: LayersService) {
     this.authService.validateAuth();
+
+    this.communicationService
+        .selectedForValidationLayers$()
+        .subscribe((data: string[]) => this.initValidation(data));
   }
 
   ngOnInit() {
@@ -63,33 +68,37 @@ export class ReportSidebarComponent implements OnInit {
     this.step--;
   }
 
-  initValidation(event, index: number) {
-    this.isValidationInited[index] = true;
+  initValidation(layerNames: string[]) {
+    this.logger.info('66666666666666', layerNames);
 
-    event.stopPropagation();
+    this.isValidationInited = true;
+    setTimeout(() => {
+      this.isValidationInited = false;
+    }, 3000);
 
-    let projection = this.layers[index];
-
-    if (this.connectionInfo[index]) {
-      this.validationService.validateLayer(this.connectionInfo[index])
-          .subscribe((data: any) => this.handleValidationResponse(data, index));
-    } else {
-      this.layersService.getLayer(projection)
-          .pipe(
-            filter((layer: Layer) => !!layer),
-            flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-            map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, projection.name)),
-            flatMap((connectionInfo: ValidationRequest) => {
-              this.connectionInfo[index] = connectionInfo;
-              return this.validationService.validateLayer(connectionInfo);
-            }),
-          )
-          .subscribe((data: any) => this.handleValidationResponse(data, index));
-    }
+    // let projection = this.layers[index];
+    //
+    // if (this.connectionInfo[index]) {
+    //   this.validationService
+    //       .validateLayer(this.connectionInfo[index])
+    //       .subscribe((data: any) => this.handleValidationResponse(data, index));
+    // } else {
+    //   this.layersService.getLayer(projection)
+    //       .pipe(
+    //         filter((layer: Layer) => !!layer),
+    //         flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+    //         map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, projection.name)),
+    //         flatMap((connectionInfo: ValidationRequest) => {
+    //           this.connectionInfo[index] = connectionInfo;
+    //           return this.validationService.validateLayer(connectionInfo);
+    //         }),
+    //       )
+    //       .subscribe((data: any) => this.handleValidationResponse(data, index));
+    // }
   }
 
   private handleValidationResponse(data: any, index) {
-    this.isValidationInited[index] = false;
+    this.isValidationInited = false;
 
     this.logger.info(' * ', data);
   }
@@ -115,8 +124,9 @@ export class ReportSidebarComponent implements OnInit {
     this.communicationService.bugReportSidebar.emit(false);
   }
 
-  revalidate() {
-    this.logger.info('revalidate');
+  reValidate() {
+    let copy = Object.assign([], this.layers);
+    this.communicationService.validationDialog.emit({layers: copy});
   }
 
   isLayerCommonInfoExist(name: string, param: string) {

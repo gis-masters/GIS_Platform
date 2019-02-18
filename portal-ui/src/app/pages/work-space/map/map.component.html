@@ -44,3 +44,9 @@
            [dismissible]="true">
   <report-sidebar [isActive]="isBugReportSidebarShow"></report-sidebar>
 </p-sidebar>
+
+<p-dialog header="Валидация"
+          [style]="{width: '500px', height: '600px'}"
+          [(visible)]="isValidationDialogShow">
+  <crg-validation-dialog [data]="validationDialogData"></crg-validation-dialog>
+</p-dialog>

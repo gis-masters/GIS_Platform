@@ -191,8 +191,13 @@ export class OpenLayersService {
     this.wfsService
         .getGeoJSON('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
-          this.positionToObject(featureCollection.features[0]);
-          this.paintObject(featureCollection.features[0]);
+          let wfsFeature = featureCollection.features[0];
+          if (!wfsFeature || !wfsFeature.geometry) {
+            this.logger.warn('Wrong feature: ', wfsFeature);
+          } else {
+            this.positionToObject(wfsFeature);
+            this.paintObject(wfsFeature);
+          }
         });
   }
 
@@ -223,7 +228,7 @@ export class OpenLayersService {
     let drawFeature;
     if (feature.geometry.type === 'Point') {
       drawFeature = new Feature({
-        labelPoint: new Point(feature.geometry.coordinates),
+        geometry: new Point(feature.geometry.coordinates),
       });
     } else if (feature.geometry.type === 'MultiLineString') {
       drawFeature = new Feature({

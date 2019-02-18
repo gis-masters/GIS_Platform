@@ -1,12 +1,15 @@
 <div>
   <mat-icon (click)="closeSidebar()" class="report-close-icon">close</mat-icon>
-  <!--<button mat-mini-fab color="primary" class="float-right" (click)="revalidate()" -->
-          <!--style="margin-top: 2px; margin-right: 2px">-->
-    <!--<mat-icon>loop</mat-icon>-->
-  <!--</button>-->
+  <button mat-mini-fab color="primary" class="float-right" (click)="reValidate()"
+          style="margin-top: 2px; margin-right: 2px">
+    <mat-icon>loop</mat-icon>
+  </button>
 </div>
 
-<div>
+<div *ngIf="isValidationInited" style="text-align: -webkit-center; margin-top: 30px">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isValidationInited">
   <mat-accordion class="validation_accordion">
     <mat-expansion-panel *ngFor="let layer of layers; let index = index"
                          [expanded]="step === (index+1)" (opened)="setStep(index+1)" hideToggle>

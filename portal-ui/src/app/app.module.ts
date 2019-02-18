@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {LayoutModule} from '@angular/cdk/layout';
-import {ReactiveFormsModule} from '@angular/forms';
+import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -23,8 +23,10 @@ import {BugsTableComponent} from './components/validation/bugs-table/bugs-table.
 import {ReportSidebarComponent} from './components/validation/report-sidebar/report-sidebar.component';
 import {ViolationsViewComponent} from './components/validation/violations-view/violations-view.component';
 import {LayerObjectsComponent} from './components/layer-objects/layer-objects.component';
+import {ValidationDialogComponent} from './components/validation/validation-dialog/validation-dialog.component';
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
     BugsTableComponent,
     ReportSidebarComponent,
     ViolationsViewComponent,
+    ValidationDialogComponent,
     LayerObjectsComponent,
+    FilterLayersPipe,
   ],
   imports: [
     AppRoutingModule,
@@ -50,6 +54,7 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
     FileUploadModule,
     BrowserAnimationsModule,
     AlertModule.forRoot(),
+    FormsModule,
     ReactiveFormsModule,
     LayoutModule,
     LoggerModule.forRoot({
