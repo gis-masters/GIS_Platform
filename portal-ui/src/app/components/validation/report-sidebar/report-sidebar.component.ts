@@ -7,7 +7,7 @@ import {AuthService} from "../../../services/auth.service";
 import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
-import {Layer, LayersService} from "../../../services/geoserver/layers.service";
+import {CrgLayer, Layer, LayersService} from "../../../services/geoserver/layers.service";
 import {GeoUtil} from "../../../services/util/GeoUtil";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
@@ -24,7 +24,7 @@ export class ReportSidebarComponent implements OnInit {
 
   connectionInfo: Map<string, ValidationRequest> = new Map<string, ValidationRequest>();
 
-  layers: NameHrefProjection[] = [];
+  layers: CrgLayer[] = [];
 
   step = 0;
   isValidationInited = false;
@@ -44,16 +44,16 @@ export class ReportSidebarComponent implements OnInit {
 
     this.communicationService
         .selectedForValidationLayers$()
-        .subscribe((data: NameHrefProjection[]) => this.initValidation(data));
+        .subscribe((data: CrgLayer[]) => this.initValidation(data));
   }
 
   ngOnInit() {
-  //   this.layersService
-  //       .getAll()
-  //       .subscribe((layers: NameHrefProjection[]) => {
-  //         this.layers = layers;
-  //         this.validationService.validationDataHolder.addLayers(layers);
-  //       });
+    this.layersService.layers$
+        .pipe(filter(value => !!value && !!value.length))
+        .subscribe((layers: CrgLayer[]) => {
+          this.layers = layers;
+          // this.validationService.validationDataHolder.addLayers(layers);
+        });
   }
 
   setStep(index: number) {
@@ -68,32 +68,32 @@ export class ReportSidebarComponent implements OnInit {
     this.step--;
   }
 
-  initValidation(layerNames: NameHrefProjection[]) {
+  initValidation(layerNames: CrgLayer[]) {
     this.logger.info('66666666666666', layerNames);
 
     this.isValidationInited = true;
-    // setTimeout(() => {
-    //   this.isValidationInited = false;
-    // }, 3000);
+    setTimeout(() => {
+      this.isValidationInited = false;
+    }, 3000);
 
-    if (this.connectionInfo.get(layerNames[0].name)) {
-      this.validationService
-          .validateLayer(this.connectionInfo.get(layerNames[0].name))
-          .subscribe((data: any) => this.handleValidationResponse(data));
-    } else {
-      let projection = this.layers.find(value => value.name === layerNames[0].name);
-      this.layersService.getLayer(projection)
-          .pipe(
-            filter((layer: Layer) => !!layer),
-            flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-            map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layerNames[0].name)),
-            flatMap((connectionInfo: ValidationRequest) => {
-              this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
-              return this.validationService.validateLayer(connectionInfo);
-            }),
-          )
-          .subscribe((data: any) => this.handleValidationResponse(data));
-    }
+    // if (this.connectionInfo.get(layerNames[0].name)) {
+    //   this.validationService
+    //       .validateLayer(this.connectionInfo.get(layerNames[0].name))
+    //       .subscribe((data: any) => this.handleValidationResponse(data));
+    // } else {
+    //   let projection = this.layers.find(value => value.name === layerNames[0].name);
+    //   this.layersService.getLayer(projection)
+    //       .pipe(
+    //         filter((layer: Layer) => !!layer),
+    //         flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+    //         map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layerNames[0].name)),
+    //         flatMap((connectionInfo: ValidationRequest) => {
+    //           this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
+    //           return this.validationService.validateLayer(connectionInfo);
+    //         }),
+    //       )
+    //       .subscribe((data: any) => this.handleValidationResponse(data));
+    // }
   }
 
   private handleValidationResponse(data: any) {
@@ -114,10 +114,6 @@ export class ReportSidebarComponent implements OnInit {
     }
   }
 
-  prepareLayerName(complexLayerName: string): string {
-    return this.ruleService.getLayerTitle(complexLayerName.split(':')[1]);
-  }
-
   closeSidebar() {
     this.openLayersService.removeBugObjectsLayer();
     this.communicationService.bugReportSidebar.emit(false);
@@ -129,15 +125,22 @@ export class ReportSidebarComponent implements OnInit {
   }
 
   isLayerCommonInfoExist(name: string, param: string) {
-    return !!this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
+    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
+    return infoByLayerName ? !!infoByLayerName[param] : undefined;
   }
 
   getInfo(name: string, param: string) {
-    return this.validationService.validationDataHolder.getInfoByLayerName(name)[param];
+    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
+
+    return infoByLayerName ? infoByLayerName[param] : undefined;
   }
 
   isValidatedAndSuccess(name: string) {
     let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
+
+    if (!infoByLayerName) {
+      return false;
+    }
 
     return infoByLayerName.isValidated && infoByLayerName.totalViolations < 1;
   }

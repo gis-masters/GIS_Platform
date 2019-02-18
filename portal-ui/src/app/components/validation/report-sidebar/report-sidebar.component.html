@@ -20,7 +20,7 @@
             <mat-icon *ngIf="!getInfo(layer.name, 'isValidated')" style="color: lightgrey">warning</mat-icon>
             <mat-icon *ngIf="isValidatedAndSuccess(layer.name)" style="color: forestgreen">done</mat-icon>
           </div>
-          <span style="position: relative; top: 5px; padding-left: 10px">{{prepareLayerName(layer.name)}}</span>
+          <span style="position: relative; top: 5px; padding-left: 10px">{{layer.title}}</span>
         </mat-panel-title>
 
         <div class="float-right" *ngIf="isLayerCommonInfoExist(layer.name, 'totalViolations')">
@@ -30,14 +30,6 @@
             </mat-chip-list>
           </div>
         </div>
-
-        <!--<mat-panel-description>-->
-          <!--&lt;!&ndash;<button mat-button (click)="initValidation($event, index)" class="validation_button">&ndash;&gt;-->
-            <!--&lt;!&ndash;<mat-icon *ngIf="!isValidationInited[index]" aria-label="label">map</mat-icon>&ndash;&gt;-->
-            <!--&lt;!&ndash;<img src="../../../assets/images/loader.gif" alt="logo" *ngIf="isValidationInited[index]"&ndash;&gt;-->
-                 <!--&lt;!&ndash;style="margin-left: 3px; margin-right: 3px" height="25" width="25">&ndash;&gt;-->
-          <!--&lt;!&ndash;</button>&ndash;&gt;-->
-        <!--</mat-panel-description>-->
       </mat-expansion-panel-header>
 
       <div>

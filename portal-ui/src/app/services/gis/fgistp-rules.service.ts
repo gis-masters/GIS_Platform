@@ -66,6 +66,10 @@ export class FgistpRulesService {
   }
 
   private getFeatureByName(layerName: string): XsdFeature {
+    if (!layerName) {
+      return;
+    }
+
     return this.featuresXsdDefinition.xsdFeatures
       .find((feature: XsdFeature) => {
         return feature.name.toLowerCase().includes(layerName.toLowerCase());
