@@ -6,11 +6,11 @@ import {NameHrefProjection} from './projections';
 import {DatastoreService} from "./datastore.service";
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {filter, flatMap, map, refCount} from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {FgistpRulesService} from "../gis/fgistp-rules.service";
 import {publishReplay} from "rxjs/internal/operators/publishReplay";
 import {ServerPropertiesService} from '../server-properties.service';
-import {catchError, filter, flatMap, map, refCount} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,35 +45,28 @@ export class LayersService {
         .pipe(
           filter(value => value && !!value['layers']),
           map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
-          map((layers: NameHrefProjection[]) => {
-            return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
-          }),
+          map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
           map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-          catchError(this.baseService.handleError('getAllLayers', []))
+          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
         )
         .subscribe(this._layers$);
   }
 
-  /**
-   * Получить полную информацию о слое
-   * @param layer Простое предствление слоя
-   */
-  getLayer(layer: NameHrefProjection): Observable<Layer> {
-    return this.http
-               .get<Layer>(layer.href);
+  private filterScratchLayers(layers: NameHrefProjection[]) {
+    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 
-  /**
-   * Получить полную информацию о слоях
-   * @param layers Список слоев
-   */
-  getLayers(layers: NameHrefProjection[]) {
-    const observableTasks = [];
-    layers.forEach((layer: NameHrefProjection) => {
-      observableTasks.push(this.getLayer(layer));
-    });
+  fetchLayerConnectionInfo(layer: CrgLayer) {
+    return this.getLayer(layer)
+      .pipe(
+        filter((layer: Layer) => !!layer),
+        flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+        map((data: any) => {
+          layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
 
-    return forkJoin(observableTasks);
+          return layer;
+        }),
+      );
   }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
@@ -90,16 +83,25 @@ export class LayersService {
     this.logger.info('payload: ', payload);
 
     return this.http
-               .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
+      .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
   }
 
-  fetchLayerConnectionInfo(layer: NameHrefProjection) {
-    return this.getLayer(layer)
-               .pipe(
-                 filter((layer: Layer) => !!layer),
-                 flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-                 map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name)),
-               );
+  /**
+   * Получить полную информацию о слое
+   * @param layer Простое предствление слоя
+   */
+  private getLayer(layer: NameHrefProjection): Observable<Layer> {
+    return this.http
+      .get<Layer>(layer.href);
+  }
+
+  private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
+    const observableTasks = [];
+    crgLayers.forEach((layer: CrgLayer) => {
+      observableTasks.push(this.fetchLayerConnectionInfo(layer));
+    });
+
+    return forkJoin(observableTasks);
   }
 
   private mergeWithRules(layers: NameHrefProjection[]) {
@@ -113,7 +115,12 @@ export class LayersService {
         name: layerName,
         complexName: layer.name,
         href: layer.href,
-        title: layerTitle
+        title: layerTitle,
+        connectionInfo: {
+          dbName: '',
+          schemaName: '',
+          tableName: ''
+        }
       })
     });
 
@@ -126,6 +133,13 @@ export interface CrgLayer {
   complexName: string;
   title: string;
   href: string;
+  connectionInfo: ConnectionInfo;
+}
+
+export interface ConnectionInfo {
+  dbName: string;
+  schemaName: string;
+  tableName: string;
 }
 
 export interface GeoLayer {

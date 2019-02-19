@@ -1,23 +1,15 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
-import {switchMap} from "rxjs/internal/operators/switchMap";
-import {MatPaginator, MatSort} from "@angular/material";
-import {merge} from "rxjs/internal/observable/merge";
-import {startWith} from "rxjs/internal/operators/startWith";
-import {ValidationRequest, ValidationService} from "../../../services/gis/validation.service";
-import {NGXLogger} from "ngx-logger";
 import {of} from "rxjs";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NGXLogger} from "ngx-logger";
+import {merge} from "rxjs/internal/observable/merge";
+import {MatPaginator, MatSort} from "@angular/material";
+import {switchMap} from "rxjs/internal/operators/switchMap";
+import {startWith} from "rxjs/internal/operators/startWith";
+import {ConnectionInfo} from "../../../services/geoserver/layers.service";
+import {ValidationService} from "../../../services/gis/validation.service";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -36,8 +28,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   @Input() isActive: boolean;
   @Input() index: number;
   @Input() step: number;
-  @Input() connectionInfo: ValidationRequest;
-  @Output() getConnectionInfo = new EventEmitter<number>();
+  @Input() connectionInfo: ConnectionInfo;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,7 +36,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   data: any[] = [];
   isLoadingResults = true;
 
-  _connectionInfo: ValidationRequest;
   status: string;
   _step: number;
   totalElements = 0;
@@ -86,15 +76,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const requestInfo = changes['connectionInfo'];
-    if (requestInfo && !requestInfo.isFirstChange()) {
-      if (requestInfo.currentValue) {
-        this._connectionInfo = requestInfo.currentValue;
-
-        this.getValidation();
-      }
-    }
-
     const step = changes['step'];
     if (step && !step.isFirstChange()) {
       if (step.currentValue) {
@@ -108,25 +89,21 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   }
 
   getValidation() {
-    if (this._connectionInfo) {
-      this.validationService
-          .getValidationResults_(this.connectionInfo, 0, this.defaultPageSize, '', 'asc')
-          .subscribe(response => {
-            this.data = response.results;
-            this.totalElements = response.total;
-            this.status = response.status;
+    this.validationService
+        .getValidationResults_(this.connectionInfo, 0, this.defaultPageSize, '', 'asc')
+        .subscribe(response => {
+          this.data = response.results;
+          this.totalElements = response.total;
+          this.status = response.status;
 
-            this.isLoadingResults = false;
-          });
-    } else {
-      this.getConnectionInfo.emit(this.index - 1);
-    }
+          this.isLoadingResults = false;
+        });
   }
 
   showObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.gotoObject.emit({id: objectId, layerName: this._connectionInfo.tableName});
+    this.communicationService.gotoObject.emit({id: objectId, layerName: this.connectionInfo.tableName});
   }
 
   getClassIdAlias(element) {
@@ -136,7 +113,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   editObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.editView.emit([{id: objectId, layerName: this._connectionInfo.tableName}]);
+    this.communicationService.editView.emit([{id: objectId, layerName: this.connectionInfo.tableName}]);
   }
 }
 

@@ -34,9 +34,8 @@
       </mat-expansion-panel-header>
 
       <div>
-        <crg-bugs-table [connectionInfo]="connectionInfo.get(layer.name)"
-                        [step]="step" [index]="index + 1" [isActive]="isActive"
-                        (getConnectionInfo)="handleChildEvent($event)"></crg-bugs-table>
+        <crg-bugs-table [connectionInfo]="layer.connectionInfo"
+                        [step]="step" [index]="index + 1" [isActive]="isActive"></crg-bugs-table>
       </div>
 
       <mat-action-row style="padding: 0">

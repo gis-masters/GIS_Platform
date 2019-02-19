@@ -1,5 +1,5 @@
 import {ImportTask, ImportTasks} from '../geoserver/import.service';
-import {ValidationRequest} from "../gis/validation.service";
+import {ConnectionInfo} from "../geoserver/layers.service";
 
 export class GeoUtil {
 
@@ -45,7 +45,7 @@ export class GeoUtil {
     }
   }
 
-  static getDbInfo(connectionParameters: any, complexLayerName: string): ValidationRequest {
+  static getDbInfo(connectionParameters: any, complexLayerName: string): ConnectionInfo {
     let dbName = '';
     let schemaName = '';
     let tableName = '';

@@ -2,6 +2,7 @@ import {NGXLogger} from "ngx-logger";
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommunicationService, ObjectDto} from "../../services/communication.service";
 import {WfsFeature, WfsFeatureCollection, WfsService} from "../../services/geoserver/wfs.service";
+import {FgistpRulesService} from "../../services/gis/fgistp-rules.service";
 
 @Component({
   selector: 'crg-edit-object',
@@ -16,6 +17,7 @@ export class EditObjectComponent implements OnChanges {
 
   constructor(private logger: NGXLogger,
               private wfsService: WfsService,
+              private fgistpService: FgistpRulesService,
               private communicationService: CommunicationService) {
   }
 
@@ -29,7 +31,6 @@ export class EditObjectComponent implements OnChanges {
       }
     }
   }
-
 
   private handleObject(objectDto: ObjectDto) {
     this.wfsService

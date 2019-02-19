@@ -1,16 +1,15 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter, flatMap, map} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {Component, Input, OnInit} from '@angular/core';
-import {GeoUtil} from "../../../services/util/GeoUtil";
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {AuthService} from "../../../services/auth.service";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
-import {CrgLayer, Layer, LayersService} from "../../../services/geoserver/layers.service";
-import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
+import {CrgLayer, LayersService} from "../../../services/geoserver/layers.service";
+import {ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
   selector: 'report-sidebar',
@@ -20,8 +19,6 @@ import {ValidationRequest, ValidationService} from '../../../services/gis/valida
 export class ReportSidebarComponent implements OnInit {
 
   @Input() isActive: boolean;
-
-  connectionInfo: Map<string, ValidationRequest> = new Map<string, ValidationRequest>();
 
   layers: CrgLayer[] = [];
 
@@ -70,41 +67,13 @@ export class ReportSidebarComponent implements OnInit {
   initValidation(crgLayers: CrgLayer[]) {
     this.isValidationInited = true;
 
-    if (this.connectionInfo.get(crgLayers[0].name)) {
-      this.validationService
-          .validateLayer(this.connectionInfo.get(crgLayers[0].name))
-          .subscribe((data: any) => this.handleValidationResponse(data));
-    } else {
-      this.layersService.getLayer(crgLayers[0])
-          .pipe(
-            filter((layer: Layer) => !!layer),
-            flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-            map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, crgLayers[0].name)),
-            flatMap((connectionInfo: ValidationRequest) => {
-              this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
-              return this.validationService.validateLayer(connectionInfo);
-            }),
-          )
-          .subscribe((data: any) => this.handleValidationResponse(data));
-    }
-  }
+    this.validationService
+        .validateLayer(crgLayers[0].connectionInfo)
+        .subscribe((data: any) => {
+          this.isValidationInited = false;
 
-  private handleValidationResponse(data: any) {
-    this.isValidationInited = false;
-
-    this.logger.info(' * * * * * *', data);
-  }
-
-  handleChildEvent(layerIndex: number) {
-    if (layerIndex != undefined && this.layers[layerIndex]) {
-      this.layersService
-          .fetchLayerConnectionInfo(this.layers[layerIndex])
-          .subscribe((connectionInfo: ValidationRequest) => {
-            this.connectionInfo.set(this.layers[layerIndex].name, connectionInfo);
-          })
-    } else {
-      this.logger.info('Not fetch layer connections');
-    }
+          this.logger.info(' * * * * * *', data);
+        });
   }
 
   closeSidebar() {
