@@ -1,7 +1,6 @@
 import {NGXLogger} from "ngx-logger";
 import {Component, Input} from '@angular/core';
 import {MatListOption, MatSelectionList} from "@angular/material";
-import {NameHrefProjection} from "../../../services/geoserver/projections";
 import {CommunicationService} from "../../../services/communication.service";
 import {CrgLayer} from "../../../services/geoserver/layers.service";
 
@@ -26,12 +25,13 @@ export class ValidationDialogComponent {
     selectionList.selectedOptions.selected
       .map((selectedOption: MatListOption) => {
         let title = selectedOption.getLabel();
-        this.selectedLayers.push(this.data.layers.find(value => value.title === title));
+        let items = this.data.layers.find(value => value.title.trim().toLowerCase() === title.trim().toLowerCase());
+
+        this.selectedLayers.push(items);
       });
   }
 
   initValidation() {
-    this.logger.info('??????????????? ', this.selectedLayers);
     this.communicationService.selectedForValidation.emit(this.selectedLayers);
   }
 

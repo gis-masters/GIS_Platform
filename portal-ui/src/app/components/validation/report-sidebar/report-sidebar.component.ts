@@ -1,17 +1,16 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
 import {filter, flatMap, map} from 'rxjs/operators';
-import {MatDialog, MatSnackBar} from "@angular/material";
 import {Component, Input, OnInit} from '@angular/core';
-import {AuthService} from "../../../services/auth.service";
-import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
-import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {DatastoreService} from '../../../services/geoserver/datastore.service';
-import {CrgLayer, Layer, LayersService} from "../../../services/geoserver/layers.service";
 import {GeoUtil} from "../../../services/util/GeoUtil";
+import {MatDialog, MatSnackBar} from "@angular/material";
+import {AuthService} from "../../../services/auth.service";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
+import {CrgLayer, Layer, LayersService} from "../../../services/geoserver/layers.service";
+import {ValidationRequest, ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
   selector: 'report-sidebar',
@@ -68,32 +67,26 @@ export class ReportSidebarComponent implements OnInit {
     this.step--;
   }
 
-  initValidation(layerNames: CrgLayer[]) {
-    this.logger.info('66666666666666', layerNames);
-
+  initValidation(crgLayers: CrgLayer[]) {
     this.isValidationInited = true;
-    setTimeout(() => {
-      this.isValidationInited = false;
-    }, 3000);
 
-    // if (this.connectionInfo.get(layerNames[0].name)) {
-    //   this.validationService
-    //       .validateLayer(this.connectionInfo.get(layerNames[0].name))
-    //       .subscribe((data: any) => this.handleValidationResponse(data));
-    // } else {
-    //   let projection = this.layers.find(value => value.name === layerNames[0].name);
-    //   this.layersService.getLayer(projection)
-    //       .pipe(
-    //         filter((layer: Layer) => !!layer),
-    //         flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-    //         map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layerNames[0].name)),
-    //         flatMap((connectionInfo: ValidationRequest) => {
-    //           this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
-    //           return this.validationService.validateLayer(connectionInfo);
-    //         }),
-    //       )
-    //       .subscribe((data: any) => this.handleValidationResponse(data));
-    // }
+    if (this.connectionInfo.get(crgLayers[0].name)) {
+      this.validationService
+          .validateLayer(this.connectionInfo.get(crgLayers[0].name))
+          .subscribe((data: any) => this.handleValidationResponse(data));
+    } else {
+      this.layersService.getLayer(crgLayers[0])
+          .pipe(
+            filter((layer: Layer) => !!layer),
+            flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+            map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, crgLayers[0].name)),
+            flatMap((connectionInfo: ValidationRequest) => {
+              this.connectionInfo.set(connectionInfo.tableName, connectionInfo);
+              return this.validationService.validateLayer(connectionInfo);
+            }),
+          )
+          .subscribe((data: any) => this.handleValidationResponse(data));
+    }
   }
 
   private handleValidationResponse(data: any) {

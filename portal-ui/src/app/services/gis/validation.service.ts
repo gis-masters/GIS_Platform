@@ -20,6 +20,8 @@ export class ValidationService {
   }
 
   validateLayer(data: ValidationRequest): Observable<any> {
+    this.logger.info('66666666666666', data);
+
     return this.validateLayers([data]);
   }
 

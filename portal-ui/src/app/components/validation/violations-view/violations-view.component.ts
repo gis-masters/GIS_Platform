@@ -18,8 +18,6 @@ export class ViolationsViewComponent implements OnInit {
               private ruleService: FgistpRulesService) {}
 
   ngOnInit() {
-    this.logger.info('safasdfasdfasdf', this.layerName);
-
     this.data.forEach((value: ViolationItem) => {
       this.violationItems.push({
         errors: this.ruleService.getErrorsDescription(value.errorTypes),
