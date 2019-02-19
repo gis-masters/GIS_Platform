@@ -117,6 +117,20 @@ public class PostGisStorage {
         return initConnection(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
     }
 
+    @Transactional
+    public boolean isValidated(ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
+
+        List<Map<String, Object>> result = initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest);
+
+        log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
+
+        return !result.isEmpty();
+    }
+
     private void createExtensionForNewDb(JdbcTemplate jdbcTemplate) {
         jdbcTemplate.execute("CREATE EXTENSION postgis;");
     }

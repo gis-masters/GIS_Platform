@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
@@ -58,18 +59,22 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void startValidation(final ValidationMqRequest validationMqRequest) {
-        log.info("Получено сообщение, startValidation: {}", validationMqRequest.getId());
+    public void validation(final ValidationMqRequest mqRequest) {
+        log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
 
         try {
-            if (validationMqRequest.getEntityType() != null) {
-                validationService.startValidation(validationMqRequest);
+            if (mqRequest.getType() == RequstType.INIT) {
+                validationService.startValidation(mqRequest);
+            } else if (mqRequest.getType() == RequstType.GET) {
+                validationService.getResults(mqRequest);
+            } else if (mqRequest.getType() == RequstType.INFO) {
+                validationService.getInfo(mqRequest);
             } else {
-                validationService.getResults(validationMqRequest);
+                log.warn("Not supported type");
             }
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(validationMqRequest.getId(), ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(mqRequest.getId(), ValidationStatus.ERROR));
         }
     }
 

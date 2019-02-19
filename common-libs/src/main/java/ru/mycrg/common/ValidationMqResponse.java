@@ -1,7 +1,9 @@
 package ru.mycrg.common;
 
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,14 +11,19 @@ import java.util.UUID;
 public class ValidationMqResponse {
 
     private UUID id;
+    private String resourceId;
     private Long total = 0L;
+    private boolean isValidated;
+    private LocalDateTime lastValidated;
     private ValidationStatus status;
+    private RequstType requstType;
     private List<ObjectValidationResult> results = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(UUID id) {
-        this.id = id;
+    public ValidationMqResponse(ValidationMqRequest request) {
+        this.id = request.getId();
+        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }
 
     public ValidationMqResponse(ValidationStatus status) {
@@ -75,5 +82,41 @@ public class ValidationMqResponse {
 
     public void setTotal(Long total) {
         this.total = total;
+    }
+
+    public boolean isValidated() {
+        return isValidated;
+    }
+
+    public void setValidated(boolean validated) {
+        isValidated = validated;
+    }
+
+    public LocalDateTime getLastValidated() {
+        return lastValidated;
+    }
+
+    public void setLastValidated(LocalDateTime lastValidated) {
+        this.lastValidated = lastValidated;
+    }
+
+    public RequstType getRequstType() {
+        return requstType;
+    }
+
+    public void setRequstType(RequstType requstType) {
+        this.requstType = requstType;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 }

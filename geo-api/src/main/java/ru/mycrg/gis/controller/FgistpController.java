@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -66,7 +66,7 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public CompletableFuture<ValidationMqResponse> initValidation(
+    public CompletableFuture<List<ValidationResponseDto>> initValidation(
             @RequestBody List<ValidationRequestDto> request,
             Principal principal) {
         log.debug("Init validation for: {} classes", request.size());
@@ -77,14 +77,14 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/info")
-    public CompletableFuture<ValidationMqResponse> getCommonInfo(
+    public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(
             @Valid @RequestBody ValidationRequestDto request,
             Principal principal) {
         return validationService.getCommonInfo(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation")
-    public CompletableFuture<ValidationMqResponse> getValidationResults(
+    public CompletableFuture<List<ValidationResponseDto>> getValidationResults(
             @Valid @RequestBody ValidationRequestDto request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "20") String size,

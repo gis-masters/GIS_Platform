@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.ValidationAlreadyStartedException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.service.fgistp.EntityType;
@@ -39,8 +41,8 @@ public class ValidationServiceImpl implements IValidationService {
     }
 
     @Override
-    public CompletableFuture<ValidationMqResponse> getResults(ValidationRequestDto request, int page, int size,
-                                                              String userName) {
+    public CompletableFuture<List<ValidationResponseDto>> getResults(ValidationRequestDto request, int page, int size,
+                                                               String userName) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -49,17 +51,19 @@ public class ValidationServiceImpl implements IValidationService {
         process.setUserName(userName);
         process.addRequest(request);
 
+        processes.add(process);
+
         ValidationMqRequest validationMqRequest = new ValidationMqRequest();
         validationMqRequest.setId(process.getId());
         validationMqRequest.setDbName(request.getDbName());
         validationMqRequest.setSchemaName(request.getSchemaName());
-        validationMqRequest.setPage(page);
-        validationMqRequest.setSize(size);
 
         EntityType ruleByClassName = ruleService.getRuleByClassName(request.getTableName());
         validationMqRequest.setTableName(ruleByClassName.getTableName());
 
-        processes.add(process);
+        validationMqRequest.setType(RequstType.GET);
+        validationMqRequest.setPage(page);
+        validationMqRequest.setSize(size);
 
         mqSender.startValidation(validationMqRequest);
 
@@ -67,7 +71,7 @@ public class ValidationServiceImpl implements IValidationService {
     }
 
     @Override
-    public CompletableFuture<ValidationMqResponse> getCommonInfo(String userName, ValidationRequestDto request) {
+    public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(String userName, ValidationRequestDto request) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -75,6 +79,8 @@ public class ValidationServiceImpl implements IValidationService {
         ValidationProcess process = new ValidationProcess();
         process.setUserName(userName);
         process.addRequest(request);
+
+        processes.add(process);
 
         ValidationMqRequest validationMqRequest = new ValidationMqRequest();
         validationMqRequest.setId(process.getId());
@@ -84,22 +90,15 @@ public class ValidationServiceImpl implements IValidationService {
         EntityType ruleByClassName = ruleService.getRuleByClassName(request.getTableName());
         validationMqRequest.setTableName(ruleByClassName.getTableName());
 
-        processes.add(process);
+        validationMqRequest.setType(RequstType.INFO);
 
-        // mqSender.startValidation(validationMqRequest);
-
-        ValidationMqResponse response = new ValidationMqResponse();
-        response.setStatus(ValidationStatus.DONE);
-        response.setTotal(0L);
-
-        log.info("COMPLETE");
-        process.getFutureResponse().complete(response);
+        mqSender.startValidation(validationMqRequest);
 
         return process.getFutureResponse();
     }
 
     @Override
-    public CompletableFuture<ValidationMqResponse> initValidation(String userName, List<ValidationRequestDto> request) {
+    public CompletableFuture<List<ValidationResponseDto>> initValidation(String userName, List<ValidationRequestDto> request) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -114,7 +113,10 @@ public class ValidationServiceImpl implements IValidationService {
 
                     ValidationRequestType requestType = checkNewRequest(requestDto, userName);
                     if (requestType == UNIQE || requestType == SAME_DATA) {
-                        mqSender.startValidation(preparePayload(process.getId(), requestDto));
+                        ValidationMqRequest payload = preparePayload(process.getId(), requestDto);
+                        payload.setType(RequstType.INIT);
+
+                        mqSender.startValidation(payload);
                     } else if (requestType == SAME_USER) {
                         log.info("Ignore request from SAME_USER");
 
@@ -138,33 +140,9 @@ public class ValidationServiceImpl implements IValidationService {
         // TODO: При валидации не комплитить ответ пустыми данными если при валидации не выявлено ошибок
         // дожидаться каких либо ошибок либо DONE статуса
 
-        if (response.isPending() || response.isDone()) {
-            getProcessById(response.getId())
-                    .ifPresentOrElse(process -> {
-                                // TODO После или при добавлении ответа определять завершен ли процесс
-                                process.addResponse(response);
-                                process.getFutureResponse().complete(response);
-                            },
-                            () -> log.warn("Not found validation process by id: {}", response.getId()));
-        }
-
-        if (response.isEmpty()) {
-            log.info("Try validate empty table!");
-
-            getProcessById(response.getId())
-                    .ifPresentOrElse(process -> {
-                                process.setStatus(ValidationStatus.EMPTY);
-                                process.getFutureResponse().complete(response);
-                            },
-                            () -> log.warn("Not found validation process by id: {}", response.getId()));
-        } else if (response.isError()) {
-            getProcessById(response.getId())
-                    .ifPresentOrElse(process -> {
-                                process.setStatus(ValidationStatus.ERROR);
-                                process.getFutureResponse().complete(response);
-                            },
-                            () -> log.warn("Not found validation process by id: {}", response.getId()));
-        }
+        getProcessById(response.getId()).ifPresentOrElse(
+                process -> process.addResponse(response),
+                () -> log.warn("Not found validation process by id: {}", response.getId()));
     }
 
 //    private ValidationProcess initValidationProcess(ValidationRequestDto requestDto, String userName) {

@@ -1,6 +1,7 @@
 package ru.mycrg.wrapper.service.validation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -24,6 +26,8 @@ public class ValidationService {
     private final IMqEvents mqEvents;
     private final IValidator validator;
     private final PostGisStorage postGisStorage;
+
+    private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
 
     private final int BATCH_SIZE = 100;
 
@@ -52,7 +56,7 @@ public class ValidationService {
     }
 
     public void getResults(ValidationMqRequest validationMqRequest) throws IOException {
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
         if (totalViolations > 0) {
@@ -69,7 +73,9 @@ public class ValidationService {
     }
 
     public void startValidation(ValidationMqRequest validationMqRequest) {
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
+
+        lastCalculatedValidation.put(response.getResourceId(), LocalDateTime.now());
 
         int offset = 0;
         while (true) {
@@ -103,9 +109,20 @@ public class ValidationService {
         postGisStorage.saveValidationResults(dto);
     }
 
+    public void getInfo(ValidationMqRequest validationMqRequest) {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
+
+        response.setValidated(postGisStorage.isValidated(validationMqRequest));
+        response.setTotal(postGisStorage.countTotalViolations(validationMqRequest));
+        response.setLastValidated(lastCalculatedValidation.get(response.getResourceId()));
+        response.setStatus(ValidationStatus.DONE);
+
+        mqEvents.validationResponse(response);
+    }
+
     private void sendPendingResponse(ValidationMqRequest validationMqRequest,
                                      List<ObjectValidationResult> violationResults) {
-        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest.getId());
+        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
         pendingResponse.setStatus(ValidationStatus.PENDING);
         pendingResponse.setResults(violationResults);
 
