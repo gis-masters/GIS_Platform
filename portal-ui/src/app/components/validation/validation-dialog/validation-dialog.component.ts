@@ -1,8 +1,8 @@
 import {NGXLogger} from "ngx-logger";
 import {Component, Input} from '@angular/core';
 import {MatListOption, MatSelectionList} from "@angular/material";
-import {CommunicationService} from "../../../services/communication.service";
 import {CrgLayer} from "../../../services/geoserver/layers.service";
+import {CommunicationService} from "../../../services/communication.service";
 
 @Component({
   selector: 'crg-validation-dialog',
