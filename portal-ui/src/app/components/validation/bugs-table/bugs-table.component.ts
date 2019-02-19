@@ -132,6 +132,12 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   getClassIdAlias(element) {
     return this.ruleService.getClassIdAlias(this.connectionInfo.tableName, element);
   }
+
+  editObject(event, objectId: string) {
+    event.stopPropagation();
+
+    this.communicationService.editView.emit([{id: objectId, layerName: this._connectionInfo.tableName}]);
+  }
 }
 
 export interface Violations {

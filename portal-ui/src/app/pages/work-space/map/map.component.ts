@@ -6,10 +6,10 @@ import {AuthService} from '../../../services/auth.service';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService, ObjectDto} from "../../../services/communication.service";
-import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {ValidationDialogData} from "../../../components/validation/validation-dialog/validation-dialog.component";
 
 @Component({
@@ -31,6 +31,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   isValidationDialogShow: boolean = false;
   validationDialogData: ValidationDialogData;
+
+  isEditDialogShow: boolean = false;
+  objectsToEdit: ObjectDto[] = [];
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
@@ -81,6 +84,13 @@ export class MapComponent implements OnInit, OnDestroy {
         .gotoObject$()
         .subscribe((objectDto: ObjectDto) => {
           this.openLayers.showObject(objectDto);
+        });
+
+    this.communicationService
+        .editView$()
+        .subscribe((objects: ObjectDto[]) => {
+          this.isEditDialogShow = true;
+          this.objectsToEdit = objects;
         });
 
     this.communicationService

@@ -25,6 +25,9 @@
             <button mat-icon-button (click)="showObject($event, element.objectId)">
               <mat-icon style="color: yellowgreen">search</mat-icon>
             </button>
+            <button mat-icon-button (click)="editObject($event, element.objectId)">
+              <mat-icon style="color: darkgrey">edit</mat-icon>
+            </button>
             {{element.objectId}}
           </td>
         </ng-container>

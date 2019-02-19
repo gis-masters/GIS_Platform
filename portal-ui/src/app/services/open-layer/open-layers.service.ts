@@ -189,7 +189,7 @@ export class OpenLayersService {
    */
   showObject(objectDto: ObjectDto) {
     this.wfsService
-        .getGeoJSON('work_workspace:' + objectDto.layerName, objectDto.id)
+        .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
           let wfsFeature = featureCollection.features[0];
           if (!wfsFeature || !wfsFeature.geometry) {

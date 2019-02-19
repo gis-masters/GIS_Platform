@@ -11,7 +11,6 @@ import {ServerPropertiesService} from '../server-properties.service';
 export class WfsService {
 
   private _fwsUrl = this.serverProp.geoServerUrl;
-  wfsFiz = this.serverProp.geoServerUrl + '/work_workspace/ows';
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
@@ -26,7 +25,7 @@ export class WfsService {
   // maxFeatures=50&
   // outputFormat=application%2Fjson
   // &featureID=30
-  getGeoJSON(layerName: string, objectId: string): Observable<WfsFeatureCollection> {
+  getFeature(layerName: string, objectId: string): Observable<WfsFeatureCollection> {
     let url = this.prepareLink(layerName, objectId);
 
     return this.http
@@ -40,8 +39,6 @@ export class WfsService {
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
-
-  //4326
 
   get fwsUrl(): string {
     return this._fwsUrl;

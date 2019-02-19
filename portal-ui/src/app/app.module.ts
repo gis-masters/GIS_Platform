@@ -27,6 +27,7 @@ import {ValidationDialogComponent} from './components/validation/validation-dial
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
+import {EditObjectComponent} from './components/edit-object/edit-object.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {FilterLayersPipe} from './pipes/filter-layers.pipe';
     ValidationDialogComponent,
     LayerObjectsComponent,
     FilterLayersPipe,
+    EditObjectComponent,
   ],
   imports: [
     AppRoutingModule,
