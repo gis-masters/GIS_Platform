@@ -15,10 +15,7 @@ import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -65,6 +62,38 @@ public class ValidationServiceImpl implements IValidationService {
         processes.add(process);
 
         mqSender.startValidation(validationMqRequest);
+
+        return process.getFutureResponse();
+    }
+
+    @Override
+    public CompletableFuture<ValidationMqResponse> getCommonInfo(String userName, ValidationRequestDto request) {
+        if (ruleService.isCacheEmpty()) {
+            ruleService.updateRules();
+        }
+
+        ValidationProcess process = new ValidationProcess();
+        process.setUserName(userName);
+        process.addRequest(request);
+
+        ValidationMqRequest validationMqRequest = new ValidationMqRequest();
+        validationMqRequest.setId(process.getId());
+        validationMqRequest.setDbName(request.getDbName());
+        validationMqRequest.setSchemaName(request.getSchemaName());
+
+        EntityType ruleByClassName = ruleService.getRuleByClassName(request.getTableName());
+        validationMqRequest.setTableName(ruleByClassName.getTableName());
+
+        processes.add(process);
+
+        // mqSender.startValidation(validationMqRequest);
+
+        ValidationMqResponse response = new ValidationMqResponse();
+        response.setStatus(ValidationStatus.DONE);
+        response.setTotal(0L);
+
+        log.info("COMPLETE");
+        process.getFutureResponse().complete(response);
 
         return process.getFutureResponse();
     }

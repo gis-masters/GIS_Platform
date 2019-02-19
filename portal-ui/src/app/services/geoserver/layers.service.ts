@@ -52,10 +52,6 @@ export class LayersService {
         .subscribe(this._layers$);
   }
 
-  private filterScratchLayers(layers: NameHrefProjection[]) {
-    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
-  }
-
   fetchLayerConnectionInfo(layer: CrgLayer) {
     return this.getLayer(layer)
       .pipe(
@@ -93,6 +89,10 @@ export class LayersService {
   private getLayer(layer: NameHrefProjection): Observable<Layer> {
     return this.http
       .get<Layer>(layer.href);
+  }
+
+  private filterScratchLayers(layers: NameHrefProjection[]) {
+    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 
   private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {

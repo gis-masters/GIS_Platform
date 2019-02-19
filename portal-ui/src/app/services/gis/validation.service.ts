@@ -1,11 +1,13 @@
-import {Observable} from "rxjs";
+import {forkJoin, Observable} from "rxjs";
 import {NGXLogger} from "ngx-logger";
 import {Injectable} from '@angular/core';
 import {MatPaginator, MatSort} from "@angular/material";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ServerPropertiesService} from "../server-properties.service";
 import {NameHrefProjection} from "../geoserver/projections";
-import {ConnectionInfo} from "../geoserver/layers.service";
+import {ConnectionInfo, CrgLayer} from "../geoserver/layers.service";
+import {WfsFeatureCollection} from "../geoserver/wfs.service";
+import {ImportTaskShort} from "../geoserver/import.service";
 
 @Injectable({
   providedIn: 'root'
@@ -49,9 +51,22 @@ export class ValidationService {
                      {headers: {'Content-Type': 'application/json'}, params: params});
   }
 
-  getStatisticByLayerName(data: ConnectionInfo) {
-    return this.validationDataHolder.getCommonInfoByLayerName(name);
+  getLayersStatistic(crgLayers: CrgLayer[]) {
+    const observableTasks = [];
+    crgLayers.forEach((crgLayer: CrgLayer) => {
+      observableTasks.push(this.getLayerStatistic(crgLayer));
+    });
+
+    return forkJoin(observableTasks);
   }
+
+  getLayerStatistic(crgLayer: CrgLayer) {
+    return this.http
+               .post(this.serverProp.validationInfo,
+                 JSON.stringify(crgLayer.connectionInfo),
+                 {headers: {'Content-Type': 'application/json'}});
+  }
+
 }
 
 export interface CommonLayerInfo {
@@ -71,7 +86,7 @@ export class ValidationDataHolder {
   addLayers(layers: NameHrefProjection[]) {
     this.commonInfo.set(layers[0].name, {isValidated: true, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
     this.commonInfo.set(layers[1].name, {isValidated: false, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
-    this.commonInfo.set(layers[2].name, {isValidated: true, totalViolations: 8273, lastValidationDateTime: '02.14.2019 16:00'});
+    // this.commonInfo.set(layers[2].name, {isValidated: true, totalViolations: 8273, lastValidationDateTime: '02.14.2019 16:00'});
   }
 
   getInfoByLayerName(name: string) {

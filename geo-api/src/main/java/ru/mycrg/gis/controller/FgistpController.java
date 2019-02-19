@@ -76,6 +76,13 @@ public class FgistpController {
         return validationService.initValidation(principal.getName(), request);
     }
 
+    @PostMapping("/fgistp/validation/info")
+    public CompletableFuture<ValidationMqResponse> getCommonInfo(
+            @Valid @RequestBody ValidationRequestDto request,
+            Principal principal) {
+        return validationService.getCommonInfo(principal.getName(), request);
+    }
+
     @PostMapping("/fgistp/validation")
     public CompletableFuture<ValidationMqResponse> getValidationResults(
             @Valid @RequestBody ValidationRequestDto request,

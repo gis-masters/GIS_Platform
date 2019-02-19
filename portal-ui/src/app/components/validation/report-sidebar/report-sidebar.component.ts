@@ -1,6 +1,6 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter} from 'rxjs/operators';
+import {filter, flatMap} from 'rxjs/operators';
 import {Component, Input, OnInit} from '@angular/core';
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {AuthService} from "../../../services/auth.service";
@@ -45,10 +45,29 @@ export class ReportSidebarComponent implements OnInit {
 
   ngOnInit() {
     this.layersService.layers$
-        .pipe(filter(value => !!value && !!value.length))
+        .pipe(
+          filter(value => !!value && !!value.length),
+        )
         .subscribe((layers: CrgLayer[]) => {
+          this.isValidationInited = true;
+
           this.layers = layers;
-          // this.validationService.validationDataHolder.addLayers(layers);
+
+          if (layers.length < 1) {
+            this.isValidationInited = false;
+          } else {
+            this.validationService
+                .getLayersStatistic(layers)
+                .subscribe((response: any[]) => {
+                  this.isValidationInited = false;
+
+                  // TODO: ID is layerName
+                  this.logger.info('REEEEEEEsponse INFO: ', response);
+
+                  //TODO: сервис сам должен записать эту инфу
+                  this.validationService.validationDataHolder.addLayers(layers);
+                });
+          }
         });
   }
 

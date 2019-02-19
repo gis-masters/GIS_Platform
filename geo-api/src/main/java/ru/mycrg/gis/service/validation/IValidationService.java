@@ -10,6 +10,8 @@ public interface IValidationService {
 
     CompletableFuture<ValidationMqResponse> initValidation(String userName, List<ValidationRequestDto> request);
 
+    CompletableFuture<ValidationMqResponse> getCommonInfo(String userName, ValidationRequestDto request);
+
     CompletableFuture<ValidationMqResponse> getResults(ValidationRequestDto request, int page, int size, String userName);
 
     void progress(ValidationMqResponse response);
