@@ -4,9 +4,9 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ValidationResponseDto {
 
@@ -19,13 +19,17 @@ public class ValidationResponseDto {
 
     public ValidationResponseDto() {}
 
-    public ValidationResponseDto(ValidationMqResponse response) {
-        this.resourceId = response.getResourceId();
-        this.status = response.getStatus();
-        this.isValidated = response.isValidated();
-        this.totalViolations = response.getTotal();
-        this.lastValidationDateTime = response.getLastValidated();
-        this.objects = response.getResults();
+    public ValidationResponseDto(Optional<ValidationMqResponse> mqResponseOptional) {
+        mqResponseOptional.ifPresentOrElse(response -> {
+            this.resourceId = response.getResourceId();
+            this.status = response.getStatus();
+            this.isValidated = response.isValidated();
+            this.totalViolations = response.getTotal();
+            this.lastValidationDateTime = response.getLastValidated();
+            this.objects = response.getResults();
+        }, () -> {
+            this.status = ValidationStatus.ERROR;
+        });
     }
 
     public String getResourceId() {

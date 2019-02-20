@@ -16,6 +16,10 @@ public class ValidationRequestDto {
 
     public ValidationRequestDto() {}
 
+    public String getResourceId() {
+        return String.join(":", dbName, schemaName, tableName);
+    }
+
     public String getDbName() {
         return dbName;
     }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
@@ -13,7 +14,6 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.validation.IValidationService;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -73,23 +73,27 @@ public class FgistpController {
 
         validateRequest(request);
 
-        return validationService.initValidation(principal.getName(), request);
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INIT);
     }
 
     @PostMapping("/fgistp/validation/info")
     public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(
-            @Valid @RequestBody ValidationRequestDto request,
+            @RequestBody List<ValidationRequestDto> request,
             Principal principal) {
-        return validationService.getCommonInfo(principal.getName(), request);
+        validateRequest(request);
+
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INFO);
     }
 
     @PostMapping("/fgistp/validation")
     public CompletableFuture<List<ValidationResponseDto>> getValidationResults(
-            @Valid @RequestBody ValidationRequestDto request,
+            @RequestBody List<ValidationRequestDto> request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
-            @RequestParam(required = false, name = "size", defaultValue = "20") String size,
+            @RequestParam(required = false, name = "size", defaultValue = "25") String size,
             Principal principal) {
         log.info("Request get validation results: {}/{}", page, size);
+
+        validateRequest(request);
 
         int nPage;
         int nSize;
@@ -100,7 +104,7 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.getResults(request, nPage, nSize, principal.getName());
+        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequstType.GET);
     }
 
     private void validateRequest(List<ValidationRequestDto> request) {

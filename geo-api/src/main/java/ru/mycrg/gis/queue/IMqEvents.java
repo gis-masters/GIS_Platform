@@ -7,6 +7,6 @@ public interface IMqEvents {
 
     void initCreation(MqOrganizationInit msg);
 
-    void startValidation(ValidationMqRequest validationMqRequest);
+    void sendValidationRequest(ValidationMqRequest validationMqRequest);
 
 }

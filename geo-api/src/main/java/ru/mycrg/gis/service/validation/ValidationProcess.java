@@ -10,6 +10,7 @@ import ru.mycrg.gis.dto.ValidationResponseDto;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class ValidationProcess {
 
@@ -21,7 +22,7 @@ public class ValidationProcess {
     private LocalDateTime endTime;
     private ValidationStatus status;
     private Set<ValidationRequestDto> requests = new HashSet<>();
-    private List<ValidationMqResponse> responses = new ArrayList<>();
+    private Map<String, List<ValidationMqResponse>> mqResponses = new HashMap<>();
     private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
     private int doneCounter = 0;
 
@@ -32,8 +33,20 @@ public class ValidationProcess {
     }
 
     public void addResponse(ValidationMqResponse response) {
-        responses.add(response);
+        if (mqResponses.containsKey(response.getResourceId())) {
+            List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
+            responses.add(response);
+        } else {
+            List<ValidationMqResponse> responses = new ArrayList<>();
+            responses.add(response);
 
+            mqResponses.put(response.getResourceId(), responses);
+        }
+
+        handleResponse(response);
+    }
+
+    private void handleResponse(ValidationMqResponse response) {
         if (response.isDone()) {
             status = ValidationStatus.DONE;
 
@@ -56,11 +69,18 @@ public class ValidationProcess {
     }
 
     public List<ValidationResponseDto> prepareResponse() {
-        List<ValidationResponseDto> result = new ArrayList<>();
+        return requests
+                .stream()
+                .map(ValidationRequestDto::getResourceId)
+                .map(resourceId -> new ValidationResponseDto(getCompletiveResponse(resourceId)))
+                .collect(Collectors.toList());
+    }
 
-        responses.forEach(response -> result.add(new ValidationResponseDto(response)));
-
-        return result;
+    private Optional<ValidationMqResponse> getCompletiveResponse(String resourceId) {
+        return this.mqResponses
+                .get(resourceId).stream()
+                .filter(response -> !response.isPending())
+                .findFirst();
     }
 
     public UUID getId() {
@@ -95,10 +115,6 @@ public class ValidationProcess {
         this.status = status;
     }
 
-    public List<ValidationMqResponse> getResponses() {
-        return responses;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -111,4 +127,7 @@ public class ValidationProcess {
         return futureResponse;
     }
 
+    public Map<String, List<ValidationMqResponse>> getMqResponses() {
+        return mqResponses;
+    }
 }

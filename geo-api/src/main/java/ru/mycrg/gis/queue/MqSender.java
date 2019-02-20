@@ -30,8 +30,8 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void startValidation(ValidationMqRequest payload) {
-        log.info("Queue startValidation: {}", payload.getId());
+    public void sendValidationRequest(ValidationMqRequest payload) {
+        log.info("MQ sendValidationRequest: {}", payload.getId());
 
         rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload);
     }
