@@ -62,14 +62,14 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
             this.isValidationInited = false;
           } else {
             this.validationService
-                .getLayersStatistic(layers)
-                .subscribe((responses: ValidationResponse[][]) => {
+                .getLayerStatistic(layers)
+                .subscribe((responses: ValidationResponse[]) => {
                   this.isValidationInited = false;
 
                   // this.logger.info('REEEEEEEsponse INFO: ', responses);
 
-                  responses.forEach((response: ValidationResponse[]) => {
-                    this.commonInfo.set(response[0].resourceId.split(':')[2], response[0]);
+                  responses.forEach((response: ValidationResponse) => {
+                    this.commonInfo.set(response.resourceId.split(':')[2], response);
                   });
                 });
           }
@@ -97,13 +97,15 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
     this.isValidationInited = true;
 
     this.validationService
-        .validateLayer(crgLayers[0].connectionInfo)
-        .subscribe((response: ValidationResponse[]) => {
+        .validateLayers(crgLayers)
+        .subscribe((responses: ValidationResponse[]) => {
           this.isValidationInited = false;
 
-          // this.logger.info(' * * * * * *', response);
+          this.logger.info(' * * * validateLayers response* * *', responses);
 
-          this.commonInfo.set(response[0].resourceId.split(':')[2], response[0]);
+          responses.forEach((response: ValidationResponse) => {
+            this.commonInfo.set(response.resourceId.split(':')[2], response);
+          });
         });
   }
 

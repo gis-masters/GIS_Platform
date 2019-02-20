@@ -17,14 +17,12 @@ export class ValidationService {
     this.logger.info('ValidationService constructor');
   }
 
-  validateLayer(data: ConnectionInfo): Observable<ValidationResponse[]> {
-    return this.validateLayers([data]);
-  }
+  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationResponse[]> {
+    const payload = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
 
-  validateLayers(data: ConnectionInfo[]): Observable<ValidationResponse[]> {
     return this.http
                .post<ValidationResponse[]>(this.serverProp.initValidationUrl,
-                     JSON.stringify(data),
+                     JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}});
   }
 
@@ -36,6 +34,8 @@ export class ValidationService {
 
   getValidationResults_(data: ConnectionInfo, page: number, size: number, sortBy: string,
                         sortDirection: string): Observable<ValidationResponse[]> {
+    const payload = [data];
+
     let params = new HttpParams()
       .set('page', page? String(page): '0')
       .set('size', page? String(size): '25')
@@ -43,23 +43,16 @@ export class ValidationService {
 
     return this.http
                .post<ValidationResponse[]>(this.serverProp.validationUrl,
-                     JSON.stringify(data),
+                     JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}, params: params});
   }
 
-  getLayersStatistic(crgLayers: CrgLayer[]) {
-    const observableTasks = [];
-    crgLayers.forEach((crgLayer: CrgLayer) => {
-      observableTasks.push(this.getLayerStatistic(crgLayer));
-    });
+  getLayerStatistic(crgLayers: CrgLayer[]) {
+    const payload = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
 
-    return forkJoin(observableTasks);
-  }
-
-  getLayerStatistic(crgLayer: CrgLayer) {
     return this.http
                .post(this.serverProp.validationInfo,
-                 JSON.stringify(crgLayer.connectionInfo),
+                 JSON.stringify(payload),
                  {headers: {'Content-Type': 'application/json'}});
   }
 

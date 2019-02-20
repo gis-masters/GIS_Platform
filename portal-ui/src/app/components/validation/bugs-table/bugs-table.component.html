@@ -1,6 +1,9 @@
 <div *ngIf="data.objects.length < 1 && data.validated && !isLoadingResults">
   <div *ngIf="data.status === 'DONE'">
-    <h6 class="float-left" style="font-size: inherit; padding-left: 10px">Ошибок нет</h6>
+    <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
+        *ngIf="!!data.validated">Ошибок нет</h6>
+    <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
+        *ngIf="!data.validated">Валидация не выполнялась</h6>
     <h6 class="float-right" style="font-size: inherit; padding-right: 10px"
         *ngIf="!!data.lastValidationDateTime">Время последней проверки: {{data.lastValidationDateTime}}</h6>
   </div>

@@ -15,6 +15,8 @@ public class ValidationMqRequest {
     private int page = 0;
     private int size = 25;
 
+    public ValidationMqRequest() {}
+
     public ValidationMqRequest(UUID id, RequstType type, int page, int size,
                                String dbName, String schemaName, EntityTypeDto entityType) {
         this.id = id;
