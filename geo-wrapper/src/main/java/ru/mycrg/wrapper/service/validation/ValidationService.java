@@ -64,10 +64,16 @@ public class ValidationService {
 
             log.info("Found {} violations", violations.size());
             response.setResults(mapToViolations(violations));
+            response.setValidated(true);
+        } else {
+            response.setValidated(postGisStorage.isValidated(validationMqRequest));
         }
 
+        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
         response.setTotal(totalViolations);
         response.setStatus(ValidationStatus.DONE);
+
 
         mqEvents.validationResponse(response);
     }
@@ -76,6 +82,8 @@ public class ValidationService {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         lastCalculatedValidation.put(response.getResourceId(), LocalDateTime.now());
+        response.setValidated(true);
+        response.setLastValidated(LocalDateTime.now().toString());
 
         int offset = 0;
         while (true) {
@@ -114,7 +122,9 @@ public class ValidationService {
 
         response.setValidated(postGisStorage.isValidated(validationMqRequest));
         response.setTotal(postGisStorage.countTotalViolations(validationMqRequest));
-        response.setLastValidated(lastCalculatedValidation.get(response.getResourceId()));
+
+        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
         response.setStatus(ValidationStatus.DONE);
 
         mqEvents.validationResponse(response);

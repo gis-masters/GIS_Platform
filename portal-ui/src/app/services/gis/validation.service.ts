@@ -22,31 +22,32 @@ export class ValidationService {
     this.logger.info('ValidationService constructor');
   }
 
-  validateLayer(data: ConnectionInfo): Observable<any> {
+  validateLayer(data: ConnectionInfo): Observable<ValidationResponse> {
     return this.validateLayers([data]);
   }
 
-  validateLayers(data: ConnectionInfo[]): Observable<any> {
+  validateLayers(data: ConnectionInfo[]): Observable<ValidationResponse> {
     return this.http
-               .post(this.serverProp.initValidationUrl,
+               .post<ValidationResponse>(this.serverProp.initValidationUrl,
                      JSON.stringify(data),
                      {headers: {'Content-Type': 'application/json'}});
   }
 
-  getValidationResults(data: ConnectionInfo, paginator: MatPaginator, sorter: MatSort): Observable<any> {
+  getValidationResults(data: ConnectionInfo, paginator: MatPaginator, sorter: MatSort): Observable<ValidationResponse[]> {
     return this.getValidationResults_(data,
                                      paginator.pageIndex, paginator.pageSize,
                                      sorter.active, sorter.direction);
   }
 
-  getValidationResults_(data: ConnectionInfo, page: number, size: number, sortBy: string, sortDirection: string): Observable<any> {
+  getValidationResults_(data: ConnectionInfo, page: number, size: number, sortBy: string,
+                        sortDirection: string): Observable<ValidationResponse[]> {
     let params = new HttpParams()
       .set('page', page? String(page): '0')
       .set('size', page? String(size): '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection): '');
 
     return this.http
-               .post(this.serverProp.validationUrl,
+               .post<ValidationResponse[]>(this.serverProp.validationUrl,
                      JSON.stringify(data),
                      {headers: {'Content-Type': 'application/json'}, params: params});
   }
@@ -69,24 +70,44 @@ export class ValidationService {
 
 }
 
-export interface CommonLayerInfo {
-  isValidated?: boolean;
-  totalViolations?: number;
-  lastValidationDateTime?: string;
+export interface ValidationResponse {
+  resourceId: string;
+  validated: boolean;
+  totalViolations: number;
+  lastValidationDateTime: string;
+  objects: BugObject[];
+  status: string;
+}
+
+export interface BugObject {
+  classId: string;
+  objectId: string;
+  violations: ViolationItem[];
+  xMin: string;
+}
+
+export interface ViolationItem {
+  name: string;
+  value: string;
+  errorTypes: string[];
 }
 
 export class ValidationDataHolder {
 
-  private commonInfo: Map<string, CommonLayerInfo> = new Map<string, CommonLayerInfo>();
+  private commonInfo: Map<string, ValidationResponse> = new Map<string, ValidationResponse>();
 
-  getCommonInfoByLayerName(name: string): CommonLayerInfo {
+  getCommonInfoByLayerName(name: string): ValidationResponse {
     return this.commonInfo.get(name);
   }
 
-  addLayers(layers: NameHrefProjection[]) {
-    this.commonInfo.set(layers[0].name, {isValidated: true, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
-    this.commonInfo.set(layers[1].name, {isValidated: false, totalViolations: 0, lastValidationDateTime: '02.14.2019 16:00'});
-    // this.commonInfo.set(layers[2].name, {isValidated: true, totalViolations: 8273, lastValidationDateTime: '02.14.2019 16:00'});
+  addLayers(response: ValidationResponse[]) {
+    response.forEach((item: ValidationResponse) => {
+      if (item && item.resourceId) {
+        console.log(' +-+-+- ', item.resourceId, item.resourceId.split(':')[2]);
+
+        this.commonInfo.set(item.resourceId.split(':')[2], item);
+      }
+    });
   }
 
   getInfoByLayerName(name: string) {

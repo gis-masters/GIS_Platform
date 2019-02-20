@@ -1,7 +1,7 @@
 import {NGXLogger} from "ngx-logger";
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommunicationService, ObjectDto} from "../../services/communication.service";
-import {WfsFeature, WfsFeatureCollection, WfsService} from "../../services/geoserver/wfs.service";
+import {WfsFeatureCollection, WfsService} from "../../services/geoserver/wfs.service";
 import {FgistpRulesService} from "../../services/gis/fgistp-rules.service";
 
 @Component({
@@ -36,7 +36,11 @@ export class EditObjectComponent implements OnChanges {
     this.wfsService
         .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
-          this.wfsFeature = featureCollection.features[0].properties;
+          if (!featureCollection.features.length) {
+            this.logger.warn('features of object are empty: ', objectDto.id);
+          } else {
+            this.wfsFeature = featureCollection.features[0].properties;
+          }
         });
   }
 }

@@ -1,6 +1,7 @@
 import {NGXLogger} from "ngx-logger";
 import {Component, Input, OnInit} from '@angular/core';
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {ViolationItem} from "../../../services/gis/validation.service";
 
 @Component({
   selector: 'crg-violations-view',
@@ -30,10 +31,4 @@ export class ViolationsViewComponent implements OnInit {
 interface ViolationViewItem {
   propertyName: string;
   errors: string[];
-}
-
-interface ViolationItem {
-  name: string;
-  value: string;
-  errorTypes: string[];
 }

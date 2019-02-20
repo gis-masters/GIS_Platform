@@ -3,7 +3,6 @@ package ru.mycrg.common;
 import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +13,7 @@ public class ValidationMqResponse {
     private String resourceId;
     private Long total = 0L;
     private boolean isValidated;
-    private LocalDateTime lastValidated;
+    private String lastValidated;
     private ValidationStatus status;
     private RequstType requstType;
     private List<ObjectValidationResult> results = new ArrayList<>();
@@ -92,11 +91,11 @@ public class ValidationMqResponse {
         isValidated = validated;
     }
 
-    public LocalDateTime getLastValidated() {
+    public String getLastValidated() {
         return lastValidated;
     }
 
-    public void setLastValidated(LocalDateTime lastValidated) {
+    public void setLastValidated(String lastValidated) {
         this.lastValidated = lastValidated;
     }
 

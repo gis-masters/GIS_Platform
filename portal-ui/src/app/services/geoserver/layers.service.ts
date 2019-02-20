@@ -6,7 +6,7 @@ import {NameHrefProjection} from './projections';
 import {DatastoreService} from "./datastore.service";
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {filter, flatMap, map, refCount} from 'rxjs/operators';
+import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
 import {environment} from "../../../environments/environment";
 import {FgistpRulesService} from "../gis/fgistp-rules.service";
 import {publishReplay} from "rxjs/internal/operators/publishReplay";
@@ -49,20 +49,28 @@ export class LayersService {
           map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
           flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
         )
-        .subscribe(this._layers$);
+        .subscribe(value => {
+          this.logger.info('NEXT: ', value);
+
+          this._layers$.next(value);
+        });
   }
 
   fetchLayerConnectionInfo(layer: CrgLayer) {
     return this.getLayer(layer)
-      .pipe(
-        filter((layer: Layer) => !!layer),
-        flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-        map((data: any) => {
-          layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
+               .pipe(
+                 filter((layer: Layer) => !!layer),
+                 flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+                 map((data: any) => {
+                   if (data && data.dataStore) {
+                     layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
+                   } else {
+                     this.logger.warn('Error fetching connection info for layer', layer.name);
+                   }
 
-          return layer;
-        }),
-      );
+                   return layer;
+                 }),
+               );
   }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {

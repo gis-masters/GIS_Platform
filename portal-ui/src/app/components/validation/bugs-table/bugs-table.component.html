@@ -1,4 +1,4 @@
-<div *ngIf="data?.length === 0 && !isLoadingResults">
+<div *ngIf="data.objects?.length === 0 && !isLoadingResults">
   <div *ngIf="status === 'DONE'">
     <h6 class="float-left" style="font-size: inherit">Ошибок нет</h6>
     <h6 class="float-right" style="font-size: inherit">Время последней проверки: 2019.02.05</h6>
@@ -8,15 +8,15 @@
   </div>
 </div>
 
-<div class="validation-results-container mat-elevation-z8" [hidden]="data?.length === 0 && !isLoadingResults">
+<div class="validation-results-container mat-elevation-z8" [hidden]="data.objects?.length === 0 && !isLoadingResults">
   <div class="example-loading-shade" *ngIf="isLoadingResults">
     <mat-spinner></mat-spinner>
   </div>
 
-  <div [hidden]="data?.length === 0">
+  <div [hidden]="data?.objects?.length === 0">
     <div class="validation-results-table-container">
 
-      <table mat-table [dataSource]="data" class="example-table" multiTemplateDataRows
+      <table mat-table [dataSource]="data?.objects" class="example-table" multiTemplateDataRows
              matSort matSortActive="objectid">
 
         <ng-container matColumnDef="objectid">

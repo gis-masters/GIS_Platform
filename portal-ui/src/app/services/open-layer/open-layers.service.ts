@@ -65,8 +65,6 @@ export class OpenLayersService {
   }
 
   addLayerToMap(complexLayerName: string) {
-    this.logger.debug('addLayer: ', complexLayerName);
-
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
         url: this.wmsService.baseUrl,

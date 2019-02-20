@@ -5,7 +5,7 @@ import {MatPaginator, MatSort} from "@angular/material";
 import {switchMap} from "rxjs/internal/operators/switchMap";
 import {startWith} from "rxjs/internal/operators/startWith";
 import {ConnectionInfo} from "../../../services/geoserver/layers.service";
-import {ValidationService} from "../../../services/gis/validation.service";
+import {ValidationResponse, ValidationService} from "../../../services/gis/validation.service";
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
@@ -33,7 +33,15 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['objectid', 'classid', 'violationsCounter'];
-  data: any[] = [];
+  data: ValidationResponse = {
+    objects: [],
+    validated: false,
+    totalViolations: 0,
+    lastValidationDateTime: '',
+    resourceId: '',
+    status: ''
+  };
+
   isLoadingResults = true;
 
   status: string;
@@ -47,6 +55,19 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
               private communicationService: CommunicationService,
               private ruleService: FgistpRulesService,
               private validationService: ValidationService) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const step = changes['step'];
+    if (step && !step.isFirstChange()) {
+      if (step.currentValue) {
+        this._step = step.currentValue;
+
+        if (this.index === this._step) {
+          this.getValidation();
+        }
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -64,40 +85,13 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
             return of(null);
           }
         }),
-      ).subscribe(response => {
-        if (response) {
-          this.data = response.results;
-          this.totalElements = response.total;
-          this.status = response.status;
-
-          this.isLoadingResults = false;
-        }
-      });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    const step = changes['step'];
-    if (step && !step.isFirstChange()) {
-      if (step.currentValue) {
-        this._step = step.currentValue;
-
-        if (this.index === this._step) {
-          this.getValidation();
-        }
-      }
-    }
+      ).subscribe((response: ValidationResponse[]) => this.handleResponse(response));
   }
 
   getValidation() {
     this.validationService
         .getValidationResults_(this.connectionInfo, 0, this.defaultPageSize, '', 'asc')
-        .subscribe(response => {
-          this.data = response.results;
-          this.totalElements = response.total;
-          this.status = response.status;
-
-          this.isLoadingResults = false;
-        });
+        .subscribe((response: ValidationResponse[]) => this.handleResponse(response));
   }
 
   showObject(event, objectId: string) {
@@ -115,14 +109,17 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
     this.communicationService.editView.emit([{id: objectId, layerName: this.connectionInfo.tableName}]);
   }
-}
 
-export interface Violations {
-  violations: ViolationObject[];
-}
+  private handleResponse(response: ValidationResponse[]) {
+    if (response) {
 
-export interface ViolationObject {
-  name: string;
-  value: string;
-  errors: string;
+      this.logger.info('tttttttttttttttttt', response[0]);
+
+      this.data = response[0];
+      this.totalElements = response[0].totalViolations;
+      this.status = response[0].status;
+
+      this.isLoadingResults = false;
+    }
+  }
 }

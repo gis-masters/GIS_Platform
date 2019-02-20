@@ -1,7 +1,7 @@
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter, flatMap} from 'rxjs/operators';
-import {Component, Input, OnInit} from '@angular/core';
+import {filter, flatMap, takeUntil} from 'rxjs/operators';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {AuthService} from "../../../services/auth.service";
 import {CommunicationService} from "../../../services/communication.service";
@@ -9,14 +9,15 @@ import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
 import {CrgLayer, LayersService} from "../../../services/geoserver/layers.service";
-import {ValidationService} from '../../../services/gis/validation.service';
+import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'report-sidebar',
   templateUrl: './report-sidebar.component.html',
   styleUrls: ['./report-sidebar.component.css']
 })
-export class ReportSidebarComponent implements OnInit {
+export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   @Input() isActive: boolean;
 
@@ -24,6 +25,8 @@ export class ReportSidebarComponent implements OnInit {
 
   step = 0;
   isValidationInited = false;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -46,7 +49,9 @@ export class ReportSidebarComponent implements OnInit {
   ngOnInit() {
     this.layersService.layers$
         .pipe(
+          takeUntil(this.unsubscribe$),
           filter(value => !!value && !!value.length),
+          // filter(value => this.isActive),
         )
         .subscribe((layers: CrgLayer[]) => {
           this.isValidationInited = true;
@@ -58,17 +63,21 @@ export class ReportSidebarComponent implements OnInit {
           } else {
             this.validationService
                 .getLayersStatistic(layers)
-                .subscribe((response: any[]) => {
+                .subscribe((response: ValidationResponse[]) => {
                   this.isValidationInited = false;
 
-                  // TODO: ID is layerName
                   this.logger.info('REEEEEEEsponse INFO: ', response);
 
                   //TODO: сервис сам должен записать эту инфу
-                  this.validationService.validationDataHolder.addLayers(layers);
+                  this.validationService.validationDataHolder.addLayers(response);
                 });
           }
         });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   setStep(index: number) {
@@ -123,6 +132,7 @@ export class ReportSidebarComponent implements OnInit {
       return false;
     }
 
-    return infoByLayerName.isValidated && infoByLayerName.totalViolations < 1;
+    return infoByLayerName.validated && infoByLayerName.totalViolations < 1;
   }
+
 }

@@ -14,8 +14,10 @@ public class ValidationResponseDto {
     private ValidationStatus status;
     private boolean isValidated;
     private long totalViolations;
-    private LocalDateTime lastValidationDateTime;
+    private String lastValidationDateTime;
     private List<ObjectValidationResult> objects = new ArrayList<>();
+
+    public ValidationResponseDto() {}
 
     public ValidationResponseDto(ValidationMqResponse response) {
         this.resourceId = response.getResourceId();
@@ -58,11 +60,11 @@ public class ValidationResponseDto {
         this.totalViolations = totalViolations;
     }
 
-    public LocalDateTime getLastValidationDateTime() {
+    public String getLastValidationDateTime() {
         return lastValidationDateTime;
     }
 
-    public void setLastValidationDateTime(LocalDateTime lastValidationDateTime) {
+    public void setLastValidationDateTime(String lastValidationDateTime) {
         this.lastValidationDateTime = lastValidationDateTime;
     }
 

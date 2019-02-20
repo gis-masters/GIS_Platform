@@ -1,6 +1,7 @@
+import {Subject} from "rxjs";
 import {NGXLogger} from 'ngx-logger';
-import {filter} from "rxjs/operators";
 import {Router} from '@angular/router';
+import {filter, takeUntil} from "rxjs/operators";
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {MatListOption, MatSelectionList} from '@angular/material';
@@ -35,6 +36,8 @@ export class MapComponent implements OnInit, OnDestroy {
   isEditDialogShow: boolean = false;
   objectsToEdit: ObjectDto[] = [];
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
               private layersService: LayersService,
@@ -57,9 +60,14 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe(value => this.layersService.fetchLayers());
 
     this.layersService.layers$
-        .pipe(filter(value => !!value && !!value.length))
+        .pipe(
+          filter(value => !!value && !!value.length),
+          takeUntil(this.unsubscribe$)
+        )
         .subscribe((layers: CrgLayer[]) => {
           this.layers = layers;
+
+          this.logger.debug('addLayers: ', layers);
 
           this.layers.forEach((layer, index) => {
             this.openLayers
@@ -105,6 +113,13 @@ export class MapComponent implements OnInit, OnDestroy {
         });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+
+    this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
 
@@ -126,10 +141,6 @@ export class MapComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.openLayers.getMap().updateSize();
     }, 300);
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 }
