@@ -1,20 +1,15 @@
-import {forkJoin, Observable} from "rxjs";
 import {NGXLogger} from "ngx-logger";
 import {Injectable} from '@angular/core';
+import {forkJoin, Observable} from "rxjs";
 import {MatPaginator, MatSort} from "@angular/material";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ServerPropertiesService} from "../server-properties.service";
-import {NameHrefProjection} from "../geoserver/projections";
 import {ConnectionInfo, CrgLayer} from "../geoserver/layers.service";
-import {WfsFeatureCollection} from "../geoserver/wfs.service";
-import {ImportTaskShort} from "../geoserver/import.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidationService {
-
-  validationDataHolder = new ValidationDataHolder();
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
@@ -22,13 +17,13 @@ export class ValidationService {
     this.logger.info('ValidationService constructor');
   }
 
-  validateLayer(data: ConnectionInfo): Observable<ValidationResponse> {
+  validateLayer(data: ConnectionInfo): Observable<ValidationResponse[]> {
     return this.validateLayers([data]);
   }
 
-  validateLayers(data: ConnectionInfo[]): Observable<ValidationResponse> {
+  validateLayers(data: ConnectionInfo[]): Observable<ValidationResponse[]> {
     return this.http
-               .post<ValidationResponse>(this.serverProp.initValidationUrl,
+               .post<ValidationResponse[]>(this.serverProp.initValidationUrl,
                      JSON.stringify(data),
                      {headers: {'Content-Type': 'application/json'}});
   }
@@ -90,27 +85,4 @@ export interface ViolationItem {
   name: string;
   value: string;
   errorTypes: string[];
-}
-
-export class ValidationDataHolder {
-
-  private commonInfo: Map<string, ValidationResponse> = new Map<string, ValidationResponse>();
-
-  getCommonInfoByLayerName(name: string): ValidationResponse {
-    return this.commonInfo.get(name);
-  }
-
-  addLayers(response: ValidationResponse[]) {
-    response.forEach((item: ValidationResponse) => {
-      if (item && item.resourceId) {
-        console.log(' +-+-+- ', item.resourceId, item.resourceId.split(':')[2]);
-
-        this.commonInfo.set(item.resourceId.split(':')[2], item);
-      }
-    });
-  }
-
-  getInfoByLayerName(name: string) {
-    return this.commonInfo.get(name);
-  }
 }

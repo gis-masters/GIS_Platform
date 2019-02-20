@@ -1,16 +1,16 @@
+import {Subject} from "rxjs";
 import {NGXLogger} from "ngx-logger";
 import {Router} from "@angular/router";
-import {filter, flatMap, takeUntil} from 'rxjs/operators';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {AuthService} from "../../../services/auth.service";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommunicationService} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
 import {CrgLayer, LayersService} from "../../../services/geoserver/layers.service";
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
-import {Subject} from "rxjs";
 
 @Component({
   selector: 'report-sidebar',
@@ -22,6 +22,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   @Input() isActive: boolean;
 
   layers: CrgLayer[] = [];
+  commonInfo: Map<string, ValidationResponse> = new Map<string, ValidationResponse>();
 
   step = 0;
   isValidationInited = false;
@@ -51,7 +52,6 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.unsubscribe$),
           filter(value => !!value && !!value.length),
-          // filter(value => this.isActive),
         )
         .subscribe((layers: CrgLayer[]) => {
           this.isValidationInited = true;
@@ -63,13 +63,14 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
           } else {
             this.validationService
                 .getLayersStatistic(layers)
-                .subscribe((response: ValidationResponse[]) => {
+                .subscribe((responses: ValidationResponse[][]) => {
                   this.isValidationInited = false;
 
-                  this.logger.info('REEEEEEEsponse INFO: ', response);
+                  // this.logger.info('REEEEEEEsponse INFO: ', responses);
 
-                  //TODO: сервис сам должен записать эту инфу
-                  this.validationService.validationDataHolder.addLayers(response);
+                  responses.forEach((response: ValidationResponse[]) => {
+                    this.commonInfo.set(response[0].resourceId.split(':')[2], response[0]);
+                  });
                 });
           }
         });
@@ -97,10 +98,12 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
     this.validationService
         .validateLayer(crgLayers[0].connectionInfo)
-        .subscribe((data: any) => {
+        .subscribe((response: ValidationResponse[]) => {
           this.isValidationInited = false;
 
-          this.logger.info(' * * * * * *', data);
+          // this.logger.info(' * * * * * *', response);
+
+          this.commonInfo.set(response[0].resourceId.split(':')[2], response[0]);
         });
   }
 
@@ -112,27 +115,6 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   reValidate() {
     let copy = Object.assign([], this.layers);
     this.communicationService.validationDialog.emit({layers: copy});
-  }
-
-  isLayerCommonInfoExist(name: string, param: string) {
-    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
-    return infoByLayerName ? !!infoByLayerName[param] : undefined;
-  }
-
-  getInfo(name: string, param: string) {
-    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
-
-    return infoByLayerName ? infoByLayerName[param] : undefined;
-  }
-
-  isValidatedAndSuccess(name: string) {
-    let infoByLayerName = this.validationService.validationDataHolder.getInfoByLayerName(name);
-
-    if (!infoByLayerName) {
-      return false;
-    }
-
-    return infoByLayerName.validated && infoByLayerName.totalViolations < 1;
   }
 
 }

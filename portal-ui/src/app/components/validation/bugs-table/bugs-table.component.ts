@@ -44,7 +44,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   isLoadingResults = true;
 
-  status: string;
   _step: number;
   totalElements = 0;
   defaultPageSize = 25;
@@ -112,13 +111,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   private handleResponse(response: ValidationResponse[]) {
     if (response) {
-
-      this.logger.info('tttttttttttttttttt', response[0]);
-
       this.data = response[0];
       this.totalElements = response[0].totalViolations;
-      this.status = response[0].status;
-
       this.isLoadingResults = false;
     }
   }

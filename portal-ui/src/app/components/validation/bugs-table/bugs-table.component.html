@@ -1,9 +1,10 @@
-<div *ngIf="data.objects?.length === 0 && !isLoadingResults">
-  <div *ngIf="status === 'DONE'">
-    <h6 class="float-left" style="font-size: inherit">Ошибок нет</h6>
-    <h6 class="float-right" style="font-size: inherit">Время последней проверки: 2019.02.05</h6>
+<div *ngIf="data.objects.length < 1 && data.validated && !isLoadingResults">
+  <div *ngIf="data.status === 'DONE'">
+    <h6 class="float-left" style="font-size: inherit; padding-left: 10px">Ошибок нет</h6>
+    <h6 class="float-right" style="font-size: inherit; padding-right: 10px"
+        *ngIf="!!data.lastValidationDateTime">Время последней проверки: {{data.lastValidationDateTime}}</h6>
   </div>
-  <div *ngIf="status === 'ERROR'">
+  <div *ngIf="data.status === 'ERROR'">
     <h6 class="float-left" style="font-size: inherit">Ошибка валидации</h6>
   </div>
 </div>
@@ -13,10 +14,10 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <div [hidden]="data?.objects?.length === 0">
+  <div [hidden]="data.objects?.length === 0">
     <div class="validation-results-table-container">
 
-      <table mat-table [dataSource]="data?.objects" class="example-table" multiTemplateDataRows
+      <table mat-table [dataSource]="data.objects" class="example-table" multiTemplateDataRows
              matSort matSortActive="objectid">
 
         <ng-container matColumnDef="objectid">

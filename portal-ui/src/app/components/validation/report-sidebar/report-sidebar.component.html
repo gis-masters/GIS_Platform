@@ -17,17 +17,18 @@
       <mat-expansion-panel-header>
         <mat-panel-title>
           <div style="position: relative; top: 4px">
-            <mat-icon *ngIf="getInfo(layer.name, 'totalViolations') > 0" style="color: tomato">error</mat-icon>
-            <mat-icon *ngIf="!getInfo(layer.name, 'isValidated')" style="color: lightgrey">warning</mat-icon>
-            <mat-icon *ngIf="isValidatedAndSuccess(layer.name)" style="color: forestgreen">done</mat-icon>
+            <mat-icon *ngIf="commonInfo.get(layer.name)?.totalViolations > 0" style="color: tomato">error</mat-icon>
+            <mat-icon *ngIf="!commonInfo.get(layer.name)?.validated" style="color: lightgrey">warning</mat-icon>
+            <mat-icon *ngIf="commonInfo.get(layer.name)?.validated && commonInfo.get(layer.name)?.totalViolations < 1"
+                      style="color: forestgreen">done</mat-icon>
           </div>
           <span style="position: relative; top: 5px; padding-left: 10px">{{layer.title}}</span>
         </mat-panel-title>
 
-        <div class="float-right" *ngIf="isLayerCommonInfoExist(layer.name, 'totalViolations')">
-          <div *ngIf="getInfo(layer.name, 'isValidated')">
-            <mat-chip-list *ngIf="getInfo(layer.name, 'totalViolations') > 0">
-              <mat-chip style="color: tomato">{{getInfo(layer.name, 'totalViolations')}}</mat-chip>
+        <div class="float-right" *ngIf="!!commonInfo.get(layer.name)">
+          <div *ngIf="commonInfo.get(layer.name)?.totalViolations">
+            <mat-chip-list>
+              <mat-chip style="color: tomato">{{commonInfo.get(layer.name)?.totalViolations}}</mat-chip>
             </mat-chip-list>
           </div>
         </div>
