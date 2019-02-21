@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {ColumnProjection} from "../gis/gis-db.service";
-import {SimpleProperty} from "../gis/rules.service";
+import {SimpleProperty} from "../gis/fgistp-rules.service";
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {ServerPropertiesService} from '../server-properties.service';

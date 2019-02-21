@@ -1,5 +1,7 @@
 package ru.mycrg.common;
 
+import ru.mycrg.common.enums.RequstType;
+
 import java.util.UUID;
 
 public class ValidationMqRequest {
@@ -9,17 +11,23 @@ public class ValidationMqRequest {
     private String schemaName;
     private String tableName;
     private EntityTypeDto entityType;
+    private RequstType type;
     private int page = 0;
-    private int size = 20;
+    private int size = 25;
 
     public ValidationMqRequest() {}
 
-    public ValidationMqRequest(UUID id, String dbName, String schemaName, EntityTypeDto entityType) {
+    public ValidationMqRequest(UUID id, RequstType type, int page, int size,
+                               String dbName, String schemaName, EntityTypeDto entityType) {
         this.id = id;
+        this.type = type;
+        this.page = page;
+        this.size = size;
         this.dbName = dbName;
         this.schemaName = schemaName;
         this.entityType = entityType;
         this.tableName = entityType.getTableName();
+
     }
 
     public String getDbName() {
@@ -76,5 +84,13 @@ public class ValidationMqRequest {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public RequstType getType() {
+        return type;
+    }
+
+    public void setType(RequstType type) {
+        this.type = type;
     }
 }

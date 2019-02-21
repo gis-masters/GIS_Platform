@@ -9,14 +9,15 @@
   <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
                [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
     <mat-nav-list>
-      <mat-selection-list #shoes cdkDropList (cdkDropListDropped)="drop($event)" (selectionChange)="handleSelection(shoes)">
-        <div *ngIf="layerNames.length > 0">
+      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
+                          (selectionChange)="handleSelection(fizLayers)">
+        <div *ngIf="layers.length > 0">
           <mat-list-option class="example-box" style="height: 64px"
-                           *ngFor="let item of layerNames" cdkDrag>
-            <crg-layer-list-item [layerName]="item"></crg-layer-list-item>
+                           *ngFor="let layer of layers" cdkDrag>
+            <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
           </mat-list-option>
         </div>
-        <div *ngIf="layerNames.length == 0" class="empty-layers">
+        <div *ngIf="layers.length == 0" class="empty-layers">
           <span style="margin-left: 40px; margin-right: 40px">Нет слоев</span>
         </div>
       </mat-selection-list>
@@ -28,24 +29,30 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<!--<p-dialog [(visible)]="display"-->
-          <!--[closeOnEscape]="false"-->
-          <!--[resizable]="false"-->
-          <!--[positionTop]="700"-->
-          <!--[contentStyle]="{'overflow':'visible'}"-->
-          <!--[style]="{width: '100%', height: '300px'}">-->
-  <!--<p-header>-->
-    <!--Content here-->
-  <!--</p-header>-->
+<p-sidebar [(visible)]="isLayerObjectsSidebarShow" position="bottom" styleClass="{{layerObjectsSidebarSize}}"
+           [style]="{padding:'0'}"
+           [modal]="false"
+           [showCloseIcon]="true"
+           [dismissible]="true">
+  <!--<crg-layer-objects></crg-layer-objects>-->
+</p-sidebar>
 
-  <!--<p-footer>-->
-    <!--Footer-->
-  <!--</p-footer>-->
-<!--</p-dialog>-->
-
-<p-sidebar [(visible)]="display" position="bottom" styleClass="ui-sidebar-md"
+<p-sidebar [(visible)]="isBugReportSidebarShow" position="right" styleClass="{{bugReportSidebarSize}}"
+           [style]="{padding:'0'}"
            [modal]="false"
            [showCloseIcon]="false"
            [dismissible]="true">
-  <crg-layer-objects></crg-layer-objects>
+  <report-sidebar [isActive]="isBugReportSidebarShow"></report-sidebar>
 </p-sidebar>
+
+<p-dialog header="Валидация"
+          [style]="{width: '450px', height: '500px'}"
+          [(visible)]="isValidationDialogShow">
+  <crg-validation-dialog [data]="validationDialogData"></crg-validation-dialog>
+</p-dialog>
+
+<p-dialog header="Редактирование"
+          [style]="{width: '500px', height: '600px'}"
+          [(visible)]="isEditDialogShow">
+  <crg-edit-object [data]="objectsToEdit"></crg-edit-object>
+</p-dialog>

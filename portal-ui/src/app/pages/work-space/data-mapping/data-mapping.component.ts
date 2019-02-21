@@ -6,7 +6,7 @@ import {environment} from '../../../../environments/environment';
 import {GisDbService} from '../../../services/gis/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {EntityDefinition, GisService} from "../../../services/gis/rules.service";
+import {FeatureXsdDefinition, FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {GeoStyle, StylesService} from '../../../services/geoserver/styles.service';
 import {TransformationService} from '../../../services/geoserver/transformation.service';
@@ -24,7 +24,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
   workspaces = [];
   layers: LayerItem[] = [];
-  entityTypes: any = [];
+  featureXsdDefinition: any = [];
   importFlow: ImportFlow;
 
   isImportFinished = false;
@@ -37,7 +37,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               private gisDbService: GisDbService,
               private authService: AuthService,
               private stylesService: StylesService,
-              private ruleService: GisService,
+              private ruleService: FgistpRulesService,
               private layersService: LayersService,
               private router: Router,
               private logger: NGXLogger) {
@@ -79,8 +79,8 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
 
     this.ruleService.getRules()
-        .subscribe((entityTypesDefinition: EntityDefinition) => {
-          this.entityTypes = entityTypesDefinition.entityTypes;
+        .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
+          this.featureXsdDefinition = entityTypesDefinition.xsdFeatures;
         });
   }
 

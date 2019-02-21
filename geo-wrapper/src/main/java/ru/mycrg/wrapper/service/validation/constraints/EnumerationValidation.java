@@ -3,10 +3,13 @@ package ru.mycrg.wrapper.service.validation.constraints;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EnumerationValidation implements CrgConstraintValidator {
+
+    private final String type = "enumeration";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -18,5 +21,12 @@ public class EnumerationValidation implements CrgConstraintValidator {
                 .getEnumerations().stream()
                 .map((Function<ValueTitleProjection, Object>) ValueTitleProjection::getValue)
                 .collect(Collectors.toList()).contains(value.toString());
+    }
+
+    @Override
+    public void validate(Object value, SimplePropertyDto context, List<String> violations) {
+        if (!isValid(value, context)) {
+            violations.add(type);
+        }
     }
 }

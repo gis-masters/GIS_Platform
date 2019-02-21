@@ -1,22 +1,24 @@
 package ru.mycrg.wrapper.service.validation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ValidationMqRequest;
-import ru.mycrg.common.ValidationMqResponse;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
+import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
+@Transactional
 public class ValidationService {
 
     private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
@@ -25,12 +27,26 @@ public class ValidationService {
     private final IValidator validator;
     private final PostGisStorage postGisStorage;
 
-    private final int BATCH_SIZE = 100;
-    private String OBJECT_ID = "objectid";
-    private String EXTENSION_ID_KEY = "object_id";
-    private String VIOLATIONS_KEY = "violations";
+    private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
 
-    private List<ValidationMqRequest> currentRequests = new ArrayList<>();
+    private final int BATCH_SIZE = 100;
+
+    /**
+     * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
+     */
+    private String OBJECT_ID = "objectid";
+    private String CLASS_ID = "classid";
+
+    /**
+     * Название колонки(идентификатор обьекта) в таблицах содержащих данные по валидации('_extension')
+     */
+    private String EXTENSION_OBJECTID_KEY = "object_id";
+    private String EXTENSION_CLASSID_KEY = "class_id";
+
+    /**
+     * Название колонки содержащей описание ошибок валидации.
+     */
+    private String VIOLATIONS_KEY = "violations";
 
     @Autowired
     public ValidationService(IValidator validator, IMqEvents mqEvents, PostGisStorage postGisStorage) {
@@ -39,8 +55,8 @@ public class ValidationService {
         this.postGisStorage = postGisStorage;
     }
 
-    public void getResults(ValidationMqRequest validationMqRequest) {
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
+    public void getResults(ValidationMqRequest validationMqRequest) throws IOException {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
         if (totalViolations > 0) {
@@ -48,58 +64,96 @@ public class ValidationService {
 
             log.info("Found {} violations", violations.size());
             response.setResults(mapToViolations(violations));
+            response.setValidated(true);
+        } else {
+            response.setValidated(postGisStorage.isValidated(validationMqRequest));
         }
 
+        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
         response.setTotal(totalViolations);
         response.setStatus(ValidationStatus.DONE);
+
 
         mqEvents.validationResponse(response);
     }
 
     public void startValidation(ValidationMqRequest validationMqRequest) {
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest.getId());
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
+
+        lastCalculatedValidation.put(response.getResourceId(), LocalDateTime.now());
+        response.setValidated(true);
+        response.setLastValidated(LocalDateTime.now().toString());
 
         int offset = 0;
         while (true) {
             response.setResults(new ArrayList<>());
 
-            List<Map<String, Object>> batch = postGisStorage
-                    .fetchBatchOfRowsNeededValidation(validationMqRequest, BATCH_SIZE, offset);
-
-            // TODO: Возникновение ошибки при обработке пакета не должны прекращать обработку других пакетов? или должны
-            // типа если один с ошибкой то и большая вероятность что другие тоже...
-            if (offset == 0 && batch.isEmpty()) {
-                response.setStatus(ValidationStatus.EMPTY);
-
-                mqEvents.validationResponse(response);
+            var batch = postGisStorage.fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
+            if (batch.isEmpty()) {
                 break;
-            } else if (offset > 0 && batch.isEmpty()) {
-                break;
-            } else {
-                List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
-
-                postGisStorage.saveValidationResults(validationMqRequest, violationResults, EXTENSION_ID_KEY);
-
-                offset++;
             }
+
+            List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
+
+            sendPendingResponse(validationMqRequest, violationResults);
+
+            if (!violationResults.isEmpty()) {
+                mqEvents.sandValidationToSave(new ViolationsSaveDto(validationMqRequest, violationResults));
+            } else {
+                log.debug("No violations found in batch:{}. Nothing to save.", offset);
+            }
+
+            offset++;
         }
 
-        List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
-
+        // TODO: Недело кончено что посути мы ответили DONE а сохранилось оно или упало неизвестно, но пока упущу этот момент
         response.setStatus(ValidationStatus.DONE);
-        response.setResults(mapToViolations(violations));
 
         mqEvents.validationResponse(response);
     }
 
-    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) {
+    public void saveViolations(ViolationsSaveDto dto) throws NumberFormatException {
+        postGisStorage.saveValidationResults(dto);
+    }
+
+    public void getInfo(ValidationMqRequest validationMqRequest) {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
+
+        response.setValidated(postGisStorage.isValidated(validationMqRequest));
+        response.setTotal(postGisStorage.countTotalViolations(validationMqRequest));
+
+        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
+        response.setStatus(ValidationStatus.DONE);
+
+        mqEvents.validationResponse(response);
+    }
+
+    private void sendPendingResponse(ValidationMqRequest validationMqRequest,
+                                     List<ObjectValidationResult> violationResults) {
+        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
+        pendingResponse.setStatus(ValidationStatus.PENDING);
+        pendingResponse.setResults(violationResults);
+
+        mqEvents.validationResponse(pendingResponse);
+    }
+
+    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
         List<ObjectValidationResult> results = new ArrayList<>();
 
         int i = 0;
         while (i < violations.size()) {
             ObjectValidationResult objectValidationResult = new ObjectValidationResult();
-            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_ID_KEY));
-            objectValidationResult.setViolationAsString(Util.getViolations(violations.get(i), VIOLATIONS_KEY));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_OBJECTID_KEY));
+            objectValidationResult.setClassId(Util.getPropertyByKey(violations.get(i), EXTENSION_CLASSID_KEY));
+
+            String violationsAsString = Util.getViolations(violations.get(i), VIOLATIONS_KEY);
+
+            ObjectMapper mapper = new ObjectMapper();
+            PropertyViolation[] data = mapper.readValue(violationsAsString, PropertyViolation[].class);
+
+            objectValidationResult.setViolations(List.of(data));
 
             results.add(objectValidationResult);
 
@@ -116,6 +170,7 @@ public class ValidationService {
         while (i < batch.size()) {
             ObjectValidationResult objectValidationResult = validator.validate(entityType, batch.get(i));
             objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
+            objectValidationResult.setClassId(Util.getPropertyByKey(batch.get(i), CLASS_ID));
             objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));
 
             validationResults.add(objectValidationResult);

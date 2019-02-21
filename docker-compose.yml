@@ -44,57 +44,12 @@ services:
 
 
 
-  config:
-    container_name: crg-config
-    image: $DOCKER_CRG_HOST/crg-config
-    restart: always
-    environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
   registry:
     container_name: crg-registry
     image: $DOCKER_CRG_HOST/crg-registry
     restart: always
-    environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
-    depends_on:
-      - config
     ports:
       - 8761:8761
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  monitoring:
-    container_name: crg-monitoring
-    image: $DOCKER_CRG_HOST/crg-monitoring
-    restart: always
-    environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
-    depends_on:
-      - config
-    ports:
-      - 9090:8080
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
-
-  turbine-stream-service:
-    container_name: crg-turbine-service
-    image: $DOCKER_CRG_HOST/crg-turbine-service
-    restart: always
-    environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
-    depends_on:
-      - config
-    ports:
-    - 8989:8989
     logging:
       options:
         max-size: "10m"
@@ -105,10 +60,7 @@ services:
     image: $DOCKER_CRG_HOST/jwt-service
     restart: always
     environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
-    depends_on:
-      - config
     logging:
       options:
         max-size: "10m"
@@ -118,10 +70,8 @@ services:
     container_name: crg-gateway
     image: $DOCKER_CRG_HOST/crg-gateway
     restart: always
-    environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
     depends_on:
-      - config
+      - registry
     ports:
       - 8100:8100
     logging:
@@ -134,7 +84,6 @@ services:
     image: $DOCKER_CRG_HOST/geo-api
     restart: always
     environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_FLYWAY_URL: jdbc:postgresql://database:5432/gis_portal
@@ -146,7 +95,6 @@ services:
     volumes:
       - /opt/fgistp:/opt/fgistp
     depends_on:
-      - config
       - database
       - rabbitmq
       - geoserver
@@ -161,7 +109,6 @@ services:
     image: $DOCKER_CRG_HOST/geo-wrapper
     restart: always
     environment:
-      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
       SPRING_DATASOURCE_USERNAME: $CRG_USER
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
@@ -171,7 +118,6 @@ services:
       FIZ_GEOSERVER_PASSWORD: $GEOSERVER_PASSWORD
       FIZ_POSTGIS_HOST: postgis:5432
     depends_on:
-      - config
       - rabbitmq
       - geo-api
     logging:

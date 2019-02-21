@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
@@ -33,18 +35,19 @@ public class PostGisStorage {
         jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0};", dbName));
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
-        createExtensionForNewDb(jdbcTemplate);
+        JdbcTemplate jdbcTemplateNewDb = initConnection(dbName);
+
+        createExtensionForNewDb(jdbcTemplateNewDb);
 
         log.debug("Successfully created");
     }
 
-    public List<Map<String, Object>> fetchBatchOfRowsNeededValidation(ValidationMqRequest validationMqRequest,
-                                                                      int limit, int offset) {
+    @Transactional
+    public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(ValidationMqRequest validationMqRequest,
+                                                                        int limit, int offset) {
         String schema = validationMqRequest.getSchemaName();
         String table = validationMqRequest.getEntityType().getTableName();
         String extensionTableName = table + "_extension";
-
-        log.info("Table: {} with limit: {} / offset: {}", extensionTableName, limit, offset);
 
         JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
 
@@ -54,44 +57,43 @@ public class PostGisStorage {
                 "ORDER BY target.objectid " +
                 "LIMIT ? OFFSET ?", schema, table, schema, extensionTableName);
 
+        log.debug("Sql: {}", rowsNeedingValidation);
+
         return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
     }
 
-    public void saveValidationResults(ValidationMqRequest validationMqRequest,
-                                      List<ObjectValidationResult> violationResults,
-                                      String objectIdKey) {
-        String schema = validationMqRequest.getSchemaName();
-        String table = validationMqRequest.getEntityType().getTableName();
-        String extensionTableName = table + "_extension";
+    @Transactional
+    public void saveValidationResults(ViolationsSaveDto dto) throws NumberFormatException {
+        String schema = dto.getSchemaName();
+        String extensionTableName = dto.getTableName() + "_extension";
+        List<ObjectValidationResult> violationResults = dto.getViolationResults();
 
-        log.info("Save validation results for: {}.{} Count: {}", schema, table, violationResults.size());
+        log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violationResults.size());
 
-        JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
-        violationResults.forEach(validationResult -> {
-            String objectId = validationResult.getObjectId();
+        JdbcTemplate jdbcTemplate = initConnection(dto.getDbName());
+        String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
+                "VALUES (?, to_json(?::json), ?, ?, ?) " +
+                "ON CONFLICT(object_id) DO UPDATE " +
+                "SET violations = EXCLUDED.violations, _xmin = EXCLUDED._xmin, " +
+                "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id", schema, extensionTableName);
 
-            String sqlIsRowExist = String.format("SELECT * FROM %s.%s where ? = ?", schema, extensionTableName);
-            var isRowExist = jdbcTemplate.queryForList(sqlIsRowExist, objectIdKey, objectId);
+        jdbcTemplate
+                .batchUpdate(upsert, violationResults, violationResults.size(),
+                        (ps, argument) -> {
+                            int objectId = Integer.valueOf(argument.getObjectId());
+                            int classId = Integer.valueOf(argument.getClassId());
+                            int xMin = Integer.valueOf(argument.getxMin());
+                            JsonNode json = Util.convertToJson(argument.getViolations());
 
-            JsonNode json = Util.convertToJson(validationResult.getViolations());
-            String xMin = validationResult.getxMin();
-
-            if (isRowExist.isEmpty()) { // Add new row
-                String sqlAddRow = String.format("INSERT INTO %s.%s(violations, _xmin, valid, object_id) " +
-                                "VALUES ('%s', ?, ?, ?);", schema, extensionTableName, json.toString());
-
-                jdbcTemplate.update(sqlAddRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
-            } else { // Update row
-                String sqlUpdateRow = String.format("UPDATE %s.%s SET violations='%s', _xmin=?, valid=? " +
-                                "WHERE object_id = ?", schema, extensionTableName, json.toString());
-
-                jdbcTemplate.update(sqlUpdateRow,
-                        Integer.valueOf(xMin), validationResult.getViolations().isEmpty(), Integer.valueOf(objectId));
-            }
-        });
+                            ps.setInt(1, objectId);
+                            ps.setString(2, json.toString());
+                            ps.setInt(3, xMin);
+                            ps.setBoolean(4, argument.getViolations().isEmpty());
+                            ps.setInt(5, classId);
+                        });
     }
 
+    @Transactional
     public List<Map<String, Object>> getViolations(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
@@ -104,14 +106,29 @@ public class PostGisStorage {
         return initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest, limit, limit * offset);
     }
 
+    @Transactional
     public Long countTotalViolations(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
-                    schemaName, extensionTableName);
+                schemaName, extensionTableName);
 
         return initConnection(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
+    }
+
+    @Transactional
+    public boolean isValidated(ValidationMqRequest validationMqRequest) {
+        String schemaName = validationMqRequest.getSchemaName();
+        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
+
+        List<Map<String, Object>> result = initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest);
+
+        log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
+
+        return !result.isEmpty();
     }
 
     private void createExtensionForNewDb(JdbcTemplate jdbcTemplate) {
@@ -121,5 +138,4 @@ public class PostGisStorage {
     private JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
-
 }

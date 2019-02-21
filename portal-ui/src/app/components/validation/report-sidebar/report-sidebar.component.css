@@ -1,0 +1,50 @@
+@import url(../../../pages/_app/app.component.css);
+
+.validation_accordion {
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.validation_button {
+  margin-left: auto;
+}
+
+::ng-deep .validation_accordion .mat-expansion-panel-header {
+  display: grid;
+  height: 50px;
+  padding: 0 10px;
+}
+
+::ng-deep .validation_accordion .mat-paginator-container {
+  max-height: 36px;
+}
+
+/*::ng-deep .validation_accordion .mat-expansion-panel {*/
+/*  background-color: ghostwhite;*/
+/*}*/
+
+/*::ng-deep .validation_accordion .mat-accordion .mat-expansion-panel:last-of-type {*/
+/*  border-bottom-right-radius: 24px;*/
+/*  border-bottom-left-radius: 24px;*/
+/*}*/
+
+.report-close-icon {
+  color: darkslategrey;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.fiz-loading-shade {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

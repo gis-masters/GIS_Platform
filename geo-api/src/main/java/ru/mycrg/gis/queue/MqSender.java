@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.gis.dto.MqOrganizationInit;
 
-import java.util.Optional;
-
 import static ru.mycrg.common.config.MqProperties.*;
 
 @Service
@@ -32,12 +30,10 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void startValidation(Optional<ValidationMqRequest> payload) {
-        payload.ifPresent(validationMqRequest -> {
-            log.info("Queue startValidation: {}", payload.get().getId());
+    public void sendValidationRequest(ValidationMqRequest payload) {
+        log.info("MQ sendValidationRequest: {}", payload.getId());
 
-            rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload.get());
-        });
+        rabbitTemplate.convertAndSend(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload);
     }
 
 }

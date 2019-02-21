@@ -1,5 +1,5 @@
 import {ImportTask, ImportTasks} from '../geoserver/import.service';
-import {ValidationRequest} from "../validation.service";
+import {ConnectionInfo} from "../geoserver/layers.service";
 
 export class GeoUtil {
 
@@ -45,18 +45,17 @@ export class GeoUtil {
     }
   }
 
-  static getDbInfo(connectionParameters: any, layerName: string): ValidationRequest {
+  static getDbInfo(connectionParameters: any, complexLayerName: string): ConnectionInfo {
     let dbName = '';
     let schemaName = '';
     let tableName = '';
 
-    if (layerName.split(':')[1]) {
-      tableName = layerName.split(':')[1];
+    if (complexLayerName.split(':')[1]) {
+      tableName = complexLayerName.split(':')[1];
     } else {
-      tableName = layerName;
+      tableName = complexLayerName;
     }
 
-    console.log(' ** ', connectionParameters.entry);
     connectionParameters.entry.forEach((item) => {
       if (item['@key'] === 'database') {
         dbName = item['$'];

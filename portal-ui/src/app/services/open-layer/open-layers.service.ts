@@ -1,12 +1,22 @@
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import OSM from 'ol/source/OSM.js';
+import Feature from 'ol/Feature.js';
+import Point from 'ol/geom/Point.js';
+import MultiLineString from 'ol/geom/MultiLineString.js';
+import MultiPolygon from 'ol/geom/MultiPolygon.js';
+import ImageWMS from 'ol/source/ImageWMS.js';
+import MousePosition from 'ol/control/MousePosition.js';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import ImageWMS from 'ol/source/ImageWMS.js';
 import {WmsService} from '../geoserver/wms.service';
 import {TokenStorageService} from '../token-storage.service';
-import {Image as ImageLayer, Tile as TileLayer} from 'ol/layer.js';
+import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
+import {Fill, Stroke, Style} from 'ol/style.js';
+import {OSM, Vector as VectorSource} from 'ol/source.js';
+import {WfsFeature, WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
+import {defaults as defaultControls} from 'ol/control.js';
+import {createStringXY} from 'ol/coordinate.js';
+import {ObjectDto} from "../communication.service";
 
 export let BEARER_TOKEN = '';
 
@@ -17,9 +27,19 @@ export class OpenLayersService {
 
   private _map;
 
+  view: View;
+  bugObjectLayer: VectorLayer;
+
+  mousePositionControl = new MousePosition({
+    coordinateFormat: createStringXY(4),
+    projection: 'EPSG:4326',
+    undefinedHTML: '&nbsp;'
+  });
+
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
-              private wmsService: WmsService) {
+              private wmsService: WmsService,
+              private wfsService: WfsService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
   }
 
@@ -28,26 +48,27 @@ export class OpenLayersService {
       // Слой подлжка
       new TileLayer({
         source: new OSM()
-      }),
+      })
     ];
 
+    this.view = new View({
+      center: [3803333, 5542377],
+      zoom: 13
+    });
+
     this._map = new Map({
+      controls: defaultControls().extend([this.mousePositionControl]),
       layers: layers,
       target: 'fiz-openLayer-map',
-      view: new View({
-        center: [3803333, 5542377],
-        zoom: 13
-      })
+      view: this.view
     });
   }
 
-  addLayer(layerName: string) {
-    this.logger.debug('addLayer: ', layerName);
-
+  addLayerToMap(complexLayerName: string) {
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
         url: this.wmsService.baseUrl,
-        params: {'LAYERS': layerName},
+        params: {'LAYERS': complexLayerName},
         imageLoadFunction: this.fizImageLoadFunction,
         ratio: 1,
         serverType: 'geoserver',
@@ -56,6 +77,7 @@ export class OpenLayersService {
     });
 
     imageLayer.setVisible(false);
+
     this._map.addLayer(imageLayer);
 
     return imageLayer;
@@ -65,15 +87,16 @@ export class OpenLayersService {
    * Принимает список включенных слоев.
    * Проходит по всем слоям на карте проставляет true для всех переданных слоев и false для всех остальных.
    *
-   * @param layers - Навания включенных слоев.
+   * @param layerNames - Навания включенных слоев.
    */
-  changeLayersVisibility(layers: any[]) {
+  changeLayersVisibility(layerNames: any[]) {
     this._map.getLayers().forEach((vrLayer: any) => {
       const source = vrLayer.getSource();
+
       if (source && source.params_ && source.params_['LAYERS']) {
         const layerName = source.params_['LAYERS'];
         let isExist = false;
-        layers.forEach(value => {
+        layerNames.forEach(value => {
           if (layerName.includes(value)) {
             isExist = true;
           }
@@ -104,8 +127,6 @@ export class OpenLayersService {
    * Все слоя типа 'IMAGE'
    */
   public imageLayers() {
-    // return this.map.getLayers().filter((vrLayer) => vrLayer.type === 'IMAGE');
-
     const result = [];
     this._map.getLayers().forEach((vrLayer) => {
       if (vrLayer.type === 'IMAGE') {
@@ -160,4 +181,83 @@ export class OpenLayersService {
     this._map = value;
   }
 
+  /**
+   * Получаем обьект из wfs позиционируемся и подсвечиваем.
+   * @param objectDto
+   */
+  showObject(objectDto: ObjectDto) {
+    this.wfsService
+        .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
+        .subscribe((featureCollection: WfsFeatureCollection) => {
+          let wfsFeature = featureCollection.features[0];
+          if (!wfsFeature || !wfsFeature.geometry) {
+            this.logger.warn('Wrong feature: ', wfsFeature);
+          } else {
+            this.positionToObject(wfsFeature);
+            this.paintObject(wfsFeature);
+          }
+        });
+  }
+
+  removeBugObjectsLayer() {
+    if (this.bugObjectLayer) {
+      this._map.removeLayer(this.bugObjectLayer);
+    }
+  }
+
+  private positionToObject(feature: WfsFeature) {
+    let view = this._map.getView();
+    let size = this._map.getSize();
+
+    if (feature.geometry.type === 'Point') {
+      view.centerOn(feature.geometry.coordinates, size, [570, 500]);
+    } else if (feature.geometry.type === 'MultiLineString') {
+      view.fit(new MultiLineString(feature.geometry.coordinates), {constrainResolution: false});
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      view.fit(new MultiPolygon(feature.geometry.coordinates), {constrainResolution: false});
+    } else {
+      console.warn('Not supported geometry type: ', feature.geometry);
+    }
+  }
+
+  private paintObject(feature: WfsFeature) {
+    this.removeBugObjectsLayer();
+
+    let drawFeature;
+    if (feature.geometry.type === 'Point') {
+      drawFeature = new Feature({
+        geometry: new Point(feature.geometry.coordinates),
+      });
+    } else if (feature.geometry.type === 'MultiLineString') {
+      drawFeature = new Feature({
+        geometry: new MultiLineString(feature.geometry.coordinates),
+      });
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      drawFeature = new Feature({
+        geometry: new MultiPolygon(feature.geometry.coordinates),
+      });
+    }
+    else {
+      console.warn('Not supported geometry type: ', feature.geometry);
+    }
+
+    const vector = new VectorLayer({
+      source: new VectorSource({
+        features: [drawFeature]
+      }),
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.3)'
+        }),
+        stroke: new Stroke({
+          color: '#ff0018',
+          width: 2
+        })
+      })
+    });
+
+    this.bugObjectLayer = vector;
+
+    this._map.addLayer(vector);
+  }
 }

@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+---
+
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    username: postgres
+    password: 314
+
+security:
+  jwt:
+    secret: vjp4lLW_QmjMHiUw1OBVRIZH
+    admin_name: admin
+    admin_pass: geoserver
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://crg-registry:8761/eureka/
+
+server:
+  port: 9000

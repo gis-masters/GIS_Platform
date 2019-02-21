@@ -1,22 +1,22 @@
 package ru.mycrg.gis.controller;
 
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.validation.IValidationService;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class FgistpController {
@@ -66,21 +66,34 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public HttpStatus initValidation(@RequestBody List<ValidationRequestDto> request, Principal principal) {
-        log.info("Request validation: {}", request.size());
+    public CompletableFuture<List<ValidationResponseDto>> initValidation(
+            @RequestBody List<ValidationRequestDto> request,
+            Principal principal) {
+        log.debug("Init validation for: {} classes", request.size());
 
-        validationService.initValidation(principal.getName(), request);
+        validateRequest(request);
 
-        return HttpStatus.ACCEPTED;
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INIT);
+    }
+
+    @PostMapping("/fgistp/validation/info")
+    public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(
+            @RequestBody List<ValidationRequestDto> request,
+            Principal principal) {
+        validateRequest(request);
+
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INFO);
     }
 
     @PostMapping("/fgistp/validation")
-    public ValidationMqResponse getValidationResults(
-            @Valid @RequestBody ValidationRequestDto request,
+    public CompletableFuture<List<ValidationResponseDto>> getValidationResults(
+            @RequestBody List<ValidationRequestDto> request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
-            @RequestParam(required = false, name = "size", defaultValue = "20") String size,
+            @RequestParam(required = false, name = "size", defaultValue = "25") String size,
             Principal principal) {
         log.info("Request get validation results: {}/{}", page, size);
+
+        validateRequest(request);
 
         int nPage;
         int nSize;
@@ -91,16 +104,19 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        ValidationMqResponse response = null;
-        try {
-            response = validationService
-                    .getResults(request, nPage, nSize, principal.getName())
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error(" -------- {}", e.getLocalizedMessage());
-        }
+        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequstType.GET);
+    }
 
-        return response;
+    private void validateRequest(List<ValidationRequestDto> request) {
+        request.forEach(requestDto -> {
+            String dbName = requestDto.getDbName();
+            String schemaName = requestDto.getSchemaName();
+            String tableName = requestDto.getTableName();
+
+            if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
+                throw new CrgBadRequestException("Incorrect data");
+            }
+        });
     }
 
 }

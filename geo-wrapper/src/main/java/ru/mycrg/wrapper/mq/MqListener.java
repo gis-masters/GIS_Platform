@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
+import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
@@ -57,18 +59,22 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void startValidation(final ValidationMqRequest validationMqRequest) {
-        log.info("Получено сообщение, startValidation: {}", validationMqRequest.getId());
+    public void validation(final ValidationMqRequest mqRequest) {
+        log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
 
         try {
-            if (validationMqRequest.getEntityType() != null) {
-                validationService.startValidation(validationMqRequest);
+            if (mqRequest.getType() == RequstType.INIT) {
+                validationService.startValidation(mqRequest);
+            } else if (mqRequest.getType() == RequstType.GET) {
+                validationService.getResults(mqRequest);
+            } else if (mqRequest.getType() == RequstType.INFO) {
+                validationService.getInfo(mqRequest);
             } else {
-                validationService.getResults(validationMqRequest);
+                log.warn("Not supported type");
             }
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(validationMqRequest.getId(), ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(mqRequest.getId(), ValidationStatus.ERROR));
         }
     }
 
@@ -86,6 +92,18 @@ public class MqListener {
             log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
         } catch (IOException e) {
             log.error("Не удалось распарсить сообщение: {}", result);
+        }
+    }
+
+    @RabbitListener(queues = MqProperties.QUEUE_VIOLATION_SAVE)
+    public void saveViolations(final ViolationsSaveDto dto) {
+        log.info("Получено сообщение, saveViolations");
+
+        try {
+            validationService.saveViolations(dto);
+        } catch (Exception e) {
+            log.error("Не удалось сохранить результаты валидации: {}.{}.{}",
+                    dto.getDbName(), dto.getSchemaName(), dto.getTableName(), e);
         }
     }
 

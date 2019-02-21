@@ -1,67 +1,76 @@
-import {forkJoin, Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {GeoUtil} from "../util/GeoUtil";
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
-import {catchError, filter, flatMap, map} from 'rxjs/operators';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {environment} from "../../../environments/environment";
-import {ServerPropertiesService} from '../server-properties.service';
-import {GeoUtil} from "../util/GeoUtil";
-import {ValidationRequest} from "../validation.service";
 import {DatastoreService} from "./datastore.service";
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
+import {environment} from "../../../environments/environment";
+import {FgistpRulesService} from "../gis/fgistp-rules.service";
+import {publishReplay} from "rxjs/internal/operators/publishReplay";
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService {
 
+  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>([]);
+  public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
+    .pipe(
+      // компоненты при подписке должны видеть одно последнее значение в потоке
+      publishReplay(1),
+      refCount()
+    );
+
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
+              private ruleService: FgistpRulesService,
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     logger.info('LayersService start');
   }
 
   /**
-   * Получить слоя в простом виде: имя и сслыка на полное представление
+   * Получаем слоя с геосервера.
    */
-  getAll(): Observable<NameHrefProjection[] | any> {
-    return this.http
-               .get<GeoLayer>(this.layersUrl)
+  fetchLayers(): void {
+    this.http
+        .get<GeoLayer>(this.layersUrl)
+        .pipe(
+          filter(value => value && !!value['layers']),
+          map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
+          map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
+          map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
+          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
+        )
+        .subscribe(value => {
+          this.logger.info('NEXT: ', value);
+
+          this._layers$.next(value);
+        });
+  }
+
+  fetchLayerConnectionInfo(layer: CrgLayer) {
+    return this.getLayer(layer)
                .pipe(
-                 filter(value => value && !!value['layers']),
-                 map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
-                 map((layers: NameHrefProjection[]) => {
-                   return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+                 filter((layer: Layer) => !!layer),
+                 flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+                 map((data: any) => {
+                   if (data && data.dataStore) {
+                     layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
+                   } else {
+                     this.logger.warn('Error fetching connection info for layer', layer.name);
+                   }
+
+                   return layer;
                  }),
-                 catchError(this.baseService.handleError('getAllLayers', []))
                );
-  }
-
-  /**
-   * Получить полную информацию о слое
-   * @param layer Простое предствление слоя
-   */
-  getLayer(layer: NameHrefProjection): Observable<Layer> {
-    return this.http
-               .get<Layer>(layer.href);
-  }
-
-  /**
-   * Получить полную информацию о слоях
-   * @param layers Список слоев
-   */
-  getLayers(layers: NameHrefProjection[]) {
-    const observableTasks = [];
-    layers.forEach((layer: NameHrefProjection) => {
-      observableTasks.push(this.getLayer(layer));
-    });
-
-    return forkJoin(observableTasks);
   }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
@@ -78,17 +87,67 @@ export class LayersService {
     this.logger.info('payload: ', payload);
 
     return this.http
-               .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
+      .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
   }
 
-  fetchLayerConnectionInfo(layer: NameHrefProjection) {
-    return this.getLayer(layer)
-               .pipe(
-                 filter((layer: Layer) => !!layer),
-                 flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
-                 map((data: any) => GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name)),
-               );
+  /**
+   * Получить полную информацию о слое
+   * @param layer Простое предствление слоя
+   */
+  private getLayer(layer: NameHrefProjection): Observable<Layer> {
+    return this.http
+      .get<Layer>(layer.href);
   }
+
+  private filterScratchLayers(layers: NameHrefProjection[]) {
+    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+  }
+
+  private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
+    const observableTasks = [];
+    crgLayers.forEach((layer: CrgLayer) => {
+      observableTasks.push(this.fetchLayerConnectionInfo(layer));
+    });
+
+    return forkJoin(observableTasks);
+  }
+
+  private mergeWithRules(layers: NameHrefProjection[]) {
+    const crgLayers: CrgLayer[] = [];
+
+    layers.forEach((layer: NameHrefProjection) => {
+      let layerName = layer.name.split(':')[1];
+      let layerTitle = this.ruleService.getLayerTitle(layerName);
+
+      crgLayers.push({
+        name: layerName,
+        complexName: layer.name,
+        href: layer.href,
+        title: layerTitle,
+        connectionInfo: {
+          dbName: '',
+          schemaName: '',
+          tableName: ''
+        }
+      })
+    });
+
+    return crgLayers;
+  }
+}
+
+export interface CrgLayer {
+  name: string;
+  complexName: string;
+  title: string;
+  href: string;
+  connectionInfo: ConnectionInfo;
+}
+
+export interface ConnectionInfo {
+  dbName: string;
+  schemaName: string;
+  tableName: string;
 }
 
 export interface GeoLayer {

@@ -18,8 +18,6 @@ export class DatastoreService {
   getByLayerResource(layer: Layer): Observable<any> {
     let url = StringUtil.getHrefFromBlyadskiyJson(layer);
 
-    this.logger.info(' ------------ ', url);
-
     return this.http
                .get<any>(url);
   }

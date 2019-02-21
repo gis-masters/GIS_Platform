@@ -16,6 +16,7 @@ export class ServerPropertiesService {
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
   private _validationUrl = this._baseUrl + '/fgistp/validation';
   private _initValidationUrl = this._validationUrl + '/init';
+  private _validationInfo = this._validationUrl + '/info';
 
   constructor() {
   }
@@ -24,72 +25,40 @@ export class ServerPropertiesService {
     return this._host;
   }
 
-  set host(value: string) {
-    this._host = value;
-  }
-
   get port(): number {
     return this._port;
-  }
-
-  set port(value: number) {
-    this._port = value;
   }
 
   get baseUrl(): string {
     return this._baseUrl;
   }
 
-  set baseUrl(value: string) {
-    this._baseUrl = value;
-  }
-
   get geoServerUrl(): string {
     return this._geoServerUrl;
-  }
-
-  set geoServerUrl(value: string) {
-    this._geoServerUrl = value;
   }
 
   get authServerUrl(): string {
     return this._authServerUrl;
   }
 
-  set authServerUrl(value: string) {
-    this._authServerUrl = value;
-  }
-
   get organizationsUrl(): string {
     return this._organizationsUrl;
-  }
-
-  set organizationsUrl(value: string) {
-    this._organizationsUrl = value;
   }
 
   get rulesUrl(): string {
     return this._rulesUrl;
   }
 
-  set rulesUrl(value: string) {
-    this._rulesUrl = value;
-  }
-
   get initValidationUrl(): string {
     return this._initValidationUrl;
-  }
-
-  set initValidationUrl(value: string) {
-    this._initValidationUrl = value;
   }
 
   get validationUrl(): string {
     return this._validationUrl;
   }
 
-  set validationUrl(value: string) {
-    this._validationUrl = value;
+  get validationInfo(): string {
+    return this._validationInfo;
   }
 
 }

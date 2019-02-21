@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+---
+
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/postgres
+    username: fiz
+    password: 314
+    hikari:
+      maximum-pool-size: 1
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+fiz:
+  geoserver-host: 127.0.0.1:8100
+  geoserver-user: admin
+  geoserver-password: geoserver
+  postgis-host: localhost:5434

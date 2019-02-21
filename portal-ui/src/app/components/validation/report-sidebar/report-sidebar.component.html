@@ -1,0 +1,49 @@
+<div>
+  <mat-icon (click)="closeSidebar()" class="report-close-icon">close</mat-icon>
+  <button mat-mini-fab color="primary" class="float-right" (click)="reValidate()"
+          style="margin-top: 2px; margin-right: 2px">
+    <mat-icon>loop</mat-icon>
+  </button>
+</div>
+
+<div class="fiz-loading-shade" *ngIf="isValidationInited">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div>
+  <mat-accordion class="validation_accordion">
+    <mat-expansion-panel *ngFor="let layer of layers; let index = index"
+                         [expanded]="step === (index+1)" (opened)="setStep(index+1)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div style="position: relative; top: 4px">
+            <mat-icon *ngIf="commonInfo.get(layer.name)?.totalViolations > 0" style="color: tomato">error</mat-icon>
+            <mat-icon *ngIf="!commonInfo.get(layer.name)?.validated" style="color: lightgrey">warning</mat-icon>
+            <mat-icon *ngIf="commonInfo.get(layer.name)?.validated && commonInfo.get(layer.name)?.totalViolations < 1"
+                      style="color: forestgreen">done</mat-icon>
+          </div>
+          <span style="position: relative; top: 5px; padding-left: 10px">{{layer.title}}</span>
+        </mat-panel-title>
+
+        <div class="float-right" *ngIf="!!commonInfo.get(layer.name)">
+          <div *ngIf="commonInfo.get(layer.name)?.totalViolations">
+            <mat-chip-list>
+              <mat-chip style="color: tomato">{{commonInfo.get(layer.name)?.totalViolations}}</mat-chip>
+            </mat-chip-list>
+          </div>
+        </div>
+      </mat-expansion-panel-header>
+
+      <div>
+        <crg-bugs-table [connectionInfo]="layer.connectionInfo"
+                        [step]="step" [index]="index + 1" [isActive]="isActive"></crg-bugs-table>
+      </div>
+
+      <mat-action-row style="padding: 0">
+        <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
+        <button mat-button *ngIf="index < (layers.length - 1) " color="primary" (click)="nextStep()">Следующий</button>
+        <button mat-button *ngIf="index == (layers.length - 1) " color="primary" (click)="nextStep()">Закончить</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

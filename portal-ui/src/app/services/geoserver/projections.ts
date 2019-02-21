@@ -3,11 +3,6 @@ export interface NameHrefProjection {
   href: string;
 }
 
-export interface NameAliasProjection {
-  name: string;
-  alias: string;
-}
-
 export interface ValueTitleProjection {
   value: string;
   title: string;
