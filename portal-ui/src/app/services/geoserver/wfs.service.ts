@@ -10,7 +10,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 })
 export class WfsService {
 
-  private _fwsUrl = this.serverProp.geoServerUrl;
+  private _wfsUrl = this.serverProp.geoServerUrl;
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
@@ -35,17 +35,17 @@ export class WfsService {
   private prepareLink(typeName: string, objectId: string) {
     const workspaceName = typeName.split(':')[0];
 
-    return this._fwsUrl + '/' + workspaceName + '/ows'
+    return this._wfsUrl + '/' + workspaceName + '/ows'
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
-  get fwsUrl(): string {
-    return this._fwsUrl;
+  get wfsUrl(): string {
+    return this._wfsUrl;
   }
 
-  set fwsUrl(value: string) {
-    this._fwsUrl = value;
+  set wfsUrl(value: string) {
+    this._wfsUrl = value;
   }
 }
 
