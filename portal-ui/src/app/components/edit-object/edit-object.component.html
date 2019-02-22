@@ -1,6 +1,14 @@
 <div class="edit-content">
   <div *ngIf="wfsFeature">
     Редактируем обьект:
-    <pre>{{wfsFeature | json}}</pre>
+    <pre>{{wfsFeature.properties | json}}</pre>
   </div>
+
+  <div *ngIf="!!wfsFeature?.properties?.name">
+      <input matInput type="text" placeholder="Фильтр" [(ngModel)]="newName">
+  </div>
+
+  <button mat-button mat-icon-button (click)="editFeature()">
+    Edit
+  </button>
 </div>
