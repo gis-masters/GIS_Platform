@@ -1,0 +1,9 @@
+mat-selection-list {
+  display: inline-block;
+  overflow: auto;
+}
+.LayerName {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

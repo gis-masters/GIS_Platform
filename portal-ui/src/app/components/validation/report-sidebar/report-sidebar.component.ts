@@ -5,12 +5,13 @@ import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {AuthService} from "../../../services/auth.service";
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {CommunicationService} from "../../../services/communication.service";
+import {CommunicationService, ObjectDto} from "../../../services/communication.service";
 import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
 import {CrgLayer, LayersService} from "../../../services/geoserver/layers.service";
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
+import {animate, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'report-sidebar',
@@ -26,6 +27,9 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   step = 0;
   isValidationInited = false;
+
+  isEditMode = false;
+  objectsToEdit: ObjectDto[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -66,13 +70,22 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
                 .subscribe((responses: ValidationResponse[]) => {
                   this.isValidationInited = false;
 
-                  // this.logger.info('REEEEEEEsponse INFO: ', responses);
-
-                  responses.forEach((response: ValidationResponse) => {
-                    this.commonInfo.set(response.resourceId.split(':')[2], response);
-                  });
+                  if (!responses) {
+                    this.logger.warn('Cant get layer info', responses);
+                  } else {
+                    responses.forEach((response: ValidationResponse) => {
+                      this.commonInfo.set(response.resourceId.split(':')[2], response);
+                    });
+                  }
                 });
           }
+        });
+
+    this.communicationService
+        .editView$()
+        .subscribe((objects: ObjectDto[]) => {
+          this.isEditMode = true;
+          this.objectsToEdit = objects;
         });
   }
 
@@ -119,4 +132,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
     this.communicationService.validationDialog.emit({layers: copy});
   }
 
+  switchMode() {
+    this.isEditMode = !this.isEditMode;
+  }
 }

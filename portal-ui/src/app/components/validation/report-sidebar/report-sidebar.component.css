@@ -28,23 +28,3 @@
 /*  border-bottom-right-radius: 24px;*/
 /*  border-bottom-left-radius: 24px;*/
 /*}*/
-
-.report-close-icon {
-  color: darkslategrey;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.fiz-loading-shade {
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 56px;
-  right: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}

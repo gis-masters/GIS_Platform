@@ -75,3 +75,7 @@
   height: 100%;
   width: 100%;
 }
+
+::ng-deep .ui-dialog-content .ui-widget-content {
+  height: 700px;
+}
