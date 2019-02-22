@@ -22,7 +22,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  layers: CrgLayer[] = [];
+  layers: CrgLayer[]=[];
 
   isLayerObjectsSidebarShow: boolean = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
@@ -104,12 +104,120 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .validationDialog$()
         .subscribe((data: ValidationDialogData) => {
-          if (data && data.layers.length > 0) {
+          // if (data && data.layers.length > 0) {
             this.isValidationDialogShow = true;
-            this.validationDialogData = data;
-          } else {
-            this.logger.warn('Empty data: ', data);
-          }
+            this.validationDialogData = {
+              layers: [
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf  sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf  sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf  sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf  sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf  sd sdf sdf sdf sdf sdf sdsdfsdf sdfsdf sdf sdf sfd d sdf sdf sdf sdf sdf sdsdfsdf '
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+                {
+                  complexName: '',
+                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
+                  href: '',
+                  name: '',
+                  title: 'sd sdf sdf sdf sdf sdf'
+                },
+              ]
+            };
+          // } else {
+          //   this.logger.warn('Empty data: ', data);
+          // }
         });
   }
 

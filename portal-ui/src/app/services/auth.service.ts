@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   validateAuth() {
-    if (this.router.isActive('/login', false)) {
+    /*if (this.router.isActive('/login', false)) {
       if (this._authenticated) {
         this.router.navigateByUrl('/workspace');
       }
@@ -48,7 +48,7 @@ export class AuthService {
       if (!this._authenticated) {
         this.router.navigate(['/']);
       }
-    }
+    }*/
   }
 
   logout() {
