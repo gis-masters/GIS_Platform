@@ -22,7 +22,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  layers: CrgLayer[] = [];
+  layers: CrgLayer[]=[];
 
   isLayerObjectsSidebarShow: boolean = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
