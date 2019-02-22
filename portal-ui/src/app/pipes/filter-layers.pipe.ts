@@ -1,18 +1,19 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {NameHrefProjection} from "../services/geoserver/projections";
+import {CrgLayer} from "../services/geoserver/layers.service";
 
 @Pipe({
   name: 'filterLayers'
 })
 export class FilterLayersPipe implements PipeTransform {
 
-  transform(layers: NameHrefProjection[], filterTerm: string): any {
+  transform(layers: CrgLayer[], filterTerm: string): any {
     if (!layers || !filterTerm) {
       return layers;
     }
 
-    return layers.filter((layer: NameHrefProjection) =>
-      layer.name.toLocaleLowerCase().indexOf(filterTerm.toLocaleLowerCase()) !== -1);
+    return layers.filter((layer: CrgLayer) =>
+      layer.title.toLocaleLowerCase().indexOf(filterTerm.toLocaleLowerCase()) !== -1);
   }
 
 }

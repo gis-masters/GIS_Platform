@@ -1,14 +1,43 @@
-<div class="edit-content">
-  <div *ngIf="wfsFeature">
-    Редактируем обьект:
-    <pre>{{wfsFeature.properties | json}}</pre>
+<div class="container-fluid">
+  <div *ngIf="!isFeatureTypeLoaded" class="fiz-loading-shade">
+      <mat-spinner></mat-spinner>
   </div>
 
-  <div *ngIf="!!wfsFeature?.properties?.name">
-      <input matInput type="text" placeholder="Фильтр" [(ngModel)]="newName">
+  <div class="row">
+    <div class="col-12">
+      <button mat-stroked-button (click)="close()">Отмена</button>
+      <button mat-stroked-button color="primary" (click)="editFeature()">Сохранить</button>
+    </div>
   </div>
 
-  <button mat-button mat-icon-button (click)="editFeature()">
-    Edit
-  </button>
+  <div class="row" *ngIf="isFeatureTypeLoaded">
+    <form class="example-form col-md-12">
+      <div *ngFor="let featureProperty of featureType.properties">
+        <div *ngIf="featureProperty.valueType.includes('STRING')" class="col-12 fiz-edit-item">
+          <mat-form-field class="example-full-width">
+            <span>"{{featureProperty.title}}"</span>
+            <input matInput type="text" value="">
+          </mat-form-field>
+        </div>
+        <div *ngIf="featureProperty.valueType.includes('CHOICE')" class="fiz-edit-item">
+          <mat-select placeholder="{{featureProperty.title}}">
+            <mat-option *ngFor="let enumOption of featureProperty.enumerations"
+                        [value]="enumOption.value">
+              {{enumOption.value}}
+            </mat-option>
+          </mat-select>
+        </div>
+        <div *ngIf="featureProperty.valueType.includes('INT')" class="fiz-edit-item">
+          <mat-form-field class="example-full-width">
+            <input matInput type="number" placeholder="{{featureProperty.title}}" value="">
+          </mat-form-field>
+        </div>
+        <div *ngIf="featureProperty.valueType.includes('DOUBLE')" class="fiz-edit-item">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" placeholder="{{featureProperty.title}}" value="DOUBLE here">
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

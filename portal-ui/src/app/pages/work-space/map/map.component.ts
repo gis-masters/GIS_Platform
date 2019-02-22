@@ -22,7 +22,7 @@ export class MapComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
-  layers: CrgLayer[]=[];
+  layers: CrgLayer[] = [];
 
   isLayerObjectsSidebarShow: boolean = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
@@ -94,12 +94,12 @@ export class MapComponent implements OnInit, OnDestroy {
           this.openLayers.showObject(objectDto);
         });
 
-    this.communicationService
-        .editView$()
-        .subscribe((objects: ObjectDto[]) => {
-          this.isEditDialogShow = true;
-          this.objectsToEdit = objects;
-        });
+    // this.communicationService
+    //     .editView$()
+    //     .subscribe((objects: ObjectDto[]) => {
+    //       this.isEditDialogShow = true;
+    //       this.objectsToEdit = objects;
+    //     });
 
     this.communicationService
         .validationDialog$()

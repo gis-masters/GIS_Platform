@@ -16,6 +16,7 @@ import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {AppComponent} from './pages/_app/app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
+import {EditObjectComponent} from './components/edit-object/edit-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
 import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
@@ -27,7 +28,6 @@ import {ValidationDialogComponent} from './components/validation/validation-dial
 import {JwtInterceptorService} from "./services/jwt-interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
-import {EditObjectComponent} from './components/edit-object/edit-object.component';
 
 @NgModule({
   declarations: [
