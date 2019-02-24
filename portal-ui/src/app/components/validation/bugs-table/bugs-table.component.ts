@@ -106,6 +106,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   editObject(event, objectId: string) {
     event.stopPropagation();
 
+    this.communicationService.gotoObject.emit({id: objectId, layerName: this.connectionInfo.tableName});
     this.communicationService.editView.emit([{id: objectId, layerName: this.connectionInfo.tableName}]);
   }
 
