@@ -51,13 +51,6 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queuePostgreValidation()).to(fanoutExchangePostgreValidation());
     }
 
-    // Config "save violations result" exchange/queue
-    @Bean public Queue queueViolationSave() { return new Queue(QUEUE_VIOLATION_SAVE, false);}
-    @Bean public FanoutExchange fanoutExchangeViolationSave() { return new FanoutExchange(FANOUT_VIOLATION_SAVE);}
-    @Bean public Binding bindingViolationSave() {
-        return BindingBuilder.bind(queueViolationSave()).to(fanoutExchangeViolationSave());
-    }
-
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();

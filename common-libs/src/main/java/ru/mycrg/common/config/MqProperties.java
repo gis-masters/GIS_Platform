@@ -22,7 +22,4 @@ public class MqProperties {
     public static final String QUEUE_POSTGRE_VALIDATION = "postgre.validation";
     public static final String KEY_POSTGRE_VALIDATION = "key.postgre.validation";
 
-    public static final String FANOUT_VIOLATION_SAVE = "fanout.save.violations";
-    public static final String QUEUE_VIOLATION_SAVE = "save.violations";
-    public static final String KEY_VIOLATION_SAVE = "key.save.violations";
 }

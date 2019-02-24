@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
-import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
@@ -63,14 +62,14 @@ public class PostGisStorage {
     }
 
     @Transactional
-    public void saveValidationResults(ViolationsSaveDto dto) throws NumberFormatException {
-        String schema = dto.getSchemaName();
-        String extensionTableName = dto.getTableName() + "_extension";
-        List<ObjectValidationResult> violationResults = dto.getViolationResults();
+    public void saveValidationResults(ValidationMqRequest mqRequest,
+                                      List<ObjectValidationResult> violations) throws NumberFormatException {
+        String schema = mqRequest.getSchemaName();
+        String extensionTableName = mqRequest.getTableName() + "_extension";
 
-        log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violationResults.size());
+        log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
-        JdbcTemplate jdbcTemplate = initConnection(dto.getDbName());
+        JdbcTemplate jdbcTemplate = initConnection(mqRequest.getDbName());
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +
                 "ON CONFLICT(object_id) DO UPDATE " +
@@ -78,7 +77,7 @@ public class PostGisStorage {
                 "valid = EXCLUDED.valid, class_id = EXCLUDED.class_id", schema, extensionTableName);
 
         jdbcTemplate
-                .batchUpdate(upsert, violationResults, violationResults.size(),
+                .batchUpdate(upsert, violations, violations.size(),
                         (ps, argument) -> {
                             int objectId = Integer.valueOf(argument.getObjectId());
                             int classId = Integer.valueOf(argument.getClassId());
@@ -138,4 +137,5 @@ public class PostGisStorage {
     private JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
+
 }

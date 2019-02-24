@@ -13,7 +13,6 @@ import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
-import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
@@ -92,18 +91,6 @@ public class MqListener {
             log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
         } catch (IOException e) {
             log.error("Не удалось распарсить сообщение: {}", result);
-        }
-    }
-
-    @RabbitListener(queues = MqProperties.QUEUE_VIOLATION_SAVE)
-    public void saveViolations(final ViolationsSaveDto dto) {
-        log.info("Получено сообщение, saveViolations");
-
-        try {
-            validationService.saveViolations(dto);
-        } catch (Exception e) {
-            log.error("Не удалось сохранить результаты валидации: {}.{}.{}",
-                    dto.getDbName(), dto.getSchemaName(), dto.getTableName(), e);
         }
     }
 

@@ -1,7 +1,6 @@
 package ru.mycrg.wrapper.service.validation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
-import ru.mycrg.wrapper.dto.ViolationsSaveDto;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
 import java.io.IOException;
@@ -28,6 +26,9 @@ public class ValidationService {
     private final PostGisStorage postGisStorage;
 
     private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
+    private Queue<List<ObjectValidationResult>> violationsQueue = new ArrayDeque<>();
+    private long totalViolations;
+    private boolean isNotValidatedYet = true;
 
     private final int BATCH_SIZE = 100;
 
@@ -81,6 +82,15 @@ public class ValidationService {
     public void startValidation(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
+        // определим как будем подсчитывать общее кол-во ошибок в слое.
+        if (postGisStorage.isValidated(validationMqRequest)) {
+            totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
+            isNotValidatedYet = false;
+        } else {
+            totalViolations = 0;
+            isNotValidatedYet = true;
+        }
+
         lastCalculatedValidation.put(response.getResourceId(), LocalDateTime.now());
         response.setValidated(true);
         response.setLastValidated(LocalDateTime.now().toString());
@@ -94,27 +104,50 @@ public class ValidationService {
                 break;
             }
 
-            List<ObjectValidationResult> violationResults = validateBatch(batch, validationMqRequest.getEntityType());
-
-            sendPendingResponse(validationMqRequest, violationResults);
-
-            if (!violationResults.isEmpty()) {
-                mqEvents.sandValidationToSave(new ViolationsSaveDto(validationMqRequest, violationResults));
-            } else {
-                log.debug("No violations found in batch:{}. Nothing to save.", offset);
-            }
+            violationsQueue.offer(validateBatch(batch, validationMqRequest.getEntityType()));
 
             offset++;
         }
 
-        // TODO: Недело кончено что посути мы ответили DONE а сохранилось оно или упало неизвестно, но пока упущу этот момент
-        response.setStatus(ValidationStatus.DONE);
+        // Для подсчета общего кол-ва обьектов с ошибками различаем две ситуации когда слой был провалидирован ранее
+        // и когда происходит первая валидация.
+        if (isNotValidatedYet) {
+            totalViolations = countIncorrectObjects(violationsQueue);
+        } else {
+            totalViolations = totalViolations - countCorrectObjects(violationsQueue);
+        }
 
-        mqEvents.validationResponse(response);
+        // Сохраняем результаты валидации
+        while (true) {
+            List<ObjectValidationResult> nextViolations = violationsQueue.poll();
+            if (nextViolations != null) {
+                sendPendingResponse(validationMqRequest, nextViolations);
+
+                postGisStorage.saveValidationResults(validationMqRequest, nextViolations);
+            } else {
+                response.setTotal(totalViolations);
+                response.setStatus(ValidationStatus.DONE);
+
+                mqEvents.validationResponse(response);
+                break;
+            }
+        }
     }
 
-    public void saveViolations(ViolationsSaveDto dto) throws NumberFormatException {
-        postGisStorage.saveValidationResults(dto);
+    private long countCorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
+        return validationResult
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(objectViolation -> objectViolation.getViolations().isEmpty())
+                .count();
+    }
+
+    private long countIncorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
+        return validationResult
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(objectViolation -> !objectViolation.getViolations().isEmpty())
+                .count();
     }
 
     public void getInfo(ValidationMqRequest validationMqRequest) {
