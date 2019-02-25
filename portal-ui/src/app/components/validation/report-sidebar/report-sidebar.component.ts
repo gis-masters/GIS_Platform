@@ -28,7 +28,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   step = 0;
   isValidationInited = false;
 
-  isEditMode = false;
+  isEditMode = true;
   objectsToEdit: ObjectDto[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();

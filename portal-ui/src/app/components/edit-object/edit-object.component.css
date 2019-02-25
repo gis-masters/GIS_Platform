@@ -2,6 +2,8 @@
 
 .edit-content {
   /*height: 535px;*/
+  overflow: auto;
+  height: calc(100vh - 50px)!important;
 }
 
 .example-full-width {
