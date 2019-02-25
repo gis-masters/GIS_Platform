@@ -1,7 +1,7 @@
 import Point from 'ol/geom/Point.js';
 import SimpleGeometry from 'ol/geom/SimpleGeometry.js';
 import MultiLineString from 'ol/geom/MultiLineString.js';
-import {WfsFeature} from "../geoserver/wfs.service";
+import {WfsFeature} from '../geoserver/wfs.service';
 
 export class GeometryFactory {
 

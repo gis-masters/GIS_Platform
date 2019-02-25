@@ -1,10 +1,9 @@
-import {forkJoin, Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {Layer} from './layers.service';
 import {Injectable} from '@angular/core';
+import {forkJoin, Observable} from 'rxjs';
+import {StringUtil} from '../util/StringUtil';
 import {HttpClient} from '@angular/common/http';
-import {Layer} from "./layers.service";
-import {NameHrefProjection} from "./projections";
-import {StringUtil} from "../util/StringUtil";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class DatastoreService {
   }
 
   getByLayerResource(layer: Layer): Observable<any> {
-    let url = StringUtil.getHrefFromBlyadskiyJson(layer);
+    const url = StringUtil.getHrefFromBlyadskiyJson(layer);
 
     return this.http
                .get<any>(url);

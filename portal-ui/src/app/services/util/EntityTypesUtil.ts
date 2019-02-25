@@ -1,10 +1,10 @@
-import {XsdFeature, SimpleProperty} from "../gis/fgistp-rules.service";
-import {LayerAttribute, LayerItem} from "../geoserver/import.service";
+import {XsdFeature, SimpleProperty} from '../gis/fgistp-rules.service';
+import {LayerAttribute, LayerItem} from '../geoserver/import.service';
 
 export class EntityTypesUtil {
 
   static getEntityGeometry(entityType: XsdFeature): string[] {
-    let simpleProperty = entityType.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
+    const simpleProperty = entityType.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
 
     if (simpleProperty) {
       return simpleProperty.allowedValues;
@@ -27,9 +27,9 @@ export class EntityTypesUtil {
 
     // console.log(' --- ', layerGeometryName);
 
-    let entityGeometry = this.getEntityGeometry(entityType);
+    const entityGeometry = this.getEntityGeometry(entityType);
 
-    let allowedGeometry: string[] = [];
+    const allowedGeometry: string[] = [];
     EntityTypesUtil.moveByTypes(new Geometry(), allowedGeometry, layerGeometryName);
 
     // console.log(' ----- ', allowedGeometry);
@@ -44,8 +44,8 @@ export class EntityTypesUtil {
     return result;
   }
 
-  private static moveByTypes(item: Item, allowedGeometry: string[], name: string) {
-    item.items.forEach((item: Item) => {
+  private static moveByTypes(data: Item, allowedGeometry: string[], name: string) {
+    data.items.forEach((item: Item) => {
       if (item.name === name) {
         allowedGeometry.push(name);
         this.collectAll(item, allowedGeometry, name);
@@ -55,8 +55,8 @@ export class EntityTypesUtil {
     });
   }
 
-  private static collectAll(item: Item, allowedGeometry: string[], name: string) {
-    item.items.forEach((item: Item) => {
+  private static collectAll(data: Item, allowedGeometry: string[], name: string) {
+    data.items.forEach((item: Item) => {
       allowedGeometry.push(item.name);
       this.collectAll(item, allowedGeometry, name);
     });
@@ -162,5 +162,5 @@ export class Geometry implements Item {
         },
       ]
     },
-  ]
+  ];
 }

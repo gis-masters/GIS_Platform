@@ -3,7 +3,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {WorkImport} from '../geoserver/import.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ServerPropertiesService} from "../server-properties.service";
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'

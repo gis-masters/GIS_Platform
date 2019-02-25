@@ -13,10 +13,10 @@ import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {WfsFeature, WfsFeatureCollection, WfsService} from "../geoserver/wfs.service";
+import {WfsFeature, WfsFeatureCollection, WfsService} from '../geoserver/wfs.service';
 import {defaults as defaultControls} from 'ol/control.js';
 import {createStringXY} from 'ol/coordinate.js';
-import {ObjectDto} from "../communication.service";
+import {ObjectDto} from '../communication.service';
 
 export let BEARER_TOKEN = '';
 
@@ -183,13 +183,13 @@ export class OpenLayersService {
 
   /**
    * Получаем обьект из wfs позиционируемся и подсвечиваем.
-   * @param objectDto
+   * @param objectDto Идентификатор обьекта
    */
   showObject(objectDto: ObjectDto) {
     this.wfsService
         .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
-          let wfsFeature = featureCollection.features[0];
+          const wfsFeature = featureCollection.features[0];
           if (!wfsFeature || !wfsFeature.geometry) {
             this.logger.warn('Wrong feature: ', wfsFeature);
           } else {
@@ -206,8 +206,8 @@ export class OpenLayersService {
   }
 
   private positionToObject(feature: WfsFeature) {
-    let view = this._map.getView();
-    let size = this._map.getSize();
+    const view = this._map.getView();
+    const size = this._map.getSize();
 
     if (feature.geometry.type === 'Point') {
       view.centerOn(feature.geometry.coordinates, size, [570, 500]);
@@ -236,8 +236,7 @@ export class OpenLayersService {
       drawFeature = new Feature({
         geometry: new MultiPolygon(feature.geometry.coordinates),
       });
-    }
-    else {
+    } else {
       console.warn('Not supported geometry type: ', feature.geometry);
     }
 

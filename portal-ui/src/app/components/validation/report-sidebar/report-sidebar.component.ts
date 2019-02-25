@@ -1,17 +1,16 @@
-import {Subject} from "rxjs";
-import {NGXLogger} from "ngx-logger";
-import {Router} from "@angular/router";
+import {Subject} from 'rxjs';
+import {NGXLogger} from 'ngx-logger';
+import {Router} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
-import {MatDialog, MatSnackBar} from "@angular/material";
-import {AuthService} from "../../../services/auth.service";
+import {MatDialog, MatSnackBar} from '@angular/material';
+import {AuthService} from '../../../services/auth.service';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {CommunicationService, ObjectDto} from "../../../services/communication.service";
-import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
-import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
-import {CrgLayer, LayersService} from "../../../services/geoserver/layers.service";
+import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
+import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
+import {CommunicationService, ObjectDto} from '../../../services/communication.service';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
-import {animate, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'report-sidebar',
@@ -128,7 +127,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   reValidate() {
-    let copy = Object.assign([], this.layers);
+    const copy = Object.assign([], this.layers);
     this.communicationService.validationDialog.emit({layers: copy});
   }
 

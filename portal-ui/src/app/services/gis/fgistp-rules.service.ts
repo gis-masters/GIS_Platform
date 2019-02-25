@@ -1,9 +1,9 @@
-import {tap} from "rxjs/operators";
+import {tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ValueTitleProjection} from "../geoserver/projections";
+import {ValueTitleProjection} from '../geoserver/projections';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -38,7 +38,7 @@ export class FgistpRulesService {
       return layerName;
     }
 
-    let featureByName = this.getFeatureByName(layerName);
+    const featureByName = this.getFeatureByName(layerName);
     if (featureByName) {
       return featureByName.title;
     } else {
@@ -55,7 +55,7 @@ export class FgistpRulesService {
   }
 
   public getNativeLayerNameByTitle(layerTitle: string) {
-    let featureByTitle = this.getFeatureByTitle(layerTitle);
+    const featureByTitle = this.getFeatureByTitle(layerTitle);
     if (featureByTitle) {
       return featureByTitle.tableName;
     } else {
@@ -117,7 +117,7 @@ export class FgistpRulesService {
 
   /**
    * По типу ошибки сформируем его описание, выводимое пользователю.
-   * @param errorTypes
+   * @param errorTypes Тип ошибки
    */
   getErrorsDescription(errorTypes: string[]) {
     // TODO: Решили передавать с сервера только тип ошибки а описание формировать на клиенте.
@@ -125,7 +125,7 @@ export class FgistpRulesService {
     // в правила и высматривать там эти значения (Если бы в момент валидации отдавать не тип ошибки а формировать
     // сообщение то это бы делалось в одном месте, один раз. И пока не понятно как будет с кастомными правилами)
 
-    let result = [];
+    const result = [];
 
     errorTypes.forEach(error => {
       if (error === 'enumeration') {

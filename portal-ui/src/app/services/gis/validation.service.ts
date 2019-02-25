@@ -1,10 +1,10 @@
-import {NGXLogger} from "ngx-logger";
+import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from "rxjs";
-import {MatPaginator, MatSort} from "@angular/material";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {ServerPropertiesService} from "../server-properties.service";
-import {ConnectionInfo, CrgLayer} from "../geoserver/layers.service";
+import {forkJoin, Observable} from 'rxjs';
+import {MatPaginator, MatSort} from '@angular/material';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {ServerPropertiesService} from '../server-properties.service';
+import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,10 +36,10 @@ export class ValidationService {
                         sortDirection: string): Observable<ValidationResponse[]> {
     const payload = [data];
 
-    let params = new HttpParams()
-      .set('page', page? String(page): '0')
-      .set('size', page? String(size): '25')
-      .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection): '');
+    const params = new HttpParams()
+      .set('page', page ? String(page) : '0')
+      .set('size', page ? String(size) : '25')
+      .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
     return this.http
                .post<ValidationResponse[]>(this.serverProp.validationUrl,

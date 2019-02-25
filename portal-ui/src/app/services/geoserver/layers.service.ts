@@ -1,15 +1,15 @@
 import {NGXLogger} from 'ngx-logger';
-import {GeoUtil} from "../util/GeoUtil";
+import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
-import {DatastoreService} from "./datastore.service";
+import {DatastoreService} from './datastore.service';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
-import {environment} from "../../../environments/environment";
-import {FgistpRulesService} from "../gis/fgistp-rules.service";
-import {publishReplay} from "rxjs/internal/operators/publishReplay";
+import {filter, flatMap, map, refCount} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
+import {FgistpRulesService} from '../gis/fgistp-rules.service';
+import {publishReplay} from 'rxjs/internal/operators/publishReplay';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -59,8 +59,8 @@ export class LayersService {
   fetchLayerConnectionInfo(layer: CrgLayer) {
     return this.getLayer(layer)
                .pipe(
-                 filter((layer: Layer) => !!layer),
-                 flatMap((layer: Layer) => this.datastoreService.getByLayerResource(layer)),
+                 filter((data: Layer) => !!data),
+                 flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
                  map((data: any) => {
                    if (data && data.dataStore) {
                      layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
@@ -116,8 +116,8 @@ export class LayersService {
     const crgLayers: CrgLayer[] = [];
 
     layers.forEach((layer: NameHrefProjection) => {
-      let layerName = layer.name.split(':')[1];
-      let layerTitle = this.ruleService.getLayerTitle(layerName);
+      const layerName = layer.name.split(':')[1];
+      const layerTitle = this.ruleService.getLayerTitle(layerName);
 
       crgLayers.push({
         name: layerName,
@@ -129,7 +129,7 @@ export class LayersService {
           schemaName: '',
           tableName: ''
         }
-      })
+      });
     });
 
     return crgLayers;

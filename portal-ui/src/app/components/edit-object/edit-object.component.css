@@ -1,7 +1,6 @@
 @import url(../../pages/_app/app.component.css);
 
 .edit-content {
-  /*height: 535px;*/
   overflow: auto;
   height: calc(100vh - 50px)!important;
 }

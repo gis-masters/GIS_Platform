@@ -1,10 +1,10 @@
-import {NGXLogger} from "ngx-logger";
-import {MatSnackBar} from "@angular/material";
+import {NGXLogger} from 'ngx-logger';
+import {MatSnackBar} from '@angular/material';
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {FgistpRulesService, XsdFeature} from "../../services/gis/fgistp-rules.service";
-import {ObjectDto} from "../../services/communication.service";
-import {TransformFeatureService} from "../../services/gis/transform-feature.service";
-import {WfsFeatureCollection, WfsService} from "../../services/geoserver/wfs.service";
+import {FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {ObjectDto} from '../../services/communication.service';
+import {TransformFeatureService} from '../../services/gis/transform-feature.service';
+import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 
 @Component({
   selector: 'crg-edit-object',
@@ -39,7 +39,7 @@ export class EditObjectComponent implements OnChanges {
       if (dataChanged.currentValue) {
         this.logger.info('ngOnChanges 3');
 
-        let newObject = Object.assign({}, dataChanged.currentValue[0]);
+        const newObject = Object.assign({}, dataChanged.currentValue[0]);
 
         this.object = newObject;
         this.handleObject(newObject);
@@ -55,6 +55,7 @@ export class EditObjectComponent implements OnChanges {
         .subscribe((featureCollection: WfsFeatureCollection) => {
           if (!featureCollection || !featureCollection.features.length) {
             this.logger.warn('features of object are empty: ', objectDto.id);
+            this.isFeatureTypeLoaded = true;
           } else {
             this.wfsFeature = featureCollection.features[0];
 
@@ -68,14 +69,14 @@ export class EditObjectComponent implements OnChanges {
 
   editFeature() {
     if (this.wfsFeature && this.wfsFeature.properties) {
-      let newProperties = {};
+      const newProperties = {};
       // newProperties['name'] = this.newName;
 
       this.transformFeatureService
-          .updateFeature(this.wfsFeature, newProperties,'work_workspace', this.object.layerName)
+          .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
           .subscribe(value => {
             this.snackBar.open('Сохранено', 'X', {duration: 3000});
-          })
+          });
     }
   }
 

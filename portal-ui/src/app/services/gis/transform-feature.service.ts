@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import WFS from 'ol/format/WFS.js';
 import GML from 'ol/format/GML.js';
 import Feature from 'ol/Feature.js';
-import {NGXLogger} from "ngx-logger";
-import {ServerPropertiesService} from "../server-properties.service";
-import {HttpClient} from "@angular/common/http";
+import {NGXLogger} from 'ngx-logger';
+import {ServerPropertiesService} from '../server-properties.service';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class TransformFeatureService {
     this.logger.info('testTransaction: ', payload);
 
     return this.http
-               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: "text"})
+               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
   private prepareGMLOptions(workspace, featureType) {
@@ -44,7 +44,7 @@ export class TransformFeatureService {
       featureNS: 'castyl_for_remove',
       featureType: featureType,
       featurePrefix: workspace
-    }
+    };
   }
 
   // private prepareProperties(oldProp: any, newProp: Map<string, string>) {
