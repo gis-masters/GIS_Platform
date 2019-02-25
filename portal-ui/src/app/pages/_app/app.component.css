@@ -16,3 +16,11 @@
   align-items: center;
   justify-content: center;
 }
+
+.scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: grey;
+}
