@@ -1,12 +1,13 @@
 import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
 import {ObjectDto} from '../../services/communication.service';
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
+import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
-import {CustomValidator} from '../../services/util/CustomValidator';
+import {ValueTitleProjection} from "../../services/geoserver/projections";
 
 @Component({
   selector: 'crg-edit-object',
@@ -78,18 +79,29 @@ export class EditObjectComponent implements OnChanges, OnInit {
   prepareEditForm() {
     for (const key of Object.keys(this.wfsFeature.properties)) {
       const value = this.wfsFeature.properties[key];
-      const propertiesByName = this.getPropertiesByName(key);
+      const property = this.getPropertiesByName(key);
 
-      const formControl = new FormControl(value,
-        {
-          validators: [CustomValidator.validate(propertiesByName)],
+      const formControl = new FormControl(value,{
+          validators: [
+            FeaturePropertyValidators.required(property),
+            FeaturePropertyValidators.enumeration(property),
+            FeaturePropertyValidators.minLength(property),
+
+            // maxLength?: number;
+            // pattern?: string;
+            // patternDescription?: string;
+            // minInclusive?: number;
+            // maxInclusive?: number;
+            // totalDigits?: number;
+            // allowedValues?: string[];
+          ],
           // updateOn: 'blur'
         });
 
       this.editFeatureForm.addControl(key, formControl);
       this.editFeatureData.push({
         name: key,
-        property: propertiesByName,
+        property: property,
         value: value
       });
     }

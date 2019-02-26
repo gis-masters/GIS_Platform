@@ -2,7 +2,7 @@ import {GeoUtil} from './GeoUtil';
 import {EntityTypesUtil} from './EntityTypesUtil';
 import {ImportTask} from '../geoserver/import.service';
 import {SimpleProperty, XsdFeature} from '../gis/fgistp-rules.service';
-import {CustomValidator} from './CustomValidator';
+import {FeaturePropertyValidators} from './FeaturePropertyValidators';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ControlContainer} from '@angular/forms';
 
