@@ -36,7 +36,7 @@ export class CustomValidator {
     }
 
     const result = enumerations.find((item: ValueTitleProjection) => {
-      return item.value === currentValue.toString();
+      return item.value.toString() === currentValue.toString();
     });
 
     return result !== undefined;

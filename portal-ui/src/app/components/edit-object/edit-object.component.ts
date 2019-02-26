@@ -102,16 +102,37 @@ export class EditObjectComponent implements OnChanges, OnInit {
   }
 
   editFeature() {
-    if (this.wfsFeature && this.wfsFeature.properties) {
-      const newProperties = {};
-      // newProperties['name'] = this.newName;
+    this.logger.info('editFeature');
 
-      this.transformFeatureService
-        .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
-        .subscribe(value => {
-          this.snackBar.open('Сохранено', 'X', {duration: 3000});
-        });
+    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
+    this.logger.info('dirtyProperties: ', dirtyProperties);
+
+    // if (this.wfsFeature && this.wfsFeature.properties) {
+    //   const newProperties = {};
+    //   // newProperties['name'] = this.newName;
+    //
+    //   this.transformFeatureService
+    //     .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
+    //     .subscribe(value => {
+    //       this.snackBar.open('Сохранено', 'X', {duration: 3000});
+    //     });
+    // }
+  }
+
+  private getDirtyAndValidProperties(): EditFeatureItem[] {
+    const result: EditFeatureItem[] = [];
+    if (!this.editFeatureForm.dirty) {
+      return result;
     }
+
+    this.editFeatureData.forEach((property: EditFeatureItem) => {
+      const formProperty = this.editFeatureForm.controls[property.name];
+      if (formProperty.dirty && formProperty.valid) {
+        result.push(property);
+      }
+    });
+
+    return result;
   }
 
   close() {
