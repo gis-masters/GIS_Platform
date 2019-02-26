@@ -1,17 +1,17 @@
-import {Subject} from "rxjs";
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {filter, takeUntil} from "rxjs/operators";
+import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {CommunicationService, ObjectDto} from "../../../services/communication.service";
-import {ValidationDialogData} from "../../../components/validation/validation-dialog/validation-dialog.component";
+import {CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
 @Component({
   selector: 'crg-map',
@@ -24,16 +24,16 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layers: CrgLayer[] = [];
 
-  isLayerObjectsSidebarShow: boolean = false;
+  isLayerObjectsSidebarShow = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
 
-  isBugReportSidebarShow: boolean = false;
+  isBugReportSidebarShow = false;
   bugReportSidebarSize = 'ui-sidebar-md';
 
-  isValidationDialogShow: boolean = false;
+  isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
 
-  isEditDialogShow: boolean = false;
+  isEditDialogShow = false;
   objectsToEdit: ObjectDto[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();

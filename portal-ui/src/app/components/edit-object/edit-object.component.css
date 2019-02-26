@@ -2,7 +2,7 @@
 
 .edit-content {
   overflow: auto;
-  height: calc(100vh - 50px)!important;
+  height: calc(100vh - 50px) !important;
 }
 
 .example-full-width {
@@ -10,6 +10,18 @@
 }
 
 .fiz-edit-item {
-  padding-top: 3px;
-  padding-bottom: 3px;
+  align-items: center;
+  padding: 4px 6px 4px 6px;
+}
+
+.edit-item-title {
+  font-family: monospace;
+  font-weight: bold;
+  line-height: 1.1
+}
+
+.field-error {
+  width: 100%;
+  text-align: end;
+  color: red;
 }

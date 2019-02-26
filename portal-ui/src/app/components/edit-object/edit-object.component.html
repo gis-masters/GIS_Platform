@@ -11,47 +11,60 @@
   </div>
 
   <div class="row edit-content scroll" *ngIf="isFeatureTypeLoaded">
-    <form class="example-form col-md-12">
-      <div *ngFor="let featureProperty of featureType.properties">
 
-        <div *ngIf="featureProperty.valueType.includes('STRING')" class="fiz-edit-item">
-          <div class="row" style="margin-right: 0px; align-items: center;">
-            <div class="col-6" style="font-family: monospace; font-weight: bold; line-height: 1.1">
-              {{featureProperty.title}}
-            </div>
-            <input class="col-6 form-control" type="text" pInputText>
+    <form class="example-form col-md-12" [formGroup]="editFeatureForm" *ngIf="editFeatureData.length > 0">
+      <div *ngFor="let editFeatureItem of editFeatureData">
+
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <input class="col-6 px-0 form-control" type="text" formControlName="{{editFeatureItem.name}}">
+          <div class="field-error" *ngIf="editFeatureForm.controls[editFeatureItem.name].hasError('required')">
+            Обязательное для заполнения поле
           </div>
         </div>
 
-        <div *ngIf="featureProperty.valueType.includes('CHOICE')" class="fiz-edit-item">
-          <select class="custom-select">
-            <option selected>{{featureProperty.title}}</option>
-            <option *ngFor="let enumOption of featureProperty.enumerations"
-                        [value]="enumOption.value">
-              {{enumOption.title}}
-            </option>
-          </select>
-        </div>
-
-        <div *ngIf="featureProperty.valueType.includes('INT')" class="fiz-edit-item">
-          <div class="row" style="margin-right: 0px; align-items: center;">
-            <div class="col-9" style="font-family: monospace; font-weight: bold">
-              {{featureProperty.title}}
-            </div>
-            <input class="col-3 form-control" type="number" pInputText>
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <input class="col-6 px-0 form-control" type="text" formControlName="{{editFeatureItem.name}}">
+          <div class="float-right field-error"
+               *ngIf="editFeatureForm.controls[editFeatureItem.name].hasError('required')">
+            Обязательное для заполнения поле
           </div>
         </div>
 
-        <div *ngIf="featureProperty.valueType.includes('DOUBLE')" class="fiz-edit-item">
-          <div class="row" style="margin-right: 0px; align-items: center;">
-            <div class="col-9" style="font-family: monospace; font-weight: bold">
-              {{featureProperty.title}}
-            </div>
-            <input class="col-3 form-control" type="number" pInputText>
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <input class="col-6 px-0 form-control" type="text" formControlName="{{editFeatureItem.name}}">
+          <div class="field-error" *ngIf="editFeatureForm.controls[editFeatureItem.name].hasError('required')">
+            Обязательное для заполнения поле
           </div>
         </div>
 
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <div class="col-6 px-0">
+            <select class="custom-select" formControlName="{{editFeatureItem.name}}">
+              <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
+                      [value]="enumOption.value">
+                {{enumOption.title}}
+              </option>
+            </select>
+          </div>
+          <div class="field-error" *ngIf="editFeatureForm.controls[editFeatureItem.name].hasError('wrongChoice')">
+            Значение не соответствует справочному
+          </div>
+          <div class="field-error" *ngIf="editFeatureForm.controls[editFeatureItem.name].hasError('required')">
+            Обязательное для заполнения поле
+          </div>
+        </div>
       </div>
+
+      <br>
+      <pre>
+          Form valid: {{editFeatureForm.valid}}
+          Form dirty: {{editFeatureForm.dirty}}
+          Form errors: {{editFeatureForm.errors | json }}
+      </pre>
     </form>
   </div>
 </div>
