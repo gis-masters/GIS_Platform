@@ -1,8 +1,8 @@
-import {NGXLogger} from "ngx-logger";
+import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
-import {MatListOption, MatSelectionList} from "@angular/material";
-import {CrgLayer} from "../../../services/geoserver/layers.service";
-import {CommunicationService} from "../../../services/communication.service";
+import {MatListOption, MatSelectionList} from '@angular/material';
+import {CrgLayer} from '../../../services/geoserver/layers.service';
+import {CommunicationService} from '../../../services/communication.service';
 
 @Component({
   selector: 'crg-validation-dialog',
@@ -24,8 +24,8 @@ export class ValidationDialogComponent {
     this.selectedLayers = [];
     selectionList.selectedOptions.selected
       .map((selectedOption: MatListOption) => {
-        let title = selectedOption.getLabel();
-        let items = this.data.layers.find(value => value.title.trim().toLowerCase() === title.trim().toLowerCase());
+        const title = selectedOption.getLabel();
+        const items = this.data.layers.find(value => value.title.trim().toLowerCase() === title.trim().toLowerCase());
 
         this.selectedLayers.push(items);
       });

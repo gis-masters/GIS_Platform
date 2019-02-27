@@ -1,6 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {NameHrefProjection} from "../services/geoserver/projections";
-import {CrgLayer} from "../services/geoserver/layers.service";
+import {CrgLayer} from '../services/geoserver/layers.service';
 
 @Pipe({
   name: 'filterLayers'

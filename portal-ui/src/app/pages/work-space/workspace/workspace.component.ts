@@ -1,9 +1,9 @@
 import {NGXLogger} from 'ngx-logger';
 import {MediaMatcher} from '@angular/cdk/layout';
-import {AuthService} from "../../../services/auth.service";
+import {AuthService} from '../../../services/auth.service';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {CommunicationService} from "../../../services/communication.service";
-import {OpenLayersService} from "../../../services/open-layer/open-layers.service";
+import {CommunicationService} from '../../../services/communication.service';
+import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-workspace',

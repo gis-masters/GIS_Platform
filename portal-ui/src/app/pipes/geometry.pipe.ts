@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {XsdFeature} from "../services/gis/fgistp-rules.service";
-import {EntityTypesUtil} from "../services/util/EntityTypesUtil";
-import {LayerItem} from "../services/geoserver/import.service";
+import {XsdFeature} from '../services/gis/fgistp-rules.service';
+import {EntityTypesUtil} from '../services/util/EntityTypesUtil';
+import {LayerItem} from '../services/geoserver/import.service';
 
 @Pipe({
   name: 'geometry'
@@ -9,8 +9,8 @@ import {LayerItem} from "../services/geoserver/import.service";
 export class GeometryPipe implements PipeTransform {
 
   transform(entityTypes: XsdFeature[], layer?: LayerItem): any {
-    let layerGeometry = EntityTypesUtil.getLayerGeometry(layer);
-    let filtered = entityTypes.filter((entityType: XsdFeature) => {
+    const layerGeometry = EntityTypesUtil.getLayerGeometry(layer);
+    const filtered = entityTypes.filter((entityType: XsdFeature) => {
       return EntityTypesUtil.isLayerGeometryCompatible(layerGeometry, entityType);
     });
 

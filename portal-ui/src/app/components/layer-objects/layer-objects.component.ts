@@ -1,6 +1,6 @@
+import {NGXLogger} from 'ngx-logger';
 import {Component, OnInit} from '@angular/core';
-import {NGXLogger} from "ngx-logger";
-import {CommunicationService} from "../../services/communication.service";
+import {CommunicationService} from '../../services/communication.service';
 
 @Component({
   selector: 'crg-layer-objects',

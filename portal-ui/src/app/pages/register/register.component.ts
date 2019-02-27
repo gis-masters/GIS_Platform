@@ -19,7 +19,7 @@ export class RegisterComponent {
     firstName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
     password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]],
-    password_: [null,Validators.required]
+    password_: [null, Validators.required]
   });
 
   constructor(private fb: FormBuilder,

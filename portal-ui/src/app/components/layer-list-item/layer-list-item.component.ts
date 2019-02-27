@@ -1,7 +1,7 @@
-import {NGXLogger} from "ngx-logger";
+import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
 import {WmsService} from '../../services/geoserver/wms.service';
-import {CrgLayer} from "../../services/geoserver/layers.service";
+import {CrgLayer} from '../../services/geoserver/layers.service';
 
 @Component({
   selector: 'crg-layer-list-item',

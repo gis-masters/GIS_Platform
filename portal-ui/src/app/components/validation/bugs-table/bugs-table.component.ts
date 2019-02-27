@@ -1,14 +1,14 @@
-import {of} from "rxjs";
-import {NGXLogger} from "ngx-logger";
-import {merge} from "rxjs/internal/observable/merge";
-import {MatPaginator, MatSort} from "@angular/material";
-import {switchMap} from "rxjs/internal/operators/switchMap";
-import {startWith} from "rxjs/internal/operators/startWith";
-import {ConnectionInfo} from "../../../services/geoserver/layers.service";
-import {ValidationResponse, ValidationService} from "../../../services/gis/validation.service";
-import {CommunicationService} from "../../../services/communication.service";
-import {FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {of} from 'rxjs';
+import {NGXLogger} from 'ngx-logger';
+import {merge} from 'rxjs/internal/observable/merge';
+import {MatPaginator, MatSort} from '@angular/material';
+import {switchMap} from 'rxjs/internal/operators/switchMap';
+import {startWith} from 'rxjs/internal/operators/startWith';
+import {ConnectionInfo} from '../../../services/geoserver/layers.service';
+import {CommunicationService} from '../../../services/communication.service';
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
 import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 
 @Component({

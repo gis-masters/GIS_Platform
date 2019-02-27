@@ -1,8 +1,7 @@
+import {NGXLogger} from 'ngx-logger';
+import {CrgLayer} from './geoserver/layers.service';
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {NGXLogger} from "ngx-logger";
-import {ValidationDialogData} from "../components/validation/validation-dialog/validation-dialog.component";
-import {NameHrefProjection} from "./geoserver/projections";
-import {CrgLayer} from "./geoserver/layers.service";
+import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 
 @Injectable({
   providedIn: 'root'

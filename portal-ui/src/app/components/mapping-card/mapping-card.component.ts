@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
-import {XsdFeature, SimpleProperty} from "../../services/gis/fgistp-rules.service";
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {XsdFeature, SimpleProperty} from '../../services/gis/fgistp-rules.service';
 import {ImportService, LayerItem, AS_IS_TYPE, NOT_IMPORT} from '../../services/geoserver/import.service';
 
 @Component({
@@ -31,7 +31,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
   }
 
   tapeSelected(selected: string) {
-    let selectedType = this.entityTypes.find((type: XsdFeature) => type.name === selected);
+    const selectedType = this.entityTypes.find((type: XsdFeature) => type.name === selected);
 
     this.importService.importFlow.setTable(this.layer.originalName, selectedType.tableName);
     this.typeProperties = [];

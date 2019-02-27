@@ -6,10 +6,10 @@ import {environment} from '../../../../environments/environment';
 import {GisDbService} from '../../../services/gis/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {FeatureXsdDefinition, FgistpRulesService} from "../../../services/gis/fgistp-rules.service";
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {GeoStyle, StylesService} from '../../../services/geoserver/styles.service';
 import {TransformationService} from '../../../services/geoserver/transformation.service';
+import {FeatureXsdDefinition, FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {GeoDataStore, GeoWorkspace, GeoWorkspaceItem, WorkspacesService} from '../../../services/geoserver/workspaces.service';
 import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImport} from '../../../services/geoserver/import.service';
 
