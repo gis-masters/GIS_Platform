@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import WFS from 'ol/format/WFS.js';
-import GML from 'ol/format/GML.js';
 import Feature from 'ol/Feature.js';
 import {NGXLogger} from 'ngx-logger';
-import {ServerPropertiesService} from '../server-properties.service';
 import {HttpClient} from '@angular/common/http';
+import {CrgLayer} from '../geoserver/layers.service';
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,10 @@ export class TransformFeatureService {
               private propertiesService: ServerPropertiesService) {
   }
 
-  updateFeature(feature: Feature, newProperties: any, workspace: string, featureType: string) {
-    const gmlFormat = this.prepareGMLOptions(workspace, featureType);
+  updateFeature(feature: Feature, newProperties: any, crgLayer: CrgLayer) {
+    const workspace = crgLayer.complexName.split(':')[0];
+
+    const gmlFormat = this.prepareGMLOptions(workspace, crgLayer.name);
 
     // let featureProperties = feature.properties;
     // this.prepareProperties(featureProperties, newProperties);
@@ -47,9 +49,4 @@ export class TransformFeatureService {
     };
   }
 
-  // private prepareProperties(oldProp: any, newProp: Map<string, string>) {
-  //   delete oldProp.bbox;
-  //
-  //   newProp.forEach((value, key) => oldProp[key] = value);
-  // }
 }

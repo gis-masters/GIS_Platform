@@ -187,7 +187,7 @@ export class OpenLayersService {
    */
   showObject(objectDto: ObjectDto) {
     this.wfsService
-        .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
+        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
         .subscribe((featureCollection: WfsFeatureCollection) => {
           const wfsFeature = featureCollection.features[0];
           if (!wfsFeature || !wfsFeature.geometry) {

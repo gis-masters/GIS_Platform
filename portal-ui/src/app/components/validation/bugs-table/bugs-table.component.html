@@ -58,7 +58,7 @@
             <div class="example-element-detail"
                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
               <crg-violations-view [data]="element.violations"
-                                   [layerName]="this.connectionInfo.tableName"
+                                   [layerName]="crgLayer.name"
                                    style="width: 100%"></crg-violations-view>
             </div>
           </td>

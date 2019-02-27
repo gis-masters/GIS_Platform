@@ -4,7 +4,7 @@ import {merge} from 'rxjs/internal/observable/merge';
 import {MatPaginator, MatSort} from '@angular/material';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {startWith} from 'rxjs/internal/operators/startWith';
-import {ConnectionInfo} from '../../../services/geoserver/layers.service';
+import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -28,7 +28,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   @Input() isActive: boolean;
   @Input() index: number;
   @Input() step: number;
-  @Input() connectionInfo: ConnectionInfo;
+  @Input() crgLayer: CrgLayer;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -78,8 +78,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          if (this.isActive && !!this.connectionInfo) {
-            return this.validationService.getValidationResults(this.connectionInfo, this.paginator, this.sort);
+          if (this.isActive && !!this.crgLayer.connectionInfo) {
+            return this.validationService.getValidationResults(this.crgLayer.connectionInfo, this.paginator, this.sort);
           } else {
             return of(null);
           }
@@ -89,25 +89,25 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   getValidation() {
     this.validationService
-        .getValidationResults_(this.connectionInfo, 0, this.defaultPageSize, '', 'asc')
+        .getValidationResults_(this.crgLayer.connectionInfo, 0, this.defaultPageSize, '', 'asc')
         .subscribe((response: ValidationResponse[]) => this.handleResponse(response));
   }
 
   showObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.gotoObject.emit({id: objectId, layerName: this.connectionInfo.tableName});
+    this.communicationService.gotoObject.emit({id: objectId, crgLayer: this.crgLayer});
   }
 
   getClassIdAlias(element) {
-    return this.ruleService.getClassIdAlias(this.connectionInfo.tableName, element);
+    return this.ruleService.getClassIdAlias(this.crgLayer.connectionInfo.tableName, element);
   }
 
   editObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.gotoObject.emit({id: objectId, layerName: this.connectionInfo.tableName});
-    this.communicationService.editView.emit([{id: objectId, layerName: this.connectionInfo.tableName}]);
+    this.communicationService.gotoObject.emit({id: objectId, crgLayer: this.crgLayer});
+    this.communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);
   }
 
   private handleResponse(response: ValidationResponse[]) {

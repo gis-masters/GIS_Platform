@@ -137,9 +137,9 @@ export class LayersService {
 }
 
 export interface CrgLayer {
-  name: string;
-  complexName: string;
-  title: string;
+  name: string;         // Like: functionalzone
+  complexName: string;  // Like: work_workspace:functionalzone
+  title: string;        // Like: Функциональные зоны
   href: string;
   connectionInfo: ConnectionInfo;
 }

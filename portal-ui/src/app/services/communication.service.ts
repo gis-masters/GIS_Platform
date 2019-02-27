@@ -13,8 +13,8 @@ export class CommunicationService {
 
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
-  @Output() editView = new EventEmitter<ObjectDto[]>();
 
+  @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() gotoObject = new EventEmitter<ObjectDto>();
 
   constructor(private logger: NGXLogger) {
@@ -48,5 +48,5 @@ export class CommunicationService {
 
 export interface ObjectDto {
   id: string;
-  layerName: string;
+  crgLayer: CrgLayer;
 }

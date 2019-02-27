@@ -98,7 +98,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
       });
 
       this.transformFeatureService
-          .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
+          .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
 
@@ -123,22 +123,22 @@ export class EditObjectComponent implements OnChanges, OnInit {
 
   private handleObject(objectDto: ObjectDto) {
     this.wfsService
-      .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
-      .subscribe((featureCollection: WfsFeatureCollection) => {
-        if (!featureCollection || !featureCollection.features.length) {
-          this.logger.warn('features of object are empty: ', objectDto.id);
-          this.isFeatureTypeLoaded = true;
-        } else {
-          this.isFeatureTypeLoaded = true;
+        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
+        .subscribe((featureCollection: WfsFeatureCollection) => {
+          if (!featureCollection || !featureCollection.features.length) {
+            this.logger.warn('features of object are empty: ', objectDto.id);
+            this.isFeatureTypeLoaded = true;
+          } else {
+            this.isFeatureTypeLoaded = true;
 
-          this.wfsFeature = featureCollection.features[0];
-          this.featureType = this.rulesService.getFeatureByName(objectDto.layerName);
+            this.wfsFeature = featureCollection.features[0];
+            this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
 
-          this.logger.info('featureType: ', this.featureType, this.wfsFeature);
+            this.logger.info('featureType: ', this.featureType, this.wfsFeature);
 
-          this.prepareEditForm();
-        }
-      });
+            this.prepareEditForm();
+          }
+        });
   }
 
   private getPropertiesByName(key: string) {

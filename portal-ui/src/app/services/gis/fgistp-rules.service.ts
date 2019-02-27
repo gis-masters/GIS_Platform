@@ -116,7 +116,7 @@ export class FgistpRulesService {
   }
 
   /**
-   * По типу ошибки сформируем его описание, выводимое пользователю.
+   * По присланному с сервера типу ошибки сформируем его описание, выводимое пользователю.
    * @param errorTypes Тип ошибки
    */
   getErrorsDescription(errorTypes: string[]) {

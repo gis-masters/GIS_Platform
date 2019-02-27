@@ -25,8 +25,8 @@ export class WfsService {
   // maxFeatures=50&
   // outputFormat=application%2Fjson
   // &featureID=30
-  getFeature(layerName: string, objectId: string): Observable<WfsFeatureCollection> {
-    let url = this.prepareLink(layerName, objectId);
+  getFeature(complexName: string, objectId: string): Observable<WfsFeatureCollection> {
+    const url = this.prepareLink(complexName, objectId);
 
     return this.http
                .get<WfsFeatureCollection>(url);
@@ -57,7 +57,7 @@ export interface WfsFeatureCollection {
   numberReturned: number;
   timeStamp: string;
   crs: any;
-  bbox: any
+  bbox: any;
 }
 
 export interface WfsFeature {
