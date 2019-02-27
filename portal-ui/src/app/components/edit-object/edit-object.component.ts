@@ -1,13 +1,12 @@
 import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
 import {ObjectDto} from '../../services/communication.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
-import {ValueTitleProjection} from "../../services/geoserver/projections";
 
 @Component({
   selector: 'crg-edit-object',
@@ -46,6 +45,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
 
     if (dataChanged) {
       if (dataChanged.currentValue) {
+        // TODO: Берем только первое значение(В таблице пока нельзя выбирать)
         const newObject = Object.assign({}, dataChanged.currentValue[0]);
 
         this.object = newObject;
@@ -54,34 +54,12 @@ export class EditObjectComponent implements OnChanges, OnInit {
     }
   }
 
-  private handleObject(objectDto: ObjectDto) {
-    this.logger.info('handleObject', objectDto);
-
-    this.wfsService
-      .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
-      .subscribe((featureCollection: WfsFeatureCollection) => {
-        if (!featureCollection || !featureCollection.features.length) {
-          this.logger.warn('features of object are empty: ', objectDto.id);
-          this.isFeatureTypeLoaded = true;
-        } else {
-          this.isFeatureTypeLoaded = true;
-
-          this.wfsFeature = featureCollection.features[0];
-          this.featureType = this.rulesService.getFeatureByName(objectDto.layerName);
-
-          this.logger.info('featureType: ', this.featureType, this.wfsFeature);
-
-          this.prepareEditForm();
-        }
-      });
-  }
-
   prepareEditForm() {
     for (const key of Object.keys(this.wfsFeature.properties)) {
       const value = this.wfsFeature.properties[key];
       const property = this.getPropertiesByName(key);
 
-      const formControl = new FormControl(value,{
+      const formControl = new FormControl(value, {
           validators: [
             FeaturePropertyValidators.required(property),
             FeaturePropertyValidators.enumeration(property),
@@ -107,28 +85,51 @@ export class EditObjectComponent implements OnChanges, OnInit {
     }
   }
 
+  editFeature() {
+    // Сохраняем только те свойства что были затронуты пользователем и валидны
+    // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
+    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
+
+    if (this.wfsFeature && this.wfsFeature.properties) {
+      const newProperties = {};
+      dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
+        newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
+      });
+
+      this.transformFeatureService
+          .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
+          .subscribe(response => {
+            // TODO: ошибка также валится с кодом 200 поэтому тут нужно парсить response
+
+            this.snackBar.open('Сохранено', 'X', {duration: 3000});
+          });
+    }
+  }
+
+  private handleObject(objectDto: ObjectDto) {
+    this.wfsService
+      .getFeature('work_workspace:' + objectDto.layerName, objectDto.id)
+      .subscribe((featureCollection: WfsFeatureCollection) => {
+        if (!featureCollection || !featureCollection.features.length) {
+          this.logger.warn('features of object are empty: ', objectDto.id);
+          this.isFeatureTypeLoaded = true;
+        } else {
+          this.isFeatureTypeLoaded = true;
+
+          this.wfsFeature = featureCollection.features[0];
+          this.featureType = this.rulesService.getFeatureByName(objectDto.layerName);
+
+          // this.logger.info('featureType: ', this.featureType, this.wfsFeature);
+
+          this.prepareEditForm();
+        }
+      });
+  }
+
   private getPropertiesByName(key: string) {
     return this.featureType.properties.find((simpleProperty: SimpleProperty) => {
       return simpleProperty.name === key.toUpperCase();
     });
-  }
-
-  editFeature() {
-    this.logger.info('editFeature');
-
-    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
-    this.logger.info('dirtyProperties: ', dirtyProperties);
-
-    // if (this.wfsFeature && this.wfsFeature.properties) {
-    //   const newProperties = {};
-    //   // newProperties['name'] = this.newName;
-    //
-    //   this.transformFeatureService
-    //     .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
-    //     .subscribe(value => {
-    //       this.snackBar.open('Сохранено', 'X', {duration: 3000});
-    //     });
-    // }
   }
 
   private getDirtyAndValidProperties(): EditFeatureItem[] {
