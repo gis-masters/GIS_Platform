@@ -73,7 +73,7 @@ public class MqListener {
             }
         } catch (Exception e) {
             log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(mqRequest.getId(), ValidationStatus.ERROR));
+            mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ValidationStatus.ERROR));
         }
     }
 

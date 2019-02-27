@@ -29,7 +29,7 @@ public class MqSender implements IMqEvents {
 
     @Override
     public void validationResponse(ValidationMqResponse response) {
-        log.info("Send validation response: {}", response.getId());
+        log.info("Send {} response: {}", response.getStatus(), response.getId());
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
     }

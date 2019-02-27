@@ -25,18 +25,10 @@ public class ValidationMqResponse {
         this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }
 
-    public ValidationMqResponse(ValidationStatus status) {
+    public ValidationMqResponse(ValidationMqRequest request, ValidationStatus status) {
+        this.id = request.getId();
+        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
         this.status = status;
-    }
-
-    public ValidationMqResponse(UUID id, ValidationStatus status) {
-        this.id = id;
-        this.status = status;
-    }
-
-    public ValidationMqResponse(ValidationStatus status, List<ObjectValidationResult> results) {
-        this.status = status;
-        this.results = results;
     }
 
     public boolean isDone() {
