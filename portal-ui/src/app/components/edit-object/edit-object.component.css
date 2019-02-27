@@ -20,12 +20,7 @@
   line-height: 1.1
 }
 
-.field-error {
-  width: 100%;
-  text-align: end;
-  color: red;
-}
-
-.alert-text {
-  color: red;
+.error-badge {
+  padding: 0 2px 0 2px;
+  background-color: tomato;
 }

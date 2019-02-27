@@ -16,7 +16,7 @@ export class FeaturePropertyValidators {
 
       console.log('required: ', currentValue);
       if (!currentValue) {
-        errors['required'] = 'some value here';
+        errors['required'] = 'Поле обязательно к заполнению';
       }
 
       return errors;
@@ -36,7 +36,7 @@ export class FeaturePropertyValidators {
       // console.log('enumeration: ', currentValue);
       if (property.valueType.includes('CHOICE')) {
         if (!this.isEnumIncludeValue(property.enumerations, currentValue)) {
-          errors['wrongChoice'] = 'some value here';
+          errors['wrongChoice'] = 'Значение: ' + currentValue + ' не соответствует справочному';
         }
       }
 
@@ -56,7 +56,45 @@ export class FeaturePropertyValidators {
 
       console.log('minLength: ', currentValue);
       if (currentValue.toString().length < property.minLength) {
-        errors['minLength'] = 'some value here';
+        errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + property.minLength + ' символов';
+      }
+
+      return errors;
+    };
+  }
+
+  static maxLength(property: SimpleProperty): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.maxLength || property.maxLength === -1) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      console.log('maxLength: ', currentValue);
+      if (currentValue.toString().length > property.maxLength) {
+        errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + property.maxLength + ' символов';
+      }
+
+      return errors;
+    };
+  }
+
+  static totalDigits(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.totalDigits || property.totalDigits === -1) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      console.log('totalDigits: ', currentValue);
+      if (currentValue.toString().length > property.totalDigits) {
+        errors['totalDigits'] = 'some value here';
       }
 
       return errors;

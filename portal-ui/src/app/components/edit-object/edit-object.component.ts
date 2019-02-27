@@ -5,9 +5,9 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
+import {ValidationResponse, ValidationService} from '../../services/gis/validation.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
-import {ValidationResponse, ValidationService} from '../../services/gis/validation.service';
 
 @Component({
   selector: 'crg-edit-object',
@@ -66,13 +66,12 @@ export class EditObjectComponent implements OnChanges, OnInit {
             FeaturePropertyValidators.required(property),
             FeaturePropertyValidators.enumeration(property),
             FeaturePropertyValidators.minLength(property),
+            FeaturePropertyValidators.maxLength(property),
+            FeaturePropertyValidators.totalDigits(property),
 
-            // maxLength?: number;
             // pattern?: string;
-            // patternDescription?: string;
             // minInclusive?: number;
             // maxInclusive?: number;
-            // totalDigits?: number;
             // allowedValues?: string[];
           ],
           // updateOn: 'blur'
@@ -112,6 +111,8 @@ export class EditObjectComponent implements OnChanges, OnInit {
                   ])
                   .subscribe((responses: ValidationResponse[]) => {
                     this.snackBar.open('Сохранено', 'X', {duration: 3000});
+
+                    this.closeMe.emit(true);
                   });
             } else {
               this.logger.warn('UpdateFeature response: ', response);
@@ -133,7 +134,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
           this.wfsFeature = featureCollection.features[0];
           this.featureType = this.rulesService.getFeatureByName(objectDto.layerName);
 
-          // this.logger.info('featureType: ', this.featureType, this.wfsFeature);
+          this.logger.info('featureType: ', this.featureType, this.wfsFeature);
 
           this.prepareEditForm();
         }
