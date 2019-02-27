@@ -41,7 +41,10 @@
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <div [class]="editFeatureForm.controls[editFeatureItem.name].valid
+                        ? 'col-6 px-0 edit-item-title' : 'col-6 px-0 edit-item-title alert-text'">
+            {{editFeatureItem.property?.title}}
+          </div>
           <div class="col-6 px-0">
             <select class="custom-select" formControlName="{{editFeatureItem.name}}">
               <option *ngFor="let enumOption of editFeatureItem.property.enumerations"

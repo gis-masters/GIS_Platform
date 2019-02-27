@@ -33,7 +33,7 @@ export class TransformFeatureService {
     const payload = this.xs.serializeToString(node)
                            .replace('xmlns:' + workspace + '="castyl_for_remove"', '');
 
-    this.logger.info('Transaction payload: ', payload);
+    // this.logger.info('Transaction payload: ', payload);
 
     return this.http
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});

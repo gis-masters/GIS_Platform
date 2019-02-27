@@ -7,6 +7,7 @@ import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.ser
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {ValidationResponse, ValidationService} from '../../services/gis/validation.service';
 
 @Component({
   selector: 'crg-edit-object',
@@ -32,6 +33,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
               private formBuilder: FormBuilder,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
+              private validationService: ValidationService,
               private rulesService: FgistpRulesService,
               private transformFeatureService: TransformFeatureService) {
   }
@@ -99,9 +101,21 @@ export class EditObjectComponent implements OnChanges, OnInit {
       this.transformFeatureService
           .updateFeature(this.wfsFeature, newProperties, 'work_workspace', this.object.layerName)
           .subscribe(response => {
-            // TODO: ошибка также валится с кодом 200 поэтому тут нужно парсить response
+            if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
 
-            this.snackBar.open('Сохранено', 'X', {duration: 3000});
+              // Сразу провалидируем слой при успешном сохранении
+              this.validationService.validateLayers([
+                    {
+                      complexName: '', href: '', name: '', title: '',
+                      connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
+                    }
+                  ])
+                  .subscribe((responses: ValidationResponse[]) => {
+                    this.snackBar.open('Сохранено', 'X', {duration: 3000});
+                  });
+            } else {
+              this.logger.warn('UpdateFeature response: ', response);
+            }
           });
     }
   }

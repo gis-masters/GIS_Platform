@@ -33,7 +33,7 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      console.log('enumeration: ', currentValue);
+      // console.log('enumeration: ', currentValue);
       if (property.valueType.includes('CHOICE')) {
         if (!this.isEnumIncludeValue(property.enumerations, currentValue)) {
           errors['wrongChoice'] = 'some value here';
