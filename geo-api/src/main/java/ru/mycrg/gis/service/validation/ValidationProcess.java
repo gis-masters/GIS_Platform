@@ -72,11 +72,11 @@ public class ValidationProcess {
         return requests
                 .stream()
                 .map(ValidationRequestDto::getResourceId)
-                .map(resourceId -> new ValidationResponseDto(getCompletiveResponse(resourceId)))
+                .map(resourceId -> new ValidationResponseDto(getFinishResponse(resourceId)))
                 .collect(Collectors.toList());
     }
 
-    private Optional<ValidationMqResponse> getCompletiveResponse(String resourceId) {
+    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) {
         return this.mqResponses
                 .get(resourceId).stream()
                 .filter(response -> !response.isPending())
