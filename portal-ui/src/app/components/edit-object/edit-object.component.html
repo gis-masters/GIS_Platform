@@ -13,6 +13,10 @@
   <div class="row edit-content scroll" *ngIf="isFeatureTypeLoaded">
 
     <form class="example-form col-md-12" [formGroup]="editFeatureForm" *ngIf="editFeatureData.length > 0">
+      <div class="alert alert-danger" role="alert" *ngIf="!!objectValidationResult?.customRule" style="margin-top: 5px">
+        {{objectValidationResult?.customRule}}
+      </div>
+
       <div *ngFor="let editFeatureItem of editFeatureData">
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">

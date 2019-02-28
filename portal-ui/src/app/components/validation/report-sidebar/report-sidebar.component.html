@@ -31,7 +31,7 @@
                   <mat-icon *ngIf="commonInfo.get(layer.name)?.validated && commonInfo.get(layer.name)?.totalViolations < 1"
                             style="color: forestgreen">done</mat-icon>
                 </div>
-                <span style="position: relative; top: 5px; padding-left: 10px">{{layer.title}}</span>
+                <span style="padding-left: 10px">{{layer.title}}</span>
               </mat-panel-title>
 
               <div class="float-right" *ngIf="!!commonInfo.get(layer.name)">

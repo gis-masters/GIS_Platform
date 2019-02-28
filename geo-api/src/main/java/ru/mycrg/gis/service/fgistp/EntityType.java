@@ -13,6 +13,7 @@ public class EntityType {
     private String description;
     private String tableName;
     private List<AbstractProperty> properties = new ArrayList<>();
+    private String customRuleFunction;
 
     public EntityType() {}
 
@@ -62,5 +63,13 @@ public class EntityType {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getCustomRuleFunction() {
+        return customRuleFunction;
+    }
+
+    public void setCustomRuleFunction(String customRuleFunction) {
+        this.customRuleFunction = customRuleFunction;
     }
 }

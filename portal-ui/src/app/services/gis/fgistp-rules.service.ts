@@ -168,6 +168,7 @@ export interface XsdFeature {
   description: string;
   properties: SimpleProperty[];
   tableName: string;
+  customRuleFunction?: any;
 }
 
 export interface SimpleProperty {

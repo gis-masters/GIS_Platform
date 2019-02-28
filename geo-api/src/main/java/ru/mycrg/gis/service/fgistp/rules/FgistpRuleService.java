@@ -118,18 +118,29 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     private void getRulesFromDb() {
         log.info("Get rules from DB");
 
-        List<EntityType> classTypes = fgistpRules.getEntityTypes();
+        List<EntityType> entityTypes = fgistpRules.getEntityTypes();
 
         xsdRuleRepository
                 .findAll()
-                .forEach(xsdRule -> classTypes.add(MapperUtil.mapXsdRuleToEntityType(xsdRule)));
+                .forEach(xsdRule -> entityTypes.add(MapperUtil.mapXsdRuleToEntityType(xsdRule)));
     }
 
     /**
      * Накладываем поверх сгенерированных правил, правила установленные вручную.
      */
     private void imposeCustomRules() {
-        log.warn("ImposeCustomRules not implemented yet");
+        log.warn("ImposeCustomRules");
+
+        customRuleRepository
+                .findAll()
+                .forEach(customRule -> {
+                    String className = customRule.getClassName();
+
+                    fgistpRules.getEntityTypes()
+                            .stream()
+                            .filter(entityType -> className.equals(entityType.getName()))
+                            .forEach(entityType -> entityType.setCustomRuleFunction(customRule.getClassRule()));
+                });
     }
 
 }

@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../gis/fgistp-rules.service';
+import {SimpleProperty, XsdFeature} from '../gis/fgistp-rules.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
@@ -156,6 +156,18 @@ export class FeaturePropertyValidators {
 
       return errors;
     };
+  }
+
+  static customRules(featureProperties: any, xsdFeature: XsdFeature) {
+    const errors = {};
+
+    if (!xsdFeature || !xsdFeature.customRuleFunction) {
+      return errors;
+    }
+
+    const evaluateObjectRules = new Function('obj', xsdFeature.customRuleFunction);
+
+    return evaluateObjectRules(featureProperties);
   }
 
   private static isEnumIncludeValue(enumerations: ValueTitleProjection[], currentValue: any): boolean {

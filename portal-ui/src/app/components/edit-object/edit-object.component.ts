@@ -1,11 +1,12 @@
 import {NGXLogger} from 'ngx-logger';
+import {debounceTime} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
 import {ObjectDto} from '../../services/communication.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
-import {WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {ValidationResponse, ValidationService} from '../../services/gis/validation.service';
+import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
 
@@ -22,10 +23,12 @@ export class EditObjectComponent implements OnChanges, OnInit {
   editFeatureForm: FormGroup;
 
   featureType: XsdFeature;
-  wfsFeature: any;
+  wfsFeature: WfsFeature;
 
   editFeatureData: EditFeatureItem[] = [];
   isFeatureTypeLoaded = false;
+
+  objectValidationResult: {};
 
   private object: ObjectDto;
 
@@ -40,6 +43,15 @@ export class EditObjectComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.editFeatureForm = this.formBuilder.group({});
+
+    this.editFeatureForm.valueChanges
+        .pipe(debounceTime(100))
+        .subscribe(val => {
+          // const newFeatureProperties = Object.assign({}, this.wfsFeature.properties);
+          this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureType);
+
+          // this.logger.info('!!!!!!!!!!!!!!!!!', val);
+        });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,47 +80,47 @@ export class EditObjectComponent implements OnChanges, OnInit {
       });
 
       this.transformFeatureService
-        .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
-        .subscribe(response => {
-          if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
+          .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
+          .subscribe(response => {
+            if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
 
-            // Сразу провалидируем слой при успешном сохранении
-            this.validationService.validateLayers([
-              {
-                complexName: '', href: '', name: '', title: '',
-                connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
-              }
-            ])
-              .subscribe((responses: ValidationResponse[]) => {
-                this.snackBar.open('Сохранено', 'X', {duration: 3000});
+              // Сразу провалидируем слой при успешном сохранении
+              this.validationService.validateLayers([
+                {
+                  complexName: '', href: '', name: '', title: '',
+                  connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
+                }
+              ])
+                .subscribe((responses: ValidationResponse[]) => {
+                  this.snackBar.open('Сохранено', 'X', {duration: 3000});
 
-                this.closeMe.emit(true);
-              });
-          } else {
-            this.logger.warn('UpdateFeature response: ', response);
-          }
-        });
+                  this.closeMe.emit(true);
+                });
+            } else {
+              this.logger.warn('UpdateFeature response: ', response);
+            }
+          });
     }
   }
 
   private handleObject(objectDto: ObjectDto) {
     this.wfsService
-      .getFeature(objectDto.crgLayer.complexName, objectDto.id)
-      .subscribe((featureCollection: WfsFeatureCollection) => {
-        if (!featureCollection || !featureCollection.features.length) {
-          this.logger.warn('features of object are empty: ', objectDto.id);
-          this.isFeatureTypeLoaded = true;
-        } else {
-          this.isFeatureTypeLoaded = true;
+        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
+        .subscribe((featureCollection: WfsFeatureCollection) => {
+          if (!featureCollection || !featureCollection.features.length) {
+            this.logger.warn('features of object are empty: ', objectDto.id);
+            this.isFeatureTypeLoaded = true;
+          } else {
+            this.isFeatureTypeLoaded = true;
 
-          this.wfsFeature = featureCollection.features[0];
-          this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+            this.wfsFeature = featureCollection.features[0];
+            this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
 
-          this.logger.info('featureType: ', this.featureType, this.wfsFeature);
+            this.logger.info('featureType: ', this.featureType, this.wfsFeature);
 
-          this.prepareEditForm(this.wfsFeature.properties);
-        }
-      });
+            this.prepareEditForm(this.wfsFeature.properties);
+          }
+        });
   }
 
   /**
