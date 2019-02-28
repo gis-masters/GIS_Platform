@@ -33,10 +33,11 @@ public class GisStorageDaoService {
     }
 
     /**
-     * Импорт проходит в три этапа:
-     *  - Очистка таблицы
+     * При импорте выполняется:
+     *  - Очистка целевой таблицы и таблицы с данными валидации (*_extension)
      *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs"
      *  - Перенос из исходной таблицы в рабочую
+     *  - Проверка и при необходимости генерация GLOBALID
      *
      * @param workImport Данные импорта
      */
@@ -120,6 +121,7 @@ public class GisStorageDaoService {
 
         try {
             truncate(statement, workImport.getTargetSchema(), importTask.getWorkTableName());
+            truncate(statement, workImport.getTargetSchema(), importTask.getWorkTableName() + "_extension");
 
             if (isNeedPrepareTable(importTask)) {
                 prepareTable(statement, workImport, importTask);
@@ -157,7 +159,7 @@ public class GisStorageDaoService {
     }
 
     private void truncate(Statement statement, String schema, String table) throws SQLException {
-        log.info("Truncate table");
+        log.debug("Truncate: {}.{}", schema, table);
 
         statement.execute(String.format("TRUNCATE %s.%s", schema, table));
     }
