@@ -4,6 +4,7 @@ import {Component} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
+import {MustMatch} from './mustMatch.validator';
 
 @Component({
   selector: 'crg-register',
@@ -18,8 +19,9 @@ export class RegisterComponent {
     lastName: [null, Validators.required],
     firstName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
-    password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]],
+    password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=\\S+$).{8,}$')]],
     password_: [null, Validators.required]
+  }, {validator: MustMatch('password', 'password_')
   });
 
   constructor(private fb: FormBuilder,

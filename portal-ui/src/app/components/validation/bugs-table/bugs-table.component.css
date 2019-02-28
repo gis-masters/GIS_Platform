@@ -9,14 +9,6 @@
   overflow: auto;
 }
 
-.validation-results-table-container::-webkit-scrollbar {
-  width: 4px;
-}
-
-.validation-results-table-container::-webkit-scrollbar-thumb {
-  background: grey;
-}
-
 table {
   width: 100%;
 }

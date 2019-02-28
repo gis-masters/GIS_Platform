@@ -18,7 +18,7 @@
   </div>
 
   <div [hidden]="data.objects?.length === 0">
-    <div class="validation-results-table-container">
+    <div class="validation-results-table-container scroll">
 
       <table mat-table [dataSource]="data.objects" class="example-table" multiTemplateDataRows
              matSort matSortActive="objectid">
