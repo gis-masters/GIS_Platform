@@ -27,7 +27,8 @@
           </div>
           <div class="col-3">
             <mat-form-field class="full-width">
-              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone" prefix="+7" mask="(000) 000-00-00" minlength="10">
+              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone"
+                     prefix="+7" mask="(000) 000-00-00" minlength="10">
               <mat-icon matSuffix>phone</mat-icon>
               <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('required')">
                 Обязательное для заполнения поле
@@ -113,13 +114,15 @@
         </div>
       </mat-card-content>
 
-      <mat-card-actions style="display: flex">
-        <div>
-          <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">Зарегистрироваться</button>
-        </div>
-        <div class="linkLogin">
-          <mat-card-content>Уже есть учетная запись?</mat-card-content>
-          <a class="float-right ml-lg-3" routerLink="/login">ВОЙТИ</a>
+      <mat-card-actions>
+        <div class="row m-0">
+          <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">
+            Зарегистрироваться
+          </button>
+          <div class="linkLogin align-self-end">
+            <span>Уже есть учетная запись?</span>
+            <a class="float-right ml-lg-3" routerLink="/login">ВОЙТИ</a>
+          </div>
         </div>
       </mat-card-actions>
     </mat-card>
