@@ -61,7 +61,7 @@ public class GisStorageDaoService {
                 statement.close();
                 dataSource.close();
             } catch (SQLException e) {
-                log.error("Failed free resources: ", e.getLocalizedMessage());
+                log.error("Failed free resources: {}", e.getLocalizedMessage());
             }
         }
     }
@@ -141,7 +141,7 @@ public class GisStorageDaoService {
     }
 
     private void prepareTable(Statement statement, WorkImport workImport, ImportTask importTask) throws SQLException {
-        String sqlRequest = prepareAlterRequest(importTask, workImport.getTargetSchema(), workImport.getSourceSchema());
+        String sqlRequest = prepareAlterRequest(importTask, workImport.getTargetSchema());
 
         log.info("SQL alter request: {}", sqlRequest);
 
@@ -170,7 +170,7 @@ public class GisStorageDaoService {
         return insertTo + data + from;
     }
 
-    private String prepareAlterRequest(ImportTask importTask, String targetSchema, String sourceSchema) {
+    private String prepareAlterRequest(ImportTask importTask, String targetSchema) {
 //        ALTER TABLE fiz.functionalzone ADD COLUMN IF NOT EXISTS fiz6 INTEGER,
 //                                       ADD COLUMN IF NOT EXISTS fiz5 INTEGER,
 //                                       ADD COLUMN IF NOT EXISTS fiz4 INTEGER;
@@ -248,7 +248,7 @@ public class GisStorageDaoService {
         dataSource.setPassword(storageProperties.getPassword());
         dataSource.setMaximumPoolSize(1);
 
-        Connection connection = null;
+        Connection connection;
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
