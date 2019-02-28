@@ -14,7 +14,7 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      console.log('required: ', currentValue);
+      // console.log('required: ', currentValue);
       if (!currentValue) {
         errors['required'] = 'Поле обязательно к заполнению';
       }
@@ -54,7 +54,7 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      console.log('minLength: ', currentValue);
+      // console.log('minLength: ', currentValue);
       if (currentValue.toString().length < property.minLength) {
         errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + property.minLength + ' символов';
       }
@@ -73,7 +73,7 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      console.log('maxLength: ', currentValue);
+      // console.log('maxLength: ', currentValue);
       if (currentValue.toString().length > property.maxLength) {
         errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + property.maxLength + ' символов';
       }
@@ -92,9 +92,66 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      console.log('totalDigits: ', currentValue);
+      // console.log('totalDigits: ', currentValue);
       if (currentValue.toString().length > property.totalDigits) {
         errors['totalDigits'] = 'some value here';
+      }
+
+      return errors;
+    };
+  }
+
+  static pattern(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.pattern) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      // console.log('pattern: ', currentValue);
+      if (!currentValue.match(property.pattern)) {
+        errors['pattern'] = 'Строка не соответствует паттерну';
+      }
+
+      return errors;
+    };
+  }
+
+  static minInclusive(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.minInclusive) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      // console.log('minInclusive: ', currentValue);
+      if (Number(currentValue) >= Number(property.minInclusive)) {
+        errors['minInclusive'] = 'Значение' + currentValue + ' менее допустимого: ' + property.minInclusive;
+      }
+
+      return errors;
+    };
+  }
+
+  static maxInclusive(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.maxInclusive) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      // console.log('maxInclusive: ', currentValue);
+      if (Number(currentValue) <= Number(property.maxInclusive)) {
+        errors['maxInclusive'] = 'Значение' + currentValue + ' более допустимого: ' + property.maxInclusive;
       }
 
       return errors;

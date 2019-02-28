@@ -56,36 +56,6 @@ export class EditObjectComponent implements OnChanges, OnInit {
     }
   }
 
-  prepareEditForm() {
-    for (const key of Object.keys(this.wfsFeature.properties)) {
-      const value = this.wfsFeature.properties[key];
-      const property = this.getPropertiesByName(key);
-
-      const formControl = new FormControl(value, {
-          validators: [
-            FeaturePropertyValidators.required(property),
-            FeaturePropertyValidators.enumeration(property),
-            FeaturePropertyValidators.minLength(property),
-            FeaturePropertyValidators.maxLength(property),
-            FeaturePropertyValidators.totalDigits(property),
-
-            // pattern?: string;
-            // minInclusive?: number;
-            // maxInclusive?: number;
-            // allowedValues?: string[];
-          ],
-          // updateOn: 'blur'
-        });
-
-      this.editFeatureForm.addControl(key, formControl);
-      this.editFeatureData.push({
-        name: key,
-        property: property,
-        value: value
-      });
-    }
-  }
-
   editFeature() {
     // Сохраняем только те свойства что были затронуты пользователем и валидны
     // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
@@ -98,51 +68,96 @@ export class EditObjectComponent implements OnChanges, OnInit {
       });
 
       this.transformFeatureService
-          .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
-          .subscribe(response => {
-            if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
+        .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
+        .subscribe(response => {
+          if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
 
-              // Сразу провалидируем слой при успешном сохранении
-              this.validationService.validateLayers([
-                    {
-                      complexName: '', href: '', name: '', title: '',
-                      connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
-                    }
-                  ])
-                  .subscribe((responses: ValidationResponse[]) => {
-                    this.snackBar.open('Сохранено', 'X', {duration: 3000});
+            // Сразу провалидируем слой при успешном сохранении
+            this.validationService.validateLayers([
+              {
+                complexName: '', href: '', name: '', title: '',
+                connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
+              }
+            ])
+              .subscribe((responses: ValidationResponse[]) => {
+                this.snackBar.open('Сохранено', 'X', {duration: 3000});
 
-                    this.closeMe.emit(true);
-                  });
-            } else {
-              this.logger.warn('UpdateFeature response: ', response);
-            }
-          });
+                this.closeMe.emit(true);
+              });
+          } else {
+            this.logger.warn('UpdateFeature response: ', response);
+          }
+        });
     }
   }
 
   private handleObject(objectDto: ObjectDto) {
     this.wfsService
-        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
-        .subscribe((featureCollection: WfsFeatureCollection) => {
-          if (!featureCollection || !featureCollection.features.length) {
-            this.logger.warn('features of object are empty: ', objectDto.id);
-            this.isFeatureTypeLoaded = true;
-          } else {
-            this.isFeatureTypeLoaded = true;
+      .getFeature(objectDto.crgLayer.complexName, objectDto.id)
+      .subscribe((featureCollection: WfsFeatureCollection) => {
+        if (!featureCollection || !featureCollection.features.length) {
+          this.logger.warn('features of object are empty: ', objectDto.id);
+          this.isFeatureTypeLoaded = true;
+        } else {
+          this.isFeatureTypeLoaded = true;
 
-            this.wfsFeature = featureCollection.features[0];
-            this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+          this.wfsFeature = featureCollection.features[0];
+          this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
 
-            this.logger.info('featureType: ', this.featureType, this.wfsFeature);
+          this.logger.info('featureType: ', this.featureType, this.wfsFeature);
 
-            this.prepareEditForm();
-          }
-        });
+          this.prepareEditForm(this.wfsFeature.properties);
+        }
+      });
   }
 
-  private getPropertiesByName(key: string) {
-    return this.featureType.properties.find((simpleProperty: SimpleProperty) => {
+  /**
+   * Генерим форму
+   *
+   * @param featureProperties Свойства полученные из "фичи" геосервера
+   */
+  private prepareEditForm(featureProperties: any) {
+    for (const key of Object.keys(featureProperties)) {
+      const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
+      const property = this.getPropertiesByName(key, this.featureType.properties);
+      if (property) {
+        // Добавляем валидации
+        const formControl = new FormControl(currentValue, {
+          validators: [
+            FeaturePropertyValidators.required(property),
+            FeaturePropertyValidators.minLength(property),
+            FeaturePropertyValidators.maxLength(property),
+            FeaturePropertyValidators.enumeration(property),
+            FeaturePropertyValidators.totalDigits(property),
+            FeaturePropertyValidators.pattern(property),
+            FeaturePropertyValidators.minInclusive(property),
+            FeaturePropertyValidators.maxInclusive(property),
+            // allowedValues?: string[];
+          ],
+          // updateOn: 'blur'
+        });
+
+        // Наполняем форму
+        this.editFeatureForm.addControl(key, formControl);
+        this.editFeatureData.push({
+          name: key,
+          property: property,
+          value: currentValue
+        });
+      } else {
+        this.logger.info('Свойство: ' + key + ' отсутствует в описании типа по приказу');
+      }
+    }
+  }
+
+  /**
+   * Ищем свойство, среди тех что есть в XSD схеме.
+   *
+   * @param key Наименование свойства, полученное из "фичи" геосервера
+   * @param properties Свойства полученные из XSD схемы.
+   */
+  private getPropertiesByName(key: string, properties: SimpleProperty[]) {
+    return properties.find((simpleProperty: SimpleProperty) => {
       return simpleProperty.name === key.toUpperCase();
     });
   }
