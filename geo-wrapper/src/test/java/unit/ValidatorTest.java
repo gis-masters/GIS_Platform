@@ -117,4 +117,36 @@ public class ValidatorTest {
         assertEquals(1, objectValidationResult.getViolations().get(2).getErrorTypes().size());
     }
 
+    @Test
+    public void validateCustomRules() {
+        IValidator validator = new ValidatorImpl();
+
+        SimplePropertyDto classId = new SimplePropertyDto();
+        classId.setValueType(ValueType.STRING);
+        classId.setName("classid");
+        classId.setRequired(true);
+        classId.setMinLength(3);
+        classId.setMaxLength(15);
+
+        List<SimplePropertyDto> properties = new ArrayList<>();
+        properties.add(classId);
+
+        EntityTypeDto entityType = new EntityTypeDto();
+        entityType.setName("Fiz_Type");
+        entityType.setDescription("test description");
+        entityType.setTitle("test title");
+        entityType.setTableName("test tableName");
+        entityType.setProperties(properties);
+        entityType.setCustomRuleFunction("var errors = []; if (obj.classid == 602040315) {if (Number(obj.wear_prcnt) " +
+                "> 20) {errors.push('У объектов данного класса % износа должен быть не более 20');}}return errors;");
+
+        HashMap<String, Object> rowFromDb = new HashMap<>();
+        rowFromDb.put("classid", "602040315");
+        rowFromDb.put("wear_prcnt", "30");
+
+        ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
+
+        assertEquals(1, objectValidationResult.getObjectViolations().size());
+    }
+
 }

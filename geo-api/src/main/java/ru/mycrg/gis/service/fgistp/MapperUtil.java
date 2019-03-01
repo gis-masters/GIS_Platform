@@ -42,6 +42,7 @@ public class MapperUtil {
         dto.setTitle(entityType.getTitle());
         dto.setDescription(entityType.getDescription());
         dto.setTableName(entityType.getTableName());
+        dto.setCustomRuleFunction(entityType.getCustomRuleFunction());
 
         entityType.getProperties().forEach(abstractProperty -> {
             dto.addProperty(mapPropertyToDto(abstractProperty));

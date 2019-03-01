@@ -28,7 +28,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
   editFeatureData: EditFeatureItem[] = [];
   isFeatureTypeLoaded = false;
 
-  objectValidationResult: {};
+  objectValidationResult: any[];
 
   private object: ObjectDto;
 

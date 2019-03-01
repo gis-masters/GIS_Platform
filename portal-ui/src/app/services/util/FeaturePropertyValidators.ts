@@ -179,15 +179,21 @@ export class FeaturePropertyValidators {
   }
 
   static customRules(featureProperties: any, xsdFeature: XsdFeature) {
-    const errors = {};
+    let errors = [];
 
     if (!xsdFeature || !xsdFeature.customRuleFunction) {
       return errors;
     }
 
-    const evaluateObjectRules = new Function('obj', xsdFeature.customRuleFunction);
+    try {
+      const evaluateObjectRules = new Function('obj', xsdFeature.customRuleFunction);
 
-    return evaluateObjectRules(featureProperties);
+      errors = evaluateObjectRules(featureProperties);
+    } catch (e) {
+      throw Error('Ошибка при анализе доп. правил. ' + e);
+    }
+
+    return errors;
   }
 
   private static isEnumIncludeValue(enumerations: ValueTitleProjection[], currentValue: any): boolean {

@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Обрабатывает и содержит правила ФГИС ТП: <p>
@@ -60,7 +61,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
             log.error("Not found xsd schema file by path: {} / {}", path, e.getLocalizedMessage());
         } catch (Exception e) {
             log.error("Failed load rules: {}", e.getMessage());
-            throw new CrgFailedException("Failed load rules. " + e.getLocalizedMessage());
+            // throw new CrgFailedException("Failed load rules. " + e.getLocalizedMessage());
         }
 
         return fgistpRules;
@@ -84,7 +85,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
             throw new CrgFailedException("Failed update rules. " + e.getLocalizedMessage());
         }
 
-        return getRules();
+        return fgistpRules;
     }
 
     public FgistpRules getRules() {
@@ -92,11 +93,22 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     }
 
     public EntityType getRuleByClassName(String name) throws FgistpRuleNotFoundException {
-        return fgistpRules
+        Optional<EntityType> optionalEntityType = fgistpRules
                 .getEntityTypes().stream()
                 .filter(fgistpClassType -> fgistpClassType.getName().toLowerCase().contains(name.toLowerCase()))
-                .findFirst()
-                .orElseThrow(() -> new FgistpRuleNotFoundException(name));
+                .findFirst();
+
+        if (optionalEntityType.isPresent()) {
+            EntityType entityType = optionalEntityType.get();
+            customRuleRepository.findCustomRuleByClassName(entityType.getName())
+                    .ifPresent(customRule -> {
+                        entityType.setCustomRuleFunction(customRule.getClassRule());
+                    });
+
+            return entityType;
+        } else {
+            throw new FgistpRuleNotFoundException(name);
+        }
     }
 
     @Override

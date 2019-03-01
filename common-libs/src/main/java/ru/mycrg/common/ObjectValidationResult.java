@@ -12,15 +12,18 @@ public class ObjectValidationResult {
 
     private String objectId;
     private String classId;
-
     private String xMin;
-
     private List<PropertyViolation> violations = new ArrayList<>();
+    private List<String> objectViolations = new ArrayList<>();
 
     public ObjectValidationResult() {}
 
     public void addPropertyViolation(PropertyViolation propertyViolation) {
         this.violations.add(propertyViolation);
+    }
+
+    public void addObjectViolation(String violation) {
+        this.objectViolations.add(violation);
     }
 
     public String getObjectId() {
@@ -54,4 +57,9 @@ public class ObjectValidationResult {
     public void setClassId(String classId) {
         this.classId = classId;
     }
+
+    public List<String> getObjectViolations() {
+        return objectViolations;
+    }
+
 }

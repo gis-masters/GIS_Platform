@@ -78,16 +78,16 @@ public class PostGisStorage {
 
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
-                        (ps, argument) -> {
-                            int objectId = Integer.valueOf(argument.getObjectId());
-                            int classId = Integer.valueOf(argument.getClassId());
-                            int xMin = Integer.valueOf(argument.getxMin());
-                            JsonNode json = Util.convertToJson(argument.getViolations());
+                        (ps, violation) -> {
+                            int objectId = Integer.valueOf(violation.getObjectId());
+                            int classId = Integer.valueOf(violation.getClassId());
+                            int xMin = Integer.valueOf(violation.getxMin());
+                            JsonNode json = Util.convertToJson(violation);
 
                             ps.setInt(1, objectId);
                             ps.setString(2, json.toString());
                             ps.setInt(3, xMin);
-                            ps.setBoolean(4, argument.getViolations().isEmpty());
+                            ps.setBoolean(4, violation.getViolations().isEmpty());
                             ps.setInt(5, classId);
                         });
     }

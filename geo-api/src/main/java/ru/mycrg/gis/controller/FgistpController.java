@@ -34,20 +34,12 @@ public class FgistpController {
 
     @GetMapping("/fgistp/rules")
     public FgistpRules getRules() {
-        log.info("Request /fgistp/rules");
+        log.debug("Request /fgistp/rules");
 
-        if (fgistpRuleService.isXsdRulesEmpty()) {
-            log.warn("Not found rules in DB. Try generate new from default source.");
-
-            return fgistpRuleService.loadRulesFromXsdSchema();
+        if (fgistpRuleService.isCacheEmpty()) {
+            return fgistpRuleService.updateRules();
         } else {
-            FgistpRules rules = fgistpRuleService.getRules();
-
-            if (rules.getEntityTypes().isEmpty()) {
-                return fgistpRuleService.updateRules();
-            } else {
-                return rules;
-            }
+            return fgistpRuleService.getRules();
         }
     }
 

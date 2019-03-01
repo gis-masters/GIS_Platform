@@ -7,6 +7,7 @@ import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 
 import java.util.List;
@@ -40,11 +41,11 @@ public class Util {
                 : "";
     }
 
-    public static JsonNode convertToJson(List<PropertyViolation> propertyViolations) {
+    public static JsonNode convertToJson(ObjectValidationResult object) {
         try {
             String asString = new ObjectMapper().writer()
                     .withDefaultPrettyPrinter()
-                    .writeValueAsString(propertyViolations);
+                    .writeValueAsString(object.getViolations());
             return JacksonUtil.toJsonNode(asString);
         } catch (JsonProcessingException e) {
             log.error("Failed convert to json: {}", e.getMessage());

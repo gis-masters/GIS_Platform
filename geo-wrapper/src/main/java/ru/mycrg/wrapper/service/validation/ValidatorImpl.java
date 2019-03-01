@@ -13,6 +13,7 @@ import ru.mycrg.wrapper.service.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 public class ValidatorImpl implements IValidator {
@@ -29,10 +30,14 @@ public class ValidatorImpl implements IValidator {
     private IsLongTypeValidation isLongTypeValidation = new IsLongTypeValidation();
     private IsDoubleTypeValidation isDoubleTypeValidation = new IsDoubleTypeValidation();
     private EnumerationValidation enumerationValidation = new EnumerationValidation();
+    private CustomRuleValidation customRuleValidator = new CustomRuleValidation();
 
     @Override
     public ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
+
+        customRuleValidator.validate(entityType, data).values()
+                .forEach(validationResult::addObjectViolation);
 
         entityType.getProperties().forEach(propertyDto -> {
             String name = propertyDto.getName();

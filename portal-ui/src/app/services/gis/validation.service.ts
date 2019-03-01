@@ -72,6 +72,7 @@ export interface BugObject {
   objectId: string;
   violations: ViolationItem[];
   xMin: string;
+  objectViolations: string[];
 }
 
 export interface ViolationItem {
