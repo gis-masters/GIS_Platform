@@ -144,6 +144,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
             FeaturePropertyValidators.pattern(property),
             FeaturePropertyValidators.minInclusive(property),
             FeaturePropertyValidators.maxInclusive(property),
+            FeaturePropertyValidators.byType(property),
             // allowedValues?: string[];
           ],
           // updateOn: 'blur'

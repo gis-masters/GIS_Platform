@@ -132,7 +132,7 @@ export class FeaturePropertyValidators {
 
       // console.log('minInclusive: ', currentValue);
       if (Number(currentValue) >= Number(property.minInclusive)) {
-        errors['minInclusive'] = 'Значение' + currentValue + ' менее допустимого: ' + property.minInclusive;
+        errors['minInclusive'] = 'Значение: ' + currentValue + ' менее допустимого: ' + property.minInclusive;
       }
 
       return errors;
@@ -151,7 +151,27 @@ export class FeaturePropertyValidators {
 
       // console.log('maxInclusive: ', currentValue);
       if (Number(currentValue) <= Number(property.maxInclusive)) {
-        errors['maxInclusive'] = 'Значение' + currentValue + ' более допустимого: ' + property.maxInclusive;
+        errors['maxInclusive'] = 'Значение: ' + currentValue + ' более допустимого: ' + property.maxInclusive;
+      }
+
+      return errors;
+    };
+  }
+
+  static byType(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.valueType) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+
+      if (property.valueType.includes('DOUBLE') || property.valueType.includes('INT')) {
+        if (isNaN(currentValue)) {
+          errors['byType'] = 'Значение должно быть числом';
+        }
       }
 
       return errors;

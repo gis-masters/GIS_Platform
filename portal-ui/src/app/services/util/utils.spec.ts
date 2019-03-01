@@ -1,10 +1,7 @@
 import {GeoUtil} from './GeoUtil';
 import {EntityTypesUtil} from './EntityTypesUtil';
 import {ImportTask} from '../geoserver/import.service';
-import {SimpleProperty, XsdFeature} from '../gis/fgistp-rules.service';
-import {FeaturePropertyValidators} from './FeaturePropertyValidators';
-import {ValueTitleProjection} from '../geoserver/projections';
-import {AbstractControl, ControlContainer} from '@angular/forms';
+import {XsdFeature} from '../gis/fgistp-rules.service';
 
 describe('GeoUtil test', () => {
 
@@ -116,42 +113,6 @@ describe('GeoUtil test', () => {
     expect(false).toEqual(EntityTypesUtil.isLayerGeometryCompatible('Polygon', entityLineString));
     expect(true).toEqual(EntityTypesUtil.isLayerGeometryCompatible('MultiPolygon', entityPolygon));
     expect(false).toEqual(EntityTypesUtil.isLayerGeometryCompatible('MultiLineString', entityMultiGeometry));
-  });
-
-
-  it('should validate input', () => {
-    const enumerations: ValueTitleProjection[] = [
-      {
-        value: '1',
-        title: 'first'
-      },
-      {
-        value: '2',
-        title: 'second'
-      },
-    ];
-
-    const simpleProperty: SimpleProperty = {
-      name: 'Name1',
-      title: 'Title1',
-      valueType: 'CHOICE',
-      required: false,
-      description: 'description',
-      enumerations: enumerations,
-      allowedValues: [],
-      hidden: false,
-      isMultiple: false,
-      updateability: '',
-      choice: '',
-      minLength: 1,
-      maxLength: 10,
-      pattern: '',
-      patternDescription: '',
-      minInclusive: -1,
-      maxInclusive: -1,
-      totalDigits: -1,
-  };
-
   });
 
 });
