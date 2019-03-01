@@ -12,7 +12,7 @@ export class LayerObjectsComponent implements OnInit {
   cols = [
     { field: 'objectId', header: 'objectId' },
     { field: 'classId', header: 'classId' },
-    { field: 'violations', header: 'violations' },
+    { field: 'propertyViolations', header: 'propertyViolations' },
     { field: 'count', header: 'count' }
   ];
 

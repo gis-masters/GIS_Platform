@@ -1,12 +1,14 @@
 package ru.mycrg.wrapper.service.validation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.*;
+import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ValidationStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
@@ -38,17 +40,6 @@ public class ValidationService {
     private String OBJECT_ID = "objectid";
     private String CLASS_ID = "classid";
 
-    /**
-     * Название колонки(идентификатор обьекта) в таблицах содержащих данные по валидации('_extension')
-     */
-    private String EXTENSION_OBJECTID_KEY = "object_id";
-    private String EXTENSION_CLASSID_KEY = "class_id";
-
-    /**
-     * Название колонки содержащей описание ошибок валидации.
-     */
-    private String VIOLATIONS_KEY = "violations";
-
     @Autowired
     public ValidationService(IValidator validator, IMqEvents mqEvents, PostGisStorage postGisStorage) {
         this.mqEvents = mqEvents;
@@ -64,7 +55,7 @@ public class ValidationService {
             List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
 
             log.info("Found {} violations", violations.size());
-            response.setResults(mapToViolations(violations));
+            response.setResults(Util.mapToViolations(violations));
             response.setValidated(true);
         } else {
             response.setValidated(postGisStorage.isValidated(validationMqRequest));
@@ -138,7 +129,7 @@ public class ValidationService {
         return validationResult
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(objectViolation -> objectViolation.getViolations().isEmpty())
+                .filter(objectViolation -> objectViolation.getPropertyViolations().isEmpty())
                 .count();
     }
 
@@ -146,7 +137,7 @@ public class ValidationService {
         return validationResult
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(objectViolation -> !objectViolation.getViolations().isEmpty())
+                .filter(objectViolation -> !objectViolation.getPropertyViolations().isEmpty())
                 .count();
     }
 
@@ -170,30 +161,6 @@ public class ValidationService {
         pendingResponse.setResults(violationResults);
 
         mqEvents.validationResponse(pendingResponse);
-    }
-
-    private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
-        List<ObjectValidationResult> results = new ArrayList<>();
-
-        int i = 0;
-        while (i < violations.size()) {
-            ObjectValidationResult objectValidationResult = new ObjectValidationResult();
-            objectValidationResult.setObjectId(Util.getPropertyByKey(violations.get(i), EXTENSION_OBJECTID_KEY));
-            objectValidationResult.setClassId(Util.getPropertyByKey(violations.get(i), EXTENSION_CLASSID_KEY));
-
-            String violationsAsString = Util.getViolations(violations.get(i), VIOLATIONS_KEY);
-
-            ObjectMapper mapper = new ObjectMapper();
-            PropertyViolation[] data = mapper.readValue(violationsAsString, PropertyViolation[].class);
-
-            objectValidationResult.setViolations(List.of(data));
-
-            results.add(objectValidationResult);
-
-            i++;
-        }
-
-        return results;
     }
 
     private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {

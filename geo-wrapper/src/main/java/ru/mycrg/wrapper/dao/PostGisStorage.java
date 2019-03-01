@@ -87,7 +87,7 @@ public class PostGisStorage {
                             ps.setInt(1, objectId);
                             ps.setString(2, json.toString());
                             ps.setInt(3, xMin);
-                            ps.setBoolean(4, violation.getViolations().isEmpty());
+                            ps.setBoolean(4, violation.getPropertyViolations().isEmpty());
                             ps.setInt(5, classId);
                         });
     }

@@ -13,13 +13,13 @@ public class ObjectValidationResult {
     private String objectId;
     private String classId;
     private String xMin;
-    private List<PropertyViolation> violations = new ArrayList<>();
+    private List<PropertyViolation> propertyViolations = new ArrayList<>();
     private List<String> objectViolations = new ArrayList<>();
 
     public ObjectValidationResult() {}
 
     public void addPropertyViolation(PropertyViolation propertyViolation) {
-        this.violations.add(propertyViolation);
+        this.propertyViolations.add(propertyViolation);
     }
 
     public void addObjectViolation(String violation) {
@@ -34,12 +34,12 @@ public class ObjectValidationResult {
         this.objectId = objectId;
     }
 
-    public List<PropertyViolation> getViolations() {
-        return violations;
+    public List<PropertyViolation> getPropertyViolations() {
+        return propertyViolations;
     }
 
-    public void setViolations(List<PropertyViolation> violations) {
-        this.violations = violations;
+    public void setPropertyViolations(List<PropertyViolation> propertyViolations) {
+        this.propertyViolations = propertyViolations;
     }
 
     public String getxMin() {

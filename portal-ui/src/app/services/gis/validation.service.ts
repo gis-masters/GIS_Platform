@@ -70,8 +70,8 @@ export interface ValidationResponse {
 export interface BugObject {
   classId: string;
   objectId: string;
-  violations: ViolationItem[];
   xMin: string;
+  propertyViolations: ViolationItem[];
   objectViolations: string[];
 }
 
