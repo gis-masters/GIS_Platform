@@ -3,8 +3,8 @@
 </mat-toolbar>
 
 <div class="container">
-  <mat-card style="padding: 0">
-    <mat-card-header class="card-header-fiz">
+  <mat-card class="crg-card">
+    <mat-card-header class="crg-header">
       <div class="row col-12">
         <div class="col-6" style="align-self: center">
           <h5>Выберите рабочую область</h5>
@@ -19,45 +19,61 @@
       </div>
     </mat-card-header>
 
-    <mat-card-content style="padding: 10px 10px 10px 10px">
-      <div class="row">
-        <div class="col-12">
-          <div *ngIf="layers.length == 0">Нет данных для импорта</div>
-          <mat-accordion *ngIf="layers.length > 0">
-            <mat-expansion-panel *ngFor="let layer of layers">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <h6>{{layer.originalName}}.shp</h6>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-
-              <crg-mapping-card [entityTypes]="featureXsdDefinition" [layer]="layer"></crg-mapping-card>
-            </mat-expansion-panel>
-          </mat-accordion>
+    <mat-card-content class="crg-card-content">
+      <div class="row m-0 h-100">
+        <div class="col-3 p-0 crg-card-list">
+          <mat-nav-list dense>
+            <mat-list-item *ngFor="let layer of layers"
+                           [ngClass]="layer.isActive ? 'selected-element' : 'crg-list-item'"
+                           (click)="selectLayer(layer)">
+              <a matLine>{{layer.title}}.shp</a>
+              <mat-icon *ngIf="layer.isMapped">done</mat-icon>
+              <mat-icon *ngIf="!layer.isMapped">warning</mat-icon>
+              <div class="selected-element-marker" *ngIf="layer.isActive"></div>
+            </mat-list-item>
+          </mat-nav-list>
+        </div>
+        <div class="col-9">
+          Content
         </div>
       </div>
 
-      <div class="row" style="padding-top: 20px">
-        <div class="col-12" style="align-self: center; text-align: center">
-          <button mat-flat-button class="float-left" routerLink="/workspace/data_import">
-            Назад
-          </button>
-          <button mat-flat-button class="float-right" routerLink="/workspace/map"
-                  *ngIf="isImportFinished">
-            &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
-          </button>
-          <button mat-flat-button class="float-right" [disabled]="!importFlow.work_import.isWorkImportReady"
-                  (click)="startWorkImport()"
-                  *ngIf="!isImportFinished">
-            <span *ngIf="!isWorkImportInited">Импортировать</span>
+<!--      <div class="row">-->
+<!--        <div class="col-12">-->
+<!--          <div *ngIf="layers.length == 0">Нет данных для импорта</div>-->
+<!--          <mat-accordion *ngIf="layers.length > 0">-->
+<!--            <mat-expansion-panel *ngFor="let layer of layers">-->
+<!--              <mat-expansion-panel-header>-->
+<!--                <mat-panel-title>-->
+<!--                  <h6>{{layer.originalName}}.shp</h6>-->
+<!--                </mat-panel-title>-->
+<!--              </mat-expansion-panel-header>-->
 
-            <img src="../../../../assets/images/loader.gif" alt="logo"
-                 *ngIf="isWorkImportInited"
-                 style="margin-left: 39px; margin-right: 39px" height="27" width="27">
-          </button>
-        </div>
-      </div>
+<!--              <crg-mapping-card [entityTypes]="featureXsdDefinition" [layer]="layer"></crg-mapping-card>-->
+<!--            </mat-expansion-panel>-->
+<!--          </mat-accordion>-->
+<!--        </div>-->
+<!--      </div>-->
     </mat-card-content>
+
+    <mat-card-footer class="crg-card-footer">
+      <button mat-stroked-button class="float-left crg-card-footer-b" routerLink="/workspace/data_import">
+        Назад
+      </button>
+      <button mat-stroked-button class="float-right crg-card-footer-b" routerLink="/workspace/map"
+              *ngIf="isImportFinished">
+        &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
+      </button>
+      <button mat-stroked-button class="float-right crg-card-footer-b" [disabled]="!importFlow.work_import.isWorkImportReady"
+              (click)="startWorkImport()"
+              *ngIf="!isImportFinished">
+        <span *ngIf="!isWorkImportInited">Импортировать</span>
+
+        <img src="../../../../assets/images/loader.gif" alt="logo"
+             *ngIf="isWorkImportInited"
+             style="margin-left: 39px; margin-right: 39px" height="27" width="27">
+      </button>
+    </mat-card-footer>
   </mat-card>
 
   <!--<div class="jumbotron">-->

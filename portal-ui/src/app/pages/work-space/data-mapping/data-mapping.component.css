@@ -1,6 +1,52 @@
 @import url(../../_app/app.component.css);
 
-.card-header-fiz {
+.crg-card {
+  height: calc(100vh - 145px);
+  padding: 0;
+}
+
+.crg-header {
   background: rgba(0, 0, 0, .05);
   padding-top: 1.25em;
+}
+
+.crg-card-content {
+  margin: 0;
+  height: calc(100% - 144px);
+}
+
+.crg-card-footer {
+  height: 58px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, .05);
+  margin: 0;
+}
+
+.crg-card-footer-b {
+  margin: 12px;
+}
+
+.crg-card-list {
+  height: inherit;
+  overflow: auto;
+}
+
+.crg-list-item {
+  font-size: larger!important;
+  color: dimgrey;
+}
+
+.selected-element {
+  font-size: large!important;
+  color: #3f51b5;
+}
+
+.selected-element-marker {
+  position: relative;
+  left: 16px;
+  width: 3px;
+  height: 38px;
+  background-color: #3f51b5;
 }

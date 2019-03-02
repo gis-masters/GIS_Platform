@@ -23,10 +23,13 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   @Output() workspaceChanged = new EventEmitter<string>();
 
   workspaces = [];
-  layers: LayerItem[] = [];
   featureXsdDefinition: any = [];
-  importFlow: ImportFlow;
 
+  layers: LayerItem[] = [];
+  selectedLayer: LayerItem;
+  color = '#e2e2e2';
+
+  importFlow: ImportFlow;
   isImportFinished = false;
   isWorkImportInited = false;
 
@@ -86,6 +89,14 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.importService.importFlow.work_import.clear();
+  }
+
+  selectLayer(layer: LayerItem) {
+    this.layers.forEach(value => value.isActive = false);
+
+    layer.isActive = true;
+    layer.isMapped = true;
+    this.selectedLayer = layer;
   }
 
   workspaceSelected(selectedWorkspace: any) {

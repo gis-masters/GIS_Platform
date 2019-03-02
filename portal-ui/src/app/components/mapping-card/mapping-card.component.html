@@ -7,7 +7,7 @@
       <mat-select placeholder="Целевой слой" [disabled]="entityTypes.length === 0">
         <mat-option *ngFor="let tape of entityTypes | geometry:layer" [value]="tape.name"
                     (click)="tapeSelected(tape.name)">
-          {{tape.title}}
+          <span style="font-size: smaller">({{tape.name}})</span> {{tape.title}}
         </mat-option>
       </mat-select>
     </mat-form-field>

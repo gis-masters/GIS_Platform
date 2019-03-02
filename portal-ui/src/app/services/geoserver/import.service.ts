@@ -260,6 +260,9 @@ export interface LayerItem {
     name: string,
     href: string
   };
+
+  isActive?: boolean;
+  isMapped?: boolean;
 }
 
 export interface LayerAttribute {
