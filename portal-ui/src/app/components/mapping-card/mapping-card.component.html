@@ -1,21 +1,22 @@
-<div>
-  <div class="row" style="margin-top: 10px">
-    <div class="col-6" style="align-self: center">
-      <h6>Выберите слой для импорта данных</h6>
-    </div>
-    <mat-form-field class="col-6">
+<div *ngIf="!layer">
+  <h6>Выберите слой</h6>
+</div>
+<div *ngIf="!!layer">
+  <div class="row m-0 py-2">
+    <div class="col-4 p-0 align-self-center"><h6>Сопоставте слой</h6></div>
+    <mat-form-field class="col-8 p-0">
       <mat-select placeholder="Целевой слой" [disabled]="entityTypes.length === 0">
-        <mat-option *ngFor="let tape of entityTypes | geometry:layer" [value]="tape.name"
-                    (click)="tapeSelected(tape.name)">
-          <span style="font-size: smaller">({{tape.name}})</span> {{tape.title}}
+        <mat-option *ngFor="let entityItem of entityTypes | geometry:layer" [value]="entityItem.name"
+                    (click)="entityTypeSelected(entityItem.name)">
+          <span style="font-size: smaller">({{entityItem.name}})</span> {{entityItem.title}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
-  <div class="row" style="margin-top: 10px; text-align: center">
+  <div class="row" style="text-align: center">
     <div class="col-12">
-      <h3 class="mat-h2">Сопоставление атрибутов</h3>
+      <h3 class="mat-h2 m-0">Сопоставте атрибуты</h3>
     </div>
   </div>
 

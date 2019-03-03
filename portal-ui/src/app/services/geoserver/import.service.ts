@@ -1,14 +1,15 @@
-import {map} from 'rxjs/operators';
+import {map, publishReplay, refCount} from 'rxjs/operators';
 import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {ColumnProjection} from '../gis/gis-db.service';
 import {SimpleProperty} from '../gis/fgistp-rules.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {ServerPropertiesService} from '../server-properties.service';
+import {CrgLayer} from "./layers.service";
 
 @Injectable({
   providedIn: 'root'
@@ -313,7 +314,7 @@ export class TaskImport {
   // Наименование слоя из исходных данных
   layerName: string;
 
-  // Таблица выбранная из рабочих даннх
+  // Таблица выбранная из рабочих данных
   workTableName: string;
 
   // Список обьектов маппинга. (Что во что должно смапится)
@@ -322,9 +323,27 @@ export class TaskImport {
   constructor(layerName: string) {
     this.layerName = layerName;
   }
+
+  isPrepared(): boolean {
+    if (!this.layerName || !this.workTableName || this.mapping.length < 1) {
+      console.log('false');
+      return false;
+    }
+
+    console.log('true');
+    return true;
+  }
 }
 
 export class WorkImport {
+
+  private _tasks$: BehaviorSubject<TaskImport[]> = new BehaviorSubject<TaskImport[]>([]);
+  public tasks$: Observable<TaskImport[]> = this._tasks$.asObservable()
+    .pipe(
+      publishReplay(1),
+      refCount()
+    );
+
   // Наименование рабочей области
   workspace: string;
   dataStore: string;
@@ -343,6 +362,8 @@ export class WorkImport {
   }
 
   addMapping(layerName: string, source: LayerAttribute, targetProperty: SimpleProperty) {
+    console.log(' ------------ addMapping -----------');
+
     const newMapping = {
       source: source,
       target: {
@@ -412,6 +433,8 @@ export class WorkImport {
     } else {
       this.isWorkImportReady = false;
     }
+
+    this._tasks$.next(this.tasks);
   }
 }
 

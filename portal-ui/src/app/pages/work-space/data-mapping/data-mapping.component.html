@@ -6,7 +6,7 @@
   <mat-card class="crg-card">
     <mat-card-header class="crg-header">
       <div class="row col-12">
-        <div class="col-6" style="align-self: center">
+        <div class="col-6 align-self-center">
           <h5>Выберите рабочую область</h5>
         </div>
         <mat-form-field class="col-6">
@@ -33,27 +33,13 @@
             </mat-list-item>
           </mat-nav-list>
         </div>
-        <div class="col-9">
-          Content
+        <div class="">
+          <div class="content-separator"></div>
+        </div>
+        <div class="col-9 crg-card-list">
+          <crg-mapping-card [layer]="selectedLayer"></crg-mapping-card>
         </div>
       </div>
-
-<!--      <div class="row">-->
-<!--        <div class="col-12">-->
-<!--          <div *ngIf="layers.length == 0">Нет данных для импорта</div>-->
-<!--          <mat-accordion *ngIf="layers.length > 0">-->
-<!--            <mat-expansion-panel *ngFor="let layer of layers">-->
-<!--              <mat-expansion-panel-header>-->
-<!--                <mat-panel-title>-->
-<!--                  <h6>{{layer.originalName}}.shp</h6>-->
-<!--                </mat-panel-title>-->
-<!--              </mat-expansion-panel-header>-->
-
-<!--              <crg-mapping-card [entityTypes]="featureXsdDefinition" [layer]="layer"></crg-mapping-card>-->
-<!--            </mat-expansion-panel>-->
-<!--          </mat-accordion>-->
-<!--        </div>-->
-<!--      </div>-->
     </mat-card-content>
 
     <mat-card-footer class="crg-card-footer">
@@ -75,8 +61,4 @@
       </button>
     </mat-card-footer>
   </mat-card>
-
-  <!--<div class="jumbotron">-->
-    <!--<pre>{{importFlow | json}}</pre>-->
-  <!--</div>-->
 </div>

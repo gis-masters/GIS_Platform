@@ -33,8 +33,6 @@ export class WorkspacesService {
   }
 
   getWorkspaceByName(name: string): Observable<any> {
-    this.logger.info('get workspace: ', name);
-
     return this.http.get(this.workspaceUrl + '/' + name);
   }
 

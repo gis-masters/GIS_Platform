@@ -1,17 +1,28 @@
 import {NGXLogger} from 'ngx-logger';
-import {filter} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {environment} from '../../../../environments/environment';
 import {GisDbService} from '../../../services/gis/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {GeoStyle, StylesService} from '../../../services/geoserver/styles.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {StylesService} from '../../../services/geoserver/styles.service';
 import {TransformationService} from '../../../services/geoserver/transformation.service';
-import {FeatureXsdDefinition, FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
-import {GeoDataStore, GeoWorkspace, GeoWorkspaceItem, WorkspacesService} from '../../../services/geoserver/workspaces.service';
-import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImport} from '../../../services/geoserver/import.service';
+import {
+  GeoDataStore,
+  GeoWorkspace,
+  GeoWorkspaceItem,
+  WorkspacesService
+} from '../../../services/geoserver/workspaces.service';
+import {
+  ImportFlow,
+  ImportLayer,
+  ImportService,
+  LayerItem,
+  TaskImport
+} from '../../../services/geoserver/import.service';
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'crg-data-mapping',
@@ -20,18 +31,16 @@ import {ImportFlow, ImportLayer, ImportService, LayerItem, TaskImport, WorkImpor
 })
 export class DataMappingComponent implements OnInit, OnDestroy {
 
-  @Output() workspaceChanged = new EventEmitter<string>();
-
   workspaces = [];
-  featureXsdDefinition: any = [];
 
   layers: LayerItem[] = [];
   selectedLayer: LayerItem;
-  color = '#e2e2e2';
 
   importFlow: ImportFlow;
   isImportFinished = false;
   isWorkImportInited = false;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private workspacesService: WorkspacesService,
               private importService: ImportService,
@@ -40,11 +49,9 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               private gisDbService: GisDbService,
               private authService: AuthService,
               private stylesService: StylesService,
-              private ruleService: FgistpRulesService,
               private layersService: LayersService,
               private router: Router,
               private logger: NGXLogger) {
-    this.logger.info('DataMappingComponent start');
     this.authService.validateAuth();
 
     this.importFlow = this.importService.importFlow;
@@ -69,8 +76,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.importService
         .getAllImportLayers(true)
         .subscribe((layers: ImportLayer[]) => {
-          this.logger.info('All Layers: ', layers);
-
           this.layers = layers
               .map((layer: ImportLayer) => {
                 this.importService.importFlow.work_import.addTask(layer.layer.originalName);
@@ -78,16 +83,30 @@ export class DataMappingComponent implements OnInit, OnDestroy {
                 return layer.layer as LayerItem;
               });
 
-          this.logger.info('All Layers: ', this.layers);
+          this.logger.info('All Import Layers: ', this.layers);
         });
 
-    this.ruleService.getRules()
-        .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
-          this.featureXsdDefinition = entityTypesDefinition.xsdFeatures;
+    this.importFlow.work_import.tasks$
+        .pipe(
+          filter(value => !!value && !!value.length),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((tasks: TaskImport[]) => {
+          this.logger.info('tassssssssssssks: ', tasks);
+
+          tasks.forEach((task: TaskImport) => {
+            let layerItem = this.layers.find(layer => layer.originalName === task.layerName);
+            if (layerItem) {
+              layerItem.isMapped = task.isPrepared();
+            }
+          });
         });
   }
 
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+
     this.importService.importFlow.work_import.clear();
   }
 
@@ -95,7 +114,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.layers.forEach(value => value.isActive = false);
 
     layer.isActive = true;
-    layer.isMapped = true;
+    // layer.isMapped = true;
     this.selectedLayer = layer;
   }
 
@@ -149,7 +168,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
                 this.isWorkImportInited = false;
                 this.isImportFinished = true;
 
-                this.addStyle(workImport);
+                // this.addStyle(workImport);
               }, error1 => {
                 this.isWorkImportInited = false;
               });
@@ -160,23 +179,23 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
   }
 
-  private addStyle(workImport: WorkImport) {
-    workImport.tasks.forEach((task: TaskImport) =>
-      this.stylesService
-          .getByName(task.workTableName)
-          .subscribe((style: GeoStyle) => {
-            this.logger.info(' *** style: ', style);
-
-            this.layersService
-                .addStyle(style.name, style.filename, task.workTableName)
-                .subscribe(value => {
-                  this.logger.info('Success add style: ', style);
-                }, errorResponse => {
-                  this.logger.error(errorResponse);
-                });
-          }, errorResponse => {
-            this.logger.error(errorResponse);
-          })
-    );
-  }
+  // private addStyle(workImport: WorkImport) {
+  //   workImport.tasks.forEach((task: TaskImport) =>
+  //     this.stylesService
+  //         .getByName(task.workTableName)
+  //         .subscribe((style: GeoStyle) => {
+  //           this.logger.info(' *** style: ', style);
+  //
+  //           this.layersService
+  //               .addStyle(style.name, style.filename, task.workTableName)
+  //               .subscribe(value => {
+  //                 this.logger.info('Success add style: ', style);
+  //               }, errorResponse => {
+  //                 this.logger.error(errorResponse);
+  //               });
+  //         }, errorResponse => {
+  //           this.logger.error(errorResponse);
+  //         })
+  //   );
+  // }
 }

@@ -29,13 +29,14 @@
 }
 
 .crg-card-list {
+  max-width: 74.6%;
   height: inherit;
   overflow: auto;
 }
 
 .crg-list-item {
   font-size: larger!important;
-  color: dimgrey;
+  color: grey;
 }
 
 .selected-element {
@@ -49,4 +50,10 @@
   width: 3px;
   height: 38px;
   background-color: #3f51b5;
+}
+
+.content-separator {
+  width: 4px;
+  height: 100%;
+  background-color: #f2f2f2;
 }
