@@ -33,6 +33,8 @@ public class ImportProcess {
 
         if (request.getImportTasks().size() == mqResponse.size()) {
             endTime = LocalDateTime.now();
+
+            log.info("Process id: {} is DONE. Processed: {}", id, mqResponse.size());
             futureResponse.complete(prepareResponse());
         } else {
             log.info("Process id: {} is PENDING. Processed: {}", id, mqResponse.size());
@@ -42,7 +44,16 @@ public class ImportProcess {
     private Map<String, String> prepareResponse() {
         Map<String, String> response = new HashMap<>();
 
-        mqResponse.forEach(mqResponse -> response.put(mqResponse.getLayerName(), mqResponse.getStatus().toString()));
+        mqResponse.forEach(mqResponse -> {
+            String layerName = mqResponse.getLayerName();
+            ProcessStatus status = mqResponse.getStatus();
+
+            if (layerName != null && status != null) {
+                response.put(layerName, status.toString());
+            } else {
+                log.warn("?????????????????");
+            }
+        });
 
         return response;
     }

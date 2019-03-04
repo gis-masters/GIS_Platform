@@ -12,6 +12,7 @@ import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
@@ -64,8 +65,29 @@ public class MqListener {
     @RabbitListener(queues = MqProperties.QUEUE_IMPORT_INIT)
     public void initImport(ImportMqRequest request) {
         log.info("initImport. Получено сообщение {}", request.getId());
+        if (request != null && request.getSourceResource() != null && request.getTargetResource() != null) {
+            try {
+                log.info("Try import from: {} to: {}", request.sourceToString(), request.targetToString());
 
-        importService.doImport(request);
+                importService.doImport(request);
+
+                mqEvents.importResponse(
+                        new ImportMqResponse(
+                                request.getId(),
+                                request.getSourceResource().getTableName(),
+                                ProcessStatus.DONE));
+            } catch (Exception e) {
+                log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
+
+                mqEvents.importResponse(
+                        new ImportMqResponse(
+                                request.getId(),
+                                request.getSourceResource().getTableName(),
+                                ProcessStatus.ERROR));
+            }
+        } else {
+            log.warn("????????????");
+        }
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)

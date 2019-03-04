@@ -31,10 +31,10 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void initImport(ImportMqRequest importMqRequest) {
-        log.info("Send init import event: {}", importMqRequest);
+    public void initImport(ImportMqRequest payload) {
+        log.info("Send init import event: {}/{}", payload.getId(), payload.getSourceResource().getTableName());
 
-        rabbitTemplate.convertAndSend(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, importMqRequest);
+        rabbitTemplate.convertAndSend(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, payload);
     }
 
     @Override

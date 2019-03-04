@@ -27,10 +27,9 @@ public class ImportService {
         ImportProcess process = new ImportProcess(workImport);
         importProcesses.add(process);
 
-        workImport
-                .getImportTasks().stream()
-                .map(importTask -> mapToMqRequest(workImport, importTask))
-                .forEach(mqSender::initImport);
+        workImport.getImportTasks().forEach(importTask -> {
+            mqSender.initImport(mapToMqRequest(workImport, importTask, process.getId()));
+        });
 
         return process.getFutureResponse();
     }
@@ -51,9 +50,9 @@ public class ImportService {
                 .findFirst();
     }
 
-    private ImportMqRequest mapToMqRequest(WorkImport workImport, ImportTask importTask) {
+    private ImportMqRequest mapToMqRequest(WorkImport workImport, ImportTask importTask, UUID id) {
         return new ImportMqRequest(workImport.getDbName(), workImport.getSourceSchema(), workImport.getTargetSchema(),
-                importTask.getLayerName(), importTask.getWorkTableName(), importTask.getMapping());
+                importTask.getLayerName(), importTask.getWorkTableName(), importTask.getMapping(), id);
     }
 
 }

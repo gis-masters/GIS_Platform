@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.import_.ColumnProjection;
+import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.wrapper.service.validation.Util;
 
@@ -23,6 +25,9 @@ public class PostGisStorage {
 
     private DatasourceFactory datasourceFactory;
 
+    private static final String AS_IS = "AsIs";
+    private static final String NOT_IMPORT = "NotImport";
+
     @Autowired
     public PostGisStorage(DatasourceFactory datasourceFactory) {
         this.datasourceFactory = datasourceFactory;
@@ -35,9 +40,8 @@ public class PostGisStorage {
         jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0};", dbName));
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
-        JdbcTemplate jdbcTemplateNewDb = initConnection(dbName);
-
-        createExtensionForNewDb(jdbcTemplateNewDb);
+        // Подсоединяемся к только что созданной БД и создаем расширние postgis
+        initConnection(dbName).execute("CREATE EXTENSION postgis;");
 
         log.debug("Successfully created");
     }
@@ -131,16 +135,119 @@ public class PostGisStorage {
         return !result.isEmpty();
     }
 
+    /**
+     * При импорте выполняется:
+     *  - Очистка целевой таблицы и таблицы с данными валидации (*_extension)
+     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs"
+     *  - Перенос из исходной таблицы в рабочую
+     *  - Проверка и при необходимости генерация GLOBALID
+     */
     @Transactional
     public void doImport(ImportMqRequest request) {
+        String targetSchema = request.getTargetResource().getSchemaName();
+        String targetTable = request.getTargetResource().getTableName();
 
-    }
+        JdbcTemplate jdbcTemplate = initConnection(request.getSourceResource().getDbName());
+        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", targetSchema, targetTable));
+        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", targetSchema, targetTable + "_extension"));
 
-    private void createExtensionForNewDb(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.execute("CREATE EXTENSION postgis;");
+        if (isNeedPrepareTable(request.getMapping())) {
+            String alterRequest = prepareAlterRequest(request.getMapping(), targetSchema, targetTable);
+            log.debug("SQL alter request: {}", alterRequest);
+            jdbcTemplate.execute(alterRequest);
+        }
+
+        String sqlRequest = prepareInsertRequest(request);
+        log.debug("SQL import request: {}", sqlRequest);
+        jdbcTemplate.execute(sqlRequest);
     }
 
     private JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
+
+    private boolean isNeedPrepareTable(List<GeoMapping> mapping) {
+        return mapping.stream()
+                .anyMatch(geoMapping -> AS_IS.equals(geoMapping.getTarget().getType()));
+    }
+
+    private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
+//        ALTER TABLE fiz.functionalzone ADD COLUMN IF NOT EXISTS fiz6 INTEGER,
+//                                       ADD COLUMN IF NOT EXISTS fiz5 INTEGER,
+//                                       ADD COLUMN IF NOT EXISTS fiz4 INTEGER;
+        String alter = "ALTER TABLE " + targetSchema + "." + targetTable + " ";
+        StringBuilder columns = new StringBuilder();
+
+        for (GeoMapping geoMapping : mapping) {
+            ColumnProjection target = geoMapping.getTarget();
+            if (target.getType().equals(AS_IS)) {
+                columns
+                        .append("ADD COLUMN IF NOT EXISTS ")
+                        .append(geoMapping.getSource().getName())
+                        .append(" ")
+                        .append(defineColumnType(geoMapping.getSource().getBinding()))
+                        .append(", ");
+            }
+        }
+
+        columns = new StringBuilder(columns.substring(0, columns.length() - 2));
+
+        return alter + columns;
+    }
+
+    private String defineColumnType(String binding) {
+        // TODO
+
+        if (binding.contains("Double")) {
+            return "numeric";
+        }
+
+        if (binding.contains("Integer")) {
+            return "integer";
+        }
+
+        return "varchar";
+    }
+
+    private String prepareInsertRequest(ImportMqRequest request) {
+        String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
+                request.getTargetResource().getTableName();
+        String data = handleInsertMappingColumns(request.getMapping());
+        String from = " FROM " + request.getSourceResource().getSchemaName() + "." + '\"' +
+                request.getSourceResource().getTableName() + '\"';
+
+        return insertTo + data + from;
+    }
+
+    private String handleInsertMappingColumns(List<GeoMapping> mapping) {
+        String pre = " (";
+        String post = ") ";
+
+        StringBuilder targetColumns = new StringBuilder();
+        StringBuilder sourceColumns = new StringBuilder("SELECT ");
+        for (GeoMapping geoMapping : mapping) {
+            ColumnProjection target = geoMapping.getTarget();
+            if (target.getType().equals("serial") || target.getType().equals(NOT_IMPORT)) {
+                continue;
+            }
+
+            String tName;
+            String sName;
+            if (target.getType().equals(AS_IS)) {
+                tName = sName = geoMapping.getSource().getName();
+            } else {
+                tName = target.getName();
+                sName = geoMapping.getSource().getName();
+            }
+
+            targetColumns.append(tName).append(", ");
+            sourceColumns.append("\"").append(sName).append("\", ");
+        }
+
+        targetColumns = new StringBuilder(pre + targetColumns.substring(0, targetColumns.length() - 2) + post);
+        sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
+
+        return targetColumns + sourceColumns.toString();
+    }
+
 }

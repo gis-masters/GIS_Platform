@@ -10,6 +10,8 @@ public class ImportMqResponse {
     private String layerName;
     private ProcessStatus status;
 
+    public ImportMqResponse() {}
+
     public ImportMqResponse(UUID id, String tableName, ProcessStatus status) {
         this.id = id;
         this.layerName = tableName;
