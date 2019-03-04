@@ -107,7 +107,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.layers.forEach(value => value.isActive = false);
 
     layer.isActive = true;
-    // layer.isMapped = true;
     this.selectedLayer = layer;
   }
 
@@ -131,21 +130,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
                 this.importService.importFlow.work_import.dataStore = storeName;
               });
         });
-
-    // TODO: В СУБД под каждую организацию создается отдельная БД. Под каждый проект(рабочую область) создается схема
-    // this.gisDbService.getDbTables('gis', 'fiz')
-    //     .subscribe((projection: TableProjection[]) => {
-    //       let i = 0;
-    //       projection.forEach(value => {
-    //         if (value.name.includes('_point')) {
-    //           i++;
-    //         }
-    //       });
-    //
-    //       this.logger.info(' --- ', projection.length - i);
-    //
-    //       this.entityTypes = projection;
-    //     });
   }
 
   startWorkImport() {
