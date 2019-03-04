@@ -1,6 +1,6 @@
 import {GeoUtil} from './GeoUtil';
 import {EntityTypesUtil} from './EntityTypesUtil';
-import {ImportTask} from '../geoserver/import.service';
+import {ImportTask} from '../geoserver/import/import.service';
 import {XsdFeature} from '../gis/fgistp-rules.service';
 
 describe('GeoUtil test', () => {

@@ -1,12 +1,12 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
-  XsdFeature,
-  SimpleProperty,
   FeatureXsdDefinition,
-  FgistpRulesService
+  FgistpRulesService,
+  SimpleProperty,
+  XsdFeature
 } from '../../services/gis/fgistp-rules.service';
-import {ImportService, LayerItem, AS_IS_TYPE, NOT_IMPORT} from '../../services/geoserver/import.service';
+import {AS_IS_TYPE, ImportService, LayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
 
 @Component({
   selector: 'crg-mapping-card',

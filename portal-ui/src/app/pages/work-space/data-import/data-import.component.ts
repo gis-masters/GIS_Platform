@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
 import {AuthService} from '../../../services/auth.service';
-import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import.service';
+import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import/import.service';
 
 @Component({
   selector: 'crg-data-import',

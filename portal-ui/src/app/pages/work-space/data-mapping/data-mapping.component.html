@@ -27,7 +27,7 @@
                            [ngClass]="layer.isActive ? 'selected-element' : 'crg-list-item'"
                            (click)="selectLayer(layer)">
               <a matLine>{{layer.title}}.shp</a>
-              <mat-icon *ngIf="layer.isMapped">done</mat-icon>
+              <mat-icon *ngIf="layer.isMapped" style="color: green">done</mat-icon>
               <mat-icon *ngIf="!layer.isMapped">warning</mat-icon>
               <div class="selected-element-marker" *ngIf="layer.isActive"></div>
             </mat-list-item>

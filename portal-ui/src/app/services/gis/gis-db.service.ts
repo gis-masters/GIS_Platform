@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {WorkImport} from '../geoserver/import.service';
+import {WorkImport} from '../geoserver/import/workImport';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 

@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {filter, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../services/auth.service';
 import {environment} from '../../../../environments/environment';
@@ -8,21 +8,16 @@ import {LayersService} from '../../../services/geoserver/layers.service';
 import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StylesService} from '../../../services/geoserver/styles.service';
-import {TransformationService} from '../../../services/geoserver/transformation.service';
 import {
   GeoDataStore,
   GeoWorkspace,
   GeoWorkspaceItem,
   WorkspacesService
 } from '../../../services/geoserver/workspaces.service';
-import {
-  ImportFlow,
-  ImportLayer,
-  ImportService,
-  LayerItem,
-  TaskImport
-} from '../../../services/geoserver/import.service';
-import {Subject} from "rxjs";
+import {ImportLayer, ImportService, LayerItem} from '../../../services/geoserver/import/import.service';
+import {Subject} from 'rxjs';
+import {ImportFlow} from '../../../services/geoserver/import/importFlow';
+import {TaskImport} from '../../../services/geoserver/import/taskImport';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -44,7 +39,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
   constructor(private workspacesService: WorkspacesService,
               private importService: ImportService,
-              private transformationService: TransformationService,
               private workspaceService: WorkspacesService,
               private gisDbService: GisDbService,
               private authService: AuthService,
@@ -89,13 +83,12 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.importFlow.work_import.tasks$
         .pipe(
           filter(value => !!value && !!value.length),
+          debounceTime(100),
           takeUntil(this.unsubscribe$)
         )
         .subscribe((tasks: TaskImport[]) => {
-          this.logger.info('tassssssssssssks: ', tasks);
-
           tasks.forEach((task: TaskImport) => {
-            let layerItem = this.layers.find(layer => layer.originalName === task.layerName);
+            const layerItem = this.layers.find(layer => layer.originalName === task.layerName);
             if (layerItem) {
               layerItem.isMapped = task.isPrepared();
             }

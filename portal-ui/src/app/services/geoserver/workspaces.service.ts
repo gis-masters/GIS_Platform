@@ -5,8 +5,9 @@ import {BaseService} from '../base.service';
 import {catchError, map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {NameHrefProjection} from './projections';
-import {TaskImport, WorkImport} from './import.service';
+import {TaskImport} from './import/taskImport';
 import {ServerPropertiesService} from '../server-properties.service';
+import {WorkImport} from "./import/workImport";
 
 @Injectable({
   providedIn: 'root'

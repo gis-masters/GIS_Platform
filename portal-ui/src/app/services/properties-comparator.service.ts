@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SimpleProperty} from './gis/fgistp-rules.service';
-import {LayerAttribute} from './geoserver/import.service';
+import {LayerAttribute} from './geoserver/import/import.service';
 import {DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison} from './util/CrgComparatorUtil';
 
 @Injectable({

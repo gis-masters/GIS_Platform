@@ -1,6 +1,6 @@
 import {SimpleProperty} from '../gis/fgistp-rules.service';
 import {CrgComparison} from '../properties-comparator.service';
-import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import.service';
+import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import/import.service';
 
 /**
  * Первый и самый простой компаратор.

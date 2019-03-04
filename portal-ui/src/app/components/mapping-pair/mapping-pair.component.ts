@@ -3,7 +3,7 @@ import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {SimpleProperty} from '../../services/gis/fgistp-rules.service';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ImportService, LayerAttribute} from '../../services/geoserver/import.service';
+import {ImportService, LayerAttribute} from '../../services/geoserver/import/import.service';
 import {PropertiesComparatorService} from '../../services/properties-comparator.service';
 
 @Component({
