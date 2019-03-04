@@ -16,7 +16,6 @@ export class ErrorsBadgeComponent implements OnInit {
   }
 
   ngOnInit() {
-    // TODO: Дописать генерацию тултипа при множественных ошибках
     for (const key of Object.keys(this.errors)) {
       this.htmlTooltip += '\n' + this.errors[key];
     }
