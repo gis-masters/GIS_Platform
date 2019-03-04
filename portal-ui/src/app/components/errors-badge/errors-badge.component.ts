@@ -10,15 +10,15 @@ export class ErrorsBadgeComponent implements OnInit {
 
   @Input() errors: ValidationErrors | null;
 
-  htmlTooltip: string;
+  htmlTooltip = '';
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     // TODO: Дописать генерацию тултипа при множественных ошибках
     for (const key of Object.keys(this.errors)) {
-      this.htmlTooltip = this.errors[key];
+      this.htmlTooltip += '\n' + this.errors[key];
     }
   }
-
 }
