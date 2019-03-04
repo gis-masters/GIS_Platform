@@ -18,7 +18,7 @@ export class RegisterComponent {
     lastName: [null, Validators.required],
     firstName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
-    password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=\\S+$).{8,}$')]],
+    password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]],
     password_: [null, Validators.required]
   }, {
     validator: this.passwordMatch('password', 'password_')
