@@ -9,7 +9,7 @@ import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
-import ru.mycrg.common.enums.ValidationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
@@ -64,7 +64,7 @@ public class ValidationService {
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
         response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
         response.setTotal(totalViolations);
-        response.setStatus(ValidationStatus.DONE);
+        response.setStatus(ProcessStatus.DONE);
 
 
         mqEvents.validationResponse(response);
@@ -117,7 +117,7 @@ public class ValidationService {
                 postGisStorage.saveValidationResults(validationMqRequest, nextViolations);
             } else {
                 response.setTotal(totalViolations);
-                response.setStatus(ValidationStatus.DONE);
+                response.setStatus(ProcessStatus.DONE);
 
                 mqEvents.validationResponse(response);
                 break;
@@ -149,7 +149,7 @@ public class ValidationService {
 
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
         response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
-        response.setStatus(ValidationStatus.DONE);
+        response.setStatus(ProcessStatus.DONE);
 
         mqEvents.validationResponse(response);
     }
@@ -157,7 +157,7 @@ public class ValidationService {
     private void sendPendingResponse(ValidationMqRequest validationMqRequest,
                                      List<ObjectValidationResult> violationResults) {
         ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
-        pendingResponse.setStatus(ValidationStatus.PENDING);
+        pendingResponse.setStatus(ProcessStatus.PENDING);
         pendingResponse.setResults(violationResults);
 
         mqEvents.validationResponse(pendingResponse);

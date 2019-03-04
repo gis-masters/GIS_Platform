@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service;
+package ru.mycrg.common.import_;
 
 public class LayerInfo {
 

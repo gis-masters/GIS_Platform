@@ -1,6 +1,6 @@
 package ru.mycrg.common.enums;
 
-public enum ValidationStatus {
+public enum ProcessStatus {
     PENDING,// В процессе
     DONE,   // Валидация закончена
     ERROR,  // Ошибка при валидации

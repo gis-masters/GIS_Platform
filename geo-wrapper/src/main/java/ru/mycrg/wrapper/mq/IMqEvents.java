@@ -1,6 +1,7 @@
 package ru.mycrg.wrapper.mq;
 
 import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.import_.ImportMqResponse;
 
 public interface IMqEvents {
 
@@ -8,4 +9,5 @@ public interface IMqEvents {
 
     void validationResponse(ValidationMqResponse response);
 
+    void importResponse(ImportMqResponse importMqResponse);
 }

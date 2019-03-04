@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service;
+package ru.mycrg.gis.service.import_;
 
 import java.util.List;
 

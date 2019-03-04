@@ -1,4 +1,6 @@
-package ru.mycrg.gis.service;
+package ru.mycrg.gis.service.import_;
+
+import ru.mycrg.common.import_.GeoMapping;
 
 import java.util.List;
 

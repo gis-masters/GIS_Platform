@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.config.GisStorageProperties;
-import ru.mycrg.gis.dto.ColumnProjection;
-import ru.mycrg.gis.dto.TableProjection;
-import ru.mycrg.gis.exceptions.GisException;
+import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.gis.exceptions.GisSqlException;
+import ru.mycrg.common.import_.GeoMapping;
+import ru.mycrg.gis.service.import_.ImportTask;
+import ru.mycrg.gis.service.import_.WorkImport;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,10 +20,10 @@ public class GisStorageDaoService {
 
     private static final Logger log = LoggerFactory.getLogger(GisStorageDaoService.class);
 
+    private HikariDataSource dataSource;
+
     private static final String AS_IS = "AsIs";
     private static final String NOT_IMPORT = "NotImport";
-    private final String TARGET_COLUMN = "shape";
-    private HikariDataSource dataSource;
 
     private final GisStorageProperties storageProperties;
 
@@ -65,55 +65,6 @@ public class GisStorageDaoService {
                 log.error("Failed free resources: {}", e.getLocalizedMessage());
             }
         }
-    }
-
-    /**
-     * Получить все таблицы по указанным параметрам.
-     * @param dbName Название БД
-     * @param schemaPattern Название схемы.
-     * @return
-     */
-    public List<TableProjection> getAllTables(final String dbName, final String schemaPattern) {
-        List<TableProjection> tablesProjection = new ArrayList<>();
-        try {
-            DatabaseMetaData metaData = getConnection(dbName).getMetaData();
-            String[] types = {"TABLE"};
-
-            ResultSet tableSelector = metaData.getTables(null, schemaPattern, "%", types);
-            while (tableSelector.next()) {
-                String tableCatalog = tableSelector.getString(1);
-                String tableSchema = tableSelector.getString(2);
-                String tableName = tableSelector.getString(3);
-
-                ResultSet targetColumnsSelector = metaData.getColumns(null, schemaPattern, tableName, TARGET_COLUMN);
-                if (targetColumnsSelector.next()) {
-                    List<ColumnProjection> columns = new ArrayList<>();
-
-                    ResultSet allColumnsSelector = metaData.getColumns(null, schemaPattern, tableName, null);
-                    while (allColumnsSelector.next()) {
-                        columns.add(new ColumnProjection(allColumnsSelector.getString(4), allColumnsSelector.getString("TYPE_NAME")));
-                    }
-                    allColumnsSelector.close();
-
-                    tablesProjection.add(new TableProjection(tableName, columns));
-                }
-                targetColumnsSelector.close();
-            }
-            tableSelector.close();
-        } catch (RuntimeException e) {
-            log.error("Failed get tables: {}", e.getLocalizedMessage());
-
-            throw new GisException("Failed get tables: " + e.getLocalizedMessage());
-        } catch (SQLException e) {
-            log.error("Failed get tables: {}", e.getLocalizedMessage());
-
-            throw new GisSqlException("Failed get tables: " + e.getLocalizedMessage());
-        } finally {
-            dataSource.close();
-        }
-
-        log.info("Successfully {}", tablesProjection.size());
-        return tablesProjection;
     }
 
     private void importTable(WorkImport workImport, Statement statement, ImportTask importTask) {

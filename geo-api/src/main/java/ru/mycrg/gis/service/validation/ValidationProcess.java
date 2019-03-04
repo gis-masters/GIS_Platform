@@ -3,7 +3,7 @@ package ru.mycrg.gis.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.common.ValidationMqResponse;
-import ru.mycrg.common.enums.ValidationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 
@@ -20,7 +20,7 @@ public class ValidationProcess {
     private String userName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private ValidationStatus status;
+    private ProcessStatus status;
     private Set<ValidationRequestDto> requests = new HashSet<>();
     private Map<String, List<ValidationMqResponse>> mqResponses = new HashMap<>();
     private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
@@ -28,7 +28,7 @@ public class ValidationProcess {
 
     public ValidationProcess() {
         this.id = UUID.randomUUID();
-        this.status = ValidationStatus.PENDING;
+        this.status = ProcessStatus.PENDING;
         this.startTime = LocalDateTime.now();
     }
 
@@ -46,9 +46,24 @@ public class ValidationProcess {
         handleResponse(response);
     }
 
+    public List<ValidationResponseDto> prepareResponse() {
+        return requests
+                .stream()
+                .map(ValidationRequestDto::getResourceId)
+                .map(resourceId -> new ValidationResponseDto(getFinishResponse(resourceId)))
+                .collect(Collectors.toList());
+    }
+
+    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) {
+        return this.mqResponses
+                .get(resourceId).stream()
+                .filter(response -> !response.isPending())
+                .findFirst();
+    }
+
     private void handleResponse(ValidationMqResponse response) {
         if (response.isDone()) {
-            status = ValidationStatus.DONE;
+            status = ProcessStatus.DONE;
 
             doneCounter++;
             if (doneCounter == requests.size()) {
@@ -66,21 +81,6 @@ public class ValidationProcess {
         } else {
             log.warn("Unsupported response status: {}", response.getStatus());
         }
-    }
-
-    public List<ValidationResponseDto> prepareResponse() {
-        return requests
-                .stream()
-                .map(ValidationRequestDto::getResourceId)
-                .map(resourceId -> new ValidationResponseDto(getFinishResponse(resourceId)))
-                .collect(Collectors.toList());
-    }
-
-    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) {
-        return this.mqResponses
-                .get(resourceId).stream()
-                .filter(response -> !response.isPending())
-                .findFirst();
     }
 
     public UUID getId() {
@@ -107,11 +107,11 @@ public class ValidationProcess {
         this.endTime = endTime;
     }
 
-    public ValidationStatus getStatus() {
+    public ProcessStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ValidationStatus status) {
+    public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 

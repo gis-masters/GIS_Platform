@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.text.MessageFormat;
@@ -130,6 +131,11 @@ public class PostGisStorage {
         return !result.isEmpty();
     }
 
+    @Transactional
+    public void doImport(ImportMqRequest request) {
+
+    }
+
     private void createExtensionForNewDb(JdbcTemplate jdbcTemplate) {
         jdbcTemplate.execute("CREATE EXTENSION postgis;");
     }
@@ -137,5 +143,4 @@ public class PostGisStorage {
     private JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
-
 }

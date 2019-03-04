@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.gis.dto.MqOrganizationInit;
 
 import static ru.mycrg.common.config.MqProperties.*;
@@ -24,9 +25,16 @@ public class MqSender implements IMqEvents {
 
     @Override
     public void initCreation(MqOrganizationInit creationDto) {
-        log.info("Send init event: {}", creationDto.toString());
+        log.info("Send init orgCreation event: {}", creationDto.toString());
 
         rabbitTemplate.convertAndSend(FANOUT_ORG_INIT, KEY_ORG_INIT, creationDto);
+    }
+
+    @Override
+    public void initImport(ImportMqRequest importMqRequest) {
+        log.info("Send init import event: {}", importMqRequest);
+
+        rabbitTemplate.convertAndSend(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, importMqRequest);
     }
 
     @Override

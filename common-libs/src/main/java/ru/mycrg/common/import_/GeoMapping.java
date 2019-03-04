@@ -1,6 +1,4 @@
-package ru.mycrg.gis.service;
-
-import ru.mycrg.gis.dto.ColumnProjection;
+package ru.mycrg.common.import_;
 
 public class GeoMapping {
 

@@ -5,14 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.dto.TableProjection;
-import ru.mycrg.gis.service.GisStorageDaoService;
-import ru.mycrg.gis.service.WorkImport;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ru.mycrg.gis.service.import_.ImportService;
+import ru.mycrg.gis.service.import_.WorkImport;
 
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class GisController {
@@ -20,27 +21,14 @@ public class GisController {
     private static Logger log = LoggerFactory.getLogger(GisController.class);
 
     @Autowired
-    private GisStorageDaoService daoService;
-
-    @ResponseBody
-    @GetMapping("/db/{dbName}/tables")
-    public List<TableProjection> getDbTables(
-            @PathVariable String dbName,
-            @RequestParam(required = false, name = "schema", defaultValue = "public") String schemaPattern) {
-        log.info("Request getDbTables by db name: {} and schema pattern: {}", dbName, schemaPattern);
-
-        // TODO: Нет более нужды в этом ендпоинте?
-        return daoService.getAllTables(dbName, schemaPattern);
-    }
+    private ImportService importService;
 
     @ResponseBody
     @PostMapping("/db/import")
-    public HttpStatus initImport(@RequestBody WorkImport workImport) {
-        log.info("initImport: {}", getAsJson(workImport));
+    public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport) {
+        log.info("InitImport request");
 
-        daoService.doImport(workImport);
-
-        return HttpStatus.OK;
+        return importService.initProcess(workImport);
     }
 
     private String getAsJson(WorkImport workImport) {

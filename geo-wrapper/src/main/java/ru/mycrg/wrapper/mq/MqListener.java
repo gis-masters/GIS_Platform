@@ -10,11 +10,13 @@ import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.RequstType;
-import ru.mycrg.common.enums.ValidationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
+import ru.mycrg.wrapper.service.import_.ImportService;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
@@ -28,13 +30,15 @@ public class MqListener {
     private final IGeoServer geoServer;
     private final AuthService authService;
     private final ValidationService validationService;
+    private final ImportService importService;
 
     @Autowired
     public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService,
-                      ValidationService validationService) {
+                      ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
         this.geoServer = geoServer;
         this.authService = authService;
+        this.importService = importService;
         this.validationService = validationService;
     }
 
@@ -57,6 +61,13 @@ public class MqListener {
         }
     }
 
+    @RabbitListener(queues = MqProperties.QUEUE_IMPORT_INIT)
+    public void initImport(ImportMqRequest request) {
+        log.info("initImport. Получено сообщение {}", request.getId());
+
+        importService.doImport(request);
+    }
+
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
     public void validation(final ValidationMqRequest mqRequest) {
         log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
@@ -72,8 +83,8 @@ public class MqListener {
                 log.warn("Not supported type");
             }
         } catch (Exception e) {
-            log.error("Неудалось провалидировать.", e);
-            mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ValidationStatus.ERROR));
+            log.error("Не удалось провалидировать.", e);
+            mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
         }
     }
 

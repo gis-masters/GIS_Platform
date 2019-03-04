@@ -1,4 +1,4 @@
-package ru.mycrg.gis.dto;
+package ru.mycrg.common.import_;
 
 public class ColumnProjection {
 

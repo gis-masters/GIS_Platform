@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.common.import_.ImportMqResponse;
 
 @Service
 public class MqSender implements IMqEvents {
@@ -32,6 +33,11 @@ public class MqSender implements IMqEvents {
         log.info("Send {} response: {}", response.getStatus(), response.getId());
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
+    }
+
+    @Override
+    public void importResponse(ImportMqResponse payload) {
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_IMPORT_INIT, MqProperties.KEY_IMPORT_INIT, payload);
     }
 
 }

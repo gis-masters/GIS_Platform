@@ -2,7 +2,7 @@ package ru.mycrg.gis.dto;
 
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqResponse;
-import ru.mycrg.common.enums.ValidationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ValidationResponseDto {
 
     private String resourceId;
-    private ValidationStatus status;
+    private ProcessStatus status;
     private boolean isValidated;
     private long totalViolations;
     private String lastValidationDateTime;
@@ -28,7 +28,7 @@ public class ValidationResponseDto {
             this.lastValidationDateTime = response.getLastValidated();
             this.objects = response.getResults();
         }, () -> {
-            this.status = ValidationStatus.ERROR;
+            this.status = ProcessStatus.ERROR;
         });
     }
 
@@ -40,11 +40,11 @@ public class ValidationResponseDto {
         this.resourceId = resourceId;
     }
 
-    public ValidationStatus getStatus() {
+    public ProcessStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ValidationStatus status) {
+    public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 

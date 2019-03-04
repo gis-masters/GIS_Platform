@@ -1,7 +1,7 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.RequstType;
-import ru.mycrg.common.enums.ValidationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class ValidationMqResponse {
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
-    private ValidationStatus status;
+    private ProcessStatus status;
     private RequstType requstType;
     private List<ObjectValidationResult> results = new ArrayList<>();
 
@@ -25,33 +25,33 @@ public class ValidationMqResponse {
         this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }
 
-    public ValidationMqResponse(ValidationMqRequest request, ValidationStatus status) {
+    public ValidationMqResponse(ValidationMqRequest request, ProcessStatus status) {
         this.id = request.getId();
         this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
         this.status = status;
     }
 
     public boolean isDone() {
-        return status == ValidationStatus.DONE;
+        return status == ProcessStatus.DONE;
     }
 
     public boolean isEmpty() {
-        return status == ValidationStatus.EMPTY;
+        return status == ProcessStatus.EMPTY;
     }
 
     public boolean isError() {
-        return status == ValidationStatus.ERROR;
+        return status == ProcessStatus.ERROR;
     }
 
     public boolean isPending() {
-        return status == ValidationStatus.PENDING;
+        return status == ProcessStatus.PENDING;
     }
 
-    public ValidationStatus getStatus() {
+    public ProcessStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ValidationStatus status) {
+    public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 
