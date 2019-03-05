@@ -14,7 +14,7 @@
 
     <form class="example-form col-md-12" [formGroup]="editFeatureForm" *ngIf="editFeatureData.length > 0">
       <div class="alert alert-danger" role="alert" *ngIf="objectValidationResult?.length > 0" style="margin-top: 5px">
-        {{objectValidationResult}}
+        <span *ngFor="let error of objectValidationResult">{{error}}<br></span>
       </div>
 
       <div *ngFor="let editFeatureItem of editFeatureData">

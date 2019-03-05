@@ -178,7 +178,7 @@ export class FeaturePropertyValidators {
     };
   }
 
-  static customRules(featureProperties: any, xsdFeature: XsdFeature) {
+  static customRules(featureProperties: any, xsdFeature: XsdFeature): string[] {
     let errors = [];
 
     if (!xsdFeature || !xsdFeature.customRuleFunction) {
