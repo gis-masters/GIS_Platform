@@ -1,15 +1,20 @@
 package unit;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
+import java.io.BufferedInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class UtilTest {
 
@@ -36,15 +41,42 @@ public class UtilTest {
     }
 
     @Test
+    @Ignore
     public void shouldTestEncoding() {
-        String oldString = "Ð\u009BÐ\u00ADÐ\u009F 10 ÐºÐ\u0092";
-        String example1 = "some text here";
+        String windows1251 = "Ð¡Ñ\u0080ÐµÐ´Ð½ÐµÑ\u008DÑ\u0082Ð°Ð¶ÐºÐ° - Ð³Ð´Ðµ ÐµÑ\u0081Ñ\u0082Ñ\u008C,, " +
+                "Ð¼Ð°Ð»Ð¾Ñ\u008DÑ\u0082Ð°Ð¶ÐºÐ° Ð³Ð´Ðµ Ð¼Ð¾Ð¶Ð½Ð¾";
+        String utf8 = "Ð Ð\u008EÐ¡Ð\u0082Ð ÂµÐ Ò\u0091Ð Ð\u0085Ð ÂµÐ¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° - " +
+                "Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð ÂµÐ¡Ð\u0083Ð¡â\u0080\u009AÐ¡Ð\u008A,, Ð Ñ\u0098Ð Â°Ð Â»Ð Ñ\u0095Ð¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð Ñ\u0098Ð Ñ\u0095Ð Â¶Ð Ð\u0085Ð Ñ\u0095";
 
-        String newString = new String(oldString.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-        String newExample1 = new String(example1.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        String encodedWindows1251 = new String(windows1251.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        String encodedUtf8 = new String(utf8.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
-        assertEquals("ЛЭП 10 кВ", newString);
-        assertEquals("some text here", newExample1);
+        assertEquals("Среднеэтажка - где есть,, малоэтажка где можно", encodedWindows1251);
+        assertEquals("Среднеэтажка - где есть,, малоэтажка где можно", encodedUtf8);
+    }
+
+    @Test
+    public void shouldTestChar() {
+        assertEquals("CYRILLIC", Character.UnicodeBlock.of('Ц').toString());
+        assertNotEquals("CYRILLIC", Character.UnicodeBlock.of('W').toString());
+    }
+
+    @Test
+    public void shouldTest2() {
+        CharsetDetector utf8 = new CharsetDetector();
+        utf8.setText("Ð¡Ñ\u0080ÐµÐ´Ð½ÐµÑ\u008DÑ\u0082Ð°Ð¶ÐºÐ° - Ð³Ð´Ðµ ÐµÑ\u0081Ñ\u0082Ñ\u008C,, Ð¼Ð°Ð»Ð¾Ñ\u008DÑ\u0082Ð°Ð¶ÐºÐ° Ð³Ð´Ðµ Ð¼Ð¾Ð¶Ð½Ð¾".getBytes());
+
+        assertEquals("UTF-8", utf8.detect().getName());
+
+        CharsetDetector windows1520 = new CharsetDetector();
+        windows1520.setText("Ð Ð\u008EÐ¡Ð\u0082Ð ÂµÐ Ò\u0091Ð Ð\u0085Ð ÂµÐ¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° - Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð ÂµÐ¡Ð\u0083Ð¡â\u0080\u009AÐ¡Ð\u008A,, Ð Ñ\u0098Ð Â°Ð Â»Ð Ñ\u0095Ð¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð Ñ\u0098Ð Ñ\u0095Ð Â¶Ð Ð\u0085Ð Ñ\u0095".getBytes());
+
+        assertEquals("UTF-8", windows1520.detect().getName());
+
+        CharsetDetector windows = new CharsetDetector();
+        windows.setText("РЎСЂРµРґРЅРµСЌС‚Р°Р¶РєР° - РіРґРµ РµСЃС‚СЊ,, РјР°Р»РѕСЌС‚Р°Р¶РєР° РіРґРµ РјРѕР¶РЅРѕ".getBytes());
+
+        assertEquals("UTF-8", windows.detect().getName());
     }
 
 }

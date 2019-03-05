@@ -1,5 +1,4 @@
 import {LayerAttribute} from './import.service';
-import {ColumnProjection} from '../../gis/gis-db.service';
 
 export class TaskImport {
   // Наименование слоя из исходных данных
@@ -27,4 +26,9 @@ export class TaskImport {
 export interface MappingItem {
   source: LayerAttribute;
   target: ColumnProjection;
+}
+
+export interface ColumnProjection {
+  name: string;
+  type: string;
 }
