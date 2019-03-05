@@ -37,7 +37,9 @@ public class MqSender implements IMqEvents {
 
     @Override
     public void importResponse(ImportMqResponse payload) {
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_IMPORT_INIT, MqProperties.KEY_IMPORT_INIT, payload);
+        log.debug("Send {} response: {} / {}", payload.getId(), payload.getLayerName(), payload.getStatus());
+
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_IMPORT_RESPONSE, MqProperties.KEY_IMPORT_RESPONSE, payload);
     }
 
 }

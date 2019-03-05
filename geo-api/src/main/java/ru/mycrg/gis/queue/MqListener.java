@@ -45,7 +45,7 @@ public class MqListener {
         validationService.progress(response);
     }
 
-    @RabbitListener(queues = QUEUE_IMPORT_INIT)
+    @RabbitListener(queues = QUEUE_IMPORT_RESPONSE)
     public void importResponse(ImportMqResponse response) {
         importService.progress(response);
     }

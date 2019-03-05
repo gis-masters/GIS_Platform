@@ -51,7 +51,7 @@ public class ImportProcess {
             if (layerName != null && status != null) {
                 response.put(layerName, status.toString());
             } else {
-                log.warn("?????????????????");
+                log.warn("Incorrect response");
             }
         });
 

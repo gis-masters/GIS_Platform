@@ -13,11 +13,11 @@ import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
+import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
-import ru.mycrg.wrapper.service.import_.ImportService;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
@@ -31,15 +31,15 @@ public class MqListener {
     private final IGeoServer geoServer;
     private final AuthService authService;
     private final ValidationService validationService;
-    private final ImportService importService;
+    private final PostGisStorage postGisStorage;
 
     @Autowired
     public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService,
-                      ValidationService validationService, ImportService importService) {
+                      ValidationService validationService, PostGisStorage postGisStorage) {
         this.mqEvents = mqEvents;
         this.geoServer = geoServer;
         this.authService = authService;
-        this.importService = importService;
+        this.postGisStorage = postGisStorage;
         this.validationService = validationService;
     }
 
@@ -64,29 +64,23 @@ public class MqListener {
 
     @RabbitListener(queues = MqProperties.QUEUE_IMPORT_INIT)
     public void initImport(ImportMqRequest request) {
-        log.info("initImport. Получено сообщение {}", request.getId());
-        if (request != null && request.getSourceResource() != null && request.getTargetResource() != null) {
-            try {
-                log.info("Try import from: {} to: {}", request.sourceToString(), request.targetToString());
+        log.debug("Получено сообщение initImport");
+        try {
+            postGisStorage.doImport(request);
 
-                importService.doImport(request);
+            mqEvents.importResponse(
+                    new ImportMqResponse(
+                            request.getId(),
+                            request.getSourceResource().getTableName(),
+                            ProcessStatus.DONE));
+        } catch (Exception e) {
+            log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
 
-                mqEvents.importResponse(
-                        new ImportMqResponse(
-                                request.getId(),
-                                request.getSourceResource().getTableName(),
-                                ProcessStatus.DONE));
-            } catch (Exception e) {
-                log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
-
-                mqEvents.importResponse(
-                        new ImportMqResponse(
-                                request.getId(),
-                                request.getSourceResource().getTableName(),
-                                ProcessStatus.ERROR));
-            }
-        } else {
-            log.warn("????????????");
+            mqEvents.importResponse(
+                    new ImportMqResponse(
+                            request.getId(),
+                            request.getSourceResource().getTableName(),
+                            ProcessStatus.ERROR));
         }
     }
 

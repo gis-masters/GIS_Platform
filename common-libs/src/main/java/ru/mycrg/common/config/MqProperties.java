@@ -22,6 +22,10 @@ public class MqProperties {
     public static final String QUEUE_IMPORT_INIT = "import.init";
     public static final String KEY_IMPORT_INIT = "init.import.key";
 
+    public static final String FANOUT_IMPORT_RESPONSE = "fanout.import.response";
+    public static final String QUEUE_IMPORT_RESPONSE = "import.response";
+    public static final String KEY_IMPORT_RESPONSE = "init.response.key";
+
     public static final String FANOUT_POSTGRE_VALIDATION = "fanout.postgre.validation";
     public static final String QUEUE_POSTGRE_VALIDATION = "postgre.validation";
     public static final String KEY_POSTGRE_VALIDATION = "key.postgre.validation";

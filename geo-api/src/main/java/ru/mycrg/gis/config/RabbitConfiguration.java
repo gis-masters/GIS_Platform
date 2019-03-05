@@ -37,6 +37,13 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueImportInit()).to(fanoutExchangeImportInit());
     }
 
+    // Config "import response" exchange/queue
+    @Bean public Queue queueImportResponse() { return new Queue(QUEUE_IMPORT_RESPONSE, false);}
+    @Bean public FanoutExchange fanoutExchangeImportResponse() { return new FanoutExchange(FANOUT_IMPORT_RESPONSE);}
+    @Bean public Binding bindingImportResponse() {
+        return BindingBuilder.bind(queueImportResponse()).to(fanoutExchangeImportResponse());
+    }
+
     // Config "validation start" exchange/queue
     @Bean public Queue queueStartValidation() { return new Queue(QUEUE_VALIDATION_START, false);}
     @Bean public FanoutExchange fanoutExchangeValidationStart() { return new FanoutExchange(FANOUT_VALIDATION_START);}

@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: fiz-dev
+logging:
+  level:
+    ru.mycrg: DEBUG
 
 ---
 
