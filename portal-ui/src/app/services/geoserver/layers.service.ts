@@ -6,7 +6,7 @@ import {NameHrefProjection} from './projections';
 import {DatastoreService} from './datastore.service';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {filter, flatMap, map, refCount} from 'rxjs/operators';
+import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
 import {publishReplay} from 'rxjs/internal/operators/publishReplay';
@@ -34,6 +34,8 @@ export class LayersService {
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     logger.info('LayersService start');
+
+    this.layers$.subscribe();
   }
 
   /**
@@ -50,10 +52,27 @@ export class LayersService {
           flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
         )
         .subscribe(value => {
-          this.logger.info('NEXT: ', value);
-
           this._layers$.next(value);
         });
+  }
+
+  test() {
+    const newLayer = {
+      name: 'New Layer from test',
+      complexName: 'complexName',
+      title: 'Title of new layer',
+      href: '',
+      connectionInfo: {
+        dbName: '',
+        schemaName: '',
+        tableName: ''
+      }
+    };
+
+    const crgLayers = this._layers$.getValue();
+    crgLayers.push(newLayer);
+
+    this._layers$.next(crgLayers);
   }
 
   fetchLayerConnectionInfo(layer: CrgLayer) {
@@ -84,7 +103,7 @@ export class LayersService {
       }
     };
 
-    this.logger.info('payload: ', payload);
+    // this.logger.info('payload: ', payload);
 
     return this.http
       .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
@@ -134,6 +153,7 @@ export class LayersService {
 
     return crgLayers;
   }
+
 }
 
 export interface CrgLayer {

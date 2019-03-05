@@ -59,7 +59,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.workspacesService.getAll()
         .pipe(filter(value => !!value['workspaces']))
         .subscribe((geoWorkspace: GeoWorkspace) => {
-          this.logger.info('workspacesService.getAll: ', geoWorkspace.workspaces);
+          // this.logger.info('workspacesService.getAll: ', geoWorkspace.workspaces);
 
           this.workspaces = geoWorkspace.workspaces.workspace
               .map((item: NameHrefProjection) => item.name)

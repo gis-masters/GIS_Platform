@@ -94,7 +94,7 @@ export class ImportService {
   }
 
   getAllImportLayers(isScratch: boolean): Observable<ImportLayer[]> {
-    this.logger.info('getAll import layers');
+    // this.logger.info('getAll import layers');
 
     const observableTasks = [];
     this.getTasks(isScratch)

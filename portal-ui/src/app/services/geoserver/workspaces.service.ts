@@ -7,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {NameHrefProjection} from './projections';
 import {TaskImport} from './import/taskImport';
 import {ServerPropertiesService} from '../server-properties.service';
-import {WorkImport} from "./import/workImport";
+import {WorkImport} from './import/workImport';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class WorkspacesService {
   }
 
   getAll(): Observable<GeoWorkspace | any> {
-    this.logger.info('getAll workspaces');
+    // this.logger.info('getAll workspaces');
 
     return this.http
       .get<GeoWorkspace>(this.workspaceUrl)
@@ -62,7 +62,7 @@ export class WorkspacesService {
    * @param table Название таблицы
    */
   publishLayer(workspace: string, store: string, table: string): Observable<any> {
-    this.logger.info('publishLayer: ', workspace, store, table);
+    // this.logger.info('publishLayer: ', workspace, store, table);
 
     return this.http.post(
       this.workspaceUrl + '/' + workspace + '/datastores/' + store + '/featuretypes',

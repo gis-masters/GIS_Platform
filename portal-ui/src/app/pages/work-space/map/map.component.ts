@@ -33,9 +33,6 @@ export class MapComponent implements OnInit, OnDestroy {
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
 
-  isEditDialogShow = false;
-  objectsToEdit: ObjectDto[] = [];
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -67,8 +64,6 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((layers: CrgLayer[]) => {
           this.layers = layers;
 
-          this.logger.debug('addLayers: ', layers);
-
           this.layers.forEach((layer, index) => {
             this.openLayers
                 .addLayerToMap(layer.complexName)
@@ -93,13 +88,6 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((objectDto: ObjectDto) => {
           this.openLayers.showObject(objectDto);
         });
-
-    // this.communicationService
-    //     .editView$()
-    //     .subscribe((objects: ObjectDto[]) => {
-    //       this.isEditDialogShow = true;
-    //       this.objectsToEdit = objects;
-    //     });
 
     this.communicationService
         .validationDialog$()

@@ -33,7 +33,7 @@ export class GisDbService {
       importTasks: workImport.tasks
     };
 
-    this.logger.info('payload: ', payload);
+    // this.logger.info('payload: ', payload);
 
     return this.http.post(this.serverProp.baseUrl + '/db/import', payload);
   }

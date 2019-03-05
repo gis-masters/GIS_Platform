@@ -6,6 +6,7 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -32,6 +33,18 @@ public class UtilTest {
                         "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
                         "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":[\"Some error\"]}",
                 jsonNode.toString());
+    }
+
+    @Test
+    public void shouldTestEncoding() {
+        String oldString = "Ð\u009BÐ\u00ADÐ\u009F 10 ÐºÐ\u0092";
+        String example1 = "some text here";
+
+        String newString = new String(oldString.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        String newExample1 = new String(example1.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+
+        assertEquals("ЛЭП 10 кВ", newString);
+        assertEquals("some text here", newExample1);
     }
 
 }
