@@ -26,7 +26,7 @@ public class GisController {
     @ResponseBody
     @PostMapping("/db/import")
     public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport) {
-        log.info("InitImport request");
+        log.debug("InitImport request");
 
         return importService.initProcess(workImport);
     }
