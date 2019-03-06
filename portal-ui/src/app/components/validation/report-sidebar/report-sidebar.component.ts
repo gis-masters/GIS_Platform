@@ -53,8 +53,8 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.layersService.layers$
         .pipe(
-          takeUntil(this.unsubscribe$),
           filter(value => !!value && !!value.length),
+          takeUntil(this.unsubscribe$)
         )
         .subscribe((layers: CrgLayer[]) => {
           this.isValidationInited = true;
