@@ -13,9 +13,9 @@ import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.wrapper.dao.PostGisStorage;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
+import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
@@ -31,15 +31,15 @@ public class MqListener {
     private final IGeoServer geoServer;
     private final AuthService authService;
     private final ValidationService validationService;
-    private final PostGisStorage postGisStorage;
+    private final ImportService importService;
 
     @Autowired
     public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService,
-                      ValidationService validationService, PostGisStorage postGisStorage) {
+                      ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
         this.geoServer = geoServer;
         this.authService = authService;
-        this.postGisStorage = postGisStorage;
+        this.importService = importService;
         this.validationService = validationService;
     }
 
@@ -66,7 +66,7 @@ public class MqListener {
     public void initImport(ImportMqRequest request) {
         log.debug("Получено сообщение initImport");
         try {
-            postGisStorage.doImport(request);
+            importService.doImport(request);
 
             mqEvents.importResponse(
                     new ImportMqResponse(

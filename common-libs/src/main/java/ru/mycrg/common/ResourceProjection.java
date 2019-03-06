@@ -37,4 +37,9 @@ public class ResourceProjection {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
+
+    @Override
+    public String toString() {
+        return schemaName + tableName;
+    }
 }

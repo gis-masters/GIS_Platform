@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
@@ -19,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PostGisStorage {
+public class GisStorage {
 
-    private static final Logger log = LoggerFactory.getLogger(PostGisStorage.class);
+    private static final Logger log = LoggerFactory.getLogger(GisStorage.class);
 
     private DatasourceFactory datasourceFactory;
 
@@ -29,7 +30,7 @@ public class PostGisStorage {
     private static final String NOT_IMPORT = "NotImport";
 
     @Autowired
-    public PostGisStorage(DatasourceFactory datasourceFactory) {
+    public GisStorage(DatasourceFactory datasourceFactory) {
         this.datasourceFactory = datasourceFactory;
     }
 
@@ -136,39 +137,112 @@ public class PostGisStorage {
     }
 
     /**
-     * При импорте выполняется:
-     *  - Очистка целевой таблицы и таблицы с данными валидации (*_extension)
-     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs"
+     * Импорт. <p>
+     * Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт,
+     * в схему которая определена как рабочая, но все это в пределах одной БД. <p>
+     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
      *  - Перенос из исходной таблицы в рабочую
-     *  - Проверка и при необходимости генерация GLOBALID
+     * @param jdbcTemplate Коннекшн к БД
+     * @param request Даные для импорта
      */
     @Transactional
-    public void doImport(ImportMqRequest request) {
+    public void doImport(JdbcTemplate jdbcTemplate, ImportMqRequest request) {
+        log.debug("doImport from: {} to: {}", request.sourceToString(), request.targetToString());
+
         String targetSchema = request.getTargetResource().getSchemaName();
         String targetTable = request.getTargetResource().getTableName();
 
-        JdbcTemplate jdbcTemplate = initConnection(request.getSourceResource().getDbName());
-        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", targetSchema, targetTable));
-        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", targetSchema, targetTable + "_extension"));
-
+        // Prepare table
         if (isNeedPrepareTable(request.getMapping())) {
             String alterRequest = prepareAlterRequest(request.getMapping(), targetSchema, targetTable);
             log.debug("SQL alter request: {}", alterRequest);
             jdbcTemplate.execute(alterRequest);
         }
 
-        String sqlRequest = prepareInsertRequest(request);
-        log.debug("SQL import request: {}", sqlRequest);
-        jdbcTemplate.execute(sqlRequest);
+        // Import
+        String insertRequest = prepareInsertRequest(request);
+        log.debug("SQL import request: {}", insertRequest);
+        jdbcTemplate.execute(insertRequest);
     }
 
-    private JdbcTemplate initConnection(final String dbName) {
+    /**
+     * Подразумевает очистку таблиц впаре с таблицей "_extension"
+     *
+     * @param jdbcTemplate Коннекшн к БД
+     * @param targets Описание ресурсов к которым нужно применить очистку
+     */
+    @Transactional
+    public void truncate(JdbcTemplate jdbcTemplate, List<ResourceProjection> targets) {
+        targets.forEach(target -> {
+            log.debug("Try truncate: {}", target.toString());
+
+            jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), target.getTableName()));
+
+            String extensionTable = target.getTableName() + "_extension";
+            try {
+                jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), extensionTable));
+            } catch (Exception e) {
+                log.warn("Cant truncate table: {} Error: {}", extensionTable, e.getLocalizedMessage());
+            }
+        });
+    }
+
+    public boolean isColumnExist(JdbcTemplate jdbcTemplate, String tableName, String columnName) {
+        String sqlRequest = String.format("SELECT * FROM information_schema.columns WHERE table_name='%s' and " +
+                "column_name='%s'", tableName, columnName);
+
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sqlRequest);
+
+        return !result.isEmpty();
+    }
+
+    public JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
 
     private boolean isNeedPrepareTable(List<GeoMapping> mapping) {
         return mapping.stream()
                 .anyMatch(geoMapping -> AS_IS.equals(geoMapping.getTarget().getType()));
+    }
+
+    /**
+     * Получить партию данных.
+     *
+     * @param jdbcTemplate Коннекш к БД
+     * @param target Данные ресурса из которого производится выборка
+     * @param limit Размер партии
+     * @param offset Смещение
+     */
+    public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
+                                                int limit, int offset) {
+        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT ? OFFSET ?",
+                target.getSchemaName(), target.getTableName());
+
+        return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
+    }
+
+    public void saveBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
+        nextBatch.forEach(item -> {
+            String sqlUpdate = generateUpdateRequest(target, item);
+
+            log.debug("update SQL: {}", sqlUpdate);
+
+            jdbcTemplate.update(sqlUpdate);
+        });
+    }
+
+    private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {
+        var ref = new Object() {
+            String sql = String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName());
+        };
+
+        item.forEach((key, value) -> {
+            if (!"objectid".equals(key)) {
+                ref.sql = ref.sql + key + "='" + value + "', ";
+            }
+        });
+
+        return ref.sql.substring(0, ref.sql.length() - 2) + " WHERE objectid=" + item.get("objectid");
     }
 
     private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
@@ -249,5 +323,4 @@ public class PostGisStorage {
 
         return targetColumns + sourceColumns.toString();
     }
-
 }

@@ -10,7 +10,7 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.PostGisStorage;
+import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class ValidationService {
 
     private final IMqEvents mqEvents;
     private final IValidator validator;
-    private final PostGisStorage postGisStorage;
+    private final GisStorage gisStorage;
 
     private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
     private Queue<List<ObjectValidationResult>> violationsQueue = new ArrayDeque<>();
@@ -41,24 +41,24 @@ public class ValidationService {
     private String CLASS_ID = "classid";
 
     @Autowired
-    public ValidationService(IValidator validator, IMqEvents mqEvents, PostGisStorage postGisStorage) {
+    public ValidationService(IValidator validator, IMqEvents mqEvents, GisStorage gisStorage) {
         this.mqEvents = mqEvents;
         this.validator = validator;
-        this.postGisStorage = postGisStorage;
+        this.gisStorage = gisStorage;
     }
 
     public void getResults(ValidationMqRequest validationMqRequest) throws IOException {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
-        Long totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
+        Long totalViolations = gisStorage.countTotalViolations(validationMqRequest);
         if (totalViolations > 0) {
-            List<Map<String, Object>> violations = postGisStorage.getViolations(validationMqRequest);
+            List<Map<String, Object>> violations = gisStorage.getViolations(validationMqRequest);
 
             log.info("Found {} violations", violations.size());
             response.setResults(Util.mapToViolations(violations));
             response.setValidated(true);
         } else {
-            response.setValidated(postGisStorage.isValidated(validationMqRequest));
+            response.setValidated(gisStorage.isValidated(validationMqRequest));
         }
 
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
@@ -74,8 +74,8 @@ public class ValidationService {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         // определим как будем подсчитывать общее кол-во ошибок в слое.
-        if (postGisStorage.isValidated(validationMqRequest)) {
-            totalViolations = postGisStorage.countTotalViolations(validationMqRequest);
+        if (gisStorage.isValidated(validationMqRequest)) {
+            totalViolations = gisStorage.countTotalViolations(validationMqRequest);
             isNotValidatedYet = false;
         } else {
             totalViolations = 0;
@@ -90,7 +90,7 @@ public class ValidationService {
         while (true) {
             response.setResults(new ArrayList<>());
 
-            var batch = postGisStorage.fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
+            var batch = gisStorage.fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }
@@ -114,7 +114,7 @@ public class ValidationService {
             if (nextViolations != null) {
                 sendPendingResponse(validationMqRequest, nextViolations);
 
-                postGisStorage.saveValidationResults(validationMqRequest, nextViolations);
+                gisStorage.saveValidationResults(validationMqRequest, nextViolations);
             } else {
                 response.setTotal(totalViolations);
                 response.setStatus(ProcessStatus.DONE);
@@ -144,8 +144,8 @@ public class ValidationService {
     public void getInfo(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
-        response.setValidated(postGisStorage.isValidated(validationMqRequest));
-        response.setTotal(postGisStorage.countTotalViolations(validationMqRequest));
+        response.setValidated(gisStorage.isValidated(validationMqRequest));
+        response.setTotal(gisStorage.countTotalViolations(validationMqRequest));
 
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
         response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
