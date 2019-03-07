@@ -30,4 +30,12 @@ public class MqProperties {
     public static final String QUEUE_POSTGRE_VALIDATION = "postgre.validation";
     public static final String KEY_POSTGRE_VALIDATION = "key.postgre.validation";
 
+    public static final String FANOUT_GML_INIT = "fanout.gml.init";
+    public static final String QUEUE_GML_INIT = "gml.init";
+    public static final String KEY_GML_INIT = "key.gml.init";
+
+    public static final String FANOUT_GML_RESPONSE = "fanout.gml.response";
+    public static final String QUEUE_GML_RESPONSE = "gml.response";
+    public static final String KEY_GML_RESPONSE = "key.gml.response";
+
 }

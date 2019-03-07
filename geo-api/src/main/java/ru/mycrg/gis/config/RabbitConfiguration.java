@@ -65,6 +65,20 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queuePostgreValidation()).to(fanoutExchangePostgreValidation());
     }
 
+    // Config "gml init generation" exchange/queue
+    @Bean public Queue queueGmlInit() { return new Queue(QUEUE_GML_INIT, false);}
+    @Bean public FanoutExchange fanoutExchangeGmlInit() { return new FanoutExchange(FANOUT_GML_INIT);}
+    @Bean public Binding bindingGmlInit() {
+        return BindingBuilder.bind(queueGmlInit()).to(fanoutExchangeGmlInit());
+    }
+
+    // Config "gml response"
+    @Bean public Queue queueGmlResponse() { return new Queue(QUEUE_GML_RESPONSE, false);}
+    @Bean public FanoutExchange fanoutExchangeGmlResponse() { return new FanoutExchange(FANOUT_GML_RESPONSE);}
+    @Bean public Binding bindingGmlResponse() {
+        return BindingBuilder.bind(queueGmlResponse()).to(fanoutExchangeGmlResponse());
+    }
+
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();

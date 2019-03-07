@@ -3,6 +3,8 @@ package ru.mycrg.wrapper.mq;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 
+import java.util.List;
+
 public interface IMqEvents {
 
     void created(Long msg);
@@ -10,4 +12,6 @@ public interface IMqEvents {
     void validationResponse(ValidationMqResponse response);
 
     void importResponse(ImportMqResponse importMqResponse);
+
+    void gmlResponse(List<String> payload);
 }

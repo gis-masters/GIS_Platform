@@ -12,6 +12,8 @@ import ru.mycrg.gis.service.OrganizationService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
+import java.util.List;
+
 import static ru.mycrg.common.config.MqProperties.*;
 
 @Component
@@ -48,5 +50,12 @@ public class MqListener {
     @RabbitListener(queues = QUEUE_IMPORT_RESPONSE)
     public void importResponse(ImportMqResponse response) {
         importService.progress(response);
+    }
+
+    @RabbitListener(queues = QUEUE_GML_RESPONSE)
+    public void gmlResponse(List<String> response) {
+        log.info("gmlResponse: {}", response);
+
+        // importService.progress(response);
     }
 }

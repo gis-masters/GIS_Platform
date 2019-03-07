@@ -9,6 +9,8 @@ import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.import_.ImportMqResponse;
 
+import java.util.List;
+
 @Service
 public class MqSender implements IMqEvents {
 
@@ -40,6 +42,13 @@ public class MqSender implements IMqEvents {
         log.debug("Send {} response: {} / {}", payload.getId(), payload.getLayerName(), payload.getStatus());
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_IMPORT_RESPONSE, MqProperties.KEY_IMPORT_RESPONSE, payload);
+    }
+
+    @Override
+    public void gmlResponse(List<String> payload) {
+        log.debug("Send gml response");
+
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_GML_RESPONSE, MqProperties.KEY_GML_RESPONSE, payload);
     }
 
 }
