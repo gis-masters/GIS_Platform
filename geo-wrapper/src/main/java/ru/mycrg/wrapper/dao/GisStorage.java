@@ -18,6 +18,7 @@ import ru.mycrg.wrapper.service.validation.Util;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class GisStorage {
@@ -221,13 +222,23 @@ public class GisStorage {
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
 
-    public void saveBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
+    public void updateBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
         nextBatch.forEach(item -> {
             String sqlUpdate = generateUpdateRequest(target, item);
 
             log.debug("update SQL: {}", sqlUpdate);
 
             jdbcTemplate.update(sqlUpdate);
+        });
+    }
+
+    public void saveBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> batch) {
+        batch.forEach(item -> {
+            String sqlInsert = generateInsertRequest(target, item);
+
+            log.debug("update SQL: {}", sqlInsert);
+
+            jdbcTemplate.update(sqlInsert);
         });
     }
 
@@ -243,6 +254,29 @@ public class GisStorage {
         });
 
         return ref.sql.substring(0, ref.sql.length() - 2) + " WHERE objectid=" + item.get("objectid");
+    }
+
+    private String generateInsertRequest(ResourceProjection target, Map<String, Object> item) {
+        String sql = String.format("INSERT INTO %s.%s(GENERATED_KEYS) VALUES(GENERATED_VALUES);",
+                target.getSchemaName(),
+                target.getTableName());
+
+        var ref = new Object() {
+            String keysString = "";
+            String valuesString = "";
+        };
+        item.forEach((key, value) -> {
+            ref.keysString = ref.keysString + key + ", ";
+            ref.valuesString = ref.valuesString + "'" + value + "',";
+        });
+
+        ref.keysString.substring(0, ref.keysString.length() - 2);
+        ref.valuesString.substring(0, ref.valuesString.length() - 2);
+
+        String insertKeys = sql.replace("GENERATED_KEYS", (CharSequence) ref.keysString);
+        String result = insertKeys.replace("GENERATED_VALUES", (CharSequence) ref.valuesString);
+
+        return result;
     }
 
     private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {

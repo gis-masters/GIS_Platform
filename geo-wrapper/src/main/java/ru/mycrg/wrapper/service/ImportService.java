@@ -68,7 +68,7 @@ public class ImportService {
         while (true) {
             List<Map<String, Object>> nextBatch = queue.poll();
             if (nextBatch != null) {
-                gisStorage.saveBatch(jdbcTemplate, resourceProjection, nextBatch);
+                gisStorage.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
             } else {
                 break;
             }
