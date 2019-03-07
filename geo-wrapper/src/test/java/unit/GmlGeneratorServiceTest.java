@@ -12,6 +12,7 @@ import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.service.GmlGenerator;
 
 import java.io.IOException;
+import java.util.*;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -35,7 +36,33 @@ public class GmlGeneratorServiceTest {
         DatasourceFactory datasourceFactory = new DatasourceFactory(env, jdbcTemplate);
 
         GmlGenerator gmlGenerator = new GmlGenerator(new GisStorage(datasourceFactory));
-        gmlGenerator.generate(new ResourceProjection("gis", "fiz", "electricline"));
+        gmlGenerator.generate(new ResourceProjection("gis", "fiz", "functionalzone"));
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void generateData() {
+        MockEnvironment env = new MockEnvironment();
+        env.setProperty("spring.datasource.url", "jdbc:postgresql://127.0.0.1:5434/postgres");
+        env.setProperty("spring.datasource.username", "fiz");
+        env.setProperty("spring.datasource.password", "314");
+
+        DatasourceFactory datasourceFactory = new DatasourceFactory(env, jdbcTemplate);
+
+        List<Map<String, Object>> batch = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("classid", "314314");
+            params.put("other", "other string");
+            params.put("globalid", UUID.randomUUID());
+
+            batch.add(params);
+        }
+
+        GisStorage gisStorage = new GisStorage(datasourceFactory);
+        gisStorage.saveBatch(jdbcTemplate, new ResourceProjection("gis", "fiz", "functionalzone"), batch);
 
         assertTrue(true);
     }
