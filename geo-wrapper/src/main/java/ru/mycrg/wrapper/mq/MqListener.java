@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
@@ -15,12 +16,14 @@ import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
+import ru.mycrg.wrapper.service.GmlGenerator;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class MqListener {
@@ -32,13 +35,15 @@ public class MqListener {
     private final AuthService authService;
     private final ValidationService validationService;
     private final ImportService importService;
+    private final GmlGenerator gmlGenerator;
 
     @Autowired
-    public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService,
+    public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService, GmlGenerator gmlGenerator,
                       ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
         this.geoServer = geoServer;
         this.authService = authService;
+        this.gmlGenerator = gmlGenerator;
         this.importService = importService;
         this.validationService = validationService;
     }
@@ -101,6 +106,18 @@ public class MqListener {
         } catch (Exception e) {
             log.error("Не удалось провалидировать.", e);
             mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
+        }
+    }
+
+    @RabbitListener(queues = MqProperties.QUEUE_GML_INIT)
+    public void gmlInit(List<ResourceProjection> request) {
+        log.info("Получено сообщение, gmlInit");
+
+        try {
+            gmlGenerator.generate(request.get(0));
+        } catch (Exception e) {
+            log.error("Не удалось провалидировать.", e);
+            // mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
         }
     }
 

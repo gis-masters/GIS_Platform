@@ -1,7 +1,6 @@
 package unit;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.tika.parser.txt.CharsetDetector;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.mycrg.common.ObjectValidationResult;
@@ -58,28 +57,6 @@ public class UtilTest {
     public void shouldTestChar() {
         assertEquals("CYRILLIC", Character.UnicodeBlock.of('Ц').toString());
         assertNotEquals("CYRILLIC", Character.UnicodeBlock.of('W').toString());
-    }
-
-    @Test
-    public void shouldDefineEncodeType() {
-        CharsetDetector utf8 = new CharsetDetector();
-        utf8.setText(("Ð¡Ñ\u0080ÐµÐ´Ð½ÐµÑ\u008DÑ\u0082Ð°Ð¶ÐºÐ° - Ð³Ð´Ðµ ÐµÑ\u0081Ñ\u0082Ñ\u008C,, Ð¼Ð°Ð»Ð¾Ñ\u008DÑ" +
-                "\u0082Ð°Ð¶ÐºÐ° Ð³Ð´Ðµ Ð¼Ð¾Ð¶Ð½Ð¾").getBytes());
-
-        assertEquals("UTF-8", utf8.detect().getName());
-
-        CharsetDetector windows1520 = new CharsetDetector();
-        windows1520.setText(("Ð Ð\u008EÐ¡Ð\u0082Ð ÂµÐ Ò\u0091Ð Ð\u0085Ð ÂµÐ¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094" +
-                "Ð Â° - Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð ÂµÐ¡Ð\u0083Ð¡â\u0080\u009AÐ¡Ð\u008A,, Ð Ñ\u0098Ð Â°Ð Â»Ð Ñ\u0095" +
-                "Ð¡Ð\u008CÐ¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð Ñ\u0098Ð Ñ\u0095Ð Â¶Ð Ð" +
-                "\u0085Ð Ñ\u0095").getBytes());
-
-        assertEquals("UTF-8", windows1520.detect().getName());
-
-        CharsetDetector windows = new CharsetDetector();
-        windows.setText("РЎСЂРµРґРЅРµСЌС‚Р°Р¶РєР° - РіРґРµ РµСЃС‚СЊ".getBytes());
-
-        assertEquals("UTF-8", windows.detect().getName());
     }
 
 }
