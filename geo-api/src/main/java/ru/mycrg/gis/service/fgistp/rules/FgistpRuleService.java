@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
 import ru.mycrg.gis.repository.CustomRuleRepository;

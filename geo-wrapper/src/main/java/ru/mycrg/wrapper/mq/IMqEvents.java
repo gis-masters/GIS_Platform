@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.mq;
 
+import ru.mycrg.common.GmlResponseDto;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 
@@ -13,5 +14,5 @@ public interface IMqEvents {
 
     void importResponse(ImportMqResponse importMqResponse);
 
-    void gmlResponse(List<String> payload);
+    void gmlResponse(GmlResponseDto gmlResponseDto);
 }

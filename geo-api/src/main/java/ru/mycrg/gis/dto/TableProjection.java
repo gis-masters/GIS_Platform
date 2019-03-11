@@ -1,7 +1,7 @@
 package ru.mycrg.gis.dto;
 
 import ru.mycrg.common.import_.ColumnProjection;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
 
 import java.util.List;
 

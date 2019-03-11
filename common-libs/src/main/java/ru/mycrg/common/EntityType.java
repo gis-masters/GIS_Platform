@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.common;
 
 import ru.mycrg.common.propertyTypes.*;
 
@@ -16,6 +16,10 @@ public class EntityType {
     private String customRuleFunction;
 
     public EntityType() {}
+
+    public String getClearName() {
+        return name.split("_")[0];
+    }
 
     public EntityType(String name) {
         this.name = name;

@@ -6,24 +6,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.GmlInitDto;
+import ru.mycrg.common.GmlResponseDto;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
-import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.RequstType;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
-import ru.mycrg.wrapper.service.GmlGenerator;
+import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public class MqListener {
@@ -110,14 +110,14 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_GML_INIT)
-    public void gmlInit(List<ResourceProjection> request) {
-        log.info("Получено сообщение, gmlInit");
+    public void gmlInit(GmlInitDto request) {
+        log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
-            gmlGenerator.generate(request.get(0));
+            gmlGenerator.generate(request);
         } catch (Exception e) {
             log.error("Не удалось провалидировать.", e);
-            // mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
+             mqEvents.gmlResponse(new GmlResponseDto(request.getId(), ProcessStatus.ERROR));
         }
     }
 
