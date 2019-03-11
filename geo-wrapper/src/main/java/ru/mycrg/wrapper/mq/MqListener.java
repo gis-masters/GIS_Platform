@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.GmlInitDto;
-import ru.mycrg.common.GmlResponseDto;
+import ru.mycrg.common.GmlMqRequest;
+import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
@@ -110,14 +110,16 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_GML_INIT)
-    public void gmlInit(GmlInitDto request) {
+    public void gmlInit(GmlMqRequest request) {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
-            gmlGenerator.generate(request);
+            String filePath = gmlGenerator.generate(request);
+
+            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), filePath, ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Не удалось провалидировать.", e);
-             mqEvents.gmlResponse(new GmlResponseDto(request.getId(), ProcessStatus.ERROR));
+             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR));
         }
     }
 

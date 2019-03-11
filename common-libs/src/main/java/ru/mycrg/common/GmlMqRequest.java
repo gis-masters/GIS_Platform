@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GmlInitDto {
+public class GmlMqRequest {
 
     private UUID id;
     private String docSchema = "Doc.20301010000";
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityType> fgistpRules = new ArrayList<>();
 
-    public GmlInitDto() {}
+    public GmlMqRequest() {}
 
     public UUID getId() {
         return id;

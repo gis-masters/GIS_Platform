@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import ru.mycrg.common.EntityType;
-import ru.mycrg.common.GmlInitDto;
+import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.wrapper.dao.GisStorage;
@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 import java.util.*;
 
 @Service
@@ -40,24 +41,24 @@ public class GmlGenerator {
     /**
      * Генерируем GML.
      *
-     * @param gmlInitDto Источник данных
+     * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(GmlInitDto gmlInitDto) throws ParserConfigurationException, TransformerException {
+    public String generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException, TransformerException {
         log.info("Start gml generation. idCounter: {}", idCounter);
 
-        GmlDocumentHolder documentHolder = createGml(gmlInitDto);
+        GmlDocumentHolder documentHolder = createGml(gmlMqRequest);
 
         return saveFile(documentHolder);
     }
 
     @NotNull
-    public GmlDocumentHolder createGml(GmlInitDto gmlInitDto) throws ParserConfigurationException {
-        GmlDocumentHolder documentHolder = createXmlDocument(gmlInitDto.getDocSchema());
+    public GmlDocumentHolder createGml(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
+        GmlDocumentHolder documentHolder = createXmlDocument(gmlMqRequest.getDocSchema());
 
-        log.debug("{} sources", gmlInitDto.getResourceProjections().size());
-        gmlInitDto.getResourceProjections().forEach(resourceProjection -> {
-            getFgistpRuleByTableName(gmlInitDto.getFgistpRules(), resourceProjection.getTableName())
+        log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
+        gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
+            getFgistpRuleByTableName(gmlMqRequest.getFgistpRules(), resourceProjection.getTableName())
                     .ifPresentOrElse(rule -> {
                                 writeDataToGml(documentHolder, rule, getData(resourceProjection));
                             },
@@ -76,8 +77,13 @@ public class GmlGenerator {
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        StreamResult result = new StreamResult("fgistp.gml");
+        StreamResult result = new StreamResult("/opt/fgistp.gml");
         transformer.transform(source, result);
+
+        File file = new File("/opt/fgistp.gml");
+        if (file.exists() && !file.isDirectory()) {
+            return file.getAbsolutePath();
+        }
 
         return "";
     }

@@ -7,7 +7,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import ru.mycrg.common.EntityType;
-import ru.mycrg.common.GmlInitDto;
+import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
@@ -43,9 +43,9 @@ public class GmlGeneratorServiceTest {
 
         DatasourceFactory datasourceFactory = new DatasourceFactory(env, jdbcTemplate);
 
-        GmlInitDto gmlInitDto = new GmlInitDto();
-        gmlInitDto.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
-        gmlInitDto.addResource(new ResourceProjection("gis", "fiz", "electricline"));
+        GmlMqRequest gmlMqRequest = new GmlMqRequest();
+        gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
+        gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 
         List<EntityType> fgistpRules = new ArrayList<>();
         // FZ
@@ -79,13 +79,14 @@ public class GmlGeneratorServiceTest {
         // ----------------------------
         fgistpRules.add(functionalZone);
         fgistpRules.add(electricline);
-        gmlInitDto.setFgistpRules(fgistpRules);
+        gmlMqRequest.setFgistpRules(fgistpRules);
 
         GmlGenerator gmlGenerator = new GmlGenerator(new GisStorage(datasourceFactory));
 
         // ACTION
-        GmlDocumentHolder gml = gmlGenerator.createGml(gmlInitDto);
-//        gmlGenerator.generate(gmlInitDto);
+        GmlDocumentHolder gml = gmlGenerator.createGml(gmlMqRequest);
+        String filePath = gmlGenerator.generate(gmlMqRequest);
+        assertTrue(filePath.length() > 0);
 
         assertNotNull(gml.getDocument());
         assertTrue(gml.getDocument().getElementsByTagName("FunctionalZone").getLength() > 0);

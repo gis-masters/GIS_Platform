@@ -1,7 +1,5 @@
 package ru.mycrg.gis.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +27,6 @@ public class GisController {
         log.debug("InitImport request");
 
         return importService.initProcess(workImport);
-    }
-
-    private String getAsJson(WorkImport workImport) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        String result = workImport.getDbName();
-        try {
-            result = mapper.writeValueAsString(workImport);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return result;
     }
 
 }

@@ -6,16 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GmlResponseDto {
+public class GmlMqResponse {
 
     private UUID id;
     private String pathToFile;
     private ProcessStatus status;
 
-    public GmlResponseDto() {}
+    public GmlMqResponse() {}
 
-    public GmlResponseDto(UUID id, ProcessStatus status) {
+    public GmlMqResponse(UUID id, ProcessStatus status) {
         this.id = id;
+        this.status = status;
+    }
+
+    public GmlMqResponse(UUID id, String pathToFile, ProcessStatus status) {
+        this.id = id;
+        this.pathToFile = pathToFile;
         this.status = status;
     }
 
