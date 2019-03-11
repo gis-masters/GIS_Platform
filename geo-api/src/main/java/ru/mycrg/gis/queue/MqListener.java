@@ -6,13 +6,12 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.IValidationService;
-
-import java.util.List;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -53,8 +52,8 @@ public class MqListener {
     }
 
     @RabbitListener(queues = QUEUE_GML_RESPONSE)
-    public void gmlResponse(List<String> response) {
-        log.info("gmlResponse: {}", response);
+    public void gmlResponse(GmlMqResponse response) {
+        log.info("gmlResponse: {}", response.getId());
 
         // importService.progress(response);
     }
