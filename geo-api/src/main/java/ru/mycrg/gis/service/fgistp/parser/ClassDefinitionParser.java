@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
 import ru.mycrg.common.propertyTypes.*;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 

@@ -40,6 +40,6 @@ public class ResourceProjection {
 
     @Override
     public String toString() {
-        return schemaName + tableName;
+        return schemaName + "." + tableName;
     }
 }

@@ -5,12 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.GmlInitDto;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.gis.dto.MqOrganizationInit;
-
-import java.util.List;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -48,8 +46,8 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void sendGmlInit(List<ResourceProjection> payload) {
-        log.info("MQ sendGmlInit: {}", payload);
+    public void sendGmlInit(GmlInitDto payload) {
+        log.info("MQ sendGmlInit: {}", payload.getId());
 
         rabbitTemplate.convertAndSend(FANOUT_GML_INIT, KEY_GML_INIT, payload);
     }

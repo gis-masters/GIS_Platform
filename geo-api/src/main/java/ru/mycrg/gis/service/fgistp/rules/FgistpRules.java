@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.fgistp.rules;
 
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
