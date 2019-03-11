@@ -13,6 +13,7 @@ import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.service.gml.GmlDocumentHolder;
 import ru.mycrg.wrapper.service.gml.GmlGenerator;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,8 +22,7 @@ import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 public class GmlGeneratorServiceTest {
 
@@ -35,7 +35,7 @@ public class GmlGeneratorServiceTest {
     }
 
     @Test
-    public void shouldGenerateGml() throws TransformerException, ParserConfigurationException {
+    public void shouldGenerateGml() throws ParserConfigurationException, TransformerException {
         MockEnvironment env = new MockEnvironment();
         env.setProperty("spring.datasource.url", "jdbc:postgresql://127.0.0.1:5434/postgres");
         env.setProperty("spring.datasource.username", "fiz");
@@ -48,31 +48,47 @@ public class GmlGeneratorServiceTest {
         gmlInitDto.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 
         List<EntityType> fgistpRules = new ArrayList<>();
-        EntityType functionaleZone = new EntityType();
-        functionaleZone.setName("FunctionalZone_Type");
+        // FZ
+        EntityType functionalZone = new EntityType();
+        functionalZone.setName("FunctionalZone_Type");
 
         List<AbstractProperty> functionalZoneProperties = new ArrayList<>();
-        StringProperty fzGlobalID = new StringProperty();
-        fzGlobalID.setName("GLOBALID");
+        StringProperty globalID = new StringProperty();
+        globalID.setName("GLOBALID");
         StringProperty fzNotExistProp = new StringProperty();
-        fzGlobalID.setName("fzNotExistProp");
-        StringProperty fzClassId = new StringProperty();
-        fzGlobalID.setName("CLASSID");
+        fzNotExistProp.setName("fzNotExistProp");
+        StringProperty classId = new StringProperty();
+        classId.setName("CLASSID");
 
-        functionalZoneProperties.add(fzGlobalID);
+        functionalZoneProperties.add(globalID);
         functionalZoneProperties.add(fzNotExistProp);
-        functionalZoneProperties.add(fzClassId);
+        functionalZoneProperties.add(classId);
 
-        functionaleZone.setProperties(functionalZoneProperties);
+        functionalZone.setProperties(functionalZoneProperties);
 
-        fgistpRules.add(functionaleZone);
+        // Electricline
+        EntityType electricline = new EntityType();
+        electricline.setName("ElectricLine_Type");
+
+        List<AbstractProperty> electriclineProperties = new ArrayList<>();
+        electriclineProperties.add(globalID);
+        electriclineProperties.add(classId);
+
+        electricline.setProperties(electriclineProperties);
+
+        // ----------------------------
+        fgistpRules.add(functionalZone);
+        fgistpRules.add(electricline);
         gmlInitDto.setFgistpRules(fgistpRules);
 
         GmlGenerator gmlGenerator = new GmlGenerator(new GisStorage(datasourceFactory));
-        String fileUri = gmlGenerator.generate(gmlInitDto);
 
-        assertTrue(true);
-        assertEquals("", fileUri);
+        // ACTION
+        GmlDocumentHolder gml = gmlGenerator.createGml(gmlInitDto);
+//        gmlGenerator.generate(gmlInitDto);
+
+        assertNotNull(gml.getDocument());
+        assertTrue(gml.getDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
     }
 
 //    @Test

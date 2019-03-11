@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.service.gml;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +10,7 @@ import org.w3c.dom.Element;
 import ru.mycrg.common.EntityType;
 import ru.mycrg.common.GmlInitDto;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.wrapper.dao.GisStorage;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -44,6 +46,13 @@ public class GmlGenerator {
     public String generate(GmlInitDto gmlInitDto) throws ParserConfigurationException, TransformerException {
         log.info("Start gml generation. idCounter: {}", idCounter);
 
+        GmlDocumentHolder documentHolder = createGml(gmlInitDto);
+
+        return saveFile(documentHolder);
+    }
+
+    @NotNull
+    public GmlDocumentHolder createGml(GmlInitDto gmlInitDto) throws ParserConfigurationException {
         GmlDocumentHolder documentHolder = createXmlDocument(gmlInitDto.getDocSchema());
 
         log.debug("{} sources", gmlInitDto.getResourceProjections().size());
@@ -57,13 +66,7 @@ public class GmlGenerator {
                             });
         });
 
-        return saveFile(documentHolder);
-    }
-
-    private Optional<EntityType> getFgistpRuleByTableName(List<EntityType> entityTypes, String tableName) {
-        return entityTypes.stream()
-                .filter(entityType -> entityType.getClearName().toLowerCase().equals(tableName.toLowerCase()))
-                .findFirst();
+        return documentHolder;
     }
 
     private String saveFile(GmlDocumentHolder documentHolder) throws TransformerException {
@@ -83,19 +86,52 @@ public class GmlGenerator {
                                 Queue<List<Map<String, Object>>> queue) {
         log.debug("write feature {} to GML Document", entityType.getName());
 
-        Document document = documentHolder.getDocument();
         while (!queue.isEmpty()) {
-            List<Map<String, Object>> item = queue.poll();
-            item.forEach(stringObjectMap -> {
-                Element gmlFeatureMember = document.createElement("gml:featureMember");
-                documentHolder.getFeatureCollection().appendChild(gmlFeatureMember);
+            // Обрабатываем партию данных из БД
+            queue.poll().forEach(propFromDb -> {
+                Element featureMember = addFeatureMember(documentHolder, entityType.getClearName());
 
-                Element featureNode = document.createElement(entityType.getClearName());
-                featureNode.setAttribute("gml:id", generateId());
+                // Наполняем featureMember свойствами
+                propFromDb.forEach((key, value) -> {
 
-                gmlFeatureMember.appendChild(featureNode);
+                    // Выгружаются только те свойства что прописаны в 10 приказе
+                    if (isPropertyExist(entityType.getProperties(), key)) {
+                        Element prop = documentHolder.getDocument().createElement(key.toUpperCase());
+                        prop.setTextContent(value.toString());
+
+                        featureMember.appendChild(prop);
+                    } else {
+                        log.trace("Property {} does not exist in feature", key);
+                    }
+                });
             });
         }
+    }
+
+    private Element addFeatureMember(GmlDocumentHolder documentHolder, String name) {
+        Document document = documentHolder.getDocument();
+
+        Element gmlFeatureMember = document.createElement("gml:featureMember");
+        documentHolder.getFeatureCollection().appendChild(gmlFeatureMember);
+
+        Element featureNode = document.createElement(name);
+        featureNode.setAttribute("gml:id", generateId());
+
+        gmlFeatureMember.appendChild(featureNode);
+
+        return featureNode;
+    }
+
+    private boolean isPropertyExist(List<AbstractProperty> properties, String key) {
+        return properties
+                .stream()
+                .anyMatch(property -> {
+                    if (property.getName() != null && key != null) {
+                        return key.toLowerCase().equals(property.getName().toLowerCase());
+                    } else {
+                        return false;
+                    }
+                });
     }
 
     /**
@@ -161,6 +197,12 @@ public class GmlGenerator {
         }
 
         return queue;
+    }
+
+    private Optional<EntityType> getFgistpRuleByTableName(List<EntityType> entityTypes, String tableName) {
+        return entityTypes.stream()
+                .filter(entityType -> entityType.getClearName().toLowerCase().equals(tableName.toLowerCase()))
+                .findFirst();
     }
 
     private String generateId() {
