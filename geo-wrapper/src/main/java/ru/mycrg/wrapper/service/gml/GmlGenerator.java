@@ -1,6 +1,11 @@
 package ru.mycrg.wrapper.service.gml;
 
+import org.geotools.feature.SchemaException;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKBReader;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +16,7 @@ import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.dao.GisStorage;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +27,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -98,23 +105,82 @@ public class GmlGenerator {
             queue.poll().forEach(propFromDb -> {
                 Element featureMember = addFeatureMember(documentHolder, entityType.getClearName());
 
-                // Наполняем featureMember свойствами
                 propFromDb.forEach((key, value) -> {
-
-                    // Выгружаются только те свойства что прописаны в 10 приказе
-                    if (isPropertyExist(entityType.getProperties(), key)) {
-                        Element prop = documentHolder.getDocument().createElement(key.toUpperCase());
-                        if (value != null) {
-                            prop.setTextContent(value.toString());
-                        }
-
-                        featureMember.appendChild(prop);
-                    } else {
-                        log.trace("Property {} does not exist in feature", key);
-                    }
+                    fillFeatureMember(documentHolder.getDocument(), entityType.getProperties(), featureMember,
+                            key, value);
                 });
             });
         }
+    }
+
+    /**
+     * Наполняем featureMember свойствами
+     */
+    private void fillFeatureMember(Document document, List<SimplePropertyDto> properties, Element featureMember,
+                                   String key, Object value) {
+        if (key.toLowerCase().equals("crg_b_geometry") || key.toLowerCase().equals("crg_t_geometry")) {
+            SimpleFeatureType TYPE = null;
+//            try {
+//                WKBReader wkb = new WKBReader();
+//
+//                SimpleFeatureBuilder.build(TYPE, new Object[] { wkb.read((byte[]) value)},null);
+//
+//                ByteArrayOutputStream xml = new ByteArrayOutputStream();
+//
+////                GML encode2 = new GML(Version.GML2);
+////                encode2.setLegacy(true);
+////                encode2.setBaseURL(baseURL);
+////                encode2.setNamespace("location", "location.xsd");
+////                encode2.encode(xml,  new ListFeatureCollection(TYPE, collection));
+////
+////                xml.close();
+//
+//                String gml = xml.toString();
+//            } catch (SchemaException | ParseException e) {
+//                e.printStackTrace();
+//            }
+        }
+
+        // Выгружаются только те свойства что прописаны в 10 приказе
+        Optional<SimplePropertyDto> propertyByName = getPropertyByName(properties, key);
+        if (propertyByName.isPresent()) {
+            Element prop = document.createElement(key.toUpperCase());
+            if (value != null && !value.toString().isEmpty()) {
+                prop.setTextContent(getString(value));
+                featureMember.appendChild(prop);
+            } else {
+                // Значение isRequired то сгенерируем дефолтное иначе невключаем в gml
+                SimplePropertyDto property = propertyByName.get();
+                if (property.isRequired()) {
+                    prop.setTextContent(getDefaultValue(property));
+                    featureMember.appendChild(prop);
+                }
+            }
+        } else {
+            log.trace("Property {} does not exist in feature", key);
+        }
+    }
+
+    // Исправляем конвертацию BigDecimal -> "0E-8"
+    private String getString(Object value) {
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).toPlainString();
+        }
+
+        return value.toString();
+    }
+
+    @NotNull
+    private String getDefaultValue(SimplePropertyDto property) {
+        if (property.getValueType() == ValueType.INT || property.getValueType() == ValueType.CHOICE) {
+            return "0";
+        }
+
+        if (property.getValueType() == ValueType.DOUBLE) {
+            return "0.0000";
+        }
+
+        return "";
     }
 
     private Element addFeatureMember(GmlDocumentHolder documentHolder, String name) {
@@ -141,6 +207,13 @@ public class GmlGenerator {
                         return false;
                     }
                 });
+    }
+
+    private Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String key) {
+        return properties
+                .stream()
+                .filter(property -> property.getName() != null && key != null)
+                .findFirst();
     }
 
     /**

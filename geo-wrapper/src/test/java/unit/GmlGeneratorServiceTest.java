@@ -1,17 +1,26 @@
 package unit;
 
-import org.junit.Before;
+import org.geotools.data.DataUtilities;
+import org.geotools.feature.SchemaException;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureImpl;
+import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKBReader;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.propertyTypes.AbstractProperty;
-import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.service.gml.GmlDocumentHolder;
@@ -19,21 +28,16 @@ import ru.mycrg.wrapper.service.gml.GmlGenerator;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 
 public class GmlGeneratorServiceTest {
 
     @Mock
     JdbcTemplate jdbcTemplate;
-
-    @Before
-    public void setupMock() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void shouldGenerateGml() throws ParserConfigurationException, TransformerException {
@@ -60,6 +64,8 @@ public class GmlGeneratorServiceTest {
         fzNotExistProp.setName("fzNotExistProp");
         SimplePropertyDto classId = new SimplePropertyDto();
         classId.setName("CLASSID");
+        SimplePropertyDto shape = new SimplePropertyDto();
+        shape.setName("SHAPE");
 
         functionalZoneProperties.add(globalID);
         functionalZoneProperties.add(fzNotExistProp);
@@ -74,6 +80,7 @@ public class GmlGeneratorServiceTest {
         List<SimplePropertyDto> electriclineProperties = new ArrayList<>();
         electriclineProperties.add(globalID);
         electriclineProperties.add(classId);
+        electriclineProperties.add(shape);
 
         electricline.setProperties(electriclineProperties);
 
@@ -84,7 +91,7 @@ public class GmlGeneratorServiceTest {
 
         GmlGenerator gmlGenerator = new GmlGenerator(new GisStorage(datasourceFactory));
 
-        // ACTION
+        // ACT
         GmlDocumentHolder gml = gmlGenerator.createGml(gmlMqRequest);
         String filePath = gmlGenerator.generate(gmlMqRequest);
         assertTrue(filePath.length() > 0);
@@ -93,30 +100,35 @@ public class GmlGeneratorServiceTest {
         assertTrue(gml.getDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
     }
 
-//    @Test
-//    public void generateData() {
-//        MockEnvironment env = new MockEnvironment();
-//        env.setProperty("spring.datasource.url", "jdbc:postgresql://127.0.0.1:5434/postgres");
-//        env.setProperty("spring.datasource.username", "fiz");
-//        env.setProperty("spring.datasource.password", "314");
-//
-//        DatasourceFactory datasourceFactory = new DatasourceFactory(env, jdbcTemplate);
-//
-//        List<Map<String, Object>> batch = new ArrayList<>();
-//
-//        for (int i = 0; i < 10; i++) {
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("classid", "314314");
-//            params.put("other", "other string");
-//            params.put("globalid", UUID.randomUUID());
-//
-//            batch.add(params);
-//        }
-//
-//        GisStorage gisStorage = new GisStorage(datasourceFactory);
-//        gisStorage.saveBatch(jdbcTemplate, new ResourceProjection("gis", "fiz", "functionalzone"), batch);
-//
-//        assertTrue(true);
-//    }
+    @Test
+    public void shouldTest2() throws TransformerException, SchemaException, ParseException {
+        String electricline = "MULTILINESTRING((6592387.9853 4930796.0613,6592381.3446 4930622.6243,6592104.0698 " +
+                "4930418.8608,6592010.5395 4930499.868,6591938.9934 4930399.6067,6591840.2578 4930357.5477," +
+                "6591771.6732 4930321.48,6591656.4473 4930317.9192,6591307.3624 4930393.5754,6591073.9903 " +
+                "4930210.9063,6590839.0425 4930246.1438,6590811.3496 4930249.8546,6590808.2314 4930250.2847," +
+                "6590730.4077 4930261.137,6590722.3316 4930343.3346,6590714.2473 4930425.5322,6590706.3445 " +
+                "4930507.3196,6590710.4692 4930602.5,6590706.7817 4930663.383))";
+
+        String functionalzone = "MULTIPOLYGON(((6574494.1376 4919028.2325,6574475.1082 4919055.2051,6574474.9462 " +
+                "4919055.3776,6574511.131 4919080.4745,6574526.49 4919091.1263,6574531.8861 4919090.7536,6574534.3365" +
+                " 4919089.0816,6574525.0959 4919056.5317,6574523.2885 4919054.9356,6574494.1376 4919028.2325)))";
+
+        String electrictransformer = "POINT(6574347.9971 4918823.9425)";
+
+        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
+
+        SimpleFeatureType POLYGON_TYPE = DataUtilities.createType("location", "geom:Polygon");
+        SimpleFeatureType POINT_TYPE = DataUtilities.createType("location", "geom:Point");
+        SimpleFeatureType LINE_TYPE = DataUtilities.createType("location", "geom:LineString");
+
+        WKTReader2 wkt = new WKTReader2();
+        Geometry elGeometry = wkt.read(electricline);
+
+        var elFeature = SimpleFeatureBuilder.build(LINE_TYPE, new Object[]{wkt.read(electricline)}, null);
+        var fzFeature = SimpleFeatureBuilder.build(POLYGON_TYPE, new Object[]{wkt.read(functionalzone)}, null);
+        var etFeature = SimpleFeatureBuilder.build(POINT_TYPE, new Object[]{wkt.read(electrictransformer)}, null);
+
+        assertNotNull(elFeature);
+    }
 
 }

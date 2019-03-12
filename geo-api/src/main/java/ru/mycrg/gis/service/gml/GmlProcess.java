@@ -37,7 +37,7 @@ public class GmlProcess {
         if (response.getStatus() == ProcessStatus.DONE) {
             endTime = LocalDateTime.now();
 
-            log.info("Process id: {} is DONE. Processed: {}", id, mqResponse.size());
+            log.info("Process id: {} is {}", id, response.getStatus());
             futureResponse.complete(response.getPathToFile());
         } else {
             log.debug("Process: {} is: {}", id, response.getStatus());
