@@ -2,14 +2,14 @@ package ru.mycrg.gis.service.gml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.dto.GmlRequestDto;
-import ru.mycrg.gis.dto.ValidationRequestDto;
-import ru.mycrg.gis.service.import_.WorkImport;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class GmlProcess {
@@ -21,7 +21,7 @@ public class GmlProcess {
     private LocalDateTime endTime;
     private ProcessStatus status;
     private GmlRequestDto request;
-    private List<ImportMqResponse> mqResponse = new ArrayList<>();
+    private List<GmlMqResponse> mqResponse = new ArrayList<>();
     private CompletableFuture<String> futureResponse = new CompletableFuture<>();
 
     public GmlProcess(GmlRequestDto request) {
@@ -31,35 +31,18 @@ public class GmlProcess {
         this.request = request;
     }
 
-    public void addResponse(ImportMqResponse response) {
+    public void addResponse(GmlMqResponse response) {
         mqResponse.add(response);
 
-//        if (request.getImportTasks().size() == mqResponse.size()) {
-//            endTime = LocalDateTime.now();
-//
-//            log.info("Process id: {} is DONE. Processed: {}", id, mqResponse.size());
-//            futureResponse.complete(prepareResponse());
-//        } else {
-//            log.info("Process id: {} is PENDING. Processed: {}", id, mqResponse.size());
-//        }
-    }
+        if (response.getStatus() == ProcessStatus.DONE) {
+            endTime = LocalDateTime.now();
 
-//    private Map<String, String> prepareResponse() {
-//        Map<String, String> response = new HashMap<>();
-//
-//        mqResponse.forEach(mqResponse -> {
-//            String layerName = mqResponse.getLayerName();
-//            ProcessStatus status = mqResponse.getStatus();
-//
-//            if (layerName != null && status != null) {
-//                response.put(layerName, status.toString());
-//            } else {
-//                log.warn("Incorrect response");
-//            }
-//        });
-//
-//        return response;
-//    }
+            log.info("Process id: {} is DONE. Processed: {}", id, mqResponse.size());
+            futureResponse.complete(response.getPathToFile());
+        } else {
+            log.debug("Process: {} is: {}", id, response.getStatus());
+        }
+    }
 
     public UUID getId() {
         return id;
@@ -80,4 +63,9 @@ public class GmlProcess {
     public CompletableFuture<String> getFutureResponse() {
         return futureResponse;
     }
+
+    public GmlRequestDto getRequest() {
+        return request;
+    }
+
 }

@@ -13,6 +13,10 @@ public class GmlMqRequest {
 
     public GmlMqRequest() {}
 
+    public GmlMqRequest(UUID id) {
+        this.id = id;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -37,12 +41,16 @@ public class GmlMqRequest {
         this.resourceProjections.add(projections);
     }
 
-    public void setResourceProjections(List<ResourceProjection> resourceProjections) {
-        this.resourceProjections = resourceProjections;
-    }
-
     public List<EntityType> getFgistpRules() {
         return fgistpRules;
+    }
+
+    public void addRule(EntityType rule) {
+        this.fgistpRules.add(rule);
+    }
+
+    public void setResourceProjections(List<ResourceProjection> resourceProjections) {
+        this.resourceProjections = resourceProjections;
     }
 
     public void setFgistpRules(List<EntityType> fgistpRules) {
