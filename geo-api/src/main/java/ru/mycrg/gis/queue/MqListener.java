@@ -10,6 +10,7 @@ import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
+import ru.mycrg.gis.service.gml.GmlService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
@@ -23,15 +24,18 @@ public class MqListener {
 
     private final IValidationService validationService;
     private final ImportService importService;
+    private final GmlService gmlService;
     private final OrganizationService organizationService;
 
     @Autowired
     public MqListener(OrganizationService organizationService,
                       IValidationService validationService,
-                      ImportService importService) {
+                      ImportService importService,
+                      GmlService gmlService) {
         this.organizationService = organizationService;
         this.validationService = validationService;
         this.importService = importService;
+        this.gmlService = gmlService;
     }
 
     @RabbitListener(queues = QUEUE_ORG_CREATED)
@@ -55,6 +59,6 @@ public class MqListener {
     public void gmlResponse(GmlMqResponse response) {
         log.info("gmlResponse: {}", response.getId());
 
-        // importService.progress(response);
+        gmlService.progress(response);
     }
 }
