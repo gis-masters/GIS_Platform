@@ -32,6 +32,46 @@ describe('Property validation test', () => {
     expect(true).toEqual(fc1.valid);
   });
 
+  it('should validate minLength', () => {
+    const minLengthProperty: SimpleProperty = {
+      name: 'minLengthProperty',
+      title: 'minLength property',
+      valueType: 'string',
+      required: true,
+      minLength: 5,
+    };
+
+    const fcValid = new FormControl('12345', [FeaturePropertyValidators.minLength(minLengthProperty)]);
+    const fcValid2 = new FormControl('123456', [FeaturePropertyValidators.minLength(minLengthProperty)]);
+    const fcNotValid = new FormControl('', [FeaturePropertyValidators.minLength(minLengthProperty)]);
+    const fcNotValid2 = new FormControl('123', [FeaturePropertyValidators.minLength(minLengthProperty)]);
+
+    expect(true).toEqual(fcValid.valid);
+    expect(true).toEqual(fcValid2.valid);
+    expect(false).toEqual(fcNotValid.valid);
+    expect(false).toEqual(fcNotValid2.valid);
+  });
+
+  it('should validate maxLength', () => {
+    const maxLengthProperty: SimpleProperty = {
+      name: 'maxLengthProperty',
+      title: 'maxLength property',
+      valueType: 'string',
+      required: true,
+      maxLength: 5,
+    };
+
+    const fcValid = new FormControl('12345', [FeaturePropertyValidators.maxLength(maxLengthProperty)]);
+    const fcValid2 = new FormControl('123', [FeaturePropertyValidators.maxLength(maxLengthProperty)]);
+    const fcValid3 = new FormControl('', [FeaturePropertyValidators.maxLength(maxLengthProperty)]);
+    const fcNotValid = new FormControl('123456', [FeaturePropertyValidators.maxLength(maxLengthProperty)]);
+
+    expect(true).toEqual(fcValid.valid);
+    expect(true).toEqual(fcValid2.valid);
+    expect(true).toEqual(fcValid3.valid);
+    expect(false).toEqual(fcNotValid.valid);
+  });
+
   // it('should validate enumeration', () => {
   //   const enumerations: ValueTitleProjection[] = [
   //     {
