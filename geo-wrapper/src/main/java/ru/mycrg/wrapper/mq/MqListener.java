@@ -118,7 +118,7 @@ public class MqListener {
 
             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), filePath, ProcessStatus.DONE));
         } catch (Exception e) {
-            log.error("Не удалось провалидировать.", e);
+            log.error("Ошибка при генерирации файла.", e);
              mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR));
         }
     }

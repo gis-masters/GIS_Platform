@@ -6,9 +6,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -47,17 +48,17 @@ public class GmlGeneratorServiceTest {
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 
-        List<EntityType> fgistpRules = new ArrayList<>();
+        List<EntityTypeDto> fgistpRules = new ArrayList<>();
         // FZ
-        EntityType functionalZone = new EntityType();
+        EntityTypeDto functionalZone = new EntityTypeDto();
         functionalZone.setName("FunctionalZone_Type");
 
-        List<AbstractProperty> functionalZoneProperties = new ArrayList<>();
-        StringProperty globalID = new StringProperty();
+        List<SimplePropertyDto> functionalZoneProperties = new ArrayList<>();
+        SimplePropertyDto globalID = new SimplePropertyDto();
         globalID.setName("GLOBALID");
-        StringProperty fzNotExistProp = new StringProperty();
+        SimplePropertyDto fzNotExistProp = new SimplePropertyDto();
         fzNotExistProp.setName("fzNotExistProp");
-        StringProperty classId = new StringProperty();
+        SimplePropertyDto classId = new SimplePropertyDto();
         classId.setName("CLASSID");
 
         functionalZoneProperties.add(globalID);
@@ -67,10 +68,10 @@ public class GmlGeneratorServiceTest {
         functionalZone.setProperties(functionalZoneProperties);
 
         // Electricline
-        EntityType electricline = new EntityType();
+        EntityTypeDto electricline = new EntityTypeDto();
         electricline.setName("ElectricLine_Type");
 
-        List<AbstractProperty> electriclineProperties = new ArrayList<>();
+        List<SimplePropertyDto> electriclineProperties = new ArrayList<>();
         electriclineProperties.add(globalID);
         electriclineProperties.add(classId);
 

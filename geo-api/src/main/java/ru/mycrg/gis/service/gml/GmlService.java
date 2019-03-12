@@ -3,12 +3,13 @@ package ru.mycrg.gis.service.gml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.EntityType;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.queue.MqSender;
+import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class GmlService {
         mqRequest.setDocSchema(request.getDocSchema());
 
         request.getResources().forEach(resource -> {
-            mqRequest.addRule(ruleService.getRuleByClassName(resource.getTableName()));
+            EntityType ruleByClassName = ruleService.getRuleByClassName(resource.getTableName());
+            mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
             mqRequest.addResource(
                     new ResourceProjection(resource.getDbName(), resource.getSchemaName(), resource.getTableName()));
         });

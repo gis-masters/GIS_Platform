@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.fgistp.rules;
 
-import ru.mycrg.common.EntityType;
+import ru.mycrg.gis.service.fgistp.EntityType;
 
 public interface IFgistpRuleHolder {
 
