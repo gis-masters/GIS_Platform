@@ -208,6 +208,7 @@ public class GisStorage {
 
     /**
      * Получить партию данных.
+     * Геометрия в бинарном формате "crg_b_geometry"
      *
      * @param jdbcTemplate Коннекш к БД
      * @param target Данные ресурса из которого производится выборка
@@ -216,7 +217,8 @@ public class GisStorage {
      */
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
-        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT ? OFFSET ?",
+        String sqlRequest = String.format("SELECT ST_AsText(shape) as crg_t_geometry, ST_AsBinary(shape) as " +
+                        "crg_b_geometry, * FROM %s.%s LIMIT ? OFFSET ?",
                 target.getSchemaName(), target.getTableName());
 
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
