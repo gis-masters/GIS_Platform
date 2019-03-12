@@ -104,7 +104,9 @@ public class GmlGenerator {
                     // Выгружаются только те свойства что прописаны в 10 приказе
                     if (isPropertyExist(entityType.getProperties(), key)) {
                         Element prop = documentHolder.getDocument().createElement(key.toUpperCase());
-                        prop.setTextContent(value.toString());
+                        if (value != null) {
+                            prop.setTextContent(value.toString());
+                        }
 
                         featureMember.appendChild(prop);
                     } else {

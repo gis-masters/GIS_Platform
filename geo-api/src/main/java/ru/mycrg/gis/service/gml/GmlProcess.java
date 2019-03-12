@@ -41,6 +41,10 @@ public class GmlProcess {
             futureResponse.complete(response.getPathToFile());
         } else {
             log.debug("Process: {} is: {}", id, response.getStatus());
+
+            if (response.getStatus() == ProcessStatus.ERROR) {
+                futureResponse.complete("");
+            }
         }
     }
 
