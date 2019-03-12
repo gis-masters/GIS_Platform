@@ -24,6 +24,8 @@ public class InitApplication {
 
         if (ruleService.isXsdRulesEmpty()) {
             ruleService.loadRulesFromXsdSchema();
+        } else if (ruleService.isCacheEmpty()) {
+            ruleService.updateRules();
         }
     }
 }

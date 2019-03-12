@@ -9,7 +9,7 @@ public class GmlMqRequest {
     private UUID id;
     private String docSchema = "Doc.20301010000";
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
-    private List<EntityType> fgistpRules = new ArrayList<>();
+    private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
     public GmlMqRequest() {}
 
@@ -41,11 +41,11 @@ public class GmlMqRequest {
         this.resourceProjections.add(projections);
     }
 
-    public List<EntityType> getFgistpRules() {
+    public List<EntityTypeDto> getFgistpRules() {
         return fgistpRules;
     }
 
-    public void addRule(EntityType rule) {
+    public void addRule(EntityTypeDto rule) {
         this.fgistpRules.add(rule);
     }
 
@@ -53,7 +53,7 @@ public class GmlMqRequest {
         this.resourceProjections = resourceProjections;
     }
 
-    public void setFgistpRules(List<EntityType> fgistpRules) {
+    public void setFgistpRules(List<EntityTypeDto> fgistpRules) {
         this.fgistpRules = fgistpRules;
     }
 }

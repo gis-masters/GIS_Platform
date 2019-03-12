@@ -7,9 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import ru.mycrg.common.EntityType;
+import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.wrapper.dao.GisStorage;
 
@@ -88,7 +89,7 @@ public class GmlGenerator {
         return "";
     }
 
-    private void writeDataToGml(GmlDocumentHolder documentHolder, EntityType entityType,
+    private void writeDataToGml(GmlDocumentHolder documentHolder, EntityTypeDto entityType,
                                 Queue<List<Map<String, Object>>> queue) {
         log.debug("write feature {} to GML Document", entityType.getName());
 
@@ -128,7 +129,7 @@ public class GmlGenerator {
         return featureNode;
     }
 
-    private boolean isPropertyExist(List<AbstractProperty> properties, String key) {
+    private boolean isPropertyExist(List<SimplePropertyDto> properties, String key) {
         return properties
                 .stream()
                 .anyMatch(property -> {
@@ -205,7 +206,7 @@ public class GmlGenerator {
         return queue;
     }
 
-    private Optional<EntityType> getFgistpRuleByTableName(List<EntityType> entityTypes, String tableName) {
+    private Optional<EntityTypeDto> getFgistpRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
         return entityTypes.stream()
                 .filter(entityType -> entityType.getClearName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst();
