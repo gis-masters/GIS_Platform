@@ -1,20 +1,11 @@
 package unit;
 
-import org.geotools.data.DataUtilities;
-import org.geotools.feature.SchemaException;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
-import org.geotools.feature.simple.SimpleFeatureImpl;
-import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Test;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.ParseException;
-import org.locationtech.jts.io.WKBReader;
 import org.mockito.Mock;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import ru.mycrg.common.EntityTypeDto;
@@ -101,7 +92,7 @@ public class GmlGeneratorServiceTest {
     }
 
     @Test
-    public void shouldTest2() throws TransformerException, SchemaException, ParseException {
+    public void shouldTest2() throws ParseException {
         String electricline = "MULTILINESTRING((6592387.9853 4930796.0613,6592381.3446 4930622.6243,6592104.0698 " +
                 "4930418.8608,6592010.5395 4930499.868,6591938.9934 4930399.6067,6591840.2578 4930357.5477," +
                 "6591771.6732 4930321.48,6591656.4473 4930317.9192,6591307.3624 4930393.5754,6591073.9903 " +
@@ -115,20 +106,13 @@ public class GmlGeneratorServiceTest {
 
         String electrictransformer = "POINT(6574347.9971 4918823.9425)";
 
-        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-
-        SimpleFeatureType POLYGON_TYPE = DataUtilities.createType("location", "geom:Polygon");
-        SimpleFeatureType POINT_TYPE = DataUtilities.createType("location", "geom:Point");
-        SimpleFeatureType LINE_TYPE = DataUtilities.createType("location", "geom:LineString");
-
         WKTReader2 wkt = new WKTReader2();
         Geometry elGeometry = wkt.read(electricline);
+        Geometry etGeometry = wkt.read(electrictransformer);
+        Geometry fzGeometry = wkt.read(functionalzone);
 
-        var elFeature = SimpleFeatureBuilder.build(LINE_TYPE, new Object[]{wkt.read(electricline)}, null);
-        var fzFeature = SimpleFeatureBuilder.build(POLYGON_TYPE, new Object[]{wkt.read(functionalzone)}, null);
-        var etFeature = SimpleFeatureBuilder.build(POINT_TYPE, new Object[]{wkt.read(electrictransformer)}, null);
-
-        assertNotNull(elFeature);
+        ((Polygon) fzGeometry.getGeometryN(0)).getExteriorRing().getCoordinates();
+        assertNotNull(fzGeometry);
     }
 
 }
