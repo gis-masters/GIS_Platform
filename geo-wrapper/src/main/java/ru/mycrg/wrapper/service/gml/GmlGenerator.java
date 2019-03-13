@@ -68,13 +68,14 @@ public class GmlGenerator {
 
         log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
         gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
-            getFgistpRuleByTableName(gmlMqRequest.getFgistpRules(), resourceProjection.getTableName())
-                    .ifPresentOrElse(rule -> {
-                                writeDataToGml(documentHolder, rule, getData(resourceProjection));
-                            },
-                            () -> {
-                                log.warn("Не найдено описание типа: " + resourceProjection.getTableName());
-                            });
+            var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), resourceProjection.getTableName());
+            if (rule.isPresent()) {
+                var data = getData(resourceProjection);
+
+                writeDataToGml(documentHolder, rule.get(), data);
+            } else {
+                log.warn("Не найдено описание типа: " + resourceProjection.getTableName());
+            }
         });
 
         return documentHolder;
@@ -354,7 +355,7 @@ public class GmlGenerator {
         return queue;
     }
 
-    private Optional<EntityTypeDto> getFgistpRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
+    private Optional<EntityTypeDto> getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
         return entityTypes.stream()
                 .filter(entityType -> entityType.getClearName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst();
