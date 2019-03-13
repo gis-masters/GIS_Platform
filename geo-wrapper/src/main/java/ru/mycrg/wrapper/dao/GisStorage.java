@@ -217,7 +217,7 @@ public class GisStorage {
      */
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
-        String sqlRequest = String.format("SELECT ST_AsText(shape) as crg_t_geometry, ST_AsBinary(shape) as " +
+        String sqlRequest = String.format("SELECT ST_AsBinary(shape) as " +
                         "crg_b_geometry, * FROM %s.%s LIMIT ? OFFSET ?",
                 target.getSchemaName(), target.getTableName());
 

@@ -1,11 +1,12 @@
 package ru.mycrg.wrapper.service.gml;
 
-import org.geotools.feature.SchemaException;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKBReader;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,9 +28,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Service
@@ -37,8 +38,9 @@ public class GmlGenerator {
 
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
+    private WKBReader wkb = new WKBReader();
     private final int BATCH_SIZE = 100;
-    private int idCounter = 1;
+    private long idCounter = 1;
 
     private final GisStorage gisStorage;
 
@@ -96,19 +98,17 @@ public class GmlGenerator {
         return "";
     }
 
-    private void writeDataToGml(GmlDocumentHolder documentHolder, EntityTypeDto entityType,
+    private void writeDataToGml(GmlDocumentHolder docHolder, EntityTypeDto fType,
                                 Queue<List<Map<String, Object>>> queue) {
-        log.debug("write feature {} to GML Document", entityType.getName());
+        log.debug("write feature {} to GML Document", fType.getName());
 
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
             queue.poll().forEach(propFromDb -> {
-                Element featureMember = addFeatureMember(documentHolder, entityType.getClearName());
+                Element featureMember = addFeatureMember(docHolder, fType.getClearName());
 
-                propFromDb.forEach((key, value) -> {
-                    fillFeatureMember(documentHolder.getDocument(), entityType.getProperties(), featureMember,
-                            key, value);
-                });
+                propFromDb.forEach((key, value) ->
+                        fillFeatureMember(docHolder.getDocument(), fType.getProperties(), featureMember, key, value));
             });
         }
     }
@@ -118,47 +118,120 @@ public class GmlGenerator {
      */
     private void fillFeatureMember(Document document, List<SimplePropertyDto> properties, Element featureMember,
                                    String key, Object value) {
-        if (key.toLowerCase().equals("crg_b_geometry") || key.toLowerCase().equals("crg_t_geometry")) {
-            SimpleFeatureType TYPE = null;
-//            try {
-//                WKBReader wkb = new WKBReader();
-//
-//                SimpleFeatureBuilder.build(TYPE, new Object[] { wkb.read((byte[]) value)},null);
-//
-//                ByteArrayOutputStream xml = new ByteArrayOutputStream();
-//
-////                GML encode2 = new GML(Version.GML2);
-////                encode2.setLegacy(true);
-////                encode2.setBaseURL(baseURL);
-////                encode2.setNamespace("location", "location.xsd");
-////                encode2.encode(xml,  new ListFeatureCollection(TYPE, collection));
-////
-////                xml.close();
-//
-//                String gml = xml.toString();
-//            } catch (SchemaException | ParseException e) {
-//                e.printStackTrace();
-//            }
-        }
+        if ("crg_b_geometry".equals(key.toLowerCase())) {
+            if (value != null) {
+                Geometry geometry;
+                try {
+                    geometry = wkb.read((byte[]) value);
 
-        // Выгружаются только те свойства что прописаны в 10 приказе
-        Optional<SimplePropertyDto> propertyByName = getPropertyByName(properties, key);
-        if (propertyByName.isPresent()) {
-            Element prop = document.createElement(key.toUpperCase());
-            if (value != null && !value.toString().isEmpty()) {
-                prop.setTextContent(getString(value));
-                featureMember.appendChild(prop);
+                    generateGeometry(geometry, document, featureMember);
+                } catch (ParseException e) {
+                    log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
+                }
             } else {
-                // Значение isRequired то сгенерируем дефолтное иначе невключаем в gml
-                SimplePropertyDto property = propertyByName.get();
-                if (property.isRequired()) {
-                    prop.setTextContent(getDefaultValue(property));
+                log.warn("Empty geometry?");
+            }
+        } else if ("shape".equals(key.toLowerCase())) {
+            // Игнорируем.
+        } else {
+            // Выгружаются только те свойства что прописаны в 10 приказе
+            Optional<SimplePropertyDto> propertyByName = getPropertyByName(properties, key);
+            if (propertyByName.isPresent()) {
+                Element prop = document.createElement(key.toUpperCase());
+                if (value != null && !value.toString().isEmpty()) {
+                    prop.setTextContent(getString(value));
                     featureMember.appendChild(prop);
+                } else {
+                    // Значение isRequired то сгенерируем дефолтное иначе невключаем в gml
+                    SimplePropertyDto property = propertyByName.get();
+                    if (property.isRequired()) {
+                        prop.setTextContent(getDefaultValue(property));
+                        featureMember.appendChild(prop);
+                    }
+                }
+            } else {
+                log.trace("Property {} does not exist in feature", key);
+            }
+        }
+    }
+
+    private void generateGeometry(Geometry geometry, Document document, Element featureMember) {
+        String geometryType = geometry.getGeometryType();
+
+        if ("Point".equals(geometryType)) {
+            Element geometryElement = document.createElement("gml:Point");
+            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
+            geometryElement.setAttribute("gml:id", generateId());
+            featureMember.appendChild(geometryElement);
+
+            Element coordinate = document.createElement("gml:coordinates");
+            coordinate.setTextContent(convertToString(geometry.getCoordinates()));
+            geometryElement.appendChild(coordinate);
+        } else if ("MultiLineString".equals(geometryType)) {
+            Element geometryElement = document.createElement("gml:LineString");
+            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
+            geometryElement.setAttribute("gml:id", generateId());
+            featureMember.appendChild(geometryElement);
+
+            Element coordinate = document.createElement("gml:coordinates");
+            coordinate.setTextContent(convertToString(geometry.getCoordinates()));
+            geometryElement.appendChild(coordinate);
+        } else if ("MultiPolygon".equals(geometryType)) {
+            Element geometryElement = document.createElement("gml:Polygon");
+            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
+            geometryElement.setAttribute("gml:id", generateId());
+            featureMember.appendChild(geometryElement);
+
+            Polygon onlyFirstGeometry = (Polygon) geometry.getGeometryN(0);
+            LineString exteriorRing = onlyFirstGeometry.getExteriorRing();
+            if (exteriorRing != null) {
+                Element exterior = document.createElement("gml:exterior");
+                geometryElement.appendChild(exterior);
+
+                Element linearRing = document.createElement("gml:LinearRing");
+                exterior.appendChild(linearRing);
+
+                Element coordinate = document.createElement("gml:coordinates");
+                coordinate.setTextContent(convertToString(exteriorRing.getCoordinates()));
+                linearRing.appendChild(coordinate);
+            }
+
+            int numInteriorRing = onlyFirstGeometry.getNumInteriorRing();
+            if (numInteriorRing > 0) {
+                for (int i = 0; i < numInteriorRing - 1; i++) {
+                    LineString hole = onlyFirstGeometry.getInteriorRingN(i);
+
+                    Element interior = document.createElement("gml:interior");
+                    geometryElement.appendChild(interior);
+
+                    Element linearRing = document.createElement("gml:LinearRing");
+                    interior.appendChild(linearRing);
+
+                    Element coordinate = document.createElement("gml:coordinates");
+                    coordinate.setTextContent(convertToString(hole.getCoordinates()));
+                    linearRing.appendChild(coordinate);
                 }
             }
         } else {
-            log.trace("Property {} does not exist in feature", key);
+            log.warn("Unsupported geometry type: {}", geometryType);
         }
+    }
+
+    private String convertToString(Coordinate[] coordinates) {
+        StringBuilder result = new StringBuilder();
+        for (Coordinate coordinate : coordinates) {
+            result
+                    .append(trimCoordinate(coordinate.x))
+                    .append(",")
+                    .append(trimCoordinate(coordinate.y))
+                    .append(" ");
+        }
+
+        return result.toString().trim();
+    }
+
+    private String trimCoordinate(double d) {
+        return new DecimalFormat("#0.00").format(d).replace(",", ".");
     }
 
     // Исправляем конвертацию BigDecimal -> "0E-8"
