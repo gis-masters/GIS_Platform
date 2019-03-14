@@ -25,3 +25,4 @@ fiz:
   geoserver-user: admin
   geoserver-password: geoserver
   postgis-host: localhost:5434
+  gmlStoragePath: /opt/gml/

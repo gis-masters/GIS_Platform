@@ -12,15 +12,19 @@ import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.wrapper.config.FizProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.service.FileService;
 import ru.mycrg.wrapper.service.gml.GmlDocumentHolder;
 import ru.mycrg.wrapper.service.gml.GmlGenerator;
+import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -80,15 +84,18 @@ public class GmlGeneratorServiceTest {
         fgistpRules.add(electricline);
         gmlMqRequest.setFgistpRules(fgistpRules);
 
-        GmlGenerator gmlGenerator = new GmlGenerator(new GisStorage(datasourceFactory));
+        GmlGenerator gmlGenerator = new GmlGenerator(
+                new GisStorage(datasourceFactory),
+                new FileService(new FizProperties()),
+                new ValidatorImpl());
 
         // ACT
-        GmlDocumentHolder gml = gmlGenerator.createGml(gmlMqRequest);
-        String filePath = gmlGenerator.generate(gmlMqRequest);
-        assertTrue(filePath.length() > 0);
+        GmlDocumentHolder gml = gmlGenerator.createDomDocuments(gmlMqRequest);
+        Map<String, String> paths = gmlGenerator.generate(gmlMqRequest);
+        assertTrue(paths.get("gml").length() > 0);
 
-        assertNotNull(gml.getDocument());
-        assertTrue(gml.getDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
+        assertNotNull(gml.getGmlDocument());
+        assertTrue(gml.getGmlDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
     }
 
     @Test

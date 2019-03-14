@@ -5,18 +5,20 @@ import org.w3c.dom.Element;
 
 public class GmlDocumentHolder {
 
-    private Document document;
+    private Document gmlDocument;
+    private Document logDocument;
     private Element featureCollection;
     private Element objectCollection;
 
-    public GmlDocumentHolder(Document doc, Element featureCollection, Element objectCollection) {
-        this.document = doc;
+    public GmlDocumentHolder(Document mainDoc, Document logDoc, Element featureCollection, Element objectCollection) {
+        this.gmlDocument = mainDoc;
+        this.logDocument = logDoc;
         this.featureCollection = featureCollection;
         this.objectCollection = objectCollection;
     }
 
-    public Document getDocument() {
-        return document;
+    public Document getGmlDocument() {
+        return gmlDocument;
     }
 
     public Element getFeatureCollection() {
@@ -25,5 +27,13 @@ public class GmlDocumentHolder {
 
     public Element getObjectCollection() {
         return objectCollection;
+    }
+
+    public Document getLogDocument() {
+        return logDocument;
+    }
+
+    public void setLogDocument(Document logDocument) {
+        this.logDocument = logDocument;
     }
 }

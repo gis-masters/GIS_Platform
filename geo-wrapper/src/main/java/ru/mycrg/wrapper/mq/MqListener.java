@@ -24,6 +24,7 @@ import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Service
 public class MqListener {
@@ -97,9 +98,9 @@ public class MqListener {
             if (mqRequest.getType() == RequstType.INIT) {
                 validationService.startValidation(mqRequest);
             } else if (mqRequest.getType() == RequstType.GET) {
-                validationService.getResults(mqRequest);
+                mqEvents.validationResponse(validationService.getResults(mqRequest));
             } else if (mqRequest.getType() == RequstType.INFO) {
-                validationService.getInfo(mqRequest);
+                mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");
             }
@@ -114,9 +115,9 @@ public class MqListener {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
-            String filePath = gmlGenerator.generate(request);
+            Map<String, String> paths = gmlGenerator.generate(request);
 
-            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), filePath, ProcessStatus.DONE));
+            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), paths, ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла.", e);
              mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR));

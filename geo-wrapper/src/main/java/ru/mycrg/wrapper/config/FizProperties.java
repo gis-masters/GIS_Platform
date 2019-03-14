@@ -18,6 +18,7 @@ public class FizProperties {
 
     // TODO: Непонятно зачем это свойство дублирует основной jdbc url.
     private String postgisHost;
+    private String gmlStoragePath;
 
     public FizProperties() {}
 
@@ -59,5 +60,15 @@ public class FizProperties {
 
     public void setGeoserverPassword(String geoserverPassword) {
         this.geoserverPassword = geoserverPassword;
+    }
+
+    public void setGmlStoragePath(String gmlStoragePath) {
+        this.gmlStoragePath = gmlStoragePath;
+    }
+
+    @NotNull
+    public String getGmlStoragePath() {
+        return Optional.ofNullable(gmlStoragePath)
+                       .orElseThrow(() -> new IllegalStateException("Not set gmlStoragePath"));
     }
 }

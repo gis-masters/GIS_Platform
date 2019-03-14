@@ -47,29 +47,11 @@ public class ValidationService {
         this.gisStorage = gisStorage;
     }
 
-    public void getResults(ValidationMqRequest validationMqRequest) throws IOException {
-        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
-
-        Long totalViolations = gisStorage.countTotalViolations(validationMqRequest);
-        if (totalViolations > 0) {
-            List<Map<String, Object>> violations = gisStorage.getViolations(validationMqRequest);
-
-            log.info("Found {} violations", violations.size());
-            response.setResults(Util.mapToViolations(violations));
-            response.setValidated(true);
-        } else {
-            response.setValidated(gisStorage.isValidated(validationMqRequest));
-        }
-
-        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
-        response.setTotal(totalViolations);
-        response.setStatus(ProcessStatus.DONE);
-
-
-        mqEvents.validationResponse(response);
-    }
-
+    /**
+     * Валидация слоя.
+     *
+     * @param validationMqRequest Запрос
+     */
     public void startValidation(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
@@ -125,23 +107,43 @@ public class ValidationService {
         }
     }
 
-    private long countCorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
-        return validationResult
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(objectViolation -> objectViolation.getPropertyViolations().isEmpty())
-                .count();
+    /**
+     * Выборка результатов валидации.<ul>
+     *
+     * <li>- Все обьекты с ошибками
+     * <li>- Время последней проверки
+     * @param validationMqRequest Запрос
+     */
+    public ValidationMqResponse getResults(ValidationMqRequest validationMqRequest) throws IOException {
+        ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
+
+        Long totalViolations = gisStorage.countTotalViolations(validationMqRequest);
+        if (totalViolations > 0) {
+            List<Map<String, Object>> violations = gisStorage.getViolations(validationMqRequest);
+
+            log.info("Found {} violations", violations.size());
+            response.setResults(Util.mapToViolations(violations));
+            response.setValidated(true);
+        } else {
+            response.setValidated(gisStorage.isValidated(validationMqRequest));
+        }
+
+        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+        response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
+        response.setTotal(totalViolations);
+        response.setStatus(ProcessStatus.DONE);
+
+        return response;
     }
 
-    private long countIncorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
-        return validationResult
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(objectViolation -> !objectViolation.getPropertyViolations().isEmpty())
-                .count();
-    }
-
-    public void getInfo(ValidationMqRequest validationMqRequest) {
+    /**
+     * Подгатавливаем ответ на информационный запрос.<ul>
+     * <li>- Общее кол-во ошибок слоя
+     * <li>- Время последней проверки
+     *
+     * @param validationMqRequest Запрос
+     */
+    public ValidationMqResponse getInfo(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         response.setValidated(gisStorage.isValidated(validationMqRequest));
@@ -151,16 +153,7 @@ public class ValidationService {
         response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);
         response.setStatus(ProcessStatus.DONE);
 
-        mqEvents.validationResponse(response);
-    }
-
-    private void sendPendingResponse(ValidationMqRequest validationMqRequest,
-                                     List<ObjectValidationResult> violationResults) {
-        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
-        pendingResponse.setStatus(ProcessStatus.PENDING);
-        pendingResponse.setResults(violationResults);
-
-        mqEvents.validationResponse(pendingResponse);
+        return response;
     }
 
     private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
@@ -179,5 +172,30 @@ public class ValidationService {
         }
 
         return validationResults;
+    }
+
+    private long countCorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
+        return validationResult
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(objectViolation -> objectViolation.getPropertyViolations().isEmpty())
+                .count();
+    }
+
+    private long countIncorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
+        return validationResult
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(objectViolation -> !objectViolation.getPropertyViolations().isEmpty())
+                .count();
+    }
+
+    private void sendPendingResponse(ValidationMqRequest validationMqRequest,
+                                     List<ObjectValidationResult> violationResults) {
+        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
+        pendingResponse.setStatus(ProcessStatus.PENDING);
+        pendingResponse.setResults(violationResults);
+
+        mqEvents.validationResponse(pendingResponse);
     }
 }
