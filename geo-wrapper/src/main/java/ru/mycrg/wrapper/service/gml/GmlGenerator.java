@@ -13,22 +13,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.GmlMqRequest;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.service.FileService;
+import ru.mycrg.wrapper.service.validation.IValidator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -43,9 +37,13 @@ public class GmlGenerator {
     private long idCounter = 1;
 
     private final GisStorage gisStorage;
+    private final FileService fileService;
+    private final IValidator validator;
 
-    public GmlGenerator(GisStorage gisStorage) {
+    public GmlGenerator(GisStorage gisStorage, FileService fileService, IValidator validator) {
         this.gisStorage = gisStorage;
+        this.fileService = fileService;
+        this.validator = validator;
     }
 
     /**
@@ -54,16 +52,31 @@ public class GmlGenerator {
      * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException, TransformerException {
+    public Map<String, String> generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException,
+            TransformerException {
         log.info("Start gml generation. idCounter: {}", idCounter);
+        Map<String, String> paths = new HashMap<>();
 
-        GmlDocumentHolder documentHolder = createGml(gmlMqRequest);
+        GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
 
-        return saveFile(documentHolder);
+        String randomFileName = UUID.randomUUID().toString().substring(0, 8);
+        String pathToGml = fileService.save(documentHolder.getGmlDocument(),randomFileName + ".gml");
+        String pathToLog = fileService.save(documentHolder.getLogDocument(),randomFileName + ".log");
+
+        paths.put("gml", pathToGml);
+        paths.put("log", pathToLog);
+
+        return paths;
     }
 
+    /**
+     * Сгенерируем dom модели основного файла с данными и лога с ошибками, предварительно проведя валидацию.
+     *
+     * @param gmlMqRequest Запрос
+     * @return Обертка содержащая основной файл и лог файл.
+     */
     @NotNull
-    public GmlDocumentHolder createGml(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
+    public GmlDocumentHolder createDomDocuments(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
         GmlDocumentHolder documentHolder = createXmlDocument(gmlMqRequest.getDocSchema());
 
         log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
@@ -72,6 +85,7 @@ public class GmlGenerator {
             if (rule.isPresent()) {
                 var data = getData(resourceProjection);
 
+                writeLogFile(documentHolder, rule.get(), new LinkedList<>(data));
                 writeDataToGml(documentHolder, rule.get(), data);
             } else {
                 log.warn("Не найдено описание типа: " + resourceProjection.getTableName());
@@ -81,22 +95,38 @@ public class GmlGenerator {
         return documentHolder;
     }
 
-    private String saveFile(GmlDocumentHolder documentHolder) throws TransformerException {
-        log.debug("Save Document to file");
+    private void writeLogFile(GmlDocumentHolder docHolder, EntityTypeDto fType,
+                              Queue<List<Map<String, Object>>> queue) {
+        log.debug("write log file feature: {}", fType.getName());
 
-        DOMSource source = new DOMSource(documentHolder.getDocument());
+        Document log = docHolder.getLogDocument();
+        Element feature = log.createElement("featureMember");
+        feature.setAttribute("name", fType.getClearName());
 
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        StreamResult result = new StreamResult("/opt/fgistp.gml");
-        transformer.transform(source, result);
+        log.appendChild(feature);
 
-        File file = new File("/opt/fgistp.gml");
-        if (file.exists() && !file.isDirectory()) {
-            return file.getAbsolutePath();
+        while (!queue.isEmpty()) {
+            // Обрабатываем партию данных из БД
+            queue.poll().forEach(batch -> {
+                ObjectValidationResult violations = validator.validate(fType, batch);
+
+                Element object = log.createElement("object");
+                object.setAttribute("id", violations.getObjectId());
+                feature.appendChild(object);
+
+                violations.getPropertyViolations().forEach(propertyViolation -> {
+                    Element property = log.createElement(propertyViolation.getName());
+                    property.setTextContent(propertyViolation.getErrorTypes().get(0));
+                    object.appendChild(property);
+                });
+
+                if (violations.getObjectViolations().size() > 0) {
+                    Element property = log.createElement("objectViolations");
+                    property.setTextContent(violations.getObjectViolations().get(0));
+                    object.appendChild(property);
+                }
+            });
         }
-
-        return "";
     }
 
     private void writeDataToGml(GmlDocumentHolder docHolder, EntityTypeDto fType,
@@ -109,7 +139,7 @@ public class GmlGenerator {
                 Element featureMember = addFeatureMember(docHolder, fType.getClearName());
 
                 propFromDb.forEach((key, value) ->
-                        fillFeatureMember(docHolder.getDocument(), fType.getProperties(), featureMember, key, value));
+                        fillFeatureMember(docHolder.getGmlDocument(), fType.getProperties(), featureMember, key, value));
             });
         }
     }
@@ -258,7 +288,7 @@ public class GmlGenerator {
     }
 
     private Element addFeatureMember(GmlDocumentHolder documentHolder, String name) {
-        Document document = documentHolder.getDocument();
+        Document document = documentHolder.getGmlDocument();
 
         Element gmlFeatureMember = document.createElement("gml:featureMember");
         documentHolder.getFeatureCollection().appendChild(gmlFeatureMember);
@@ -271,18 +301,6 @@ public class GmlGenerator {
         return featureNode;
     }
 
-    private boolean isPropertyExist(List<SimplePropertyDto> properties, String key) {
-        return properties
-                .stream()
-                .anyMatch(property -> {
-                    if (property.getName() != null && key != null) {
-                        return key.toLowerCase().equals(property.getName().toLowerCase());
-                    } else {
-                        return false;
-                    }
-                });
-    }
-
     private Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String key) {
         return properties
                 .stream()
@@ -291,7 +309,8 @@ public class GmlGenerator {
     }
 
     /**
-     * Создаем xml document заполняем шапку, создаем корневую и основные ноды
+     * Создаем xml document заполняем шапку, создаем корневую и основные ноды для основного файла
+     * и пустую ноду для лог файла.
      *
      * @param docSchema Схема документов территориального планирования: <ul>
      *                  <li> Doc.10501010100 – Положение о территориальном планировании в области федерального транспорта;
@@ -311,27 +330,28 @@ public class GmlGenerator {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.newDocument();
+        Document mainDoc = builder.newDocument();
+        Document logDoc = builder.newDocument();
 
         // Root node
-        Element rootNode = doc.createElement(docSchema);
+        Element rootNode = mainDoc.createElement(docSchema);
         rootNode.setAttribute("xmlns", "http://fgistp");
         rootNode.setAttribute("xmlns:gml", "http://www.opengis.net/gml");
-        doc.appendChild(rootNode);
+        mainDoc.appendChild(rootNode);
 
         // Base node
-        Element featureCollection = doc.createElement("FeatureCollection");
+        Element featureCollection = mainDoc.createElement("FeatureCollection");
         rootNode.appendChild(featureCollection);
 
-        Element gmlFeatureCollection = doc.createElement("gml:FeatureCollection");
+        Element gmlFeatureCollection = mainDoc.createElement("gml:FeatureCollection");
         gmlFeatureCollection.setAttribute("gml:id", "featureID1");
         featureCollection.appendChild(gmlFeatureCollection);
 
         // Base node
-        Element objectCollection = doc.createElement("ObjectCollection");
+        Element objectCollection = mainDoc.createElement("ObjectCollection");
         rootNode.appendChild(objectCollection);
 
-        return new GmlDocumentHolder(doc, gmlFeatureCollection, objectCollection);
+        return new GmlDocumentHolder(mainDoc, logDoc, gmlFeatureCollection, objectCollection);
     }
 
     private Queue<List<Map<String, Object>>> getData(ResourceProjection target) {

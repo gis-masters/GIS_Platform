@@ -33,7 +33,7 @@ public class GmlService {
         this.ruleService = ruleService;
     }
 
-    public CompletableFuture<String> initProcess(GmlRequestDto request) {
+    public CompletableFuture<GmlMqResponse> initProcess(GmlRequestDto request) {
         GmlProcess process = new GmlProcess(request);
         gmlProcesses.add(process);
 

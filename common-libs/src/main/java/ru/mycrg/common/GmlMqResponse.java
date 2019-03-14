@@ -4,24 +4,27 @@ import ru.mycrg.common.enums.ProcessStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class GmlMqResponse {
 
     private UUID id;
     private String pathToFile;
+    private String pathToLog;
     private ProcessStatus status;
 
     public GmlMqResponse() {}
 
-    public GmlMqResponse(UUID id, ProcessStatus status) {
+    public GmlMqResponse(UUID id, Map<String, String> paths, ProcessStatus status) {
         this.id = id;
         this.status = status;
+        this.pathToFile = paths.get("gml");
+        this.pathToLog = paths.get("log");
     }
 
-    public GmlMqResponse(UUID id, String pathToFile, ProcessStatus status) {
+    public GmlMqResponse(UUID id, ProcessStatus status) {
         this.id = id;
-        this.pathToFile = pathToFile;
         this.status = status;
     }
 
@@ -47,5 +50,13 @@ public class GmlMqResponse {
 
     public void setStatus(ProcessStatus status) {
         this.status = status;
+    }
+
+    public String getPathToLog() {
+        return pathToLog;
+    }
+
+    public void setPathToLog(String pathToLog) {
+        this.pathToLog = pathToLog;
     }
 }

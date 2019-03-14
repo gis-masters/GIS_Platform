@@ -22,7 +22,7 @@ public class GmlProcess {
     private ProcessStatus status;
     private GmlRequestDto request;
     private List<GmlMqResponse> mqResponse = new ArrayList<>();
-    private CompletableFuture<String> futureResponse = new CompletableFuture<>();
+    private CompletableFuture<GmlMqResponse> futureResponse = new CompletableFuture<>();
 
     public GmlProcess(GmlRequestDto request) {
         this.id = UUID.randomUUID();
@@ -38,12 +38,12 @@ public class GmlProcess {
             endTime = LocalDateTime.now();
 
             log.info("Process id: {} is {}", id, response.getStatus());
-            futureResponse.complete(response.getPathToFile());
+            futureResponse.complete(response);
         } else {
             log.debug("Process: {} is: {}", id, response.getStatus());
 
             if (response.getStatus() == ProcessStatus.ERROR) {
-                futureResponse.complete("");
+                futureResponse.complete(response);
             }
         }
     }
@@ -64,7 +64,7 @@ public class GmlProcess {
         return status;
     }
 
-    public CompletableFuture<String> getFutureResponse() {
+    public CompletableFuture<GmlMqResponse> getFutureResponse() {
         return futureResponse;
     }
 

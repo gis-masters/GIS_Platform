@@ -1,6 +1,7 @@
 import {SimpleProperty} from '../gis/fgistp-rules.service';
 import {FeaturePropertyValidators} from './FeaturePropertyValidators';
 import {FormControl} from '@angular/forms';
+import {ValueTitleProjection} from '../geoserver/projections';
 
 describe('Property validation test', () => {
 
@@ -32,38 +33,38 @@ describe('Property validation test', () => {
     expect(true).toEqual(fc1.valid);
   });
 
-  // it('should validate enumeration', () => {
-  //   const enumerations: ValueTitleProjection[] = [
-  //     {
-  //       value: '1',
-  //       title: 'first'
-  //     },
-  //     {
-  //       value: '2',
-  //       title: 'second'
-  //     },
-  //   ];
-  //
-  //   const simpleProperty: SimpleProperty = {
-  //     name: 'Name1',
-  //     title: 'Title1',
-  //     valueType: 'CHOICE',
-  //     required: false,
-  //     description: 'description',
-  //     enumerations: enumerations,
-  //     allowedValues: [],
-  //     hidden: false,
-  //     isMultiple: false,
-  //     updateability: '',
-  //     choice: '',
-  //     minLength: 1,
-  //     maxLength: 10,
-  //     pattern: '',
-  //     patternDescription: '',
-  //     minInclusive: -1,
-  //     maxInclusive: -1,
-  //     totalDigits: -1,
-  //   };
-  // });
+  it('should validate enumeration', () => {
+    const enumerations: ValueTitleProjection[] = [
+      {
+        value: '1',
+        title: 'first'
+      },
+      {
+        value: '2',
+        title: 'second'
+      },
+    ];
+
+    const simpleProperty: SimpleProperty = {
+      name: 'Name1',
+      title: 'Title1',
+      valueType: 'CHOICE',
+      required: false,
+      description: 'description',
+      enumerations: enumerations,
+      allowedValues: [],
+      hidden: false,
+      isMultiple: false,
+      updateability: '',
+      choice: '',
+      minLength: 1,
+      maxLength: 10,
+      pattern: '',
+      patternDescription: '',
+      minInclusive: -1,
+      maxInclusive: -1,
+      totalDigits: -1,
+    };
+  });
 
 });
