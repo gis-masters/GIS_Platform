@@ -1,7 +1,7 @@
 import {SimpleProperty} from '../gis/fgistp-rules.service';
 import {FeaturePropertyValidators} from './FeaturePropertyValidators';
 import {FormControl} from '@angular/forms';
-import {ValueTitleProjection} from "../geoserver/projections";
+import {ValueTitleProjection} from '../geoserver/projections';
 
 describe('Property validation test', () => {
 
