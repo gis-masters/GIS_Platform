@@ -1,6 +1,7 @@
 import {SimpleProperty} from '../gis/fgistp-rules.service';
 import {FeaturePropertyValidators} from './FeaturePropertyValidators';
 import {FormControl} from '@angular/forms';
+import {ValueTitleProjection} from "../geoserver/projections";
 
 describe('Property validation test', () => {
 
@@ -30,6 +31,7 @@ describe('Property validation test', () => {
     expect(false).toEqual(fcNotValid2.valid);
     expect(false).toEqual(fcNotValid3.valid);
     expect(true).toEqual(fc1.valid);
+    expect('Поле обязательно к заполнению').toEqual(fcNotValid3.errors['required']);
   });
 
   it('should validate minLength', () => {
@@ -79,15 +81,14 @@ describe('Property validation test', () => {
     expect(true).toEqual(minLengthValid.valid);
     expect(true).toEqual(minLengthValid1.valid);
     expect(false).toEqual(minLengthNotValid.valid);
-    expect('Строка слишком короткая минимальныя длинна сроки: ' + minLengthProperty.minLength + ' символов').toEqual(minLengthNotValid.errors['minLength']);
     expect(false).toEqual(minLengthNotValid2.valid);
-    expect('Строка слишком короткая минимальныя длинна сроки: ' + minLengthProperty.minLength + ' символов').toEqual(minLengthNotValid2.errors['minLength']);
     expect(true).toEqual(nullMinLengthValid.valid);
     expect(true).toEqual(nullMinLengthValid2.valid);
     expect(true).toEqual(undefinedMinLengthValid.valid);
     expect(true).toEqual(undefinedMinLengthValid2.valid);
     expect(true).toEqual(notMinLengthValid.valid);
     expect(true).toEqual(notMinLengthValid2.valid);
+    expect('Строка слишком короткая минимальныя длинна сроки: ' + minLengthProperty.minLength + ' символов').toEqual(minLengthNotValid.errors['minLength']);
   });
 
   it('should validate maxLength', () => {
@@ -138,47 +139,255 @@ describe('Property validation test', () => {
     expect(true).toEqual(maxLengthValid2.valid);
     expect(true).toEqual(maxLengthValid3.valid);
     expect(false).toEqual(maxLengthNotValid.valid);
-    expect('Превышена допустимая длинна сроки. Допустимо: ' + maxLengthProperty.maxLength + ' символов').toEqual(maxLengthNotValid.errors['maxLength']);
     expect(true).toEqual(nullMaxLengthValid.valid);
     expect(true).toEqual(nullMaxLengthValid2.valid);
     expect(true).toEqual(undefinedMaxLengthValid.valid);
     expect(true).toEqual(undefinedMaxLengthValid2.valid);
     expect(true).toEqual(notMaxLengthValid.valid);
     expect(true).toEqual(notMaxLengthValid2.valid);
+    expect('Превышена допустимая длинна сроки. Допустимо: ' + maxLengthProperty.maxLength + ' символов').toEqual(maxLengthNotValid.errors['maxLength']);
   });
 
-  // it('should validate enumeration', () => {
-  //   const enumerations: ValueTitleProjection[] = [
-  //     {
-  //       value: '1',
-  //       title: 'first'
-  //     },
-  //     {
-  //       value: '2',
-  //       title: 'second'
-  //     },
-  //   ];
-  //
-  //   const simpleProperty: SimpleProperty = {
-  //     name: 'Name1',
-  //     title: 'Title1',
-  //     valueType: 'CHOICE',
-  //     required: false,
-  //     description: 'description',
-  //     enumerations: enumerations,
-  //     allowedValues: [],
-  //     hidden: false,
-  //     isMultiple: false,
-  //     updateability: '',
-  //     choice: '',
-  //     minLength: 1,
-  //     maxLength: 10,
-  //     pattern: '',
-  //     patternDescription: '',
-  //     minInclusive: -1,
-  //     maxInclusive: -1,
-  //     totalDigits: -1,
-  //   };
-  // });
+  it('should validate pattern', () => {
+    const patternProperty: SimpleProperty = {
+      name: 'patternProperty',
+      title: 'pattern property',
+      valueType: 'string',
+      required: true,
+      pattern: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$',
+    };
 
+    const nullPatternProperty: SimpleProperty = {
+      name: 'patternProperty',
+      title: 'pattern property',
+      valueType: 'string',
+      required: true,
+      pattern: null,
+    };
+
+    const undefinedPatternProperty: SimpleProperty = {
+      name: 'patternProperty',
+      title: 'pattern property',
+      valueType: 'string',
+      required: true,
+      pattern: undefined,
+    };
+
+    const patternPropertyValid = new FormControl('Ab12345678', [FeaturePropertyValidators.pattern(patternProperty)]);
+    const patternPropertyNotValid = new FormControl('b12345678', [FeaturePropertyValidators.pattern(patternProperty)]);
+    const patternPropertyNotValid2 = new FormControl('', [FeaturePropertyValidators.pattern(patternProperty)]);
+    const nullPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.pattern(nullPatternProperty)]);
+    const nullPatternPropertyValid2 = new FormControl('', [FeaturePropertyValidators.pattern(nullPatternProperty)]);
+    const undefinedPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.pattern(undefinedPatternProperty)]);
+
+    expect(true).toEqual(patternPropertyValid.valid);
+    expect(false).toEqual(patternPropertyNotValid.valid);
+    expect(false).toEqual(patternPropertyNotValid2.valid);
+    expect(true).toEqual(nullPatternPropertyValid.valid);
+    expect(true).toEqual(nullPatternPropertyValid2.valid);
+    expect(true).toEqual(undefinedPatternPropertyValid.valid);
+    expect('Строка не соответствует паттерну').toEqual(patternPropertyNotValid.errors['pattern']);
+  });
+
+  it('should validate minInclusive', () => {
+    const minInclusiveProperty: SimpleProperty = {
+      name: 'minInclusiveProperty',
+      title: 'minInclusive property',
+      valueType: 'number',
+      required: true,
+      minInclusive: 5,
+    };
+
+    const nullMinInclusiveProperty: SimpleProperty = {
+      name: 'minInclusiveProperty',
+      title: 'minInclusive property',
+      valueType: 'number',
+      required: true,
+      minInclusive: 0,
+    };
+
+    const undefinedMinInclusiveProperty: SimpleProperty = {
+      name: 'minInclusiveProperty',
+      title: 'minInclusive property',
+      valueType: 'number',
+      required: true,
+      minInclusive: undefined,
+    };
+
+    const notMinInclusiveProperty: SimpleProperty = {
+      name: 'minInclusiveProperty',
+      title: 'minInclusive property',
+      valueType: 'number',
+      required: true,
+      minInclusive: -1,
+    };
+
+    const minInclusivePropertyValid = new FormControl(3, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const minInclusivePropertyValid2 = new FormControl(null, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const minInclusivePropertyValid3 = new FormControl(undefined, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const minInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const minInclusivePropertyNotValid2 = new FormControl(7, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const stringMinInclusivePropertyValid = new FormControl('a', [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const stringMinInclusivePropertyValid2 = new FormControl('asdfghjkl', [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
+    const nullMinInclusivePropertyValid = new FormControl(3, [FeaturePropertyValidators.minInclusive(nullMinInclusiveProperty)]);
+    const undefinedMinInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(undefinedMinInclusiveProperty)]);
+    const notMinInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(notMinInclusiveProperty)]);
+    const notMinInclusivePropertyValid = new FormControl(-5, [FeaturePropertyValidators.minInclusive(notMinInclusiveProperty)]);
+
+    expect(true).toEqual(minInclusivePropertyValid.valid);
+    expect(true).toEqual(minInclusivePropertyValid2.valid);
+    expect(true).toEqual(minInclusivePropertyValid3.valid);
+    expect(false).toEqual(minInclusivePropertyNotValid.valid);
+    expect(false).toEqual(minInclusivePropertyNotValid2.valid);
+    expect(true).toEqual(stringMinInclusivePropertyValid.valid);  // Строку он не должен принимать
+    expect(true).toEqual(stringMinInclusivePropertyValid2.valid);  // Строку он не должен принимать
+    expect(true).toEqual(nullMinInclusivePropertyValid.valid);
+    expect(true).toEqual(undefinedMinInclusivePropertyValid.valid);
+    expect(false).toEqual(notMinInclusivePropertyNotValid.valid);
+    expect(true).toEqual(notMinInclusivePropertyValid.valid);
+    expect('Значение: ' + minInclusivePropertyNotValid.value + ' менее допустимого: ' + minInclusiveProperty.minInclusive).toEqual(minInclusivePropertyNotValid.errors['minInclusive']);
+  });
+
+  it('should validate maxInclusive', () => {
+    const maxInclusiveProperty: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: true,
+      maxInclusive: 5,
+    };
+
+    const nullMaxInclusiveProperty: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: true,
+      maxInclusive: 0,
+    };
+
+    const undefinedMaxInclusiveProperty: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: true,
+      maxInclusive: undefined,
+    };
+
+    const notMaxInclusiveProperty: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: true,
+      maxInclusive: -1,
+    };
+
+    const maxInclusivePropertyValid = new FormControl(7, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const maxInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const maxInclusivePropertyNotValid2 = new FormControl(3, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const maxInclusivePropertyNotValid3 = new FormControl(null, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const maxInclusivePropertyNotValid4 = new FormControl(undefined, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const stringMaxInclusivePropertyValid = new FormControl('a', [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const stringMaxInclusivePropertyValid2 = new FormControl('asdfghjkl', [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
+    const nullMaxInclusivePropertyValid = new FormControl(7, [FeaturePropertyValidators.maxInclusive(nullMaxInclusiveProperty)]);
+    const undefinedMaxInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(undefinedMaxInclusiveProperty)]);
+    const notMaxInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(notMaxInclusiveProperty)]);
+    const notMaxInclusivePropertyNotValid = new FormControl(-5, [FeaturePropertyValidators.maxInclusive(notMaxInclusiveProperty)]);
+
+    expect(true).toEqual(maxInclusivePropertyValid.valid);
+    expect(false).toEqual(maxInclusivePropertyNotValid.valid);
+    expect(false).toEqual(maxInclusivePropertyNotValid2.valid);
+    expect(false).toEqual(maxInclusivePropertyNotValid3.valid);
+    expect(false).toEqual(maxInclusivePropertyNotValid4.valid);
+    expect(true).toEqual(stringMaxInclusivePropertyValid.valid);  // Строку не должен принимать
+    expect(true).toEqual(stringMaxInclusivePropertyValid2.valid);  // Строку не должен принимать
+    expect(true).toEqual(nullMaxInclusivePropertyValid.valid);
+    expect(true).toEqual(undefinedMaxInclusivePropertyValid.valid);
+    expect(true).toEqual(notMaxInclusivePropertyValid.valid);
+    expect(false).toEqual(notMaxInclusivePropertyNotValid.valid);
+    expect('Значение: ' + maxInclusivePropertyNotValid.value + ' более допустимого: ' + maxInclusiveProperty.maxInclusive).toEqual(maxInclusivePropertyNotValid.errors['maxInclusive']);
+  });
+
+  it('should validate enumeration', () => {
+    const enumerations: ValueTitleProjection[] = [
+      {
+        value: '1',
+        title: 'first'
+      },
+      {
+        value: '2',
+        title: 'second'
+      },
+    ];
+
+    const simpleProperty: SimpleProperty = {
+      name: 'enumerationProperty',
+      title: 'enumerationProperty',
+      valueType: 'CHOICE',
+      required: false,
+      description: 'description',
+      enumerations: enumerations,
+    };
+
+    const enumerationPropertyValid = new FormControl(1, [FeaturePropertyValidators.enumeration(simpleProperty)]);
+    const enumerationPropertyNotValid = new FormControl(0, [FeaturePropertyValidators.enumeration(simpleProperty)]);
+    const enumerationPropertyNotValid2 = new FormControl(3, [FeaturePropertyValidators.enumeration(simpleProperty)]);
+    const nullEnumerationPropertyNotValid = new FormControl(null, [FeaturePropertyValidators.enumeration(simpleProperty)]);
+    const stringEnumerationPropertyNotValid = new FormControl('asdfas', [FeaturePropertyValidators.enumeration(simpleProperty)]);
+
+    expect(true).toEqual(enumerationPropertyValid.valid);
+    expect(false).toEqual(enumerationPropertyNotValid.valid);
+    expect(false).toEqual(enumerationPropertyNotValid2.valid);
+    expect(false).toEqual(nullEnumerationPropertyNotValid.valid);
+    expect(false).toEqual(stringEnumerationPropertyNotValid.valid);
+    expect('Значение: ' + enumerationPropertyNotValid.value + ' не соответствует справочному').toEqual(enumerationPropertyNotValid.errors['wrongChoice']);
+  });
+
+  it('should validate byType', () => {
+    const doubleByTypeProperty: SimpleProperty = {
+      name: 'byTypeProperty',
+      title: 'byType Property',
+      valueType: 'DOUBLE',
+      required: false,
+    };
+
+    const intByTypeProperty: SimpleProperty = {
+      name: 'byTypeProperty',
+      title: 'byType Property',
+      valueType: 'INT',
+      required: false,
+    };
+
+    const nullByTypeProperty: SimpleProperty = {
+      name: 'byTypeProperty',
+      title: 'byType Property',
+      valueType: null,
+      required: false,
+    };
+
+    const undefinedByTypeProperty: SimpleProperty = {
+      name: 'byTypeProperty',
+      title: 'byType Property',
+      valueType: undefined,
+      required: false,
+    };
+
+    const doubleByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
+    const nullDoubleByTypePropertyValid = new FormControl(null, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
+    const undefinedDoubleByTypePropertyValid = new FormControl(undefined, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
+    const doubleByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
+    const intByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.byType(intByTypeProperty)]);
+    const intByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.byType(intByTypeProperty)]);
+    const nullByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.byType(nullByTypeProperty)]);
+    const undefinedByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.byType(undefinedByTypeProperty)]);
+
+    expect(true).toEqual(doubleByTypePropertyValid.valid);
+    expect(true).toEqual(nullDoubleByTypePropertyValid.valid);
+    expect(true).toEqual(undefinedDoubleByTypePropertyValid.valid);
+    expect(false).toEqual(doubleByTypePropertyNotValid.valid);
+    expect(true).toEqual(intByTypePropertyValid.valid);
+    expect(false).toEqual(intByTypePropertyNotValid.valid);
+    expect(true).toEqual(nullByTypePropertyValid.valid);
+    expect(true).toEqual(undefinedByTypePropertyValid.valid);
+    expect('Значение должно быть числом').toEqual(doubleByTypePropertyNotValid.errors['byType']);
+  });
 });
