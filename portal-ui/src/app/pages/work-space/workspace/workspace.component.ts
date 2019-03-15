@@ -14,6 +14,8 @@ export class WorkspaceComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   _mobileQueryListener: () => void;
 
+  notificationCounter = 0;
+
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
               private openLayersService: OpenLayersService,
@@ -38,4 +40,11 @@ export class WorkspaceComponent implements OnDestroy {
     this.communicationService.bugReportSidebar.emit(true);
   }
 
+  openExportDialog() {
+    this.logger.info('openExportDialog');
+  }
+
+  notification() {
+    this.notificationCounter++;
+  }
 }

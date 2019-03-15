@@ -31,3 +31,8 @@
   top: 8px;
   color: white;
 }
+
+.crg-notification {
+  cursor: pointer;
+  margin-right: 15px;
+}

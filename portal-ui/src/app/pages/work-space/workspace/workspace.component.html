@@ -31,12 +31,31 @@
               <mat-icon aria-label="label">bug_report</mat-icon>
             </button>
           </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="mat-tab-label-content">ФГИС ТП</span>
+            </ng-template>
+
+            <button mat-icon-button (click)="openExportDialog()">
+              <mat-icon aria-label="label">arrow_downward</mat-icon>
+            </button>
+          </mat-tab>
         </mat-tab-group>
       </div>
 
       <span class="example-spacer"></span>
 
-      <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon class="crg-notification" (click)="notification()"
+                *ngIf="notificationCounter == 0">notifications</mat-icon>
+      <mat-icon class="crg-notification" matBadge="{{notificationCounter}}" matBadgeColor="warn"
+                *ngIf="notificationCounter > 0"
+                (click)="notification()">notifications
+      </mat-icon>
+<!--      <mat-icon class="crg-notification" *ngIf="notificationActive"-->
+<!--                (click)="notification()">notifications</mat-icon>-->
+<!--      <mat-icon class="crg-notification" *ngIf="!notificationActive"-->
+<!--                (click)="notification()">notifications_active</mat-icon>-->
+      <button class="float-right" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
       </button>
     </mat-toolbar-row>
