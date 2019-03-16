@@ -38,6 +38,10 @@ export class LayersService {
     this.layers$.subscribe();
   }
 
+  public getCurrent(): CrgLayer[] {
+    return this._layers$.getValue();
+  }
+
   /**
    * Получаем слоя с геосервера.
    */
@@ -54,25 +58,6 @@ export class LayersService {
         .subscribe(value => {
           this._layers$.next(value);
         });
-  }
-
-  test() {
-    const newLayer = {
-      name: 'New Layer from test',
-      complexName: 'complexName',
-      title: 'Title of new layer',
-      href: '',
-      connectionInfo: {
-        dbName: '',
-        schemaName: '',
-        tableName: ''
-      }
-    };
-
-    const crgLayers = this._layers$.getValue();
-    crgLayers.push(newLayer);
-
-    this._layers$.next(crgLayers);
   }
 
   fetchLayerConnectionInfo(layer: CrgLayer) {

@@ -50,3 +50,9 @@
           [(visible)]="isValidationDialogShow">
   <crg-validation-dialog [data]="validationDialogData"></crg-validation-dialog>
 </p-dialog>
+
+<p-dialog header="Экспорт"
+          [style]="{width: '450px', height: '500px'}"
+          [(visible)]="isGmlDialogShow">
+  <crg-export-dialog [layers]="gmlDialogData"></crg-export-dialog>
+</p-dialog>

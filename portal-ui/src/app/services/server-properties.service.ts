@@ -17,6 +17,7 @@ export class ServerPropertiesService {
   private _validationUrl = this._baseUrl + '/fgistp/validation';
   private _initValidationUrl = this._validationUrl + '/init';
   private _validationInfo = this._validationUrl + '/info';
+  private _exportGmlUrl = this._baseUrl + '/export/gml';
 
   constructor() {
   }
@@ -59,6 +60,14 @@ export class ServerPropertiesService {
 
   get validationInfo(): string {
     return this._validationInfo;
+  }
+
+  get exportGmlUrl(): string {
+    return this._exportGmlUrl;
+  }
+
+  set exportGmlUrl(value: string) {
+    this._exportGmlUrl = value;
   }
 
 }

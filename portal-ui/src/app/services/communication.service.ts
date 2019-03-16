@@ -14,6 +14,9 @@ export class CommunicationService {
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
 
+  @Output() gmlDialog = new EventEmitter<CrgLayer[]>();
+  @Output() selectedForGml = new EventEmitter<CrgLayer[]>();
+
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() gotoObject = new EventEmitter<ObjectDto>();
 
@@ -39,6 +42,14 @@ export class CommunicationService {
 
   public selectedForValidationLayers$() {
     return this.selectedForValidation;
+  }
+
+  public gmlDialog$() {
+    return this.gmlDialog;
+  }
+
+  public selectedForGmlLayers$() {
+    return this.selectedForGml;
   }
 
   public editView$() {

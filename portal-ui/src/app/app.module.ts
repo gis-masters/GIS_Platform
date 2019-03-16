@@ -25,10 +25,11 @@ import {ReportSidebarComponent} from './components/validation/report-sidebar/rep
 import {ViolationsViewComponent} from './components/validation/violations-view/violations-view.component';
 import {LayerObjectsComponent} from './components/layer-objects/layer-objects.component';
 import {ValidationDialogComponent} from './components/validation/validation-dialog/validation-dialog.component';
+import {ErrorsBadgeComponent} from './components/errors-badge/errors-badge.component';
+import {ExportDialogComponent} from './components/export/export-dilog/export-dialog.component';
 import {JwtInterceptorService} from './services/jwt-interceptor.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
-import {ErrorsBadgeComponent} from './components/errors-badge/errors-badge.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {ErrorsBadgeComponent} from './components/errors-badge/errors-badge.compo
     FilterLayersPipe,
     EditObjectComponent,
     ErrorsBadgeComponent,
+    ExportDialogComponent,
   ],
   imports: [
     AppRoutingModule,

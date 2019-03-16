@@ -22,7 +22,7 @@ public class GmlController {
     private GmlService gmlService;
 
     @ResponseBody
-    @PostMapping("/gml")
+    @PostMapping("/export/gml")
     public CompletableFuture<GmlMqResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
         log.debug("Gml generation request");
 

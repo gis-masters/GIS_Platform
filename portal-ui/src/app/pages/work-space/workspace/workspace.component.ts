@@ -2,6 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 
@@ -19,6 +20,7 @@ export class WorkspaceComponent implements OnDestroy {
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
               private openLayersService: OpenLayersService,
+              private layersService: LayersService,
               private communicationService: CommunicationService,
               private logger: NGXLogger) {
     this.authService.validateAuth();
@@ -41,7 +43,8 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   openExportDialog() {
-    this.logger.info('openExportDialog');
+    const copyOfLayers = Object.assign([], this.layersService.getCurrent());
+    this.communicationService.gmlDialog.emit(copyOfLayers);
   }
 
   notification() {

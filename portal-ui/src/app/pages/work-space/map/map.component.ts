@@ -33,6 +33,9 @@ export class MapComponent implements OnInit, OnDestroy {
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
 
+  isGmlDialogShow = false;
+  gmlDialogData: CrgLayer[];
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -97,6 +100,17 @@ export class MapComponent implements OnInit, OnDestroy {
             this.validationDialogData = data;
           } else {
             this.logger.warn('Empty data: ', data);
+          }
+        });
+
+    this.communicationService
+        .gmlDialog$()
+        .subscribe((layers: CrgLayer[]) => {
+          if (layers && layers.length > 0) {
+            this.isGmlDialogShow = true;
+            this.gmlDialogData = layers;
+          } else {
+            this.logger.warn('Empty data: ', layers);
           }
         });
   }
