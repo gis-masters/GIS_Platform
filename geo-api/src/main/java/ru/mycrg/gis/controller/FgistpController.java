@@ -5,13 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.enums.RequstType;
+import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
+import ru.mycrg.gis.service.gml.GmlService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
 import java.security.Principal;
@@ -25,11 +28,15 @@ public class FgistpController {
 
     private final FgistpRuleService fgistpRuleService;
     private final IValidationService validationService;
+    private final GmlService gmlService;
 
     @Autowired
-    public FgistpController(FgistpRuleService fgistpRuleService, IValidationService validationService) {
+    public FgistpController(FgistpRuleService fgistpRuleService,
+                            IValidationService validationService,
+                            GmlService gmlService) {
         this.fgistpRuleService = fgistpRuleService;
         this.validationService = validationService;
+        this.gmlService = gmlService;
     }
 
     @GetMapping("/fgistp/rules")
@@ -97,6 +104,14 @@ public class FgistpController {
         }
 
         return validationService.initProcess(principal.getName(), request, nPage, nSize, RequstType.GET);
+    }
+
+    @ResponseBody
+    @PostMapping("/fgistp/export/gml")
+    public CompletableFuture<GmlMqResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
+        log.debug("Gml generation request");
+
+        return gmlService.initProcess(request);
     }
 
     private void validateRequest(List<ValidationRequestDto> request) {

@@ -17,8 +17,6 @@ export class ExportDialogComponent {
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
   selectedDocSchema: string = undefined;
-
-  private isExportInited = false;
   docs: ValueTitleProjection[] = [
     {
       value: 'Doc.10501010100',
@@ -57,6 +55,8 @@ export class ExportDialogComponent {
       title: 'Положение о территориальном планировании городского округа'
     },
   ];
+
+  private isExportInited = false;
 
   constructor(private logger: NGXLogger,
               private exportService: ExportService) {

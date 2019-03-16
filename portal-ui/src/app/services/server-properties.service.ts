@@ -17,7 +17,7 @@ export class ServerPropertiesService {
   private _validationUrl = this._baseUrl + '/fgistp/validation';
   private _initValidationUrl = this._validationUrl + '/init';
   private _validationInfo = this._validationUrl + '/info';
-  private _exportGmlUrl = this._baseUrl + '/export/gml';
+  private _exportGmlUrl = this._baseUrl + '/fgistp/export/gml';
 
   constructor() {
   }
