@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
-import ru.mycrg.common.enums.RequstType;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.queue.MqSender;
@@ -42,7 +42,7 @@ public class ValidationServiceImpl implements IValidationService {
     public CompletableFuture<List<ValidationResponseDto>> initProcess(String userName,
                                                                       List<ValidationRequestDto> request,
                                                                       int page, int size,
-                                                                      RequstType type) {
+                                                                      RequestType type) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -65,7 +65,7 @@ public class ValidationServiceImpl implements IValidationService {
     }
 
     @NotNull
-    private ValidationMqRequest prepareMqRequest(int page, int size, RequstType type,
+    private ValidationMqRequest prepareMqRequest(int page, int size, RequestType type,
                                                  ValidationProcess process, ValidationRequestDto requestDto) {
         EntityType entityType = ruleService.getRuleByClassName(requestDto.getTableName());
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.GmlMqResponse;
-import ru.mycrg.common.enums.RequstType;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
@@ -72,7 +72,7 @@ public class FgistpController {
 
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INIT);
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INIT);
     }
 
     @PostMapping("/fgistp/validation/info")
@@ -81,7 +81,7 @@ public class FgistpController {
             Principal principal) {
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequstType.INFO);
+        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INFO);
     }
 
     @PostMapping("/fgistp/validation")
@@ -103,7 +103,7 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequstType.GET);
+        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequestType.GET);
     }
 
     @ResponseBody

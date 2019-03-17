@@ -12,7 +12,7 @@ import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.RequstType;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.MqOrganizationInit;
@@ -95,11 +95,11 @@ public class MqListener {
         log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
 
         try {
-            if (mqRequest.getType() == RequstType.INIT) {
+            if (mqRequest.getType() == RequestType.INIT) {
                 validationService.startValidation(mqRequest);
-            } else if (mqRequest.getType() == RequstType.GET) {
+            } else if (mqRequest.getType() == RequestType.GET) {
                 mqEvents.validationResponse(validationService.getResults(mqRequest));
-            } else if (mqRequest.getType() == RequstType.INFO) {
+            } else if (mqRequest.getType() == RequestType.INFO) {
                 mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");

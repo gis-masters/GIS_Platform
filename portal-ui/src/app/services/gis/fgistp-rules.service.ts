@@ -27,7 +27,11 @@ export class FgistpRulesService {
                  .get<FeatureXsdDefinition>(this.serverProp.rulesUrl)
                  .pipe(
                    tap((respone: any) => {
-                     this.featuresXsdDefinition.xsdFeatures = respone.entityTypes;
+                     if (respone) {
+                       this.featuresXsdDefinition.xsdFeatures = respone.entityTypes;
+                     } else {
+                       this.logger.warn('getRules response is: ', respone);
+                     }
                    })
                  );
     }

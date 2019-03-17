@@ -1,6 +1,6 @@
 package ru.mycrg.common.enums;
 
-public enum RequstType {
+public enum RequestType {
     INFO,
     INIT,
     GET

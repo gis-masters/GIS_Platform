@@ -33,8 +33,6 @@ public class ResourceServerSecurityConfiguration extends ResourceServerConfigure
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/organizations", "/organizations/").permitAll()
-                // TODO: HttpMethod.GET Открыто для теста, закрыть в будущем
-                .antMatchers(HttpMethod.GET, "/organizations", "/organizations/").permitAll()
                 .anyRequest().authenticated();
     }
 
