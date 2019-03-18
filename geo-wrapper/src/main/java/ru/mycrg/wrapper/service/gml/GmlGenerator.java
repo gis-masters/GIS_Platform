@@ -267,9 +267,9 @@ public class GmlGenerator {
         StringBuilder result = new StringBuilder();
         for (Coordinate coordinate : coordinates) {
             result
-                    .append(trimCoordinate(coordinate.x))
-                    .append(",")
                     .append(trimCoordinate(coordinate.y))
+                    .append(",")
+                    .append(trimCoordinate(coordinate.x))
                     .append(" ");
         }
 
@@ -424,6 +424,6 @@ public class GmlGenerator {
     private String generateId() {
         idCounter++;
 
-        return "id" + idCounter;
+        return "ID" + idCounter;
     }
 }
