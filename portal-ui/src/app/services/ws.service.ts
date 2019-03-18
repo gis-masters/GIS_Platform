@@ -44,11 +44,9 @@ export class WsService {
     const _this = this;
     this.stompClient.connect({}, function (frame) {
       _this.setConnected(true);
-      console.log('Connected: ' + frame);
+      // console.log('Connected: ' + frame);
 
       _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
-        console.log('stompClient.subscribe /topic data: ', JSON.parse(data.body));
-
         _this._wsMsg$.next(JSON.parse(data.body));
       });
     });

@@ -84,18 +84,18 @@ public class GmlGeneratorServiceTest {
         fgistpRules.add(electricline);
         gmlMqRequest.setFgistpRules(fgistpRules);
 
-        GmlGenerator gmlGenerator = new GmlGenerator(
-                new GisStorage(datasourceFactory),
-                new FileService(new FizProperties()),
-                new ValidatorImpl());
-
-        // ACT
-        GmlDocumentHolder gml = gmlGenerator.createDomDocuments(gmlMqRequest);
-        Map<String, String> paths = gmlGenerator.generate(gmlMqRequest);
-        assertTrue(paths.get("gml").length() > 0);
-
-        assertNotNull(gml.getGmlDocument());
-        assertTrue(gml.getGmlDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
+//        GmlGenerator gmlGenerator = new GmlGenerator(
+//                new GisStorage(datasourceFactory),
+//                new FileService(new FizProperties()),
+//                new ValidatorImpl());
+//
+//        // ACT
+//        GmlDocumentHolder gml = gmlGenerator.createDomDocuments(gmlMqRequest);
+//        Map<String, String> paths = gmlGenerator.generate(gmlMqRequest);
+//        assertTrue(paths.get("gml").length() > 0);
+//
+//        assertNotNull(gml.getGmlDocument());
+//        assertTrue(gml.getGmlDocument().getElementsByTagName("FunctionalZone").getLength() > 0);
     }
 
     @Test

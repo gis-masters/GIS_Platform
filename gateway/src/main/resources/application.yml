@@ -44,6 +44,10 @@ zuul:
       path: /db/**
       url: http://geo-api:8088/db/
 
+    gis-ws:
+      path: /crg-ws-endpoint/**
+      url: http://geo-api:8088/crg-ws-endpoint/
+
     gis-rules:
       path: /fgistp/**
       url: http://geo-api:8088/fgistp/

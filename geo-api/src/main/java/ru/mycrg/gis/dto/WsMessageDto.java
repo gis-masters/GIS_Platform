@@ -9,8 +9,9 @@ public class WsMessageDto<T> {
 
     public WsMessageDto() {}
 
-    public WsMessageDto(ProcessType type) {
+    public WsMessageDto(ProcessType type, T response) {
         this.type = type;
+        this.payload = response;
     }
 
     public ProcessType getType() {

@@ -5,6 +5,7 @@ import java.util.List;
 public class GmlRequestDto {
 
     private String docSchema;
+    private String id;
     private List<ValidationRequestDto> resources;
 
     public GmlRequestDto() {}
@@ -23,5 +24,13 @@ public class GmlRequestDto {
 
     public void setResources(List<ValidationRequestDto> resources) {
         this.resources = resources;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -17,12 +17,13 @@ import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.service.FileService;
-import ru.mycrg.wrapper.service.validation.IValidator;
+import ru.mycrg.wrapper.service.validation.Util;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -38,12 +39,10 @@ public class GmlGenerator {
 
     private final GisStorage gisStorage;
     private final FileService fileService;
-    private final IValidator validator;
 
-    public GmlGenerator(GisStorage gisStorage, FileService fileService, IValidator validator) {
+    public GmlGenerator(GisStorage gisStorage, FileService fileService) {
         this.gisStorage = gisStorage;
         this.fileService = fileService;
-        this.validator = validator;
     }
 
     /**
@@ -83,10 +82,8 @@ public class GmlGenerator {
         gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
             var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), resourceProjection.getTableName());
             if (rule.isPresent()) {
-                var data = getData(resourceProjection);
-
-                writeLogFile(documentHolder, rule.get(), new LinkedList<>(data));
-                writeDataToGml(documentHolder, rule.get(), data);
+                generateGmlDomModel(documentHolder, rule.get(), resourceProjection);
+                generateLogDomModel(documentHolder, rule.get(), resourceProjection);
             } else {
                 log.warn("Не найдено описание типа: " + resourceProjection.getTableName());
             }
@@ -95,43 +92,49 @@ public class GmlGenerator {
         return documentHolder;
     }
 
-    private void writeLogFile(GmlDocumentHolder docHolder, EntityTypeDto fType,
-                              Queue<List<Map<String, Object>>> queue) {
-        log.debug("write log file feature: {}", fType.getName());
+    private void generateLogDomModel(GmlDocumentHolder docHolder, EntityTypeDto fType, ResourceProjection resource) {
+        log.debug("generate LOG Document for feature: {}", fType.getName());
 
-        Document log = docHolder.getLogDocument();
-        Element feature = log.createElement("featureMember");
+        Queue<List<Map<String, Object>>> queue = getViolationsData(resource);
+
+        Document logDocument = docHolder.getLogDocument();
+        Element logRootNode = docHolder.getLogRootNode();
+
+        Element feature = logDocument.createElement("featureMember");
         feature.setAttribute("name", fType.getClearName());
 
-        log.appendChild(feature);
+        logRootNode.appendChild(feature);
 
         while (!queue.isEmpty()) {
-            // Обрабатываем партию данных из БД
-            queue.poll().forEach(batch -> {
-                ObjectValidationResult violations = validator.validate(fType, batch);
+            List<Map<String, Object>> batch = queue.poll();
+            try {
+                Util.mapToViolations(batch).forEach(violations -> {
+                    Element object = logDocument.createElement("object");
+                    object.setAttribute("id", violations.getObjectId());
+                    feature.appendChild(object);
 
-                Element object = log.createElement("object");
-                object.setAttribute("id", violations.getObjectId());
-                feature.appendChild(object);
+                    violations.getPropertyViolations().forEach(propertyViolation -> {
+                        Element property = logDocument.createElement(propertyViolation.getName());
+                        property.setTextContent(propertyViolation.getErrorTypes().get(0));
+                        object.appendChild(property);
+                    });
 
-                violations.getPropertyViolations().forEach(propertyViolation -> {
-                    Element property = log.createElement(propertyViolation.getName());
-                    property.setTextContent(propertyViolation.getErrorTypes().get(0));
-                    object.appendChild(property);
+                    if (violations.getObjectViolations().size() > 0) {
+                        Element property = logDocument.createElement("objectViolations");
+                        property.setTextContent(violations.getObjectViolations().get(0));
+                        object.appendChild(property);
+                    }
                 });
-
-                if (violations.getObjectViolations().size() > 0) {
-                    Element property = log.createElement("objectViolations");
-                    property.setTextContent(violations.getObjectViolations().get(0));
-                    object.appendChild(property);
-                }
-            });
+            } catch (IOException e) {
+                log.error("Error parsin violations");
+            }
         }
     }
 
-    private void writeDataToGml(GmlDocumentHolder docHolder, EntityTypeDto fType,
-                                Queue<List<Map<String, Object>>> queue) {
-        log.debug("write feature {} to GML Document", fType.getName());
+    private void generateGmlDomModel(GmlDocumentHolder docHolder, EntityTypeDto fType, ResourceProjection resource) {
+        log.debug("generate GML Document for feature {}", fType.getName());
+
+        var queue = getData(resource);
 
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
@@ -291,7 +294,7 @@ public class GmlGenerator {
         Document document = documentHolder.getGmlDocument();
 
         Element gmlFeatureMember = document.createElement("gml:featureMember");
-        documentHolder.getFeatureCollection().appendChild(gmlFeatureMember);
+        documentHolder.getGmlFeatureCollection().appendChild(gmlFeatureMember);
 
         Element featureNode = document.createElement(name);
         featureNode.setAttribute("gml:id", generateId());
@@ -333,7 +336,7 @@ public class GmlGenerator {
         Document mainDoc = builder.newDocument();
         Document logDoc = builder.newDocument();
 
-        // Root node
+        // Gml Root node
         Element rootNode = mainDoc.createElement(docSchema);
         rootNode.setAttribute("xmlns", "http://fgistp");
         rootNode.setAttribute("xmlns:gml", "http://www.opengis.net/gml");
@@ -351,7 +354,11 @@ public class GmlGenerator {
         Element objectCollection = mainDoc.createElement("ObjectCollection");
         rootNode.appendChild(objectCollection);
 
-        return new GmlDocumentHolder(mainDoc, logDoc, gmlFeatureCollection, objectCollection);
+        // Log Root node
+        Element logRootNode = logDoc.createElement(docSchema);
+        logDoc.appendChild(logRootNode);
+
+        return new GmlDocumentHolder(mainDoc, logDoc, gmlFeatureCollection, objectCollection, logRootNode);
     }
 
     private Queue<List<Map<String, Object>>> getData(ResourceProjection target) {
@@ -363,6 +370,27 @@ public class GmlGenerator {
         int offset = 0;
         while (true) {
             var batch = gisStorage.fetchBatch(jdbcTemplate, target, BATCH_SIZE, offset);
+            if (batch.isEmpty()) {
+                break;
+            }
+
+            queue.offer(batch);
+
+            offset++;
+        }
+
+        return queue;
+    }
+
+    private Queue<List<Map<String, Object>>> getViolationsData(ResourceProjection target) {
+        log.debug("Get violations from: {}", target.toString());
+
+        Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
+        JdbcTemplate jdbcTemplate = gisStorage.initConnection(target.getDbName());
+
+        int offset = 0;
+        while (true) {
+            var batch = gisStorage.fetchViolationsBatch(jdbcTemplate, target, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }

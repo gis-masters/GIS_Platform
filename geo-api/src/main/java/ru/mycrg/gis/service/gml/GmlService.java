@@ -7,7 +7,10 @@ import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
+import ru.mycrg.gis.dto.WsMessageDto;
+import ru.mycrg.gis.enums.ProcessType;
 import ru.mycrg.gis.queue.MqSender;
+import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -27,10 +30,12 @@ public class GmlService {
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
+    private final WsNotificationService wsNotificationService;
 
-    public GmlService(MqSender mqSender, FgistpRuleService ruleService) {
+    public GmlService(MqSender mqSender, FgistpRuleService ruleService, WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
+        this.wsNotificationService = wsNotificationService;
     }
 
     public CompletableFuture<GmlMqResponse> initProcess(GmlRequestDto request) {
@@ -57,10 +62,15 @@ public class GmlService {
             log.warn("Return invalid response");
         }
 
-        getProcessById(response.getId())
-                .ifPresentOrElse(
-                        process -> process.addResponse(response),
-                        () -> log.warn("Not found gml process by id: {}", response.getId()));
+        Optional<GmlProcess> processById = getProcessById(response.getId());
+        if (processById.isPresent()) {
+            GmlProcess gmlProcess = processById.get();
+            wsNotificationService.send(new WsMessageDto(ProcessType.EXPORT, response), gmlProcess.getRequest().getId());
+
+            gmlProcess.addResponse(response);
+        } else {
+            log.warn("Not found gml process by id: {}", response.getId());
+        }
     }
 
     private Optional<GmlProcess> getProcessById(UUID id) {

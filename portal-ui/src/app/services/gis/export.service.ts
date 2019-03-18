@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import {WsService} from '../ws.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class ExportService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private wsService: WsService,
               private serverProp: ServerPropertiesService) {
     this.logger.info('ExportService constructor');
   }
@@ -19,6 +21,7 @@ export class ExportService {
   exportGml(crgLayers: CrgLayer[], docSchema: string): Observable<ExportGmlResponse> {
     const resources: ConnectionInfo[] = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
     const payload: ExportGmlRequest = {
+      id: this.wsService.getId(),
       docSchema: docSchema,
       resources: resources
     };
@@ -40,6 +43,7 @@ export interface ExportGmlResponse {
 }
 
 export interface ExportGmlRequest {
+  id: string;
   docSchema: string;
   resources: ConnectionInfo[];
 }

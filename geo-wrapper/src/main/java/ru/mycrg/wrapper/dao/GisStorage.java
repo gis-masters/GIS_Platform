@@ -18,7 +18,6 @@ import ru.mycrg.wrapper.service.validation.Util;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class GisStorage {
@@ -97,6 +96,17 @@ public class GisStorage {
                             ps.setBoolean(4, violation.getPropertyViolations().isEmpty());
                             ps.setInt(5, classId);
                         });
+    }
+
+    @Transactional
+    public List<Map<String, Object>> fetchViolationsBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
+                                                          int limit, int offset) {
+        String extensionTableName = target.getTableName() + "_extension";
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
+                target.getSchemaName(), extensionTableName);
+
+        return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
 
     @Transactional
@@ -359,4 +369,5 @@ public class GisStorage {
 
         return targetColumns + sourceColumns.toString();
     }
+
 }

@@ -7,13 +7,16 @@ public class GmlDocumentHolder {
 
     private Document gmlDocument;
     private Document logDocument;
-    private Element featureCollection;
+    private Element gmlFeatureCollection;
     private Element objectCollection;
+    private Element logRootNode;
 
-    public GmlDocumentHolder(Document mainDoc, Document logDoc, Element featureCollection, Element objectCollection) {
+    public GmlDocumentHolder(Document mainDoc, Document logDoc, Element gmlFeatureCollection,
+                             Element objectCollection, Element logRootNode) {
         this.gmlDocument = mainDoc;
         this.logDocument = logDoc;
-        this.featureCollection = featureCollection;
+        this.gmlFeatureCollection = gmlFeatureCollection;
+        this.logRootNode = logRootNode;
         this.objectCollection = objectCollection;
     }
 
@@ -21,8 +24,8 @@ public class GmlDocumentHolder {
         return gmlDocument;
     }
 
-    public Element getFeatureCollection() {
-        return featureCollection;
+    public Element getGmlFeatureCollection() {
+        return gmlFeatureCollection;
     }
 
     public Element getObjectCollection() {
@@ -35,5 +38,9 @@ public class GmlDocumentHolder {
 
     public void setLogDocument(Document logDocument) {
         this.logDocument = logDocument;
+    }
+
+    public Element getLogRootNode() {
+        return logRootNode;
     }
 }

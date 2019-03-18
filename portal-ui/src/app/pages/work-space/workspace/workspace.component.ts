@@ -5,6 +5,8 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {IWsMessage, WsService} from '../../../services/ws.service';
+import {filter, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-workspace',
@@ -16,6 +18,8 @@ export class WorkspaceComponent implements OnDestroy {
   _mobileQueryListener: () => void;
 
   notificationCounter = 0;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
@@ -30,13 +34,22 @@ export class WorkspaceComponent implements OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener);
 
     this.wsService.messages$
-        .subscribe((value: IWsMessage) => {
-          this.logger.info('this.wsService.messages$: ', value);
+        .pipe(
+          filter(value => !!value),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((wsMessage: IWsMessage) => {
+          this.logger.info('this.wsService.messages$: ', wsMessage);
+
+          this.notificationCounter++;
         });
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   logout() {
@@ -53,7 +66,7 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   notification() {
-    this.notificationCounter++;
+    // this.notificationCounter++;
   }
 
 }
