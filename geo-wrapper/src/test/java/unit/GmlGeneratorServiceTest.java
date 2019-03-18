@@ -22,9 +22,7 @@ import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -35,7 +33,7 @@ public class GmlGeneratorServiceTest {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    public void shouldGenerateGml() throws ParserConfigurationException, TransformerException {
+    public void shouldGenerateGml() {
         MockEnvironment env = new MockEnvironment();
         env.setProperty("spring.datasource.url", "jdbc:postgresql://127.0.0.1:5434/postgres");
         env.setProperty("spring.datasource.username", "fiz");
@@ -52,7 +50,7 @@ public class GmlGeneratorServiceTest {
         EntityTypeDto functionalZone = new EntityTypeDto();
         functionalZone.setName("FunctionalZone_Type");
 
-        List<SimplePropertyDto> functionalZoneProperties = new ArrayList<>();
+        Set<SimplePropertyDto> functionalZoneProperties = new LinkedHashSet<>();
         SimplePropertyDto globalID = new SimplePropertyDto();
         globalID.setName("GLOBALID");
         SimplePropertyDto fzNotExistProp = new SimplePropertyDto();
@@ -72,7 +70,7 @@ public class GmlGeneratorServiceTest {
         EntityTypeDto electricline = new EntityTypeDto();
         electricline.setName("ElectricLine_Type");
 
-        List<SimplePropertyDto> electriclineProperties = new ArrayList<>();
+        Set<SimplePropertyDto> electriclineProperties = new LinkedHashSet<>();
         electriclineProperties.add(globalID);
         electriclineProperties.add(classId);
         electriclineProperties.add(shape);

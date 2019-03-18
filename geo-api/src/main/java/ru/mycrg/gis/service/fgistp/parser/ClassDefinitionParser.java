@@ -23,10 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
@@ -92,7 +89,9 @@ public class ClassDefinitionParser {
                 simpleType.setName(nodeName);
 
                 Node restrictionNode = getRestrictionNode(node.getChildNodes());
-                fetchEnumerations(restrictionNode.getChildNodes(), simpleType.getProperties());
+                if (restrictionNode != null) {
+                    fetchEnumerations(restrictionNode.getChildNodes(), simpleType.getProperties());
+                }
 
                 if (!simpleType.getProperties().isEmpty()) {
                     simpleTypes.add(simpleType);
@@ -143,8 +142,8 @@ public class ClassDefinitionParser {
         });
     }
 
-    private List<AbstractProperty> fetchSequences(XSComplexTypeDecl xsComplexType) {
-        List<AbstractProperty> properties = new ArrayList<>();
+    private Set<AbstractProperty> fetchSequences(XSComplexTypeDecl xsComplexType) {
+        Set<AbstractProperty> properties = new LinkedHashSet<>();
 
         XSParticleDecl particle = (XSParticleDecl) xsComplexType.getParticle();
         handleParticle(particle, properties);
@@ -152,7 +151,7 @@ public class ClassDefinitionParser {
         return properties;
     }
 
-    private void handleParticle(XSParticleDecl particle, List<AbstractProperty> properties) {
+    private void handleParticle(XSParticleDecl particle, Set<AbstractProperty> properties) {
         if (particle.fType == PARTICLE_MODELGROUP) {
             XSObjectList particles = ((XSModelGroupImpl) particle.getTerm()).getParticles();
             for (Object particleItem : particles) {

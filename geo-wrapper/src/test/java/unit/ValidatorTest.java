@@ -9,9 +9,7 @@ import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -80,7 +78,7 @@ public class ValidatorTest {
         validEnum.setName("validEnum");
         validEnum.setEnumerations(enumerations);
 
-        List<SimplePropertyDto> properties = new ArrayList<>();
+        Set<SimplePropertyDto> properties = new LinkedHashSet<>();
         properties.add(classId);
         properties.add(shortClassId);
         properties.add(validClassId);
@@ -128,7 +126,7 @@ public class ValidatorTest {
         classId.setMinLength(3);
         classId.setMaxLength(15);
 
-        List<SimplePropertyDto> properties = new ArrayList<>();
+        Set<SimplePropertyDto> properties = new LinkedHashSet<>();
         properties.add(classId);
 
         EntityTypeDto entityType = new EntityTypeDto();
