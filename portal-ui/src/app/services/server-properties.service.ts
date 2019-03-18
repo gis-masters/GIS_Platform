@@ -18,6 +18,7 @@ export class ServerPropertiesService {
   private _initValidationUrl = this._validationUrl + '/init';
   private _validationInfo = this._validationUrl + '/info';
   private _exportGmlUrl = this._baseUrl + '/fgistp/export/gml';
+  private _wsUrl = this._baseUrl + '/crg-ws-endpoint';
 
   constructor() {
   }
@@ -66,8 +67,8 @@ export class ServerPropertiesService {
     return this._exportGmlUrl;
   }
 
-  set exportGmlUrl(value: string) {
-    this._exportGmlUrl = value;
+  get wsUrl(): string {
+    return this._wsUrl;
   }
 
 }
