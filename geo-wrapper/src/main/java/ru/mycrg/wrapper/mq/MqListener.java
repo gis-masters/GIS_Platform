@@ -120,7 +120,7 @@ public class MqListener {
             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), paths, ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла.", e);
-             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR));
+             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR, e.getLocalizedMessage()));
         }
     }
 

@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.mq.IMqEvents;
 import ru.mycrg.wrapper.service.FileService;
 import ru.mycrg.wrapper.service.validation.Util;
 
@@ -28,6 +29,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+
 @Service
 public class GmlGenerator {
 
@@ -39,8 +42,10 @@ public class GmlGenerator {
 
     private final GisStorage gisStorage;
     private final FileService fileService;
+    private final IMqEvents mqEvents;
 
-    public GmlGenerator(GisStorage gisStorage, FileService fileService) {
+    public GmlGenerator(GisStorage gisStorage, FileService fileService, IMqEvents mqEvents) {
+        this.mqEvents = mqEvents;
         this.gisStorage = gisStorage;
         this.fileService = fileService;
     }
@@ -57,6 +62,8 @@ public class GmlGenerator {
         Map<String, String> paths = new HashMap<>();
 
         GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
+
+        mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Генерация файлов"));
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
         String pathToGml = fileService.save(documentHolder.getGmlDocument(),randomFileName + ".gml");
@@ -77,15 +84,20 @@ public class GmlGenerator {
     @NotNull
     public GmlDocumentHolder createDomDocuments(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
         GmlDocumentHolder documentHolder = createXmlDocument(gmlMqRequest.getDocSchema());
+        mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Инициализация..."));
 
         log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
         gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
-            var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), resourceProjection.getTableName());
+            String tableName = resourceProjection.getTableName();
+            var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
             if (rule.isPresent()) {
+                mqEvents.gmlResponse(
+                        new GmlMqResponse(gmlMqRequest.getId(), PENDING,"Обработка: " + tableName));
+
                 generateGmlDomModel(documentHolder, rule.get(), resourceProjection);
                 generateLogDomModel(documentHolder, rule.get(), resourceProjection);
             } else {
-                log.warn("Не найдено описание типа: " + resourceProjection.getTableName());
+                log.warn("Не найдено описание типа: " + tableName);
             }
         });
 

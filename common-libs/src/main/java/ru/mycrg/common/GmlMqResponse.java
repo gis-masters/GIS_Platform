@@ -13,6 +13,7 @@ public class GmlMqResponse {
     private String pathToFile;
     private String pathToLog;
     private ProcessStatus status;
+    private String description;
 
     public GmlMqResponse() {}
 
@@ -23,9 +24,10 @@ public class GmlMqResponse {
         this.pathToLog = paths.get("log");
     }
 
-    public GmlMqResponse(UUID id, ProcessStatus status) {
+    public GmlMqResponse(UUID id, ProcessStatus status, String description) {
         this.id = id;
         this.status = status;
+        this.description = description;
     }
 
     public UUID getId() {
@@ -58,5 +60,13 @@ public class GmlMqResponse {
 
     public void setPathToLog(String pathToLog) {
         this.pathToLog = pathToLog;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -8,7 +8,6 @@ import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
-import ru.mycrg.gis.enums.ProcessType;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
@@ -20,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static ru.mycrg.gis.enums.ProcessType.EXPORT;
 
 @Service
 public class GmlService {
@@ -65,7 +66,7 @@ public class GmlService {
         Optional<GmlProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
             GmlProcess gmlProcess = processById.get();
-            wsNotificationService.send(new WsMessageDto(ProcessType.EXPORT, response), gmlProcess.getRequest().getId());
+            wsNotificationService.send(new WsMessageDto<>(EXPORT, response),gmlProcess.getRequest().getId());
 
             gmlProcess.addResponse(response);
         } else {

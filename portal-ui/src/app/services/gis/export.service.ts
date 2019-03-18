@@ -40,6 +40,7 @@ export interface ExportGmlResponse {
   pathToFile: string;
   pathToLog: string;
   status: string;
+  description: string;
 }
 
 export interface ExportGmlRequest {

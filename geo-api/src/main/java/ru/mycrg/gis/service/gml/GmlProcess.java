@@ -34,17 +34,14 @@ public class GmlProcess {
     public void addResponse(GmlMqResponse response) {
         mqResponse.add(response);
 
+        futureResponse.complete(response);
+
         if (response.getStatus() == ProcessStatus.DONE) {
             endTime = LocalDateTime.now();
 
             log.info("Process id: {} is {}", id, response.getStatus());
-            futureResponse.complete(response);
         } else {
             log.debug("Process: {} is: {}", id, response.getStatus());
-
-            if (response.getStatus() == ProcessStatus.ERROR) {
-                futureResponse.complete(response);
-            }
         }
     }
 
