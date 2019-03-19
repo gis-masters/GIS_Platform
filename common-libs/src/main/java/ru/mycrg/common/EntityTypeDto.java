@@ -1,7 +1,7 @@
 package ru.mycrg.common;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityTypeDto {
 
@@ -9,7 +9,7 @@ public class EntityTypeDto {
     private String title;
     private String description;
     private String tableName;
-    private Set<SimplePropertyDto> properties = new LinkedHashSet<>();
+    private List<SimplePropertyDto> properties = new ArrayList<>();
     private String customRuleFunction = "";
 
     public EntityTypeDto() {}
@@ -54,11 +54,11 @@ public class EntityTypeDto {
         this.tableName = tableName;
     }
 
-    public Set<SimplePropertyDto> getProperties() {
+    public List<SimplePropertyDto> getProperties() {
         return properties;
     }
 
-    public void setProperties(Set<SimplePropertyDto> properties) {
+    public void setProperties(List<SimplePropertyDto> properties) {
         this.properties = properties;
     }
 

@@ -1,9 +1,9 @@
 package ru.mycrg.gis.service.fgistp;
 
-import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.propertyTypes.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 // Inheritance other EntityType
 public class EntityType {
@@ -12,7 +12,7 @@ public class EntityType {
     private String title;
     private String description;
     private String tableName;
-    private Set<AbstractProperty> properties = new LinkedHashSet<>();
+    private List<AbstractProperty> properties = new ArrayList<>();
     private String customRuleFunction;
 
     public EntityType() {}
@@ -25,11 +25,11 @@ public class EntityType {
         properties.add(property);
     }
 
-    public Set<AbstractProperty> getProperties() {
+    public List<AbstractProperty> getProperties() {
         return properties;
     }
 
-    public void setProperties(Set<AbstractProperty> properties) {
+    public void setProperties(List<AbstractProperty> properties) {
         this.properties = properties;
     }
 

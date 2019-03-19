@@ -8,7 +8,10 @@ import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static ru.mycrg.common.enums.ValueType.CHOICE;
 
@@ -60,7 +63,7 @@ public class EntityTypeUtil {
             if (geometryCounter > 1) {
                 GeometryProperty newGeometryProperty = new GeometryProperty();
 
-                Set<AbstractProperty> properties = entityType.getProperties();
+                List<AbstractProperty> properties = entityType.getProperties();
                 List<String> geometries = new ArrayList<>();
                 properties.stream()
                         .filter(AbstractProperty::isGeometry)

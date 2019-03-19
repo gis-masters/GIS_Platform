@@ -153,9 +153,6 @@ public class GmlGenerator {
             queue.poll().forEach(propFromDb -> {
                 Element featureMember = addFeatureMember(docHolder, fType.getClearName());
 
-                // TODO: значит я ставлю на первое место совойства полученные из БД
-                // а нодобы соблюдать порядок свойств заданные в fType.getProperties() т.е. нужно итерироваться именно
-                // по этой коллекции
                 propFromDb.forEach((key, value) ->
                         fillFeatureMember(docHolder.getGmlDocument(), fType.getProperties(), featureMember, key, value));
             });
@@ -165,7 +162,7 @@ public class GmlGenerator {
     /**
      * Наполняем featureMember свойствами
      */
-    private void fillFeatureMember(Document document, Set<SimplePropertyDto> properties, Element featureMember,
+    private void fillFeatureMember(Document document, List<SimplePropertyDto> properties, Element featureMember,
                                    String key, Object value) {
         if ("crg_b_geometry".equals(key.toLowerCase())) {
             if (value != null) {
@@ -319,7 +316,7 @@ public class GmlGenerator {
         return featureNode;
     }
 
-    private Optional<SimplePropertyDto> getPropertyByName(Set<SimplePropertyDto> properties, String key) {
+    private Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String key) {
         return properties
                 .stream()
                 .filter(property -> property.getName() != null && key != null)
