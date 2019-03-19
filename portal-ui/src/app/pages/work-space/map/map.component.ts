@@ -36,6 +36,8 @@ export class MapComponent implements OnInit, OnDestroy {
   isGmlDialogShow = false;
   gmlDialogData: CrgLayer[];
 
+  isInfoSidebarActive = false;
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -108,6 +110,7 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((layers: CrgLayer[]) => {
           if (layers && layers.length > 0) {
             this.isGmlDialogShow = true;
+            this.isInfoSidebarActive = !this.isInfoSidebarActive;
             this.gmlDialogData = layers;
           } else {
             this.logger.warn('Empty data: ', layers);

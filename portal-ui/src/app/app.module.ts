@@ -27,6 +27,8 @@ import {LayerObjectsComponent} from './components/layer-objects/layer-objects.co
 import {ValidationDialogComponent} from './components/validation/validation-dialog/validation-dialog.component';
 import {ErrorsBadgeComponent} from './components/errors-badge/errors-badge.component';
 import {ExportDialogComponent} from './components/export/export-dilog/export-dialog.component';
+import {InfoSidebarComponent} from './components/info-sidebar/info-sidebar.component';
+import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/jwt-interceptor.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
@@ -50,6 +52,8 @@ import {FilterLayersPipe} from './pipes/filter-layers.pipe';
     EditObjectComponent,
     ErrorsBadgeComponent,
     ExportDialogComponent,
+    InfoSidebarComponent,
+    ProgressItemComponent,
   ],
   imports: [
     AppRoutingModule,

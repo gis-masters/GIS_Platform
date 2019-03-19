@@ -1,0 +1,72 @@
+.progress-item {
+  margin: 5px;
+  background-color: #9bc53e;
+  height: 60px;
+  border-radius: 5px;
+}
+
+.progress-icon {
+  float: left;
+  width: 15%;
+  background-color: #7c9d33;
+  border-radius: 5px 0 0 5px;
+  height: 100%;
+}
+
+.progress-content {
+  float: right;
+  width: 85%;
+  height: 100%;
+  padding: 5px;
+}
+
+.crg-spinner {
+  zoom: 0.4;
+
+  position: relative;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+}
+
+.crg-progress-done {
+  font-size: -webkit-xxx-large;
+  color: white;
+  position: relative;
+  top: 5px;
+  left: 5px;
+}
+
+.info-close-icon {
+  position: relative;
+  left: 5px;
+
+  cursor: pointer;
+  color: #7c9d33;
+  float: right;
+}
+
+.content-text {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.content-action {
+  position: relative;
+  top: 6px;
+}
+
+.gml-link {
+  padding-right: 10px;
+}
+
+.content-link-icon {
+  color: #7c9d33;
+  font-size: x-large;
+  cursor: pointer;
+}
+
+.content-link-text {
+  position: relative;
+  top: -5px;
+  font-family: monospace;
+}
