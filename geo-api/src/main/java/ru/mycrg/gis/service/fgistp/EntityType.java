@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.fgistp;
 
-import ru.mycrg.common.propertyTypes.*;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
 
 import java.util.ArrayList;
 import java.util.List;

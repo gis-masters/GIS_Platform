@@ -32,6 +32,8 @@ public class SimplePropertyDto {
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
 
+    private int sequenceNumber;
+
     public SimplePropertyDto() {}
 
     public String getName() {
@@ -176,5 +178,13 @@ public class SimplePropertyDto {
 
     public void setPatternDescription(String patternDescription) {
         this.patternDescription = patternDescription;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }

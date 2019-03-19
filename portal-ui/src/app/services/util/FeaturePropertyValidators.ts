@@ -124,14 +124,14 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.minInclusive) {
+      if (!property || !property.minInclusive || property.minInclusive === -1) {
         return errors;
       }
 
       const currentValue = control.value;
 
       // console.log('minInclusive: ', currentValue);
-      if (Number(currentValue) >= Number(property.minInclusive)) {
+      if (Number(currentValue) < Number(property.minInclusive)) {
         errors['minInclusive'] = 'Значение: ' + currentValue + ' менее допустимого: ' + property.minInclusive;
       }
 
@@ -143,14 +143,14 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.maxInclusive) {
+      if (!property || !property.maxInclusive || property.maxInclusive === -1) {
         return errors;
       }
 
       const currentValue = control.value;
 
       // console.log('maxInclusive: ', currentValue);
-      if (Number(currentValue) <= Number(property.maxInclusive)) {
+      if (Number(currentValue) > Number(property.maxInclusive)) {
         errors['maxInclusive'] = 'Значение: ' + currentValue + ' более допустимого: ' + property.maxInclusive;
       }
 

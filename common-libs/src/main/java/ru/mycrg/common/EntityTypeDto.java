@@ -14,10 +14,6 @@ public class EntityTypeDto {
 
     public EntityTypeDto() {}
 
-    public String getClearName() {
-        return name.split("_")[0];
-    }
-
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
     }

@@ -18,6 +18,8 @@ public abstract class AbstractProperty {
     private ChoiceType choice;
     private ValueType valueType;
 
+    private int sequenceNumber;
+
     public AbstractProperty() {}
 
     public AbstractProperty(String name) {
@@ -107,5 +109,13 @@ public abstract class AbstractProperty {
 
     public boolean isGeometry() {
         return this.valueType == ValueType.GEOMETRY;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 }

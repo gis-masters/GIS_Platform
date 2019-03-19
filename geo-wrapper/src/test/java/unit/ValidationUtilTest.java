@@ -7,14 +7,13 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-public class UtilTest {
+public class ValidationUtilTest {
 
     @Test
     public void shouldConvertToJSON() {

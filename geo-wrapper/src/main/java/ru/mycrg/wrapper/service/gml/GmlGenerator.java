@@ -1,7 +1,6 @@
 package ru.mycrg.wrapper.service.gml;
 
 import org.jetbrains.annotations.NotNull;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Polygon;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
 import ru.mycrg.wrapper.service.FileService;
@@ -25,11 +23,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+import static ru.mycrg.wrapper.service.gml.GmlUtil.*;
 
 @Service
 public class GmlGenerator {
@@ -66,8 +63,8 @@ public class GmlGenerator {
         mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Генерация файлов"));
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
-        String pathToGml = fileService.save(documentHolder.getGmlDocument(),randomFileName + ".gml");
-        String pathToLog = fileService.save(documentHolder.getLogDocument(),randomFileName + ".log");
+        String pathToGml = fileService.save(documentHolder.getGmlDocument(), randomFileName + ".gml");
+        String pathToLog = fileService.save(documentHolder.getLogDocument(), randomFileName + ".log");
 
         paths.put("gml", pathToGml);
         paths.put("log", pathToLog);
@@ -92,7 +89,7 @@ public class GmlGenerator {
             var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
             if (rule.isPresent()) {
                 mqEvents.gmlResponse(
-                        new GmlMqResponse(gmlMqRequest.getId(), PENDING,"Обработка: " + tableName));
+                        new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Обработка: " + tableName));
 
                 generateGmlDomModel(documentHolder, rule.get(), resourceProjection);
                 generateLogDomModel(documentHolder, rule.get(), resourceProjection);
@@ -113,7 +110,7 @@ public class GmlGenerator {
         Element logRootNode = docHolder.getLogRootNode();
 
         Element feature = logDocument.createElement("featureMember");
-        feature.setAttribute("name", fType.getClearName());
+        feature.setAttribute("name", fType.getName().split("_")[0]);
 
         logRootNode.appendChild(feature);
 
@@ -143,18 +140,35 @@ public class GmlGenerator {
         }
     }
 
-    private void generateGmlDomModel(GmlDocumentHolder docHolder, EntityTypeDto fType, ResourceProjection resource) {
-        log.debug("generate GML Document for feature {}", fType.getName());
+    private void generateGmlDomModel(GmlDocumentHolder docHolder, EntityTypeDto feature, ResourceProjection resource) {
+        log.debug("generate GML Document for feature {}", feature.getName());
 
         var queue = getData(resource);
 
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
             queue.poll().forEach(propFromDb -> {
-                Element featureMember = addFeatureMember(docHolder, fType.getClearName());
+                Element featureMember = addFeatureMember(docHolder, clearName(feature.getName()));
 
-                propFromDb.forEach((key, value) ->
-                        fillFeatureMember(docHolder.getGmlDocument(), fType.getProperties(), featureMember, key, value));
+                // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
+                feature.getProperties().stream()
+                        .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+                        .forEach(simplePropertyDto -> {
+                            fillFeatureMember(featureMember, docHolder.getGmlDocument(), propFromDb, simplePropertyDto);
+                        });
+
+                // Отдельно обрабатываем геометрию
+                Object crg_b_geometry = propFromDb.get("crg_b_geometry");
+                if (crg_b_geometry != null) {
+                    Geometry geometry;
+                    try {
+                        geometry = wkb.read((byte[]) crg_b_geometry);
+
+                        generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
+                    } catch (ParseException e) {
+                        log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
+                    }
+                }
             });
         }
     }
@@ -162,43 +176,23 @@ public class GmlGenerator {
     /**
      * Наполняем featureMember свойствами
      */
-    private void fillFeatureMember(Document document, List<SimplePropertyDto> properties, Element featureMember,
-                                   String key, Object value) {
-        if ("crg_b_geometry".equals(key.toLowerCase())) {
-            if (value != null) {
-                Geometry geometry;
-                try {
-                    geometry = wkb.read((byte[]) value);
-
-                    generateGeometry(geometry, document, featureMember);
-                } catch (ParseException e) {
-                    log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
-                }
-            } else {
-                log.warn("Empty geometry?");
-            }
-        } else if ("shape".equals(key.toLowerCase())) {
-            // Игнорируем.
-        } else {
-            // Выгружаются только те свойства что прописаны в 10 приказе
-            Optional<SimplePropertyDto> propertyByName = getPropertyByName(properties, key);
-            if (propertyByName.isPresent()) {
+    private void fillFeatureMember(Element featureMember, Document document,
+                                   Map<String, Object> dbProp, SimplePropertyDto targetProperty) {
+        dbProp.forEach((key, value) -> {
+            if (targetProperty.getName().toLowerCase().equals(key.toLowerCase())) {
                 Element prop = document.createElement(key.toUpperCase());
                 if (value != null && !value.toString().isEmpty()) {
                     prop.setTextContent(getString(value));
                     featureMember.appendChild(prop);
                 } else {
                     // Значение isRequired то сгенерируем дефолтное иначе невключаем в gml
-                    SimplePropertyDto property = propertyByName.get();
-                    if (property.isRequired()) {
-                        prop.setTextContent(getDefaultValue(property));
+                    if (targetProperty.isRequired()) {
+                        prop.setTextContent(getDefaultValue(targetProperty));
                         featureMember.appendChild(prop);
                     }
                 }
-            } else {
-                log.trace("Property {} does not exist in feature", key);
             }
-        }
+        });
     }
 
     private void generateGeometry(Geometry geometry, Document document, Element featureMember) {
@@ -263,45 +257,6 @@ public class GmlGenerator {
         }
     }
 
-    private String convertToString(Coordinate[] coordinates) {
-        StringBuilder result = new StringBuilder();
-        for (Coordinate coordinate : coordinates) {
-            result
-                    .append(trimCoordinate(coordinate.y))
-                    .append(",")
-                    .append(trimCoordinate(coordinate.x))
-                    .append(" ");
-        }
-
-        return result.toString().trim();
-    }
-
-    private String trimCoordinate(double d) {
-        return new DecimalFormat("#0.00").format(d).replace(",", ".");
-    }
-
-    // Исправляем конвертацию BigDecimal -> "0E-8"
-    private String getString(Object value) {
-        if (value instanceof BigDecimal) {
-            return ((BigDecimal) value).toPlainString();
-        }
-
-        return value.toString();
-    }
-
-    @NotNull
-    private String getDefaultValue(SimplePropertyDto property) {
-        if (property.getValueType() == ValueType.INT || property.getValueType() == ValueType.CHOICE) {
-            return "0";
-        }
-
-        if (property.getValueType() == ValueType.DOUBLE) {
-            return "0.0000";
-        }
-
-        return "";
-    }
-
     private Element addFeatureMember(GmlDocumentHolder documentHolder, String name) {
         Document document = documentHolder.getGmlDocument();
 
@@ -314,13 +269,6 @@ public class GmlGenerator {
         gmlFeatureMember.appendChild(featureNode);
 
         return featureNode;
-    }
-
-    private Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String key) {
-        return properties
-                .stream()
-                .filter(property -> property.getName() != null && key != null)
-                .findFirst();
     }
 
     /**
@@ -338,7 +286,6 @@ public class GmlGenerator {
      *                  <li> Doc.20201010000 – Положение о территориальном планировании поселения
      *                  <li> Doc.20301010000 – Положение о территориальном планировании городского округа.<ul>
      * @return Обьект содержащий document и все ключевые ноды.
-     * @throws ParserConfigurationException
      */
     private GmlDocumentHolder createXmlDocument(String docSchema) throws ParserConfigurationException {
         log.debug("create file");
@@ -394,7 +341,7 @@ public class GmlGenerator {
         return queue;
     }
 
-    private Queue<List<Map<String, Object>>> getViolationsData(ResourceProjection target) {
+    private Queue<List<Map<String, Object>>> getViolationsData(@NotNull ResourceProjection target) {
         log.debug("Get violations from: {}", target.toString());
 
         Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
@@ -415,12 +362,7 @@ public class GmlGenerator {
         return queue;
     }
 
-    private Optional<EntityTypeDto> getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
-        return entityTypes.stream()
-                .filter(entityType -> entityType.getClearName().toLowerCase().equals(tableName.toLowerCase()))
-                .findFirst();
-    }
-
+    @NotNull
     private String generateId() {
         idCounter++;
 

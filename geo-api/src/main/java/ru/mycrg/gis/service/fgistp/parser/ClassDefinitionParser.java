@@ -39,6 +39,7 @@ public class ClassDefinitionParser {
 
     private static Logger log = LoggerFactory.getLogger(ClassDefinitionParser.class);
 
+    private int sequenceNumber = 0;
     private String TARGET_NAMESPACE = "http://fgistp";
 
     public FgistpRules parse(@NotNull File file) {
@@ -144,6 +145,8 @@ public class ClassDefinitionParser {
     }
 
     private List<AbstractProperty> fetchSequences(XSComplexTypeDecl xsComplexType) {
+        sequenceNumber = 0;
+
         List<AbstractProperty> properties = new ArrayList<>();
 
         XSParticleDecl particle = (XSParticleDecl) xsComplexType.getParticle();
@@ -161,6 +164,7 @@ public class ClassDefinitionParser {
         } else if (particle.fType == PARTICLE_ELEMENT) {
             AbstractProperty property = mapParticleElement(particle);
             if (property != null) {
+                property.setSequenceNumber(++sequenceNumber);
                 properties.add(property);
             }
         } else {
@@ -266,12 +270,14 @@ public class ClassDefinitionParser {
     private void setIntegerValues(XSSimpleTypeDecl simpleTypeDecl, IntegerProperty integerProperty) {
         XSObject facetMinInclusive = simpleTypeDecl.getFacet(FACET_MININCLUSIVE);
         if (facetMinInclusive != null) {
-            integerProperty.setMinInclusive(((XSFacet) facetMinInclusive).getIntFacetValue());
+            Object facetValue = ((XSFacet) facetMinInclusive).getActualFacetValue();
+            integerProperty.setMinInclusive(Integer.valueOf(facetValue.toString()));
         }
 
         XSObject facetMaxInclusive = simpleTypeDecl.getFacet(FACET_MAXINCLUSIVE);
         if (facetMaxInclusive != null) {
-            integerProperty.setMaxInclusive(((XSFacet) facetMaxInclusive).getIntFacetValue());
+            Object facetValue = ((XSFacet) facetMaxInclusive).getActualFacetValue();
+            integerProperty.setMaxInclusive(Integer.valueOf(facetValue.toString()));
         }
     }
 

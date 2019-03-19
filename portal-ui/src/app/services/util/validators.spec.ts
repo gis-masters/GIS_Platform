@@ -190,7 +190,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate minInclusive', () => {
-    const minInclusiveProperty: SimpleProperty = {
+    const mi5: SimpleProperty = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: 'number',
@@ -198,7 +198,7 @@ describe('Property validation test', () => {
       minInclusive: 5,
     };
 
-    const nullMinInclusiveProperty: SimpleProperty = {
+    const mi0: SimpleProperty = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: 'number',
@@ -206,7 +206,7 @@ describe('Property validation test', () => {
       minInclusive: 0,
     };
 
-    const undefinedMinInclusiveProperty: SimpleProperty = {
+    const miUndefined: SimpleProperty = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: 'number',
@@ -214,7 +214,7 @@ describe('Property validation test', () => {
       minInclusive: undefined,
     };
 
-    const notMinInclusiveProperty: SimpleProperty = {
+    const miNotSet: SimpleProperty = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: 'number',
@@ -222,30 +222,18 @@ describe('Property validation test', () => {
       minInclusive: -1,
     };
 
-    const minInclusivePropertyValid = new FormControl(3, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const minInclusivePropertyValid2 = new FormControl(null, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const minInclusivePropertyValid3 = new FormControl(undefined, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const minInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const minInclusivePropertyNotValid2 = new FormControl(7, [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const stringMinInclusivePropertyValid = new FormControl('a', [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const stringMinInclusivePropertyValid2 = new FormControl('asdfghjkl', [FeaturePropertyValidators.minInclusive(minInclusiveProperty)]);
-    const nullMinInclusivePropertyValid = new FormControl(3, [FeaturePropertyValidators.minInclusive(nullMinInclusiveProperty)]);
-    const undefinedMinInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(undefinedMinInclusiveProperty)]);
-    const notMinInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.minInclusive(notMinInclusiveProperty)]);
-    const notMinInclusivePropertyValid = new FormControl(-5, [FeaturePropertyValidators.minInclusive(notMinInclusiveProperty)]);
+    expect(false).toEqual(new FormControl(3, [FeaturePropertyValidators.minInclusive(mi5)]).valid);
+    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.minInclusive(mi5)]).valid);
+    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.minInclusive(mi5)]).valid);
+    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.minInclusive(mi0)]).valid);
+    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.minInclusive(miUndefined)]).valid);
+    expect(true).toEqual(new FormControl(1, [FeaturePropertyValidators.minInclusive(miNotSet)]).valid);
+    expect(true).toEqual(new FormControl(-12, [FeaturePropertyValidators.minInclusive(miNotSet)]).valid);
 
-    expect(true).toEqual(minInclusivePropertyValid.valid);
-    expect(true).toEqual(minInclusivePropertyValid2.valid);
-    expect(true).toEqual(minInclusivePropertyValid3.valid);
-    expect(false).toEqual(minInclusivePropertyNotValid.valid);
-    expect(false).toEqual(minInclusivePropertyNotValid2.valid);
-    expect(true).toEqual(stringMinInclusivePropertyValid.valid);  // Строку он не должен принимать
-    expect(true).toEqual(stringMinInclusivePropertyValid2.valid);  // Строку он не должен принимать
-    expect(true).toEqual(nullMinInclusivePropertyValid.valid);
-    expect(true).toEqual(undefinedMinInclusivePropertyValid.valid);
-    expect(false).toEqual(notMinInclusivePropertyNotValid.valid);
-    expect(true).toEqual(notMinInclusivePropertyValid.valid);
-    expect('Значение: ' + minInclusivePropertyNotValid.value + ' менее допустимого: ' + minInclusiveProperty.minInclusive).toEqual(minInclusivePropertyNotValid.errors['minInclusive']);
+    const formControl = new FormControl(3, [FeaturePropertyValidators.minInclusive(mi5)]);
+
+    expect('Значение: ' + formControl.value + ' менее допустимого: ' + mi5.minInclusive)
+      .toEqual(formControl.errors['minInclusive']);
   });
 
   it('should validate maxInclusive', () => {

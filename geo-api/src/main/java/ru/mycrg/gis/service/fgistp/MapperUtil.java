@@ -62,6 +62,7 @@ public class MapperUtil {
         dto.setMultiple(abstractProperty.isMultiple());
         dto.setChoice(abstractProperty.getChoice());
         dto.setValueType(abstractProperty.getValueType());
+        dto.setSequenceNumber(abstractProperty.getSequenceNumber());
 
         if (abstractProperty.getValueType() == ValueType.STRING) {
             StringProperty stringProperty = (StringProperty) abstractProperty;
@@ -181,6 +182,7 @@ public class MapperUtil {
         target.setUpdateability(dto.getUpdateability());
         target.setMultiple(dto.isMultiple());
         target.setChoice(dto.getChoice());
+        target.setSequenceNumber(dto.getSequenceNumber());
     }
 
     @Nullable

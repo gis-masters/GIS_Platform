@@ -8,10 +8,7 @@ import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static ru.mycrg.common.enums.ValueType.CHOICE;
 
@@ -73,7 +70,13 @@ public class EntityTypeUtil {
 
                 properties.removeIf(AbstractProperty::isGeometry);
 
+                int sequenceNumber = properties.stream()
+                        .max(Comparator.comparingInt(AbstractProperty::getSequenceNumber))
+                        .get()
+                        .getSequenceNumber();
+
                 newGeometryProperty.setAllowedValues(geometries);
+                newGeometryProperty.setSequenceNumber(sequenceNumber + 1);
 
                 entityType.addProperty(newGeometryProperty);
             }

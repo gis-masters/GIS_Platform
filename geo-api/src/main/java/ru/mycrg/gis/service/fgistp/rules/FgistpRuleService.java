@@ -78,6 +78,10 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         fgistpRules.setEntityTypes(new ArrayList<>());
 
         try {
+            if (isXsdRulesEmpty()) {
+                loadRulesFromXsdSchema();
+            }
+
             getRulesFromDb();
             imposeCustomRules();
         } catch (Exception e) {
