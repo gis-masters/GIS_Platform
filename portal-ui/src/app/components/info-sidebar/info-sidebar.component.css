@@ -45,6 +45,18 @@
 
 }
 
+.no-events {
+  color: lightgrey;
+  padding-top: 10%;
+  text-align: center;
+}
+
+.no-events-icon {
+  position: relative;
+  left: -15px;
+  font-size: -webkit-xxx-large;
+}
+
 .crg-close-icon {
   cursor: pointer;
   color: grey;

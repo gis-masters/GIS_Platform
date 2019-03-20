@@ -4,9 +4,13 @@
     Уведомления
   </div>
   <div class="crg-sidebar-content">
-    <crg-progress-item></crg-progress-item>
-    <crg-progress-item></crg-progress-item>
-    <crg-progress-item></crg-progress-item>
-    <crg-progress-item></crg-progress-item>
+    <div *ngFor="let event of events">
+      <crg-progress-item [event]="event"></crg-progress-item>
+    </div>
+
+    <div class="no-events" *ngIf="!events.length">
+      <mat-icon class="no-events-icon">notifications_none</mat-icon>
+      <span style="display: block">Нет новых уведомлений</span>
+    </div>
   </div>
 </div>

@@ -12,4 +12,9 @@ export class StringUtil {
       .split('"}')[0]
       .split('/featuretypes')[0];
   }
+
+  // 'yypefc'
+  static generateRandomId() {
+    return Math.random().toString(36).substring(2, 8);
+  }
 }

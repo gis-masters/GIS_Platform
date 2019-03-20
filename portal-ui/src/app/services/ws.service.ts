@@ -6,6 +6,7 @@ import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
+import {StringUtil} from './util/StringUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class WsService {
 
   disabled = true;
 
-  private id = Math.random().toString(36).substring(2, 8);
+  private id = StringUtil.generateRandomId();
   private stompClient = null;
 
   constructor(private logger: NGXLogger,
@@ -68,7 +69,15 @@ export class WsService {
 
 export interface IWsMessage {
   type: WsMessageType;
-  payload: any;
+  payload: ExportWsMsg;
+}
+
+export interface ExportWsMsg {
+  id: string;
+  description: string;
+  pathToFile: string;
+  pathToLog: string;
+  status: string;
 }
 
 export enum WsMessageType {

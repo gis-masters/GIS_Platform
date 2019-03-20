@@ -1,11 +1,11 @@
-<div class="progress-item" [hidden]="isHide">
+<div class="progress-item">
   <div class="progress-icon">
     <mat-spinner class="crg-spinner crg-center" (click)="clickByLeft()" *ngIf="!isDone"></mat-spinner>
     <mat-icon class="crg-progress-done" (click)="clickByLeft()" *ngIf="isDone">done_all</mat-icon>
   </div>
 
   <div class="progress-content">
-    <div class="content-text">Готово</div>
+    <div class="content-text">{{event.id}}</div>
     <div class="content-action">
       <mat-icon class="content-link-icon" *ngIf="isDownload">archive</mat-icon>
       <span class="content-link-text" (click)="download()" *ngIf="isDownload">Скачать GML файл</span>
