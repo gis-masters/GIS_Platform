@@ -31,9 +31,16 @@
   left: calc(50% - 50px);
 }
 
+.success {
+  color: seagreen;
+}
+
+.error {
+  color: tomato;
+}
+
 .crg-progress-done {
   font-size: -webkit-xxx-large;
-  color: seagreen;
   position: relative;
   top: 5px;
   left: 5px;

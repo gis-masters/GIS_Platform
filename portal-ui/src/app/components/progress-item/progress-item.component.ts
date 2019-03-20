@@ -20,6 +20,8 @@ export class ProgressItemComponent {
       return this.event.payload.payload.description;
     } else if (this.event.payload.payload.status === 'DONE') {
       return 'Готово';
+    } else if (this.event.payload.payload.status === 'ERROR') {
+      return 'Ошибка экспорта';
     } else {
       return '';
     }
@@ -33,4 +35,11 @@ export class ProgressItemComponent {
 
   }
 
+  isShowActionBlock() {
+    return this.event.payload.payload.status === 'DONE' || this.event.payload.payload.status === 'ERROR';
+  }
+
+  isShowDownloadLink() {
+    return this.event.payload.payload.status === 'DONE';
+  }
 }
