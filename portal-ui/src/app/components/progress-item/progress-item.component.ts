@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
 
 @Component({
@@ -7,23 +7,22 @@ import {EventService, IEvent} from '../../services/event.service';
   templateUrl: './progress-item.component.html',
   styleUrls: ['./progress-item.component.css']
 })
-export class ProgressItemComponent implements OnInit {
+export class ProgressItemComponent {
 
   @Input() event: IEvent;
-
-  isDone = false;
-  isHide = false;
-  isDownload = true;
 
   constructor(private logger: NGXLogger,
               private eventService: EventService) {
   }
 
-  ngOnInit() {
-  }
-
-  clickByLeft() {
-    this.isDone = !this.isDone;
+  getDescription(): string {
+    if (this.event.payload.payload.status === 'PENDING') {
+      return this.event.payload.payload.description;
+    } else if (this.event.payload.payload.status === 'DONE') {
+      return 'Готово';
+    } else {
+      return '';
+    }
   }
 
   closeNotice() {
@@ -31,6 +30,7 @@ export class ProgressItemComponent implements OnInit {
   }
 
   download() {
-    this.isDownload = !this.isDownload;
+
   }
+
 }

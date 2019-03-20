@@ -1,14 +1,14 @@
 <div class="progress-item">
   <div class="progress-icon">
-    <mat-spinner class="crg-spinner crg-center" (click)="clickByLeft()" *ngIf="!isDone"></mat-spinner>
-    <mat-icon class="crg-progress-done" (click)="clickByLeft()" *ngIf="isDone">done_all</mat-icon>
+    <mat-spinner class="crg-spinner crg-center" *ngIf="event.payload.payload.status === 'PENDING'"></mat-spinner>
+    <mat-icon class="crg-progress-done" *ngIf="event.payload.payload.status === 'DONE'">done_all</mat-icon>
   </div>
 
   <div class="progress-content">
-    <div class="content-text">{{event.id}}</div>
-    <div class="content-action">
-      <mat-icon class="content-link-icon" *ngIf="isDownload">archive</mat-icon>
-      <span class="content-link-text" (click)="download()" *ngIf="isDownload">Скачать GML файл</span>
+    <div class="content-text">{{getDescription()}}</div>
+    <div class="content-action" *ngIf="event.payload.payload.status === 'DONE'">
+      <mat-icon class="content-link-icon" (click)="download()">archive</mat-icon>
+      <span class="content-link-text">Скачать GML файл</span>
       <mat-icon class="info-close-icon" (click)="closeNotice()">delete</mat-icon>
     </div>
   </div>
