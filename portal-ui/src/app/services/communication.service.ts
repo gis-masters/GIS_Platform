@@ -2,19 +2,21 @@ import {NGXLogger} from 'ngx-logger';
 import {CrgLayer} from './geoserver/layers.service';
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
+import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommunicationService {
 
+  @Output() infoSidebar = new EventEmitter<ActionType>();
   @Output() layerObjectsSidebar = new EventEmitter<boolean>();
   @Output() bugReportSidebar = new EventEmitter<boolean>();
 
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
 
-  @Output() gmlDialog = new EventEmitter<CrgLayer[]>();
+  @Output() gmlDialog = new EventEmitter<GmlDialogData>();
   @Output() selectedForGml = new EventEmitter<CrgLayer[]>();
 
   @Output() editView = new EventEmitter<ObjectDto[]>();
@@ -26,6 +28,10 @@ export class CommunicationService {
 
   public layerObjectsSidebar$() {
     return this.layerObjectsSidebar;
+  }
+
+  public infoSidebar$() {
+    return this.infoSidebar;
   }
 
   public bugReportSidebar$() {
@@ -60,4 +66,10 @@ export class CommunicationService {
 export interface ObjectDto {
   id: string;
   crgLayer: CrgLayer;
+}
+
+export enum ActionType {
+  OPEN,
+  CLOSE,
+  SWITCH
 }

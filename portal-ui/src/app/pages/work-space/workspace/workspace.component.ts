@@ -3,7 +3,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {LayersService} from '../../../services/geoserver/layers.service';
-import {CommunicationService} from '../../../services/communication.service';
+import {ActionType, CommunicationService} from '../../../services/communication.service';
 import {IWsMessage, WsService} from '../../../services/ws.service';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -62,11 +62,11 @@ export class WorkspaceComponent implements OnDestroy {
 
   openExportDialog() {
     const copyOfLayers = Object.assign([], this.layersService.getCurrent());
-    this.communicationService.gmlDialog.emit(copyOfLayers);
+    this.communicationService.gmlDialog.emit({open: true, layers: copyOfLayers});
   }
 
   notification() {
-    // this.notificationCounter++;
+    this.communicationService.infoSidebar.emit(ActionType.SWITCH);
   }
 
 }

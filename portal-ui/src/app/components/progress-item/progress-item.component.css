@@ -1,14 +1,17 @@
 .progress-item {
   margin: 5px;
-  background-color: #9bc53e;
+  background-color: white;
   height: 60px;
-  border-radius: 5px;
+
+  border-style: solid;
+  border-color: darkgrey;
+  border-radius: 8px;
 }
 
 .progress-icon {
   float: left;
   width: 15%;
-  background-color: #7c9d33;
+  background-color: lightgray;
   border-radius: 5px 0 0 5px;
   height: 100%;
 }
@@ -30,7 +33,7 @@
 
 .crg-progress-done {
   font-size: -webkit-xxx-large;
-  color: white;
+  color: seagreen;
   position: relative;
   top: 5px;
   left: 5px;
@@ -41,18 +44,17 @@
   left: 5px;
 
   cursor: pointer;
-  color: #7c9d33;
+  color: darkgrey;
   float: right;
 }
 
 .content-text {
+  padding-left: 2px;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .content-action {
-  position: relative;
-  top: 6px;
 }
 
 .gml-link {
@@ -60,7 +62,7 @@
 }
 
 .content-link-icon {
-  color: #7c9d33;
+  color: #3f51b5;
   font-size: x-large;
   cursor: pointer;
 }

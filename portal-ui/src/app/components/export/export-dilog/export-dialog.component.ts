@@ -2,8 +2,9 @@ import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
+import {ValueTitleProjection} from '../../../services/geoserver/projections';
+import {ActionType, CommunicationService} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/gis/export.service';
-import {ValueTitleProjection} from "../../../services/geoserver/projections";
 
 @Component({
   selector: 'crg-export-dialog',
@@ -59,6 +60,7 @@ export class ExportDialogComponent {
   private isExportInited = false;
 
   constructor(private logger: NGXLogger,
+              private communicationService: CommunicationService,
               private exportService: ExportService) {
   }
 
@@ -83,6 +85,14 @@ export class ExportDialogComponent {
 
           this.logger.info(' * * * exportGml response * * *', response);
         });
+
+    this.communicationService.infoSidebar.emit(ActionType.OPEN);
+    this.communicationService.gmlDialog.emit({open: false, layers: []});
   }
 
+}
+
+export interface GmlDialogData {
+  open: boolean;
+  layers: CrgLayer[];
 }

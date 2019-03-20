@@ -67,6 +67,10 @@ export class WsService {
 }
 
 export interface IWsMessage {
-  type: string;
+  type: WsMessageType;
   payload: any;
+}
+
+export enum WsMessageType {
+  EXPORT,
 }

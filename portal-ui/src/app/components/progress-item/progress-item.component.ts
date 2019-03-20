@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ProgressItemComponent implements OnInit {
   isDone = false;
   isHide = false;
+  isDownload = true;
 
   constructor() { }
 
@@ -20,5 +21,9 @@ export class ProgressItemComponent implements OnInit {
 
   closeNotice() {
     this.isHide = true;
+  }
+
+  download() {
+    this.isDownload = !this.isDownload;
   }
 }

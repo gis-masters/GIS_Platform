@@ -1,6 +1,6 @@
 <div [ngClass]="isActive? 'crg-info-sidebar' : 'crg-info-sidebar_hidden'">
   <div class="crg-sidebar-header">
-    <mat-icon class="crg-close-icon">close</mat-icon>
+    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     Уведомления
   </div>
   <div class="crg-sidebar-content">

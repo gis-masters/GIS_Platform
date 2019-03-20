@@ -10,8 +10,9 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
+import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 
 @Component({
   selector: 'crg-map',
@@ -78,14 +79,22 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService
         .layerObjectsSidebar$()
-        .subscribe((value) => {
-          this.isLayerObjectsSidebarShow = value;
-        });
+        .subscribe((value) => this.isLayerObjectsSidebarShow = value);
 
     this.communicationService
         .bugReportSidebar$()
-        .subscribe((value) => {
-          this.isBugReportSidebarShow = value;
+        .subscribe((value) => this.isBugReportSidebarShow = value);
+
+    this.communicationService
+        .infoSidebar$()
+        .subscribe((action: ActionType) => {
+          switch (action) {
+            case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
+            case ActionType.OPEN: this.isInfoSidebarActive = true;  break;
+            case ActionType.SWITCH: this.isInfoSidebarActive = !this.isInfoSidebarActive; break;
+            default:
+              this.logger.warn('Unsupported action type: ', action);
+          }
         });
 
     this.communicationService
@@ -107,13 +116,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService
         .gmlDialog$()
-        .subscribe((layers: CrgLayer[]) => {
-          if (layers && layers.length > 0) {
-            this.isGmlDialogShow = true;
-            this.isInfoSidebarActive = !this.isInfoSidebarActive;
-            this.gmlDialogData = layers;
+        .subscribe((data: GmlDialogData) => {
+          this.isGmlDialogShow = data.open;
+
+          if (data.layers.length > 0) {
+            this.gmlDialogData = data.layers;
           } else {
-            this.logger.warn('Empty data: ', layers);
+            this.logger.warn('Empty data: ', data.layers);
           }
         });
   }
