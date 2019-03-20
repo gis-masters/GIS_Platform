@@ -88,11 +88,12 @@ public class GmlGenerator {
             String tableName = resourceProjection.getTableName();
             var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
             if (rule.isPresent()) {
+                EntityTypeDto feature = rule.get();
                 mqEvents.gmlResponse(
-                        new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Обработка: " + tableName));
+                        new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Обработка: " + feature.getTitle()));
 
-                generateGmlDomModel(documentHolder, rule.get(), resourceProjection);
-                generateLogDomModel(documentHolder, rule.get(), resourceProjection);
+                generateGmlDomModel(documentHolder, feature, resourceProjection);
+                generateLogDomModel(documentHolder, feature, resourceProjection);
             } else {
                 log.warn("Не найдено описание типа: " + tableName);
             }
@@ -148,7 +149,8 @@ public class GmlGenerator {
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
             queue.poll().forEach(propFromDb -> {
-                Element featureMember = addFeatureMember(docHolder, clearName(feature.getName()));
+                String id = generateId();
+                Element featureMember = addFeatureMember(docHolder, clearName(feature.getName()), id);
 
                 // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
                 feature.getProperties().stream()
@@ -169,8 +171,32 @@ public class GmlGenerator {
                         log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
                     }
                 }
+
+                addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
             });
         }
+    }
+
+    private void addObjectMember(GmlDocumentHolder docHolder, String id, String description, Object classid) {
+        Document gmlDocument = docHolder.getGmlDocument();
+        Element objectCollection = docHolder.getObjectCollection();
+
+        Element objectNode = gmlDocument.createElement("Object");
+        objectNode.setAttribute("IDREF", id);
+
+        Element functionNode = gmlDocument.createElement("Function");
+        functionNode.setTextContent(description);
+        objectNode.appendChild(functionNode);
+
+        Element nameNode = gmlDocument.createElement("Name");
+        nameNode.setTextContent(description);
+        objectNode.appendChild(nameNode);
+
+        Element classIdNode = gmlDocument.createElement("ClassID");
+        classIdNode.setTextContent(classid.toString());
+        objectNode.appendChild(classIdNode);
+
+        objectCollection.appendChild(objectNode);
     }
 
     /**
@@ -257,14 +283,14 @@ public class GmlGenerator {
         }
     }
 
-    private Element addFeatureMember(GmlDocumentHolder documentHolder, String name) {
+    private Element addFeatureMember(GmlDocumentHolder documentHolder, String name, String id) {
         Document document = documentHolder.getGmlDocument();
 
         Element gmlFeatureMember = document.createElement("gml:featureMember");
         documentHolder.getGmlFeatureCollection().appendChild(gmlFeatureMember);
 
         Element featureNode = document.createElement(name);
-        featureNode.setAttribute("gml:id", generateId());
+        featureNode.setAttribute("gml:id", id);
 
         gmlFeatureMember.appendChild(featureNode);
 
