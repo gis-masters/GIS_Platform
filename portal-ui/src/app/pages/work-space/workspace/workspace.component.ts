@@ -1,12 +1,11 @@
 import {NGXLogger} from 'ngx-logger';
+import {filter} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
+import {EventService, IEvent} from '../../../services/event.service';
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {ActionType, CommunicationService} from '../../../services/communication.service';
-import {IWsMessage, WsService} from '../../../services/ws.service';
-import {filter, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-workspace',
@@ -19,11 +18,9 @@ export class WorkspaceComponent implements OnDestroy {
 
   notificationCounter = 0;
 
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
-              private wsService: WsService,
+              private eventService: EventService,
               private layersService: LayersService,
               private communicationService: CommunicationService,
               private logger: NGXLogger) {
@@ -33,23 +30,13 @@ export class WorkspaceComponent implements OnDestroy {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
 
-    this.wsService.messages$
-        .pipe(
-          filter(value => !!value),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((wsMessage: IWsMessage) => {
-          this.logger.info('this.wsService.messages$: ', wsMessage);
-
-          this.notificationCounter++;
-        });
+    this.eventService.events$
+        .pipe(filter(value => !!value))
+        .subscribe((events: IEvent[]) => this.notificationCounter = events.length);
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
-
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   logout() {
