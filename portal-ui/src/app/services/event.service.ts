@@ -1,10 +1,10 @@
+import * as _ from 'lodash';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, publishReplay, refCount} from 'rxjs/operators';
 import {IWsMessage, WsMessageType, WsService} from './ws.service';
-import * as _ from 'lodash';
 
 /**
  * Сервис обработки и хранения событий.
@@ -14,6 +14,8 @@ import * as _ from 'lodash';
   providedIn: 'root'
 })
 export class EventService {
+
+  private EVENTS_KEY = 'events';
 
   private _events$: BehaviorSubject<IEvent[]> = new BehaviorSubject<IEvent[]>([]);
   public events$: Observable<IEvent[]> = this._events$.asObservable()
@@ -25,11 +27,15 @@ export class EventService {
 
   constructor(private logger: NGXLogger,
               private wsService: WsService) {
+    const savedEvents: IEvent[] = this.getFromLocalStorage();
+    if (savedEvents && savedEvents.length > 0) {
+      this._events$.next(savedEvents);
+    }
 
     // Не буду тут заморачиваться с отписками потому как этот сервис живет постоянно
     this.wsService.messages$
-      .pipe(filter(value => !!value))
-      .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
+        .pipe(filter(value => !!value))
+        .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
   }
 
   /**
@@ -65,8 +71,6 @@ export class EventService {
    * Обновляем события во всех нужных местах :)
    */
   private update(events: IEvent[]) {
-    this.logger.info('eventService update: ', events);
-
     this._events$.next(events);
     this.saveToLocalStorage(events);
   }
@@ -78,11 +82,13 @@ export class EventService {
   }
 
   private saveToLocalStorage(events: IEvent[]): void {
-
+    window.localStorage.setItem(this.EVENTS_KEY, JSON.stringify(events));
   }
 
-  private getFromLocalStorage(ebents: IEvent[]): IEvent[] {
-    return [];
+  private getFromLocalStorage(): IEvent[] {
+    const events = localStorage.getItem(this.EVENTS_KEY);
+
+    return JSON.parse(events);
   }
 
 }

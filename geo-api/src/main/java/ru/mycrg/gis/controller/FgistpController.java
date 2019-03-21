@@ -142,13 +142,13 @@ public class FgistpController {
     public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
         log.debug("Request to download file: {}", fileName);
 
-        Resource resource = gmlStorageService.load(fileName);
+        Resource res = gmlStorageService.load(fileName);
 
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.parseMediaType(determinateContentType(request, resource)))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+                .contentType(MediaType.parseMediaType(determinateContentType(request, res)))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + res.getFilename() + "\"")
+                .body(res);
     }
 
     @NotNull

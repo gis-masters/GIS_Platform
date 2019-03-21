@@ -33,8 +33,6 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
           takeUntil(this.unsubscribe$)
         )
         .subscribe((events: IEvent[]) => {
-          this.logger.info('sidebar events: ', events);
-
           this.events = events;
         });
   }

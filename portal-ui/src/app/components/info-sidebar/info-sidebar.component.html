@@ -3,7 +3,7 @@
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     Уведомления
   </div>
-  <div class="crg-sidebar-content">
+  <div class="crg-sidebar-content scroll">
     <div *ngFor="let event of events">
       <crg-progress-item [event]="event"></crg-progress-item>
     </div>

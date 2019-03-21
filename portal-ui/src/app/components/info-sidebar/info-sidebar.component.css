@@ -1,3 +1,5 @@
+@import url(../../pages/_app/app.component.css);
+
 .crg-info-sidebar {
   /*border-color: brown;*/
   /*border-style: double;*/
@@ -42,7 +44,8 @@
 }
 
 .crg-sidebar-content {
-
+  overflow: auto;
+  max-height: calc(100% - 70px);
 }
 
 .no-events {

@@ -1,3 +1,5 @@
+@import url(../../../pages/_app/app.component.css);
+
 /* Structure */
 .validation-results-container {
   position: relative;
