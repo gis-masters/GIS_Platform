@@ -10,8 +10,8 @@ import {GmlDialogData} from '../components/export/export-dilog/export-dialog.com
 export class CommunicationService {
 
   @Output() infoSidebar = new EventEmitter<ActionType>();
-  @Output() layerObjectsSidebar = new EventEmitter<boolean>();
-  @Output() bugReportSidebar = new EventEmitter<boolean>();
+  @Output() bugReportSidebar = new EventEmitter<ActionType>();
+  @Output() layerObjectsSidebar = new EventEmitter<ActionType>();
 
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();

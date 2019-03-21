@@ -18,6 +18,7 @@ export class WorkspaceComponent implements OnDestroy {
 
   notificationCounter = 0;
   isInfoSidebarActive = false;
+  isBugReportSidebarShow = false;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
@@ -38,7 +39,6 @@ export class WorkspaceComponent implements OnDestroy {
     this.communicationService
         .infoSidebar$()
         .subscribe((action: ActionType) => {
-          this.logger.info('action: ', action);
           switch (action) {
             case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
             case ActionType.OPEN: this.isInfoSidebarActive = true;  break;
@@ -48,6 +48,17 @@ export class WorkspaceComponent implements OnDestroy {
           }
         });
 
+    this.communicationService
+        .bugReportSidebar$()
+        .subscribe((action) => {
+          switch (action) {
+            case ActionType.CLOSE: this.isBugReportSidebarShow = false; break;
+            case ActionType.OPEN: this.isBugReportSidebarShow = true;  break;
+            case ActionType.SWITCH: this.isBugReportSidebarShow = !this.isBugReportSidebarShow; break;
+            default:
+              this.logger.warn('Unsupported action type: ', action);
+          }
+        });
   }
 
   ngOnDestroy(): void {
@@ -59,7 +70,7 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   openBugReportSidebar() {
-    this.communicationService.bugReportSidebar.emit(true);
+    this.communicationService.bugReportSidebar.emit(ActionType.SWITCH);
   }
 
   openExportDialog() {

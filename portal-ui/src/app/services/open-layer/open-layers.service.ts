@@ -199,6 +199,7 @@ export class OpenLayersService {
         });
   }
 
+  // Очистить карту от слоя, который отображал обьект.
   removeBugObjectsLayer() {
     if (this.bugObjectLayer) {
       this._map.removeLayer(this.bugObjectLayer);

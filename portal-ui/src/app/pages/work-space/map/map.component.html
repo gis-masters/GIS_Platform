@@ -37,14 +37,6 @@
   <!--<crg-layer-objects></crg-layer-objects>-->
 </p-sidebar>
 
-<p-sidebar [(visible)]="isBugReportSidebarShow" position="right" styleClass="{{bugReportSidebarSize}}"
-           [style]="{padding:'0'}"
-           [modal]="false"
-           [showCloseIcon]="false"
-           [dismissible]="true">
-  <report-sidebar [isActive]="isBugReportSidebarShow"></report-sidebar>
-</p-sidebar>
-
 <p-dialog header="Валидация"
           [style]="{width: '450px', height: '500px'}"
           [(visible)]="isValidationDialogShow">

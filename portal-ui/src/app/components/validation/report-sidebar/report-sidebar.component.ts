@@ -9,11 +9,11 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
-  selector: 'report-sidebar',
+  selector: 'crg-report-sidebar',
   templateUrl: './report-sidebar.component.html',
   styleUrls: ['./report-sidebar.component.css']
 })
@@ -121,9 +121,9 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         });
   }
 
-  closeSidebar() {
+  closeMe() {
     this.openLayersService.removeBugObjectsLayer();
-    this.communicationService.bugReportSidebar.emit(false);
+    this.communicationService.bugReportSidebar.emit(ActionType.CLOSE);
   }
 
   reValidate() {

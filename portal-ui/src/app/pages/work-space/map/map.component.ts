@@ -28,9 +28,6 @@ export class MapComponent implements OnInit, OnDestroy {
   isLayerObjectsSidebarShow = false;
   layerObjectsSidebarSize = 'ui-sidebar-md';
 
-  isBugReportSidebarShow = false;
-  bugReportSidebarSize = 'ui-sidebar-md';
-
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
 
@@ -79,10 +76,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .layerObjectsSidebar$()
         .subscribe((value) => this.isLayerObjectsSidebarShow = value);
-
-    this.communicationService
-        .bugReportSidebar$()
-        .subscribe((value) => this.isBugReportSidebarShow = value);
 
     this.communicationService
         .gotoObject$()

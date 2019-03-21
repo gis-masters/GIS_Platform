@@ -48,8 +48,7 @@
                 *ngIf="notificationCounter == 0">notifications</mat-icon>
       <mat-icon class="crg-notification" matBadge="{{notificationCounter}}" matBadgeColor="warn"
                 *ngIf="notificationCounter > 0"
-                (click)="notification()">notifications
-      </mat-icon>
+                (click)="notification()">notifications</mat-icon>
 
       <button class="float-right" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
@@ -78,3 +77,4 @@
 </mat-menu>
 
 <crg-info-sidebar [isActive]="isInfoSidebarActive"></crg-info-sidebar>
+<crg-report-sidebar [isActive]="isBugReportSidebarShow"></crg-report-sidebar>
