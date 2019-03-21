@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import ru.mycrg.wrapper.config.FizProperties;
+import ru.mycrg.wrapper.config.CrgProperties;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -24,7 +24,7 @@ public class FileService {
 
     private final Path gmlStoragePath;
 
-    public FileService(FizProperties properties) {
+    public FileService(CrgProperties properties) {
         this.gmlStoragePath = Paths.get(properties.getGmlStoragePath())
                 .toAbsolutePath()
                 .normalize();

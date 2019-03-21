@@ -12,19 +12,12 @@ import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.wrapper.config.FizProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.dao.GisStorage;
-import ru.mycrg.wrapper.service.FileService;
-import ru.mycrg.wrapper.service.gml.GmlDocumentHolder;
-import ru.mycrg.wrapper.service.gml.GmlGenerator;
-import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;

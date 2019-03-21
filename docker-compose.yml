@@ -94,6 +94,7 @@ services:
       - "8088:8088"
     volumes:
       - /opt/fgistp:/opt/fgistp
+      - /opt/gml:/opt/gml
     depends_on:
       - database
       - rabbitmq
@@ -120,6 +121,9 @@ services:
     depends_on:
       - rabbitmq
       - geo-api
+    volumes:
+      - /opt/fgistp:/opt/fgistp
+      - /opt/gml:/opt/gml
     logging:
       options:
         max-size: "10m"

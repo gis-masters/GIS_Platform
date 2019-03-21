@@ -20,7 +20,7 @@ spring:
     host: localhost
     port: 5672
 
-fiz:
+crg-options:
   geoserver-host: 127.0.0.1:8100
   geoserver-user: admin
   geoserver-password: geoserver

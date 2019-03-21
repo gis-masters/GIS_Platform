@@ -1,9 +1,14 @@
 package ru.mycrg.gis.controller;
 
 import org.apache.logging.log4j.util.Strings;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.enums.RequestType;
@@ -11,12 +16,16 @@ import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
+import ru.mycrg.gis.exceptions.FileNotFoundException;
+import ru.mycrg.gis.service.GmlStorageService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
-import ru.mycrg.gis.service.gml.GmlService;
+import ru.mycrg.gis.service.gml.GmlGenerationService;
 import ru.mycrg.gis.service.validation.IValidationService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -28,15 +37,18 @@ public class FgistpController {
 
     private final FgistpRuleService fgistpRuleService;
     private final IValidationService validationService;
-    private final GmlService gmlService;
+    private final GmlGenerationService gmlGenerationService;
+    private final GmlStorageService gmlStorageService;
 
     @Autowired
     public FgistpController(FgistpRuleService fgistpRuleService,
                             IValidationService validationService,
-                            GmlService gmlService) {
+                            GmlStorageService gmlStorageService,
+                            GmlGenerationService gmlGenerationService) {
         this.fgistpRuleService = fgistpRuleService;
         this.validationService = validationService;
-        this.gmlService = gmlService;
+        this.gmlStorageService = gmlStorageService;
+        this.gmlGenerationService = gmlGenerationService;
     }
 
     @GetMapping("/fgistp/rules")
@@ -111,7 +123,7 @@ public class FgistpController {
     public CompletableFuture<GmlMqResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
         log.debug("Gml generation request");
 
-        return gmlService.initProcess(request);
+        return gmlGenerationService.initProcess(request);
     }
 
     private void validateRequest(List<ValidationRequestDto> request) {
@@ -124,6 +136,36 @@ public class FgistpController {
                 throw new CrgBadRequestException("Incorrect data");
             }
         });
+    }
+
+    @GetMapping("/fgistp/export/gml/{fileName:.+}")
+    public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
+        log.debug("Request to download file: {}", fileName);
+
+        Resource resource = gmlStorageService.load(fileName);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(determinateContentType(request, resource)))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+    @NotNull
+    private String determinateContentType(@NotNull HttpServletRequest request, @NotNull Resource resource) {
+        String contentType;
+        try {
+            String absolutePath = resource.getFile().getAbsolutePath();
+            contentType = request.getServletContext().getMimeType(absolutePath);
+        } catch (IOException e) {
+            throw  new FileNotFoundException("Wrong file URL");
+        }
+
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return contentType;
     }
 
 }

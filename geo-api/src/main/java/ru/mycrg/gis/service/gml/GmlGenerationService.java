@@ -23,9 +23,9 @@ import java.util.concurrent.CompletableFuture;
 import static ru.mycrg.gis.enums.ProcessType.EXPORT;
 
 @Service
-public class GmlService {
+public class GmlGenerationService {
 
-    private static Logger log = LoggerFactory.getLogger(GmlService.class);
+    private static Logger log = LoggerFactory.getLogger(GmlGenerationService.class);
 
     private List<GmlProcess> gmlProcesses = new ArrayList<>();
 
@@ -33,7 +33,7 @@ public class GmlService {
     private final FgistpRuleService ruleService;
     private final WsNotificationService wsNotificationService;
 
-    public GmlService(MqSender mqSender, FgistpRuleService ruleService, WsNotificationService wsNotificationService) {
+    public GmlGenerationService(MqSender mqSender, FgistpRuleService ruleService, WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
         this.wsNotificationService = wsNotificationService;

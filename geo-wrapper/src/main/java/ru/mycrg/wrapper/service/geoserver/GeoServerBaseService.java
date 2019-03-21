@@ -6,7 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import ru.mycrg.wrapper.config.FizProperties;
+import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.GeoserverException;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 public abstract class GeoServerBaseService {
 
     @Autowired
-    private FizProperties properties;
+    private CrgProperties properties;
 
     @Autowired
     private AuthService authService;
