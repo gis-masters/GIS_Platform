@@ -1,3 +1,5 @@
+@import url(../../pages/_app/app.component.css);
+
 .progress-item {
   margin: 5px;
   background-color: white;
@@ -55,11 +57,11 @@
   float: right;
 }
 
-.content-text {
-  padding-left: 2px;
-  overflow: hidden;
-  white-space: nowrap;
-}
+/*.content-text {*/
+/*  padding-left: 2px;*/
+/*  overflow: hidden;*/
+/*  white-space: nowrap;*/
+/*}*/
 
 .content-action {
 }

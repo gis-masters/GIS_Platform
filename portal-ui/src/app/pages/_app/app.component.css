@@ -24,3 +24,10 @@
 .scroll::-webkit-scrollbar-thumb {
   background: grey;
 }
+
+.cut-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
