@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
-import {MatListOption, MatSelectionList} from '@angular/material';
+import {MatListOption, MatSelectionList, MatSnackBar} from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
@@ -45,6 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private router: Router,
               private layersService: LayersService,
               private logger: NGXLogger,
+              private snackBar: MatSnackBar,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService,
               private ruleService: FgistpRulesService,
@@ -111,18 +112,25 @@ export class MapComponent implements OnInit, OnDestroy {
             this.validationDialogData = data;
           } else {
             this.logger.warn('Empty data: ', data);
+            this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
+              {duration: 10000});
           }
         });
 
     this.communicationService
         .gmlDialog$()
         .subscribe((data: GmlDialogData) => {
-          this.isGmlDialogShow = data.open;
-
-          if (data.layers.length > 0) {
-            this.gmlDialogData = data.layers;
+          if (data.action === ActionType.CLOSE) {
+            this.isGmlDialogShow = false;
           } else {
-            this.logger.warn('Empty data: ', data.layers);
+            if (data.layers.length > 0) {
+              this.isGmlDialogShow = true;
+              this.gmlDialogData = data.layers;
+            } else {
+              this.logger.warn('Empty data: ', data.layers);
+              this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
+                {duration: 10000});
+            }
           }
         });
   }

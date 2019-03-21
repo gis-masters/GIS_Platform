@@ -49,7 +49,7 @@ export class WorkspaceComponent implements OnDestroy {
 
   openExportDialog() {
     const copyOfLayers = Object.assign([], this.layersService.getCurrent());
-    this.communicationService.gmlDialog.emit({open: true, layers: copyOfLayers});
+    this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: copyOfLayers});
   }
 
   notification() {

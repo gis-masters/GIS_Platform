@@ -87,12 +87,12 @@ export class ExportDialogComponent {
         });
 
     this.communicationService.infoSidebar.emit(ActionType.OPEN);
-    this.communicationService.gmlDialog.emit({open: false, layers: []});
+    this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 
 }
 
 export interface GmlDialogData {
-  open: boolean;
+  action: ActionType;
   layers: CrgLayer[];
 }
