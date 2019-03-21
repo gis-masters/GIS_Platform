@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,8 @@ export class TokenStorageService {
   private ACCESS_TOKEN_KEY = 'accessToken';
   private REFRESH_TOKEN_KEY = 'refreshToken';
 
-  constructor() { }
+  constructor() {
+  }
 
   signOut() {
     this.cleanUp();
@@ -17,8 +18,8 @@ export class TokenStorageService {
   saveToken(authModel: AuthModel) {
     this.cleanUp();
 
-    window.localStorage.setItem(this.ACCESS_TOKEN_KEY,  authModel.access_token);
-    window.localStorage.setItem(this.REFRESH_TOKEN_KEY,  authModel.refresh_token);
+    window.localStorage.setItem(this.ACCESS_TOKEN_KEY, authModel.access_token);
+    window.localStorage.setItem(this.REFRESH_TOKEN_KEY, authModel.refresh_token);
   }
 
   getAccessToken(): string {

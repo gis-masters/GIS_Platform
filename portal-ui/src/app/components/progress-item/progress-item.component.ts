@@ -1,6 +1,8 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
+import {DownloadFileService} from '../../services/download-file.service';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'crg-progress-item',
@@ -12,6 +14,7 @@ export class ProgressItemComponent {
   @Input() event: IEvent;
 
   constructor(private logger: NGXLogger,
+              private fileService: DownloadFileService,
               private eventService: EventService) {
   }
 
@@ -32,7 +35,14 @@ export class ProgressItemComponent {
   }
 
   download() {
+    const fileName = this.event.payload.payload.pathToFile.split('/')[3];
 
+    this.fileService.download(fileName)
+        .subscribe(data => {
+          const blob = new Blob([data], {type: 'text/xml'});
+
+          saveAs(blob, fileName);
+        });
   }
 
   isShowActionBlock() {
