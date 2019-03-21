@@ -17,6 +17,7 @@ export class WorkspaceComponent implements OnDestroy {
   _mobileQueryListener: () => void;
 
   notificationCounter = 0;
+  isInfoSidebarActive = false;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
@@ -33,6 +34,20 @@ export class WorkspaceComponent implements OnDestroy {
     this.eventService.events$
         .pipe(filter(value => !!value))
         .subscribe((events: IEvent[]) => this.notificationCounter = events.length);
+
+    this.communicationService
+        .infoSidebar$()
+        .subscribe((action: ActionType) => {
+          this.logger.info('action: ', action);
+          switch (action) {
+            case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
+            case ActionType.OPEN: this.isInfoSidebarActive = true;  break;
+            case ActionType.SWITCH: this.isInfoSidebarActive = !this.isInfoSidebarActive; break;
+            default:
+              this.logger.warn('Unsupported action type: ', action);
+          }
+        });
+
   }
 
   ngOnDestroy(): void {

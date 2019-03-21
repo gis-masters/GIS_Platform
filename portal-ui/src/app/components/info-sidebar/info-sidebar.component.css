@@ -1,8 +1,7 @@
 @import url(../../pages/_app/app.component.css);
 
 .crg-info-sidebar {
-  /*border-color: brown;*/
-  /*border-style: double;*/
+  z-index: 100;
   position: fixed;
   top: 104px;
   left: calc(100% - 400px);
@@ -20,8 +19,7 @@
 }
 
 .crg-info-sidebar_hidden {
-  /*border-color: brown;*/
-  /*border-style: double;*/
+  z-index: 100;
   position: fixed;
   top: 104px;
   left: 100%;

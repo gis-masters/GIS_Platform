@@ -4,7 +4,6 @@
   <mat-toolbar color="primary">
     <mat-toolbar-row style="height: 60px">
       <img src="../../../../assets/images/logo.svg" alt="logo" height="50" width="115">
-      <!--<span>Cool header</span>-->
 
       <div style="padding-left: 30px">
         <mat-tab-group color="accent">
@@ -51,10 +50,7 @@
                 *ngIf="notificationCounter > 0"
                 (click)="notification()">notifications
       </mat-icon>
-<!--      <mat-icon class="crg-notification" *ngIf="notificationActive"-->
-<!--                (click)="notification()">notifications</mat-icon>-->
-<!--      <mat-icon class="crg-notification" *ngIf="!notificationActive"-->
-<!--                (click)="notification()">notifications_active</mat-icon>-->
+
       <button class="float-right" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
       </button>
@@ -80,3 +76,5 @@
     <span>Logout</span>
   </button>
 </mat-menu>
+
+<crg-info-sidebar [isActive]="isInfoSidebarActive"></crg-info-sidebar>

@@ -37,8 +37,6 @@ export class MapComponent implements OnInit, OnDestroy {
   isGmlDialogShow = false;
   gmlDialogData: CrgLayer[];
 
-  isInfoSidebarActive = false;
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -85,18 +83,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .bugReportSidebar$()
         .subscribe((value) => this.isBugReportSidebarShow = value);
-
-    this.communicationService
-        .infoSidebar$()
-        .subscribe((action: ActionType) => {
-          switch (action) {
-            case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
-            case ActionType.OPEN: this.isInfoSidebarActive = true;  break;
-            case ActionType.SWITCH: this.isInfoSidebarActive = !this.isInfoSidebarActive; break;
-            default:
-              this.logger.warn('Unsupported action type: ', action);
-          }
-        });
 
     this.communicationService
         .gotoObject$()
