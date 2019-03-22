@@ -28,6 +28,7 @@ import {ValidationDialogComponent} from './components/validation/validation-dial
 import {ErrorsBadgeComponent} from './components/errors-badge/errors-badge.component';
 import {ExportDialogComponent} from './components/export/export-dilog/export-dialog.component';
 import {InfoSidebarComponent} from './components/info-sidebar/info-sidebar.component';
+import {LayersSidebarComponent} from './components/layers-sidebar/layers-sidebar.component';
 import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/jwt-interceptor.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -53,6 +54,7 @@ import {FilterLayersPipe} from './pipes/filter-layers.pipe';
     ErrorsBadgeComponent,
     ExportDialogComponent,
     InfoSidebarComponent,
+    LayersSidebarComponent,
     ProgressItemComponent,
   ],
   imports: [

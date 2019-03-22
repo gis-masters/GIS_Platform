@@ -1,0 +1,37 @@
+<div [ngClass]="isActive? 'crg-info-sidebar' : 'crg-info-sidebar_hidden'">
+  <div class="crg-sidebar-content scroll">
+    Content here
+<!--    <mat-nav-list>-->
+<!--      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"-->
+<!--                          (selectionChange)="handleSelection(fizLayers)">-->
+<!--        <div *ngIf="layers.length > 0">-->
+<!--          <mat-list-option class="example-box" style="height: 64px"-->
+<!--                           *ngFor="let layer of layers" cdkDrag>-->
+<!--            <crg-layer-list-item [layer]="layer"></crg-layer-list-item>-->
+<!--          </mat-list-option>-->
+<!--        </div>-->
+<!--        <div *ngIf="layers.length == 0" class="empty-layers">-->
+<!--          <span style="margin-left: 40px; margin-right: 40px">Нет слоев</span>-->
+<!--        </div>-->
+<!--      </mat-selection-list>-->
+<!--    </mat-nav-list>-->
+  </div>
+</div>
+
+<!--  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"-->
+<!--               [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">-->
+<!--    <mat-nav-list>-->
+<!--      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"-->
+<!--                          (selectionChange)="handleSelection(fizLayers)">-->
+<!--        <div *ngIf="layers.length > 0">-->
+<!--          <mat-list-option class="example-box" style="height: 64px"-->
+<!--                           *ngFor="let layer of layers" cdkDrag>-->
+<!--            <crg-layer-list-item [layer]="layer"></crg-layer-list-item>-->
+<!--          </mat-list-option>-->
+<!--        </div>-->
+<!--        <div *ngIf="layers.length == 0" class="empty-layers">-->
+<!--          <span style="margin-left: 40px; margin-right: 40px">Нет слоев</span>-->
+<!--        </div>-->
+<!--      </mat-selection-list>-->
+<!--    </mat-nav-list>-->
+<!--  </mat-sidenav>-->

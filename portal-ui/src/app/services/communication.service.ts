@@ -71,5 +71,6 @@ export enum ActionType {
 
 export enum SidebarType {
   INFO,       // Информационная панель
+  LAYERS,     // Левая панель со слоями
   BUG_REPORT, // Панель отображения и редактирования ошибок
 }

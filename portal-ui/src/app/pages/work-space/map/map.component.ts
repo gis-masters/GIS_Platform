@@ -10,7 +10,13 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {
+  ActionType,
+  CommunicationService,
+  ObjectDto,
+  SidebarData,
+  SidebarType
+} from '../../../services/communication.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 
@@ -35,6 +41,7 @@ export class MapComponent implements OnInit, OnDestroy {
   gmlDialogData: CrgLayer[];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
+  private isLayersSidebarActive = false;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,
@@ -71,6 +78,18 @@ export class MapComponent implements OnInit, OnDestroy {
                 .addLayerToMap(layer.complexName)
                 .setZIndex(layers.length - index);
           });
+        });
+
+    this.communicationService
+        .sidebarManager$()
+        .subscribe((data: SidebarData) => {
+          switch (data.action) {
+            case ActionType.CLOSE: this.isLayersSidebarActive = false; break;
+            case ActionType.OPEN: this.isLayersSidebarActive = true;  break;
+            case ActionType.SWITCH: this.isLayersSidebarActive = !this.isLayersSidebarActive; break;
+            default:
+              this.logger.warn('Unsupported action type: ', data.action);
+          }
         });
 
     this.communicationService
@@ -140,4 +159,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }, 300);
   }
 
+  switchLayersSidebar() {
+    this.communicationService.sidebarManager.emit({target: SidebarType.LAYERS, action: ActionType.SWITCH});
+  }
 }

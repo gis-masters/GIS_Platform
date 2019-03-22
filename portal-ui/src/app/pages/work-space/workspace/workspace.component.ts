@@ -42,6 +42,10 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   private manageSidebar(data: SidebarData) {
+    if (data.target === SidebarType.LAYERS) {
+      return;
+    }
+
     if (data.target === SidebarType.INFO) {
       switch (data.action) {
         case ActionType.CLOSE: this.isInfoSidebarActive = false; break;

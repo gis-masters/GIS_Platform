@@ -1,0 +1,73 @@
+@import url(../../pages/_app/app.component.css);
+
+.crg-info-sidebar {
+  z-index: 100;
+  position: fixed;
+  top: 104px;
+  left: calc(100% - 400px);
+
+  height: calc(100% - 104px);
+  width: 400px;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.crg-info-sidebar_hidden {
+  z-index: 100;
+  position: fixed;
+  top: 104px;
+  left: 100%;
+
+  height: calc(100% - 104px);
+  width: 400px;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.crg-sidebar-header {
+  font-size: larger;
+  padding: 20px;
+}
+
+.crg-sidebar-content {
+  overflow: auto;
+  max-height: calc(100% - 70px);
+}
+
+.no-events {
+  color: lightgrey;
+  padding-top: 10%;
+  text-align: center;
+}
+
+.no-events-icon {
+  position: relative;
+  left: -15px;
+  font-size: -webkit-xxx-large;
+}
+
+.crg-close-icon {
+  cursor: pointer;
+  color: grey;
+  float: right;
+
+  /*-webkit-transition: -webkit-transform .3s ease-in-out;*/
+  /*transition: transform .3s ease-in-out;*/
+}
+
+.crg-close-icon:hover {
+  /*-webkit-transform: rotate(90deg);*/
+  /*transform: rotate(90deg);*/
+}
