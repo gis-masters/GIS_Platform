@@ -34,8 +34,13 @@ export class ProgressItemComponent {
     this.eventService.delete(this.event.id);
   }
 
-  download() {
-    const fileName = this.event.payload.payload.pathToFile.split('/')[3];
+  download(mode) {
+    let fileName;
+    if (mode) {
+      fileName = this.event.payload.payload.pathToFile.split('/')[3];
+    } else {
+      fileName = this.event.payload.payload.pathToLog.split('/')[3];
+    }
 
     this.fileService.download(fileName)
         .subscribe(data => {
