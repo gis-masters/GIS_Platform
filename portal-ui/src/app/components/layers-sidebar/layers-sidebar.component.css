@@ -1,10 +1,10 @@
 @import url(../../pages/_app/app.component.css);
 
-.crg-info-sidebar {
+.crg-layers-sidebar {
   z-index: 100;
   position: fixed;
   top: 104px;
-  left: calc(100% - 400px);
+  left: 0;
 
   height: calc(100% - 104px);
   width: 400px;
@@ -18,11 +18,11 @@
   transition-duration: 0.3s;
 }
 
-.crg-info-sidebar_hidden {
+.crg-layers-sidebar_hidden {
   z-index: 100;
   position: fixed;
   top: 104px;
-  left: 100%;
+  left: -400px;
 
   height: calc(100% - 104px);
   width: 400px;
@@ -44,30 +44,4 @@
 .crg-sidebar-content {
   overflow: auto;
   max-height: calc(100% - 70px);
-}
-
-.no-events {
-  color: lightgrey;
-  padding-top: 10%;
-  text-align: center;
-}
-
-.no-events-icon {
-  position: relative;
-  left: -15px;
-  font-size: -webkit-xxx-large;
-}
-
-.crg-close-icon {
-  cursor: pointer;
-  color: grey;
-  float: right;
-
-  /*-webkit-transition: -webkit-transform .3s ease-in-out;*/
-  /*transition: transform .3s ease-in-out;*/
-}
-
-.crg-close-icon:hover {
-  /*-webkit-transform: rotate(90deg);*/
-  /*transform: rotate(90deg);*/
 }

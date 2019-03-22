@@ -26,13 +26,8 @@ import {GmlDialogData} from '../../../components/export/export-dilog/export-dial
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, OnDestroy {
-  mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
 
   layers: CrgLayer[] = [];
-
-  isLayerObjectsSidebarShow = false;
-  layerObjectsSidebarSize = 'ui-sidebar-md';
 
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
@@ -53,10 +48,6 @@ export class MapComponent implements OnInit, OnDestroy {
               private ruleService: FgistpRulesService,
               private authService: AuthService) {
     this.authService.validateAuth();
-
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit() {
@@ -65,6 +56,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.ruleService.getRules()
         .subscribe(value => this.layersService.fetchLayers());
 
+    // Подписываемся на слоя чтобы докидывать их на карту
     this.layersService.layers$
         .pipe(
           filter(value => !!value && !!value.length),
@@ -78,18 +70,6 @@ export class MapComponent implements OnInit, OnDestroy {
                 .addLayerToMap(layer.complexName)
                 .setZIndex(layers.length - index);
           });
-        });
-
-    this.communicationService
-        .sidebarManager$()
-        .subscribe((data: SidebarData) => {
-          switch (data.action) {
-            case ActionType.CLOSE: this.isLayersSidebarActive = false; break;
-            case ActionType.OPEN: this.isLayersSidebarActive = true;  break;
-            case ActionType.SWITCH: this.isLayersSidebarActive = !this.isLayersSidebarActive; break;
-            default:
-              this.logger.warn('Unsupported action type: ', data.action);
-          }
         });
 
     this.communicationService
@@ -132,34 +112,6 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-
-    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
-
-    this.layers.forEach((layer, index) => {
-      this.openLayers.set_ZIndex(layer.name, this.layers.length - index);
-    });
-  }
-
-  handleSelection(selectionList: MatSelectionList) {
-    // Только выбранные галочкой элементы
-    const nameOfSelectedLayers = selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => {
-        return this.ruleService.getNativeLayerNameByTitle(selectedOption.getLabel());
-      });
-    this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
-  }
-
-  updateMapSize() {
-    setTimeout(() => {
-      this.openLayers.getMap().updateSize();
-    }, 300);
-  }
-
-  switchLayersSidebar() {
-    this.communicationService.sidebarManager.emit({target: SidebarType.LAYERS, action: ActionType.SWITCH});
-  }
 }

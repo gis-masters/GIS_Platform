@@ -1,5 +1,5 @@
 .fiz-container {
-  height: 89.8%;
+  height: calc(100% - 140px);
 }
 
 /*.example-toolbar {*/

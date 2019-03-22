@@ -1,44 +1,17 @@
 <mat-toolbar color="primary" class="map-toolbar">
-  <button mat-icon-button (click)="switchLayersSidebar()">
+  <button mat-icon-button (click)="isLayersSidebarActive = !isLayersSidebarActive">
     <mat-icon>menu</mat-icon>
   </button>
 </mat-toolbar>
 
-<mat-sidenav-container class="example-sidenav-container-fiz"
-                       [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-
-  <crg-layers-sidebar [isActive]="isLayersSidebarActive"></crg-layers-sidebar>
-
-<!--  <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"-->
-<!--               [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">-->
-<!--    <mat-nav-list>-->
-<!--      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"-->
-<!--                          (selectionChange)="handleSelection(fizLayers)">-->
-<!--        <div *ngIf="layers.length > 0">-->
-<!--          <mat-list-option class="example-box" style="height: 64px"-->
-<!--                           *ngFor="let layer of layers" cdkDrag>-->
-<!--            <crg-layer-list-item [layer]="layer"></crg-layer-list-item>-->
-<!--          </mat-list-option>-->
-<!--        </div>-->
-<!--        <div *ngIf="layers.length == 0" class="empty-layers">-->
-<!--          <span style="margin-left: 40px; margin-right: 40px">Нет слоев</span>-->
-<!--        </div>-->
-<!--      </mat-selection-list>-->
-<!--    </mat-nav-list>-->
-<!--  </mat-sidenav>-->
-
+<mat-sidenav-container class="example-sidenav-container-fiz">
   <mat-sidenav-content>
+    <crg-layers-sidebar [isActive]="isLayersSidebarActive"></crg-layers-sidebar>
+
+    <!--Карта-->
     <div id="fiz-openLayer-map" class="crg-map"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<p-sidebar [(visible)]="isLayerObjectsSidebarShow" position="bottom" styleClass="{{layerObjectsSidebarSize}}"
-           [style]="{padding:'0'}"
-           [modal]="false"
-           [showCloseIcon]="true"
-           [dismissible]="true">
-  <!--<crg-layer-objects></crg-layer-objects>-->
-</p-sidebar>
 
 <p-dialog header="Валидация"
           [style]="{width: '450px', height: '500px'}"
