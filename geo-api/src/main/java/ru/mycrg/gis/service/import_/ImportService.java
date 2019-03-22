@@ -39,9 +39,13 @@ public class ImportService {
             log.warn("Return invalid response");
         }
 
-        getProcessById(response.getId()).ifPresentOrElse(
-                process -> process.addResponse(response),
-                () -> log.warn("Not found import process by id: {}", response.getId()));
+        Optional<ImportProcess> processById = getProcessById(response.getId());
+        if (processById.isPresent()) {
+            ImportProcess process = processById.get();
+            process.addResponse(response);
+        } else {
+            log.warn("Not found import process by id: {}", response.getId());
+        }
     }
 
     private Optional<ImportProcess> getProcessById(UUID id) {

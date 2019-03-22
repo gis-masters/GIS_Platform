@@ -72,7 +72,8 @@ public class ValidationService {
         while (true) {
             response.setResults(new ArrayList<>());
 
-            var batch = gisStorage.fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch = gisStorage
+                    .fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }

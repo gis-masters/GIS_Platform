@@ -1,5 +1,6 @@
 package ru.mycrg.gis.unit;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -49,7 +50,7 @@ public class OrganizationServiceTest {
         Iterable<Organization> result = organizationService.findAll();
 
         // ASSERT
-        assertEquals(1, List.of(result).size());
+        assertEquals(1, Lists.newArrayList(result).size());
     }
 
     @Test

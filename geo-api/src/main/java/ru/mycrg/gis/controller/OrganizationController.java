@@ -45,7 +45,7 @@ public class OrganizationController {
             @RequestParam(value = "size", required = false) String size) {
         log.debug("Get organizations request with params: page:{} / size:{} / sort: {}", page, size, sort);
 
-        var organizations = organizationService.findAll(getPageableRequest(page, size, sort));
+        Iterable<Organization> organizations = organizationService.findAll(getPageableRequest(page, size, sort));
 
         return ResponseEntity.ok(organizations);
     }

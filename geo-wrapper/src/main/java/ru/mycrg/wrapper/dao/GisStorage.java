@@ -255,17 +255,15 @@ public class GisStorage {
     }
 
     private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {
-        var ref = new Object() {
-            String sql = String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName());
-        };
+        final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
         item.forEach((key, value) -> {
             if (!"objectid".equals(key)) {
-                ref.sql = ref.sql + key + "='" + value + "', ";
+                sql[0] = sql[0] + key + "='" + value + "', ";
             }
         });
 
-        return ref.sql.substring(0, ref.sql.length() - 2) + " WHERE objectid=" + item.get("objectid");
+        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get("objectid");
     }
 
     private String generateInsertRequest(ResourceProjection target, Map<String, Object> item) {
@@ -273,20 +271,18 @@ public class GisStorage {
                 target.getSchemaName(),
                 target.getTableName());
 
-        var ref = new Object() {
-            String keysString = "";
-            String valuesString = "";
-        };
+        final String[] keysString = {""};
+        final String[] valuesString = {""};
         item.forEach((key, value) -> {
-            ref.keysString = ref.keysString + key + ", ";
-            ref.valuesString = ref.valuesString + "'" + value + "',";
+            keysString[0] = keysString[0] + key + ", ";
+            valuesString[0] = valuesString[0] + "'" + value + "',";
         });
 
-        ref.keysString.substring(0, ref.keysString.length() - 2);
-        ref.valuesString.substring(0, ref.valuesString.length() - 2);
+        String keySubstring = keysString[0].substring(0, keysString[0].length() - 2);
+        String valueSubstring = valuesString[0].substring(0, valuesString[0].length() - 2);
 
-        String insertKeys = sql.replace("GENERATED_KEYS", (CharSequence) ref.keysString);
-        String result = insertKeys.replace("GENERATED_VALUES", (CharSequence) ref.valuesString);
+        String insertKeys = sql.replace("GENERATED_KEYS", (CharSequence) keySubstring);
+        String result = insertKeys.replace("GENERATED_VALUES", valueSubstring);
 
         return result;
     }

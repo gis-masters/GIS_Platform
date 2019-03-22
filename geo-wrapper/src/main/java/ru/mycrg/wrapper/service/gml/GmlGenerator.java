@@ -86,7 +86,7 @@ public class GmlGenerator {
         log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
         gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
             String tableName = resourceProjection.getTableName();
-            var rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
+            Optional<EntityTypeDto> rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
             if (rule.isPresent()) {
                 EntityTypeDto feature = rule.get();
                 mqEvents.gmlResponse(
@@ -144,7 +144,7 @@ public class GmlGenerator {
     private void generateGmlDomModel(GmlDocumentHolder docHolder, EntityTypeDto feature, ResourceProjection resource) {
         log.debug("generate GML Document for feature {}", feature.getName());
 
-        var queue = getData(resource);
+        Queue<List<Map<String, Object>>> queue = getData(resource);
 
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
@@ -354,7 +354,7 @@ public class GmlGenerator {
 
         int offset = 0;
         while (true) {
-            var batch = gisStorage.fetchBatch(jdbcTemplate, target, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch = gisStorage.fetchBatch(jdbcTemplate, target, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }
@@ -375,7 +375,7 @@ public class GmlGenerator {
 
         int offset = 0;
         while (true) {
-            var batch = gisStorage.fetchViolationsBatch(jdbcTemplate, target, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch = gisStorage.fetchViolationsBatch(jdbcTemplate, target, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }

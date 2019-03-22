@@ -7,7 +7,6 @@ import ru.mycrg.common.EntityTypeDto;
 import javax.script.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class CustomRuleValidation {
 
@@ -27,7 +26,11 @@ public class CustomRuleValidation {
 
             result = (Map<String, String>) invocable.invokeFunction("validate", data);
 
-            return Objects.requireNonNullElseGet(result, HashMap::new);
+            if (result != null) {
+                return result;
+            } else {
+                return new HashMap<>();
+            }
         } catch (ScriptException | NoSuchMethodException e) {
             log.error("Ошибка при анализе доп. правил, {} ", e.getLocalizedMessage());
         }

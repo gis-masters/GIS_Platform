@@ -41,7 +41,8 @@ public class ImportService {
         String tableName = request.getTargetResource().getTableName();
         String schemaName = request.getTargetResource().getSchemaName();
 
-        gisStorage.truncate(jdbcTemplate, List.of(new ResourceProjection(null, schemaName, tableName)));
+        gisStorage.truncate(jdbcTemplate,
+                Collections.singletonList(new ResourceProjection(null, schemaName, tableName)));
         gisStorage.doImport(jdbcTemplate, request);
 
         // GlobalId and encoding
@@ -49,7 +50,7 @@ public class ImportService {
         ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
         int offset = 0;
         while (true) {
-            var batch = gisStorage.fetchBatch(jdbcTemplate, resourceProjection, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch = gisStorage.fetchBatch(jdbcTemplate, resourceProjection, BATCH_SIZE, offset);
             if (batch.isEmpty()) {
                 break;
             }

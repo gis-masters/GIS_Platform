@@ -85,9 +85,13 @@ public class ValidationServiceImpl implements IValidationService {
         // TODO: При валидации не комплитить ответ пустыми данными если при валидации не выявлено ошибок
         // дожидаться каких либо ошибок либо DONE статуса
 
-        getProcessById(response.getId()).ifPresentOrElse(
-                process -> process.addResponse(response),
-                () -> log.warn("Not found validation process by id: {}", response.getId()));
+        Optional<ValidationProcess> processById = getProcessById(response.getId());
+        if (processById.isPresent()) {
+            ValidationProcess process = processById.get();
+            process.addResponse(response);
+        } else {
+            log.warn("Not found validation process by id: {}", response.getId());
+        }
     }
 
     private Optional<ValidationProcess> getProcessById(UUID id) {
