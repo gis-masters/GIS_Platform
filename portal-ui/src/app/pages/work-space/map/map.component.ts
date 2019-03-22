@@ -74,10 +74,6 @@ export class MapComponent implements OnInit, OnDestroy {
         });
 
     this.communicationService
-        .layerObjectsSidebar$()
-        .subscribe((value) => this.isLayerObjectsSidebarShow = value);
-
-    this.communicationService
         .gotoObject$()
         .subscribe((objectDto: ObjectDto) => {
           this.openLayers.showObject(objectDto);

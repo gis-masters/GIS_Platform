@@ -9,9 +9,7 @@ import {GmlDialogData} from '../components/export/export-dilog/export-dialog.com
 })
 export class CommunicationService {
 
-  @Output() infoSidebar = new EventEmitter<ActionType>();
-  @Output() bugReportSidebar = new EventEmitter<ActionType>();
-  @Output() layerObjectsSidebar = new EventEmitter<ActionType>();
+  @Output() sidebarManager = new EventEmitter<SidebarData>();
 
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
@@ -26,16 +24,8 @@ export class CommunicationService {
 
   }
 
-  public layerObjectsSidebar$() {
-    return this.layerObjectsSidebar;
-  }
-
-  public infoSidebar$() {
-    return this.infoSidebar;
-  }
-
-  public bugReportSidebar$() {
-    return this.bugReportSidebar;
+  public sidebarManager$() {
+    return this.sidebarManager;
   }
 
   public gotoObject$() {
@@ -68,8 +58,18 @@ export interface ObjectDto {
   crgLayer: CrgLayer;
 }
 
+export interface SidebarData {
+  action: ActionType;
+  target: SidebarType;
+}
+
 export enum ActionType {
   OPEN,
   CLOSE,
   SWITCH
+}
+
+export enum SidebarType {
+  INFO,       // Информационная панель
+  BUG_REPORT, // Панель отображения и редактирования ошибок
 }

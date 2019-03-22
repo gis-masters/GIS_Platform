@@ -9,7 +9,7 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../../services/communication.service';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
@@ -123,7 +123,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   closeMe() {
     this.openLayersService.removeBugObjectsLayer();
-    this.communicationService.bugReportSidebar.emit(ActionType.CLOSE);
+    this.communicationService.sidebarManager.emit({action: ActionType.CLOSE, target: SidebarType.BUG_REPORT});
   }
 
   reValidate() {

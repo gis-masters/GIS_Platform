@@ -3,7 +3,7 @@ import {Component, Input} from '@angular/core';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
-import {ActionType, CommunicationService} from '../../../services/communication.service';
+import {ActionType, CommunicationService, SidebarType} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/gis/export.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class ExportDialogComponent {
           this.logger.info(' * * * exportGml response * * *', response);
         });
 
-    this.communicationService.infoSidebar.emit(ActionType.OPEN);
+    this.communicationService.sidebarManager.emit({action: ActionType.OPEN, target: SidebarType.INFO});
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 
