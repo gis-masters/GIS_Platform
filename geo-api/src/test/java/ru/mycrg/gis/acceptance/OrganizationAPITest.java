@@ -31,7 +31,15 @@ public class OrganizationAPITest {
 
     @Test
     public void aa_ShouldGetOk() {
-        when()
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTMzNTM3MzEsInVzZXJfbmFtZSI6ImFkbWluIiwiY" +
+                "XV0aG9yaXRpZXMiOlsiQURNSU4iXSwianRpIjoiNjg3MGViOTktYjQ3YS00ODhhLTk4ODItNTJjNGI2NDg2MjgzIiwiY2xpZW" +
+                "50X2lkIjoiYWRtaW4iLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXX0.Udn7BXjxKRmlZGy3WigJyA-d04s554kP9-H7VKM-v4M";
+
+        given()
+            .headers("Authorization", "Bearer " + token,
+                    "Content-Type", ContentType.JSON,
+                    "Accept", ContentType.JSON)
+        .when()
             .get()
         .then().statusCode(200)
             .and()
