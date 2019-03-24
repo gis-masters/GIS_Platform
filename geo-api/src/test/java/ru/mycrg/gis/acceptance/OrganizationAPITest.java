@@ -8,8 +8,18 @@ import okhttp3.*;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.context.WebApplicationContext;
 import ru.mycrg.common.JWTTokenHolder;
+import ru.mycrg.gis.config.CrgProperties;
 import ru.mycrg.gis.util.Util;
 
 import java.io.IOException;
@@ -24,8 +34,19 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertNotNull;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = CrgProperties.class)
+@ActiveProfiles(profiles = "fiz-dev")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OrganizationAPITest {
+
+    @Autowired
+    WebApplicationContext context;
+
+    @Autowired
+    private CrgProperties crgProperties;
+
+    private static final Logger log = LoggerFactory.getLogger(OrganizationAPITest.class);
 
     private static JWTTokenHolder jwtToken;
     private static RequestSpecification requestJwt;
@@ -39,6 +60,8 @@ public class OrganizationAPITest {
 
     @Test
     public void aa_ShouldGetOk() throws IOException {
+        log.info("+++++++++++++++++++ {}", context.getApplicationName());
+
         jwtToken = getJwtToken();
 
         assertNotNull(jwtToken);
