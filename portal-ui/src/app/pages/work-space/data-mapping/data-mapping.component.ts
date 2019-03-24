@@ -136,6 +136,9 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.isWorkImportInited = true;
 
     const workImport = this.importFlow.work_import;
+
+    // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
+    // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.gisDbService
         .doWorkImport(workImport)
         .subscribe((response: any) => {
