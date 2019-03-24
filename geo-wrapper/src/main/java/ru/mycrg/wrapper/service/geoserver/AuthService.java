@@ -8,7 +8,7 @@ import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.dto.JWTTokenHolder;
+import ru.mycrg.common.JWTTokenHolder;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -36,6 +36,7 @@ public class AuthService extends GeoServerBaseService {
                 + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
                 "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
                 + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
+
         Request request = new Request.Builder()
                 .url("http://" + geoserverHost() +"/oauth/token")
                 .header("Authorization", simpleCredential())
