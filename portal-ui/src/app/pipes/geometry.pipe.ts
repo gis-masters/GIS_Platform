@@ -8,7 +8,7 @@ import {LayerItem} from '../services/geoserver/import/import.service';
 })
 export class GeometryPipe implements PipeTransform {
 
-  transform(entityTypes: XsdFeature[], layer?: LayerItem): any {
+  transform(entityTypes: XsdFeature[], layer?: LayerItem): XsdFeature[] {
     const layerGeometry = EntityTypesUtil.getLayerGeometry(layer);
     const filtered = entityTypes.filter((entityType: XsdFeature) => {
       return EntityTypesUtil.isLayerGeometryCompatible(layerGeometry, entityType);

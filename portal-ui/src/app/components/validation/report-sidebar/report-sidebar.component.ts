@@ -76,6 +76,10 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
                       this.commonInfo.set(response.resourceId.split(':')[2], response);
                     });
                   }
+                }, error => {
+                  this.isValidationInited = false;
+
+                  this.logger.error('Cant get validation info: ', error);
                 });
           }
         });
@@ -113,11 +117,13 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         .subscribe((responses: ValidationResponse[]) => {
           this.isValidationInited = false;
 
-          this.logger.info(' * * * validateLayers response* * *', responses);
-
           responses.forEach((response: ValidationResponse) => {
             this.commonInfo.set(response.resourceId.split(':')[2], response);
           });
+        }, error => {
+          this.isValidationInited = false;
+
+          this.logger.error('Cant validate layers: ', error);
         });
   }
 
