@@ -24,5 +24,5 @@ services:
   gateway:
     build: gateway
 
-#  portal-ui:
-#    build: portal-ui
+  portal-ui:
+    build: portal-ui
