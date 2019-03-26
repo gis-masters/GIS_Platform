@@ -61,7 +61,6 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
             log.error("Not found xsd schema file by path: {} / {}", path, e.getLocalizedMessage());
         } catch (Exception e) {
             log.error("Failed load rules: {}", e.getMessage());
-            // throw new CrgFailedException("Failed load rules. " + e.getLocalizedMessage());
         }
 
         return fgistpRules;
@@ -96,14 +95,10 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         return fgistpRules;
     }
 
-    public EntityType getRuleByClassName(String name) throws FgistpRuleNotFoundException {
-        Optional<EntityType> optionalEntityType = fgistpRules
-                .getEntityTypes().stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().toLowerCase().contains(name.toLowerCase()))
-                .findFirst();
-
-        if (optionalEntityType.isPresent()) {
-            EntityType entityType = optionalEntityType.get();
+    public EntityType getRuleByName(String featureName) throws FgistpRuleNotFoundException {
+        Optional<EntityType> optionalFeature = fgistpRules.getFeatureTypeByName(featureName);
+        if (optionalFeature.isPresent()) {
+            EntityType entityType = optionalFeature.get();
             customRuleRepository.findCustomRuleByClassName(entityType.getName())
                     .ifPresent(customRule -> {
                         entityType.setCustomRuleFunction(customRule.getClassRule());
@@ -111,7 +106,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
             return entityType;
         } else {
-            throw new FgistpRuleNotFoundException(name);
+            throw new FgistpRuleNotFoundException(featureName);
         }
     }
 

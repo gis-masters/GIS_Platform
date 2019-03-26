@@ -28,9 +28,29 @@ public class FgistpRules {
         this.entityTypes = entityTypes;
     }
 
-    public Optional<EntityType> getClassTypeByName(String name) {
+    public Optional<EntityType> getFeatureTypeByName(String name) {
         return entityTypes.stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().equals(name))
+                .filter(featureType -> findFeature(name, featureType))
                 .findFirst();
     }
+
+    private boolean findFeature(String featureName, EntityType featureType) {
+        String targetName = featureType.getName().toLowerCase();
+
+        if (targetName.contains(featureName.toLowerCase())) {
+            return true;
+        }
+
+        if (featureName.contains("_")) {
+            String[] splitted = featureName.split("_");
+
+            String sName = splitted[0];
+            if (sName != null) {
+                return targetName.contains(sName.toLowerCase());
+            }
+        }
+
+        return false;
+    }
+
 }

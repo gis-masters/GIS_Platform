@@ -33,7 +33,9 @@ public class GmlGenerationService {
     private final FgistpRuleService ruleService;
     private final WsNotificationService wsNotificationService;
 
-    public GmlGenerationService(MqSender mqSender, FgistpRuleService ruleService, WsNotificationService wsNotificationService) {
+    public GmlGenerationService(MqSender mqSender,
+                                FgistpRuleService ruleService,
+                                WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
         this.wsNotificationService = wsNotificationService;
@@ -47,7 +49,7 @@ public class GmlGenerationService {
         mqRequest.setDocSchema(request.getDocSchema());
 
         request.getResources().forEach(resource -> {
-            EntityType ruleByClassName = ruleService.getRuleByClassName(resource.getTableName());
+            EntityType ruleByClassName = ruleService.getRuleByName(resource.getTableName());
             mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
             mqRequest.addResource(
                     new ResourceProjection(resource.getDbName(), resource.getSchemaName(), resource.getTableName()));

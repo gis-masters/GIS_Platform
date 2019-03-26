@@ -73,7 +73,7 @@ public class FgistpController {
     public EntityType getByName(@PathVariable String className) {
         log.info("Get rule by name: {}", className);
 
-        return fgistpRuleService.getRuleByClassName(className);
+        return fgistpRuleService.getRuleByName(className);
     }
 
     @PostMapping("/fgistp/validation/init")

@@ -6,7 +6,7 @@ public interface IFgistpRuleHolder {
 
     FgistpRules getRules();
 
-    EntityType getRuleByClassName(String name);
+    EntityType getRuleByName(String name);
 
     boolean isXsdRulesEmpty();
 

@@ -67,7 +67,7 @@ public class ValidationServiceImpl implements IValidationService {
     @NotNull
     private ValidationMqRequest prepareMqRequest(int page, int size, RequestType type,
                                                  ValidationProcess process, ValidationRequestDto requestDto) {
-        EntityType entityType = ruleService.getRuleByClassName(requestDto.getTableName());
+        EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
 
         return new ValidationMqRequest(
                 process.getId(), type, page, size,
