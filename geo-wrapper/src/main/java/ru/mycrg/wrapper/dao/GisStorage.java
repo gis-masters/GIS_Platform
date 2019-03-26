@@ -238,7 +238,7 @@ public class GisStorage {
         nextBatch.forEach(item -> {
             String sqlUpdate = generateUpdateRequest(target, item);
 
-            log.debug("update SQL: {}", sqlUpdate);
+            log.trace("update SQL: {}", sqlUpdate);
 
             jdbcTemplate.update(sqlUpdate);
         });
@@ -248,7 +248,7 @@ public class GisStorage {
         batch.forEach(item -> {
             String sqlInsert = generateInsertRequest(target, item);
 
-            log.debug("update SQL: {}", sqlInsert);
+            log.trace("update SQL: {}", sqlInsert);
 
             jdbcTemplate.update(sqlInsert);
         });
