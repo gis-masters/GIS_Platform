@@ -21,6 +21,15 @@ public class EntityType {
         this.name = name;
     }
 
+    public EntityType(EntityType entityType) {
+        this.name = entityType.getName();
+        this.title = entityType.getTitle();
+        this.description = entityType.getDescription();
+        this.tableName = entityType.getTableName();
+        this.customRuleFunction = entityType.getCustomRuleFunction();
+        this.properties = entityType.getProperties();
+    }
+
     public void addProperty(AbstractProperty property) {
         properties.add(property);
     }

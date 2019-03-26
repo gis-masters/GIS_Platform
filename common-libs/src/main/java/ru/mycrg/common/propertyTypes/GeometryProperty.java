@@ -19,6 +19,21 @@ public class GeometryProperty extends AbstractProperty {
         this.allowedValues.add(name);
     }
 
+    public GeometryProperty(GeometryProperty geomProperty) {
+        setName(geomProperty.getName());
+        setTitle(geomProperty.getTitle());
+        setDescription(geomProperty.getDescription());
+        setRequired(geomProperty.isRequired());
+        setHidden(geomProperty.isHidden());
+        setUpdateability(geomProperty.getUpdateability());
+        setMultiple(geomProperty.isMultiple());
+        setChoice(geomProperty.getChoice());
+        setValueType(geomProperty.getValueType());
+        setSequenceNumber(geomProperty.getSequenceNumber());
+
+        this.allowedValues = geomProperty.getAllowedValues();
+    }
+
     public List<String> getAllowedValues() {
         return allowedValues;
     }

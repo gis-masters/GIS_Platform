@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
@@ -15,9 +17,7 @@ import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Обрабатывает и содержит правила ФГИС ТП: <p>
@@ -54,16 +54,62 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         try {
             File file = ResourceUtils.getFile(DEFAULT_XSD_SCHEMA_PATH);
 
-            fgistpRules = parser.parse(file);
+            FgistpRules rules = parser.parse(file);
+            fgistpRules = splitRulesByGeometry(rules);
+
+            if (isIdenticalNamesExist(fgistpRules)) {
+                log.error("Exist identical feature names. Something wrong via generate rules.");
+            }
 
             persistXsdRules(fgistpRules);
         } catch (FileNotFoundException e) {
             log.error("Not found xsd schema file by path: {} / {}", path, e.getLocalizedMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Failed load rules: {}", e.getMessage());
         }
 
         return fgistpRules;
+    }
+
+    /**
+     * Описание полученное из схемы, приводится к соответствию с шаблонной БД, в которой геометрии фичи разложены по
+     * отдельным таблицам. <p>
+     * Например: <br>
+     *     NaturalRiskZone_Type имеет два вида геометрии Polygon и Point,
+     *     а в БД соответственно должно быть две таблицы: <br>
+     *     naturalriskzone(как Polygon) и naturalriskzone_point(как Point)
+     * @param rules Правила полученные после парсинга fgistp.xsd
+     * @return Правила приведенные в соответствие к шаблонной структуре БД.
+     */
+    public FgistpRules splitRulesByGeometry(FgistpRules rules) {
+        FgistpRules newRules = new FgistpRules();
+
+        rules.getEntityTypes().forEach(entityType -> {
+            Optional<GeometryProperty> optionalProperty = entityType.getProperties().stream()
+                    .filter(AbstractProperty::isGeometry)
+                    .findFirst()
+                    .map(property -> (GeometryProperty) property);
+
+            if (optionalProperty.isPresent()) {
+                GeometryProperty geomProperty = optionalProperty.get();
+
+                geomProperty.getAllowedValues().forEach(geomType -> {
+                    switch (geomType) {
+                        case "Curve": break; // Do nothing
+                        case "Polygon":     newRules.addComplexType(prepareNewFeature(entityType, "Polygon")); break;
+                        case "Point":       newRules.addComplexType(prepareNewFeature(entityType, "Point")); break;
+                        case "LineString":  newRules.addComplexType(prepareNewFeature(entityType, "LineString")); break;
+                        default:
+                            log.warn("Unsupported geometry type: {}", geomType);
+                    }
+                });
+            } else {
+                log.warn("Some feature not contain geometry? {}", entityType.getName());
+            }
+        });
+
+        return newRules;
     }
 
     @Override
@@ -110,6 +156,18 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         }
     }
 
+    /**
+     * Не должно быть повторяющихся имен фич. (Поскольку имя фичи это название таблицы)
+     */
+    private boolean isIdenticalNamesExist(FgistpRules fgistpRules) {
+        long count = fgistpRules.getEntityTypes().stream()
+                .map(EntityType::getName)
+                .distinct()
+                .count();
+
+        return count != fgistpRules.getEntityTypes().size();
+    }
+
     @Override
     public boolean isXsdRulesEmpty() {
         return xsdRuleRepository.count() == 0;
@@ -118,6 +176,41 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     @Override
     public boolean isCacheEmpty() {
         return fgistpRules.getEntityTypes().isEmpty();
+    }
+
+    /**
+     * Новая фича это копия старой с новым именем и названием таблицы, а также с отредактированным свойством
+     * геометрии, в котором отсается только одно значение.
+     */
+    private EntityType prepareNewFeature(EntityType entityType, String geometryType) {
+        EntityType newFeature = new EntityType(entityType);
+
+        List<AbstractProperty> newProperties = new ArrayList<>();
+        entityType.getProperties().forEach(property -> {
+            if (property.isGeometry()) {
+                GeometryProperty newGeometry = new GeometryProperty((GeometryProperty) property);
+                newGeometry.setAllowedValues(Collections.singletonList(geometryType));
+
+                newProperties.add(newGeometry);
+            } else {
+                newProperties.add(property);
+            }
+        });
+
+        newFeature.setProperties(newProperties);
+
+        if ("Polygon".equals(geometryType)) {
+            newFeature.setTableName(entityType.getTableName());
+        } else if ("LineString".equals(geometryType)) {
+            newFeature.setTableName(entityType.getTableName() + "_line");
+        } else if ("Point".equals(geometryType)) {
+            newFeature.setTableName(entityType.getTableName() + "_point");
+        } else {
+            newFeature.setTableName(entityType.getTableName());
+        }
+
+        newFeature.setName(newFeature.getTableName());
+        return newFeature;
     }
 
     private void persistXsdRules(FgistpRules rules) {
