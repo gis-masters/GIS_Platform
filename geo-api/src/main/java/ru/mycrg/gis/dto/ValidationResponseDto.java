@@ -19,19 +19,17 @@ public class ValidationResponseDto {
 
     public ValidationResponseDto() {}
 
-    public ValidationResponseDto(Optional<ValidationMqResponse> mqResponseOptional) {
-        if (mqResponseOptional.isPresent()) {
-            ValidationMqResponse response = mqResponseOptional.get();
+    public ValidationResponseDto(ProcessStatus status) {
+        this.status = status;
+    }
 
-            this.resourceId = response.getResourceId();
-            this.status = response.getStatus();
-            this.isValidated = response.isValidated();
-            this.totalViolations = response.getTotal();
-            this.lastValidationDateTime = response.getLastValidated();
-            this.objects = response.getResults();
-        } else {
-            this.status = ProcessStatus.ERROR;
-        }
+    public ValidationResponseDto(ValidationMqResponse response) {
+        this.resourceId = response.getResourceId();
+        this.status = response.getStatus();
+        this.isValidated = response.isValidated();
+        this.totalViolations = response.getTotal();
+        this.lastValidationDateTime = response.getLastValidated();
+        this.objects = response.getResults();
     }
 
     public String getResourceId() {

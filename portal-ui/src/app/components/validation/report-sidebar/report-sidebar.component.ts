@@ -1,16 +1,16 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
-import {MatDialog, MatSnackBar} from '@angular/material';
 import {AuthService} from '../../../services/auth.service';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../../services/communication.service';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
+import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../../services/communication.service';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -39,7 +39,6 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
               private validationService: ValidationService,
               private communicationService: CommunicationService,
               private authService: AuthService,
-              private dialog: MatDialog,
               private openLayersService: OpenLayersService,
               private ruleService: FgistpRulesService,
               private layersService: LayersService) {
@@ -117,13 +116,19 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         .subscribe((responses: ValidationResponse[]) => {
           this.isValidationInited = false;
 
-          responses.forEach((response: ValidationResponse) => {
-            this.commonInfo.set(response.resourceId.split(':')[2], response);
-          });
+          if (!responses) {
+            this.logger.error('Server response is empty');
+            this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
+          } else {
+            responses.forEach((response: ValidationResponse) => {
+              this.commonInfo.set(response.resourceId.split(':')[2], response);
+            });
+          }
         }, error => {
           this.isValidationInited = false;
 
           this.logger.error('Cant validate layers: ', error);
+          this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
         });
   }
 

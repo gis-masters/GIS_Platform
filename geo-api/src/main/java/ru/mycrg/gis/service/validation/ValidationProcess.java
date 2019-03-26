@@ -50,13 +50,20 @@ public class ValidationProcess {
         return requests
                 .stream()
                 .map(ValidationRequestDto::getResourceId)
-                .map(resourceId -> new ValidationResponseDto(getFinishResponse(resourceId)))
+                .map(resourceId -> {
+                    try {
+                        return getFinishResponse(resourceId)
+                                .map(ValidationResponseDto::new)
+                                .orElseGet(() -> new ValidationResponseDto(ProcessStatus.ERROR));
+                    } catch (NullPointerException e) {
+                        return new ValidationResponseDto(ProcessStatus.ERROR);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
-    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) {
-        return this.mqResponses
-                .get(resourceId).stream()
+    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) throws NullPointerException {
+        return mqResponses.get(resourceId).stream()
                 .filter(response -> !response.isPending())
                 .findFirst();
     }
@@ -67,7 +74,7 @@ public class ValidationProcess {
 
             doneCounter++;
             if (doneCounter == requests.size()) {
-                log.info("Process {} successfully complete", id);
+                log.info("Last DONE. The process {} is successfully completed", id);
 
                 futureResponse.complete(prepareResponse());
             } else {
