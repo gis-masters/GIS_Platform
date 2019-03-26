@@ -35,8 +35,8 @@ export class MapComponent implements OnInit, OnDestroy {
   isGmlDialogShow = false;
   gmlDialogData: CrgLayer[];
 
+  isLayersSidebarActive = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private isLayersSidebarActive = false;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private router: Router,

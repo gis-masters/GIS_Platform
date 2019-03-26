@@ -129,12 +129,12 @@ services:
         max-size: "10m"
         max-file: "10"
 
-#  portal-ui:
-#    container_name: portal-ui
-#    image: $DOCKER_CRG_HOST/portal-ui
-#    restart: always
-#    depends_on:
-#    - geo-api
-#    - geoserver
-#    ports:
-#    - 80:80
+  portal-ui:
+    container_name: portal-ui
+    image: $DOCKER_CRG_HOST/portal-ui
+    restart: always
+    depends_on:
+    - geo-api
+    - geoserver
+    ports:
+    - 80:80

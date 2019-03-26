@@ -17,7 +17,8 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   EXPORT = WsMessageType.EXPORT;
 
-  private events: IEvent[] = [];
+  events: IEvent[] = [];
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,

@@ -1,4 +1,9 @@
 export const environment = {
-  production: true,
-  version: 'Prod 0.0.1'
+  production: false,
+  version: 'Default 0.0.9',
+  server: {
+    'host': 'localhost',
+    'port': 8100
+  },
+  scratchWorkspaceName: 'scratch_workspace'
 };
