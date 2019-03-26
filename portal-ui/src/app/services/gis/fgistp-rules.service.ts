@@ -88,8 +88,10 @@ export class FgistpRulesService {
   }
 
   getClassIdAlias(layerName: string, element: any) {
-    let result;
-    this.getFeatureByName(layerName).properties
+    let result = layerName;
+    const featureByName = this.getFeatureByName(layerName);
+    if (featureByName) {
+      featureByName.properties
         .forEach((simpleProperty: SimpleProperty) => {
           if (simpleProperty.enumerations) {
             simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
@@ -99,18 +101,22 @@ export class FgistpRulesService {
             });
           }
         });
+    }
 
     return result;
   }
 
   getPropertyAlias(layerName: string, propertyName: string) {
     let result;
-    this.getFeatureByName(layerName).properties
-      .forEach((simpleProperty: SimpleProperty) => {
-        if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
-          result = simpleProperty.title;
-        }
-      });
+    const featureByName = this.getFeatureByName(layerName);
+    if (featureByName) {
+      featureByName.properties
+        .forEach((simpleProperty: SimpleProperty) => {
+          if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
+            result = simpleProperty.title;
+          }
+        });
+    }
 
     if (!result) {
       return propertyName;

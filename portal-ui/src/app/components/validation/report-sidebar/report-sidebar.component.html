@@ -1,5 +1,5 @@
 <div [ngClass]="isActive? 'crg-validation-sidebar' : 'crg-validation-sidebar_hidden'">
-  <div class="crg-sidebar-header">
+  <div class="crg-report-sidebar-header" *ngIf="!isEditMode">
     <button mat-mini-fab color="primary" class="revalidation-b" (click)="reValidate()">
       <mat-icon>loop</mat-icon>
     </button>
@@ -7,7 +7,7 @@
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
   </div>
 
-  <div class="crg-sidebar-content scroll">
+  <div class="crg-report-sidebar-content scroll">
     <div *ngIf="!isEditMode">
       <div class="container-fluid">
         <div class="row">
@@ -57,6 +57,7 @@
         </div>
       </div>
     </div>
+    <div style="height: 70px; width: 100%" *ngIf="!isEditMode"></div>
 
     <div *ngIf="isEditMode">
       <crg-edit-object [data]="objectsToEdit" (closeMe)="switchMode()"></crg-edit-object>

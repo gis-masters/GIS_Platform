@@ -115,10 +115,13 @@ export class EditObjectComponent implements OnChanges, OnInit {
 
             this.wfsFeature = featureCollection.features[0];
             this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+            if (!!this.featureType) {
+              // this.logger.info('featureType: ', this.featureType, this.wfsFeature);
 
-            this.logger.info('featureType: ', this.featureType, this.wfsFeature);
-
-            this.prepareEditForm(this.wfsFeature.properties);
+              this.prepareEditForm(this.wfsFeature.properties);
+            } else {
+              this.logger.warn('Not found featureType by name: ', objectDto.crgLayer.name);
+            }
           }
         });
   }

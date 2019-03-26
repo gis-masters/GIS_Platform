@@ -73,14 +73,14 @@
   transition-duration: 0.3s;
 }
 
-.crg-sidebar-header {
+.crg-report-sidebar-header {
   font-size: larger;
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 5px 20px;
 }
 
-.crg-sidebar-content {
+.crg-report-sidebar-content {
   overflow: auto;
-  max-height: calc(100% - 70px);
+  max-height: 100%;
 }
 
 .crg-close-icon {
