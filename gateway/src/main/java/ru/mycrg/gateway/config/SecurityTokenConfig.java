@@ -26,7 +26,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "HEAD", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Content-type"));
         configuration.setAllowCredentials(true);
