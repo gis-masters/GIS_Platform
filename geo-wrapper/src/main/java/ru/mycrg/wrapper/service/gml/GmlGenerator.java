@@ -95,7 +95,7 @@ public class GmlGenerator {
                 generateGmlDomModel(documentHolder, feature, resourceProjection);
                 generateLogDomModel(documentHolder, feature, resourceProjection);
             } else {
-                log.warn("Не найдено описание типа: " + tableName);
+                log.warn("Не найдено правило для: " + tableName);
             }
         });
 

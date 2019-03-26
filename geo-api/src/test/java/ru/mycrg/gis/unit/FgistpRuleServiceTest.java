@@ -1,40 +1,27 @@
 package ru.mycrg.gis.unit;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
-import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.service.fgistp.EntityType;
-import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-import static com.jayway.restassured.RestAssured.when;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doNothing;
 
 public class FgistpRuleServiceTest {
 
     @InjectMocks
     private FgistpRuleService ruleService;
-
-    @Mock
-    private CustomRuleRepository customRuleRepository;
-
-    @Mock
-    private ClassDefinitionParser parser;
 
     @Before
     public void setUp() {
@@ -78,7 +65,7 @@ public class FgistpRuleServiceTest {
     }
 
     @Test
-    public void shouldSplitFeatureByGeometry() {
+    public void shouldSplitFeatureByGeometry_PolygonPoint() {
         GeometryProperty geomProperty = new GeometryProperty();
         geomProperty.setAllowedValues(Arrays.asList("Polygon", "Point"));
 
@@ -128,6 +115,47 @@ public class FgistpRuleServiceTest {
         assertTrue(optionalProperty2.isPresent());
         assertEquals(1, optionalProperty2.get().getAllowedValues().size());
         assertTrue(optionalProperty2.get().getAllowedValues().contains("Point"));
+    }
+
+    @Test
+    @Ignore
+    public void shouldSplitFeatureByGeometry_CurveLineString() {
+        GeometryProperty geomProperty = new GeometryProperty();
+        geomProperty.setAllowedValues(Arrays.asList("Curve", "LineString"));
+
+        StringProperty sProperty = new StringProperty();
+        geomProperty.setName("some string prop");
+
+        EntityType electricLine = new EntityType();
+        electricLine.setName("ElectricLine_Type");
+        electricLine.setTitle("test title");
+        electricLine.setDescription("test description");
+        electricLine.setTableName("electricline");
+        electricLine.setProperties(Arrays.asList(geomProperty, sProperty));
+
+        FgistpRules targetRules = new FgistpRules();
+        targetRules.addComplexType(electricLine);
+
+        FgistpRules resultRules = ruleService.splitRulesByGeometry(targetRules);
+
+        // Common assert
+        assertNotNull(resultRules);
+        assertEquals(1, resultRules.getEntityTypes().size());
+
+        // Check table name
+        EntityType curveFeature = resultRules.getEntityTypes().get(0);
+        assertEquals("electricline", curveFeature.getTableName());
+
+        // Check geom property
+        Optional<GeometryProperty> optionalProperty1 = curveFeature.getProperties().stream()
+                .filter(AbstractProperty::isGeometry)
+                .findFirst()
+                .map(property -> (GeometryProperty) property);
+
+        assertTrue(curveFeature.getProperties().size() > 1);
+        assertTrue(optionalProperty1.isPresent());
+        assertEquals(1, optionalProperty1.get().getAllowedValues().size());
+        assertTrue(optionalProperty1.get().getAllowedValues().contains("LineString"));
     }
 
 }

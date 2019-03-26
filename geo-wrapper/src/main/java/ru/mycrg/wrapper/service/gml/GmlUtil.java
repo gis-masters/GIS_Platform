@@ -29,7 +29,7 @@ public class GmlUtil {
 
     public static Optional<EntityTypeDto> getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
         return entityTypes.stream()
-                .filter(entityType -> clearName(entityType.getName()).toLowerCase().equals(tableName.toLowerCase()))
+                .filter(entityType -> entityType.getName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst();
     }
 
