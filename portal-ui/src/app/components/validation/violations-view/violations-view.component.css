@@ -3,7 +3,7 @@
 }
 
 .fiz-inner {
-  overflow: hidden;
+  /*overflow: hidden;*/
   width: 100%;
   display: grid;
   grid-column-gap: 10px;

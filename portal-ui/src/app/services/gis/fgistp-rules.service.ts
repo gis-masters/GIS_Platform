@@ -126,37 +126,33 @@ export class FgistpRulesService {
   }
 
   /**
-   * По присланному с сервера типу ошибки сформируем его описание, выводимое пользователю.
+   * По присланному с сервера типу ошибки сформируем его короткое и неточное описание, выводимое пользователю,
+   * в выпадающем списке в таблице с ошибками.
    * @param errorTypes Тип ошибки
    */
   getErrorsDescription(errorTypes: string[]) {
-    // TODO: Решили передавать с сервера только тип ошибки а описание формировать на клиенте.
-    // Но если нужно описать ошибку более точно с указанием допустимых границ, например, то получается нужно снова лезть
-    // в правила и высматривать там эти значения (Если бы в момент валидации отдавать не тип ошибки а формировать
-    // сообщение то это бы делалось в одном месте, один раз. И пока не понятно как будет с кастомными правилами)
-
     const result = [];
 
     errorTypes.forEach(error => {
       if (error === 'enumeration') {
         result.push('Значение не соответствует справочному');
-      } else if (error === 'notDoubleType') {
+      } else if (error.toLowerCase().includes('notDoubleType'.toLowerCase())) {
         result.push('Значение не является дробным числом');
-      } else if (error === 'notLongType') {
+      } else if (error.toLowerCase().includes('notLongType'.toLowerCase())) {
         result.push('Значение не является целым числом');
-      } else if (error === 'maxInclusive') {
+      } else if (error.toLowerCase().includes('maxInclusive'.toLowerCase())) {
         result.push('Значение превышает допустимый максимум');
-      } else if (error === 'maxLength') {
+      } else if (error.toLowerCase().includes('maxLength'.toLowerCase())) {
         result.push('Строка превышает допустимую длинну');
-      } else if (error === 'minInclusive') {
-        result.push('Значение менее допустимого значения');
-      } else if (error === 'minLength') {
+      } else if (error.toLowerCase().includes('minInclusive'.toLowerCase())) {
+        result.push('Значение менее допустимого');
+      } else if (error.toLowerCase().includes('minLength'.toLowerCase())) {
         result.push('Строка слишком короткая');
-      } else if (error === 'pattern') {
+      } else if (error.toLowerCase().includes('pattern'.toLowerCase())) {
         result.push('Строка не соответствует паттерну');
-      } else if (error === 'required') {
+      } else if (error.toLowerCase().includes('required'.toLowerCase())) {
         result.push('Параметр обязателен к заполнению');
-      } else if (error === 'totalDigits') {
+      } else if (error.toLowerCase().includes('totalDigits'.toLowerCase())) {
         result.push('Превышено допустимое кол-в знаков');
       } else {
         result.push(error);
