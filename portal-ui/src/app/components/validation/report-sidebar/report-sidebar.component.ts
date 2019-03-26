@@ -72,7 +72,11 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
                     this.logger.warn('Cant get layer info', responses);
                   } else {
                     responses.forEach((response: ValidationResponse) => {
-                      this.commonInfo.set(response.resourceId.split(':')[2], response);
+                      if (response.status === 'ERROR') {
+                        this.logger.warn('Error for feature: ', response);
+                      } else {
+                        this.commonInfo.set(response.resourceId.split(':')[2], response);
+                      }
                     });
                   }
                 }, error => {
@@ -121,7 +125,11 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
             this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
           } else {
             responses.forEach((response: ValidationResponse) => {
-              this.commonInfo.set(response.resourceId.split(':')[2], response);
+              if (response.status === 'ERROR') {
+                this.logger.warn('Error for feature: ', response);
+              } else {
+                this.commonInfo.set(response.resourceId.split(':')[2], response);
+              }
             });
           }
         }, error => {
