@@ -6,7 +6,7 @@
                           (selectionChange)="handleSelection(fizLayers)">
         <div *ngIf="layers.length > 0">
           <mat-list-option class="example-box" style="height: 64px"
-                           *ngFor="let layer of layers" cdkDrag>
+                           *ngFor="let layer of layers" cdkDrag [value]="layer">
             <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
           </mat-list-option>
         </div>

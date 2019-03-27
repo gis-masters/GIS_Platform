@@ -50,25 +50,6 @@ export class FgistpRulesService {
     }
   }
 
-  public getLayerDescription(layerName: string): string {
-    if (!this.featuresXsdDefinition.xsdFeatures) {
-      return layerName;
-    }
-
-    return this.getFeatureByName(layerName).title;
-  }
-
-  public getNativeLayerNameByTitle(layerTitle: string) {
-    const featureByTitle = this.getFeatureByTitle(layerTitle);
-    if (featureByTitle) {
-      return featureByTitle.tableName;
-    } else {
-      this.logger.warn('Not found layer name by their title: ', layerTitle);
-
-      return layerTitle;
-    }
-  }
-
   public getFeatureByName(layerName: string): XsdFeature {
     if (!layerName) {
       return;
@@ -77,13 +58,6 @@ export class FgistpRulesService {
     return this.featuresXsdDefinition.xsdFeatures
       .find((feature: XsdFeature) => {
         return feature.name.toLowerCase().includes(layerName.toLowerCase());
-      });
-  }
-
-  private getFeatureByTitle(featureTitle: string): XsdFeature {
-    return this.featuresXsdDefinition.xsdFeatures
-      .find((feature: XsdFeature) => {
-        return feature.title.toLowerCase().includes(featureTitle.toLowerCase());
       });
   }
 

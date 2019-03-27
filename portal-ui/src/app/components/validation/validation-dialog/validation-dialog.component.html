@@ -6,10 +6,11 @@
     </button>
   </mat-form-field>
 
-  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange(fizLayers)" dense style="height: 330px">
-    <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm">
+  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange(fizLayers)"
+                      dense style="height: 330px">
+    <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm" [value]="layer">
       <span class="cut-text">
-        {{layer.title}}
+        {{handleTitle(layer)}}
       </span>
     </mat-list-option>
   </mat-selection-list>

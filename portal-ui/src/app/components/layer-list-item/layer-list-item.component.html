@@ -1,7 +1,8 @@
 <div>
   <div>{{layer.title}}</div>
-  <div>
-    <img [src]="imageToShow" alt="legend" height="20" width="20"
-        *ngIf="isImageLoaded">
-  </div>
+  <div>({{getGeometryType(layer.name)}})</div>
+<!--  <div>-->
+<!--    <img [src]="imageToShow" alt="legend" height="20" width="20"-->
+<!--        *ngIf="isImageLoaded">-->
+<!--  </div>-->
 </div>

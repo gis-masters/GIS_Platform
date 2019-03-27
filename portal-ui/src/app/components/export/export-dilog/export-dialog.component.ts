@@ -1,10 +1,11 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
+import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
-import {ActionType, CommunicationService, SidebarType} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/gis/export.service';
+import {ActionType, CommunicationService, SidebarType} from '../../../services/communication.service';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -65,14 +66,8 @@ export class ExportDialogComponent {
   }
 
   onChange(selectionList: MatSelectionList) {
-    this.selectedLayers = [];
-    selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => {
-        const title = selectedOption.getLabel();
-        const items = this.layers.find(value => value.title.trim().toLowerCase() === title.trim().toLowerCase());
-
-        this.selectedLayers.push(items);
-      });
+    this.selectedLayers = selectionList.selectedOptions.selected
+      .map((selectedOption: MatListOption) => selectedOption.value);
   }
 
   initValidation() {
@@ -90,6 +85,9 @@ export class ExportDialogComponent {
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 
+  handleTitle(crgLayer: CrgLayer) {
+    return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+  }
 }
 
 export interface GmlDialogData {

@@ -2,6 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
 import {WmsService} from '../../services/geoserver/wms.service';
 import {CrgLayer} from '../../services/geoserver/layers.service';
+import {StringUtil} from '../../services/util/StringUtil';
 
 @Component({
   selector: 'crg-layer-list-item',
@@ -39,4 +40,7 @@ export class LayerListItemComponent implements OnInit {
     }
   }
 
+  getGeometryType(name: string) {
+    return StringUtil.splitGeomType(name);
+  }
 }

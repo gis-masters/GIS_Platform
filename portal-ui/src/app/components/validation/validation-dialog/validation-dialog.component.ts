@@ -1,5 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
+import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
@@ -21,18 +22,16 @@ export class ValidationDialogComponent {
   }
 
   onChange(selectionList: MatSelectionList) {
-    this.selectedLayers = [];
-    selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => {
-        const title = selectedOption.getLabel();
-        const items = this.data.layers.find(value => value.title.trim().toLowerCase() === title.trim().toLowerCase());
-
-        this.selectedLayers.push(items);
-      });
+    this.selectedLayers = selectionList.selectedOptions.selected
+      .map((selectedOption: MatListOption) => selectedOption.value);
   }
 
   initValidation() {
     this.communicationService.selectedForValidation.emit(this.selectedLayers);
+  }
+
+  handleTitle(crgLayer: CrgLayer) {
+    return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
   }
 
 }

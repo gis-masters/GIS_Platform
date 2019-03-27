@@ -7,9 +7,9 @@
   <input class="form-control my-2" type="text" placeholder="Фильтр" [(ngModel)]="filterTerm">
 
   <mat-selection-list class="scroll" #gmlLayers (selectionChange)="onChange(gmlLayers)" dense style="height: 330px">
-    <mat-list-option *ngFor="let layer of layers | filterLayers:filterTerm">
+    <mat-list-option *ngFor="let layer of layers | filterLayers:filterTerm" [value]="layer">
       <span class="cut-text">
-        {{layer.title}}
+        {{handleTitle(layer)}}
       </span>
     </mat-list-option>
   </mat-selection-list>

@@ -57,11 +57,13 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   }
 
   handleSelection(selectionList: MatSelectionList) {
-    // Только выбранные галочкой элементы
-    const nameOfSelectedLayers = selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => {
-        return this.ruleService.getNativeLayerNameByTitle(selectedOption.getLabel());
-      });
+    let nameOfSelectedLayers: string[];
+    nameOfSelectedLayers = selectionList.selectedOptions.selected
+      .map((selectedOption: MatListOption) => selectedOption.value)
+      .map((layer: CrgLayer) => layer.name);
+
+    this.logger.info('------------------', nameOfSelectedLayers);
+
     this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }
 

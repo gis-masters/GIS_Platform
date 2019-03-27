@@ -17,4 +17,16 @@ export class StringUtil {
   static generateRandomId() {
     return Math.random().toString(36).substring(2, 8);
   }
+
+  static addGeometryTypeToTitle(title: string, featureName: string) {
+    return '(' + StringUtil.splitGeomType(featureName) + ') ' + title;
+  }
+
+  public static splitGeomType(featureName: string): string {
+    if (featureName.includes('_')) {
+      return featureName.split('_')[1];
+    } else {
+      return 'polygon';
+    }
+  }
 }

@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {AuthService} from '../../../services/auth.service';
+import {StringUtil} from '../../../services/util/StringUtil';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
@@ -152,5 +153,9 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   switchMode() {
     this.isEditMode = !this.isEditMode;
+  }
+
+  getGeometryType(name: string) {
+    return StringUtil.splitGeomType(name);
   }
 }
