@@ -29,12 +29,20 @@ public class FgistpRules {
     }
 
     public Optional<EntityType> getFeatureTypeByName(String name) {
+        Optional<EntityType> directComparison = entityTypes.stream()
+                .filter(featureType -> featureType.getName().toLowerCase().equals(name.toLowerCase()))
+                .findFirst();
+
+        if (directComparison.isPresent()) {
+            return directComparison;
+        }
+
         return entityTypes.stream()
-                .filter(featureType -> findFeature(name, featureType))
+                .filter(featureType -> findFeatureAdvance(name, featureType))
                 .findFirst();
     }
 
-    private boolean findFeature(String featureName, EntityType featureType) {
+    private boolean findFeatureAdvance(String featureName, EntityType featureType) {
         String targetName = featureType.getName().toLowerCase();
 
         if (targetName.contains(featureName.toLowerCase())) {
