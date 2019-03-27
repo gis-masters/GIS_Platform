@@ -137,10 +137,18 @@ public class ClassDefinitionParser {
             XSComplexTypeDecl xsComplexType = (XSComplexTypeDecl) value;
 
             EntityType entityType = new EntityType(xsComplexType.getName());
-            entityType.setTitle(fetchDescription(xsComplexType.getName(), elements));
+            fillNameAndTitle(entityType, xsComplexType.getName(), elements);
             entityType.setProperties(fetchSequences(xsComplexType));
 
-            fgistpRules.addComplexType(entityType);
+            if (entityType.getName() == null) {
+                log.warn("Feature has empty name: {}", xsComplexType.getName());
+            }
+
+            if (entityType.getTitle() == null) {
+                log.info("Feature has empty title: {}. Do not add it to list.", entityType.getName());
+            } else {
+                fgistpRules.addComplexType(entityType);
+            }
         });
     }
 
@@ -178,25 +186,11 @@ public class ClassDefinitionParser {
         if (term.getTypeDefinition() instanceof XSSimpleTypeDecl) {
             Optional<AbstractProperty> baseOptional = generateType((XSSimpleTypeDecl) term.getTypeDefinition());
             if (baseOptional.isPresent()) {
-                AbstractProperty property = baseOptional.get();
-                property.setName(term.getName());
-                property.setMultiple(element.getMinOccurs() > 0);
-
-                // Ложу сюда название простого типа из xsd схемы, для того чтобы оперется на эту инфу
-                // при вытягивании алиасов для всех перечислений из простых типов.
-                // После чего почищу описание...
-                property.setDescription(term.getTypeDefinition().getName());
-
-                if (term.getAnnotations().isEmpty()) {
-                    XSObjectList annotations = ((XSSimpleTypeDecl) term.getTypeDefinition()).getAnnotations();
-                    property.setTitle(handleAnnotation(annotations));
-                } else {
-                    property.setTitle(handleAnnotation(term.getAnnotations()));
-                }
-
-                return property;
+                return handleProperty(element, term, baseOptional.get());
             } else {
-                return null;
+                log.warn("cant define type for: {}", term.getName());
+
+                return handleProperty(element, term, new StringProperty());
             }
         } else {
             if (isGeometry(term.getName())) {
@@ -205,6 +199,25 @@ public class ClassDefinitionParser {
                 return null;
             }
         }
+    }
+
+    private AbstractProperty handleProperty(XSParticleDecl element, XSElementDecl term, AbstractProperty property) {
+        property.setName(term.getName());
+        property.setMultiple(element.getMinOccurs() > 0);
+
+        // Ложу сюда название простого типа из xsd схемы, для того чтобы оперется на эту инфу
+        // при вытягивании алиасов для всех перечислений из простых типов.
+        // После чего почищу описание...
+        property.setDescription(term.getTypeDefinition().getName());
+
+        if (term.getAnnotations().isEmpty()) {
+            XSObjectList annotations = ((XSSimpleTypeDecl) term.getTypeDefinition()).getAnnotations();
+            property.setTitle(handleAnnotation(annotations));
+        } else {
+            property.setTitle(handleAnnotation(term.getAnnotations()));
+        }
+
+        return property;
     }
 
     private boolean isGeometry(String name) {
@@ -306,16 +319,15 @@ public class ClassDefinitionParser {
         }
     }
 
-    private @NotNull String fetchDescription(String typeName, XSNamedMap elements) {
+    private void fillNameAndTitle(EntityType entityType, String typeName, XSNamedMap elements) {
         for (int i = 0; i < elements.getLength(); i++) {
             XSElementDecl xsElementDecl = (XSElementDecl) elements.item(i);
 
             if (typeName.contains(xsElementDecl.getName())) {
-                return handleAnnotation(xsElementDecl.getAnnotations());
+                entityType.setName(xsElementDecl.getName());
+                entityType.setTitle(handleAnnotation(xsElementDecl.getAnnotations()));
             }
         }
-
-        return "";
     }
 
     private @NotNull String handleAnnotation(XSObjectList annotations) {

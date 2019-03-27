@@ -2,6 +2,7 @@ package ru.mycrg.gis.unit;
 
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
+import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.EnumerationProperty;
@@ -28,8 +29,18 @@ public class XsdParserTest {
         // ASSERT
         List<EntityType> entityTypes = xsdRules.getEntityTypes();
 
+        EntityType education = entityTypes.stream()
+                .filter(fgistpClassType -> fgistpClassType.getName().equals("Education"))
+                .findFirst().get();
+        StringProperty nameProp = (StringProperty) education.getProperties().stream()
+                .filter(property -> property.getName().equals("NAME"))
+                .findFirst().get();
+
+        assertEquals("1", nameProp.getMinLength().toString());
+
+
         Optional<EntityType> functionalZone = entityTypes.stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().equals("FunctionalZone_Type"))
+                .filter(fgistpClassType -> fgistpClassType.getName().equals("FunctionalZone"))
                 .findFirst();
 
         assertFalse(entityTypes.isEmpty());
@@ -76,7 +87,7 @@ public class XsdParserTest {
         assertEquals(1, ((GeometryProperty) fzGeometry.get()).getAllowedValues().size());
 
         Optional<AbstractProperty> hGeometry = entityTypes.stream()
-                .filter(entityType -> entityType.getName().equals("Hydro_Type"))
+                .filter(entityType -> entityType.getName().equals("Hydro"))
                 .findFirst().get()
                 .getProperties().stream()
                 .filter(AbstractProperty::isGeometry)
