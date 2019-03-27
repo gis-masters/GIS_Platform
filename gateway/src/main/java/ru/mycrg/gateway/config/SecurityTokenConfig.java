@@ -1,7 +1,5 @@
 package ru.mycrg.gateway.config;
 
-import ru.mycrg.gateway.filters.AuthPreFilter;
-import ru.mycrg.gateway.filters.JwtTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -13,9 +11,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.mycrg.gateway.filters.AuthPreFilter;
+import ru.mycrg.gateway.filters.JwtTokenAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import java.util.Collections;
 
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
@@ -26,9 +26,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "HEAD", "DELETE", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Content-type"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

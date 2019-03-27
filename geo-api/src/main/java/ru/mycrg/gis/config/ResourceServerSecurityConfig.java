@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableResourceServer
-public class ResourceServerSecurityConfiguration extends ResourceServerConfigurerAdapter {
+public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
     private String SECRET;
