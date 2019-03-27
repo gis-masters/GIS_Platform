@@ -6,7 +6,7 @@ import {CrgLayer} from '../services/geoserver/layers.service';
 })
 export class FilterLayersPipe implements PipeTransform {
 
-  transform(layers: CrgLayer[], filterTerm: string): any {
+  transform(layers: CrgLayer[], filterTerm: string): CrgLayer[] {
     if (!layers || !filterTerm) {
       return layers;
     }
