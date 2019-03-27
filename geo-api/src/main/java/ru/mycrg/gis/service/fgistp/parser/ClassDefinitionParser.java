@@ -62,7 +62,6 @@ public class ClassDefinitionParser {
             addEnumerationAlias(fgistpRules, fetchEnumerationsAliasesFromXsdSimpleTypes(file));
             fillDescription(fgistpRules.getEntityTypes());
             joinGeometry(fgistpRules.getEntityTypes());
-            addDbTableName(fgistpRules.getEntityTypes());
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 ParserConfigurationException | IOException | SAXException e) {
             log.error("Error parse file: " + file.getName(), e);
@@ -137,7 +136,7 @@ public class ClassDefinitionParser {
             XSComplexTypeDecl xsComplexType = (XSComplexTypeDecl) value;
 
             EntityType entityType = new EntityType(xsComplexType.getName());
-            fillNameAndTitle(entityType, xsComplexType.getName(), elements);
+            fillOriginNameAndTitle(entityType, xsComplexType.getName(), elements);
             entityType.setProperties(fetchSequences(xsComplexType));
 
             if (entityType.getName() == null) {
@@ -190,7 +189,10 @@ public class ClassDefinitionParser {
             } else {
                 log.warn("cant define type for: {}", term.getName());
 
-                return handleProperty(element, term, new StringProperty());
+                StringProperty stringProperty = new StringProperty();
+                setStringValues((XSSimpleTypeDecl) term.getTypeDefinition(), stringProperty);
+
+                return handleProperty(element, term, stringProperty);
             }
         } else {
             if (isGeometry(term.getName())) {
@@ -319,13 +321,14 @@ public class ClassDefinitionParser {
         }
     }
 
-    private void fillNameAndTitle(EntityType entityType, String typeName, XSNamedMap elements) {
+    private void fillOriginNameAndTitle(EntityType entityType, String typeName, XSNamedMap elements) {
         for (int i = 0; i < elements.getLength(); i++) {
             XSElementDecl xsElementDecl = (XSElementDecl) elements.item(i);
 
             if (typeName.contains(xsElementDecl.getName())) {
-                entityType.setName(xsElementDecl.getName());
+                entityType.setOriginName(xsElementDecl.getName());
                 entityType.setTitle(handleAnnotation(xsElementDecl.getAnnotations()));
+                entityType.setTableName(xsElementDecl.getName().toLowerCase());
             }
         }
     }

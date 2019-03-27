@@ -14,6 +14,7 @@ public class EntityType {
     private String tableName;
     private List<AbstractProperty> properties = new ArrayList<>();
     private String customRuleFunction;
+    private String originName;
 
     public EntityType() {}
 
@@ -28,6 +29,7 @@ public class EntityType {
         this.tableName = entityType.getTableName();
         this.customRuleFunction = entityType.getCustomRuleFunction();
         this.properties = entityType.getProperties();
+        this.originName = entityType.getOriginName();
     }
 
     public void addProperty(AbstractProperty property) {
@@ -80,5 +82,13 @@ public class EntityType {
 
     public void setCustomRuleFunction(String customRuleFunction) {
         this.customRuleFunction = customRuleFunction;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
     }
 }

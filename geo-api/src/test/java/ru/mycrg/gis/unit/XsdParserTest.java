@@ -38,7 +38,6 @@ public class XsdParserTest {
 
         assertEquals("1", nameProp.getMinLength().toString());
 
-
         Optional<EntityType> functionalZone = entityTypes.stream()
                 .filter(fgistpClassType -> fgistpClassType.getName().equals("FunctionalZone"))
                 .findFirst();

@@ -111,7 +111,7 @@ public class GmlGenerator {
         Element logRootNode = docHolder.getLogRootNode();
 
         Element feature = logDocument.createElement("featureMember");
-        feature.setAttribute("name", fType.getName().split("_")[0]);
+        feature.setAttribute("name", fType.getOriginName());
 
         logRootNode.appendChild(feature);
 
@@ -150,7 +150,7 @@ public class GmlGenerator {
             // Обрабатываем партию данных из БД
             queue.poll().forEach(propFromDb -> {
                 String id = generateId();
-                Element featureMember = addFeatureMember(docHolder, clearName(feature.getName()), id);
+                Element featureMember = addFeatureMember(docHolder, feature.getOriginName(), id);
 
                 // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
                 feature.getProperties().stream()

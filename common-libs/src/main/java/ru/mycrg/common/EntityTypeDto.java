@@ -11,6 +11,7 @@ public class EntityTypeDto {
     private String tableName;
     private List<SimplePropertyDto> properties = new ArrayList<>();
     private String customRuleFunction = "";
+    private String originName;
 
     public EntityTypeDto() {}
 
@@ -64,5 +65,13 @@ public class EntityTypeDto {
 
     public void setCustomRuleFunction(String customRuleFunction) {
         this.customRuleFunction = customRuleFunction;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
     }
 }

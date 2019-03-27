@@ -39,6 +39,7 @@ public class MapperUtil {
     public static EntityTypeDto mapEntityTypeToDto(EntityType entityType) {
         EntityTypeDto dto = new EntityTypeDto();
         dto.setName(entityType.getName());
+        dto.setOriginName(entityType.getOriginName());
         dto.setTitle(entityType.getTitle());
         dto.setDescription(entityType.getDescription());
         dto.setTableName(entityType.getTableName());
@@ -110,6 +111,7 @@ public class MapperUtil {
         EntityType entityType = new EntityType();
 
         entityType.setName(dto.getName());
+        entityType.setOriginName(dto.getOriginName());
         entityType.setTitle(dto.getTitle());
         entityType.setDescription(dto.getDescription());
         entityType.setTableName(dto.getTableName());

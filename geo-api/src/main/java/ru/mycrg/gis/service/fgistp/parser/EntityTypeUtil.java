@@ -38,19 +38,6 @@ public class EntityTypeUtil {
         });
     }
 
-    public static void addDbTableName(List<EntityType> entityTypes) {
-        entityTypes.forEach(entityType -> {
-            String tableName = null;
-            try {
-                tableName = entityType.getName().split("_")[0].toLowerCase();
-            } catch (Exception e) {
-                log.warn("Неудалось преобразовать имя типа в имя таблицы БД");
-            }
-
-            entityType.setTableName(tableName);
-        });
-    }
-
     public static void joinGeometry(List<EntityType> entityTypes) {
         entityTypes.forEach(entityType -> {
             long geometryCounter = entityType.getProperties().stream()
