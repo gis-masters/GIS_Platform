@@ -76,8 +76,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
                 return layer.layer as LayerItem;
               });
-
-          this.logger.info('All Import Layers: ', this.layers);
         });
 
     this.importFlow.work_import.tasks$

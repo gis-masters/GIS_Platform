@@ -61,8 +61,6 @@ export class ImportService {
   addTask(url: string, file: File): Observable<any> {
     const tasksUrl = url + '/tasks';
 
-    this.logger.info('Add task by url: ', tasksUrl, file.name);
-
     this.importFlow.file = file;
     const formData = new FormData();
     formData.append('name', file.name);
