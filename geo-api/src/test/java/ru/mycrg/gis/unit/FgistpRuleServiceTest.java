@@ -40,6 +40,7 @@ public class FgistpRuleServiceTest {
 
         EntityType electricPointFeature = new EntityType();
         electricPointFeature.setName(epFeatureName);
+        electricPointFeature.setOriginName(epFeatureName);
 
         FgistpRules fgistpRules = new FgistpRules();
         fgistpRules.addComplexType(electricPointFeature);
@@ -54,6 +55,7 @@ public class FgistpRuleServiceTest {
 
         EntityType HydroFeature = new EntityType();
         HydroFeature.setName(featureName);
+        HydroFeature.setOriginName(featureName);
 
         FgistpRules fgistpRules = new FgistpRules();
         fgistpRules.addComplexType(HydroFeature);
