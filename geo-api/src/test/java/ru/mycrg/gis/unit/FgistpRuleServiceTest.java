@@ -120,7 +120,6 @@ public class FgistpRuleServiceTest {
     }
 
     @Test
-    @Ignore
     public void shouldSplitFeatureByGeometry_CurveLineString() {
         GeometryProperty geomProperty = new GeometryProperty();
         geomProperty.setAllowedValues(Arrays.asList("Curve", "LineString"));
@@ -146,7 +145,7 @@ public class FgistpRuleServiceTest {
 
         // Check table name
         EntityType curveFeature = resultRules.getEntityTypes().get(0);
-        assertEquals("electricline", curveFeature.getTableName());
+        assertEquals("electricline_line", curveFeature.getTableName());
 
         // Check geom property
         Optional<GeometryProperty> optionalProperty1 = curveFeature.getProperties().stream()

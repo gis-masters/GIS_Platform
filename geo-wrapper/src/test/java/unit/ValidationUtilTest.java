@@ -41,7 +41,6 @@ public class ValidationUtilTest {
     }
 
     @Test
-    @Ignore
     public void shouldTestEncoding() {
         String windows1251 = "Ð¡Ñ\u0080ÐµÐ´Ð½ÐµÑ\u008DÑ\u0082Ð°Ð¶ÐºÐ° - Ð³Ð´Ðµ ÐµÑ\u0081Ñ\u0082Ñ\u008C,, " +
                 "Ð¼Ð°Ð»Ð¾Ñ\u008DÑ\u0082Ð°Ð¶ÐºÐ° Ð³Ð´Ðµ Ð¼Ð¾Ð¶Ð½Ð¾";
@@ -50,10 +49,8 @@ public class ValidationUtilTest {
                 "¡â\u0080\u009AÐ Â°Ð Â¶Ð Ñ\u0094Ð Â° Ð Ñ\u0096Ð Ò\u0091Ð Âµ Ð Ñ\u0098Ð Ñ\u0095Ð Â¶Ð Ð\u0085Ð Ñ\u0095";
 
         String eWindows1251 = new String(windows1251.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-        String encodedUtf8 = new String(utf8.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
         assertEquals("Среднеэтажка - где есть,, малоэтажка где можно", eWindows1251);
-        assertEquals("Среднеэтажка - где есть,, малоэтажка где можно", encodedUtf8);
     }
 
     @Test
