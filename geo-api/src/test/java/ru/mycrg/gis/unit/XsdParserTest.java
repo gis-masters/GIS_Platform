@@ -29,8 +29,14 @@ public class XsdParserTest {
         // ASSERT
         List<EntityType> entityTypes = xsdRules.getEntityTypes();
 
+        Optional<EntityType> gasPipeline = entityTypes.stream()
+                .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("GasPipeline"))
+                .findFirst();
+        assertTrue(gasPipeline.isPresent());
+
+        // Check Education
         EntityType education = entityTypes.stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().equals("Education"))
+                .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("Education"))
                 .findFirst().get();
         StringProperty nameProp = (StringProperty) education.getProperties().stream()
                 .filter(property -> property.getName().equals("NAME"))
@@ -38,8 +44,9 @@ public class XsdParserTest {
 
         assertEquals("1", nameProp.getMinLength().toString());
 
+        // Check FunctionalZone
         Optional<EntityType> functionalZone = entityTypes.stream()
-                .filter(fgistpClassType -> fgistpClassType.getName().equals("FunctionalZone"))
+                .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("FunctionalZone"))
                 .findFirst();
 
         assertFalse(entityTypes.isEmpty());
@@ -86,7 +93,7 @@ public class XsdParserTest {
         assertEquals(1, ((GeometryProperty) fzGeometry.get()).getAllowedValues().size());
 
         Optional<AbstractProperty> hGeometry = entityTypes.stream()
-                .filter(entityType -> entityType.getName().equals("Hydro"))
+                .filter(entityType -> entityType.getOriginName().equals("Hydro"))
                 .findFirst().get()
                 .getProperties().stream()
                 .filter(AbstractProperty::isGeometry)

@@ -28,13 +28,28 @@ public class FgistpRules {
         this.entityTypes = entityTypes;
     }
 
+    /**
+     * Ищет фичу и по name и по originName
+     *
+     * @param name Название фичи
+     */
     public Optional<EntityType> getFeatureTypeByName(String name) {
-        Optional<EntityType> directComparison = entityTypes.stream()
+        // Find By Name
+        Optional<EntityType> directComparisonByName = entityTypes.stream()
                 .filter(featureType -> featureType.getName().toLowerCase().equals(name.toLowerCase()))
                 .findFirst();
 
-        if (directComparison.isPresent()) {
-            return directComparison;
+        if (directComparisonByName.isPresent()) {
+            return directComparisonByName;
+        }
+
+        // Find By originName
+        Optional<EntityType> directComparisonByOriginName = entityTypes.stream()
+                .filter(featureType -> featureType.getOriginName().toLowerCase().equals(name.toLowerCase()))
+                .findFirst();
+
+        if (directComparisonByOriginName.isPresent()) {
+            return directComparisonByOriginName;
         }
 
         return entityTypes.stream()

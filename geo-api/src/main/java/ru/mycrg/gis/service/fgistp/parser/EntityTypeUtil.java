@@ -1,5 +1,6 @@
 package ru.mycrg.gis.service.fgistp.parser;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.gis.service.fgistp.EntityType;
@@ -15,6 +16,20 @@ import static ru.mycrg.common.enums.ValueType.CHOICE;
 public class EntityTypeUtil {
 
     private static Logger log = LoggerFactory.getLogger(EntityTypeUtil.class);
+
+    public static String removePostfix(@NotNull String name) {
+        if (!name.contains("_")) {
+            return name;
+        }
+
+        String[] splited = name.split("_");
+
+        if (splited[0] != null) {
+            return splited[0];
+        }
+
+        return name;
+    }
 
     /**
      * Разделим title вида: Класс объектов «Функциональные зоны» <p>

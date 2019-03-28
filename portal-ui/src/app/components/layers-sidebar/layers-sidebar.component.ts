@@ -62,8 +62,6 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
       .map((selectedOption: MatListOption) => selectedOption.value)
       .map((layer: CrgLayer) => layer.name);
 
-    this.logger.info('------------------', nameOfSelectedLayers);
-
     this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }
 

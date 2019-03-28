@@ -322,10 +322,12 @@ public class ClassDefinitionParser {
     }
 
     private void fillOriginNameAndTitle(EntityType entityType, String typeName, XSNamedMap elements) {
+        String featureName = removePostfix(typeName);
+
         for (int i = 0; i < elements.getLength(); i++) {
             XSElementDecl xsElementDecl = (XSElementDecl) elements.item(i);
 
-            if (typeName.contains(xsElementDecl.getName())) {
+            if (featureName.toLowerCase().equals(xsElementDecl.getName().toLowerCase())) {
                 entityType.setOriginName(xsElementDecl.getName());
                 entityType.setTitle(handleAnnotation(xsElementDecl.getAnnotations()));
                 entityType.setTableName(xsElementDecl.getName().toLowerCase());

@@ -13,23 +13,9 @@ import java.util.Optional;
 
 public class GmlUtil {
 
-    public static String clearName(@NotNull String name) {
-        if (!name.contains("_")) {
-            return name;
-        }
-
-        String[] splited = name.split("_");
-
-        if (splited[0] != null) {
-            return splited[0];
-        }
-
-        return name;
-    }
-
     public static Optional<EntityTypeDto> getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
         return entityTypes.stream()
-                .filter(entityType -> entityType.getName().toLowerCase().equals(tableName.toLowerCase()))
+                .filter(entityType -> entityType.getTableName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst();
     }
 
