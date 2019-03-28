@@ -1,7 +1,6 @@
 package ru.mycrg.gis.unit;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;

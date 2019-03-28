@@ -2,15 +2,12 @@ package unit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.util.Lists;
-import org.junit.Ignore;
 import org.junit.Test;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

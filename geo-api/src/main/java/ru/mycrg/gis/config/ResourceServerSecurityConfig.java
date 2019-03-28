@@ -1,6 +1,5 @@
 package ru.mycrg.gis.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +19,11 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
     private String SECRET;
 
-    @Autowired
-    TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-    @Autowired
-    JwtAccessTokenConverter accessTokenConverter;
+    public ResourceServerSecurityConfig(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

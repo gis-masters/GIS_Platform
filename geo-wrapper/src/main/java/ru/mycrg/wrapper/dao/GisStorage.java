@@ -198,15 +198,6 @@ public class GisStorage {
         });
     }
 
-    public boolean isColumnExist(JdbcTemplate jdbcTemplate, String tableName, String columnName) {
-        String sqlRequest = String.format("SELECT * FROM information_schema.columns WHERE table_name='%s' and " +
-                "column_name='%s'", tableName, columnName);
-
-        List<Map<String, Object>> result = jdbcTemplate.queryForList(sqlRequest);
-
-        return !result.isEmpty();
-    }
-
     public JdbcTemplate initConnection(final String dbName) {
         return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
     }
@@ -244,16 +235,6 @@ public class GisStorage {
         });
     }
 
-    public void saveBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> batch) {
-        batch.forEach(item -> {
-            String sqlInsert = generateInsertRequest(target, item);
-
-            log.trace("update SQL: {}", sqlInsert);
-
-            jdbcTemplate.update(sqlInsert);
-        });
-    }
-
     private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {
         final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
@@ -264,27 +245,6 @@ public class GisStorage {
         });
 
         return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get("objectid");
-    }
-
-    private String generateInsertRequest(ResourceProjection target, Map<String, Object> item) {
-        String sql = String.format("INSERT INTO %s.%s(GENERATED_KEYS) VALUES(GENERATED_VALUES);",
-                target.getSchemaName(),
-                target.getTableName());
-
-        final String[] keysString = {""};
-        final String[] valuesString = {""};
-        item.forEach((key, value) -> {
-            keysString[0] = keysString[0] + key + ", ";
-            valuesString[0] = valuesString[0] + "'" + value + "',";
-        });
-
-        String keySubstring = keysString[0].substring(0, keysString[0].length() - 2);
-        String valueSubstring = valuesString[0].substring(0, valuesString[0].length() - 2);
-
-        String insertKeys = sql.replace("GENERATED_KEYS", (CharSequence) keySubstring);
-        String result = insertKeys.replace("GENERATED_VALUES", valueSubstring);
-
-        return result;
     }
 
     private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {

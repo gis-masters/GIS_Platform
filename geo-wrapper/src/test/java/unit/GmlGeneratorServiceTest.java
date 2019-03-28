@@ -3,9 +3,9 @@ package unit;
 import org.geotools.geometry.jts.WKTReader2;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.ParseException;
 import org.mockito.Mock;
-import org.locationtech.jts.geom.Polygon;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import ru.mycrg.common.EntityTypeDto;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 
 public class GmlGeneratorServiceTest {
 

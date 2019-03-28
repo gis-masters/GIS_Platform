@@ -45,7 +45,6 @@ public class RulesService extends GeoServerBaseService {
      * "/**:GET": "ROLE_ADMINISTRATOR",
      *
      * @param role Наименование роли
-     * @throws IOException
      */
     public void addRestRule(String role) throws IOException {
         log.info("addRestRule for Role: {}", role);

@@ -6,7 +6,6 @@ import ru.mycrg.common.enums.ProcessStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ValidationResponseDto {
 

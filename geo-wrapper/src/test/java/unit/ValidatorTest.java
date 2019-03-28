@@ -1,8 +1,8 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.ValueTitleProjection;
@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ValidatorTest {
 

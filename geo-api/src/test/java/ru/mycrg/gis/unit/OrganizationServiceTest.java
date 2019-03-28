@@ -15,7 +15,6 @@ import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
