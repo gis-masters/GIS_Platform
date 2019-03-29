@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+REPO_SERVER=10.10.10.165:5000
+TAG=latest
+WEB_SERVICE=crg-ui
+WEB_IMAGE=$REPO_SERVER/$WEB_SERVICE:$TAG
