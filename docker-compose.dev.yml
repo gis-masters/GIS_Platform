@@ -25,4 +25,4 @@ services:
     build: gateway
 
   portal-ui:
-    build: portal-ui
+    build: crg-ui

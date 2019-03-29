@@ -130,7 +130,7 @@ services:
         max-file: "10"
 
   portal-ui:
-    container_name: portal-ui
+    container_name: crg-ui
     image: $DOCKER_CRG_HOST/portal-ui
     restart: always
     depends_on:
