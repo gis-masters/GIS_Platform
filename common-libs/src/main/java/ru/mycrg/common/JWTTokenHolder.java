@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.dto;
+package ru.mycrg.common;
 
 public class JWTTokenHolder {
 

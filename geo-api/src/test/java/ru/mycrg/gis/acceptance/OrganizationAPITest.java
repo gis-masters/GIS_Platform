@@ -1,57 +1,99 @@
 package ru.mycrg.gis.acceptance;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.specification.RequestSpecification;
+import okhttp3.*;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.context.WebApplicationContext;
+import ru.mycrg.common.JWTTokenHolder;
+import ru.mycrg.gis.config.CrgProperties;
 import ru.mycrg.gis.util.Util;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.when;
+import static com.jayway.restassured.RestAssured.*;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertNotNull;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = CrgProperties.class)
+@ActiveProfiles(profiles = "fiz-dev")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OrganizationAPITest {
 
+    @Autowired
+    WebApplicationContext context;
+
+    @Autowired
+    private CrgProperties crgProperties;
+
+    private static final Logger log = LoggerFactory.getLogger(OrganizationAPITest.class);
+
+    private static JWTTokenHolder jwtToken;
+    private static RequestSpecification requestJwt;
+
     @BeforeClass
     public static void setup() {
-        RestAssured.baseURI = "http://10.10.10.112";
+        RestAssured.baseURI = "http://127.0.0.1";
         RestAssured.port = 8088;
         RestAssured.basePath = "/organizations";
     }
 
     @Test
-    public void aa_ShouldGetOk() {
-        when()
-            .get()
-        .then().statusCode(200)
-            .and()
-            .body(containsString("content"));
+    public void aa_ShouldGetOk() throws IOException {
+        log.info("+++++++++++++++++++ {}", context.getApplicationName());
+
+        jwtToken = getJwtToken();
+
+        assertNotNull(jwtToken);
+
+        requestJwt = RestAssured.given()
+                .headers("Authorization", "Bearer " + jwtToken.getAccess_token(), "Content-Type",
+                        ContentType.JSON, "Accept", ContentType.JSON);
+
+        requestJwt
+            .when()
+                .get()
+            .then().statusCode(200)
+                .and()
+                .body(containsString("content"));
     }
 
     @Test
     public void ab_ShouldResponse404_GetNotExistResource() {
-        when()
-            .get("/314")
-        .then()
-            .statusCode(404);
+        requestJwt
+            .when()
+                .get("/314")
+            .then()
+                .statusCode(404);
     }
 
     @Test
     public void ac_ShouldResponse404_DeleteNotExistResource() {
-        when()
-            .delete("/314")
-        .then()
-            .statusCode(404);
+        requestJwt
+            .when()
+                .delete("/314")
+            .then()
+                .statusCode(404);
     }
 
     @Test
@@ -77,29 +119,32 @@ public class OrganizationAPITest {
 
     @Test
     public void af_ShouldGetExistingResource() {
-        when()
-            .get("/1")
-        .then()
-            .statusCode(200)
-        .and()
-            .body("name", equalTo("organization name"))
-            .body("status", equalTo("PENDING"));
+        requestJwt
+            .when()
+                .get("/1")
+            .then()
+                .statusCode(200)
+            .and()
+                .body("name", equalTo("organization name"))
+                .body("status", equalTo("PENDING"));
     }
 
     @Test
     public void ag_ShouldDeleteExistingResource() {
-        when()
-            .delete("/1")
-        .then()
-            .statusCode(200);
+        requestJwt
+            .when()
+                .delete("/1")
+            .then()
+                .statusCode(200);
     }
 
     @Test
     public void ah_CheckThatTheResourceIsDeleted() {
-        when()
-            .get("/1")
-        .then()
-            .statusCode(404);
+        requestJwt
+            .when()
+                .get("/1")
+            .then()
+                .statusCode(404);
     }
 
     @Test
@@ -111,20 +156,23 @@ public class OrganizationAPITest {
 
     @Test
     public void cc_ShouldGet20_OrganizationsDefaultPaging() {
-        when()
-            .get()
-        .then()
-            .statusCode(200)
-        .and()
-            .body("size", equalTo(20))
-            .body("number", equalTo(0))
-            .body("first", equalTo(true))
-            .body("content", hasSize(20));
+        requestJwt
+            .when()
+                .get()
+            .then()
+                .statusCode(200)
+            .and()
+                .body("size", equalTo(20))
+                .body("number", equalTo(0))
+                .body("first", equalTo(true))
+                .body("content", hasSize(20));
     }
 
     @Test
     public void ci_ShouldGet5_OrganizationsDefaultPaging() {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .param("size", 5)
             .param("sort", "desc")
         .when()
@@ -141,10 +189,11 @@ public class OrganizationAPITest {
 
     @Test
     public void dd_CheckResponseTime() {
-        when()
-            .get().
-        then()
-            .time(lessThan(500L), MILLISECONDS);
+        requestJwt
+            .when()
+                .get().
+            then()
+                .time(lessThan(500L), MILLISECONDS);
     }
 
     @Test
@@ -156,16 +205,19 @@ public class OrganizationAPITest {
 
     @Test
     public void ee_OrganizationStatus_ShouldBe_Ready() {
-        when()
-            .get("/2")
-        .then().statusCode(200)
-            .and()
-            .body("status", equalTo("READY"));
+        requestJwt
+            .when()
+                .get("/2")
+            .then().statusCode(200)
+                .and()
+                .body("status", equalTo("READY"));
     }
 
     @Test
     public void ff_ShouldCheck_workspaces_via_geoserverAPI() {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
             .basePath("/geoserver/rest/workspaces.json")
         .when()
@@ -178,8 +230,9 @@ public class OrganizationAPITest {
 
     @Test
     public void fl_ShouldCheck_Roles_via_geoserverAPI() {
-
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
             .basePath("/geoserver/rest/security/roles.json")
         .when()
@@ -193,6 +246,8 @@ public class OrganizationAPITest {
     @Test
     public void fo_ShouldCheck_Users_via_geoserverAPI() {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
             .basePath("/geoserver/rest/security/usergroup/users.json")
         .when()
@@ -206,6 +261,8 @@ public class OrganizationAPITest {
     @Test
     public void fr_ShouldCheck_DataStores_via_geoserverAPI() {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
             .basePath("/geoserver/rest/workspaces/workspace_2/datastores.json")
         .when()
@@ -219,6 +276,8 @@ public class OrganizationAPITest {
     @Test
     public void ga_ImportExtension_ShouldBeActive() {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
             .basePath("/geoserver/rest/imports")
         .when()
@@ -229,6 +288,8 @@ public class OrganizationAPITest {
 
     private void createAndCheckStatus(Map<String, Object> organization, int statusCode) {
         given()
+            .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
+                    ContentType.JSON, "Accept", ContentType.JSON)
             .accept(ContentType.JSON)
             .contentType(ContentType.JSON)
             .body(organization)
@@ -236,6 +297,38 @@ public class OrganizationAPITest {
             .post()
         .then()
             .statusCode(statusCode);
+    }
+
+    private static JWTTokenHolder getJwtToken() throws IOException {
+        JWTTokenHolder jwtTokenHolder;
+        String username = "admin";
+        String password = "geoserver";
+
+        MediaType mediaType = MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
+        RequestBody body = RequestBody.create(mediaType, "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
+                "Content-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n" +
+                "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
+                "Content-Disposition: form-data; name=\"username\"\r\n\r\n" + username
+                + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
+                "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
+                + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
+        Request request = new Request.Builder()
+                .url("http://127.0.0.1:8100/oauth/token")
+                .header("Authorization", Credentials.basic(username, password))
+                .header("Content-type", "multipart/form-data")
+                .header("cache-control", "no-cache")
+                .post(body)
+                .build();
+
+        OkHttpClient httpClient = new OkHttpClient();
+        Response response = httpClient.newCall(request).execute();
+
+        ObjectMapper mapper = new ObjectMapper();
+        jwtTokenHolder = mapper.readValue(response.body().string(), JWTTokenHolder.class);
+
+        response.close();
+
+        return jwtTokenHolder;
     }
 
 }
