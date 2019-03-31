@@ -29,15 +29,22 @@ public class XsdParserTest {
         // ASSERT
         List<EntityType> entityTypes = xsdRules.getEntityTypes();
 
+        entityTypes.forEach(entityType -> {
+            System.out.println("=== " + entityType.getOriginName());
+        });
+
         Optional<EntityType> gasPipeline = entityTypes.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("GasPipeline"))
                 .findFirst();
         assertTrue(gasPipeline.isPresent());
 
         // Check Education
-        EntityType education = entityTypes.stream()
+        Optional<EntityType> oEducation = entityTypes.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("Education"))
-                .findFirst().get();
+                .findFirst();
+        assertTrue(oEducation.isPresent());
+
+        EntityType education = oEducation.get();
         StringProperty nameProp = (StringProperty) education.getProperties().stream()
                 .filter(property -> property.getName().equals("NAME"))
                 .findFirst().get();
