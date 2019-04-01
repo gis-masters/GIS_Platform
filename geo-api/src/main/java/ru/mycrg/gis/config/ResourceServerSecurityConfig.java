@@ -33,6 +33,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/organizations", "/organizations/").permitAll()
+                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                 .anyRequest().authenticated();
     }
 

@@ -8,3 +8,4 @@ if [ "$(docker images $REPO_SERVER/$WEB_SERVICE | awk '{print $2}' | grep $TAG)"
 else
   echo удаление образа $WEB_IMAGE : образ не найден
 fi
+
