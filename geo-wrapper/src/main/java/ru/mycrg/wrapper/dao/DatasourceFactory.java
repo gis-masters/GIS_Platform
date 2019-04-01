@@ -66,4 +66,18 @@ public class DatasourceFactory {
     public JdbcTemplate getInitialJdbcTemplate() {
         return jdbcTemplate;
     }
+
+    public void removeDatasourceByDbName(String name) {
+        log.debug("Remove datasource for DB: {}", name);
+
+        HikariDataSource dataSourceByName = dataSources.get(name);
+
+        if (dataSourceByName != null) {
+            if (!dataSourceByName.isClosed()) {
+                dataSourceByName.close();
+            }
+
+            dataSources.remove(name);
+        }
+    }
 }

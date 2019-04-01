@@ -44,6 +44,8 @@ public class GisStorage {
         // Подсоединяемся к только что созданной БД и создаем расширние postgis
         initConnection(dbName).execute("CREATE EXTENSION postgis;");
 
+        datasourceFactory.removeDatasourceByDbName(dbName);
+
         log.debug("Successfully created");
     }
 
