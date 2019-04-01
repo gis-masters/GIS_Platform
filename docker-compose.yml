@@ -128,7 +128,6 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-        path: /opt/logs/wrapper
 
   portal-ui:
     container_name: crg-ui
