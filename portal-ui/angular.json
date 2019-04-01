@@ -57,6 +57,30 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
@@ -68,6 +92,9 @@
           "configurations": {
             "production": {
               "browserTarget": "gis-portal:build:production"
+            },
+            "test": {
+              "browserTarget": "gis-portal:build:test"
             }
           }
         },
