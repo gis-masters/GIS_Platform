@@ -37,8 +37,8 @@ export class WsService {
   connect() {
     this.logger.info('Attempt to CONNECT');
 
-    const socket = new SockJS(this.propertiesService.wsUrl + '?access_token=' + this.storageService.getAccessToken());
-    // const socket = new SockJS('http://localhost:8088/crg-ws-endpoint?access_token=' + this.storageService.getAccessToken());
+    // const socket = new SockJS(this.propertiesService.wsUrl + '?access_token=' + this.storageService.getAccessToken());
+    const socket = new SockJS('http://10.10.10.121:8088/crg-ws-endpoint?access_token=' + this.storageService.getAccessToken());
 
     this.stompClient = Stomp.over(socket);
 
