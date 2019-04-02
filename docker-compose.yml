@@ -50,6 +50,8 @@ services:
     restart: always
     ports:
       - 8761:8761
+    volumes:
+      - /opt/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -61,6 +63,8 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
+    volumes:
+      - /opt/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -74,6 +78,8 @@ services:
       - registry
     ports:
       - 8100:8100
+    volumes:
+      - /opt/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -100,6 +106,7 @@ services:
     volumes:
       - /opt/fgistp:/opt/fgistp
       - /opt/gml:/opt/gml
+      - /opt/logs:/opt/logs
     depends_on:
       - database
       - rabbitmq
@@ -129,6 +136,7 @@ services:
     volumes:
       - /opt/fgistp:/opt/fgistp
       - /opt/gml:/opt/gml
+      - /opt/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
