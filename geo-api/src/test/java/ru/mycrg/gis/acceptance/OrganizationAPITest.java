@@ -233,7 +233,7 @@ public class OrganizationAPITest {
         .then()
             .statusCode(200)
         .and()
-            .body("users.userName", hasItems("Admin13", "Admin23", "Admin29"));
+            .body("users.userName", hasItems("admin", "Admin13", "Admin23", "Admin29"));
     }
 
     @Test
