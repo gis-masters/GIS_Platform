@@ -43,6 +43,7 @@ public class GeoServer implements IGeoServer {
         rulesService.addRestRule(roleName);
 
         gisStorage.createDb("database_" + id);
+        gisStorage.initP10Database("database_" + id, "public");
 
         storageService.createStorage(workspaceName, GeoServerConstants.DEFAULT_DATASTORE_NAME + "_" + id, databaseName);
     }

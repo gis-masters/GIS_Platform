@@ -1,12 +1,17 @@
 package ru.mycrg.wrapper.dao;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.ScriptException;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
@@ -15,6 +20,10 @@ import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.wrapper.service.validation.Util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -235,6 +244,37 @@ public class GisStorage {
 
             jdbcTemplate.update(sqlUpdate);
         });
+    }
+
+    public void initP10Database(String dbName, String schemaName) {
+        log.debug("Инициализация шаблонной БД");
+
+        try {
+            HikariDataSource datasource = datasourceFactory.getDatasource(dbName);
+
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+            String checkSchemaSql = "SELECT count(*) FROM pg_namespace WHERE nspname = '" + schemaName + "'";
+            int result = jdbcTemplate.queryForObject(checkSchemaSql, Integer.class);
+
+            if (result > 0) {
+                log.info("Схема существует, инициализация не требуется");
+            } else {
+                File schemaFile = ResourceUtils.getFile("classpath:db/p10Template.sql");
+                File dataFile = ResourceUtils.getFile("classpath:db/data.sql");
+
+                // Create schema
+                ScriptUtils.executeSqlScript(datasource.getConnection(), new UrlResource(schemaFile.toURI()));
+
+                // Insert data
+                ScriptUtils.executeSqlScript(datasource.getConnection(), new UrlResource(dataFile.toURI()));
+            }
+        } catch (SQLException e) {
+            log.error("Неудалось подключится к БД: gis / {}", e.getLocalizedMessage());
+        } catch (MalformedURLException | FileNotFoundException e) {
+            log.error("Неудалось открыть файл с шаблоном БД по 10 приказу. {}", e.getLocalizedMessage());
+        } catch (ScriptException e) {
+            log.error("Ошибка при выполнении скрипта: {}", e.getLocalizedMessage());
+        }
     }
 
     private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {

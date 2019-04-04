@@ -176,8 +176,9 @@ public class OrganizationAPITest {
     @Test
     public void dx_pause() throws InterruptedException {
         // Ждем создания всех организаций. На домашнем ПК(8 ядер) примерно 40 сек.
-        // Оснавная задержа, более секунды, при создании "EXTENSION postgis" в БД
-        Thread.sleep(150_000L);
+        // Задержа, более секунды, при создании "EXTENSION postgis" в БД
+        // Добавилось развертываение шаблонной БД около 20 сек
+        Thread.sleep(300_000L);
     }
 
     @Test
