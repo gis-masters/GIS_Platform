@@ -90,8 +90,6 @@ CREATE TABLE fiz.admemo_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.admemo_extension OWNER TO fiz;
 
 --
@@ -106,23 +104,9 @@ CREATE SEQUENCE fiz.admemo_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.admemo_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8817 (class 0 OID 0)
--- Dependencies: 229
--- Name: admemo_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.admemo_objectid_seq OWNED BY fiz.admemo.objectid;
 
-
---
-
--- Name: admenp; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.admenp (
     objectid integer NOT NULL,
@@ -1746,14 +1730,7 @@ CREATE TABLE fiz.cemetery (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.cemetery OWNER TO fiz;
-
---
-
--- Name: cemetery_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.cemetery_extension (
     object_id integer NOT NULL,
@@ -5065,14 +5042,7 @@ CREATE TABLE fiz.fses_stype (
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fses_stype OWNER TO fiz;
-
---
-
--- Name: fses_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fses_stype_objectid_seq
     AS integer
@@ -5081,37 +5051,15 @@ CREATE SEQUENCE fiz.fses_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fses_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8911 (class 0 OID 0)
--- Dependencies: 459
--- Name: fses_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fses_stype_objectid_seq OWNED BY fiz.fses_stype.objectid;
-
-
---
-
--- Name: fuel_type; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.fuel_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fuel_type OWNER TO fiz;
-
---
-
--- Name: fuel_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fuel_type_objectid_seq
     AS integer
@@ -5121,23 +5069,108 @@ CREATE SEQUENCE fiz.fuel_type_objectid_seq
     NO MAXVALUE
     CACHE 1;
 
-
 ALTER TABLE fiz.fuel_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8912 (class 0 OID 0)
--- Dependencies: 461
--- Name: fuel_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fuel_type_objectid_seq OWNED BY fiz.fuel_type.objectid;
 
 
 --
+CREATE TABLE fiz.street_line (
+    objectid integer NOT NULL,
+    classid integer,
+    number character varying(254),
+    name character varying(254),
+    address character varying(254),
+    str_r_type smallint,
+    str_l_type smallint,
+    surface_exist smallint,
+    surface_plan smallint,
+    function character varying(254),
+    event_time integer,
+    source character varying(254),
+    note character varying(254),
+    status smallint,
+    reg_status smallint,
+    shape public.geometry,
+    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+);
+ALTER TABLE fiz.street_line OWNER to fiz;
 
--- Name: functionalzone; Type: TABLE; Schema: fiz; Owner: fiz
+CREATE SEQUENCE fiz.street_line_objectid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE fiz.street_line_objectid_seq OWNER TO fiz;
+ALTER SEQUENCE fiz.street_line_objectid_seq OWNED BY fiz.street_line.objectid;
+
 --
+CREATE TABLE fiz.streetv_line (
+    objectid integer NOT NULL,
+    classid integer,
+    number character varying(254),
+    name character varying(254),
+    address character varying(254),
+    str_r_type smallint,
+    surface_exist smallint,
+    surface_plan smallint,
+    function character varying(254),
+    event_time integer,
+    source character varying(254),
+    note character varying(254),
+    status smallint,
+    reg_status smallint,
+    shape public.geometry,
+    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+);
+ALTER TABLE fiz.streetv_line OWNER to fiz;
 
+CREATE SEQUENCE fiz.streetv_line_objectid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE fiz.streetv_line_objectid_seq OWNER TO fiz;
+ALTER SEQUENCE fiz.streetv_line_objectid_seq OWNED BY fiz.streetv_line.objectid;
+
+--
+CREATE TABLE fiz.telecomnetworkline_line (
+    objectid integer NOT NULL,
+    classid integer,
+    number character varying(254),
+    name character varying(254),
+    wear_prcnt double precision,
+    comm_type integer,
+    comm_ctype integer,
+    cable_type integer,
+    zone_size double precision,
+    danger_obj integer,
+    function character varying(254),
+    event_time integer,
+    source character varying(254),
+    note character varying(254),
+    status smallint,
+    reg_status smallint,
+    shape public.geometry,
+    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+);
+ALTER TABLE fiz.telecomnetworkline_line OWNER to fiz;
+
+CREATE SEQUENCE fiz.telecomnetworkline_line_objectid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE fiz.telecomnetworkline_line_objectid_seq OWNER TO fiz;
+ALTER SEQUENCE fiz.telecomnetworkline_line_objectid_seq OWNED BY fiz.telecomnetworkline_line.objectid;
+
+
+--
 CREATE TABLE fiz.functionalzone (
     objectid integer NOT NULL,
     classid integer,
@@ -5165,14 +5198,7 @@ CREATE TABLE fiz.functionalzone (
     shape_area numeric,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.functionalzone OWNER TO fiz;
-
---
-
--- Name: functionalzone_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.functionalzone_extension (
     object_id integer NOT NULL,
@@ -5181,14 +5207,7 @@ CREATE TABLE fiz.functionalzone_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.functionalzone_extension OWNER TO fiz;
-
---
-
--- Name: functionalzone_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.functionalzone_objectid_seq
     AS integer
@@ -5197,37 +5216,17 @@ CREATE SEQUENCE fiz.functionalzone_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.functionalzone_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8913 (class 0 OID 0)
--- Dependencies: 464
--- Name: functionalzone_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.functionalzone_objectid_seq OWNED BY fiz.functionalzone.objectid;
 
 
 --
-
--- Name: fz_ingstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_ingstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_ingstp OWNER TO fiz;
-
---
-
--- Name: fz_ingstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_ingstp_objectid_seq
     AS integer
@@ -5236,16 +5235,7 @@ CREATE SEQUENCE fiz.fz_ingstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_ingstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8914 (class 0 OID 0)
--- Dependencies: 466
--- Name: fz_ingstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_ingstp_objectid_seq OWNED BY fiz.fz_ingstp.objectid;
 
 
@@ -13508,23 +13498,8 @@ CREATE SEQUENCE fiz.str_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.str_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9069 (class 0 OID 0)
--- Dependencies: 847
--- Name: str_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.str_type_objectid_seq OWNED BY fiz.str_type.objectid;
-
-
---
-
--- Name: street_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.street_line_extension (
     object_id integer NOT NULL,
@@ -13533,14 +13508,7 @@ CREATE TABLE fiz.street_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.street_line_extension OWNER TO fiz;
-
---
-
--- Name: streetv_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.streetv_line_extension (
     object_id integer NOT NULL,
@@ -13549,15 +13517,9 @@ CREATE TABLE fiz.streetv_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.streetv_line_extension OWNER TO fiz;
 
 --
-
--- Name: su_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.su_type (
     objectid integer NOT NULL,
     code smallint,
@@ -16973,61 +16935,16 @@ ALTER TABLE ONLY fiz.fp_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fp_t
 --
 
 ALTER TABLE ONLY fiz.fs_objects ALTER COLUMN objectid SET DEFAULT nextval('fiz.fs_objects_objectid_seq'::regclass);
-
-
---
--- TOC entry 7245 (class 2604 OID 34377)
--- Name: fses_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fses_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.fses_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7246 (class 2604 OID 34378)
--- Name: fuel_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fuel_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fuel_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7247 (class 2604 OID 34379)
--- Name: functionalzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.functionalzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.functionalzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7250 (class 2604 OID 34380)
--- Name: fz_ingstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
+ALTER TABLE ONLY fiz.street_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.street_line_objectid_seq'::regclass);
+ALTER TABLE ONLY fiz.streetv_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.streetv_line_objectid_seq'::regclass);
+ALTER TABLE ONLY fiz.telecomnetworkline_line ALTER COLUMN objectid
+    SET DEFAULT nextval('fiz.telecomnetworkline_line_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_ingstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_ingstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7251 (class 2604 OID 34381)
--- Name: fz_mfstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_mfstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_mfstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7252 (class 2604 OID 34382)
--- Name: fz_odstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_odstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_odstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7253 (class 2604 OID 34383)
--- Name: fz_orecstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_orecstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_orecstp_objectid_seq'::regclass);
 
 
@@ -19880,71 +19797,17 @@ ALTER TABLE ONLY fiz.fs_objects
 -- Name: fses_stype fses_stype_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
 --
 
-ALTER TABLE ONLY fiz.fses_stype
-    ADD CONSTRAINT fses_stype_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7973 (class 2606 OID 34989)
--- Name: fuel_type fuel_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.fuel_type
-    ADD CONSTRAINT fuel_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7978 (class 2606 OID 34991)
--- Name: functionalzone_extension functionalzone_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.functionalzone_extension
-    ADD CONSTRAINT functionalzone_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 7975 (class 2606 OID 34993)
--- Name: functionalzone functionalzone_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.functionalzone
-    ADD CONSTRAINT functionalzone_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7980 (class 2606 OID 34995)
--- Name: fz_ingstp fz_ingstp_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.fz_ingstp
-    ADD CONSTRAINT fz_ingstp_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7982 (class 2606 OID 34997)
--- Name: fz_mfstp fz_mfstp_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.fz_mfstp
-    ADD CONSTRAINT fz_mfstp_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7984 (class 2606 OID 34999)
--- Name: fz_odstp fz_odstp_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.fz_odstp
-    ADD CONSTRAINT fz_odstp_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 7986 (class 2606 OID 35001)
--- Name: fz_orecstp fz_orecstp_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.fz_orecstp
-    ADD CONSTRAINT fz_orecstp_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fses_stype ADD CONSTRAINT fses_stype_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fuel_type ADD CONSTRAINT fuel_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.functionalzone_extension ADD CONSTRAINT functionalzone_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.functionalzone ADD CONSTRAINT functionalzone_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.street_line ADD CONSTRAINT street_line_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.streetv_line ADD CONSTRAINT streetv_line_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.telecomnetworkline_line ADD CONSTRAINT telecomnetworkline_line_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fz_ingstp ADD CONSTRAINT fz_ingstp_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fz_mfstp ADD CONSTRAINT fz_mfstp_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fz_odstp ADD CONSTRAINT fz_odstp_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.fz_orecstp ADD CONSTRAINT fz_orecstp_pkey PRIMARY KEY (objectid);
 
 
 --
@@ -22641,6 +22504,7 @@ ALTER TABLE ONLY fiz.zone_oopt
 --
 --
 CREATE INDEX sidx_18198_22 ON fiz.functionalzone USING gist (shape);
+CREATE INDEX spatial_street_line_geom ON fiz.street_line USING gist (shape);
 CREATE INDEX sidx_19489_8 ON fiz.admesrf USING gist (shape);
 CREATE INDEX sidx_19506_11 ON fiz.admenp USING gist (shape);
 CREATE INDEX sidx_19523_7 ON fiz.admerf USING gist (shape);
@@ -22655,189 +22519,28 @@ CREATE INDEX sidx_19966_23 ON fiz.electricpowerstation_point USING gist (shape);
 CREATE INDEX sidx_19983_25 ON fiz.electrictransformer USING gist (shape);
 CREATE INDEX sidx_20000_25 ON fiz.electrictransformer_point USING gist (shape);
 CREATE INDEX sidx_20017_15 ON fiz.engprotectionobj_line USING gist (shape);
-
-
---
--- TOC entry 7888 (class 1259 OID 35615)
--- Name: sidx_20034_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20034_15 ON fiz.engprotectionobj_point USING gist (shape);
-
-
---
--- TOC entry 7997 (class 1259 OID 35616)
--- Name: sidx_20051_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20051_21 ON fiz.gasfacility USING gist (shape);
-
-
---
--- TOC entry 8002 (class 1259 OID 35617)
--- Name: sidx_20068_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20068_21 ON fiz.gasfacility_point USING gist (shape);
-
-
---
--- TOC entry 8007 (class 1259 OID 35618)
--- Name: sidx_20085_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20085_21 ON fiz.gaspipeline_line USING gist (shape);
-
-
---
--- TOC entry 8064 (class 1259 OID 35619)
--- Name: sidx_20102_19; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20102_19 ON fiz.hydraulicstructures_line USING gist (shape);
-
-
---
--- TOC entry 8069 (class 1259 OID 35620)
--- Name: sidx_20119_19; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20119_19 ON fiz.hydraulicstructures_point USING gist (shape);
-
-
---
--- TOC entry 8188 (class 1259 OID 35621)
--- Name: sidx_20136_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20136_22 ON fiz.oilfacility USING gist (shape);
-
-
---
--- TOC entry 8193 (class 1259 OID 35622)
--- Name: sidx_20153_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20153_22 ON fiz.oilfacility_point USING gist (shape);
-
-
---
--- TOC entry 8198 (class 1259 OID 35623)
--- Name: sidx_20170_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20170_20 ON fiz.oilpipeline_line USING gist (shape);
-
-
---
--- TOC entry 8233 (class 1259 OID 35624)
--- Name: sidx_20187_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20187_21 ON fiz.pipeline_line USING gist (shape);
-
-
---
--- TOC entry 8434 (class 1259 OID 35625)
--- Name: sidx_20204_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20204_21 ON fiz.sewerfacility USING gist (shape);
-
-
---
--- TOC entry 8439 (class 1259 OID 35626)
--- Name: sidx_20221_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20221_21 ON fiz.sewerfacility_point USING gist (shape);
-
-
---
--- TOC entry 8526 (class 1259 OID 35627)
--- Name: sidx_20288_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20288_21 ON fiz.telecomfacility USING gist (shape);
-
-
---
--- TOC entry 8531 (class 1259 OID 35628)
--- Name: sidx_20305_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20305_21 ON fiz.telecomfacility_point USING gist (shape);
-
-
---
--- TOC entry 8538 (class 1259 OID 35629)
--- Name: sidx_20338_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20338_23 ON fiz.thermalfacility USING gist (shape);
-
-
---
--- TOC entry 8543 (class 1259 OID 35630)
--- Name: sidx_20357_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20357_23 ON fiz.thermalfacility_point USING gist (shape);
-
-
---
--- TOC entry 8548 (class 1259 OID 35631)
--- Name: sidx_20374_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20374_20 ON fiz.thermalpipeline_line USING gist (shape);
-
-
---
--- TOC entry 8631 (class 1259 OID 35632)
--- Name: sidx_20391_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20391_23 ON fiz.waterfacility USING gist (shape);
-
-
---
--- TOC entry 8636 (class 1259 OID 35633)
--- Name: sidx_20408_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20408_23 ON fiz.waterfacility_point USING gist (shape);
-
-
---
--- TOC entry 7961 (class 1259 OID 35634)
--- Name: sidx_20425_12; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20425_12 ON fiz.forestpark USING gist (shape);
-
-
---
--- TOC entry 8012 (class 1259 OID 35635)
--- Name: sidx_20442_13; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20442_13 ON fiz.greeneryplanting USING gist (shape);
-
-
---
--- TOC entry 7910 (class 1259 OID 35636)
--- Name: sidx_20459_12; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20459_12 ON fiz.envdanger_point USING gist (shape);
-
-
---
--- TOC entry 7905 (class 1259 OID 35637)
--- Name: sidx_20476_12; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20476_12 ON fiz.envdanger USING gist (shape);
 
 
@@ -23143,7 +22846,6 @@ CREATE INDEX sidx_21107_23 ON fiz.social USING gist (shape);
 --
 
 CREATE INDEX sidx_21124_23 ON fiz.social_point USING gist (shape);
-
 
 --
 -- TOC entry 8470 (class 1259 OID 35676)
