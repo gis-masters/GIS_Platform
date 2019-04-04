@@ -92,11 +92,6 @@ CREATE TABLE fiz.admemo_extension (
 );
 ALTER TABLE fiz.admemo_extension OWNER TO fiz;
 
---
-
--- Name: admemo_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.admemo_objectid_seq
     AS integer
     START WITH 1
@@ -337,14 +332,7 @@ CREATE TABLE fiz.af_type (
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.af_type OWNER TO fiz;
-
---
-
--- Name: af_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.af_type_objectid_seq
     AS integer
@@ -353,23 +341,9 @@ CREATE SEQUENCE fiz.af_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.af_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8822 (class 0 OID 0)
--- Dependencies: 242
--- Name: af_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.af_type_objectid_seq OWNED BY fiz.af_type.objectid;
 
-
---
-
--- Name: agriculture; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.agriculture (
     objectid integer NOT NULL,
@@ -657,31 +631,15 @@ CREATE SEQUENCE fiz.airtransportobj_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.airtransportobj_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8826 (class 0 OID 0)
--- Dependencies: 254
--- Name: airtransportobj_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.airtransportobj_point_objectid_seq OWNED BY fiz.airtransportobj_point.objectid;
 
-
 --
-
--- Name: al_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.al_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.al_stype OWNER TO fiz;
 
 --
@@ -5112,7 +5070,7 @@ CREATE TABLE fiz.streetv_line (
     number character varying(254),
     name character varying(254),
     address character varying(254),
-    str_r_type smallint,
+    str_type smallint,
     surface_exist smallint,
     surface_plan smallint,
     function character varying(254),
@@ -16032,10 +15990,6 @@ CREATE TABLE fiz.wildlifeprotection_point (
 ALTER TABLE fiz.wildlifeprotection_point OWNER TO fiz;
 
 --
-
--- Name: wildlifeprotection_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.wildlifeprotection_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -16043,14 +15997,7 @@ CREATE TABLE fiz.wildlifeprotection_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.wildlifeprotection_point_extension OWNER TO fiz;
-
---
-
--- Name: wildlifeprotection_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.wildlifeprotection_point_objectid_seq
     AS integer
@@ -16059,37 +16006,16 @@ CREATE SEQUENCE fiz.wildlifeprotection_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.wildlifeprotection_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9113 (class 0 OID 0)
--- Dependencies: 964
--- Name: wildlifeprotection_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.wildlifeprotection_point_objectid_seq OWNED BY fiz.wildlifeprotection_point.objectid;
 
-
 --
-
--- Name: yatch_cls; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.yatch_cls (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.yatch_cls OWNER TO fiz;
-
---
-
--- Name: yatch_cls_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.yatch_cls_objectid_seq
     AS integer
@@ -16098,23 +16024,8 @@ CREATE SEQUENCE fiz.yatch_cls_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.yatch_cls_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9114 (class 0 OID 0)
--- Dependencies: 966
--- Name: yatch_cls_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.yatch_cls_objectid_seq OWNED BY fiz.yatch_cls.objectid;
-
-
---
-
--- Name: zone_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.zone_extension (
     object_id integer NOT NULL,
@@ -16123,28 +16034,14 @@ CREATE TABLE fiz.zone_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.zone_extension OWNER TO fiz;
-
---
-
--- Name: zone_oopt; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.zone_oopt (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.zone_oopt OWNER TO fiz;
-
---
-
--- Name: zone_oopt_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.zone_oopt_objectid_seq
     AS integer
@@ -16153,579 +16050,81 @@ CREATE SEQUENCE fiz.zone_oopt_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.zone_oopt_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9115 (class 0 OID 0)
--- Dependencies: 969
--- Name: zone_oopt_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.zone_oopt_objectid_seq OWNED BY fiz.zone_oopt.objectid;
 
 
 --
-
-
--- Name: ab_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
 --
-
 ALTER TABLE ONLY fiz.ab_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.ab_stype_objectid_seq'::regclass);
-
-
---
-
-
--- Name: admborder_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.admborder_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.admborder_objectid_seq'::regclass);
-
-
---
-
-
--- Name: admemo objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.admemo ALTER COLUMN objectid SET DEFAULT nextval('fiz.admemo_objectid_seq'::regclass);
-
-
---
-
--- Name: admenp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.admenp ALTER COLUMN objectid SET DEFAULT nextval('fiz.admenp_objectid_seq'::regclass);
-
-
---
-
--- Name: admerf objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.admerf ALTER COLUMN objectid SET DEFAULT nextval('fiz.admerf_objectid_seq'::regclass);
-
-
---
-
--- Name: admesrf objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.admesrf ALTER COLUMN objectid SET DEFAULT nextval('fiz.admesrf_objectid_seq'::regclass);
-
-
---
-
--- Name: aeroszone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.aeroszone ALTER COLUMN objectid SET DEFAULT nextval('fiz.aeroszone_objectid_seq'::regclass);
-
-
---
-
--- Name: af_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.af_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.af_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7079 (class 2604 OID 34289)
--- Name: agriculture objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.agriculture ALTER COLUMN objectid SET DEFAULT nextval('fiz.agriculture_objectid_seq'::regclass);
-
-
---
--- TOC entry 7082 (class 2604 OID 34290)
--- Name: agriculture_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.agriculture_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.agriculture_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7085 (class 2604 OID 34291)
--- Name: airtransportobj objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.airtransportobj ALTER COLUMN objectid SET DEFAULT nextval('fiz.airtransportobj_objectid_seq'::regclass);
-
-
---
--- TOC entry 7088 (class 2604 OID 34292)
--- Name: airtransportobj_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.airtransportobj_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.airtransportobj_point_objectid_seq'::regclass);
-
-
---
-
--- Name: al_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.al_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.al_stype_objectid_seq'::regclass);
-
-
---
-
--- Name: amb_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.amb_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.amb_type_objectid_seq'::regclass);
-
-
---
-
--- Name: ans_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ans_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.ans_type_objectid_seq'::regclass);
-
-
---
-
--- Name: aq_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.aq_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.aq_stype_objectid_seq'::regclass);
-
-
---
-
--- Name: areabasedevelopment objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.areabasedevelopment ALTER COLUMN objectid SET DEFAULT nextval('fiz.areabasedevelopment_objectid_seq'::regclass);
-
-
---
-
--- Name: authorityservice objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.authorityservice ALTER COLUMN objectid SET DEFAULT nextval('fiz.authorityservice_objectid_seq'::regclass);
-
-
---
-
--- Name: authorityservice_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.authorityservice_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.authorityservice_point_objectid_seq'::regclass);
-
-
---
-
--- Name: autoservice objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.autoservice ALTER COLUMN objectid SET DEFAULT nextval('fiz.autoservice_objectid_seq'::regclass);
-
-
---
--- TOC entry 7107 (class 2604 OID 34301)
--- Name: autoservice_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.autoservice_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.autoservice_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7110 (class 2604 OID 34302)
--- Name: avia_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.avia_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.avia_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7111 (class 2604 OID 34303)
--- Name: bent_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.bent_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.bent_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7112 (class 2604 OID 34304)
--- Name: bridge_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.bridge_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.bridge_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7113 (class 2604 OID 34305)
--- Name: bur_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.bur_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.bur_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7114 (class 2604 OID 34306)
--- Name: cable_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cable_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.cable_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7115 (class 2604 OID 34307)
--- Name: cat_distr objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cat_distr ALTER COLUMN objectid SET DEFAULT nextval('fiz.cat_distr_objectid_seq'::regclass);
-
-
---
--- TOC entry 7116 (class 2604 OID 34308)
--- Name: cat_main objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cat_main ALTER COLUMN objectid SET DEFAULT nextval('fiz.cat_main_objectid_seq'::regclass);
-
-
---
--- TOC entry 7117 (class 2604 OID 34309)
--- Name: cat_rdtype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cat_rdtype ALTER COLUMN objectid SET DEFAULT nextval('fiz.cat_rdtype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7118 (class 2604 OID 34310)
--- Name: cat_rr objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cat_rr ALTER COLUMN objectid SET DEFAULT nextval('fiz.cat_rr_objectid_seq'::regclass);
-
-
---
--- TOC entry 7119 (class 2604 OID 34311)
--- Name: cemet_stat objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemet_stat ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemet_stat_objectid_seq'::regclass);
-
-
---
--- TOC entry 7120 (class 2604 OID 34312)
--- Name: cemet_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemet_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemet_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7121 (class 2604 OID 34313)
--- Name: cemet_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemet_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemet_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7122 (class 2604 OID 34314)
--- Name: cemet_wtype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemet_wtype ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemet_wtype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7123 (class 2604 OID 34315)
--- Name: cemetery objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemetery ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemetery_objectid_seq'::regclass);
-
-
---
--- TOC entry 7126 (class 2604 OID 34316)
--- Name: cemetery_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cemetery_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.cemetery_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7129 (class 2604 OID 34317)
--- Name: cep_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cep_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.cep_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7130 (class 2604 OID 34318)
--- Name: chi_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.chi_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.chi_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7131 (class 2604 OID 34319)
--- Name: clb_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.clb_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.clb_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7132 (class 2604 OID 34320)
--- Name: coastalprotectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.coastalprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.coastalprotectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7135 (class 2604 OID 34321)
--- Name: comm_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.comm_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.comm_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7136 (class 2604 OID 34322)
--- Name: comm_сtype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz."comm_сtype" ALTER COLUMN objectid SET DEFAULT nextval('fiz."comm_сtype_objectid_seq"'::regclass);
-
-
---
--- TOC entry 7137 (class 2604 OID 34323)
--- Name: cr_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cr_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.cr_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7138 (class 2604 OID 34324)
--- Name: crossp_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.crossp_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.crossp_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7139 (class 2604 OID 34325)
--- Name: crossr_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.crossr_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.crossr_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7140 (class 2604 OID 34326)
--- Name: ctm_time_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ctm_time_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.ctm_time_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7141 (class 2604 OID 34327)
--- Name: ctm_use_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ctm_use_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.ctm_use_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7142 (class 2604 OID 34328)
--- Name: cu_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.cu_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.cu_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7143 (class 2604 OID 34329)
--- Name: culture objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.culture ALTER COLUMN objectid SET DEFAULT nextval('fiz.culture_objectid_seq'::regclass);
-
-
---
--- TOC entry 7146 (class 2604 OID 34330)
--- Name: culture_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.culture_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.culture_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7149 (class 2604 OID 34331)
--- Name: current objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.current ALTER COLUMN objectid SET DEFAULT nextval('fiz.current_objectid_seq'::regclass);
-
-
---
--- TOC entry 7150 (class 2604 OID 34332)
--- Name: customcontrol objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.customcontrol ALTER COLUMN objectid SET DEFAULT nextval('fiz.customcontrol_objectid_seq'::regclass);
-
-
---
--- TOC entry 7153 (class 2604 OID 34333)
--- Name: customcontrol_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.customcontrol_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.customcontrol_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7156 (class 2604 OID 34334)
--- Name: d_objects objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.d_objects ALTER COLUMN objectid SET DEFAULT nextval('fiz.d_objects_objectid_seq'::regclass);
-
-
---
--- TOC entry 7157 (class 2604 OID 34335)
--- Name: danger_obj objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.danger_obj ALTER COLUMN objectid SET DEFAULT nextval('fiz.danger_obj_objectid_seq'::regclass);
-
-
---
--- TOC entry 7158 (class 2604 OID 34336)
--- Name: drinkwaterprotectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.drinkwaterprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.drinkwaterprotectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7161 (class 2604 OID 34337)
--- Name: edu_sdtype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.edu_sdtype ALTER COLUMN objectid SET DEFAULT nextval('fiz.edu_sdtype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7162 (class 2604 OID 34338)
--- Name: edu_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.edu_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.edu_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7163 (class 2604 OID 34339)
--- Name: edu_tunit objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.edu_tunit ALTER COLUMN objectid SET DEFAULT nextval('fiz.edu_tunit_objectid_seq'::regclass);
-
-
---
--- TOC entry 7164 (class 2604 OID 34340)
--- Name: education objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.education ALTER COLUMN objectid SET DEFAULT nextval('fiz.education_objectid_seq'::regclass);
-
-
---
--- TOC entry 7167 (class 2604 OID 34341)
--- Name: education_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.education_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.education_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7170 (class 2604 OID 34342)
--- Name: el_supply objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.el_supply ALTER COLUMN objectid SET DEFAULT nextval('fiz.el_supply_objectid_seq'::regclass);
-
-
---
--- TOC entry 7171 (class 2604 OID 34343)
--- Name: electricline_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.electricline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.electricline_objectid_seq'::regclass);
-
-
---
--- TOC entry 7174 (class 2604 OID 34344)
--- Name: electricpowerstation objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.electricpowerstation ALTER COLUMN objectid SET DEFAULT nextval('fiz.electricpowerstation_objectid_seq'::regclass);
-
-
---
--- TOC entry 7177 (class 2604 OID 34345)
--- Name: electricpowerstation_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.electricpowerstation_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.electricpowerstation_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7180 (class 2604 OID 34346)
--- Name: electrictransformer objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.electrictransformer ALTER COLUMN objectid SET DEFAULT nextval('fiz.electrictransformer_objectid_seq'::regclass);
-
-
---
--- TOC entry 7183 (class 2604 OID 34347)
--- Name: electrictransformer_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.electrictransformer_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.electrictransformer_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7186 (class 2604 OID 34348)
--- Name: eme_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.eme_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.eme_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7187 (class 2604 OID 34349)
--- Name: eme_source objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.eme_source ALTER COLUMN objectid SET DEFAULT nextval('fiz.eme_source_objectid_seq'::regclass);
-
-
---
--- TOC entry 7188 (class 2604 OID 34350)
--- Name: emergencyprotectionobj objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.emergencyprotectionobj ALTER COLUMN objectid SET DEFAULT nextval('fiz.emergencyprotectionobj_objectid_seq'::regclass);
 
 
@@ -16879,61 +16278,12 @@ ALTER TABLE ONLY fiz.forest ALTER COLUMN objectid SET DEFAULT nextval('fiz.fores
 --
 
 ALTER TABLE ONLY fiz.forest_cat ALTER COLUMN objectid SET DEFAULT nextval('fiz.forest_cat_objectid_seq'::regclass);
-
-
---
--- TOC entry 7236 (class 2604 OID 34370)
--- Name: forest_os objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.forest_os ALTER COLUMN objectid SET DEFAULT nextval('fiz.forest_os_objectid_seq'::regclass);
-
-
---
--- TOC entry 7237 (class 2604 OID 34371)
--- Name: forest_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.forest_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.forest_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7238 (class 2604 OID 34372)
--- Name: forest_val objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.forest_val ALTER COLUMN objectid SET DEFAULT nextval('fiz.forest_val_objectid_seq'::regclass);
-
-
---
--- TOC entry 7239 (class 2604 OID 34373)
--- Name: forestpark objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.forestpark ALTER COLUMN objectid SET DEFAULT nextval('fiz.forestpark_objectid_seq'::regclass);
-
-
---
--- TOC entry 7242 (class 2604 OID 34374)
--- Name: fp_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fp_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.fp_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7243 (class 2604 OID 34375)
--- Name: fp_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fp_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fp_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7244 (class 2604 OID 34376)
--- Name: fs_objects objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fs_objects ALTER COLUMN objectid SET DEFAULT nextval('fiz.fs_objects_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fses_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.fses_stype_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fuel_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fuel_type_objectid_seq'::regclass);
@@ -16946,773 +16296,101 @@ ALTER TABLE ONLY fiz.fz_ingstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz
 ALTER TABLE ONLY fiz.fz_mfstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_mfstp_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_odstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_odstp_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_orecstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_orecstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7254 (class 2604 OID 34384)
--- Name: fz_recstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_recstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_recstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7255 (class 2604 OID 34385)
--- Name: fz_shstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_shstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_shstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7256 (class 2604 OID 34386)
--- Name: fz_trstp objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.fz_trstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_trstp_objectid_seq'::regclass);
-
-
---
--- TOC entry 7257 (class 2604 OID 34387)
--- Name: gas_st_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.gas_st_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.gas_st_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7258 (class 2604 OID 34388)
--- Name: gasfacility objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.gasfacility ALTER COLUMN objectid SET DEFAULT nextval('fiz.gasfacility_objectid_seq'::regclass);
-
-
---
--- TOC entry 7261 (class 2604 OID 34389)
--- Name: gasfacility_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.gasfacility_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.gasfacility_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7264 (class 2604 OID 34390)
--- Name: gaspipeline_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.gaspipeline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.gaspipeline_objectid_seq'::regclass);
-
-
---
--- TOC entry 7267 (class 2604 OID 34391)
--- Name: greeneryplanting objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.greeneryplanting ALTER COLUMN objectid SET DEFAULT nextval('fiz.greeneryplanting_objectid_seq'::regclass);
-
-
---
--- TOC entry 7270 (class 2604 OID 34392)
--- Name: ground_pos objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ground_pos ALTER COLUMN objectid SET DEFAULT nextval('fiz.ground_pos_objectid_seq'::regclass);
-
-
---
--- TOC entry 7271 (class 2604 OID 34393)
--- Name: gts_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.gts_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.gts_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7272 (class 2604 OID 34394)
--- Name: hazardarea objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hazardarea ALTER COLUMN objectid SET DEFAULT nextval('fiz.hazardarea_objectid_seq'::regclass);
-
-
---
--- TOC entry 7275 (class 2604 OID 34395)
--- Name: health objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.health ALTER COLUMN objectid SET DEFAULT nextval('fiz.health_objectid_seq'::regclass);
-
-
---
--- TOC entry 7278 (class 2604 OID 34396)
--- Name: health_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.health_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.health_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7281 (class 2604 OID 34397)
--- Name: her_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.her_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.her_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7282 (class 2604 OID 34398)
--- Name: heritage_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.heritage_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.heritage_objectid_seq'::regclass);
-
-
---
--- TOC entry 7285 (class 2604 OID 34399)
--- Name: heritagearea objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.heritagearea ALTER COLUMN objectid SET DEFAULT nextval('fiz.heritagearea_objectid_seq'::regclass);
-
-
---
--- TOC entry 7288 (class 2604 OID 34400)
--- Name: heritageprotectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.heritageprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.heritageprotectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7291 (class 2604 OID 34401)
--- Name: hist_cat objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hist_cat ALTER COLUMN objectid SET DEFAULT nextval('fiz.hist_cat_objectid_seq'::regclass);
-
-
---
--- TOC entry 7292 (class 2604 OID 34402)
--- Name: hist_out objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hist_out ALTER COLUMN objectid SET DEFAULT nextval('fiz.hist_out_objectid_seq'::regclass);
-
-
---
--- TOC entry 7293 (class 2604 OID 34403)
--- Name: historicsettlement objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.historicsettlement ALTER COLUMN objectid SET DEFAULT nextval('fiz.historicsettlement_objectid_seq'::regclass);
-
-
---
--- TOC entry 7296 (class 2604 OID 34404)
--- Name: hot_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hot_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.hot_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7297 (class 2604 OID 34405)
--- Name: hydraulicstructures_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hydraulicstructures_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.hydraulicstructures_objectid_seq'::regclass);
-
-
---
--- TOC entry 7300 (class 2604 OID 34406)
--- Name: hydraulicstructures_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hydraulicstructures_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.hydraulicstructures_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7303 (class 2604 OID 34407)
--- Name: hydro objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hydro ALTER COLUMN objectid SET DEFAULT nextval('fiz.hydro_objectid_seq'::regclass);
-
-
---
--- TOC entry 7306 (class 2604 OID 34408)
--- Name: hydro_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hydro_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.hydro_line_objectid_seq'::regclass);
-
-
---
--- TOC entry 7309 (class 2604 OID 34409)
--- Name: hydro_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hydro_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.hydro_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7312 (class 2604 OID 34410)
--- Name: hzrd_cat objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hzrd_cat ALTER COLUMN objectid SET DEFAULT nextval('fiz.hzrd_cat_objectid_seq'::regclass);
-
-
---
--- TOC entry 7313 (class 2604 OID 34411)
--- Name: hzrd_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.hzrd_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.hzrd_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7314 (class 2604 OID 34412)
--- Name: ind_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ind_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.ind_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7315 (class 2604 OID 34413)
--- Name: int_trf_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.int_trf_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.int_trf_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7316 (class 2604 OID 34414)
--- Name: int_trn_t objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.int_trn_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.int_trn_t_objectid_seq'::regclass);
-
-
---
--- TOC entry 7317 (class 2604 OID 34415)
--- Name: investmentsite objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.investmentsite ALTER COLUMN objectid SET DEFAULT nextval('fiz.investmentsite_objectid_seq'::regclass);
-
-
---
--- TOC entry 7320 (class 2604 OID 34416)
--- Name: investmentzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.investmentzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.investmentzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7323 (class 2604 OID 34417)
--- Name: land_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.land_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.land_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7324 (class 2604 OID 34418)
--- Name: landuse objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.landuse ALTER COLUMN objectid SET DEFAULT nextval('fiz.landuse_objectid_seq'::regclass);
-
-
---
--- TOC entry 7327 (class 2604 OID 34419)
--- Name: main_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.main_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.main_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7328 (class 2604 OID 34420)
--- Name: manufacturing objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.manufacturing ALTER COLUMN objectid SET DEFAULT nextval('fiz.manufacturing_objectid_seq'::regclass);
-
-
---
--- TOC entry 7331 (class 2604 OID 34421)
--- Name: manufacturing_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.manufacturing_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.manufacturing_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7334 (class 2604 OID 34422)
--- Name: mc_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mc_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.mc_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7335 (class 2604 OID 34423)
--- Name: md_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.md_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.md_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7336 (class 2604 OID 34424)
--- Name: min_atype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.min_atype ALTER COLUMN objectid SET DEFAULT nextval('fiz.min_atype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7337 (class 2604 OID 34425)
--- Name: min_mtype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.min_mtype ALTER COLUMN objectid SET DEFAULT nextval('fiz.min_mtype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7338 (class 2604 OID 34426)
--- Name: min_ntype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.min_ntype ALTER COLUMN objectid SET DEFAULT nextval('fiz.min_ntype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7339 (class 2604 OID 34427)
--- Name: mineralarea objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mineralarea ALTER COLUMN objectid SET DEFAULT nextval('fiz.mineralarea_objectid_seq'::regclass);
-
-
---
--- TOC entry 7342 (class 2604 OID 34428)
--- Name: mineraldep objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mineraldep ALTER COLUMN objectid SET DEFAULT nextval('fiz.mineraldep_objectid_seq'::regclass);
-
-
---
--- TOC entry 7345 (class 2604 OID 34429)
--- Name: mineraldep_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mineraldep_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.mineraldep_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7348 (class 2604 OID 34430)
--- Name: mp_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mp_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.mp_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7349 (class 2604 OID 34431)
--- Name: msd_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.msd_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.msd_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7350 (class 2604 OID 34432)
--- Name: mst_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.mst_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.mst_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7351 (class 2604 OID 34433)
--- Name: naturalriskzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.naturalriskzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.naturalriskzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7354 (class 2604 OID 34434)
--- Name: naturalriskzone_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.naturalriskzone_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.naturalriskzone_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7357 (class 2604 OID 34435)
--- Name: natureprotectarea objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.natureprotectarea ALTER COLUMN objectid SET DEFAULT nextval('fiz.natureprotectarea_objectid_seq'::regclass);
-
-
---
--- TOC entry 7360 (class 2604 OID 34436)
--- Name: natureprotectarea_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.natureprotectarea_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.natureprotectarea_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7363 (class 2604 OID 34437)
--- Name: natureprotectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.natureprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.natureprotectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7366 (class 2604 OID 34438)
--- Name: num_tracks objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.num_tracks ALTER COLUMN objectid SET DEFAULT nextval('fiz.num_tracks_objectid_seq'::regclass);
-
-
---
--- TOC entry 7367 (class 2604 OID 34439)
--- Name: och_use objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.och_use ALTER COLUMN objectid SET DEFAULT nextval('fiz.och_use_objectid_seq'::regclass);
-
-
---
--- TOC entry 7368 (class 2604 OID 34440)
--- Name: oilfacility objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.oilfacility ALTER COLUMN objectid SET DEFAULT nextval('fiz.oilfacility_objectid_seq'::regclass);
-
-
---
--- TOC entry 7371 (class 2604 OID 34441)
--- Name: oilfacility_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.oilfacility_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.oilfacility_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7374 (class 2604 OID 34442)
--- Name: oilpipeline_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.oilpipeline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.oilpipeline_objectid_seq'::regclass);
-
-
---
--- TOC entry 7377 (class 2604 OID 34443)
--- Name: oro_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.oro_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.oro_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7378 (class 2604 OID 34444)
--- Name: oro_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.oro_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.oro_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7379 (class 2604 OID 34445)
--- Name: otherobject objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.otherobject ALTER COLUMN objectid SET DEFAULT nextval('fiz.otherobject_objectid_seq'::regclass);
-
-
---
--- TOC entry 7382 (class 2604 OID 34446)
--- Name: otherobject_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.otherobject_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.otherobject_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7385 (class 2604 OID 34447)
--- Name: otherprotectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.otherprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.otherprotectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7388 (class 2604 OID 34448)
--- Name: otherzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.otherzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.otherzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7391 (class 2604 OID 34449)
--- Name: ozsn_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ozsn_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.ozsn_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7392 (class 2604 OID 34450)
--- Name: pass_term objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pass_term ALTER COLUMN objectid SET DEFAULT nextval('fiz.pass_term_objectid_seq'::regclass);
-
-
---
--- TOC entry 7393 (class 2604 OID 34451)
--- Name: ped_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.ped_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.ped_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7394 (class 2604 OID 34452)
--- Name: pipeline_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pipeline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.pipeline_objectid_seq'::regclass);
-
-
---
--- TOC entry 7397 (class 2604 OID 34453)
--- Name: pkio_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pkio_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.pkio_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7398 (class 2604 OID 34454)
--- Name: pl_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pl_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.pl_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7399 (class 2604 OID 34455)
--- Name: pline_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pline_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.pline_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7400 (class 2604 OID 34456)
--- Name: power_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.power_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.power_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7401 (class 2604 OID 34457)
--- Name: prg_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prg_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.prg_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7402 (class 2604 OID 34458)
--- Name: prison objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prison ALTER COLUMN objectid SET DEFAULT nextval('fiz.prison_objectid_seq'::regclass);
-
-
---
--- TOC entry 7405 (class 2604 OID 34459)
--- Name: prison_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prison_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.prison_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7408 (class 2604 OID 34460)
--- Name: prkng_lvl objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prkng_lvl ALTER COLUMN objectid SET DEFAULT nextval('fiz.prkng_lvl_objectid_seq'::regclass);
-
-
---
--- TOC entry 7409 (class 2604 OID 34461)
--- Name: prkng_time objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prkng_time ALTER COLUMN objectid SET DEFAULT nextval('fiz.prkng_time_objectid_seq'::regclass);
-
-
---
--- TOC entry 7410 (class 2604 OID 34462)
--- Name: prkng_type objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prkng_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.prkng_type_objectid_seq'::regclass);
-
-
---
--- TOC entry 7411 (class 2604 OID 34463)
--- Name: prom_direct objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.prom_direct ALTER COLUMN objectid SET DEFAULT nextval('fiz.prom_direct_objectid_seq'::regclass);
-
-
---
--- TOC entry 7412 (class 2604 OID 34464)
--- Name: protectionzone objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.protectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.protectionzone_objectid_seq'::regclass);
-
-
---
--- TOC entry 7415 (class 2604 OID 34465)
--- Name: proximity objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.proximity ALTER COLUMN objectid SET DEFAULT nextval('fiz.proximity_objectid_seq'::regclass);
-
-
---
--- TOC entry 7416 (class 2604 OID 34466)
--- Name: pu_stype objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.pu_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.pu_stype_objectid_seq'::regclass);
-
-
---
--- TOC entry 7417 (class 2604 OID 34467)
--- Name: public objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.public ALTER COLUMN objectid SET DEFAULT nextval('fiz.public_objectid_seq'::regclass);
-
-
---
--- TOC entry 7420 (class 2604 OID 34468)
--- Name: public_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.public_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.public_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7423 (class 2604 OID 34469)
--- Name: publictransportline_line objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportline_objectid_seq'::regclass);
-
-
---
--- TOC entry 7426 (class 2604 OID 34470)
--- Name: publictransportobj objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportobj ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportobj_objectid_seq'::regclass);
-
-
---
--- TOC entry 7429 (class 2604 OID 34471)
--- Name: publictransportobj_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportobj_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportobj_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7432 (class 2604 OID 34472)
--- Name: publictransportservice objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportservice ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportservice_objectid_seq'::regclass);
-
-
---
--- TOC entry 7435 (class 2604 OID 34473)
--- Name: publictransportservice_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportservice_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportservice_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7438 (class 2604 OID 34474)
--- Name: publictransportstops objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportstops ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportstops_objectid_seq'::regclass);
-
-
---
--- TOC entry 7441 (class 2604 OID 34475)
--- Name: publictransportstops_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.publictransportstops_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.publictransportstops_point_objectid_seq'::regclass);
-
-
---
--- TOC entry 7444 (class 2604 OID 34476)
--- Name: r_affinity objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.r_affinity ALTER COLUMN objectid SET DEFAULT nextval('fiz.r_affinity_objectid_seq'::regclass);
-
-
---
--- TOC entry 7445 (class 2604 OID 34477)
--- Name: rad_class objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.rad_class ALTER COLUMN objectid SET DEFAULT nextval('fiz.rad_class_objectid_seq'::regclass);
-
-
---
--- TOC entry 7446 (class 2604 OID 34478)
--- Name: railwayfacility objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.railwayfacility ALTER COLUMN objectid SET DEFAULT nextval('fiz.railwayfacility_objectid_seq'::regclass);
-
-
---
--- TOC entry 7449 (class 2604 OID 34479)
--- Name: railwayfacility_point objectid; Type: DEFAULT; Schema: fiz; Owner: fiz
---
-
 ALTER TABLE ONLY fiz.railwayfacility_point ALTER COLUMN objectid SET DEFAULT nextval('fiz.railwayfacility_point_objectid_seq'::regclass);
 
 
@@ -21498,368 +20176,49 @@ ALTER TABLE ONLY fiz.servicefacility_point_extension
 -- Name: servicefacility_point servicefacility_point_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
 --
 
-ALTER TABLE ONLY fiz.servicefacility_point
-    ADD CONSTRAINT servicefacility_point_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8427 (class 2606 OID 35379)
--- Name: settl_cat settl_cat_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.settl_cat
-    ADD CONSTRAINT settl_cat_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8429 (class 2606 OID 35381)
--- Name: settl_level settl_level_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.settl_level
-    ADD CONSTRAINT settl_level_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8431 (class 2606 OID 35383)
--- Name: settl_type settl_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.settl_type
-    ADD CONSTRAINT settl_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8436 (class 2606 OID 35385)
--- Name: sewerfacility_extension sewerfacility_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sewerfacility_extension
-    ADD CONSTRAINT sewerfacility_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8433 (class 2606 OID 35387)
--- Name: sewerfacility sewerfacility_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sewerfacility
-    ADD CONSTRAINT sewerfacility_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8441 (class 2606 OID 35389)
--- Name: sewerfacility_point_extension sewerfacility_point_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
+ALTER TABLE ONLY fiz.servicefacility_point ADD CONSTRAINT servicefacility_point_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.settl_cat ADD CONSTRAINT settl_cat_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.settl_level ADD CONSTRAINT settl_level_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.settl_type ADD CONSTRAINT settl_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.sewerfacility_extension ADD CONSTRAINT sewerfacility_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.sewerfacility ADD CONSTRAINT sewerfacility_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.sewerfacility_point_extension
     ADD CONSTRAINT sewerfacility_point_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8438 (class 2606 OID 35391)
--- Name: sewerfacility_point sewerfacility_point_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sewerfacility_point
-    ADD CONSTRAINT sewerfacility_point_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8446 (class 2606 OID 35393)
--- Name: sewerpipeline_line_extension sewerpipeline_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sewerpipeline_line_extension
-    ADD CONSTRAINT sewerpipeline_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8443 (class 2606 OID 35395)
--- Name: sewerpipeline_line sewerpipeline_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sewerpipeline_line
-    ADD CONSTRAINT sewerpipeline_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8448 (class 2606 OID 35397)
--- Name: snow_type snow_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.snow_type
-    ADD CONSTRAINT snow_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8450 (class 2606 OID 35399)
--- Name: soc_direct soc_direct_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.soc_direct
-    ADD CONSTRAINT soc_direct_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8455 (class 2606 OID 35401)
--- Name: social_extension social_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.social_extension
-    ADD CONSTRAINT social_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8453 (class 2606 OID 35403)
--- Name: social social_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.social
-    ADD CONSTRAINT social_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8460 (class 2606 OID 35405)
--- Name: social_point_extension social_point_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.social_point_extension
-    ADD CONSTRAINT social_point_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8458 (class 2606 OID 35407)
--- Name: social_point social_point_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.social_point
-    ADD CONSTRAINT social_point_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8462 (class 2606 OID 35409)
--- Name: sp_stype sp_stype_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sp_stype
-    ADD CONSTRAINT sp_stype_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8467 (class 2606 OID 35411)
--- Name: specialeconomicarea_extension specialeconomicarea_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
+ALTER TABLE ONLY fiz.sewerfacility_point ADD CONSTRAINT sewerfacility_point_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.sewerpipeline_line_extension ADD CONSTRAINT sewerpipeline_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.sewerpipeline_line ADD CONSTRAINT sewerpipeline_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.snow_type ADD CONSTRAINT snow_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.soc_direct ADD CONSTRAINT soc_direct_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.social_extension ADD CONSTRAINT social_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.social ADD CONSTRAINT social_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.social_point_extension ADD CONSTRAINT social_point_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.social_point ADD CONSTRAINT social_point_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.sp_stype ADD CONSTRAINT sp_stype_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.specialeconomicarea_extension
     ADD CONSTRAINT specialeconomicarea_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8465 (class 2606 OID 35413)
--- Name: specialeconomicarea specialeconomicarea_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.specialeconomicarea
-    ADD CONSTRAINT specialeconomicarea_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8469 (class 2606 OID 35415)
--- Name: specific specific_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.specific
-    ADD CONSTRAINT specific_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8474 (class 2606 OID 35417)
--- Name: sport_extension sport_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sport_extension
-    ADD CONSTRAINT sport_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8472 (class 2606 OID 35419)
--- Name: sport sport_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sport
-    ADD CONSTRAINT sport_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8479 (class 2606 OID 35421)
--- Name: sport_point_extension sport_point_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sport_point_extension
-    ADD CONSTRAINT sport_point_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8477 (class 2606 OID 35423)
--- Name: sport_point sport_point_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.sport_point
-    ADD CONSTRAINT sport_point_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8481 (class 2606 OID 35425)
--- Name: spz_event spz_event_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.spz_event
-    ADD CONSTRAINT spz_event_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8483 (class 2606 OID 35427)
--- Name: ssah_stype ssah_stype_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.ssah_stype
-    ADD CONSTRAINT ssah_stype_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8485 (class 2606 OID 35429)
--- Name: st_stype st_stype_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.st_stype
-    ADD CONSTRAINT st_stype_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8489 (class 2606 OID 35431)
--- Name: status_adm status_adm_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.status_adm
-    ADD CONSTRAINT status_adm_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8491 (class 2606 OID 35433)
--- Name: status_och status_och_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.status_och
-    ADD CONSTRAINT status_och_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8487 (class 2606 OID 35435)
--- Name: status status_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.status
-    ADD CONSTRAINT status_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8493 (class 2606 OID 35437)
--- Name: status_pr status_pr_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.status_pr
-    ADD CONSTRAINT status_pr_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8495 (class 2606 OID 35439)
--- Name: stop_type stop_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.stop_type
-    ADD CONSTRAINT stop_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8497 (class 2606 OID 35441)
--- Name: store_type store_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.store_type
-    ADD CONSTRAINT store_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8499 (class 2606 OID 35443)
--- Name: str_l_type str_l_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.str_l_type
-    ADD CONSTRAINT str_l_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8501 (class 2606 OID 35445)
--- Name: str_r_type str_r_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.str_r_type
-    ADD CONSTRAINT str_r_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8503 (class 2606 OID 35447)
--- Name: str_type str_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.str_type
-    ADD CONSTRAINT str_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8505 (class 2606 OID 35449)
--- Name: street_line_extension street_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.street_line_extension
-    ADD CONSTRAINT street_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8507 (class 2606 OID 35451)
--- Name: streetv_line_extension streetv_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.streetv_line_extension
-    ADD CONSTRAINT streetv_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8509 (class 2606 OID 35453)
--- Name: su_type su_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.su_type
-    ADD CONSTRAINT su_type_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8511 (class 2606 OID 35455)
--- Name: suburban_tr suburban_tr_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.suburban_tr
-    ADD CONSTRAINT suburban_tr_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8513 (class 2606 OID 35457)
--- Name: surface_type surface_type_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.surface_type
-    ADD CONSTRAINT surface_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.specialeconomicarea ADD CONSTRAINT specialeconomicarea_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.specific ADD CONSTRAINT specific_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.sport_extension ADD CONSTRAINT sport_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.sport ADD CONSTRAINT sport_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.sport_point_extension ADD CONSTRAINT sport_point_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.sport_point ADD CONSTRAINT sport_point_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.spz_event ADD CONSTRAINT spz_event_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.ssah_stype ADD CONSTRAINT ssah_stype_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.st_stype ADD CONSTRAINT st_stype_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.status_adm ADD CONSTRAINT status_adm_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.status_och ADD CONSTRAINT status_och_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.status ADD CONSTRAINT status_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.status_pr ADD CONSTRAINT status_pr_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.stop_type ADD CONSTRAINT stop_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.store_type ADD CONSTRAINT store_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.str_l_type ADD CONSTRAINT str_l_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.str_r_type ADD CONSTRAINT str_r_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.str_type ADD CONSTRAINT str_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.street_line_extension ADD CONSTRAINT street_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.streetv_line_extension ADD CONSTRAINT streetv_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.su_type ADD CONSTRAINT su_type_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.suburban_tr ADD CONSTRAINT suburban_tr_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.surface_type ADD CONSTRAINT surface_type_pkey PRIMARY KEY (objectid);
 
 
 --
@@ -21876,44 +20235,12 @@ ALTER TABLE ONLY fiz.szz_type
 -- Name: technoriskarea_extension technoriskarea_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
 --
 
-ALTER TABLE ONLY fiz.technoriskarea_extension
-    ADD CONSTRAINT technoriskarea_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8518 (class 2606 OID 35463)
--- Name: technoriskarea technoriskarea_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.technoriskarea
-    ADD CONSTRAINT technoriskarea_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8525 (class 2606 OID 35465)
--- Name: technoriskarea_point_extension technoriskarea_point_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
+ALTER TABLE ONLY fiz.technoriskarea_extension ADD CONSTRAINT technoriskarea_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.technoriskarea ADD CONSTRAINT technoriskarea_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.technoriskarea_point_extension
     ADD CONSTRAINT technoriskarea_point_extension_pkey PRIMARY KEY (object_id);
-
-
---
--- TOC entry 8523 (class 2606 OID 35467)
--- Name: technoriskarea_point technoriskarea_point_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.technoriskarea_point
-    ADD CONSTRAINT technoriskarea_point_pkey PRIMARY KEY (objectid);
-
-
---
--- TOC entry 8530 (class 2606 OID 35469)
--- Name: telecomfacility_extension telecomfacility_extension_pkey; Type: CONSTRAINT; Schema: fiz; Owner: fiz
---
-
-ALTER TABLE ONLY fiz.telecomfacility_extension
-    ADD CONSTRAINT telecomfacility_extension_pkey PRIMARY KEY (object_id);
+ALTER TABLE ONLY fiz.technoriskarea_point ADD CONSTRAINT technoriskarea_point_pkey PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.telecomfacility_extension ADD CONSTRAINT telecomfacility_extension_pkey PRIMARY KEY (object_id);
 
 
 --
@@ -22542,404 +20869,55 @@ CREATE INDEX sidx_20425_12 ON fiz.forestpark USING gist (shape);
 CREATE INDEX sidx_20442_13 ON fiz.greeneryplanting USING gist (shape);
 CREATE INDEX sidx_20459_12 ON fiz.envdanger_point USING gist (shape);
 CREATE INDEX sidx_20476_12 ON fiz.envdanger USING gist (shape);
-
-
---
--- TOC entry 8057 (class 1259 OID 35638)
--- Name: sidx_20493_8; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20493_8 ON fiz.historicsettlement USING gist (shape);
-
-
---
--- TOC entry 8038 (class 1259 OID 35639)
--- Name: sidx_20510_17; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20510_17 ON fiz.heritage_point USING gist (shape);
-
-
---
--- TOC entry 8043 (class 1259 OID 35640)
--- Name: sidx_20527_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20527_15 ON fiz.heritagearea USING gist (shape);
-
-
---
--- TOC entry 8423 (class 1259 OID 35641)
--- Name: sidx_20544_24; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20544_24 ON fiz.servicefacility_point USING gist (shape);
-
-
---
--- TOC entry 7679 (class 1259 OID 35642)
--- Name: sidx_20561_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20561_25 ON fiz.agriculture USING gist (shape);
-
-
---
--- TOC entry 7684 (class 1259 OID 35643)
--- Name: sidx_20578_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20578_25 ON fiz.agriculture_point USING gist (shape);
-
-
---
--- TOC entry 8116 (class 1259 OID 35644)
--- Name: sidx_20595_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20595_22 ON fiz.manufacturing USING gist (shape);
-
-
---
--- TOC entry 8121 (class 1259 OID 35645)
--- Name: sidx_20612_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20612_22 ON fiz.manufacturing_point USING gist (shape);
-
-
---
--- TOC entry 8418 (class 1259 OID 35646)
--- Name: sidx_20629_24; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20629_24 ON fiz.servicefacility USING gist (shape);
-
-
---
--- TOC entry 8619 (class 1259 OID 35647)
--- Name: sidx_20647_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20647_23 ON fiz.wastefacility USING gist (shape);
-
-
---
--- TOC entry 8624 (class 1259 OID 35648)
--- Name: sidx_20665_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20665_23 ON fiz.wastefacility_point USING gist (shape);
-
-
---
--- TOC entry 8102 (class 1259 OID 35649)
--- Name: sidx_20682_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20682_15 ON fiz.investmentzone USING gist (shape);
-
-
---
--- TOC entry 8099 (class 1259 OID 35650)
--- Name: sidx_20699_30; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20699_30 ON fiz.investmentsite USING gist (shape);
-
-
---
--- TOC entry 7707 (class 1259 OID 35651)
--- Name: sidx_20716_13; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20716_13 ON fiz.areabasedevelopment USING gist (shape);
-
-
---
--- TOC entry 8109 (class 1259 OID 35652)
--- Name: sidx_20733_5; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20733_5 ON fiz.landuse USING gist (shape);
-
-
---
--- TOC entry 8141 (class 1259 OID 35653)
--- Name: sidx_20750_13; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20750_13 ON fiz.mineraldep USING gist (shape);
-
-
---
--- TOC entry 8146 (class 1259 OID 35654)
--- Name: sidx_20767_13; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20767_13 ON fiz.mineraldep_point USING gist (shape);
-
-
---
--- TOC entry 8136 (class 1259 OID 35655)
--- Name: sidx_20784_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20784_14 ON fiz.mineralarea USING gist (shape);
-
-
---
--- TOC entry 8084 (class 1259 OID 35656)
--- Name: sidx_20801_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20801_14 ON fiz.hydro_point USING gist (shape);
-
-
---
--- TOC entry 8074 (class 1259 OID 35657)
--- Name: sidx_20818_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20818_14 ON fiz.hydro USING gist (shape);
-
-
---
--- TOC entry 8079 (class 1259 OID 35658)
--- Name: sidx_20835_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20835_14 ON fiz.hydro_line USING gist (shape);
-
-
---
--- TOC entry 7948 (class 1259 OID 35659)
--- Name: sidx_20852_13; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20852_13 ON fiz.forest USING gist (shape);
-
-
---
--- TOC entry 8348 (class 1259 OID 35660)
--- Name: sidx_20869_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20869_25 ON fiz.recreation_point USING gist (shape);
-
-
---
--- TOC entry 7712 (class 1259 OID 35661)
--- Name: sidx_20886_24; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20886_24 ON fiz.authorityservice USING gist (shape);
-
-
---
--- TOC entry 7717 (class 1259 OID 35662)
--- Name: sidx_20903_24; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20903_24 ON fiz.authorityservice_point USING gist (shape);
-
-
---
--- TOC entry 7795 (class 1259 OID 35663)
--- Name: sidx_20920_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20920_22 ON fiz.culture USING gist (shape);
-
-
---
--- TOC entry 7800 (class 1259 OID 35664)
--- Name: sidx_20937_22; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20937_22 ON fiz.culture_point USING gist (shape);
-
-
---
--- TOC entry 7832 (class 1259 OID 35665)
--- Name: sidx_20954_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20954_23 ON fiz.education USING gist (shape);
-
-
---
--- TOC entry 7837 (class 1259 OID 35666)
--- Name: sidx_20971_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20971_23 ON fiz.education_point USING gist (shape);
-
-
---
--- TOC entry 8026 (class 1259 OID 35667)
--- Name: sidx_20988_26; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20988_26 ON fiz.health USING gist (shape);
-
-
---
--- TOC entry 8031 (class 1259 OID 35668)
--- Name: sidx_21005_26; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21005_26 ON fiz.health_point USING gist (shape);
-
-
---
--- TOC entry 8275 (class 1259 OID 35669)
--- Name: sidx_21022_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21022_21 ON fiz.public USING gist (shape);
-
-
---
--- TOC entry 8280 (class 1259 OID 35670)
--- Name: sidx_21039_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21039_21 ON fiz.public_point USING gist (shape);
-
-
---
--- TOC entry 8343 (class 1259 OID 35671)
--- Name: sidx_21056_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21056_25 ON fiz.recreation USING gist (shape);
-
-
---
--- TOC entry 8361 (class 1259 OID 35672)
--- Name: sidx_21073_19; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21073_19 ON fiz.resort USING gist (shape);
-
-
---
--- TOC entry 8366 (class 1259 OID 35673)
--- Name: sidx_21090_19; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21090_19 ON fiz.resort_point USING gist (shape);
-
-
---
--- TOC entry 8451 (class 1259 OID 35674)
--- Name: sidx_21107_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21107_23 ON fiz.social USING gist (shape);
-
-
---
--- TOC entry 8456 (class 1259 OID 35675)
--- Name: sidx_21124_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21124_23 ON fiz.social_point USING gist (shape);
-
---
--- TOC entry 8470 (class 1259 OID 35676)
--- Name: sidx_21141_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21141_20 ON fiz.sport USING gist (shape);
-
-
---
--- TOC entry 8475 (class 1259 OID 35677)
--- Name: sidx_21158_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21158_20 ON fiz.sport_point USING gist (shape);
-
-
---
--- TOC entry 8167 (class 1259 OID 35678)
--- Name: sidx_21175_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21175_14 ON fiz.natureprotectarea USING gist (shape);
-
-
---
--- TOC entry 8172 (class 1259 OID 35679)
--- Name: sidx_21192_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21192_14 ON fiz.natureprotectarea_point USING gist (shape);
-
-
---
--- TOC entry 8521 (class 1259 OID 35680)
--- Name: sidx_21209_10; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21209_10 ON fiz.technoriskarea_point USING gist (shape);
-
-
---
--- TOC entry 8157 (class 1259 OID 35681)
--- Name: sidx_21226_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21226_9 ON fiz.naturalriskzone USING gist (shape);
-
-
---
--- TOC entry 8162 (class 1259 OID 35682)
--- Name: sidx_21243_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21243_9 ON fiz.naturalriskzone_point USING gist (shape);
-
-
---
--- TOC entry 8516 (class 1259 OID 35683)
--- Name: sidx_21260_10; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21260_10 ON fiz.technoriskarea USING gist (shape);
-
-
---
--- TOC entry 8021 (class 1259 OID 35684)
--- Name: sidx_21277_5; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21277_5 ON fiz.hazardarea USING gist (shape);
-
-
---
--- TOC entry 8376 (class 1259 OID 35685)
--- Name: sidx_21296_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21296_14 ON fiz.resortarea_point USING gist (shape);
-
-
---
--- TOC entry 8561 (class 1259 OID 35686)
--- Name: sidx_21313_11; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21313_11 ON fiz.traditionalarea USING gist (shape);
-
-
---
--- TOC entry 8371 (class 1259 OID 35687)
--- Name: sidx_21330_14; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21330_14 ON fiz.resortarea USING gist (shape);
 CREATE INDEX sidx_21347_9 ON fiz.transpprotectionzone USING gist (shape);
 CREATE INDEX sidx_21364_9 ON fiz.transpsanitarygapzone USING gist (shape);
