@@ -247,29 +247,30 @@ public class GisStorage {
     }
 
     public void initP10Database(String dbName, String schemaName) {
-        log.debug("Инициализация шаблонной БД");
+        log.debug("Инициализация шаблонной БД Для: {}", dbName + "." + schemaName);
 
         try {
             HikariDataSource datasource = datasourceFactory.getDatasource(dbName);
-
             JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-            String checkSchemaSql = "SELECT count(*) FROM pg_namespace WHERE nspname = '" + schemaName + "'";
-            int result = jdbcTemplate.queryForObject(checkSchemaSql, Integer.class);
 
-            if (result > 0) {
-                log.info("Схема существует, инициализация не требуется");
-            } else {
-                Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
-                Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
-
-                // Create schema
-                ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
-
-                // Insert data
-                ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
+            String checkTablesSql = "select count(*) from information_schema.tables where table_schema = '"
+                    + schemaName + "' AND table_type = 'BASE TABLE'";
+            int tableCounter = jdbcTemplate.queryForObject(checkTablesSql, Integer.class);
+            if (tableCounter > 400) {
+                log.debug("Инициализация не требуется");
+                return;
             }
+
+            Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
+            Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
+
+            // Create schema
+            ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
+
+            // Insert data
+            ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
         } catch (SQLException e) {
-            log.error("Неудалось подключится к БД: gis / {}", e.getLocalizedMessage());
+            log.error("Неудалось подключится к БД / {}", e.getLocalizedMessage());
         } catch (ScriptException e) {
             log.error("Ошибка при выполнении скрипта: {}", e.getLocalizedMessage());
         }

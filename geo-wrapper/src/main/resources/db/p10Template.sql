@@ -22639,122 +22639,21 @@ ALTER TABLE ONLY fiz.zone_oopt
 
 
 --
--- TOC entry 7976 (class 1259 OID 35600)
--- Name: sidx_18198_22; Type: INDEX; Schema: fiz; Owner: fiz
 --
-
 CREATE INDEX sidx_18198_22 ON fiz.functionalzone USING gist (shape);
-
-
---
--- TOC entry 7670 (class 1259 OID 35601)
--- Name: sidx_19489_8; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19489_8 ON fiz.admesrf USING gist (shape);
-
-
---
--- TOC entry 7660 (class 1259 OID 35602)
--- Name: sidx_19506_11; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19506_11 ON fiz.admenp USING gist (shape);
-
-
---
--- TOC entry 7665 (class 1259 OID 35603)
--- Name: sidx_19523_7; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19523_7 ON fiz.admerf USING gist (shape);
-
-
---
--- TOC entry 7655 (class 1259 OID 35604)
--- Name: sidx_19540_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19540_9 ON fiz.admemo USING gist (shape);
-
-
---
--- TOC entry 7650 (class 1259 OID 35605)
--- Name: sidx_19557_6; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19557_6 ON fiz.admborder_line USING gist (shape);
-
-
---
--- TOC entry 8463 (class 1259 OID 35606)
--- Name: sidx_19576_18; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19576_18 ON fiz.specialeconomicarea USING gist (shape);
-
-
---
--- TOC entry 8641 (class 1259 OID 35607)
--- Name: sidx_19763_18; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19763_18 ON fiz.waterpipeline_line USING gist (shape);
-
-
---
--- TOC entry 8444 (class 1259 OID 35608)
--- Name: sidx_19915_17; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19915_17 ON fiz.sewerpipeline_line USING gist (shape);
-
-
---
--- TOC entry 7844 (class 1259 OID 35609)
--- Name: sidx_19932_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19932_21 ON fiz.electricline_line USING gist (shape);
-
-
---
--- TOC entry 7849 (class 1259 OID 35610)
--- Name: sidx_19949_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19949_23 ON fiz.electricpowerstation USING gist (shape);
-
-
---
--- TOC entry 7854 (class 1259 OID 35611)
--- Name: sidx_19966_23; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19966_23 ON fiz.electricpowerstation_point USING gist (shape);
-
-
---
--- TOC entry 7859 (class 1259 OID 35612)
--- Name: sidx_19983_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_19983_25 ON fiz.electrictransformer USING gist (shape);
-
-
---
--- TOC entry 7864 (class 1259 OID 35613)
--- Name: sidx_20000_25; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20000_25 ON fiz.electrictransformer_point USING gist (shape);
-
-
---
--- TOC entry 7883 (class 1259 OID 35614)
--- Name: sidx_20017_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_20017_15 ON fiz.engprotectionobj_line USING gist (shape);
 
 
@@ -23340,229 +23239,33 @@ CREATE INDEX sidx_21313_11 ON fiz.traditionalarea USING gist (shape);
 --
 
 CREATE INDEX sidx_21330_14 ON fiz.resortarea USING gist (shape);
-
-
---
--- TOC entry 8591 (class 1259 OID 35688)
--- Name: sidx_21347_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21347_9 ON fiz.transpprotectionzone USING gist (shape);
-
-
---
--- TOC entry 8596 (class 1259 OID 35689)
--- Name: sidx_21364_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21364_9 ON fiz.transpsanitarygapzone USING gist (shape);
-
-
---
--- TOC entry 8646 (class 1259 OID 35690)
--- Name: sidx_21381_8; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21381_8 ON fiz.waterprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7943 (class 1259 OID 35691)
--- Name: sidx_21398_8; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21398_8 ON fiz.foreshore USING gist (shape);
-
-
---
--- TOC entry 8048 (class 1259 OID 35692)
--- Name: sidx_21415_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21415_9 ON fiz.heritageprotectionzone USING gist (shape);
-
-
---
--- TOC entry 8177 (class 1259 OID 35693)
--- Name: sidx_21432_10; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21432_10 ON fiz.natureprotectionzone USING gist (shape);
-
-
---
--- TOC entry 8217 (class 1259 OID 35694)
--- Name: sidx_21449_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21449_9 ON fiz.otherprotectionzone USING gist (shape);
-
-
---
--- TOC entry 8222 (class 1259 OID 35695)
--- Name: sidx_21466_10; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21466_10 ON fiz.otherzone USING gist (shape);
-
-
---
--- TOC entry 8266 (class 1259 OID 35696)
--- Name: sidx_21483_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21483_9 ON fiz.protectionzone USING gist (shape);
-
-
---
--- TOC entry 8381 (class 1259 OID 35697)
--- Name: sidx_21500_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21500_9 ON fiz.resortprotectionzone USING gist (shape);
-
-
---
--- TOC entry 8407 (class 1259 OID 35698)
--- Name: sidx_21517_12; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21517_12 ON fiz.sanitaryprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7774 (class 1259 OID 35699)
--- Name: sidx_21534_8; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21534_8 ON fiz.coastalprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7821 (class 1259 OID 35700)
--- Name: sidx_21551_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21551_9 ON fiz.drinkwaterprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7893 (class 1259 OID 35701)
--- Name: sidx_21568_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21568_9 ON fiz.engprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7898 (class 1259 OID 35702)
--- Name: sidx_21585_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21585_9 ON fiz.engsanitarygapzone USING gist (shape);
-
-
---
--- TOC entry 7931 (class 1259 OID 35703)
--- Name: sidx_21602_9; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21602_9 ON fiz.fishprotectionzone USING gist (shape);
-
-
---
--- TOC entry 7936 (class 1259 OID 35704)
--- Name: sidx_21619_10; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21619_10 ON fiz.floodarea USING gist (shape);
-
-
---
--- TOC entry 8666 (class 1259 OID 35705)
--- Name: sidx_21788_16; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21788_16 ON fiz.wildlifeprotection USING gist (shape);
-
-
---
--- TOC entry 8671 (class 1259 OID 35706)
--- Name: sidx_21805_16; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21805_16 ON fiz.wildlifeprotection_point USING gist (shape);
-
-
---
--- TOC entry 7873 (class 1259 OID 35707)
--- Name: sidx_21822_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21822_21 ON fiz.emergencyprotectionobj USING gist (shape);
-
-
---
--- TOC entry 7878 (class 1259 OID 35708)
--- Name: sidx_21839_21; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21839_21 ON fiz.emergencyprotectionobj_point USING gist (shape);
-
-
---
--- TOC entry 7915 (class 1259 OID 35709)
--- Name: sidx_21856_16; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21856_16 ON fiz.envmonitoring USING gist (shape);
-
-
---
--- TOC entry 7920 (class 1259 OID 35710)
--- Name: sidx_21873_16; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21873_16 ON fiz.envmonitoring_point USING gist (shape);
-
-
---
--- TOC entry 8207 (class 1259 OID 35711)
--- Name: sidx_21890_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21890_20 ON fiz.otherobject USING gist (shape);
-
-
---
--- TOC entry 8212 (class 1259 OID 35712)
--- Name: sidx_21907_20; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21907_20 ON fiz.otherobject_point USING gist (shape);
-
-
---
--- TOC entry 8248 (class 1259 OID 35713)
--- Name: sidx_21924_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21924_15 ON fiz.prison USING gist (shape);
-
-
---
--- TOC entry 8253 (class 1259 OID 35714)
--- Name: sidx_21941_15; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21941_15 ON fiz.prison_point USING gist (shape);
-
-
---
--- TOC entry 7758 (class 1259 OID 35715)
--- Name: sidx_21958_19; Type: INDEX; Schema: fiz; Owner: fiz
---
-
 CREATE INDEX sidx_21958_19 ON fiz.cemetery USING gist (shape);
 CREATE INDEX sidx_21975_19 ON fiz.cemetery_point USING gist (shape);
 CREATE INDEX sidx_22147_17 ON fiz.publictransportstops_point USING gist (shape);
