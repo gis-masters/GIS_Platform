@@ -5,13 +5,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
@@ -20,9 +20,6 @@ import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.wrapper.service.validation.Util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
@@ -33,14 +30,17 @@ public class GisStorage {
 
     private static final Logger log = LoggerFactory.getLogger(GisStorage.class);
 
+    private ResourceLoader resourceLoader;
     private DatasourceFactory datasourceFactory;
 
     private static final String AS_IS = "AsIs";
     private static final String NOT_IMPORT = "NotImport";
 
     @Autowired
-    public GisStorage(DatasourceFactory datasourceFactory) {
+    public GisStorage(DatasourceFactory datasourceFactory,
+                      ResourceLoader resourceLoader) {
         this.datasourceFactory = datasourceFactory;
+        this.resourceLoader = resourceLoader;
     }
 
     public void createDb(final String dbName) throws RuntimeException {
@@ -259,19 +259,17 @@ public class GisStorage {
             if (result > 0) {
                 log.info("Схема существует, инициализация не требуется");
             } else {
-                File schemaFile = ResourceUtils.getFile("classpath:db/p10Template.sql");
-                File dataFile = ResourceUtils.getFile("classpath:db/data.sql");
+                Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
+                Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
 
                 // Create schema
-                ScriptUtils.executeSqlScript(datasource.getConnection(), new UrlResource(schemaFile.toURI()));
+                ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
 
                 // Insert data
-                ScriptUtils.executeSqlScript(datasource.getConnection(), new UrlResource(dataFile.toURI()));
+                ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
             }
         } catch (SQLException e) {
             log.error("Неудалось подключится к БД: gis / {}", e.getLocalizedMessage());
-        } catch (MalformedURLException | FileNotFoundException e) {
-            log.error("Неудалось открыть файл с шаблоном БД по 10 приказу. {}", e.getLocalizedMessage());
         } catch (ScriptException e) {
             log.error("Ошибка при выполнении скрипта: {}", e.getLocalizedMessage());
         }

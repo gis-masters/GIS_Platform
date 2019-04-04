@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -22,6 +23,9 @@ public class GisStorageTest {
     @Mock
     JdbcTemplate jdbcTemplate;
 
+    @Mock
+    ResourceLoader resourceLoader;
+
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
@@ -30,7 +34,7 @@ public class GisStorageTest {
     @Test
     @Ignore
     public void shouldConvertToJSON() {
-        GisStorage gisStorage = new GisStorage(new DatasourceFactory(environment, jdbcTemplate));
+        GisStorage gisStorage = new GisStorage(new DatasourceFactory(environment, jdbcTemplate), resourceLoader);
 
         ValidationMqRequest mqRequest = new ValidationMqRequest();
         mqRequest.setDbName("gis");
