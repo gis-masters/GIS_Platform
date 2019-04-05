@@ -65,6 +65,11 @@ export class GeoUtil {
       }
     });
 
+    // На геосервере может быть не указана схема(подразумевается public) а вернется пустая строка.
+    if (!schemaName) {
+      schemaName = 'public';
+    }
+
     return {
       dbName: dbName,
       schemaName: schemaName,

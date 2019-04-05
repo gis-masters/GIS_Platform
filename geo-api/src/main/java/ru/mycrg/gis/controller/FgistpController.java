@@ -126,6 +126,9 @@ public class FgistpController {
         return gmlGenerationService.initProcess(request);
     }
 
+    /**
+     * Если есть пустые/незаполненные параметры(хотябы у одного) - считаем это некорректной работой UI.
+     */
     private void validateRequest(List<ValidationRequestDto> request) {
         request.forEach(requestDto -> {
             String dbName = requestDto.getDbName();
@@ -133,7 +136,7 @@ public class FgistpController {
             String tableName = requestDto.getTableName();
 
             if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
-                throw new CrgBadRequestException("Incorrect data");
+                throw new CrgBadRequestException("Incorrect data: " + String.join(".", dbName, schemaName, tableName));
             }
         });
     }
