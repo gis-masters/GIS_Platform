@@ -17,6 +17,7 @@ export class DataImportComponent {
 
   isImportInited = false;
   isUploadComplete = false;
+  isWrongExt = false;
 
   public uploader: FileUploader = new FileUploader({url: ''});
 
@@ -45,6 +46,20 @@ export class DataImportComponent {
           (data: InputStartResponseDto) => this.addTask(data),
           errorResponse => this.handleError('Start import failed', errorResponse)
         );
+  }
+
+  checkFile(name: string) {
+    const extension = name.split('.')[1];
+    if (extension) {
+      if (extension === 'zip') {
+        return false;
+      } else {
+        this.isWrongExt = true;
+        return true;
+      }
+    } else {
+      return true;
+    }
   }
 
   private addTask(data: InputStartResponseDto) {
@@ -122,5 +137,4 @@ export class DataImportComponent {
       duration: 5000,
     });
   }
-
 }

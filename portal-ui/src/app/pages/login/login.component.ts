@@ -13,7 +13,7 @@ import {AuthModel, TokenStorageService} from '../../services/token-storage.servi
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
+  isWrongPassword = false;
   loginForm = this.fb.group({
     username: [null, Validators.required],
     password: [null, Validators.required],
@@ -36,6 +36,8 @@ export class LoginComponent {
     };
 
     if (this.loginForm.valid) {
+      this.isWrongPassword = false;
+
       this.authService.authenticate(credentials)
           .subscribe((authModel: AuthModel) => {
             this.logger.info('Authenticate success');
@@ -53,7 +55,9 @@ export class LoginComponent {
             if (response.error && response.error.error_description) {
               msg = response.error.error_description;
             }
-            this.snackBar.open(msg, 'X', {duration: 5000});
+
+            this.isWrongPassword = true;
+            //this.snackBar.open(msg, 'X', {duration: 5000});
           });
     } else {
       alert('Not valid form!');

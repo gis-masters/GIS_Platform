@@ -13,10 +13,12 @@
              [uploader]="uploader"
              class="well my-drop-zone">
           <div style="text-align: center; margin-top: 10px; margin-bottom: 10px">
-            <span>Перетащите архив с shape файлами</span>
+            <span>Перетащите zip архив с shape файлами</span>
             <span style="display: block">или</span>
             <div>
-              <button mat-raised-button (click)="fileInput.click(); uploader.clearQueue(); isUploadComplete = false">Откройте проводник для выбора файла</button>
+              <button mat-raised-button
+                      (click)="fileInput.click(); uploader.clearQueue(); isUploadComplete = false; isWrongExt = false">
+                Откройте проводник для выбора файла</button>
               <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
                 <input type="file" #fileInput ng2FileSelect [uploader]="uploader"/>
               </span>
@@ -26,7 +28,8 @@
       </div>
 
       <div class="col-3" style="align-self: center">
-        <button mat-raised-button class="float-right" [disabled]="!uploader.queue[0]"
+        <button mat-raised-button class="float-right"
+                [disabled]="!uploader.queue[0] || checkFile(uploader?.queue[0]?._file.name)"
                 (click)="initScratchImport()">
           <mat-icon *ngIf="!isImportInited" aria-label="label">cloud_download</mat-icon>
           <span *ngIf="!isImportInited">&nbsp;Загрузка</span>
@@ -39,6 +42,7 @@
 
     <div class="row" style="padding-top: 20px">
       <div class="col-9">
+        <div *ngIf="isWrongExt" class="float-left text-danger">Неверный формат файла</div>
         <div class="float-right" *ngIf="uploader?.queue[0]">{{uploader.queue[0]?.file?.size/1024/1024 | number:'.2'}} Mb</div>
         <div class="float-right" *ngIf="uploader?.queue[0]">&nbsp;......&nbsp;</div>
         <div class="float-right">{{uploader?.queue[0]?._file.name}}</div>
