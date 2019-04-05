@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 
@@ -12,6 +13,9 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/**
+ * Сущность которая содержит запросы и процессит ответы.
+ */
 public class ValidationProcess {
 
     private static Logger log = LoggerFactory.getLogger(ValidationServiceImpl.class);
@@ -24,7 +28,8 @@ public class ValidationProcess {
     private Set<ValidationRequestDto> requests = new HashSet<>();
     private Map<String, List<ValidationMqResponse>> mqResponses = new HashMap<>();
     private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
-    private int doneCounter = 0;
+    private int completeResponseCounter = 0;
+    private RequestType requestType;
 
     public ValidationProcess() {
         this.id = UUID.randomUUID();
@@ -32,7 +37,19 @@ public class ValidationProcess {
         this.startTime = LocalDateTime.now();
     }
 
-    public void addResponse(ValidationMqResponse response) {
+    public void addRequest(List<ValidationRequestDto> request) {
+        request.stream()
+                .distinct()
+                .forEach((ValidationRequestDto requestDto) -> {
+                    requests.add(requestDto);
+                });
+    }
+
+    /**
+     * Добавление и обработка ответа.
+     * @param response {@link ValidationMqResponse}
+     */
+    public void handleResponse(ValidationMqResponse response) {
         if (mqResponses.containsKey(response.getResourceId())) {
             List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
             responses.add(response);
@@ -43,10 +60,25 @@ public class ValidationProcess {
             mqResponses.put(response.getResourceId(), responses);
         }
 
-        handleResponse(response);
+        if (response.isDone() || response.isEmpty() || response.isError()) {
+            status = response.getStatus();
+
+            completeResponseCounter++;
+            if (completeResponseCounter == requests.size()) {
+                log.info("Last completed. The process {} is successfully completed", id);
+
+                futureResponse.complete(prepareResponse());
+            } else {
+                log.info("One more part of process {} DONE", id);
+            }
+        } else if (response.isPending()) {
+            log.info("Process {} is PENDING yet", id);
+        } else {
+            log.warn("Unsupported response status: {}", response.getStatus());
+        }
     }
 
-    public List<ValidationResponseDto> prepareResponse() {
+    private List<ValidationResponseDto> prepareResponse() {
         return requests
                 .stream()
                 .map(ValidationRequestDto::getResourceId)
@@ -62,40 +94,18 @@ public class ValidationProcess {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Для заданного ресурса, среди всех ответов обработчика, найти завершающий.
+     * DONE, ERROR or EMPTY
+     */
     private Optional<ValidationMqResponse> getFinishResponse(String resourceId) throws NullPointerException {
         return mqResponses.get(resourceId).stream()
                 .filter(response -> !response.isPending())
                 .findFirst();
     }
 
-    private void handleResponse(ValidationMqResponse response) {
-        if (response.isDone()) {
-            status = ProcessStatus.DONE;
-
-            doneCounter++;
-            if (doneCounter == requests.size()) {
-                log.info("Last DONE. The process {} is successfully completed", id);
-
-                futureResponse.complete(prepareResponse());
-            } else {
-                log.info("One more part of process {} DONE", id);
-            }
-        } else if (response.isEmpty() || response.isError()) {
-            log.info("Response for process: {} is {}", id, response.getStatus());
-            futureResponse.complete(prepareResponse());
-        } else if (response.isPending()) {
-            log.info("Process {} is PENDING yet", id);
-        } else {
-            log.warn("Unsupported response status: {}", response.getStatus());
-        }
-    }
-
     public UUID getId() {
         return id;
-    }
-
-    public void addRequest(ValidationRequestDto requestDto) {
-        requests.add(requestDto);
     }
 
     public Set<ValidationRequestDto> getRequests() {
@@ -136,5 +146,13 @@ public class ValidationProcess {
 
     public Map<String, List<ValidationMqResponse>> getMqResponses() {
         return mqResponses;
+    }
+
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
     }
 }

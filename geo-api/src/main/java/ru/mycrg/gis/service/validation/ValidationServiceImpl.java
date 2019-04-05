@@ -49,32 +49,19 @@ public class ValidationServiceImpl implements IValidationService {
 
         ValidationProcess process = new ValidationProcess();
         process.setUserName(userName);
-
-        request.stream()
-                .distinct()
-                .forEach((ValidationRequestDto requestDto) -> {
-                    process.addRequest(requestDto);
-
-                    log.info("Process: {} Request type: {}", process.getId(), type);
-                    mqSender.sendValidationRequest(prepareMqRequest(page, size, type, process, requestDto));
-                });
+        process.setRequestType(type);
+        process.addRequest(request);
 
         processes.add(process);
 
+        process.getRequests().forEach(requestDto -> {
+            log.debug("Start process: {} Request type: {}", process.getId(), process.getRequestType());
+
+            mqSender.sendValidationRequest(
+                    prepareMqRequest(page, size, process.getRequestType(), process.getId(), requestDto));
+        });
+
         return process.getFutureResponse();
-    }
-
-    @NotNull
-    private ValidationMqRequest prepareMqRequest(int page, int size, RequestType type,
-                                                 ValidationProcess process, ValidationRequestDto requestDto) {
-        EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
-        // entityType.setTableName(requestDto.getTableName());
-
-        return new ValidationMqRequest(
-                process.getId(), type, page, size,
-                requestDto.getDbName(),
-                requestDto.getSchemaName(),
-                MapperUtil.mapEntityTypeToDto(entityType));
     }
 
     @Override
@@ -89,16 +76,29 @@ public class ValidationServiceImpl implements IValidationService {
         Optional<ValidationProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
             ValidationProcess process = processById.get();
-            process.addResponse(response);
+            process.handleResponse(response);
         } else {
             log.warn("Not found validation process by id: {}", response.getId());
         }
     }
 
+    @NotNull
+    private ValidationMqRequest prepareMqRequest(int page, int size, RequestType type,
+                                                 UUID processId, ValidationRequestDto requestDto) {
+        EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
+        // entityType.setTableName(requestDto.getTableName());
+
+        return new ValidationMqRequest(
+                processId, type, page, size,
+                requestDto.getDbName(),
+                requestDto.getSchemaName(),
+                MapperUtil.mapEntityTypeToDto(entityType));
+    }
+
     private Optional<ValidationProcess> getProcessById(UUID id) {
         return processes.stream()
-                        .filter(processInfo -> processInfo.getId().equals(id))
-                        .findFirst();
+                .filter(processInfo -> processInfo.getId().equals(id))
+                .findFirst();
 
     }
 
