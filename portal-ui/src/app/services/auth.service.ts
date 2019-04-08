@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   registration(regData: RegData) {
-    this.logger.info('Try register new organization: ', regData);
+    // this.logger.info('Try register new organization: ', regData);
 
     const payload = {
       email: regData.email,

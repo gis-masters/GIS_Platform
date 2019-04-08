@@ -12,6 +12,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class RegisterComponent {
 
+  errorMsg: string;
   registrationForm = this.fb.group({
     company: [null, Validators.required],
     contactPhone: [null, Validators.required],
@@ -32,6 +33,8 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    this.errorMsg = '';
+
     if (this.registrationForm.valid) {
       this.authService
           .registration(this.registrationForm.getRawValue())
@@ -41,9 +44,11 @@ export class RegisterComponent {
             this.snackBar.open('Регистрация прошла успешно', 'X', {duration: 5000});
             this.router.navigateByUrl('/login');
           }, errorResponse => {
-            Object.keys(errorResponse.error).forEach(value => {
-              this.snackBar.open(errorResponse.error[value][0], 'X', {duration: 5000});
-            });
+            if (errorResponse.error.message) {
+              this.errorMsg = errorResponse.error.message;
+            } else {
+              this.logger.error(errorResponse);
+            }
           });
     } else {
       alert('Not valid!');

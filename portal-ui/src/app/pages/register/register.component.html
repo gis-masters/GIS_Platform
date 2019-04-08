@@ -112,6 +112,10 @@
             </mat-form-field>
           </div>
         </div>
+
+        <div class="row justify-content-center text-danger">
+          <div *ngIf="!!errorMsg">{{errorMsg}}</div>
+        </div>
       </mat-card-content>
 
       <mat-card-actions>
