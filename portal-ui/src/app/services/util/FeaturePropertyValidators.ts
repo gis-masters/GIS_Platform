@@ -149,9 +149,12 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
 
-      // console.log('maxInclusive: ', currentValue);
-      if (Number(currentValue) > Number(property.maxInclusive)) {
-        errors['maxInclusive'] = 'Значение: ' + currentValue + ' более допустимого: ' + property.maxInclusive;
+      if (!this.isValidInteger(currentValue)) {
+        errors['incorrectNumber'] = 'Введите корректное число';
+      } else {
+        if (Number(currentValue) > Number(property.maxInclusive)) {
+          errors['maxInclusive'] = 'Значение: ' + currentValue + ' более допустимого: ' + property.maxInclusive;
+        }
       }
 
       return errors;
@@ -206,5 +209,15 @@ export class FeaturePropertyValidators {
     });
 
     return result !== undefined;
+  }
+
+  private static isValidInteger(currentValue: any): boolean {
+    const number = Number(currentValue);
+
+    if (!number) {
+      return false;
+    }
+
+    return Number.isInteger(number);
   }
 }

@@ -237,7 +237,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate maxInclusive', () => {
-    const maxInclusiveProperty: SimpleProperty = {
+    const max5: SimpleProperty = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: 'number',
@@ -245,23 +245,7 @@ describe('Property validation test', () => {
       maxInclusive: 5,
     };
 
-    const nullMaxInclusiveProperty: SimpleProperty = {
-      name: 'maxInclusiveProperty',
-      title: 'maxInclusive property',
-      valueType: 'number',
-      required: true,
-      maxInclusive: 0,
-    };
-
-    const undefinedMaxInclusiveProperty: SimpleProperty = {
-      name: 'maxInclusiveProperty',
-      title: 'maxInclusive property',
-      valueType: 'number',
-      required: true,
-      maxInclusive: undefined,
-    };
-
-    const notMaxInclusiveProperty: SimpleProperty = {
+    const notSetMax: SimpleProperty = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: 'number',
@@ -269,30 +253,24 @@ describe('Property validation test', () => {
       maxInclusive: -1,
     };
 
-    const maxInclusivePropertyValid = new FormControl(7, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const maxInclusivePropertyNotValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const maxInclusivePropertyNotValid2 = new FormControl(3, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const maxInclusivePropertyNotValid3 = new FormControl(null, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const maxInclusivePropertyNotValid4 = new FormControl(undefined, [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const stringMaxInclusivePropertyValid = new FormControl('a', [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const stringMaxInclusivePropertyValid2 = new FormControl('asdfghjkl', [FeaturePropertyValidators.maxInclusive(maxInclusiveProperty)]);
-    const nullMaxInclusivePropertyValid = new FormControl(7, [FeaturePropertyValidators.maxInclusive(nullMaxInclusiveProperty)]);
-    const undefinedMaxInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(undefinedMaxInclusiveProperty)]);
-    const notMaxInclusivePropertyValid = new FormControl(5, [FeaturePropertyValidators.maxInclusive(notMaxInclusiveProperty)]);
-    const notMaxInclusivePropertyNotValid = new FormControl(-5, [FeaturePropertyValidators.maxInclusive(notMaxInclusiveProperty)]);
+    const notRequiredMax: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: false,
+      maxInclusive: 10,
+    };
 
-    expect(true).toEqual(maxInclusivePropertyValid.valid);
-    expect(false).toEqual(maxInclusivePropertyNotValid.valid);
-    expect(false).toEqual(maxInclusivePropertyNotValid2.valid);
-    expect(false).toEqual(maxInclusivePropertyNotValid3.valid);
-    expect(false).toEqual(maxInclusivePropertyNotValid4.valid);
-    expect(true).toEqual(stringMaxInclusivePropertyValid.valid);  // Строку не должен принимать
-    expect(true).toEqual(stringMaxInclusivePropertyValid2.valid);  // Строку не должен принимать
-    expect(true).toEqual(nullMaxInclusivePropertyValid.valid);
-    expect(true).toEqual(undefinedMaxInclusivePropertyValid.valid);
-    expect(true).toEqual(notMaxInclusivePropertyValid.valid);
-    expect(false).toEqual(notMaxInclusivePropertyNotValid.valid);
-    expect('Значение: ' + maxInclusivePropertyNotValid.value + ' более допустимого: ' + maxInclusiveProperty.maxInclusive).toEqual(maxInclusivePropertyNotValid.errors['maxInclusive']);
+    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.maxInclusive(notRequiredMax)]).valid);
+    expect(false).toEqual(new FormControl(7, [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    expect(true).toEqual(new FormControl('5', [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    expect(false).toEqual(new FormControl('test', [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    // expect(false).toEqual(new FormControl(1.5, [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    // expect(false).toEqual(new FormControl('03', [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.maxInclusive(notSetMax)]).valid);
+    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.maxInclusive(notSetMax)]).valid);
+    expect(true).toEqual(new FormControl(-10, [FeaturePropertyValidators.maxInclusive(notSetMax)]).valid);
   });
 
   it('should validate enumeration', () => {

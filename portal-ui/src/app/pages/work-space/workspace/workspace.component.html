@@ -5,40 +5,53 @@
       <img src="../../../../assets/images/logo.svg" alt="logo" height="50" width="115">
 
       <div style="padding-left: 30px">
-        <mat-tab-group color="accent">
-          <mat-tab>
-            <ng-template mat-tab-label>
-              <span class="mat-tab-label-content">Карта</span>
-            </ng-template>
+        <button mat-icon-button routerLink="/workspace/data_import"
+                matTooltip="Загрузка шейпов">
+          <mat-icon aria-label="label">cloud_download</mat-icon>
+        </button>
+        <button mat-icon-button (click)="openBugReportSidebar()"
+                matTooltip="Проверка ошибок по приказу">
+          <mat-icon aria-label="label">bug_report</mat-icon>
+        </button>
+        <button mat-icon-button (click)="openExportDialog()"
+                matTooltip="Выгрузка GML">
+          <mat-icon aria-label="label">arrow_downward</mat-icon>
+        </button>
 
-            <button mat-icon-button routerLink="/workspace/map"><mat-icon aria-label="label">save</mat-icon></button>
-            <button mat-icon-button><mat-icon aria-label="label">delete</mat-icon></button>
-            <!--<button mat-icon-button (click)="tryPositionToObject()">-->
-              <!--<mat-icon aria-label="label">map</mat-icon>-->
-            <!--</button>-->
-          </mat-tab>
-          <mat-tab>
-            <ng-template mat-tab-label>
-              <span class="mat-tab-label-content">Данные</span>
-            </ng-template>
+<!--        <mat-tab-group color="accent">-->
+<!--          <mat-tab>-->
+<!--            <ng-template mat-tab-label>-->
+<!--              <span class="mat-tab-label-content">Карта</span>-->
+<!--            </ng-template>-->
 
-            <button mat-icon-button routerLink="/workspace/data_import">
-              <mat-icon aria-label="label">cloud_download</mat-icon>
-            </button>
-            <button mat-icon-button (click)="openBugReportSidebar()">
-              <mat-icon aria-label="label">bug_report</mat-icon>
-            </button>
-          </mat-tab>
-          <mat-tab>
-            <ng-template mat-tab-label>
-              <span class="mat-tab-label-content">ФГИС ТП</span>
-            </ng-template>
+<!--            <button mat-icon-button routerLink="/workspace/map"><mat-icon aria-label="label">save</mat-icon></button>-->
+<!--            <button mat-icon-button><mat-icon aria-label="label">delete</mat-icon></button>-->
+<!--            &lt;!&ndash;<button mat-icon-button (click)="tryPositionToObject()">&ndash;&gt;-->
+<!--              &lt;!&ndash;<mat-icon aria-label="label">map</mat-icon>&ndash;&gt;-->
+<!--            &lt;!&ndash;</button>&ndash;&gt;-->
+<!--          </mat-tab>-->
+<!--          <mat-tab>-->
+<!--            <ng-template mat-tab-label>-->
+<!--              <span class="mat-tab-label-content">Данные</span>-->
+<!--            </ng-template>-->
 
-            <button mat-icon-button (click)="openExportDialog()">
-              <mat-icon aria-label="label">arrow_downward</mat-icon>
-            </button>
-          </mat-tab>
-        </mat-tab-group>
+<!--            <button mat-icon-button routerLink="/workspace/data_import">-->
+<!--              <mat-icon aria-label="label">cloud_download</mat-icon>-->
+<!--            </button>-->
+<!--            <button mat-icon-button (click)="openBugReportSidebar()">-->
+<!--              <mat-icon aria-label="label">bug_report</mat-icon>-->
+<!--            </button>-->
+<!--          </mat-tab>-->
+<!--          <mat-tab>-->
+<!--            <ng-template mat-tab-label>-->
+<!--              <span class="mat-tab-label-content">ФГИС ТП</span>-->
+<!--            </ng-template>-->
+
+<!--            <button mat-icon-button (click)="openExportDialog()">-->
+<!--              <mat-icon aria-label="label">arrow_downward</mat-icon>-->
+<!--            </button>-->
+<!--          </mat-tab>-->
+<!--        </mat-tab-group>-->
       </div>
 
       <span class="example-spacer"></span>
