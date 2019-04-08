@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
@@ -13,8 +13,11 @@ import {ActionType, CommunicationService, SidebarType} from '../../../services/c
   styleUrls: ['./export-dialog.component.css']
 })
 export class ExportDialogComponent {
-
+  @ViewChild(MatSelectionList) list: MatSelectionList;
   @Input() layers: CrgLayer[];
+
+  selectAllList: boolean;
+  selectText = 'Выделить всё';
 
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
@@ -87,6 +90,18 @@ export class ExportDialogComponent {
 
   handleTitle(crgLayer: CrgLayer) {
     return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+  }
+
+  selectAll() {
+    if (!this.selectAllList) {
+      this.list.selectAll();
+      this.selectAllList = true;
+      this.selectText = 'Снять выделение';
+    } else {
+      this.list.deselectAll();
+      this.selectAllList = false;
+      this.selectText = 'Выделить всё';
+    }
   }
 }
 
