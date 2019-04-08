@@ -13,12 +13,16 @@ import ru.mycrg.common.MqOrganizationInit;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
+import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.OrganizationCreateException;
+import ru.mycrg.gis.exceptions.UserCreationException;
 import ru.mycrg.gis.queue.IMqEvents;
+import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -29,11 +33,14 @@ public class OrganizationController {
     private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
     private final IMqEvents mqEvents;
+    private final UserRepository userRepository;
     private final OrganizationService organizationService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService, IMqEvents mqEvents) {
+    public OrganizationController(OrganizationService organizationService, IMqEvents mqEvents,
+                                  UserRepository userRepository) {
         this.mqEvents = mqEvents;
+        this.userRepository = userRepository;
         this.organizationService = organizationService;
     }
 
@@ -53,6 +60,11 @@ public class OrganizationController {
     @PostMapping
     public ResponseEntity createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {
         log.debug("Create organization request: {}", createDto);
+
+        Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
+        if (userByEmail.isPresent()) {
+            throw new UserCreationException("Данный email уже занят");
+        }
 
         Organization newOrganization;
         try {

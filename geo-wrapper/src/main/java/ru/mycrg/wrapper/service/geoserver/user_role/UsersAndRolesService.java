@@ -40,7 +40,9 @@ public class UsersAndRolesService extends GeoServerBaseService {
         doRequest(request, "createUser");
     }
 
-    // "/rest/roles/[service/<serviceName>/]role/<role>/user/<user>"
+    // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
+    // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
+    // /rest/roles/[service/<serviceName>/]<serviceName>/user/<user>/roles
     public void associateUserWithRole(String user, String role) throws IOException {
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "");
 

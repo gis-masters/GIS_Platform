@@ -126,8 +126,11 @@ public class OrganizationService {
                 .findById(id)
                 .ifPresent(organization -> {
                     organization.setStatus(newStatus);
-
                     organizationRepository.save(organization);
+
+                    User user = organization.getUsers().get(0);
+                    user.setEnabled(true);
+                    userRepository.save(user);
                 });
     }
 

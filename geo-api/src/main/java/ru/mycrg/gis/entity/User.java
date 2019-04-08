@@ -46,6 +46,7 @@ public class User {
         this.name = name;
         this.surName = surName;
         this.email = email;
+        this.enabled = false;
     }
 
     public long getId() {
