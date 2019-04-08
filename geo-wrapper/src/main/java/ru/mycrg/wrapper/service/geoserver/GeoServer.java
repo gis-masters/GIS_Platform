@@ -2,6 +2,7 @@ package ru.mycrg.wrapper.service.geoserver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.MqOrganizationInit;
 import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
 import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
@@ -29,9 +30,12 @@ public class GeoServer implements IGeoServer {
         this.gisStorage = gisStorage;
     }
 
-    public void createOrganization(Long id, String rawPassword) throws IOException, RuntimeException {
+    public void createOrganization(MqOrganizationInit orgData) throws IOException, RuntimeException {
+        Long id = orgData.getId();
+        String rawPassword = orgData.getRawPassword();
+
         String workspaceName = GeoServerConstants.DEFAULT_WORKSPACE_NAME + "_" + id;
-        String userName = GeoServerConstants.DEFAULT_USER_NAME + id;
+        String userName = orgData.getEmail();
         String roleName = GeoServerConstants.DEFAULT_ROLE_NAME + "_" + id;
         String databaseName = GeoServerConstants.DEFAULT_DB_NAME + "_" + id;
 

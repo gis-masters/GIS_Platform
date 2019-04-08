@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.import_.ImportMqRequest;
-import ru.mycrg.gis.dto.MqOrganizationInit;
+import ru.mycrg.common.MqOrganizationInit;
 
 import static ru.mycrg.common.config.MqProperties.*;
 

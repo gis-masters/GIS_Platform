@@ -1,5 +1,7 @@
 package ru.mycrg.wrapper.service.geoserver;
 
+import ru.mycrg.common.MqOrganizationInit;
+
 import java.io.IOException;
 
 public interface IGeoServer {
@@ -15,9 +17,7 @@ public interface IGeoServer {
      *   <p> - Создание БД в postGis<br>
      *   <p> - Создание хранилища (postgis) на геосервере.
      *
-     * @param id Идентификатор организации.
-     * @param rawPassword Пароль пользователя.
      */
-    void createOrganization(Long id, String rawPassword) throws IOException;
+    void createOrganization(MqOrganizationInit creationDto) throws IOException;
 
 }

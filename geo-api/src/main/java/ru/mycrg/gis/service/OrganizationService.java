@@ -64,7 +64,8 @@ public class OrganizationService {
         newOrganization.setStatus(OrganizationStatus.PENDING);
 
         organizationRepository.save(newOrganization);
-        newUser.setUsername("Admin" + newOrganization.getId());
+        // We use email as login
+        newUser.setUsername(organizationCreateDto.getEmail());
         newUser.addAuthority("GEOSERVER_ADMIN");
 
         return newOrganization;

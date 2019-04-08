@@ -6,16 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.GmlMqRequest;
-import ru.mycrg.common.GmlMqResponse;
-import ru.mycrg.common.ValidationMqRequest;
-import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.*;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.wrapper.dto.MqOrganizationInit;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.ImportService;
@@ -56,7 +52,7 @@ public class MqListener {
         try {
             if (authService.authorize().isPresent()) {
                 try {
-                    geoServer.createOrganization(creationDto.getId(), creationDto.getRawPassword());
+                    geoServer.createOrganization(creationDto);
 
                     mqEvents.created(creationDto.getId());
                 } catch (IOException | RuntimeException e) {

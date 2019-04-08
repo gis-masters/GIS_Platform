@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.dto;
+package ru.mycrg.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,10 +9,13 @@ public class MqOrganizationInit implements Serializable {
     private Long id;
     private String rawPassword;
     private String comment;
+    private String email;
 
     public MqOrganizationInit(@JsonProperty("id") long id,
+                              @JsonProperty("email") String email,
                               @JsonProperty("rawPassword") String rawPassword) {
         this.id = id;
+        this.email = email;
         this.rawPassword = rawPassword;
     }
 
@@ -38,6 +41,14 @@ public class MqOrganizationInit implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
