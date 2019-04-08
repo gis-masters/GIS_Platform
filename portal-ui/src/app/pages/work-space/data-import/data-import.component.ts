@@ -18,6 +18,7 @@ export class DataImportComponent {
   isImportInited = false;
   isUploadComplete = false;
   isWrongExt = false;
+  isImportFailed = false;
 
   public uploader: FileUploader = new FileUploader({url: ''});
 
@@ -38,6 +39,7 @@ export class DataImportComponent {
   initScratchImport() {
     this.logger.info('Start scratch import');
 
+    this.isImportFailed = false;
     this.isUploadComplete = false;
     this.isImportInited = true;
     this.importService
@@ -132,9 +134,7 @@ export class DataImportComponent {
   private handleError(msg: string, response?: any) {
     this.logger.error(msg, response);
 
+    this.isImportFailed = true;
     this.isImportInited = false;
-    this.snackBar.open('Failed start import', 'X', {
-      duration: 5000,
-    });
   }
 }

@@ -17,7 +17,8 @@
             <span style="display: block">или</span>
             <div>
               <button mat-raised-button
-                      (click)="fileInput.click(); uploader.clearQueue(); isUploadComplete = false; isWrongExt = false">
+                      (click)="fileInput.click(); uploader.clearQueue();
+                      isUploadComplete = false; isWrongExt = false; isImportFailed = false;">
                 Откройте проводник для выбора файла</button>
               <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
                 <input type="file" #fileInput ng2FileSelect [uploader]="uploader"/>
@@ -47,6 +48,10 @@
         <div class="float-right" *ngIf="uploader?.queue[0]">&nbsp;......&nbsp;</div>
         <div class="float-right">{{uploader?.queue[0]?._file.name}}</div>
       </div>
+    </div>
+
+    <div class="row justify-content-center text-danger" style="padding-top: 10px">
+      <div *ngIf="isImportFailed">Неудается загрузить архив, проверьте вложенные файлы.</div>
     </div>
 
     <div class="row" style="padding-top: 40px">
