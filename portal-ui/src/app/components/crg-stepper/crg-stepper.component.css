@@ -1,0 +1,23 @@
+.crg-stepper {
+  margin-left: 200px;
+  position: absolute;
+  top: 13px;
+}
+
+.step-1 {
+  width: 80px;
+  height: 80px;
+  background-color: darkblue;
+  border-style: solid;
+  border-color: white;
+  border-radius: 50%;
+  border-width: thick;
+}
+
+.stepper-icon {
+  position: relative;
+  left: 15px;
+  top: 14px;
+
+  font-size: 40px
+}

@@ -33,6 +33,7 @@ import {ProgressItemComponent} from './components/progress-item/progress-item.co
 import {JwtInterceptorService} from './services/jwt-interceptor.service';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
+import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {FilterLayersPipe} from './pipes/filter-layers.pipe';
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
+    CrgStepperComponent,
   ],
   imports: [
     AppRoutingModule,
