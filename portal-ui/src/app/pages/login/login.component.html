@@ -11,7 +11,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field class="full-width">
-              <input matInput placeholder="Учетная запись" formControlName="username">
+              <input matInput placeholder="E-mail" formControlName="username">
               <mat-error *ngIf="loginForm.controls['username'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
@@ -32,6 +32,7 @@
 
         <div class="row justify-content-center text-danger">
           <div *ngIf="isWrongPassword">Неверное имя пользователя или пароль</div>
+          <div *ngIf="isUserDisabled">Запрос на создание принят и обрабатывается. Попробуйте позже.</div>
         </div>
       </mat-card-content>
 

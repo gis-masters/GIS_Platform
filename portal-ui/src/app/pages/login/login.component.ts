@@ -1,7 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component} from '@angular/core';
-import {MatSnackBar} from '@angular/material';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
@@ -14,6 +13,8 @@ import {AuthModel, TokenStorageService} from '../../services/token-storage.servi
 })
 export class LoginComponent {
   isWrongPassword = false;
+  isUserDisabled = false;
+
   loginForm = this.fb.group({
     username: [null, Validators.required],
     password: [null, Validators.required],
@@ -21,7 +22,6 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder,
               private http: HttpClient,
-              private snackBar: MatSnackBar,
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
               private logger: NGXLogger,
@@ -37,6 +37,7 @@ export class LoginComponent {
 
     if (this.loginForm.valid) {
       this.isWrongPassword = false;
+      this.isUserDisabled = false;
 
       this.authService.authenticate(credentials)
           .subscribe((authModel: AuthModel) => {
@@ -51,13 +52,13 @@ export class LoginComponent {
 
             this.authService.authenticated = false;
 
-            let msg = 'Login failed...';
-            if (response.error && response.error.error_description) {
-              msg = response.error.error_description;
+            if (response.error && response.error.error_description === 'User is disabled') {
+              this.isUserDisabled = true;
+            } else if (response.error.error_description === 'Bad credentials') {
+              this.isWrongPassword = true;
+            } else {
+              this.logger.error('Other error type: ', response.error);
             }
-
-            this.isWrongPassword = true;
-            //this.snackBar.open(msg, 'X', {duration: 5000});
           });
     } else {
       alert('Not valid form!');
