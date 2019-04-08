@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
@@ -11,11 +11,13 @@ import {CommunicationService} from '../../../services/communication.service';
   styleUrls: ['./validation-dialog.component.css']
 })
 export class ValidationDialogComponent {
-
+  @ViewChild(MatSelectionList) layers: MatSelectionList;
   @Input() data: ValidationDialogData;
-
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
+
+  selectAllLayers: boolean;
+  selectText = 'Выделить всё';
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService) {
@@ -34,6 +36,17 @@ export class ValidationDialogComponent {
     return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
   }
 
+  selectAll() {
+    if (!this.selectAllLayers) {
+      this.layers.selectAll();
+      this.selectAllLayers = true;
+      this.selectText = 'Снять выделение';
+    } else {
+      this.layers.deselectAll();
+      this.selectAllLayers = false;
+      this.selectText = 'Выделить всё';
+    }
+  }
 }
 
 export interface ValidationDialogData {
