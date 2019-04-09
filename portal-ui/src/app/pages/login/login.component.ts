@@ -16,7 +16,7 @@ export class LoginComponent {
   isUserDisabled = false;
 
   loginForm = this.fb.group({
-    username: [null, Validators.required],
+    username: [null, [Validators.required, Validators.email]],
     password: [null, Validators.required],
   });
 
