@@ -3,7 +3,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {catchError, map} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NameHrefProjection} from './projections';
 import {TaskImport} from './import/taskImport';
 import {ServerPropertiesService} from '../server-properties.service';
@@ -15,6 +15,9 @@ import {WorkImport} from './import/workImport';
 export class WorkspacesService {
 
   private workspaceUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
+  private JSON_FORMAT = new HttpHeaders({
+    'Content-Type': 'application/json',
+  });
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
@@ -35,6 +38,16 @@ export class WorkspacesService {
 
   getWorkspaceByName(name: string): Observable<any> {
     return this.http.get(this.workspaceUrl + '/' + name);
+  }
+
+  create(name: string): Observable<any> {
+    const payload = JSON.stringify({workspace: {name: name}});
+
+    return this.http.post(this.workspaceUrl, payload, {headers: this.JSON_FORMAT, responseType: 'text'});
+  }
+
+  delete(name: string): Observable<any> {
+    return this.http.delete(this.workspaceUrl + '/' + name);
   }
 
   /**

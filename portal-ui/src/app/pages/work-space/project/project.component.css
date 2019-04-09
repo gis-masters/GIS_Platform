@@ -45,3 +45,20 @@
   float: left;
   padding: 10px;
 }
+
+.text-block {
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.project-remove-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  padding-top: 3px;
+  color: lightslategray;
+  cursor: pointer;
+}

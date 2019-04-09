@@ -22,6 +22,8 @@ export class ProjectComponent implements OnInit {
   isEditMode = false;
   projects: CrgProject[] = [];
   projectName = '';
+  isHover = true;
+  activeProject: string;
 
   constructor(private logger: NGXLogger,
               private workspaceService: WorkspacesService) {
@@ -56,6 +58,11 @@ export class ProjectComponent implements OnInit {
     event.stopPropagation();
 
     this.isEditMode = false;
+
+    this.workspaceService.create(this.projectName)
+        .subscribe(response => {
+          this.logger.info('rrrrrrrrrrrrrrrr', response);
+        });
   }
 
   cancel(event) {
@@ -67,5 +74,20 @@ export class ProjectComponent implements OnInit {
   switchMode() {
     this.isEditMode = true;
     this.projectName = '';
+  }
+
+  deleteProject(pItem: CrgProject) {
+    this.workspaceService.delete(pItem.name)
+        .subscribe(response => {
+          this.logger.info('dddddddddddddd', response);
+        });
+  }
+
+  hoverBy(pItem: CrgProject) {
+    this.activeProject = pItem.name;
+  }
+
+  stopHover() {
+    this.activeProject = '';
   }
 }
