@@ -7,9 +7,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CrgStepperComponent implements OnInit {
 
+  activeStep = 1;
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  nextStep() {
+    if (this.activeStep === 4) {
+      this.activeStep = 1;
+    } else {
+      this.activeStep += 1;
+    }
+  }
+
+  step(number) {
+    if (number <= this.activeStep) {
+      this.activeStep = number;
+    }
+  }
 }

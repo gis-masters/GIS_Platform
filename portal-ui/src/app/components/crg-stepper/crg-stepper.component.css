@@ -2,22 +2,40 @@
   margin-left: 200px;
   position: absolute;
   top: 13px;
+  display: flex;
 }
 
-.step-1 {
+.step-1, .step-2, .step-3 {
   width: 80px;
   height: 80px;
-  background-color: darkblue;
-  border-style: solid;
-  border-color: white;
   border-radius: 50%;
-  border-width: thick;
+  border-width: 0;
 }
 
 .stepper-icon {
   position: relative;
-  left: 15px;
-  top: 14px;
+  left: 20px;
+  top: 18px;
+  font-size: 40px;
+}
 
-  font-size: 40px
+.step-line {
+  align-self: center;
+  width: 100px;
+  height: 6px;
+  margin: -1px;
+}
+
+.disabled {
+  background-color: darkgrey;
+}
+
+.active {
+  background-color: #008ace;
+  cursor: pointer;
+}
+
+.done {
+  background-color: #95b70b;
+  cursor: pointer;
 }
