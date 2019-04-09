@@ -1,0 +1,77 @@
+<mat-toolbar color="primary" class="workspace-page_toolbar">
+  <h6>Проекты</h6>
+</mat-toolbar>
+
+<div class="container">
+  <mat-grid-list [gutterSize]="10" cols="3" rowHeight="2:1">
+
+    <mat-grid-tile class="new-project-item" (click)="switchMode()">
+      <div *ngIf="!isEditMode">
+        <mat-icon style="float: left">add</mat-icon>
+        <span>Создать новый проект</span>
+      </div>
+
+      <div *ngIf="isEditMode" class="fiz-class">
+        <mat-form-field class="project-form">
+          <input matInput maxlength="255" placeholder="Название проекта" [(ngModel)]="projectName">
+          <mat-hint align="end">{{projectName.length}} / 255</mat-hint>
+          <button mat-button *ngIf="projectName" matSuffix mat-icon-button aria-label="Clear" (click)="projectName=''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div class="project-item-footer">
+          <button mat-button class="float-left" (click)="cancel($event)">Отмена</button>
+          <button mat-button class="float-right" [disabled]="!projectName"
+                  (click)="createNew($event)">Сохранить</button>
+        </div>
+      </div>
+    </mat-grid-tile>
+
+    <mat-grid-tile *ngFor="let pItem of projects" class="project-item">
+      <div style="float: left">{{pItem.name}}</div>
+
+      <div class="project-item-footer" (click)="openProject(pItem)">
+        <span style="vertical-align: -webkit-baseline-middle">Открыть</span>
+      </div>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+</div>
+
+
+<!--<div class="container">-->
+<!--  <div *ngIf="!isEditMode">-->
+<!--    <mat-grid-list [gutterSize]="10" cols="3" rowHeight="2:1">-->
+<!--      <mat-grid-tile class="new-project-item" (click)="isEditMode = true">-->
+<!--        <mat-icon style="float: left">add</mat-icon>-->
+<!--        <span>Создать новый проект</span>-->
+<!--      </mat-grid-tile>-->
+
+<!--      <mat-grid-tile *ngFor="let pItem of projects" class="project-item">-->
+<!--        <div style="float: left">{{pItem.name}}</div>-->
+
+<!--        <div class="project-item-footer" (click)="openProject(pItem)">-->
+<!--          <span style="vertical-align: -webkit-baseline-middle">Открыть</span>-->
+<!--        </div>-->
+<!--      </mat-grid-tile>-->
+<!--    </mat-grid-list>-->
+<!--  </div>-->
+
+<!--  <div *ngIf="isEditMode">-->
+<!--    <mat-card>-->
+<!--      <mat-form-field style="width: 100%">-->
+<!--        <input matInput maxlength="255" placeholder="Название проекта" [(ngModel)]="projectName">-->
+<!--        <mat-hint align="end">{{projectName.length}} / 255</mat-hint>-->
+<!--        <button mat-button *ngIf="projectName" matSuffix mat-icon-button aria-label="Clear" (click)="projectName=''">-->
+<!--          <mat-icon>close</mat-icon>-->
+<!--        </button>-->
+<!--      </mat-form-field>-->
+
+<!--      <mat-card-footer style="background: rgba(0, 0, 0, .05)">-->
+<!--        <button mat-button (click)="isEditMode = false">Назад</button>-->
+<!--        <button mat-button class="float-right" (click)="createNew()">Создать</button>-->
+<!--      </mat-card-footer>-->
+<!--    </mat-card>-->
+<!--  </div>-->
+<!--</div>-->

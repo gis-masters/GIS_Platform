@@ -9,6 +9,7 @@ import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {WorkspaceComponent} from './pages/work-space/workspace/workspace.component';
 import {DataImportComponent} from './pages/work-space/data-import/data-import.component';
 import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
+import {ProjectComponent} from './pages/work-space/project/project.component';
 
 const routes: Routes = [
   {path: '', component: LandingComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
     component: WorkspaceComponent,
     children: [
       {path: '', redirectTo: 'map', pathMatch: 'full'},
+      {path: 'projects', component: ProjectComponent},
       {path: 'map', component: MapComponent},
       {path: 'data_import', component: DataImportComponent},
       {path: 'data_mapping', component: DataMappingComponent},

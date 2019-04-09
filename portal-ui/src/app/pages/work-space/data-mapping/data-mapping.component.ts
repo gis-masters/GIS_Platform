@@ -56,17 +56,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.workspacesService.getAll()
-        .pipe(filter(value => !!value['workspaces']))
-        .subscribe((geoWorkspace: GeoWorkspace) => {
-          // this.logger.info('workspacesService.getAll: ', geoWorkspace.workspaces);
-
-          this.workspaces = geoWorkspace.workspaces.workspace
-              .map((item: NameHrefProjection) => item.name)
-                // Не показываем 'scratch workspace'
-              .filter(workspaceName => !workspaceName.includes(environment.scratchWorkspaceName));
-        });
-
     this.importService
         .getAllImportLayers(true)
         .subscribe((layers: ImportLayer[]) => {
