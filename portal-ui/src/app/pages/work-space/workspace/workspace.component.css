@@ -6,6 +6,12 @@
   /*height: 85px;*/
 /*}*/
 
+.example-is-mobile {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+}
+
 .example-container {
   display: flex;
   flex-direction: column;
