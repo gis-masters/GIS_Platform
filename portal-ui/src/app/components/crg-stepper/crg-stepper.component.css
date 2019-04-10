@@ -1,22 +1,22 @@
 .crg-stepper {
-  margin-left: 200px;
+  margin-left: 25px;
   position: absolute;
-  top: 13px;
+  top: 25px;
   display: flex;
 }
 
-.step-1, .step-2, .step-3 {
-  width: 80px;
-  height: 80px;
+.step-1, .step-2, .step-3, .step-4 {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border-width: 0;
 }
 
 .stepper-icon {
   position: relative;
-  left: 20px;
-  top: 18px;
-  font-size: 40px;
+  left: 10px;
+  top: 10px;
+  font-size: 30px;
 }
 
 .step-line {
