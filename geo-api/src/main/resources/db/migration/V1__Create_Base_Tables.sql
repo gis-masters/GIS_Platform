@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS public.users(
   id bigserial NOT NULL UNIQUE,
-  email character varying(255) COLLATE pg_catalog."default",
+  email character varying(255),
   enabled boolean,
-  name character varying(255) COLLATE pg_catalog."default",
-  password character varying(255) COLLATE pg_catalog."default",
-  sur_name character varying(255) COLLATE pg_catalog."default",
-  username character varying(255) COLLATE pg_catalog."default",
+  name character varying(255),
+  password character varying(255),
+  sur_name character varying(255),
+  username character varying(255),
   CONSTRAINT users_pkey PRIMARY KEY (id),
   CONSTRAINT ukr43af9ap4edm43mmtq01oddj6 UNIQUE (username)
 )
@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.projects(
   id bigserial NOT NULL UNIQUE,
   internal_name character varying(255),
   geoserver_name character varying(255),
+  extra json,
   CONSTRAINT projects_pkey PRIMARY KEY (id),
   CONSTRAINT ukr43af3ap46dm12mmtq31oddj6 UNIQUE (internal_name)
 );
@@ -25,9 +26,9 @@ ALTER TABLE public.projects OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public.organization(
   id bigserial NOT NULL UNIQUE,
-  name character varying(255) COLLATE pg_catalog."default",
-  phone character varying(255) COLLATE pg_catalog."default",
-  status character varying(255) COLLATE pg_catalog."default",
+  name character varying(255),
+  phone character varying(255),
+  status character varying(255),
   CONSTRAINT organization_pkey PRIMARY KEY (id)
 )
 WITH (OIDS = FALSE)
@@ -70,7 +71,7 @@ ALTER TABLE public.organization_projects OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public.authorities(
   id bigserial NOT NULL UNIQUE,
-  authority character varying(255) COLLATE pg_catalog."default",
+  authority character varying(255),
   user_id integer NOT NULL,
   CONSTRAINT authorities_pkey PRIMARY KEY (id),
   CONSTRAINT fkk91upmbueyim93v469wj7b2qh FOREIGN KEY (user_id)
@@ -85,10 +86,10 @@ ALTER TABLE public.authorities OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public.custom_rules(
   id bigserial NOT NULL UNIQUE,
-  class_name character varying(255) COLLATE pg_catalog."default",
-  class_rule text COLLATE pg_catalog."default",
-  group_ character varying(255) COLLATE pg_catalog."default",
-  group_alias character varying(255) COLLATE pg_catalog."default",
+  class_name character varying(255),
+  class_rule text,
+  group_ character varying(255),
+  group_alias character varying(255),
   CONSTRAINT custom_rules_pkey PRIMARY KEY (id)
 )
 WITH (OIDS = FALSE)
@@ -99,7 +100,7 @@ ALTER TABLE public.custom_rules OWNER to postgres;
 CREATE TABLE IF NOT EXISTS public.xsd_rules
 (
   id bigserial NOT NULL UNIQUE,
-  class_name character varying(255) COLLATE pg_catalog."default",
+  class_name character varying(255),
   class_rule json,
   CONSTRAINT xsd_rules_pkey PRIMARY KEY (id)
 )

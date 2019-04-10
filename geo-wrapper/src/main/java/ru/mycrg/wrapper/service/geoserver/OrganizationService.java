@@ -12,7 +12,7 @@ import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 import java.io.IOException;
 
 @Service
-public class GeoServer implements IGeoServer {
+public class OrganizationService {
 
     private final WorkspacesService workspacesService;
     private final UsersAndRolesService usersAndRolesService;
@@ -21,8 +21,8 @@ public class GeoServer implements IGeoServer {
     private final StorageService storageService;
 
     @Autowired
-    public GeoServer(WorkspacesService workspacesService, UsersAndRolesService usersAndRolesService,
-                     RulesService rulesService, StorageService storageService, GisStorage gisStorage) {
+    public OrganizationService(WorkspacesService workspacesService, UsersAndRolesService usersAndRolesService,
+                               RulesService rulesService, StorageService storageService, GisStorage gisStorage) {
         this.workspacesService = workspacesService;
         this.usersAndRolesService = usersAndRolesService;
         this.rulesService = rulesService;
@@ -30,7 +30,27 @@ public class GeoServer implements IGeoServer {
         this.gisStorage = gisStorage;
     }
 
+    /**
+     * Создание организации.
+     * <p>
+     * Подразумевает под собой:
+     *   <p> - Создание БД в postGis<br>
+     */
     public void createOrganization(MqOrganizationInit orgData) throws IOException, RuntimeException {
+        gisStorage.createDb("database_" + orgData.getId());
+    }
+
+    /**
+     * Создание проекта.
+     * <p>
+     * Подразумевает под собой:
+     *   <p> - Создание рабочей области, роли, супер-пользователя с необходимыми ролями.<p>
+     *         Добавление правил доступа к:<br>
+     *             * рабочей области или слоям рабочей области.<br>
+     *             * REST геосервера<br><br>
+     *   <p> - Создание хранилища (postgis) на геосервере.
+     */
+    public void createProject(MqOrganizationInit orgData) throws IOException, RuntimeException {
         Long id = orgData.getId();
         String rawPassword = orgData.getRawPassword();
 
@@ -46,7 +66,6 @@ public class GeoServer implements IGeoServer {
         rulesService.addLayersRule(GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), roleName);
         rulesService.addRestRule(roleName);
 
-        gisStorage.createDb("database_" + id);
         gisStorage.initP10Database("database_" + id, "public");
 
         storageService.createStorage(workspaceName, GeoServerConstants.DEFAULT_DATASTORE_NAME + "_" + id, databaseName);

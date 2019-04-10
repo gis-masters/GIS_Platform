@@ -1,9 +1,18 @@
 package ru.mycrg.gis.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="projects")
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
 public class Project {
 
     @Id
@@ -16,6 +25,10 @@ public class Project {
 
     @Column
     private String internalName;
+
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "json")
+    private JsonNode extra;
 
     public Project() {}
 
@@ -46,5 +59,13 @@ public class Project {
 
     public void setInternalName(String internalName) {
         this.internalName = internalName;
+    }
+
+    public JsonNode getExtra() {
+        return extra;
+    }
+
+    public void setExtra(JsonNode extra) {
+        this.extra = extra;
     }
 }

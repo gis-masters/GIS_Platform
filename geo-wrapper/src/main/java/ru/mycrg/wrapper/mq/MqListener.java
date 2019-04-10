@@ -13,10 +13,10 @@ import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
+import ru.mycrg.wrapper.service.geoserver.OrganizationService;
 import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
-import ru.mycrg.wrapper.service.geoserver.IGeoServer;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
@@ -28,17 +28,17 @@ public class MqListener {
     private static final Logger log = LoggerFactory.getLogger(MqListener.class);
 
     private final IMqEvents mqEvents;
-    private final IGeoServer geoServer;
+    private final OrganizationService organizationService;
     private final AuthService authService;
     private final ValidationService validationService;
     private final ImportService importService;
     private final GmlGenerator gmlGenerator;
 
     @Autowired
-    public MqListener(IMqEvents mqEvents, IGeoServer geoServer, AuthService authService, GmlGenerator gmlGenerator,
+    public MqListener(IMqEvents mqEvents, OrganizationService organizationService, AuthService authService, GmlGenerator gmlGenerator,
                       ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
-        this.geoServer = geoServer;
+        this.organizationService = organizationService;
         this.authService = authService;
         this.gmlGenerator = gmlGenerator;
         this.importService = importService;
@@ -46,21 +46,13 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
-    public void initOrganization(final MqOrganizationInit creationDto) {
-        log.info("initCreation. Получено сообщение {}", creationDto.toString());
+    public void handleOrganizationEvent(final MqOrganizationInit creationdto) {
+        log.info("initCreation. Получено сообщение {}", creationdto.toString());
 
-        try {
-            if (authService.authorize().isPresent()) {
-                try {
-                    geoServer.createOrganization(creationDto);
-
-                    mqEvents.created(creationDto.getId());
-                } catch (IOException | RuntimeException e) {
-                    log.error("Неудалось создать организацию на геосервере: ", e);
-                }
-            }
-        } catch (IOException e) {
-            log.error("Неудалось создать организацию на геосервере: ", e);
+        switch (creationdto.getEventType()) {
+            case CREATE_ORG:        createOrg(creationdto);     break;
+            case CREATE_PROJECT:    createProject(creationdto); break;
+            default: log.warn("Not processable event type");
         }
     }
 
@@ -134,6 +126,20 @@ public class MqListener {
             log.info("Получено сообщение, from postgresql: {}", postgreEvent.getObjectid());
         } catch (IOException e) {
             log.error("Не удалось распарсить сообщение: {}", result);
+        }
+    }
+
+    private void createProject(MqOrganizationInit dto) {
+
+    }
+
+    private void createOrg(MqOrganizationInit dto) {
+        try {
+            organizationService.createOrganization(dto);
+
+            mqEvents.created(dto.getId());
+        } catch (IOException | RuntimeException e) {
+            log.error("Неудалось создать организацию на геосервере: ", e);
         }
     }
 

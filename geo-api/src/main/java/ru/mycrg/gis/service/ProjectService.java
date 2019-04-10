@@ -29,14 +29,24 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    /**
+     * Создаем проект у нас.
+     * Отправляем задание в очередь на создание проекта на геосервере.
+     *
+     * @param name Название проекта (человеческое)
+     * @return нашу сущность проекта  {@link Project}
+     */
     public Project create(String name) {
         log.debug("Create project: {}", name);
 
-        Optional<Project> projectByName = projectRepository.findByInternalName(name);
+        // Имя под которым будет создан workspace на геосервере
+        String geoserverName = Translit.doIt(name);
+
+        Optional<Project> projectByName = projectRepository.findByGeoserverName(geoserverName);
         if (projectByName.isPresent()) {
             throw new EntityCreationException("Проект с таким именем уже существует");
         } else {
-            return projectRepository.save(new Project(name, Translit.doIt(name)));
+            return projectRepository.save(new Project(name, geoserverName));
         }
     }
 

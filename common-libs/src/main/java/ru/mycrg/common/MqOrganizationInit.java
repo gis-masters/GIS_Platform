@@ -1,6 +1,7 @@
 package ru.mycrg.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.mycrg.common.enums.OrganizationEventType;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ public class MqOrganizationInit implements Serializable {
     private String rawPassword;
     private String comment;
     private String email;
+    private OrganizationEventType eventType;
 
     public MqOrganizationInit(@JsonProperty("id") long id,
                               @JsonProperty("email") String email,
@@ -49,6 +51,14 @@ public class MqOrganizationInit implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public OrganizationEventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(OrganizationEventType eventType) {
+        this.eventType = eventType;
     }
 
     @Override

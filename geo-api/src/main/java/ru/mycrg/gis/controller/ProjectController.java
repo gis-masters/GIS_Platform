@@ -13,6 +13,7 @@ import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,7 +40,11 @@ public class ProjectController {
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity createProject(@PathVariable String name) {
+    public ResponseEntity createProject(@PathVariable String name, Principal principal) {
+        if (principal != null) {
+            log.debug("Request for createProject from: {}", principal.getName());
+        }
+
         Project newProject = projectService.create(name);
 
         URI location = ServletUriComponentsBuilder
