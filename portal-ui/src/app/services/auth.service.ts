@@ -42,7 +42,7 @@ export class AuthService {
   validateAuth() {
     if (this.router.isActive('/login', false)) {
       if (this._authenticated) {
-        this.router.navigateByUrl('/projects');
+        this.router.navigateByUrl('/workspace');
       }
     } else {
       if (!this._authenticated) {

@@ -21,7 +21,7 @@ const routes: Routes = [
     path: 'workspace',
     component: WorkspaceComponent,
     children: [
-      {path: '', redirectTo: 'map', pathMatch: 'full'},
+      {path: '', redirectTo: 'projects', pathMatch: 'full'},
       {path: 'projects', component: ProjectComponent},
       {path: 'map', component: MapComponent},
       {path: 'data_import', component: DataImportComponent},

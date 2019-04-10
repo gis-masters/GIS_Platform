@@ -1,24 +1,17 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
-import {MatListOption, MatSelectionList, MatSnackBar} from '@angular/material';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {
-  ActionType,
-  CommunicationService,
-  ObjectDto,
-  SidebarData,
-  SidebarType
-} from '../../../services/communication.service';
-import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
+import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
 @Component({
   selector: 'crg-map',
@@ -39,15 +32,17 @@ export class MapComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-              private router: Router,
               private layersService: LayersService,
               private logger: NGXLogger,
+              private router: Router,
               private snackBar: MatSnackBar,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService,
               private ruleService: FgistpRulesService,
               private authService: AuthService) {
-    this.authService.validateAuth();
+    if (!this.authService.authenticated) {
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnInit() {

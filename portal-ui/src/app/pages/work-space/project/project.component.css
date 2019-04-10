@@ -62,3 +62,11 @@
   color: lightslategray;
   cursor: pointer;
 }
+
+.error-text {
+  color: tomato;
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

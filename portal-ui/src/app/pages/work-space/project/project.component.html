@@ -7,8 +7,8 @@
 
     <mat-grid-tile class="new-project-item" (click)="switchMode()">
       <div *ngIf="!isEditMode">
-        <mat-icon style="float: left">add</mat-icon>
-        <span>Создать новый проект</span>
+        <mat-icon style="float: left; font-size: 30px">add</mat-icon>
+        <span style="font-size: larger; padding-left: 5px">Создать новый проект</span>
       </div>
 
       <div *ngIf="isEditMode" class="fiz-class">
@@ -19,6 +19,8 @@
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
+
+        <div *ngIf="true" class="error-text">{{errorMsg}}</div>
 
         <div class="project-item-footer">
           <button mat-button class="float-left" (click)="cancel($event)">Отмена</button>

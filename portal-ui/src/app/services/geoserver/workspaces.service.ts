@@ -1,13 +1,14 @@
-import {forkJoin, Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
-import {catchError, map} from 'rxjs/operators';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {NameHrefProjection} from './projections';
 import {TaskImport} from './import/taskImport';
-import {ServerPropertiesService} from '../server-properties.service';
 import {WorkImport} from './import/workImport';
+import {NameHrefProjection} from './projections';
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
+import {filter, map, publishReplay, refCount} from 'rxjs/operators';
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,21 +20,38 @@ export class WorkspacesService {
     'Content-Type': 'application/json',
   });
 
+  private _workspaces$: BehaviorSubject<NameHrefProjection[]> = new BehaviorSubject<NameHrefProjection[]>([]);
+  public workspaces$: Observable<NameHrefProjection[]> = this._workspaces$.asObservable()
+    .pipe(
+      // компоненты при подписке должны видеть одно последнее значение в потоке
+      publishReplay(1),
+      refCount()
+    );
+
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
+
+    this.workspaces$.subscribe();
   }
 
-  getAll(): Observable<GeoWorkspace | any> {
-    // this.logger.info('getAll workspaces');
+  fetchWorkspaces(): void {
+    this.http
+        .get<GeoWorkspace>(this.workspaceUrl)
+        .pipe(
+          filter((geoWorkspace: GeoWorkspace) => !!geoWorkspace && !!geoWorkspace.workspaces),
+          map((geoWorkspace: GeoWorkspace) => geoWorkspace.workspaces.workspace),
+        )
+        .subscribe((workspaces: NameHrefProjection[]) => {
+          // Не показываем 'scratch workspace'
+          const filtered = workspaces.filter((wItem: NameHrefProjection) => {
+            return !wItem.name.toString().includes(environment.scratchWorkspaceName);
+          });
 
-    return this.http
-      .get<GeoWorkspace>(this.workspaceUrl)
-      .pipe(
-        catchError(this.baseService.handleError('getWorkspaces', []))
-      );
+          this._workspaces$.next(filtered);
+        });
   }
 
   getWorkspaceByName(name: string): Observable<any> {
