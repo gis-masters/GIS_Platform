@@ -1,5 +1,5 @@
 .workspace-page_toolbar {
-  height: 40px;
+  height: 55px;
   margin-bottom: 20px;
 }
 
@@ -31,3 +31,6 @@
   overflow: hidden;
 }
 
+.workspace-page_toolbar>h6 {
+  z-index: 1;
+}
