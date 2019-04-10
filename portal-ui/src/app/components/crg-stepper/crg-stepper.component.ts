@@ -15,7 +15,7 @@ export class CrgStepperComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.activeStep === 4) {
+    if (this.activeStep === 5) {
       this.activeStep = 1;
     } else {
       this.activeStep += 1;
