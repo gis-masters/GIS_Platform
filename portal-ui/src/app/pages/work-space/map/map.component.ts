@@ -81,78 +81,31 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .validationDialog$()
         .subscribe((data: ValidationDialogData) => {
-          //if (data && data.layers.length > 0) {
+          if (data && data.layers.length > 0) {
             this.isValidationDialogShow = true;
-            this.validationDialogData = {
-              layers: [
-                {
-                  complexName: '',
-                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-                  href: '',
-                  name: '',
-                  title: 'sd sdf sdf sdf sdf sdf'
-                },
-                {
-                  complexName: '',
-                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-                  href: '',
-                  name: '',
-                  title: 'sd sdf sdf sdf sdf sdf'
-                },
-                {
-                  complexName: '',
-                  connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-                  href: '',
-                  name: '',
-                  title: 'sd sdf sdf sdf sdf sdf'
-                },
-              ]
-            };
-          //} else {
-          //  this.logger.warn('Empty data: ', data);
-          //  this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
-          //    {duration: 10000});
-        //  }
+            this.validationDialogData = data;
+          } else {
+            this.logger.warn('Empty data: ', data);
+            this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
+              {duration: 10000});
+          }
         });
 
     this.communicationService
         .gmlDialog$()
         .subscribe((data: GmlDialogData) => {
-         // if (data.action === ActionType.CLOSE) {
-            this.isGmlDialogShow = true;
-          this.gmlDialogData = [
-            {
-              complexName: '',
-              connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-              href: '',
-              name: '',
-              title: 'sd sdf sdf sdf sdf sdf'
-            },
-            {
-              complexName: '',
-              connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-              href: '',
-              name: '',
-              title: 'sd sdf sdf sdf sdf sdf'
-            },
-            {
-              complexName: '',
-              connectionInfo: {dbName: '', schemaName: '', tableName: ''},
-              href: '',
-              name: '',
-              title: 'sd sdf sdf sdf sdf sdf'
-            },
-          ];
-         // } else {
-         //   if (data.layers.length > 0) {
-          //    this.isGmlDialogShow = true;
-         //     this.gmlDialogData = data.layers;
-         //   } else {
-         //     this.logger.warn('Empty data: ', data.layers);
-         //     this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
-         //       {duration: 10000});
-          //  }
-        //  }
+          if (data.action === ActionType.CLOSE) {
+            this.isGmlDialogShow = false;
+          } else {
+            if (data.layers.length > 0) {
+              this.isGmlDialogShow = true;
+              this.gmlDialogData = data.layers;
+            } else {
+              this.logger.warn('Empty data: ', data.layers);
+              this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
+                {duration: 10000});
+            }
+          }
         });
   }
 
