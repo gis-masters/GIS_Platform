@@ -3,10 +3,10 @@
 .crg-info-sidebar {
   z-index: 100;
   position: fixed;
-  top: 104px;
+  top: 55px;
   left: calc(100% - 400px);
 
-  height: calc(100% - 104px);
+  height: calc(100% - 55px);
   width: 400px;
 
   background-color: white;
@@ -21,10 +21,10 @@
 .crg-info-sidebar_hidden {
   z-index: 100;
   position: fixed;
-  top: 104px;
+  top: 55px;
   left: 100%;
 
-  height: calc(100% - 104px);
+  height: calc(100% - 55px);
   width: 400px;
 
   background-color: white;

@@ -40,10 +40,10 @@
 .crg-validation-sidebar {
   z-index: 100;
   position: fixed;
-  top: 104px;
+  top: 55px;
   left: calc(100% - 550px);
 
-  height: calc(100% - 104px);
+  height: calc(100% - 55px);
   width: 550px;
 
   background-color: white;
@@ -58,10 +58,10 @@
 .crg-validation-sidebar_hidden {
   z-index: 100;
   position: fixed;
-  top: 104px;
+  top: 55px;
   left: 100%;
 
-  height: calc(100% - 104px);
+  height: calc(100% - 55px);
   width: 550px;
 
   background-color: white;
