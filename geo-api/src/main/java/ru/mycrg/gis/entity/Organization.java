@@ -24,6 +24,9 @@ public class Organization {
     @OneToMany(cascade = CascadeType.REMOVE)
     private List<User> users = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Project> projects = new ArrayList<>();
+
     @Enumerated(value = EnumType.STRING)
     private OrganizationStatus status = OrganizationStatus.NEW;
 
@@ -76,5 +79,13 @@ public class Organization {
 
     public void addUser(User user) {
         this.users.add(user);
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

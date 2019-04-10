@@ -1,10 +1,9 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {map, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NameHrefProjection} from '../../../services/geoserver/projections';
-import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
+import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 
 @Component({
   selector: 'crg-project',
@@ -23,18 +22,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private router: Router,
-              private workspaceService: WorkspacesService) {
+              private projectsService: ProjectsService) {
 
   }
 
   ngOnInit() {
-    this.workspaceService.fetchWorkspaces();
+    this.projectsService.fetchProjects();
 
-    this.workspaceService.workspaces$
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          map((workspaces: NameHrefProjection[]) => this.mapToProjects(workspaces))
-        )
+    this.projectsService.projects$
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((projects: CrgProject[]) => this.projects = projects);
   }
 
@@ -51,11 +47,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.errorMsg = '';
 
-    this.workspaceService
+    this.projectsService
         .create(this.projectName)
         .subscribe(response => {
             this.isEditMode = false;
-            this.workspaceService.fetchWorkspaces();
+            this.projectsService.fetchProjects();
           },
           errors => {
             if (errors.error.toString().includes('already exists')) {
@@ -79,39 +75,21 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   deleteProject(pItem: CrgProject) {
-    this.workspaceService
-        .delete(pItem.name)
+    this.projectsService
+        .delete(pItem.internalName)
         .subscribe(response => {
           this.logger.info('dddddddddddd', response);
 
-          this.workspaceService.fetchWorkspaces();
+          this.projectsService.fetchProjects();
         });
   }
 
   hoverBy(pItem: CrgProject) {
-    this.activeProject = pItem.name;
+    this.activeProject = pItem.internalName;
   }
 
   stopHover() {
     this.activeProject = '';
   }
 
-  private mapToProjects(workspaces: NameHrefProjection[]): CrgProject[] {
-    return workspaces.map((wItem: NameHrefProjection) => {
-      return {
-        name: wItem.name,
-        title: '',
-        href: wItem.href,
-        type: ''
-      };
-    });
-  }
-
-}
-
-export interface CrgProject {
-  name: string;
-  title: string;
-  href?: string;
-  type: string;
 }

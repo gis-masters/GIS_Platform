@@ -100,23 +100,23 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   workspaceSelected(selectedWorkspace: any) {
     this.importService.importFlow.setWorkspace(selectedWorkspace);
 
-    this.workspaceService
-        .getWorkspaceByName(selectedWorkspace)
-        .subscribe((data: any) => {
-          const workspace = data.workspace as GeoWorkspaceItem;
-
-          this.workspacesService
-              .getWorkspaceDataStore(workspace.dataStores)
-              .subscribe((geoDataStore: GeoDataStore) => {
-                // TODO:  Cannot read property 'length' of undefined
-                if (geoDataStore.dataStores.dataStore.length > 1) {
-                  this.logger.warn('У рабочей области несколько хранилищь?');
-                }
-
-                const storeName = geoDataStore.dataStores.dataStore[0].name;
-                this.importService.importFlow.work_import.dataStore = storeName;
-              });
-        });
+    // this.workspaceService
+    //     .getWorkspaceByName(selectedWorkspace)
+    //     .subscribe((data: any) => {
+    //       const workspace = data.workspace as GeoWorkspaceItem;
+    //
+    //       this.workspacesService
+    //           .getWorkspaceDataStore(workspace.dataStores)
+    //           .subscribe((geoDataStore: GeoDataStore) => {
+    //             // TODO:  Cannot read property 'length' of undefined
+    //             if (geoDataStore.dataStores.dataStore.length > 1) {
+    //               this.logger.warn('У рабочей области несколько хранилищь?');
+    //             }
+    //
+    //             const storeName = geoDataStore.dataStores.dataStore[0].name;
+    //             this.importService.importFlow.work_import.dataStore = storeName;
+    //           });
+    //     });
   }
 
   startWorkImport() {

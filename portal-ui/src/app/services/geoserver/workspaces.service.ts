@@ -4,10 +4,9 @@ import {BaseService} from '../base.service';
 import {TaskImport} from './import/taskImport';
 import {WorkImport} from './import/workImport';
 import {NameHrefProjection} from './projections';
-import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {filter, map, publishReplay, refCount} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -15,57 +14,17 @@ import {ServerPropertiesService} from '../server-properties.service';
 })
 export class WorkspacesService {
 
-  private workspaceUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
+  private geoserverWorkspaceUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
+
   private JSON_FORMAT = new HttpHeaders({
     'Content-Type': 'application/json',
   });
-
-  private _workspaces$: BehaviorSubject<NameHrefProjection[]> = new BehaviorSubject<NameHrefProjection[]>([]);
-  public workspaces$: Observable<NameHrefProjection[]> = this._workspaces$.asObservable()
-    .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
-      publishReplay(1),
-      refCount()
-    );
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
-
-    this.workspaces$.subscribe();
-  }
-
-  fetchWorkspaces(): void {
-    this.http
-        .get<GeoWorkspace>(this.workspaceUrl)
-        .pipe(
-          filter((geoWorkspace: GeoWorkspace) => !!geoWorkspace && !!geoWorkspace.workspaces),
-          map((geoWorkspace: GeoWorkspace) => geoWorkspace.workspaces.workspace),
-        )
-        .subscribe((workspaces: NameHrefProjection[]) => {
-          // Не показываем 'scratch workspace'
-          const filtered = workspaces.filter((wItem: NameHrefProjection) => {
-            return !wItem.name.toString().includes(environment.scratchWorkspaceName);
-          });
-
-          this._workspaces$.next(filtered);
-        });
-  }
-
-  getWorkspaceByName(name: string): Observable<any> {
-    return this.http.get(this.workspaceUrl + '/' + name);
-  }
-
-  create(name: string): Observable<any> {
-    const payload = JSON.stringify({workspace: {name: name}});
-
-    return this.http.post(this.workspaceUrl, payload, {headers: this.JSON_FORMAT, responseType: 'text'});
-  }
-
-  delete(name: string): Observable<any> {
-    return this.http.delete(this.workspaceUrl + '/' + name);
   }
 
   /**
@@ -76,7 +35,7 @@ export class WorkspacesService {
     this.logger.info('All layers for workspace: ', name);
 
     return this.http
-               .get<NameHrefProjection>(this.workspaceUrl + '/' + name + '/layers')
+               .get<NameHrefProjection>(this.geoserverWorkspaceUrl + '/' + name + '/layers')
                .pipe(
                  map((response: any) => response.layers.layer)
                );
@@ -96,7 +55,7 @@ export class WorkspacesService {
     // this.logger.info('publishLayer: ', workspace, store, table);
 
     return this.http.post(
-      this.workspaceUrl + '/' + workspace + '/datastores/' + store + '/featuretypes',
+      this.geoserverWorkspaceUrl + '/' + workspace + '/datastores/' + store + '/featuretypes',
       {featureType: {name: table}});
   }
 
@@ -121,7 +80,7 @@ export class WorkspacesService {
 
   deleteLayer(workspaceName: string, layerName: string) {
     return this.http
-               .delete(this.workspaceUrl + '/' + workspaceName + '/layers/' + layerName);
+               .delete(this.geoserverWorkspaceUrl + '/' + workspaceName + '/layers/' + layerName);
   }
 }
 

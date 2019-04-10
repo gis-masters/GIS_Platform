@@ -15,7 +15,7 @@ import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.OrganizationCreateException;
-import ru.mycrg.gis.exceptions.UserCreationException;
+import ru.mycrg.gis.exceptions.EntityCreationException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
@@ -63,7 +63,7 @@ public class OrganizationController {
 
         Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
         if (userByEmail.isPresent()) {
-            throw new UserCreationException("Данный email уже занят");
+            throw new EntityCreationException("Данный email уже занят");
         }
 
         Organization newOrganization;

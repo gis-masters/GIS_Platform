@@ -44,9 +44,10 @@ zuul:
       path: /oauth/token/**
       service-id: http://jwt-service:9000/oauth/token
 
-    gis-db:
-      path: /db/**
-      url: http://geo-api:8088/db/
+    # Our API
+    gis-projects:
+      path: /projects/**
+      url: http://geo-api:8088/projects/
 
     gis-ws:
       path: /crg-ws-endpoint/**
@@ -56,7 +57,7 @@ zuul:
       path: /fgistp/**
       url: http://geo-api:8088/fgistp/
 
-    organizations:
+    gis-organizations:
       path: /organizations/**
       url: http://geo-api:8088/organizations/
 

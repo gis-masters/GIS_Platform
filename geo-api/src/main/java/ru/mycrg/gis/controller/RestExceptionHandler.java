@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
  * Упращаем вывод ошибок при неправильных запросах и ошибках вылетающий при валидации.
  */
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)

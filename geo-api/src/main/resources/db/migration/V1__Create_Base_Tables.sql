@@ -13,6 +13,15 @@ WITH (OIDS = FALSE)
 TABLESPACE pg_default;
 ALTER TABLE public.users OWNER to postgres;
 
+CREATE TABLE IF NOT EXISTS public.projects(
+  id bigserial NOT NULL UNIQUE,
+  internal_name character varying(255),
+  geoserver_name character varying(255),
+  CONSTRAINT projects_pkey PRIMARY KEY (id),
+  CONSTRAINT ukr43af3ap46dm12mmtq31oddj6 UNIQUE (internal_name)
+);
+ALTER TABLE public.projects OWNER to postgres;
+
 
 CREATE TABLE IF NOT EXISTS public.organization(
   id bigserial NOT NULL UNIQUE,
@@ -23,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.organization(
 )
 WITH (OIDS = FALSE)
 TABLESPACE pg_default;
-ALTER TABLE public.users OWNER to postgres;
+ALTER TABLE public.organization OWNER to postgres;
 
 
 CREATE TABLE IF NOT EXISTS public.organization_users(
@@ -41,7 +50,22 @@ CREATE TABLE IF NOT EXISTS public.organization_users(
 )
 WITH (OIDS = FALSE)
 TABLESPACE pg_default;
-ALTER TABLE public.users OWNER to postgres;
+ALTER TABLE public.organization_users OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public.organization_projects(
+  organization_id integer NOT NULL,
+  projects_id integer NOT NULL,
+  CONSTRAINT uk_ag16e4qasggh3qxd83rfod3wk UNIQUE (projects_id),
+  CONSTRAINT fk15s2npsq3mkltwy8r6fuc3yky FOREIGN KEY (organization_id)
+  REFERENCES public.organization (id) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+  CONSTRAINT fknk2jfecnwa5ihxjd2p6dph9ih FOREIGN KEY (projects_id)
+  REFERENCES public.projects (id) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+);
+ALTER TABLE public.organization_projects OWNER to postgres;
 
 
 CREATE TABLE IF NOT EXISTS public.authorities(
@@ -83,21 +107,3 @@ WITH (OIDS = FALSE)
 TABLESPACE pg_default;
 ALTER TABLE public.xsd_rules OWNER to postgres;
 
-
--- CREATE TABLE IF NOT EXISTS public.validation_result
--- (
---   id bigint NOT NULL DEFAULT nextval('validation_result_id_seq'::regclass),
---   last_modified timestamp without time zone,
---   object_id character varying(255) COLLATE pg_catalog."default",
---   table_name character varying(255) COLLATE pg_catalog."default",
---   violations json,
---   user_id integer NOT NULL DEFAULT nextval('validation_result_user_id_seq'::regclass),
---   CONSTRAINT validation_result_pkey PRIMARY KEY (id),
---   CONSTRAINT fk74sex4490h5a357dw0jq9un1u FOREIGN KEY (user_id)
---   REFERENCES public.users (id) MATCH SIMPLE
---   ON UPDATE NO ACTION
---   ON DELETE NO ACTION
--- )
--- WITH (OIDS = FALSE)
--- TABLESPACE pg_default;
--- ALTER TABLE public.validation_result OWNER to postgres;
