@@ -12,4 +12,8 @@ public class OrganizationNotFoundException extends EntityNotFoundException {
 	public OrganizationNotFoundException(Long orgId) {
 		super("Организация с Id: " + orgId + " не найдена");
 	}
+
+	public OrganizationNotFoundException(String userName) {
+		super("Для пользователя " + userName + " организация не найдена");
+	}
 }

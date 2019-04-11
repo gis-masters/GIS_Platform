@@ -37,6 +37,14 @@ public class Organization {
         this.phone = phone;
     }
 
+    public void addUser(User user) {
+        this.users.add(user);
+    }
+
+    public void addProject(Project project) {
+        this.projects.add(project);
+    }
+
     public long getId() {
         return id;
     }
@@ -75,10 +83,6 @@ public class Organization {
 
     public void setStatus(OrganizationStatus status) {
         this.status = status;
-    }
-
-    public void addUser(User user) {
-        this.users.add(user);
     }
 
     public List<Project> getProjects() {

@@ -5,10 +5,10 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
 
-    List<Organization> findOrganizationByUsersContaining(User name);
+    Optional<Organization> findOrganizationByUsersContaining(User name);
 }

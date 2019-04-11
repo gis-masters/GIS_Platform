@@ -12,14 +12,13 @@ import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.enums.OrganizationStatus;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -49,14 +48,16 @@ public class OrganizationService {
         return organizationRepository.findAll(pageable);
     }
 
-    public List<Organization> getOrganizationByUser(String userName) {
+    public Organization getOrganizationByUser(String userName) {
         Optional<User> user = userRepository.findUserByUsername(userName);
         if (user.isPresent()) {
-            return organizationRepository.findOrganizationByUsersContaining(user.get());
+            return organizationRepository
+                    .findOrganizationByUsersContaining(user.get())
+                    .orElseThrow(() -> new OrganizationNotFoundException(userName));
         } else {
             log.warn("Not found user: {}", userName);
 
-            return Collections.emptyList();
+            throw new CrgNotFoundException("Not found user: " + userName);
         }
     }
 
@@ -147,6 +148,10 @@ public class OrganizationService {
                 });
     }
 
+    public void save(Organization organization) {
+        organizationRepository.save(organization);
+    }
+
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {
         return new Organization(dto.getName(), dto.getPhone());
     }
@@ -162,5 +167,4 @@ public class OrganizationService {
                 dto.getEmail()
             );
     }
-
 }

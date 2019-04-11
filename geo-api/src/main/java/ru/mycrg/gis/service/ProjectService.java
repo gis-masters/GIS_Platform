@@ -32,25 +32,36 @@ public class ProjectService {
         this.organizationService = organizationService;
     }
 
-    public List<Organization> getAllByUser(String name) {
-        return organizationService.getOrganizationByUser(name);
+    public List<Project> getProjectByUser(String name) {
+        return organizationService
+                .getOrganizationByUser(name)
+                .getProjects();
     }
 
     /**
      * Создаем проект у нас.
-     * Отправляем задание в очередь на создание проекта на геосервере.
+     * Находим организацию в которой состоит пользователь и для этой организации создаем проект.
+     * (отправляем задание в очередь на создание проекта на геосервере)
      *
-     * @param name Название проекта (человеческое)
+     * @param projectName Название проекта (человеческое)
+     * @param userName Пользователь
      * @return нашу сущность проекта  {@link Project}
      */
-    public Project create(String name) {
-        log.debug("Create project: {}", name);
+    public Project create(String projectName, String userName) {
+        log.debug("Create project: {}", projectName);
 
-        Optional<Project> projectByName = projectRepository.findByInternalName(name);
+        Organization organization = organizationService.getOrganizationByUser(userName);
+
+        Optional<Project> projectByName = projectRepository.findByInternalName(projectName);
         if (projectByName.isPresent()) {
             throw new EntityCreationException("Проект с таким именем уже существует");
         } else {
-            return projectRepository.save(new Project(name, Translit.doIt(name)));
+            Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
+
+            organization.addProject(newProject);
+            organizationService.save(organization);
+
+            return newProject;
         }
     }
 

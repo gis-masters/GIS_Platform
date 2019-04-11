@@ -5,6 +5,17 @@ public class Translit {
     private static final char[][] charTable = new char[65536][];
 
     static {
+        charTable['0'] = "0".toCharArray();
+        charTable['1'] = "1".toCharArray();
+        charTable['2'] = "2".toCharArray();
+        charTable['3'] = "3".toCharArray();
+        charTable['4'] = "4".toCharArray();
+        charTable['5'] = "5".toCharArray();
+        charTable['6'] = "6".toCharArray();
+        charTable['7'] = "7".toCharArray();
+        charTable['8'] = "8".toCharArray();
+        charTable['9'] = "9".toCharArray();
+
         charTable['А'] = "A".toCharArray();
         charTable['Б'] = "B".toCharArray();
         charTable['В'] = "V".toCharArray();

@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
@@ -35,10 +34,12 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Organization>> getProjects(Principal principal) {
-        List<Organization> allByUser = projectService.getAllByUser(principal.getName());
+    public ResponseEntity<List<Project>> getProjects(Principal principal) {
+        log.debug("Request get projects for user: {}", principal.getName());
 
-        return ResponseEntity.ok(allByUser);
+        List<Project> projects = projectService.getProjectByUser(principal.getName());
+
+        return ResponseEntity.ok(projects);
     }
 
     @PostMapping("/{name}")
@@ -47,7 +48,7 @@ public class ProjectController {
             log.debug("Request for createProject from: {}", principal.getName());
         }
 
-        Project newProject = projectService.create(name);
+        Project newProject = projectService.create(name, principal.getName());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

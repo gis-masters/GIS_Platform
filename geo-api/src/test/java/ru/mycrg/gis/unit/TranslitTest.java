@@ -29,6 +29,8 @@ public class TranslitTest {
                 Translit.doIt("Заменить пробелы нижними подчеркиваниями"));
         assertEquals("Bez_myagkogo_i_tverdogo_znaka",
                 Translit.doIt("Без мягкого(ь) и твердого(ъ) знака"));
+        assertEquals("Proverka314", Translit.doIt("Proverka314"));
+        assertEquals("314", Translit.doIt("314"));
     }
 
 }
