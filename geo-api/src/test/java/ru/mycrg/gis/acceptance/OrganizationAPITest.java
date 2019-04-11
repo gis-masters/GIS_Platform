@@ -33,7 +33,7 @@ public class OrganizationAPITest {
 
     @BeforeClass
     public static void setup() {
-        RestAssured.baseURI = "http://10.10.10.215";
+        RestAssured.baseURI = "http://10.10.10.121";
         RestAssured.port = 8088;
         RestAssured.basePath = "/organizations";
     }
@@ -295,7 +295,7 @@ public class OrganizationAPITest {
                 "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
                 + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
         Request request = new Request.Builder()
-                .url("http://10.10.10.215:8100/oauth/token")
+                .url("http://10.10.10.121:8100/oauth/token")
                 .header("Authorization", Credentials.basic(username, password))
                 .header("Content-type", "multipart/form-data")
                 .header("cache-control", "no-cache")
