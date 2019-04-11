@@ -7,6 +7,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import okhttp3.*;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import ru.mycrg.common.JWTTokenHolder;
@@ -32,7 +33,7 @@ public class OrganizationAPITest {
 
     @BeforeClass
     public static void setup() {
-        RestAssured.baseURI = "http://10.10.10.121";
+        RestAssured.baseURI = "http://10.10.10.215";
         RestAssured.port = 8088;
         RestAssured.basePath = "/organizations";
     }
@@ -177,8 +178,7 @@ public class OrganizationAPITest {
     public void dx_pause() throws InterruptedException {
         // Ждем создания всех организаций. На домашнем ПК(8 ядер) примерно 40 сек.
         // Задержа, более секунды, при создании "EXTENSION postgis" в БД
-        // Добавилось развертываение шаблонной БД около 20 сек
-        Thread.sleep(420_000L);
+        Thread.sleep(120_000L);
     }
 
     @Test
@@ -192,6 +192,7 @@ public class OrganizationAPITest {
     }
 
     @Test
+    @Ignore
     public void ff_ShouldCheck_workspaces_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -207,6 +208,7 @@ public class OrganizationAPITest {
     }
 
     @Test
+    @Ignore
     public void fl_ShouldCheck_Roles_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -222,6 +224,7 @@ public class OrganizationAPITest {
     }
 
     @Test
+    @Ignore
     public void fo_ShouldCheck_Users_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -237,6 +240,7 @@ public class OrganizationAPITest {
     }
 
     @Test
+    @Ignore
     public void fr_ShouldCheck_DataStores_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -279,7 +283,7 @@ public class OrganizationAPITest {
 
     private static JWTTokenHolder getJwtToken() throws IOException {
         JWTTokenHolder jwtTokenHolder;
-        String username = "admin";
+        String username = "admin@mail.ru";
         String password = "geoserver";
 
         MediaType mediaType = MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
@@ -291,7 +295,7 @@ public class OrganizationAPITest {
                 "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
                 + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
         Request request = new Request.Builder()
-                .url("http://10.10.10.121:8100/oauth/token")
+                .url("http://10.10.10.215:8100/oauth/token")
                 .header("Authorization", Credentials.basic(username, password))
                 .header("Content-type", "multipart/form-data")
                 .header("cache-control", "no-cache")

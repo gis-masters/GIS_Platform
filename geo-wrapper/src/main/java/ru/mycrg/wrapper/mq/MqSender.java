@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.import_.ImportMqResponse;
@@ -23,10 +24,10 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void created(Long msg) {
-        log.info("Send created event: {}", msg);
+    public void orgEventResponse(OrgMqResponse response) {
+        log.info("Send created event: {}", response.getId());
 
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_ORG_CREATED, MqProperties.KEY_ORG_CREATED, msg);
+        rabbitTemplate.convertAndSend(MqProperties.FANOUT_ORG_CREATED, MqProperties.KEY_ORG_CREATED, response);
     }
 
     @Override

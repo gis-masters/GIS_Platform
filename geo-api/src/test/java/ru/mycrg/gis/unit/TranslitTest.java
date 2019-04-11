@@ -20,6 +20,8 @@ public class TranslitTest {
 
     @Test
     public void shouldCorrectTranslit() {
+        assertEquals("Proverka", Translit.doIt("Proverka"));
+        assertEquals("additional_test", Translit.doIt("additional test *!"));
         assertEquals("Proverka_s_probelom", Translit.doIt("Проверка с пробелом"));
         assertEquals("Nazvanie__dolzhno__soderzhat_tolko_bukvy_i_cifry",
                 Translit.doIt("Название - должно : содержать только буквы и цифры )(№;%%:;?*"));

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.import_.ImportMqRequest;
-import ru.mycrg.common.MqOrganizationInit;
+import ru.mycrg.common.OrgMqRequest;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -25,7 +25,7 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void initCreation(MqOrganizationInit creationDto) {
+    public void sendOrgEvent(OrgMqRequest creationDto) {
         log.info("Send init orgCreation event: {}", creationDto.toString());
 
         rabbitTemplate.convertAndSend(FANOUT_ORG_INIT, KEY_ORG_INIT, creationDto);

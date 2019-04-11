@@ -18,6 +18,9 @@ import ru.mycrg.gis.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * CRUD сервис для работы с Организациями.
@@ -44,6 +47,17 @@ public class OrganizationService {
 
     public Iterable<Organization> findAll(Pageable pageable) {
         return organizationRepository.findAll(pageable);
+    }
+
+    public List<Organization> getOrganizationByUser(String userName) {
+        Optional<User> user = userRepository.findUserByUsername(userName);
+        if (user.isPresent()) {
+            return organizationRepository.findOrganizationByUsersContaining(user.get());
+        } else {
+            log.warn("Not found user: {}", userName);
+
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -118,14 +132,13 @@ public class OrganizationService {
     }
 
     public void organizationCreated(Long id) {
-        updateStatus(id, OrganizationStatus.READY);
-    }
+        log.info("Создана организация с id: {}", id);
 
-    public void updateStatus(long id, OrganizationStatus newStatus) {
+        // Update status
         organizationRepository
                 .findById(id)
                 .ifPresent(organization -> {
-                    organization.setStatus(newStatus);
+                    organization.setStatus(OrganizationStatus.READY);
                     organizationRepository.save(organization);
 
                     User user = organization.getUsers().get(0);

@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.common.MqOrganizationInit;
+import ru.mycrg.common.OrgMqRequest;
+import ru.mycrg.common.enums.EventType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
@@ -84,8 +85,10 @@ public class OrganizationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        mqEvents.initCreation(
-                new MqOrganizationInit(newOrganization.getId(), createDto.getEmail(), createDto.getPassword()));
+        mqEvents.sendOrgEvent(new OrgMqRequest(newOrganization.getId(),
+                createDto.getEmail(),
+                createDto.getPassword(),
+                EventType.CREATE_ORG));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
     }

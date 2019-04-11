@@ -22,6 +22,9 @@ import ru.mycrg.wrapper.service.validation.ValidationService;
 import java.io.IOException;
 import java.util.Map;
 
+import static ru.mycrg.common.enums.EventType.CREATE_ORG;
+import static ru.mycrg.common.enums.EventType.CREATE_PROJECT;
+
 @Service
 public class MqListener {
 
@@ -46,13 +49,14 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
-    public void handleOrganizationEvent(final MqOrganizationInit creationdto) {
-        log.info("initCreation. Получено сообщение {}", creationdto.toString());
+    public void handleOrganizationEvent(final OrgMqRequest mqRequest) {
+        log.info("initCreation. Получено сообщение {}", mqRequest.toString());
 
-        switch (creationdto.getEventType()) {
-            case CREATE_ORG:        createOrg(creationdto);     break;
-            case CREATE_PROJECT:    createProject(creationdto); break;
-            default: log.warn("Not processable event type");
+        switch (mqRequest.getType()) {
+            case CREATE_ORG: createOrg(mqRequest); break;
+            case CREATE_PROJECT: createProject(mqRequest); break;
+            default:
+                log.warn("Not processable event type");
         }
     }
 
@@ -108,7 +112,7 @@ public class MqListener {
             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), paths, ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла.", e);
-             mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR, e.getLocalizedMessage()));
+            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR, e.getLocalizedMessage()));
         }
     }
 
@@ -129,16 +133,30 @@ public class MqListener {
         }
     }
 
-    private void createProject(MqOrganizationInit dto) {
+    private void createProject(OrgMqRequest dto) {
+        try {
+            organizationService.createProject(dto);
 
+            mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
+        } catch (IOException | RuntimeException e) {
+            log.error("Неудалось создать организацию на геосервере: ", e);
+            mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
+        }
     }
 
-    private void createOrg(MqOrganizationInit dto) {
+    private void createOrg(OrgMqRequest dto) {
         try {
-            organizationService.createOrganization(dto);
+            if (authService.authorize().isPresent()) {
+                try {
+                    organizationService.createOrganization(dto);
 
-            mqEvents.created(dto.getId());
-        } catch (IOException | RuntimeException e) {
+                    mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_ORG, ProcessStatus.DONE));
+                } catch (IOException | RuntimeException e) {
+                    log.error("Неудалось создать организацию на геосервере: ", e);
+                    mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_ORG, ProcessStatus.ERROR));
+                }
+            }
+        } catch (IOException e) {
             log.error("Неудалось создать организацию на геосервере: ", e);
         }
     }

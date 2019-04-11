@@ -1,12 +1,13 @@
 package ru.mycrg.wrapper.mq;
 
 import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 
 public interface IMqEvents {
 
-    void created(Long msg);
+    void orgEventResponse(OrgMqResponse response);
 
     void validationResponse(ValidationMqResponse response);
 

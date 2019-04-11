@@ -40,6 +40,33 @@ public class Translit {
         charTable['Я'] = "YA".toCharArray();
         charTable[' '] = " ".toCharArray();
 
+        charTable['A'] = "A".toCharArray();
+        charTable['B'] = "B".toCharArray();
+        charTable['C'] = "C".toCharArray();
+        charTable['D'] = "D".toCharArray();
+        charTable['E'] = "E".toCharArray();
+        charTable['F'] = "F".toCharArray();
+        charTable['G'] = "G".toCharArray();
+        charTable['H'] = "H".toCharArray();
+        charTable['I'] = "I".toCharArray();
+        charTable['J'] = "J".toCharArray();
+        charTable['K'] = "K".toCharArray();
+        charTable['L'] = "L".toCharArray();
+        charTable['M'] = "M".toCharArray();
+        charTable['N'] = "N".toCharArray();
+        charTable['O'] = "O".toCharArray();
+        charTable['P'] = "P".toCharArray();
+        charTable['Q'] = "Q".toCharArray();
+        charTable['R'] = "R".toCharArray();
+        charTable['S'] = "S".toCharArray();
+        charTable['T'] = "T".toCharArray();
+        charTable['U'] = "U".toCharArray();
+        charTable['V'] = "V".toCharArray();
+        charTable['W'] = "W".toCharArray();
+        charTable['X'] = "X".toCharArray();
+        charTable['Y'] = "Y".toCharArray();
+        charTable['Z'] = "Z".toCharArray();
+
         for (int i = 0; i < charTable.length; i++) {
             char idx = (char) i;
             char lower = Character.toLowerCase(idx);

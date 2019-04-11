@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
@@ -14,6 +15,7 @@ import ru.mycrg.gis.service.import_.WorkImport;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,10 +35,10 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Project>> getProjects() {
-        Iterable<Project> projects = projectService.getAll();
+    public ResponseEntity<List<Organization>> getProjects(Principal principal) {
+        List<Organization> allByUser = projectService.getAllByUser(principal.getName());
 
-        return ResponseEntity.ok(projects);
+        return ResponseEntity.ok(allByUser);
     }
 
     @PostMapping("/{name}")

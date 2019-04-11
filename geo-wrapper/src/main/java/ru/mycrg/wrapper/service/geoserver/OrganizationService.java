@@ -2,7 +2,7 @@ package ru.mycrg.wrapper.service.geoserver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.MqOrganizationInit;
+import ru.mycrg.common.OrgMqRequest;
 import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
 import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
@@ -10,6 +10,9 @@ import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
 import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 
 import java.io.IOException;
+
+import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
 
 @Service
 public class OrganizationService {
@@ -32,43 +35,37 @@ public class OrganizationService {
 
     /**
      * Создание организации.
-     * <p>
-     * Подразумевает под собой:
-     *   <p> - Создание БД в postGis<br>
      */
-    public void createOrganization(MqOrganizationInit orgData) throws IOException, RuntimeException {
-        gisStorage.createDb("database_" + orgData.getId());
+    public void createOrganization(OrgMqRequest dto) throws IOException, RuntimeException {
+        String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
+
+        usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
+        usersAndRolesService.createRole(roleName);
+        rulesService.addRestRule(roleName);
+
+        usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
+
+        gisStorage.createDb("database_" + dto.getOrgId());
     }
 
     /**
      * Создание проекта.
-     * <p>
-     * Подразумевает под собой:
-     *   <p> - Создание рабочей области, роли, супер-пользователя с необходимыми ролями.<p>
-     *         Добавление правил доступа к:<br>
-     *             * рабочей области или слоям рабочей области.<br>
-     *             * REST геосервера<br><br>
-     *   <p> - Создание хранилища (postgis) на геосервере.
+     * Создание хранилища (postgis) на геосервере.
      */
-    public void createProject(MqOrganizationInit orgData) throws IOException, RuntimeException {
-        Long id = orgData.getId();
-        String rawPassword = orgData.getRawPassword();
+    public void createProject(OrgMqRequest dto) throws IOException, RuntimeException {
+        Long id = dto.getOrgId();
 
-        String workspaceName = GeoServerConstants.DEFAULT_WORKSPACE_NAME + "_" + id;
-        String userName = orgData.getEmail();
-        String roleName = GeoServerConstants.DEFAULT_ROLE_NAME + "_" + id;
-        String databaseName = GeoServerConstants.DEFAULT_DB_NAME + "_" + id;
+        String workspaceName = dto.getWorkspaceName();
+        String databaseName = DEFAULT_DB_NAME + "_" + id;
+        String storeName = databaseName + "_store";
 
         workspacesService.createWorkspace(workspaceName);
-        usersAndRolesService.createRole(roleName);
-        usersAndRolesService.createUser(userName, rawPassword);
-        usersAndRolesService.associateUserWithRole(userName, roleName);
-        rulesService.addLayersRule(GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), roleName);
-        rulesService.addRestRule(roleName);
+        rulesService.addLayersRule(
+                GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
 
-        gisStorage.initP10Database("database_" + id, "public");
+        gisStorage.initP10Database(databaseName, workspaceName);
 
-        storageService.createStorage(workspaceName, GeoServerConstants.DEFAULT_DATASTORE_NAME + "_" + id, databaseName);
+        storageService.createStorage(databaseName, workspaceName, storeName);
     }
 
 }

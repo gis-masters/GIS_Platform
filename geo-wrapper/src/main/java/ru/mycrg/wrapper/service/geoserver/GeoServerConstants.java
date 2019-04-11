@@ -9,8 +9,6 @@ public class GeoServerConstants {
     public static final MediaType XML_MEDIA_TYPE = MediaType.parse("application/xml");
 
     public static final String DEFAULT_DB_NAME = "database";
-    public static final String DEFAULT_WORKSPACE_NAME = "workspace";
-    public static final String DEFAULT_DATASTORE_NAME = DEFAULT_WORKSPACE_NAME + "_store";
-    public static final String DEFAULT_ROLE_NAME = "admin_" + DEFAULT_WORKSPACE_NAME;
+    public static final String DEFAULT_ROLE_NAME = "admin_";
 
 }

@@ -7,9 +7,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
+import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.gml.GmlGenerationService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.IValidationService;
@@ -26,23 +28,28 @@ public class MqListener {
     private final ImportService importService;
     private final GmlGenerationService gmlGenerationService;
     private final OrganizationService organizationService;
+    private final ProjectService projectService;
 
     @Autowired
     public MqListener(OrganizationService organizationService,
                       IValidationService validationService,
                       ImportService importService,
+                      ProjectService projectService,
                       GmlGenerationService gmlGenerationService) {
         this.organizationService = organizationService;
         this.validationService = validationService;
         this.importService = importService;
         this.gmlGenerationService = gmlGenerationService;
+        this.projectService = projectService;
     }
 
     @RabbitListener(queues = QUEUE_ORG_CREATED)
-    public void created(Long id) {
-        log.info("Создана организация с id: {}", id);
-
-        organizationService.organizationCreated(id);
+    public void created(OrgMqResponse response) {
+        switch (response.getEventType()) {
+            case CREATE_ORG: organizationService.organizationCreated(response.getId()); break;
+            case CREATE_PROJECT: projectService.handleResponse(response); break;
+            default: log.warn("Not processable event type");
+        }
     }
 
     @RabbitListener(queues = QUEUE_VALIDATION_RESULT)
