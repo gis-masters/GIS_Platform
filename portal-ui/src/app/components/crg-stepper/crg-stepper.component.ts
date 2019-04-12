@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
+import {LayersService} from '../../services/geoserver/layers.service';
 
 @Component({
   selector: 'crg-crg-stepper',
@@ -10,10 +11,11 @@ import {ActionType, CommunicationService, SidebarType} from '../../services/comm
 
 export class CrgStepperComponent implements OnInit {
 
-  activeStep = 1;
+  activeStep = 4;
 
   constructor(private router: Router,
-              private communicationService: CommunicationService) { }
+              private communicationService: CommunicationService,
+              private layersService: LayersService) { }
 
   ngOnInit() {
   }
@@ -39,6 +41,11 @@ export class CrgStepperComponent implements OnInit {
     if (this.activeStep === 3) {
       this.router.navigate(['/workspace/map']);
       this.communicationService.sidebarManager.emit({action: ActionType.SWITCH, target: SidebarType.BUG_REPORT});
+    }
+    if (this.activeStep === 4) {
+      this.router.navigate(['/workspace/map']);
+      const copyOfLayers = Object.assign([], this.layersService.getCurrent());
+      this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: copyOfLayers});
     }
   }
 }
