@@ -60,7 +60,7 @@
           Назад
         </button>
         <button mat-raised-button class="float-right mat-primary" [disabled]="!isUploadComplete"
-                routerLink="/workspace/data_mapping">
+                (click)="next()">
           Далее
         </button>
       </div>

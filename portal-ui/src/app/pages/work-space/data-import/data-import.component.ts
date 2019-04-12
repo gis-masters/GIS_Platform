@@ -5,6 +5,7 @@ import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
 import {AuthService} from '../../../services/auth.service';
 import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import/import.service';
+import {CrgStepperComponent} from '../../../components/crg-stepper/crg-stepper.component';
 
 @Component({
   selector: 'crg-data-import',
@@ -62,6 +63,10 @@ export class DataImportComponent {
     } else {
       return true;
     }
+  }
+
+  next() {
+    this.router.navigateByUrl('/workspace/data_mapping');
   }
 
   private addTask(data: InputStartResponseDto) {
