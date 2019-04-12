@@ -26,8 +26,6 @@ export class WorkspaceComponent implements OnDestroy {
               private layersService: LayersService,
               private communicationService: CommunicationService,
               private logger: NGXLogger) {
-    this.authService.validateAuth();
-
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);

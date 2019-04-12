@@ -1,19 +1,11 @@
 import {NGXLogger} from 'ngx-logger';
 import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {AuthService} from '../../../services/auth.service';
-import {environment} from '../../../../environments/environment';
 import {GisDbService} from '../../../services/gis/gis-db.service';
 import {LayersService} from '../../../services/geoserver/layers.service';
-import {NameHrefProjection} from '../../../services/geoserver/projections';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StylesService} from '../../../services/geoserver/styles.service';
-import {
-  GeoDataStore,
-  GeoWorkspace,
-  GeoWorkspaceItem,
-  WorkspacesService
-} from '../../../services/geoserver/workspaces.service';
+import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
 import {ImportLayer, ImportService, LayerItem} from '../../../services/geoserver/import/import.service';
 import {Subject} from 'rxjs';
 import {ImportFlow} from '../../../services/geoserver/import/importFlow';
@@ -41,13 +33,11 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               private importService: ImportService,
               private workspaceService: WorkspacesService,
               private gisDbService: GisDbService,
-              private authService: AuthService,
               private stylesService: StylesService,
               private layersService: LayersService,
               private router: Router,
               private logger: NGXLogger) {
-    this.authService.validateAuth();
-
+    // TODO: Перенести логику блокирования страницы при неверных данных, по примеру WorkflowGuardService
     this.importFlow = this.importService.importFlow;
     if (!this.importFlow.scratch_import && !this.importFlow.scratch_import) {
       this.router.navigateByUrl('/workspace/data_import');

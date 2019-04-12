@@ -3,9 +3,7 @@ import {Router} from '@angular/router';
 import {Component} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
-import {AuthService} from '../../../services/auth.service';
 import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import/import.service';
-import {CrgStepperComponent} from '../../../components/crg-stepper/crg-stepper.component';
 
 @Component({
   selector: 'crg-data-import',
@@ -28,9 +26,7 @@ export class DataImportComponent {
   constructor(private logger: NGXLogger,
               private router: Router,
               private snackBar: MatSnackBar,
-              private authService: AuthService,
               private importService: ImportService) {
-    this.authService.validateAuth();
   }
 
   public fileOverBase(e: any): void {

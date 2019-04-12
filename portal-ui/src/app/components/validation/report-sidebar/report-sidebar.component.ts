@@ -43,8 +43,6 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
               private openLayersService: OpenLayersService,
               private ruleService: FgistpRulesService,
               private layersService: LayersService) {
-    this.authService.validateAuth();
-
     this.communicationService
         .selectedForValidationLayers$()
         .subscribe((data: CrgLayer[]) => this.initValidation(data));

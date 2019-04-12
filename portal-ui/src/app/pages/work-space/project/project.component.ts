@@ -3,7 +3,10 @@ import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
+import {LocalStorageService} from '../../../services/local-storage.service';
+import {StorageKeys} from '../../../services/storage-keys';
 
 @Component({
   selector: 'crg-project',
@@ -22,8 +25,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private router: Router,
+              private storageService: LocalStorageService,
               private projectsService: ProjectsService) {
-
   }
 
   ngOnInit() {
@@ -40,7 +43,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   openProject(project: CrgProject) {
-    this.router.navigateByUrl('/workspace/map');
+    const projectModel = new ProjectModel(project);
+    this.storageService.saveByKey(StorageKeys.projectKey, JSON.stringify(projectModel));
+
+    this.router.navigateByUrl('/workspace/data_import');
   }
 
   createNew(event) {

@@ -1,10 +1,8 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
-import {AuthService} from '../../../services/auth.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
@@ -34,15 +32,10 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private layersService: LayersService,
               private logger: NGXLogger,
-              private router: Router,
               private snackBar: MatSnackBar,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService,
-              private ruleService: FgistpRulesService,
-              private authService: AuthService) {
-    if (!this.authService.authenticated) {
-      this.router.navigate(['/login']);
-    }
+              private ruleService: FgistpRulesService) {
   }
 
   ngOnInit() {
