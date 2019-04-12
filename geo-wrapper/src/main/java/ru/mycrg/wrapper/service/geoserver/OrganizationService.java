@@ -14,6 +14,13 @@ import java.io.IOException;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
 
+/**
+ * При создании БД для организации, использую ИД организации для генерации названия БД.
+ * Затем при создании проектов пользуюсь этим.
+ * Т.е. название БД для организации это "database_3" например.
+ * А название схемы в БД более осмысленное - транслит в латиницу с русского названия проекта, это же используется для
+ * именования рабочей области на геосервере.
+ */
 @Service
 public class OrganizationService {
 
@@ -35,6 +42,10 @@ public class OrganizationService {
 
     /**
      * Создание организации.
+     * - создаем пользователя на геосервере
+     * - задаем роль и правило доступа к хранилищу "помойке" - scratch_workspace
+     * - ассоциируем роль с пользователем
+     * - создаем БД
      */
     public void createOrganization(OrgMqRequest dto) throws IOException, RuntimeException {
         String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
@@ -42,6 +53,10 @@ public class OrganizationService {
         usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
         usersAndRolesService.createRole(roleName);
         rulesService.addRestRule(roleName);
+
+        // Задаем правило доступа к рабочей области scratch_workspace
+        String rule = GeoServerUtil.buildRule("scratch_workspace", GeoServerPermissions.ADMIN);
+        rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
 
         usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
 

@@ -18,8 +18,6 @@ import {TaskImport} from '../../../services/geoserver/import/taskImport';
 })
 export class DataMappingComponent implements OnInit, OnDestroy {
 
-  workspaces = [];
-
   layers: LayerItem[] = [];
   selectedLayer: LayerItem;
 

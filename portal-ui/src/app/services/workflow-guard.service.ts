@@ -15,7 +15,6 @@ export class WorkflowGuardService implements CanActivate {
               private router: Router) {
   }
 
-
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
     if (route.toString().includes('data_import')) {
       if (!this.storageService.getByKey(StorageKeys.projectKey)) {

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class LocalStorageService {
 
   }
 
-  saveByKey(payload: any, key: string): void {
+  saveByKey(key: string, payload: any): void {
     window.localStorage.setItem(key, payload);
   }
 
