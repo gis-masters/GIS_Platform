@@ -250,6 +250,9 @@ public class GisStorage {
      * Инициализация шаблонной структуры 10 приказа. <p>
      *
      * В указанной БД создается указанная схема, если схема существует и наполнена таблицами ничего сделано не будет.
+     *
+     * Шаблон разворачивается следубщим образом, есть sql скрипты сгенереные из БД, но в них указана дефолтная схема
+     * "fiz", которая переименовывается в нужное название уже после.
      * @param dbName Имя БД
      * @param schemaName Имя схемы
      */
@@ -276,6 +279,9 @@ public class GisStorage {
 
             // Insert data
             ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
+
+            // Rename schema
+            jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
         } catch (SQLException e) {
             log.error("Неудалось подключится к БД / {}", e.getLocalizedMessage());
         } catch (ScriptException e) {
