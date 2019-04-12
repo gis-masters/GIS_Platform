@@ -50,7 +50,7 @@ public class MqListener {
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
     public void handleOrganizationEvent(final OrgMqRequest mqRequest) {
-        log.info("initCreation. Получено сообщение {}", mqRequest.toString());
+        log.info("handleOrganizationEvent. Получено сообщение {}", mqRequest.toString());
 
         switch (mqRequest.getType()) {
             case CREATE_ORG: createOrg(mqRequest); break;
@@ -135,6 +135,8 @@ public class MqListener {
 
     private void createProject(OrgMqRequest dto) {
         try {
+            log.debug("Try create project: {}", dto.getWorkspaceName());
+
             organizationService.createProject(dto);
 
             mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));

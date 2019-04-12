@@ -246,7 +246,14 @@ public class GisStorage {
         });
     }
 
-    public void initP10Database(String dbName, String schemaName) {
+    /**
+     * Инициализация шаблонной структуры 10 приказа. <p>
+     *
+     * В указанной БД создается указанная схема, если схема существует и наполнена таблицами ничего сделано не будет.
+     * @param dbName Имя БД
+     * @param schemaName Имя схемы
+     */
+    public void initP10Template(String dbName, String schemaName) {
         log.debug("Инициализация шаблонной БД Для: {}", dbName + "." + schemaName);
 
         try {

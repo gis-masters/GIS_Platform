@@ -18,6 +18,11 @@ public class OrgMqRequest implements Serializable {
 
     public OrgMqRequest() {}
 
+    public OrgMqRequest(long orgId, EventType type) {
+        this.orgId = orgId;
+        this.type = type;
+    }
+
     public OrgMqRequest(long orgId, String email, String password, EventType type) {
         this.orgId = orgId;
         this.email = email;

@@ -59,13 +59,16 @@ public class OrganizationService {
         String databaseName = DEFAULT_DB_NAME + "_" + id;
         String storeName = databaseName + "_store";
 
+        // На геосервере создаем рабочую область и хранилище.
         workspacesService.createWorkspace(workspaceName);
-        rulesService.addLayersRule(
-                GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
-
-        gisStorage.initP10Database(databaseName, workspaceName);
-
         storageService.createStorage(databaseName, workspaceName, storeName);
+
+        // Задаем правило доступа к рабочей области
+        String rule = GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN);
+        rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
+
+        // В БД создаем схему и инициализируем в ней шаблонную структуру
+        gisStorage.initP10Template(databaseName, workspaceName);
     }
 
 }

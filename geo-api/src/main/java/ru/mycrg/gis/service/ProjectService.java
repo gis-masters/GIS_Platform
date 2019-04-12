@@ -3,7 +3,9 @@ package ru.mycrg.gis.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.OrgMqRequest;
 import ru.mycrg.common.OrgMqResponse;
+import ru.mycrg.common.enums.EventType;
 import ru.mycrg.gis.controller.ProjectController;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
@@ -60,6 +62,12 @@ public class ProjectService {
 
             organization.addProject(newProject);
             organizationService.save(organization);
+
+            OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
+            mqRequest.setUserName(userName);
+            mqRequest.setWorkspaceName(newProject.getGeoserverName().toLowerCase());
+
+            mqEvents.sendOrgEvent(mqRequest);
 
             return newProject;
         }
