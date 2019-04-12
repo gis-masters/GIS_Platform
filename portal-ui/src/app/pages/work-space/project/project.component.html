@@ -13,8 +13,8 @@
 
       <div *ngIf="isEditMode" class="fiz-class">
         <mat-form-field class="project-form">
-          <input matInput maxlength="250" placeholder="Название проекта" [(ngModel)]="projectName">
-          <mat-hint align="end">{{projectName.length}} / 250</mat-hint>
+          <input matInput maxlength="60" placeholder="Название проекта" [(ngModel)]="projectName">
+          <mat-hint align="end">{{projectName.length}} / 60</mat-hint>
           <button mat-button *ngIf="projectName" matSuffix mat-icon-button aria-label="Clear" (click)="projectName=''">
             <mat-icon>close</mat-icon>
           </button>
@@ -35,7 +35,7 @@
       <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName"
                 (click)="deleteProject(pItem)">delete</mat-icon>
 
-      <div class="text-block">{{pItem.internalName}}</div>
+      <div class="text-block" style="-webkit-box-orient: vertical;">{{pItem.internalName}}</div>
 
       <div class="project-item-footer" (click)="openProject(pItem)">
         <span style="vertical-align: -webkit-baseline-middle">Открыть</span>

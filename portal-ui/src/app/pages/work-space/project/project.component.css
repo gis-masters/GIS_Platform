@@ -19,7 +19,6 @@
 
 .project-item-footer {
   background: lightslategray;
-
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -46,18 +45,29 @@
   padding: 10px;
 }
 
-.text-block {
+/*.text-block {
   padding: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}*/
+
+.text-block {
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-height: 20px;
+  max-height: 100px;
+  text-align: center;
+  margin-top: -25px;
 }
 
 .project-remove-icon {
   position: absolute;
   right: 0;
   top: 0;
-
   padding-top: 3px;
   color: lightslategray;
   cursor: pointer;
