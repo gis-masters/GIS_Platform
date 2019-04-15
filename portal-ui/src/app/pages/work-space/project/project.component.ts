@@ -7,6 +7,8 @@ import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
+import {MatDialog} from '@angular/material';
+import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'crg-project',
@@ -26,7 +28,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
   constructor(private logger: NGXLogger,
               private router: Router,
               private storageService: LocalStorageService,
-              private projectsService: ProjectsService) {
+              private projectsService: ProjectsService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -80,7 +83,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.projectName = '';
   }
 
-  deleteProject(pItem: CrgProject) {
+/*  deleteProject(pItem: CrgProject) {
     this.projectsService
         .delete(pItem.internalName)
         .subscribe(response => {
@@ -88,7 +91,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
           this.projectsService.fetchProjects();
         });
-  }
+  }*/
 
   hoverBy(pItem: CrgProject) {
     this.activeProject = pItem.internalName;
@@ -98,4 +101,20 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.activeProject = '';
   }
 
+  openDeleteDialog(pItem: CrgProject): void {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.projectsService
+          .delete(pItem.internalName)
+          .subscribe(response => {
+            this.logger.info('dddddddddddd', response);
+
+            this.projectsService.fetchProjects();
+          });
+      }
+    });
+  }
 }

@@ -33,7 +33,7 @@
     <mat-grid-tile *ngFor="let pItem of projects" class="project-item"
                    (mouseover)="hoverBy(pItem)" (mouseleave)="stopHover()">
       <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName"
-                (click)="deleteProject(pItem)">delete</mat-icon>
+                (click)="openDeleteDialog(pItem)">delete</mat-icon>
 
       <div class="text-block" style="-webkit-box-orient: vertical;">{{pItem.internalName}}</div>
 
@@ -41,9 +41,7 @@
         <span style="vertical-align: -webkit-baseline-middle">Открыть</span>
       </div>
     </mat-grid-tile>
-
   </mat-grid-list>
-</div>
 
 
 <!--<div class="container">-->
