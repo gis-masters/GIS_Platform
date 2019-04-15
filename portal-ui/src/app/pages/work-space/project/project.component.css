@@ -45,13 +45,6 @@
   padding: 10px;
 }
 
-/*.text-block {
-  padding: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}*/
-
 .text-block {
   padding: 0 10px;
   overflow: hidden;

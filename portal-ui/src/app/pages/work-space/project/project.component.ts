@@ -83,16 +83,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.projectName = '';
   }
 
-/*  deleteProject(pItem: CrgProject) {
-    this.projectsService
-        .delete(pItem.internalName)
-        .subscribe(response => {
-          this.logger.info('dddddddddddd', response);
-
-          this.projectsService.fetchProjects();
-        });
-  }*/
-
   hoverBy(pItem: CrgProject) {
     this.activeProject = pItem.internalName;
   }
