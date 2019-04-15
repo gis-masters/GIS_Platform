@@ -1,10 +1,6 @@
 spring:
   profiles:
     active: fiz-dev
-logging:
-  file: /opt/logs/wrapper.log
-  level:
-    ru.mycrg: DEBUG
 
 ---
 
