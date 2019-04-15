@@ -74,7 +74,7 @@ public class ProjectService {
     }
 
     public void delete(long id) {
-
+        log.warn("Not implemented yet...");
     }
 
     public void handleResponse(OrgMqResponse response) {

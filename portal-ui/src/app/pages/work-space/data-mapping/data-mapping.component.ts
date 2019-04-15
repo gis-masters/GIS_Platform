@@ -102,9 +102,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.projectsService
         .doWorkImport(workImport)
         .subscribe((response: any) => {
-          // Вернуть сюда название БД в которое был произведен импорт
-          this.logger.info('doWorkImport response: ', response);
-
           this.workspaceService
               .publishLayers(workImport)
               .subscribe(value => {

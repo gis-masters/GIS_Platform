@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {NGXLogger} from 'ngx-logger';
+import {StorageKeys} from './storage-keys';
+import {ProjectModel} from './geoserver/import/projectModel';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +18,9 @@ export class LocalStorageService {
 
   getByKey(key: string): any {
     return localStorage.getItem(key);
+  }
+
+  getProject(): ProjectModel {
+    return JSON.parse(this.getByKey(StorageKeys.projectKey)) as ProjectModel;
   }
 }

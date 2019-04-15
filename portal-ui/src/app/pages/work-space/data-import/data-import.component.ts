@@ -34,8 +34,6 @@ export class DataImportComponent {
   }
 
   initScratchImport() {
-    this.logger.info('Start scratch import');
-
     this.isImportFailed = false;
     this.isUploadComplete = false;
     this.isImportInited = true;

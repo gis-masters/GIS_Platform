@@ -35,7 +35,7 @@ services:
 
   geoserver:
     container_name: geoserver
-    image: $DOCKER_CRG_HOST/geoserver:1.0.1
+    image: $DOCKER_CRG_HOST/geoserver:1.0.2
     ports:
       - "8080:8080"
     volumes:

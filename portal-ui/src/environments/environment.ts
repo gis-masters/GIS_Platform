@@ -9,7 +9,7 @@ export const environment = {
     'host': 'localhost',
     'port': 8100
   },
-  scratchWorkspaceName: 'scratch_workspace'
+  scratchWorkspaceName: 'scratch_database'
 };
 
 /*

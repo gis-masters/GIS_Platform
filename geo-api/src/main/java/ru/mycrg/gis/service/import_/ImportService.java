@@ -53,8 +53,11 @@ public class ImportService {
         workImport.getImportTasks().forEach(importTask -> {
             ImportMqRequest importMqRequest = new ImportMqRequest(
                     process.getId(),
-                    // На данный момент источником для рабочего импорта является общее хранилище "scratch_workspace"
-                    new ResourceProjection("gis", "public", importTask.getLayerName()),
+                    // Источником для рабочего импорта является общее хранилище "scratch"
+                    new ResourceProjection(
+                            "database_" + organization.getId(),
+                            "public",
+                            importTask.getLayerName()),
                     // БД организации это шаблонное название "database" + ID организвции
                     new ResourceProjection(
                             "database_" + organization.getId(),

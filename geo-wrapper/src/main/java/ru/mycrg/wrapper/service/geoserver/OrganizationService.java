@@ -42,16 +42,23 @@ public class OrganizationService {
 
     /**
      * Создание организации.
-     * - создаем пользователя на геосервере
+     * - создаем рабочую область и хранилище для временного импорта
      * - задаем роль и правило доступа к хранилищу "помойке" - scratch_workspace
+     * - создаем пользователя на геосервере
      * - ассоциируем роль с пользователем
      * - создаем БД
      */
     public void createOrganization(OrgMqRequest dto) throws IOException, RuntimeException {
         String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
+        String dbName = "database_" + dto.getOrgId();
+        String scratchWorkspaceName = "scratch_" + dbName;
 
-        // Задаем правило доступа к рабочей области scratch_workspace
-        String rule = GeoServerUtil.buildRule("scratch_workspace", GeoServerPermissions.ADMIN);
+        // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
+        workspacesService.createWorkspace(scratchWorkspaceName);
+        storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + "_store");
+
+        // Задаем правило доступа к рабочей области "scratch"
+        String rule = GeoServerUtil.buildRule(scratchWorkspaceName, GeoServerPermissions.ADMIN);
         rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
 
         usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
@@ -60,7 +67,8 @@ public class OrganizationService {
 
         usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
 
-        gisStorage.createDb("database_" + dto.getOrgId());
+        // В БД
+        gisStorage.createDb(dbName);
     }
 
     /**
@@ -76,7 +84,7 @@ public class OrganizationService {
 
         // На геосервере создаем рабочую область и хранилище.
         workspacesService.createWorkspace(workspaceName);
-        storageService.createStorage(databaseName, workspaceName, storeName);
+        storageService.createStorage(databaseName, workspaceName, workspaceName, storeName);
 
         // Задаем правило доступа к рабочей области
         String rule = GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN);

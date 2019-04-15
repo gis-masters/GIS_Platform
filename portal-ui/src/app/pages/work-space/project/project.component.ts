@@ -98,12 +98,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.projectsService
-          .delete(pItem.internalName)
-          .subscribe(response => {
-            this.logger.info('dddddddddddd', response);
-
-            this.projectsService.fetchProjects();
-          });
+            .delete(pItem.internalName)
+            .subscribe(response => this.projectsService.fetchProjects());
       }
     });
   }

@@ -12,8 +12,8 @@ import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.JSON_MEDIA_T
 @Service
 public class StorageService extends GeoServerBaseService {
 
-    public void createStorage(final String databaseName, final String workspaceName, final String dataStoreName)
-            throws IOException {
+    public void createStorage(final String databaseName, final String schemaName,
+                              final String workspaceName, final String dataStoreName) throws IOException {
         String host = postgisHost().split(":")[0];
         String port = postgisHost().split(":")[1];
 
@@ -24,7 +24,7 @@ public class StorageService extends GeoServerBaseService {
                 "\t\t\t\"host\": \"" + host + "\",\n" +
                 "\t\t\t\"port\": \"" + port + "\",\n" +
                 "\t\t\t\"database\": \"" + databaseName + "\",\n" +
-                "\t\t\t\"schema\": \"" + workspaceName + "\",\n" +
+                "\t\t\t\"schema\": \"" + schemaName + "\",\n" +
                 "\t\t\t\"user\": \"" + dbOwnerUser() + "\",\n" +
                 "\t\t\t\"passwd\": \"" + dbOwnerPassword() + "\",\n" +
                 "\t\t\t\"dbtype\": \"postgis\"\n" +

@@ -49,16 +49,14 @@ export class WorkspacesService {
    *
    * /geoserver/rest/workspaces/work_workspace/datastores/work_workspace_store/featuretypes
    * @param projectModel Проект
-   * @param store Название хранилища
    * @param table Название таблицы
    */
-  publishLayer(projectModel: ProjectModel, store: string, table: string): Observable<any> {
-    // this.logger.info('publishLayer: ', workspace, store, table);
-
+  publishLayer(projectModel: ProjectModel, table: string): Observable<any> {
     const workspaceName = projectModel.crgProject.geoserverName;
+    const storeName = 'database_' + projectModel.crgProject.id + '_store';
 
     return this.http.post(
-      this.geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + store + '/featuretypes',
+      this.geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + storeName + '/featuretypes',
       {featureType: {name: table}});
   }
 
@@ -71,7 +69,7 @@ export class WorkspacesService {
 
     const observableTasks = [];
     workImport.tasks.forEach((task: TaskImport) => {
-      observableTasks.push(this.publishLayer(workImport.projectModel, workImport.dataStore, task.workTableName));
+      observableTasks.push(this.publishLayer(workImport.projectModel, task.workTableName));
     });
 
     return forkJoin(observableTasks);

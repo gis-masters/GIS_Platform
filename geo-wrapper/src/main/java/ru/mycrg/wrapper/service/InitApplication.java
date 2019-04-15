@@ -17,6 +17,7 @@ public class InitApplication {
     @EventListener(ContextRefreshedEvent.class)
     public void contextRefreshedEvent() {
         // Разворачиваем шаблон базы по 10 приказу в бд: gis (эта бд есть в развернутом GIS контейнере kartoza/postgis)
-        gisStorage.initP10Template("gis", "fiz");
+        // TODO: ничего не разворачиваем, удалить по прошествии какого то времени
+        // gisStorage.initP10Template("gis", "fiz");
     }
 }

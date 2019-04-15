@@ -8,6 +8,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {ServerPropertiesService} from '../../server-properties.service';
 import {ImportFlow} from './importFlow';
+import {LocalStorageService} from '../../local-storage.service';
+import {StorageKeys} from '../../storage-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,7 @@ export class ImportService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
+              private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('ImportService start');
   }
@@ -32,8 +35,11 @@ export class ImportService {
    * Инициируем импорт во временное хранилище.
    */
   initScratchImport(): Observable<InputStartResponseDto | any> {
-    const workspace = environment.scratchWorkspaceName;
-    const storage = environment.scratchWorkspaceName + '_store';
+    const projectModel = this.localStorageService.getProject();
+    const scratchWorkspce = 'scratch_database_' + projectModel.crgProject.id;
+
+    const workspace = scratchWorkspce;
+    const storage = scratchWorkspce + '_store';
 
     this.logger.info('Init import to: ', workspace, storage);
 
