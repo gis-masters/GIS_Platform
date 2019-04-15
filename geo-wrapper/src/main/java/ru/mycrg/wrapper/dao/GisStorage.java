@@ -169,8 +169,6 @@ public class GisStorage {
      */
     @Transactional
     public void doImport(JdbcTemplate jdbcTemplate, ImportMqRequest request) {
-        log.debug("doImport from: {} to: {}", request.sourceToString(), request.targetToString());
-
         String targetSchema = request.getTargetResource().getSchemaName();
         String targetTable = request.getTargetResource().getTableName();
 

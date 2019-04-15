@@ -34,7 +34,7 @@ public class Project {
 
     public Project(String internalName, String geoserverName) {
         this.internalName = internalName;
-        this.geoserverName = geoserverName;
+        this.geoserverName = geoserverName.toLowerCase();
     }
 
     public long getId() {

@@ -4,35 +4,10 @@ import java.util.List;
 
 public class WorkImport {
 
-    private String dbName;
-    private String sourceSchema;
     private String targetSchema;
     private List<ImportTask> importTasks;
 
     public WorkImport() {}
-
-    public WorkImport(String dbName, String sourceSchema, String targetSchema, List<ImportTask> importTasks) {
-        this.dbName = dbName;
-        this.sourceSchema = sourceSchema;
-        this.targetSchema = targetSchema;
-        this.importTasks = importTasks;
-    }
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public String getSourceSchema() {
-        return sourceSchema;
-    }
-
-    public void setSourceSchema(String sourceSchema) {
-        this.sourceSchema = sourceSchema;
-    }
 
     public String getTargetSchema() {
         return targetSchema;

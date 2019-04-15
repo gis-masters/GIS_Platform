@@ -14,12 +14,14 @@ public class ImportMqRequest {
 
     public ImportMqRequest() {}
 
-    public ImportMqRequest(String dbName, String sourceSchema, String targetSchema,
-                           String layerName, String workTableName, List<GeoMapping> mapping, UUID id) {
-        this.mapping = mapping;
-        this.sourceResource = new ResourceProjection(dbName, sourceSchema, layerName);
-        this.targetResource = new ResourceProjection(dbName, targetSchema, workTableName);
+    public ImportMqRequest(UUID id,
+                           ResourceProjection sourceResource,
+                           ResourceProjection targetResource,
+                           List<GeoMapping> mapping) {
         this.id = id;
+        this.sourceResource = sourceResource;
+        this.targetResource = targetResource;
+        this.mapping = mapping;
     }
 
     public UUID getId() {
@@ -54,12 +56,11 @@ public class ImportMqRequest {
         this.mapping = mapping;
     }
 
-    public String sourceToString() {
-        return sourceResource.getDbName() + "." + sourceResource.getSchemaName() + "." + sourceResource.getTableName();
+    public String printSource() {
+        return String.join(".", sourceResource.getDbName(), sourceResource.getSchemaName(), sourceResource.getTableName());
     }
 
-    public String targetToString() {
-        return targetResource.getDbName() + "." + targetResource.getSchemaName() + "." + targetResource.getTableName();
+    public String printTarget() {
+        return String.join(".", targetResource.getDbName(), targetResource.getSchemaName(), targetResource.getTableName());
     }
-
 }

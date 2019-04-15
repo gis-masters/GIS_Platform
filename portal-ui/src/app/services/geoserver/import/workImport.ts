@@ -57,8 +57,6 @@ export class WorkImport {
   }
 
   setProject(projectModel: ProjectModel) {
-    console.log('setProject: ', projectModel);
-
     this.projectModel = projectModel;
 
     this.tasks.forEach((task: TaskImport) => {

@@ -34,15 +34,16 @@ public class ImportService {
      */
     @Transactional
     public void doImport(ImportMqRequest request) {
-        log.debug("start import");
+        log.debug("Start import from: {} to: {}", request.printSource(), request.printTarget());
 
-        JdbcTemplate jdbcTemplate = gisStorage.initConnection(request.getSourceResource().getDbName());
+        String sourceDbName = request.getSourceResource().getDbName();
+        JdbcTemplate jdbcTemplate = gisStorage.initConnection(sourceDbName);
 
         String tableName = request.getTargetResource().getTableName();
         String schemaName = request.getTargetResource().getSchemaName();
 
         gisStorage.truncate(jdbcTemplate,
-                Collections.singletonList(new ResourceProjection(null, schemaName, tableName)));
+                Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, tableName)));
         gisStorage.doImport(jdbcTemplate, request);
 
         // GlobalId and encoding
@@ -65,7 +66,7 @@ public class ImportService {
         // Вставляю сюда очередь, и обрабатываю сформированные данные позже, потому как чтение происходит быстрее а
         // запись медленее, и если читать пачку из базы -> сразу обрабатывать -> пытаться записать то половина данных
         // пропадает. Так как новые данные приходят быстро и перетерают старые.
-        // Кроме выборка и обработка кусочками дает возможность отсылать оперативную инфу по прогрессу.
+        // Кроме того выборка и обработка кусочками дает возможность отсылать оперативную инфу по прогрессу.
         while (true) {
             List<Map<String, Object>> nextBatch = queue.poll();
             if (nextBatch != null) {

@@ -74,10 +74,10 @@ public class ProjectController {
     }
 
     @PostMapping("/import")
-    public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport) {
-        log.debug("InitImport request");
+    public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport, Principal principal) {
+        log.debug("User {} initImport request", principal.getName());
 
-        return importService.initProcess(workImport);
+        return importService.initProcess(workImport, principal.getName());
     }
 
 }
