@@ -31,7 +31,11 @@ export class MappingCardComponent implements OnInit, OnChanges {
 
     this.ruleService.getRules()
         .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
-          this.entityTypes = entityTypesDefinition.xsdFeatures;
+          if (entityTypesDefinition.xsdFeatures) {
+            this.entityTypes = entityTypesDefinition.xsdFeatures;
+          } else {
+            this.logger.warn('Empty rules? ', entityTypesDefinition);
+          }
         });
   }
 

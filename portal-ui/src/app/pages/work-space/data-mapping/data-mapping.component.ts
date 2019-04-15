@@ -1,15 +1,18 @@
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {GisDbService} from '../../../services/gis/gis-db.service';
-import {LayersService} from '../../../services/geoserver/layers.service';
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {debounceTime, filter, takeUntil} from 'rxjs/operators';
+import {ImportFlow} from '../../../services/geoserver/import/importFlow';
+import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
+import {TaskImport} from '../../../services/geoserver/import/taskImport';
 import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
 import {ImportLayer, ImportService, LayerItem} from '../../../services/geoserver/import/import.service';
-import {Subject} from 'rxjs';
-import {ImportFlow} from '../../../services/geoserver/import/importFlow';
-import {TaskImport} from '../../../services/geoserver/import/taskImport';
+import {LocalStorageService} from '../../../services/local-storage.service';
+import {StorageKeys} from '../../../services/storage-keys';
+import {ProjectModel} from '../../../services/geoserver/import/projectModel';
+import {ProjectsService} from '../../../services/gis/projects.service';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -30,9 +33,10 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   constructor(private workspacesService: WorkspacesService,
               private importService: ImportService,
               private workspaceService: WorkspacesService,
-              private gisDbService: GisDbService,
+              private projectsService: ProjectsService,
               private stylesService: StylesService,
               private layersService: LayersService,
+              private storageService: LocalStorageService,
               private router: Router,
               private logger: NGXLogger) {
     // TODO: Перенести логику блокирования страницы при неверных данных, по примеру WorkflowGuardService
@@ -41,6 +45,9 @@ export class DataMappingComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/workspace/data_import');
       throw Error('WRONG WAY');
     }
+
+    const projectModel = JSON.parse(this.storageService.getByKey(StorageKeys.projectKey)) as ProjectModel;
+    this.importService.importFlow.setProject(projectModel);
   }
 
   ngOnInit() {
@@ -85,28 +92,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.selectedLayer = layer;
   }
 
-  workspaceSelected(selectedWorkspace: any) {
-    this.importService.importFlow.setWorkspace(selectedWorkspace);
-
-    // this.workspaceService
-    //     .getWorkspaceByName(selectedWorkspace)
-    //     .subscribe((data: any) => {
-    //       const workspace = data.workspace as GeoWorkspaceItem;
-    //
-    //       this.workspacesService
-    //           .getWorkspaceDataStore(workspace.dataStores)
-    //           .subscribe((geoDataStore: GeoDataStore) => {
-    //             // TODO:  Cannot read property 'length' of undefined
-    //             if (geoDataStore.dataStores.dataStore.length > 1) {
-    //               this.logger.warn('У рабочей области несколько хранилищь?');
-    //             }
-    //
-    //             const storeName = geoDataStore.dataStores.dataStore[0].name;
-    //             this.importService.importFlow.work_import.dataStore = storeName;
-    //           });
-    //     });
-  }
-
   startWorkImport() {
     this.isWorkImportInited = true;
 
@@ -114,9 +99,12 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
-    this.gisDbService
+    this.projectsService
         .doWorkImport(workImport)
         .subscribe((response: any) => {
+          // Вернуть сюда название БД в которое был произведен импорт
+          this.logger.info('doWorkImport response: ', response);
+
           this.workspaceService
               .publishLayers(workImport)
               .subscribe(value => {

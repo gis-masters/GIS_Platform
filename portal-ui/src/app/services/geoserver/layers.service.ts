@@ -53,29 +53,29 @@ export class LayersService {
           map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
           map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
           map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
+          // flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
         )
         .subscribe(value => {
           this._layers$.next(value);
         });
   }
 
-  fetchLayerConnectionInfo(layer: CrgLayer) {
-    return this.getLayer(layer)
-               .pipe(
-                 filter((data: Layer) => !!data),
-                 flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
-                 map((data: any) => {
-                   if (data && data.dataStore) {
-                     layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
-                   } else {
-                     this.logger.warn('Error fetching connection info for layer', layer.name);
-                   }
-
-                   return layer;
-                 }),
-               );
-  }
+  // fetchLayerConnectionInfo(layer: CrgLayer) {
+  //   return this.getLayer(layer)
+  //              .pipe(
+  //                filter((data: Layer) => !!data),
+  //                flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
+  //                map((data: any) => {
+  //                  if (data && data.dataStore) {
+  //                    layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
+  //                  } else {
+  //                    this.logger.warn('Error fetching connection info for layer', layer.name);
+  //                  }
+  //
+  //                  return layer;
+  //                }),
+  //              );
+  // }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
     const params = new HttpParams();
@@ -107,14 +107,14 @@ export class LayersService {
     return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 
-  private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
-    const observableTasks = [];
-    crgLayers.forEach((layer: CrgLayer) => {
-      observableTasks.push(this.fetchLayerConnectionInfo(layer));
-    });
-
-    return forkJoin(observableTasks);
-  }
+  // private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
+  //   const observableTasks = [];
+  //   crgLayers.forEach((layer: CrgLayer) => {
+  //     observableTasks.push(this.fetchLayerConnectionInfo(layer));
+  //   });
+  //
+  //   return forkJoin(observableTasks);
+  // }
 
   private mergeWithRules(layers: NameHrefProjection[]) {
     const crgLayers: CrgLayer[] = [];

@@ -3,6 +3,7 @@ import {publishReplay, refCount} from 'rxjs/operators';
 import {SimpleProperty} from '../../gis/fgistp-rules.service';
 import {InputStartResponseDto, LayerAttribute} from './import.service';
 import {MappingItem, TaskImport} from './taskImport';
+import {ProjectModel} from './projectModel';
 
 export class WorkImport {
 
@@ -14,7 +15,7 @@ export class WorkImport {
     );
 
   // Наименование рабочей области
-  workspace: string;
+  projectModel: ProjectModel;
   dataStore: string;
 
   // Сюда ложим ответ от сервера при инициализации импорта
@@ -55,8 +56,11 @@ export class WorkImport {
         });
   }
 
-  updateWorkspace(workspaceName: string) {
-    this.workspace = workspaceName;
+  setProject(projectModel: ProjectModel) {
+    console.log('setProject: ', projectModel);
+
+    this.projectModel = projectModel;
+
     this.tasks.forEach((task: TaskImport) => {
       task.mapping = [];
       task.workTableName = undefined;
@@ -74,19 +78,21 @@ export class WorkImport {
   }
 
   clear() {
-    this.workspace = undefined;
+    this.projectModel = undefined;
     this.tasks = [];
     this.target_import = undefined;
     this.updateWorkImportState();
   }
 
   private updateWorkImportState() {
-    if (this.workspace) {
-      if (this.dataStore) {
-        this.isWorkImportReady = !this.tasks.find((task: TaskImport) => !task.workTableName);
-      } else {
-        this.isWorkImportReady = false;
-      }
+    if (this.projectModel) {
+      this.isWorkImportReady = !this.tasks.find((task: TaskImport) => !task.workTableName);
+      // if (this.dataStore) {
+      //
+      // } else {
+      //   console.log('3');
+      //   this.isWorkImportReady = false;
+      // }
     } else {
       this.isWorkImportReady = false;
     }

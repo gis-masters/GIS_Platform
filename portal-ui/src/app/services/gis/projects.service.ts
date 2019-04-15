@@ -3,9 +3,9 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
-import {filter, map, publishReplay, refCount} from 'rxjs/operators';
+import {filter, publishReplay, refCount} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
+import {WorkImport} from '../geoserver/import/workImport';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +48,23 @@ export class ProjectsService {
 
   delete(name: string): Observable<any> {
     return this.http.delete(this.projectsUrl + '/' + name);
+  }
+
+  /**
+   * Для выполнения импорта передаем на бекенд geoserverName(то имя под которым создам workspace на геосервере,
+   * то имя под которым создана схема в БД) проекта в который хотим импортировать.
+   * Организация, а соответственно и название БД есть на сервере.
+   * К какой организации привязан пользователь тоже разберется бекенд.
+   */
+  doWorkImport(workImport: WorkImport) {
+    this.logger.info('doWorkImport: ', workImport);
+
+    const payload = {
+      targetSchema: workImport.projectModel.crgProject.geoserverName,
+      importTasks: workImport.tasks
+    };
+
+    return this.http.post(this.projectsUrl + '/import', payload);
   }
 
 }

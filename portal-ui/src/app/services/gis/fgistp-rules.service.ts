@@ -1,4 +1,4 @@
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
@@ -26,12 +26,16 @@ export class FgistpRulesService {
       return this.http
                  .get<FeatureXsdDefinition>(this.serverProp.rulesUrl)
                  .pipe(
-                   tap((respone: any) => {
+                   map((respone: any) => {
                      if (respone) {
                        this.featuresXsdDefinition.xsdFeatures = respone.entityTypes;
+
                      } else {
                        this.logger.warn('getRules response is: ', respone);
+                       this.featuresXsdDefinition = {xsdFeatures: []};
                      }
+
+                     return this.featuresXsdDefinition;
                    })
                  );
     }

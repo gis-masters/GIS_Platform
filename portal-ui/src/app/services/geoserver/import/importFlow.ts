@@ -1,4 +1,5 @@
 import {WorkImport} from './workImport';
+import {ProjectModel} from './projectModel';
 import {ImportTasks, InputStartResponseDto} from './import.service';
 
 export class ImportFlow {
@@ -19,10 +20,10 @@ export class ImportFlow {
 
   /**
    * Смена рабочей области обнуляем таблицу.
-   * @param workspaceName Наименование рабочей области.
+   * @param projectModel Проект
    */
-  setWorkspace(workspaceName: string) {
-    this.work_import.updateWorkspace(workspaceName);
+  setProject(projectModel: ProjectModel) {
+    this.work_import.setProject(projectModel);
   }
 
   setTable(layerName: string, newTableName: string) {

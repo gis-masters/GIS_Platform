@@ -8,6 +8,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
+import {ProjectModel} from './import/projectModel';
 
 @Injectable({
   providedIn: 'root'
@@ -47,15 +48,17 @@ export class WorkspacesService {
    * Для публикации в БД должна быть уже заполненная таблица.
    *
    * /geoserver/rest/workspaces/work_workspace/datastores/work_workspace_store/featuretypes
-   * @param workspace Название рабочей области
+   * @param projectModel Проект
    * @param store Название хранилища
    * @param table Название таблицы
    */
-  publishLayer(workspace: string, store: string, table: string): Observable<any> {
+  publishLayer(projectModel: ProjectModel, store: string, table: string): Observable<any> {
     // this.logger.info('publishLayer: ', workspace, store, table);
 
+    const workspaceName = projectModel.crgProject.geoserverName;
+
     return this.http.post(
-      this.geoserverWorkspaceUrl + '/' + workspace + '/datastores/' + store + '/featuretypes',
+      this.geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + store + '/featuretypes',
       {featureType: {name: table}});
   }
 
@@ -68,7 +71,7 @@ export class WorkspacesService {
 
     const observableTasks = [];
     workImport.tasks.forEach((task: TaskImport) => {
-      observableTasks.push(this.publishLayer(workImport.workspace, workImport.dataStore, task.workTableName));
+      observableTasks.push(this.publishLayer(workImport.projectModel, workImport.dataStore, task.workTableName));
     });
 
     return forkJoin(observableTasks);
