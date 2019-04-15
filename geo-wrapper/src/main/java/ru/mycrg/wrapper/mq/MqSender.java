@@ -25,7 +25,7 @@ public class MqSender implements IMqEvents {
 
     @Override
     public void orgEventResponse(OrgMqResponse response) {
-        log.info("Send created event: {}", response.getId());
+        log.info("Send created event: {}:{}", response.getId(), response.getStatus());
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_ORG_CREATED, MqProperties.KEY_ORG_CREATED, response);
     }

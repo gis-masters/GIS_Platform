@@ -50,13 +50,13 @@ public class OrganizationService {
     public void createOrganization(OrgMqRequest dto) throws IOException, RuntimeException {
         String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
 
-        usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
-        usersAndRolesService.createRole(roleName);
-        rulesService.addRestRule(roleName);
-
         // Задаем правило доступа к рабочей области scratch_workspace
         String rule = GeoServerUtil.buildRule("scratch_workspace", GeoServerPermissions.ADMIN);
         rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
+
+        usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
+        usersAndRolesService.createRole(roleName);
+        rulesService.addRestRule(roleName);
 
         usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
 

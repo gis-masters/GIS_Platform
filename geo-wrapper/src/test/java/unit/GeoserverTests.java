@@ -31,7 +31,7 @@ public class GeoserverTests {
         oldRules.put("/**:POST,DELETE,PUT", "ROLE_ADMINISTRATOR,admin_workspace_1");
         oldRules.put("/**:GET", "ROLE_ADMINISTRATOR,admin_workspace_1");
 
-        Map<String, String> result = rulesService.insertNewRole(oldRules, "new_role");
+        Map<String, String> result = rulesService.insertNewRole(oldRules, "new_role", null);
         assertEquals("ROLE_ADMINISTRATOR,admin_workspace_1,new_role", result.get("/**:GET"));
         assertEquals("ROLE_ADMINISTRATOR,admin_workspace_1,new_role", result.get("/**:POST,DELETE,PUT"));
     }
