@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/logs_test/wrapper.log</file>
+        <file>/opt/logs/wrapper.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/opt/logs_test/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/opt/logs/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
