@@ -135,11 +135,13 @@ public class MqListener {
 
     private void createProject(OrgMqRequest dto) {
         try {
-            log.debug("Try create project: {}", dto.getWorkspaceName());
+            if (authService.authorize().isPresent()) {
+                log.debug("Try create project: {}", dto.getWorkspaceName());
 
-            organizationService.createProject(dto);
+                organizationService.createProject(dto);
 
-            mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
+                mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
+            }
         } catch (IOException | RuntimeException e) {
             log.error("Неудалось создать организацию на геосервере: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));

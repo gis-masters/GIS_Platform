@@ -85,17 +85,17 @@ export class EditObjectComponent implements OnChanges, OnInit {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
 
               // Сразу провалидируем слой при успешном сохранении
-              this.validationService.validateLayers([
-                {
-                  complexName: '', href: '', name: '', title: '',
-                  connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
-                }
-              ])
-                .subscribe((responses: ValidationResponse[]) => {
-                  this.snackBar.open('Сохранено', 'X', {duration: 3000});
-
-                  this.closeMe.emit(true);
-                });
+              // this.validationService.validateLayers([
+              //   {
+              //     complexName: '', href: '', name: '', title: '',
+              //     connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
+              //   }
+              // ])
+              //   .subscribe((responses: ValidationResponse[]) => {
+              //     this.snackBar.open('Сохранено', 'X', {duration: 3000});
+              //
+              //     this.closeMe.emit(true);
+              //   });
             } else {
               this.logger.warn('UpdateFeature response: ', response);
             }
