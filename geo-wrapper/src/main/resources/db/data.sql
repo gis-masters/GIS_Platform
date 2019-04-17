@@ -1142,7 +1142,7 @@ INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (5, 5, 'Охра�
 INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (6, 6, 'Охранная зона дендрологического парка либо ботанического сада');
 INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (7, 7, 'Охранная зона иных особо охраняемых природных территорий');
 
-========================================================================================================================
+--
 SELECT pg_catalog.setval('fiz.ab_stype_objectid_seq', 5, true);
 SELECT pg_catalog.setval('fiz.admborder_objectid_seq', 1, true);
 SELECT pg_catalog.setval('fiz.admemo_objectid_seq', 1, false);
