@@ -64,7 +64,6 @@ public class ProjectService {
             organizationService.save(organization);
 
             OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
-            mqRequest.setUserName(userName);
             mqRequest.setWorkspaceName(newProject.getGeoserverName());
 
             mqEvents.sendOrgEvent(mqRequest);

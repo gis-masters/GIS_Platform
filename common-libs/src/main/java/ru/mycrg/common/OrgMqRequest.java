@@ -10,8 +10,8 @@ public class OrgMqRequest implements Serializable {
     private String rawPassword;
     private String comment;
     private String email;
-
     private String userName;
+
     private String workspaceName;
 
     private EventType type;
@@ -26,6 +26,7 @@ public class OrgMqRequest implements Serializable {
     public OrgMqRequest(long orgId, String email, String password, EventType type) {
         this.orgId = orgId;
         this.email = email;
+        this.userName = email;
         this.rawPassword = password;
         this.type = type;
     }
@@ -84,5 +85,18 @@ public class OrgMqRequest implements Serializable {
 
     public void setType(EventType type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "OrgMqRequest{" +
+                "orgId=" + orgId +
+                ", rawPassword='" + rawPassword + '\'' +
+                ", comment='" + comment + '\'' +
+                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                ", workspaceName='" + workspaceName + '\'' +
+                ", type=" + type +
+                '}';
     }
 }

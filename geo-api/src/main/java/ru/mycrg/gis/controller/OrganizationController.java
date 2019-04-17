@@ -60,7 +60,7 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {
-        log.debug("Create organization request: {}", createDto);
+        log.debug("Request create organization: {}", createDto.getName());
 
         Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
         if (userByEmail.isPresent()) {
