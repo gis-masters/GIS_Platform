@@ -3,8 +3,9 @@ import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {CrgProject} from '../../../services/gis/projects.service';
+import {LocalStorageService} from '../../../services/local-storage.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
@@ -18,6 +19,7 @@ import {ValidationDialogData} from '../../../components/validation/validation-di
 })
 export class MapComponent implements OnInit, OnDestroy {
 
+  currentProject: CrgProject;
   layers: CrgLayer[] = [];
 
   isValidationDialogShow = false;
@@ -33,16 +35,16 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private logger: NGXLogger,
               private snackBar: MatSnackBar,
+              private storageService: LocalStorageService,
               private communicationService: CommunicationService,
-              private openLayers: OpenLayersService,
-              private ruleService: FgistpRulesService) {
+              private openLayers: OpenLayersService) {
+    this.currentProject = this.storageService.getProject().crgProject;
   }
 
   ngOnInit() {
     this.openLayers.createMap();
 
-    this.ruleService.getRules()
-        .subscribe(value => this.layersService.fetchLayers());
+    this.layersService.fetchLayers(this.currentProject);
 
     // Подписываемся на слоя чтобы докидывать их на карту
     this.layersService.layers$

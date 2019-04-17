@@ -20,7 +20,15 @@ export class LocalStorageService {
     return localStorage.getItem(key);
   }
 
+  clearByKey(key: string): any {
+    return localStorage.removeItem(key);
+  }
+
   getProject(): ProjectModel {
     return JSON.parse(this.getByKey(StorageKeys.projectKey)) as ProjectModel;
+  }
+
+  clearProject(): void {
+    this.clearByKey(StorageKeys.projectKey);
   }
 }

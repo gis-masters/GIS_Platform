@@ -3,12 +3,13 @@ import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
+import {CrgProject} from '../gis/projects.service';
 import {DatastoreService} from './datastore.service';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
+import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
 import {publishReplay} from 'rxjs/internal/operators/publishReplay';
 import {ServerPropertiesService} from '../server-properties.service';
 
@@ -45,7 +46,7 @@ export class LayersService {
   /**
    * Получаем слоя с геосервера.
    */
-  fetchLayers(): void {
+  fetchLayers(project: CrgProject): void {
     this.http
         .get<GeoLayer>(this.layersUrl)
         .pipe(
@@ -53,7 +54,8 @@ export class LayersService {
           map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
           map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
           map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers))
+          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
+          map((layers: CrgLayer[]) => this.filterProjectLayers(project, layers)),
         )
         .subscribe(value => {
           this._layers$.next(value);
@@ -105,6 +107,10 @@ export class LayersService {
 
   private filterScratchLayers(layers: NameHrefProjection[]) {
     return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+  }
+
+  private filterProjectLayers(project: CrgProject, layers: CrgLayer[]) {
+    return layers.filter((layer: CrgLayer) => layer.connectionInfo.schemaName === project.geoserverName);
   }
 
   private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {

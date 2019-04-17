@@ -16,13 +16,16 @@ export class WorkflowGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    if (route.toString().includes('data_import')) {
-      if (!this.storageService.getByKey(StorageKeys.projectKey)) {
-        this.logger.warn('Wrong workflow: empty project');
+    if (route.url[0].path === 'data_import' && !this.storageService.getProject()) {
+      this.logger.warn('Wrong workflow: empty project');
 
-        this.router.navigateByUrl('/workspace/projects');
-        return false;
-      }
+      this.router.navigateByUrl('/workspace/projects');
+      return false;
+    } else if (route.url[0].path === 'map' && !this.storageService.getProject()) {
+      this.logger.warn('Wrong workflow: empty project');
+
+      this.router.navigateByUrl('/workspace/projects');
+      return false;
     }
 
     return true;

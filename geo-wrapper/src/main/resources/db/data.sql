@@ -1,7 +1,4 @@
--- PostgreSQL database dump
--- Dumped from database version 11.1 (Debian 11.1-3.pgdg90+1)
--- Dumped by pg_dump version 11.2 (Ubuntu 11.2-1.pgdg18.10+1)
--- Started on 2019-04-03 15:48:35 MSK
+-- PostgreSQL version 11.1 (Debian 11.1-3.pgdg90+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1145,9 +1142,7 @@ INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (5, 5, 'Охра�
 INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (6, 6, 'Охранная зона дендрологического парка либо ботанического сада');
 INSERT INTO fiz.zone_oopt (objectid, code, description) VALUES (7, 7, 'Охранная зона иных особо охраняемых природных территорий');
 
---
---
---
+========================================================================================================================
 SELECT pg_catalog.setval('fiz.ab_stype_objectid_seq', 5, true);
 SELECT pg_catalog.setval('fiz.admborder_objectid_seq', 1, true);
 SELECT pg_catalog.setval('fiz.admemo_objectid_seq', 1, false);
@@ -1162,743 +1157,87 @@ SELECT pg_catalog.setval('fiz.airtransportobj_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.airtransportobj_point_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.al_stype_objectid_seq', 8, true);
 SELECT pg_catalog.setval('fiz.amb_type_objectid_seq', 9, true);
-
-
---
--- TOC entry 9879 (class 0 OID 0)
--- Dependencies: 260
--- Name: ans_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ans_type_objectid_seq', 15, true);
-
-
---
--- TOC entry 9880 (class 0 OID 0)
--- Dependencies: 262
--- Name: aq_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.aq_stype_objectid_seq', 4, true);
-
-
---
--- TOC entry 9881 (class 0 OID 0)
--- Dependencies: 265
--- Name: areabasedevelopment_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.areabasedevelopment_objectid_seq', 1, false);
-
-
---
--- TOC entry 9882 (class 0 OID 0)
--- Dependencies: 268
--- Name: authorityservice_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.authorityservice_objectid_seq', 1, false);
-
-
---
--- TOC entry 9883 (class 0 OID 0)
--- Dependencies: 271
--- Name: authorityservice_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.authorityservice_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9884 (class 0 OID 0)
--- Dependencies: 274
--- Name: autoservice_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.autoservice_objectid_seq', 1, false);
-
-
---
--- TOC entry 9885 (class 0 OID 0)
--- Dependencies: 277
--- Name: autoservice_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.autoservice_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9886 (class 0 OID 0)
--- Dependencies: 279
--- Name: avia_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.avia_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 9887 (class 0 OID 0)
--- Dependencies: 281
--- Name: bent_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.bent_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9888 (class 0 OID 0)
--- Dependencies: 283
--- Name: bridge_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.bridge_t_objectid_seq', 7, true);
-
-
---
--- TOC entry 9889 (class 0 OID 0)
--- Dependencies: 285
--- Name: bur_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.bur_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9890 (class 0 OID 0)
--- Dependencies: 287
--- Name: cable_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cable_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 9891 (class 0 OID 0)
--- Dependencies: 289
--- Name: cat_distr_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cat_distr_objectid_seq', 5, true);
-
-
---
--- TOC entry 9892 (class 0 OID 0)
--- Dependencies: 291
--- Name: cat_main_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cat_main_objectid_seq', 2, true);
-
-
---
--- TOC entry 9893 (class 0 OID 0)
--- Dependencies: 293
--- Name: cat_rdtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cat_rdtype_objectid_seq', 7, true);
-
-
---
--- TOC entry 9894 (class 0 OID 0)
--- Dependencies: 295
--- Name: cat_rr_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cat_rr_objectid_seq', 10, true);
-
-
---
--- TOC entry 9895 (class 0 OID 0)
--- Dependencies: 297
--- Name: cemet_stat_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemet_stat_objectid_seq', 2, true);
-
-
---
--- TOC entry 9896 (class 0 OID 0)
--- Dependencies: 299
--- Name: cemet_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemet_stype_objectid_seq', 4, true);
-
-
---
--- TOC entry 9897 (class 0 OID 0)
--- Dependencies: 301
--- Name: cemet_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemet_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 9898 (class 0 OID 0)
--- Dependencies: 303
--- Name: cemet_wtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemet_wtype_objectid_seq', 3, true);
-
-
---
--- TOC entry 9899 (class 0 OID 0)
--- Dependencies: 306
--- Name: cemetery_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemetery_objectid_seq', 1, false);
-
-
---
--- TOC entry 9900 (class 0 OID 0)
--- Dependencies: 309
--- Name: cemetery_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cemetery_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9901 (class 0 OID 0)
--- Dependencies: 311
--- Name: cep_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cep_class_objectid_seq', 4, true);
-
-
---
--- TOC entry 9902 (class 0 OID 0)
--- Dependencies: 313
--- Name: chi_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.chi_stype_objectid_seq', 6, true);
-
-
---
--- TOC entry 9903 (class 0 OID 0)
--- Dependencies: 315
--- Name: clb_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.clb_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9904 (class 0 OID 0)
--- Dependencies: 318
--- Name: coastalprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.coastalprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 9905 (class 0 OID 0)
--- Dependencies: 320
--- Name: comm_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.comm_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9906 (class 0 OID 0)
--- Dependencies: 322
--- Name: comm_сtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz."comm_сtype_objectid_seq"', 4, true);
-
-
---
--- TOC entry 9907 (class 0 OID 0)
--- Dependencies: 324
--- Name: cr_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cr_stype_objectid_seq', 3, true);
-
-
---
--- TOC entry 9908 (class 0 OID 0)
--- Dependencies: 326
--- Name: crossp_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.crossp_t_objectid_seq', 2, true);
-
-
---
--- TOC entry 9909 (class 0 OID 0)
--- Dependencies: 328
--- Name: crossr_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.crossr_t_objectid_seq', 2, true);
-
-
---
--- TOC entry 9910 (class 0 OID 0)
--- Dependencies: 330
--- Name: ctm_time_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ctm_time_t_objectid_seq', 4, true);
-
-
---
--- TOC entry 9911 (class 0 OID 0)
--- Dependencies: 332
--- Name: ctm_use_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ctm_use_t_objectid_seq', 2, true);
-
-
---
--- TOC entry 9912 (class 0 OID 0)
--- Dependencies: 334
--- Name: cu_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.cu_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9913 (class 0 OID 0)
--- Dependencies: 337
--- Name: culture_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.culture_objectid_seq', 1, false);
-
-
---
--- TOC entry 9914 (class 0 OID 0)
--- Dependencies: 340
--- Name: culture_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.culture_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9915 (class 0 OID 0)
--- Dependencies: 342
--- Name: current_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.current_objectid_seq', 2, true);
-
-
---
--- TOC entry 9916 (class 0 OID 0)
--- Dependencies: 345
--- Name: customcontrol_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.customcontrol_objectid_seq', 1, false);
-
-
---
--- TOC entry 9917 (class 0 OID 0)
--- Dependencies: 348
--- Name: customcontrol_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.customcontrol_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9918 (class 0 OID 0)
--- Dependencies: 350
--- Name: d_objects_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.d_objects_objectid_seq', 6, true);
-
-
---
--- TOC entry 9919 (class 0 OID 0)
--- Dependencies: 352
--- Name: danger_obj_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.danger_obj_objectid_seq', 12, true);
-
-
---
--- TOC entry 9920 (class 0 OID 0)
--- Dependencies: 355
--- Name: drinkwaterprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.drinkwaterprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 9921 (class 0 OID 0)
--- Dependencies: 357
--- Name: edu_sdtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.edu_sdtype_objectid_seq', 3, true);
-
-
---
--- TOC entry 9922 (class 0 OID 0)
--- Dependencies: 359
--- Name: edu_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.edu_stype_objectid_seq', 5, true);
-
-
---
--- TOC entry 9923 (class 0 OID 0)
--- Dependencies: 361
--- Name: edu_tunit_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.edu_tunit_objectid_seq', 24, true);
-
-
---
--- TOC entry 9924 (class 0 OID 0)
--- Dependencies: 364
--- Name: education_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.education_objectid_seq', 1, false);
-
-
---
--- TOC entry 9925 (class 0 OID 0)
--- Dependencies: 367
--- Name: education_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.education_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9926 (class 0 OID 0)
--- Dependencies: 369
--- Name: el_supply_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.el_supply_objectid_seq', 2, true);
-
-
---
--- TOC entry 9927 (class 0 OID 0)
--- Dependencies: 372
--- Name: electricline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.electricline_objectid_seq', 50, true);
-
-
---
--- TOC entry 9928 (class 0 OID 0)
--- Dependencies: 375
--- Name: electricpowerstation_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.electricpowerstation_objectid_seq', 1, false);
-
-
---
--- TOC entry 9929 (class 0 OID 0)
--- Dependencies: 378
--- Name: electricpowerstation_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.electricpowerstation_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9930 (class 0 OID 0)
--- Dependencies: 381
--- Name: electrictransformer_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.electrictransformer_objectid_seq', 26, true);
-
-
---
--- TOC entry 9931 (class 0 OID 0)
--- Dependencies: 384
--- Name: electrictransformer_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.electrictransformer_point_objectid_seq', 26, true);
-
-
---
--- TOC entry 9932 (class 0 OID 0)
--- Dependencies: 386
--- Name: eme_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.eme_class_objectid_seq', 6, true);
-
-
---
--- TOC entry 9933 (class 0 OID 0)
--- Dependencies: 388
--- Name: eme_source_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.eme_source_objectid_seq', 30, true);
-
-
---
--- TOC entry 9934 (class 0 OID 0)
--- Dependencies: 391
--- Name: emergencyprotectionobj_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.emergencyprotectionobj_objectid_seq', 1, false);
-
-
---
--- TOC entry 9935 (class 0 OID 0)
--- Dependencies: 394
--- Name: emergencyprotectionobj_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.emergencyprotectionobj_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9936 (class 0 OID 0)
--- Dependencies: 397
--- Name: engprotectionobj_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.engprotectionobj_objectid_seq', 1, false);
-
-
---
--- TOC entry 9937 (class 0 OID 0)
--- Dependencies: 400
--- Name: engprotectionobj_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.engprotectionobj_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9938 (class 0 OID 0)
--- Dependencies: 403
--- Name: engprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.engprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 9939 (class 0 OID 0)
--- Dependencies: 406
--- Name: engsanitarygapzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.engsanitarygapzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 9940 (class 0 OID 0)
--- Dependencies: 408
--- Name: ent_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ent_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9941 (class 0 OID 0)
--- Dependencies: 411
--- Name: envdanger_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.envdanger_objectid_seq', 1, false);
-
-
---
--- TOC entry 9942 (class 0 OID 0)
--- Dependencies: 414
--- Name: envdanger_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.envdanger_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9943 (class 0 OID 0)
--- Dependencies: 417
--- Name: envmonitoring_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.envmonitoring_objectid_seq', 1, false);
-
-
---
--- TOC entry 9944 (class 0 OID 0)
--- Dependencies: 420
--- Name: envmonitoring_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.envmonitoring_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 9945 (class 0 OID 0)
--- Dependencies: 422
--- Name: feature_lep_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.feature_lep_objectid_seq', 3, true);
-
-
---
--- TOC entry 9946 (class 0 OID 0)
--- Dependencies: 424
--- Name: ferry_crgt_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ferry_crgt_objectid_seq', 2, true);
-
-
---
--- TOC entry 9947 (class 0 OID 0)
--- Dependencies: 426
--- Name: ferry_mvt_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ferry_mvt_objectid_seq', 2, true);
-
-
---
--- TOC entry 9948 (class 0 OID 0)
--- Dependencies: 429
--- Name: fishprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.fishprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 9949 (class 0 OID 0)
--- Dependencies: 432
--- Name: floodarea_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.floodarea_objectid_seq', 1, false);
-
-
---
--- TOC entry 9950 (class 0 OID 0)
--- Dependencies: 434
--- Name: flooding_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.flooding_t_objectid_seq', 4, true);
-
-
---
--- TOC entry 9951 (class 0 OID 0)
--- Dependencies: 437
--- Name: foreshore_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.foreshore_objectid_seq', 1, false);
-
-
---
--- TOC entry 9952 (class 0 OID 0)
--- Dependencies: 440
--- Name: forest_cat_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forest_cat_objectid_seq', 4, true);
-
-
---
--- TOC entry 9953 (class 0 OID 0)
--- Dependencies: 442
--- Name: forest_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forest_objectid_seq', 1, false);
-
-
---
--- TOC entry 9954 (class 0 OID 0)
--- Dependencies: 444
--- Name: forest_os_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forest_os_objectid_seq', 7, true);
-
-
---
--- TOC entry 9955 (class 0 OID 0)
--- Dependencies: 446
--- Name: forest_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forest_t_objectid_seq', 6, true);
-
-
---
--- TOC entry 9956 (class 0 OID 0)
--- Dependencies: 448
--- Name: forest_val_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forest_val_objectid_seq', 9, true);
-
-
---
--- TOC entry 9957 (class 0 OID 0)
--- Dependencies: 451
--- Name: forestpark_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.forestpark_objectid_seq', 1, false);
-
-
---
--- TOC entry 9958 (class 0 OID 0)
--- Dependencies: 453
--- Name: fp_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.fp_class_objectid_seq', 5, true);
-
-
---
--- TOC entry 9959 (class 0 OID 0)
--- Dependencies: 455
--- Name: fp_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.fp_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 9960 (class 0 OID 0)
--- Dependencies: 457
--- Name: fs_objects_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.fs_objects_objectid_seq', 4, true);
 SELECT pg_catalog.setval('fiz.fses_stype_objectid_seq', 10, true);
 SELECT pg_catalog.setval('fiz.fuel_type_objectid_seq', 12, true);
@@ -1939,1003 +1278,116 @@ SELECT pg_catalog.setval('fiz.hydro_point_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.hzrd_cat_objectid_seq', 4, true);
 SELECT pg_catalog.setval('fiz.hzrd_class_objectid_seq', 5, true);
 SELECT pg_catalog.setval('fiz.ind_type_objectid_seq', 10, true);
-
-
---
--- TOC entry 9997 (class 0 OID 0)
--- Dependencies: 548
--- Name: int_trf_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.int_trf_t_objectid_seq', 3, true);
-
-
---
--- TOC entry 9998 (class 0 OID 0)
--- Dependencies: 550
--- Name: int_trn_t_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.int_trn_t_objectid_seq', 7, true);
-
-
---
--- TOC entry 9999 (class 0 OID 0)
--- Dependencies: 552
--- Name: investmentsite_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.investmentsite_objectid_seq', 1, false);
-
-
---
--- TOC entry 10000 (class 0 OID 0)
--- Dependencies: 555
--- Name: investmentzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.investmentzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10001 (class 0 OID 0)
--- Dependencies: 557
--- Name: land_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.land_type_objectid_seq', 3, true);
-
-
---
--- TOC entry 10002 (class 0 OID 0)
--- Dependencies: 560
--- Name: landuse_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.landuse_objectid_seq', 1, false);
-
-
---
--- TOC entry 10003 (class 0 OID 0)
--- Dependencies: 562
--- Name: main_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.main_type_objectid_seq', 22, true);
-
-
---
--- TOC entry 10004 (class 0 OID 0)
--- Dependencies: 565
--- Name: manufacturing_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.manufacturing_objectid_seq', 1, false);
-
-
---
--- TOC entry 10005 (class 0 OID 0)
--- Dependencies: 568
--- Name: manufacturing_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.manufacturing_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10006 (class 0 OID 0)
--- Dependencies: 570
--- Name: mc_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mc_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 10007 (class 0 OID 0)
--- Dependencies: 572
--- Name: md_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.md_stype_objectid_seq', 13, true);
-
-
---
--- TOC entry 10008 (class 0 OID 0)
--- Dependencies: 574
--- Name: min_atype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.min_atype_objectid_seq', 2, true);
-
-
---
--- TOC entry 10009 (class 0 OID 0)
--- Dependencies: 576
--- Name: min_mtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.min_mtype_objectid_seq', 6, true);
-
-
---
--- TOC entry 10010 (class 0 OID 0)
--- Dependencies: 578
--- Name: min_ntype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.min_ntype_objectid_seq', 9, true);
-
-
---
--- TOC entry 10011 (class 0 OID 0)
--- Dependencies: 581
--- Name: mineralarea_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mineralarea_objectid_seq', 1, false);
-
-
---
--- TOC entry 10012 (class 0 OID 0)
--- Dependencies: 584
--- Name: mineraldep_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mineraldep_objectid_seq', 1, false);
-
-
---
--- TOC entry 10013 (class 0 OID 0)
--- Dependencies: 587
--- Name: mineraldep_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mineraldep_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10014 (class 0 OID 0)
--- Dependencies: 589
--- Name: mp_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mp_type_objectid_seq', 8, true);
-
-
---
--- TOC entry 10015 (class 0 OID 0)
--- Dependencies: 591
--- Name: msd_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.msd_type_objectid_seq', 6, true);
-
-
---
--- TOC entry 10016 (class 0 OID 0)
--- Dependencies: 593
--- Name: mst_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.mst_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10017 (class 0 OID 0)
--- Dependencies: 596
--- Name: naturalriskzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.naturalriskzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10018 (class 0 OID 0)
--- Dependencies: 599
--- Name: naturalriskzone_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.naturalriskzone_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10019 (class 0 OID 0)
--- Dependencies: 602
--- Name: natureprotectarea_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.natureprotectarea_objectid_seq', 1, false);
-
-
---
--- TOC entry 10020 (class 0 OID 0)
--- Dependencies: 605
--- Name: natureprotectarea_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.natureprotectarea_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10021 (class 0 OID 0)
--- Dependencies: 608
--- Name: natureprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.natureprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10022 (class 0 OID 0)
--- Dependencies: 610
--- Name: num_tracks_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.num_tracks_objectid_seq', 4, true);
-
-
---
--- TOC entry 10023 (class 0 OID 0)
--- Dependencies: 613
--- Name: och_use_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.och_use_objectid_seq', 18, true);
-
-
---
--- TOC entry 10024 (class 0 OID 0)
--- Dependencies: 616
--- Name: oilfacility_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.oilfacility_objectid_seq', 1, false);
-
-
---
--- TOC entry 10025 (class 0 OID 0)
--- Dependencies: 619
--- Name: oilfacility_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.oilfacility_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10026 (class 0 OID 0)
--- Dependencies: 622
--- Name: oilpipeline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.oilpipeline_objectid_seq', 1, false);
-
-
---
--- TOC entry 10027 (class 0 OID 0)
--- Dependencies: 624
--- Name: oro_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.oro_stype_objectid_seq', 18, true);
-
-
---
--- TOC entry 10028 (class 0 OID 0)
--- Dependencies: 626
--- Name: oro_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.oro_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 10029 (class 0 OID 0)
--- Dependencies: 629
--- Name: otherobject_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.otherobject_objectid_seq', 1, false);
-
-
---
--- TOC entry 10030 (class 0 OID 0)
--- Dependencies: 632
--- Name: otherobject_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.otherobject_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10031 (class 0 OID 0)
--- Dependencies: 635
--- Name: otherprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.otherprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10032 (class 0 OID 0)
--- Dependencies: 638
--- Name: otherzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.otherzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10033 (class 0 OID 0)
--- Dependencies: 640
--- Name: ozsn_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ozsn_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10034 (class 0 OID 0)
--- Dependencies: 642
--- Name: pass_term_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pass_term_objectid_seq', 2, true);
-
-
---
--- TOC entry 10035 (class 0 OID 0)
--- Dependencies: 644
--- Name: ped_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.ped_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 10036 (class 0 OID 0)
--- Dependencies: 647
--- Name: pipeline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pipeline_objectid_seq', 1, false);
-
-
---
--- TOC entry 10037 (class 0 OID 0)
--- Dependencies: 649
--- Name: pkio_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pkio_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 10038 (class 0 OID 0)
--- Dependencies: 651
--- Name: pl_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pl_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10039 (class 0 OID 0)
--- Dependencies: 653
--- Name: pline_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pline_type_objectid_seq', 6, true);
-
-
---
--- TOC entry 10040 (class 0 OID 0)
--- Dependencies: 655
--- Name: power_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.power_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10041 (class 0 OID 0)
--- Dependencies: 657
--- Name: prg_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prg_type_objectid_seq', 3, true);
-
-
---
--- TOC entry 10042 (class 0 OID 0)
--- Dependencies: 660
--- Name: prison_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prison_objectid_seq', 1, false);
-
-
---
--- TOC entry 10043 (class 0 OID 0)
--- Dependencies: 663
--- Name: prison_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prison_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10044 (class 0 OID 0)
--- Dependencies: 665
--- Name: prkng_lvl_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prkng_lvl_objectid_seq', 3, true);
-
-
---
--- TOC entry 10045 (class 0 OID 0)
--- Dependencies: 667
--- Name: prkng_time_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prkng_time_objectid_seq', 2, true);
-
-
---
--- TOC entry 10046 (class 0 OID 0)
--- Dependencies: 669
--- Name: prkng_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prkng_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10047 (class 0 OID 0)
--- Dependencies: 671
--- Name: prom_direct_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.prom_direct_objectid_seq', 11, true);
-
-
---
--- TOC entry 10048 (class 0 OID 0)
--- Dependencies: 674
--- Name: protectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.protectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10049 (class 0 OID 0)
--- Dependencies: 676
--- Name: proximity_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.proximity_objectid_seq', 6, true);
-
-
---
--- TOC entry 10050 (class 0 OID 0)
--- Dependencies: 678
--- Name: pu_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.pu_stype_objectid_seq', 5, true);
-
-
---
--- TOC entry 10051 (class 0 OID 0)
--- Dependencies: 681
--- Name: public_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.public_objectid_seq', 1, false);
-
-
---
--- TOC entry 10052 (class 0 OID 0)
--- Dependencies: 684
--- Name: public_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.public_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10053 (class 0 OID 0)
--- Dependencies: 687
--- Name: publictransportline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportline_objectid_seq', 1, false);
-
-
---
--- TOC entry 10054 (class 0 OID 0)
--- Dependencies: 690
--- Name: publictransportobj_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportobj_objectid_seq', 1, false);
-
-
---
--- TOC entry 10055 (class 0 OID 0)
--- Dependencies: 693
--- Name: publictransportobj_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportobj_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10056 (class 0 OID 0)
--- Dependencies: 696
--- Name: publictransportservice_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportservice_objectid_seq', 1, false);
-
-
---
--- TOC entry 10057 (class 0 OID 0)
--- Dependencies: 699
--- Name: publictransportservice_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportservice_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10058 (class 0 OID 0)
--- Dependencies: 702
--- Name: publictransportstops_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportstops_objectid_seq', 1, false);
-
-
---
--- TOC entry 10059 (class 0 OID 0)
--- Dependencies: 705
--- Name: publictransportstops_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.publictransportstops_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10060 (class 0 OID 0)
--- Dependencies: 707
--- Name: r_affinity_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.r_affinity_objectid_seq', 3, true);
-
-
---
--- TOC entry 10061 (class 0 OID 0)
--- Dependencies: 709
--- Name: rad_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rad_class_objectid_seq', 4, true);
-
-
---
--- TOC entry 10062 (class 0 OID 0)
--- Dependencies: 712
--- Name: railwayfacility_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.railwayfacility_objectid_seq', 1, false);
-
-
---
--- TOC entry 10063 (class 0 OID 0)
--- Dependencies: 715
--- Name: railwayfacility_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.railwayfacility_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10064 (class 0 OID 0)
--- Dependencies: 718
--- Name: railwayline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.railwayline_objectid_seq', 1, false);
-
-
---
--- TOC entry 10065 (class 0 OID 0)
--- Dependencies: 720
--- Name: rdwin_cat_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rdwin_cat_objectid_seq', 3, true);
-
-
---
--- TOC entry 10066 (class 0 OID 0)
--- Dependencies: 722
--- Name: rdwin_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rdwin_type_objectid_seq', 3, true);
-
-
---
--- TOC entry 10067 (class 0 OID 0)
--- Dependencies: 725
--- Name: recreation_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.recreation_objectid_seq', 1, false);
-
-
---
--- TOC entry 10068 (class 0 OID 0)
--- Dependencies: 728
--- Name: recreation_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.recreation_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10069 (class 0 OID 0)
--- Dependencies: 730
--- Name: recyc_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.recyc_type_objectid_seq', 4, true);
-
-
---
--- TOC entry 10070 (class 0 OID 0)
--- Dependencies: 732
--- Name: reg_rdtype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.reg_rdtype_objectid_seq', 2, true);
-
-
---
--- TOC entry 10071 (class 0 OID 0)
--- Dependencies: 734
--- Name: reg_status_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.reg_status_objectid_seq', 6, true);
-
-
---
--- TOC entry 10072 (class 0 OID 0)
--- Dependencies: 736
--- Name: res_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.res_stype_objectid_seq', 8, true);
-
-
---
--- TOC entry 10073 (class 0 OID 0)
--- Dependencies: 739
--- Name: resort_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.resort_objectid_seq', 1, false);
-
-
---
--- TOC entry 10074 (class 0 OID 0)
--- Dependencies: 742
--- Name: resort_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.resort_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10075 (class 0 OID 0)
--- Dependencies: 745
--- Name: resortarea_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.resortarea_objectid_seq', 1, false);
-
-
---
--- TOC entry 10076 (class 0 OID 0)
--- Dependencies: 748
--- Name: resortarea_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.resortarea_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10077 (class 0 OID 0)
--- Dependencies: 751
--- Name: resortprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.resortprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10078 (class 0 OID 0)
--- Dependencies: 753
--- Name: rfo_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rfo_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 10079 (class 0 OID 0)
--- Dependencies: 755
--- Name: risk_cat_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.risk_cat_objectid_seq', 4, true);
-
-
---
--- TOC entry 10080 (class 0 OID 0)
--- Dependencies: 758
--- Name: road_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.road_objectid_seq', 1, false);
-
-
---
--- TOC entry 10081 (class 0 OID 0)
--- Dependencies: 760
--- Name: rs_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rs_stype_objectid_seq', 5, true);
-
-
---
--- TOC entry 10082 (class 0 OID 0)
--- Dependencies: 762
--- Name: rst_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rst_class_objectid_seq', 6, true);
-
-
---
--- TOC entry 10083 (class 0 OID 0)
--- Dependencies: 764
--- Name: rst_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rst_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 10084 (class 0 OID 0)
--- Dependencies: 766
--- Name: rwy_class_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.rwy_class_objectid_seq', 6, true);
-
-
---
--- TOC entry 10085 (class 0 OID 0)
--- Dependencies: 768
--- Name: s_alert_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.s_alert_objectid_seq', 6, true);
-
-
---
--- TOC entry 10086 (class 0 OID 0)
--- Dependencies: 770
--- Name: saf_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.saf_stype_objectid_seq', 9, true);
-
-
---
--- TOC entry 10087 (class 0 OID 0)
--- Dependencies: 773
--- Name: sanitaryprotectionzone_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sanitaryprotectionzone_objectid_seq', 1, false);
-
-
---
--- TOC entry 10088 (class 0 OID 0)
--- Dependencies: 775
--- Name: sci_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sci_type_objectid_seq', 5, true);
-
-
---
--- TOC entry 10089 (class 0 OID 0)
--- Dependencies: 777
--- Name: season_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.season_objectid_seq', 4, true);
-
-
---
--- TOC entry 10090 (class 0 OID 0)
--- Dependencies: 779
--- Name: serv_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.serv_stype_objectid_seq', 13, true);
-
-
---
--- TOC entry 10091 (class 0 OID 0)
--- Dependencies: 782
--- Name: servicefacility_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.servicefacility_objectid_seq', 1, false);
-
-
---
--- TOC entry 10092 (class 0 OID 0)
--- Dependencies: 785
--- Name: servicefacility_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.servicefacility_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10093 (class 0 OID 0)
--- Dependencies: 787
--- Name: settl_cat_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.settl_cat_objectid_seq', 2, true);
-
-
---
--- TOC entry 10094 (class 0 OID 0)
--- Dependencies: 789
--- Name: settl_level_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.settl_level_objectid_seq', 5, true);
-
-
---
--- TOC entry 10095 (class 0 OID 0)
--- Dependencies: 791
--- Name: settl_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.settl_type_objectid_seq', 70, true);
-
-
---
--- TOC entry 10096 (class 0 OID 0)
--- Dependencies: 794
--- Name: sewerfacility_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sewerfacility_objectid_seq', 1, false);
-
-
---
--- TOC entry 10097 (class 0 OID 0)
--- Dependencies: 797
--- Name: sewerfacility_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sewerfacility_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10098 (class 0 OID 0)
--- Dependencies: 800
--- Name: sewerpipeline_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sewerpipeline_objectid_seq', 1, false);
-
-
---
--- TOC entry 10099 (class 0 OID 0)
--- Dependencies: 802
--- Name: snow_type_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.snow_type_objectid_seq', 2, true);
-
-
---
--- TOC entry 10100 (class 0 OID 0)
--- Dependencies: 804
--- Name: soc_direct_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.soc_direct_objectid_seq', 4, true);
-
-
---
--- TOC entry 10101 (class 0 OID 0)
--- Dependencies: 807
--- Name: social_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.social_objectid_seq', 1, false);
-
-
---
--- TOC entry 10102 (class 0 OID 0)
--- Dependencies: 810
--- Name: social_point_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.social_point_objectid_seq', 1, false);
-
-
---
--- TOC entry 10103 (class 0 OID 0)
--- Dependencies: 812
--- Name: sp_stype_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sp_stype_objectid_seq', 13, true);
-
-
---
--- TOC entry 10104 (class 0 OID 0)
--- Dependencies: 815
--- Name: specialeconomicarea_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.specialeconomicarea_objectid_seq', 1, false);
-
-
---
--- TOC entry 10105 (class 0 OID 0)
--- Dependencies: 817
--- Name: specific_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.specific_objectid_seq', 3, true);
-
-
---
--- TOC entry 10106 (class 0 OID 0)
--- Dependencies: 820
--- Name: sport_objectid_seq; Type: SEQUENCE SET; Schema: fiz; Owner: fiz
---
-
 SELECT pg_catalog.setval('fiz.sport_objectid_seq', 1, false);
-
-
---
--- TOC entry 10107 (class 0 OID 0)
--- Dependencies: 823
---
-
 SELECT pg_catalog.setval('fiz.sport_point_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.spz_event_objectid_seq', 3, true);
 SELECT pg_catalog.setval('fiz.ssah_stype_objectid_seq', 2, true);
@@ -2995,5 +1447,3 @@ SELECT pg_catalog.setval('fiz.wildlifeprotection_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.wildlifeprotection_point_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.yatch_cls_objectid_seq', 5, true);
 SELECT pg_catalog.setval('fiz.zone_oopt_objectid_seq', 7, true);
-
--- PostgreSQL database dump complete

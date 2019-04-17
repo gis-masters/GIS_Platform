@@ -27,7 +27,7 @@ const routes: Routes = [
       {path: 'projects', component: ProjectComponent},
       {path: 'data_import', component: DataImportComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
-      {path: 'map', component: MapComponent},
+      {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
       {path: '**', redirectTo: 'map'},
     ],
     canActivate: [AuthGuardService]

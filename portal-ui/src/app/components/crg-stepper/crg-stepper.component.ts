@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
+import {Component, OnInit} from '@angular/core';
 import {LayersService} from '../../services/geoserver/layers.service';
+import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
 
 @Component({
   selector: 'crg-crg-stepper',
@@ -11,7 +11,7 @@ import {LayersService} from '../../services/geoserver/layers.service';
 
 export class CrgStepperComponent implements OnInit {
 
-  activeStep = 4;
+  activeStep = 5;
 
   constructor(private router: Router,
               private communicationService: CommunicationService,

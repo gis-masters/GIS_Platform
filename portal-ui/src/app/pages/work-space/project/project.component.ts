@@ -2,12 +2,13 @@ import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ProjectModel} from '../../../services/geoserver/import/projectModel';
-import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
-import {LocalStorageService} from '../../../services/local-storage.service';
-import {StorageKeys} from '../../../services/storage-keys';
 import {MatDialog} from '@angular/material';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {StorageKeys} from '../../../services/storage-keys';
+import {ProjectModel} from '../../../services/geoserver/import/projectModel';
+import {LocalStorageService} from '../../../services/local-storage.service';
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
+import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
 
 @Component({
@@ -29,10 +30,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
               private router: Router,
               private storageService: LocalStorageService,
               private projectsService: ProjectsService,
+              private ruleService: FgistpRulesService,
               private dialog: MatDialog) {
+    storageService.clearProject();
   }
 
   ngOnInit() {
+    this.ruleService.getRules().subscribe();
     this.projectsService.fetchProjects();
 
     this.projectsService.projects$
