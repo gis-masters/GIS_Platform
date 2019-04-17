@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {Component} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
+import {CommunicationService} from '../../../services/communication.service';
 import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import/import.service';
 
 @Component({
@@ -26,7 +27,9 @@ export class DataImportComponent {
   constructor(private logger: NGXLogger,
               private router: Router,
               private snackBar: MatSnackBar,
-              private importService: ImportService) {
+              private importService: ImportService,
+              private communicationService: CommunicationService) {
+    this.communicationService.stepperEvents.emit(2);
   }
 
   public fileOverBase(e: any): void {

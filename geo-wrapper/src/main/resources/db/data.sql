@@ -189,10 +189,10 @@ INSERT INTO fiz.comm_type (objectid, code, description) VALUES (3, 3, 'Спут�
 INSERT INTO fiz.comm_type (objectid, code, description) VALUES (4, 4, 'Комбинированная линия связи');
 INSERT INTO fiz.comm_type (objectid, code, description) VALUES (5, 5, 'Тропосферная линия связи');
 
-INSERT INTO fiz."comm_сtype" (objectid, code, description) VALUES (1, 1, 'Подземный');
-INSERT INTO fiz."comm_сtype" (objectid, code, description) VALUES (2, 2, 'Подводный');
-INSERT INTO fiz."comm_сtype" (objectid, code, description) VALUES (3, 3, 'Подвесной (на опорах)');
-INSERT INTO fiz."comm_сtype" (objectid, code, description) VALUES (4, 4, 'Комбинированный');
+INSERT INTO fiz.comm_ctype (objectid, code, description) VALUES (1, 1, 'Подземный');
+INSERT INTO fiz.comm_ctype (objectid, code, description) VALUES (2, 2, 'Подводный');
+INSERT INTO fiz.comm_ctype (objectid, code, description) VALUES (3, 3, 'Подвесной (на опорах)');
+INSERT INTO fiz.comm_ctype (objectid, code, description) VALUES (4, 4, 'Комбинированный');
 
 INSERT INTO fiz.cr_stype (objectid, code, descroption) VALUES (1, 1, 'Дома и дворцы бракосочетаний, отделы записи актов гражданского состояния');
 INSERT INTO fiz.cr_stype (objectid, code, descroption) VALUES (2, 2, 'Бюро похоронного обслуживания, дом траурных обрядов');
@@ -1184,7 +1184,7 @@ SELECT pg_catalog.setval('fiz.chi_stype_objectid_seq', 6, true);
 SELECT pg_catalog.setval('fiz.clb_type_objectid_seq', 5, true);
 SELECT pg_catalog.setval('fiz.coastalprotectionzone_objectid_seq', 1, false);
 SELECT pg_catalog.setval('fiz.comm_type_objectid_seq', 5, true);
-SELECT pg_catalog.setval('fiz."comm_сtype_objectid_seq"', 4, true);
+SELECT pg_catalog.setval('fiz.comm_ctype_objectid_seq', 4, true);
 SELECT pg_catalog.setval('fiz.cr_stype_objectid_seq', 3, true);
 SELECT pg_catalog.setval('fiz.crossp_t_objectid_seq', 2, true);
 SELECT pg_catalog.setval('fiz.crossr_t_objectid_seq', 2, true);

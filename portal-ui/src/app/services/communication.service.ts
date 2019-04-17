@@ -20,8 +20,14 @@ export class CommunicationService {
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() gotoObject = new EventEmitter<ObjectDto>();
 
+  @Output() stepperEvents = new EventEmitter<number>();
+
   constructor(private logger: NGXLogger) {
 
+  }
+
+  public stepperEvents$() {
+    return this.stepperEvents;
   }
 
   public sidebarManager$() {

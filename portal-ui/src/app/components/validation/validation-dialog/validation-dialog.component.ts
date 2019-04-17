@@ -30,6 +30,7 @@ export class ValidationDialogComponent {
 
   initValidation() {
     this.communicationService.selectedForValidation.emit(this.selectedLayers);
+    this.communicationService.stepperEvents.emit(4);
   }
 
   handleTitle(crgLayer: CrgLayer) {

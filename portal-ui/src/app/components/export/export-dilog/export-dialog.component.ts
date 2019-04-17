@@ -81,7 +81,7 @@ export class ExportDialogComponent {
         .subscribe((response: ExportGmlResponse) => {
           this.isExportInited = false;
 
-          this.logger.info(' * * * exportGml response * * *', response);
+          this.communicationService.stepperEvents.emit(5);
         });
 
     this.communicationService.sidebarManager.emit({action: ActionType.OPEN, target: SidebarType.INFO});

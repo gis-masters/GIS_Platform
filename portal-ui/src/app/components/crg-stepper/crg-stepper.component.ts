@@ -1,5 +1,6 @@
+import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {LayersService} from '../../services/geoserver/layers.service';
 import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
 
@@ -9,28 +10,24 @@ import {ActionType, CommunicationService, SidebarType} from '../../services/comm
   styleUrls: ['./crg-stepper.component.css']
 })
 
-export class CrgStepperComponent implements OnInit {
+export class CrgStepperComponent {
 
   activeStep = 5;
 
   constructor(private router: Router,
+              private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private layersService: LayersService) { }
-
-  ngOnInit() {
+              private layersService: LayersService) {
+    communicationService.stepperEvents.subscribe(step => this.activeStep = step);
   }
 
-  nextStep() {
-    this.activeStep += 1;
-  }
-
-  step(number) {
-    if (number > this.activeStep) {
+  doAction(selectedStep) {
+    if (selectedStep > this.activeStep) {
       return;
     }
 
-    if (number <= this.activeStep) {
-      this.activeStep = number;
+    if (selectedStep <= this.activeStep) {
+      this.activeStep = selectedStep;
     }
     if (this.activeStep === 1) {
       this.router.navigate(['/workspace/projects']);

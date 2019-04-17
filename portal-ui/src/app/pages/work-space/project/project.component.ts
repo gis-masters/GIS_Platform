@@ -10,6 +10,8 @@ import {LocalStorageService} from '../../../services/local-storage.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
+import {CrgStepperComponent} from '../../../components/crg-stepper/crg-stepper.component';
+import {CommunicationService} from "../../../services/communication.service";
 
 @Component({
   selector: 'crg-project',
@@ -31,8 +33,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
               private storageService: LocalStorageService,
               private projectsService: ProjectsService,
               private ruleService: FgistpRulesService,
-              private dialog: MatDialog) {
-    storageService.clearProject();
+              private dialog: MatDialog,
+              private communicationService: CommunicationService) {
+    this.storageService.clearProject();
+    this.communicationService.stepperEvents.emit(1);
   }
 
   ngOnInit() {

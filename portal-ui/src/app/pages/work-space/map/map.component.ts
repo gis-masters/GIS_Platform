@@ -39,6 +39,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
     this.currentProject = this.storageService.getProject().crgProject;
+    this.communicationService.stepperEvents.emit(3);
   }
 
   ngOnInit() {

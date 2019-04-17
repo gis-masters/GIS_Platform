@@ -8,7 +8,7 @@
 
   <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange(fizLayers)"
                       dense style="height: 330px">
-    <mat-list-option class="text-right" (click)="selectAll()">{{selectText}}</mat-list-option>
+<!--    <mat-list-option class="text-right" (click)="selectAll()">{{selectText}}</mat-list-option>-->
     <mat-divider></mat-divider>
     <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm" [value]="layer">
       <span class="cut-text">

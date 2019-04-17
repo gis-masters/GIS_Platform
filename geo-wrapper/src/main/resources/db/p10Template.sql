@@ -1258,22 +1258,22 @@ ALTER TABLE fiz.comm_type_objectid_seq OWNER TO fiz;
 ALTER SEQUENCE fiz.comm_type_objectid_seq OWNED BY fiz.comm_type.objectid;
 
 --
-CREATE TABLE fiz."comm_ctype" (
+CREATE TABLE fiz.comm_ctype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-ALTER TABLE fiz."comm_ctype" OWNER TO fiz;
+ALTER TABLE fiz.comm_ctype OWNER TO fiz;
 
-CREATE SEQUENCE fiz."comm_ctype_objectid_seq"
+CREATE SEQUENCE fiz.comm_ctype_objectid_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE fiz."comm_сtype_objectid_seq" OWNER TO fiz;
-ALTER SEQUENCE fiz."comm_сtype_objectid_seq" OWNED BY fiz."comm_ctype".objectid;
+ALTER TABLE fiz.comm_ctype_objectid_seq OWNER TO fiz;
+ALTER SEQUENCE fiz.comm_ctype_objectid_seq OWNED BY fiz.comm_ctype.objectid;
 
 --
 CREATE TABLE fiz.cr_stype (
@@ -15059,7 +15059,7 @@ ALTER TABLE ONLY fiz.chi_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.ch
 ALTER TABLE ONLY fiz.clb_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.clb_type_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.coastalprotectionzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.coastalprotectionzone_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.comm_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.comm_type_objectid_seq'::regclass);
-ALTER TABLE ONLY fiz."comm_сtype" ALTER COLUMN objectid SET DEFAULT nextval('fiz."comm_сtype_objectid_seq"'::regclass);
+ALTER TABLE ONLY fiz.comm_ctype ALTER COLUMN objectid SET DEFAULT nextval('fiz.comm_ctype_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.cr_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.cr_stype_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.crossp_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.crossp_t_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.crossr_t ALTER COLUMN objectid SET DEFAULT nextval('fiz.crossr_t_objectid_seq'::regclass);
@@ -15119,8 +15119,7 @@ ALTER TABLE ONLY fiz.fuel_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fu
 ALTER TABLE ONLY fiz.functionalzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.functionalzone_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.street_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.street_line_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.streetv_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.streetv_line_objectid_seq'::regclass);
-ALTER TABLE ONLY fiz.telecomnetworkline_line ALTER COLUMN objectid
-    SET DEFAULT nextval('fiz.telecomnetworkline_line_objectid_seq'::regclass);
+ALTER TABLE ONLY fiz.telecomnetworkline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.telecomnetworkline_line_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_ingstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_ingstp_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_mfstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_mfstp_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fz_odstp ALTER COLUMN objectid SET DEFAULT nextval('fiz.fz_odstp_objectid_seq'::regclass);
@@ -15390,7 +15389,7 @@ ALTER TABLE ONLY fiz.coastalprotectionzone_extension
     ADD CONSTRAINT coastalprotectionzone_extension_pkey PRIMARY KEY (object_id);
 ALTER TABLE ONLY fiz.coastalprotectionzone ADD CONSTRAINT coastalprotectionzone_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.comm_type ADD CONSTRAINT comm_type_pkey PRIMARY KEY (objectid);
-ALTER TABLE ONLY fiz."comm_сtype" ADD CONSTRAINT "comm_ctype_pkey" PRIMARY KEY (objectid);
+ALTER TABLE ONLY fiz.comm_ctype ADD CONSTRAINT comm_ctype_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.cr_stype ADD CONSTRAINT cr_stype_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.crossp_t ADD CONSTRAINT crossp_t_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.crossr_t ADD CONSTRAINT crossr_t_pkey PRIMARY KEY (objectid);
