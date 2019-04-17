@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {debounceTime} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
-import {ObjectDto} from '../../services/communication.service';
+import {CommunicationService, ObjectDto} from '../../services/communication.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
@@ -37,6 +37,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
               private validationService: ValidationService,
+              private communicationService: CommunicationService,
               private rulesService: FgistpRulesService,
               private transformFeatureService: TransformFeatureService) {
   }
@@ -83,21 +84,14 @@ export class EditObjectComponent implements OnChanges, OnInit {
           .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
+              this.closeMe.emit(true);
+              this.snackBar.open('Сохранено', 'X', {duration: 3000});
 
               // Сразу провалидируем слой при успешном сохранении
-              // this.validationService.validateLayers([
-              //   {
-              //     complexName: '', href: '', name: '', title: '',
-              //     connectionInfo: {dbName: 'gis', schemaName: 'fiz', tableName: this.featureType.tableName}
-              //   }
-              // ])
-              //   .subscribe((responses: ValidationResponse[]) => {
-              //     this.snackBar.open('Сохранено', 'X', {duration: 3000});
-              //
-              //     this.closeMe.emit(true);
-              //   });
+              this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
             } else {
               this.logger.warn('UpdateFeature response: ', response);
+              this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
             }
           });
     }

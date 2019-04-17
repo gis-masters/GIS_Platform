@@ -13,6 +13,9 @@ import java.io.IOException;
 
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.WRITE;
+import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
 
 /**
  * При создании БД для организации, использую ИД организации для генерации названия БД.
@@ -57,9 +60,8 @@ public class OrganizationService {
         workspacesService.createWorkspace(scratchWorkspaceName);
         storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + "_store");
 
-        // Задаем правило доступа к рабочей области "scratch"
-        String rule = GeoServerUtil.buildRule(scratchWorkspaceName, GeoServerPermissions.ADMIN);
-        rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
+        // Задаем правила доступа к рабочей области "scratch"
+        rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
 
         usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
         usersAndRolesService.createRole(roleName);
@@ -86,9 +88,10 @@ public class OrganizationService {
         workspacesService.createWorkspace(workspaceName);
         storageService.createStorage(databaseName, workspaceName, workspaceName, storeName);
 
-        // Задаем правило доступа к рабочей области
-        String rule = GeoServerUtil.buildRule(workspaceName, GeoServerPermissions.ADMIN);
-        rulesService.addLayersRule(rule, DEFAULT_ROLE_NAME + dto.getOrgId());
+        // Задаем правила доступа к рабочей области проекта
+        rulesService.addLayersRule(buildRule(workspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
+        // Задаю правило WRITE потому как не давало менять фичу через wfs
+        rulesService.addLayersRule(buildRule(workspaceName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
 
         // В БД создаем схему и инициализируем в ней шаблонную структуру
         gisStorage.initP10Template(databaseName, workspaceName);
