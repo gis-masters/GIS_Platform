@@ -18,7 +18,6 @@ export class StylesService {
               private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
               private serverProp: ServerPropertiesService) {
-    logger.info('LayersService start');
   }
 
   getAll(): Observable<NameHrefProjection[] | any> {

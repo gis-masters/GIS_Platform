@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS public.projects(
   internal_name character varying(255),
   geoserver_name character varying(255),
   extra json,
-  CONSTRAINT projects_pkey PRIMARY KEY (id),
-  CONSTRAINT ukr43af3ap46dm12mmtq31oddj6 UNIQUE (internal_name)
+  CONSTRAINT projects_pkey PRIMARY KEY (id)
 );
 ALTER TABLE public.projects OWNER to postgres;
 

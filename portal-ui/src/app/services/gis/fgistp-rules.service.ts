@@ -16,7 +16,6 @@ export class FgistpRulesService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private serverProp: ServerPropertiesService) {
-    logger.info('LayersService start');
   }
 
   getRules(): Observable<FeatureXsdDefinition> {

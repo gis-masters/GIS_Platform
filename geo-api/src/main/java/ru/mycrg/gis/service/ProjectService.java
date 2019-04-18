@@ -54,23 +54,19 @@ public class ProjectService {
 
         Organization organization = organizationService.getOrganizationByUser(userName);
 
-        Optional<Project> projectByName = projectRepository.findByInternalName(projectName);
-        if (projectByName.isPresent()) {
-            throw new EntityCreationException("Проект с таким именем уже существует");
-        } else {
-            Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
+        Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
+        newProject.setGeoserverName(newProject.getGeoserverName() + "_" + newProject.getId());
+        projectRepository.save(newProject);
 
-            organization.addProject(newProject);
-            organizationService.save(organization);
+        organization.addProject(newProject);
+        organizationService.save(organization);
 
-            OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
-            mqRequest.setProjectName(newProject.getGeoserverName());
-            mqRequest.setProjectId(newProject.getId());
+        OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
+        mqRequest.setProjectName(newProject.getGeoserverName());
 
-            mqEvents.sendOrgEvent(mqRequest);
+        mqEvents.sendOrgEvent(mqRequest);
 
-            return newProject;
-        }
+        return newProject;
     }
 
     public void delete(long id) {

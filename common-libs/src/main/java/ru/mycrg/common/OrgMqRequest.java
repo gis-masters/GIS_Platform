@@ -13,7 +13,6 @@ public class OrgMqRequest implements Serializable {
     private String userName;
 
     private String projectName;
-    private Long projectId;
 
     private EventType type;
 
@@ -86,14 +85,6 @@ public class OrgMqRequest implements Serializable {
 
     public void setType(EventType type) {
         this.type = type;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     @Override

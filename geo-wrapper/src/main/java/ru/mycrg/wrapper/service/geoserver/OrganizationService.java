@@ -78,21 +78,21 @@ public class OrganizationService {
      * Создание хранилища (postgis) на геосервере.
      */
     public void createProject(OrgMqRequest dto) throws IOException, RuntimeException {
-        String workspaceName = dto.getProjectName() + "_" + dto.getProjectId();
+        String projectName = dto.getProjectName();
         String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
         String storeName = databaseName + "_store";
 
         // На геосервере создаем рабочую область и хранилище.
-        workspacesService.createWorkspace(workspaceName);
-        storageService.createStorage(databaseName, workspaceName, workspaceName, storeName);
+        workspacesService.createWorkspace(projectName);
+        storageService.createStorage(databaseName, projectName, projectName, storeName);
 
         // Задаем правила доступа к рабочей области проекта
-        rulesService.addLayersRule(buildRule(workspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
+        rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
         // Задаю правило WRITE потому как не давало менять фичу через wfs
-        rulesService.addLayersRule(buildRule(workspaceName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
+        rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
 
         // В БД создаем схему и инициализируем в ней шаблонную структуру
-        gisStorage.initP10Template(databaseName, workspaceName);
+        gisStorage.initP10Template(databaseName, projectName);
     }
 
 }
