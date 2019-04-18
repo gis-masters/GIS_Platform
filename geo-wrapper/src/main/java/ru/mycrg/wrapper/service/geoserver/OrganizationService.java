@@ -78,10 +78,8 @@ public class OrganizationService {
      * Создание хранилища (postgis) на геосервере.
      */
     public void createProject(OrgMqRequest dto) throws IOException, RuntimeException {
-        Long id = dto.getOrgId();
-
-        String workspaceName = dto.getWorkspaceName();
-        String databaseName = DEFAULT_DB_NAME + "_" + id;
+        String workspaceName = dto.getProjectName() + "_" + dto.getProjectId();
+        String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
         String storeName = databaseName + "_store";
 
         // На геосервере создаем рабочую область и хранилище.

@@ -136,7 +136,7 @@ public class MqListener {
     private void createProject(OrgMqRequest dto) {
         try {
             if (authService.authorize().isPresent()) {
-                log.debug("Try create project: {}", dto.getWorkspaceName());
+                log.debug("Try create project: {}", dto.getProjectName());
 
                 organizationService.createProject(dto);
 

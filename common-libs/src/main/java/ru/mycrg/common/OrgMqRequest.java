@@ -12,7 +12,8 @@ public class OrgMqRequest implements Serializable {
     private String email;
     private String userName;
 
-    private String workspaceName;
+    private String projectName;
+    private Long projectId;
 
     private EventType type;
 
@@ -71,12 +72,12 @@ public class OrgMqRequest implements Serializable {
         this.userName = userName;
     }
 
-    public String getWorkspaceName() {
-        return workspaceName;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setWorkspaceName(String workspaceName) {
-        this.workspaceName = workspaceName;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public EventType getType() {
@@ -87,15 +88,22 @@ public class OrgMqRequest implements Serializable {
         this.type = type;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     @Override
     public String toString() {
         return "OrgMqRequest{" +
                 "orgId=" + orgId +
-                ", rawPassword='" + rawPassword + '\'' +
                 ", comment='" + comment + '\'' +
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +
-                ", workspaceName='" + workspaceName + '\'' +
+                ", projectName='" + projectName + '\'' +
                 ", type=" + type +
                 '}';
     }
