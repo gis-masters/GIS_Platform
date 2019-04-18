@@ -192,7 +192,6 @@ public class OrganizationAPITest {
     }
 
     @Test
-    @Ignore
     public void ff_ShouldCheck_workspaces_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -204,11 +203,10 @@ public class OrganizationAPITest {
         .then()
             .statusCode(200)
         .and()
-            .body("workspaces.workspace.name", hasItems("workspace_31", "workspace_21", "workspace_11"));
+            .body("workspaces.workspace.name", hasItems("scratch_database_1", "scratch_database_11"));
     }
 
     @Test
-    @Ignore
     public void fl_ShouldCheck_Roles_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -220,11 +218,10 @@ public class OrganizationAPITest {
         .then()
             .statusCode(200)
         .and()
-            .body("roles", hasItems("admin_workspace_10", "admin_workspace_20", "admin_workspace_30"));
+            .body("roles", hasItems("ADMIN", "admin_10", "admin_20", "admin_30"));
     }
 
     @Test
-    @Ignore
     public void fo_ShouldCheck_Users_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
@@ -236,23 +233,22 @@ public class OrganizationAPITest {
         .then()
             .statusCode(200)
         .and()
-            .body("users.userName", hasItems("admin", "Admin13", "Admin23", "Admin29"));
+            .body("users.userName", hasItems("admin@mail.ru"));
     }
 
     @Test
-    @Ignore
     public void fr_ShouldCheck_DataStores_via_geoserverAPI() {
         given()
             .headers("Authorization", "Bearer " + jwtToken.getAccess_token(),"Content-Type",
                     ContentType.JSON, "Accept", ContentType.JSON)
             .port(8080)
-            .basePath("/geoserver/rest/workspaces/workspace_2/datastores.json")
+            .basePath("/geoserver/rest/workspaces/scratch_database_2/datastores.json")
         .when()
             .get()
         .then()
             .statusCode(200)
         .and()
-            .body("dataStores.dataStore.name", hasItems("workspace_store_2"));
+            .body("dataStores.dataStore.name", hasItems("scratch_database_2_store"));
     }
 
     @Test
