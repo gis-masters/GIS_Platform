@@ -5,10 +5,11 @@ import {CommunicationService, ObjectDto} from '../../services/communication.serv
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
-import {ValidationResponse, ValidationService} from '../../services/gis/validation.service';
-import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
+import {ValidationService} from '../../services/gis/validation.service';
+import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-edit-object',
@@ -36,6 +37,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
               private formBuilder: FormBuilder,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
+              private openLayers: OpenLayersService,
               private validationService: ValidationService,
               private communicationService: CommunicationService,
               private rulesService: FgistpRulesService,
@@ -99,24 +101,21 @@ export class EditObjectComponent implements OnChanges, OnInit {
 
   private handleObject(objectDto: ObjectDto) {
     this.wfsService
-        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
-        .subscribe((featureCollection: WfsFeatureCollection) => {
-          if (!featureCollection || !featureCollection.features.length) {
-            this.logger.warn('features of object are empty: ', objectDto.id);
-            this.isFeatureTypeLoaded = true;
+        .getFeatureById(objectDto.crgLayer.complexName, objectDto.id)
+        .subscribe((wfsFeature: WfsFeature) => {
+          this.isFeatureTypeLoaded = true;
+
+          this.wfsFeature = wfsFeature;
+          this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+          if (!!this.featureType) {
+            this.prepareEditForm(this.wfsFeature.properties);
           } else {
-            this.isFeatureTypeLoaded = true;
-
-            this.wfsFeature = featureCollection.features[0];
-            this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
-            if (!!this.featureType) {
-              // this.logger.info('featureType: ', this.featureType, this.wfsFeature);
-
-              this.prepareEditForm(this.wfsFeature.properties);
-            } else {
-              this.logger.warn('Not found featureType by name: ', objectDto.crgLayer.name);
-            }
+            this.logger.warn('Not found rure by feature name: ', objectDto.crgLayer.name);
           }
+
+          this.openLayers.showFeature(wfsFeature);
+        }, error1 => {
+          this.isFeatureTypeLoaded = true;
         });
   }
 

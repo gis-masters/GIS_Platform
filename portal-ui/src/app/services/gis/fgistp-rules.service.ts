@@ -1,4 +1,4 @@
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
@@ -53,10 +53,15 @@ export class FgistpRulesService {
     }
   }
 
+  // TODO: Очень часто вызывается
   public getFeatureByName(layerName: string): XsdFeature {
     if (!layerName) {
       return;
     }
+
+    // if (this.featuresXsdDefinition.xsdFeatures.length < 1) {
+    //   this.logger.warn('features definition is empty');
+    // }
 
     return this.featuresXsdDefinition.xsdFeatures
       .find((feature: XsdFeature) => {

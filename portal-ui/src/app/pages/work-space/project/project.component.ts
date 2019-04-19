@@ -7,11 +7,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {LocalStorageService} from '../../../services/local-storage.service';
+import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
-import {CrgStepperComponent} from '../../../components/crg-stepper/crg-stepper.component';
-import {CommunicationService} from "../../../services/communication.service";
 
 @Component({
   selector: 'crg-project',

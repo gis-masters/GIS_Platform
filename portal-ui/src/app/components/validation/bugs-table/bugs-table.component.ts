@@ -10,6 +10,8 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
 import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
+import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -53,6 +55,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
               private ruleService: FgistpRulesService,
+              private wfsService: WfsService,
+              private openLayers: OpenLayersService,
               private validationService: ValidationService) {
   }
 
@@ -93,20 +97,24 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
         .subscribe((response: ValidationResponse[]) => this.handleResponse(response));
   }
 
+  getClassIdAlias(element) {
+    return this.ruleService.getClassIdAlias(this.crgLayer.connectionInfo.tableName, element);
+  }
+
   showObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.gotoObject.emit({id: objectId, crgLayer: this.crgLayer});
-  }
-
-  getClassIdAlias(element) {
-    return this.ruleService.getClassIdAlias(this.crgLayer.connectionInfo.tableName, element);
+    this.wfsService
+        .getFeatureById(this.crgLayer.complexName, objectId)
+        .subscribe(
+          (wfsFeature: WfsFeature) => this.openLayers.showFeature(wfsFeature),
+          error => this.logger.error(error)
+        );
   }
 
   editObject(event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.gotoObject.emit({id: objectId, crgLayer: this.crgLayer});
     this.communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);
   }
 

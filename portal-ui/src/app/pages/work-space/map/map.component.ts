@@ -9,8 +9,10 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {ActionType, CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {ActionType, CommunicationService} from '../../../services/communication.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
+import {WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 
 @Component({
   selector: 'crg-map',
@@ -35,6 +37,8 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private logger: NGXLogger,
               private snackBar: MatSnackBar,
+              private wfsService: WfsService,
+              private ruleService: FgistpRulesService,
               private storageService: LocalStorageService,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
@@ -44,7 +48,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.openLayers.createMap();
-
+    this.ruleService.getRules().subscribe();
     this.layersService.fetchLayers(this.currentProject);
 
     // Подписываемся на слоя чтобы докидывать их на карту
@@ -55,18 +59,17 @@ export class MapComponent implements OnInit, OnDestroy {
         )
         .subscribe((layers: CrgLayer[]) => {
           this.layers = layers;
-
           this.layers.forEach((layer, index) => {
             this.openLayers
                 .addLayerToMap(layer.complexName)
                 .setZIndex(layers.length - index);
           });
-        });
 
-    this.communicationService
-        .gotoObject$()
-        .subscribe((objectDto: ObjectDto) => {
-          this.openLayers.showObject(objectDto);
+          // Позиционируемся на первом из загруженных слоев
+          if (this.layers.length > 0) {
+            this.wfsService.getFeatures(this.layers[0].complexName)
+                .subscribe((layer: WfsFeatureCollection) => this.openLayers.fitToBbox(layer.bbox));
+          }
         });
 
     this.communicationService

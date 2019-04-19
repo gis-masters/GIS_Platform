@@ -18,7 +18,6 @@ export class CommunicationService {
   @Output() selectedForGml = new EventEmitter<CrgLayer[]>();
 
   @Output() editView = new EventEmitter<ObjectDto[]>();
-  @Output() gotoObject = new EventEmitter<ObjectDto>();
 
   @Output() stepperEvents = new EventEmitter<number>();
 
@@ -32,10 +31,6 @@ export class CommunicationService {
 
   public sidebarManager$() {
     return this.sidebarManager;
-  }
-
-  public gotoObject$() {
-    return this.gotoObject;
   }
 
   public validationDialog$() {

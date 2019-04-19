@@ -13,10 +13,9 @@ import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {WfsFeature, WfsFeatureCollection, WfsService} from '../geoserver/wfs.service';
+import {WfsFeature} from '../geoserver/wfs.service';
 import {defaults as defaultControls} from 'ol/control.js';
 import {createStringXY} from 'ol/coordinate.js';
-import {ObjectDto} from '../communication.service';
 
 export let BEARER_TOKEN = '';
 
@@ -38,8 +37,7 @@ export class OpenLayersService {
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
-              private wmsService: WmsService,
-              private wfsService: WfsService) {
+              private wmsService: WmsService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
   }
 
@@ -81,6 +79,12 @@ export class OpenLayersService {
     this._map.addLayer(imageLayer);
 
     return imageLayer;
+  }
+
+  fitToBbox(bbox: any) {
+    this._map
+        .getView()
+        .fit(bbox, {constrainResolution: false});
   }
 
   /**
@@ -182,21 +186,11 @@ export class OpenLayersService {
   }
 
   /**
-   * Получаем обьект из wfs позиционируемся и подсвечиваем.
-   * @param objectDto Идентификатор обьекта
+   * позиционируемся и подсвечиваем.
    */
-  showObject(objectDto: ObjectDto) {
-    this.wfsService
-        .getFeature(objectDto.crgLayer.complexName, objectDto.id)
-        .subscribe((featureCollection: WfsFeatureCollection) => {
-          const wfsFeature = featureCollection.features[0];
-          if (!wfsFeature || !wfsFeature.geometry) {
-            this.logger.warn('Wrong feature: ', wfsFeature);
-          } else {
-            this.positionToObject(wfsFeature);
-            this.paintObject(wfsFeature);
-          }
-        });
+  showFeature(wfsFeature: WfsFeature) {
+    this.positionToFeature(wfsFeature);
+    this.paintFeature(wfsFeature);
   }
 
   // Очистить карту от слоя, который отображал обьект.
@@ -206,7 +200,7 @@ export class OpenLayersService {
     }
   }
 
-  private positionToObject(feature: WfsFeature) {
+  private positionToFeature(feature: WfsFeature) {
     const view = this._map.getView();
     const size = this._map.getSize();
 
@@ -221,7 +215,7 @@ export class OpenLayersService {
     }
   }
 
-  private paintObject(feature: WfsFeature) {
+  private paintFeature(feature: WfsFeature) {
     this.removeBugObjectsLayer();
 
     let drawFeature;
@@ -260,4 +254,5 @@ export class OpenLayersService {
 
     this._map.addLayer(vector);
   }
+
 }
