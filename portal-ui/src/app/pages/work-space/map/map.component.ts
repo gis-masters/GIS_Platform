@@ -68,7 +68,13 @@ export class MapComponent implements OnInit, OnDestroy {
           // Позиционируемся на первом из загруженных слоев
           if (this.layers.length > 0) {
             this.wfsService.getFeatures(this.layers[0].complexName)
-                .subscribe((layer: WfsFeatureCollection) => this.openLayers.fitToBbox(layer.bbox));
+                .subscribe((layer: WfsFeatureCollection) => {
+                  if (layer && layer.bbox) {
+                    this.openLayers.fitToBbox(layer.bbox);
+                  } else {
+                    this.logger.info('Cant position to layer', layer);
+                  }
+                });
           }
         });
 

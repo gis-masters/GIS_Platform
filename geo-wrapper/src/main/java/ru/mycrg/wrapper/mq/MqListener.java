@@ -143,7 +143,7 @@ public class MqListener {
                 mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException e) {
-            log.error("Неудалось создать организацию на геосервере: ", e);
+            log.error("Неудалось создать проект: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
         }
     }
