@@ -8,7 +8,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ServerPropertiesService} from '../../server-properties.service';
 import {ImportFlow} from './importFlow';
 import {LocalStorageService} from '../../local-storage.service';
-import {StorageKeys} from "../../storage-keys";
+import {StorageKeys} from '../../storage-keys';
 
 @Injectable({
   providedIn: 'root'
