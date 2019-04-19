@@ -84,7 +84,7 @@ export class OpenLayersService {
   fitToBbox(bbox: any) {
     this._map
         .getView()
-        .fit(bbox, {constrainResolution: false});
+        .fit(bbox, {padding: [50, 50, 50, 50], constrainResolution: false});
   }
 
   /**
