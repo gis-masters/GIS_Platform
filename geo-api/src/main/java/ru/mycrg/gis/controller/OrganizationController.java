@@ -23,6 +23,7 @@ import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
@@ -43,6 +44,13 @@ public class OrganizationController {
         this.mqEvents = mqEvents;
         this.userRepository = userRepository;
         this.organizationService = organizationService;
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<Long> getMyOrganizationInfo(Principal principal) {
+        log.debug("get org info(...only id yet) for user: {}", principal.getName());
+
+        return ResponseEntity.ok(organizationService.getOrganizationByUser(principal.getName()).getId());
     }
 
     @GetMapping

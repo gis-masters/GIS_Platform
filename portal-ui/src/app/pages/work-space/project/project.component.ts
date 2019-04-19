@@ -56,7 +56,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
     const projectModel = new ProjectModel(project);
     this.storageService.saveByKey(StorageKeys.projectKey, JSON.stringify(projectModel));
 
-    this.router.navigateByUrl('/workspace/data_import');
+    if (project.layersCount > 0) {
+      this.router.navigateByUrl('/workspace/map');
+    } else {
+      this.router.navigateByUrl('/workspace/data_import');
+    }
   }
 
   createNew(event) {

@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
+import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
@@ -39,7 +39,6 @@ export class ProjectsService {
         .pipe(
           filter((projects: CrgProject[]) => !!projects),
           flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
-          tap(console.log),
         )
         .subscribe((projects: CrgProject[]) => {
           this._projects$.next(projects);

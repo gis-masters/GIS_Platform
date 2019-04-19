@@ -5,11 +5,10 @@ import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../../base.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
 import {ServerPropertiesService} from '../../server-properties.service';
 import {ImportFlow} from './importFlow';
 import {LocalStorageService} from '../../local-storage.service';
-import {StorageKeys} from '../../storage-keys';
+import {StorageKeys} from "../../storage-keys";
 
 @Injectable({
   providedIn: 'root'
@@ -35,11 +34,11 @@ export class ImportService {
    * Инициируем импорт во временное хранилище.
    */
   initScratchImport(): Observable<InputStartResponseDto | any> {
-    const projectModel = this.localStorageService.getProject();
-    const scratchWorkspce = 'scratch_database_' + projectModel.crgProject.id;
+    const orgId = this.localStorageService.getByKey(StorageKeys.orgId);
+    const scratchWorkspace = 'scratch_database_' + orgId;
 
-    const workspace = scratchWorkspce;
-    const storage = scratchWorkspce + '_store';
+    const workspace = scratchWorkspace;
+    const storage = scratchWorkspace + '_store';
 
     this.logger.info('Init import to: ', workspace, storage);
 

@@ -5,6 +5,9 @@ import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
+import {OrganizationService} from '../../services/gis/organization.service';
+import {LocalStorageService} from '../../services/local-storage.service';
+import {StorageKeys} from "../../services/storage-keys";
 
 @Component({
   selector: 'crg-login',
@@ -24,6 +27,8 @@ export class LoginComponent {
               private http: HttpClient,
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
+              private organizationService: OrganizationService,
+              private storageService: LocalStorageService,
               private logger: NGXLogger,
               private router: Router) {
     this.authService.validateAuth();
@@ -46,7 +51,12 @@ export class LoginComponent {
             this.authService.authenticated = true;
             this.tokenStorage.saveToken(authModel);
 
-            this.router.navigateByUrl('/workspace');
+            this.organizationService.getInfo()
+                .subscribe((orgId: any) => {
+                  this.storageService.saveByKey(StorageKeys.orgId, orgId);
+
+                  this.router.navigateByUrl('/workspace');
+                });
           }, response => {
             this.logger.error('error: ', response);
 
