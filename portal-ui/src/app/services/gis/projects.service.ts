@@ -1,11 +1,12 @@
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {filter, publishReplay, refCount} from 'rxjs/operators';
+import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 import {WorkImport} from '../geoserver/import/workImport';
+import {LayersService} from '../geoserver/layers.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class ProjectsService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private layerService: LayersService,
               private baseService: BaseService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
@@ -36,6 +38,8 @@ export class ProjectsService {
         .get<CrgProject[]>(this.projectsUrl)
         .pipe(
           filter((projects: CrgProject[]) => !!projects),
+          flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
+          tap(console.log),
         )
         .subscribe((projects: CrgProject[]) => {
           this._projects$.next(projects);
@@ -67,6 +71,31 @@ export class ProjectsService {
     return this.http.post(this.projectsUrl + '/import', payload);
   }
 
+  private fetchProjectsLayers(projects: CrgProject[]) {
+    const observableTasks = [];
+    projects.forEach((project: CrgProject) => {
+      observableTasks.push(this.fetchProjectLayers(project));
+    });
+
+    return forkJoin(observableTasks);
+  }
+
+  private fetchProjectLayers(project: CrgProject): Observable<CrgProject> {
+    return this.layerService
+               .countProjectLayers(project)
+               .pipe(
+                 map((value: number) => {
+                   if (value) {
+                     project.layersCount = value;
+                   } else {
+                     project.layersCount = 0;
+                   }
+
+                   return project;
+                 })
+               );
+  }
+
 }
 
 export interface CrgProject {
@@ -75,4 +104,5 @@ export interface CrgProject {
   internalName: string;
   href?: string;
   type?: string;
+  layersCount?: number;
 }

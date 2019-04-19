@@ -9,9 +9,10 @@ import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
-import {filter, flatMap, map, refCount, tap} from 'rxjs/operators';
+import {filter, flatMap, map, refCount} from 'rxjs/operators';
 import {publishReplay} from 'rxjs/internal/operators/publishReplay';
 import {ServerPropertiesService} from '../server-properties.service';
+import {tap} from "rxjs/internal/operators/tap";
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +61,21 @@ export class LayersService {
         .subscribe(value => {
           this._layers$.next(value);
         });
+  }
+
+  countProjectLayers(project: CrgProject): Observable<number> {
+    return this.http
+               .get<GeoLayer>(this.layersUrl)
+               .pipe(
+                 filter(value => value && !!value['layers']),
+                 map((geoLayer: GeoLayer) => geoLayer.layers.layer),
+                 map((layers: NameHrefProjection[]) => {
+                   return layers.filter((layer: NameHrefProjection) => {
+                     return layer.name.split(':')[0] === project.geoserverName;
+                   });
+                 }),
+                 map((layers: NameHrefProjection[]) => layers.length)
+               );
   }
 
   fetchLayerConnectionInfo(layer: CrgLayer) {
