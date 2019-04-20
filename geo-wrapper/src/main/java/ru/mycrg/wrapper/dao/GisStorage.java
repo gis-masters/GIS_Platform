@@ -255,37 +255,34 @@ public class GisStorage {
      * @param dbName Имя БД
      * @param schemaName Имя схемы
      */
-    public void initP10Template(String dbName, String schemaName) {
+    public void initP10Template(String dbName, String schemaName) throws SQLException {
         log.debug("Инициализация шаблонной БД Для: {}", dbName + "." + schemaName);
 
-        try {
-            HikariDataSource datasource = datasourceFactory.getDatasource(dbName);
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
+        HikariDataSource datasource = datasourceFactory.getDatasource(dbName);
 
-            String checkTablesSql = "select count(*) from information_schema.tables where table_schema = '"
-                    + schemaName + "' AND table_type = 'BASE TABLE'";
-            int tableCounter = jdbcTemplate.queryForObject(checkTablesSql, Integer.class);
-            if (tableCounter > 400) {
-                log.debug("Инициализация не требуется");
-                return;
-            }
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 
-            Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
-            Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
-
-            // Create schema
-            ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
-
-            // Insert data
-            ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
-
-            // Rename schema
-            jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
-        } catch (SQLException e) {
-            log.error("Неудалось подключится к БД / {}", e.getLocalizedMessage());
-        } catch (ScriptException e) {
-            log.error("Ошибка при выполнении скрипта: {}", e.getLocalizedMessage());
+        String checkTablesSql = "select count(*) from information_schema.tables where table_schema = '"
+                + schemaName + "' AND table_type = 'BASE TABLE'";
+        int tableCounter = jdbcTemplate.queryForObject(checkTablesSql, Integer.class);
+        if (tableCounter > 400) {
+            log.debug("Инициализация не требуется");
+            return;
         }
+
+        Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
+        Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
+
+        // Create schema
+        ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
+
+        // Insert data
+        ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
+
+        // Rename schema
+        jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
+
+        datasourceFactory.removeDatasourceByDbName(dbName);
     }
 
     private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {

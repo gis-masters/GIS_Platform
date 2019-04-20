@@ -10,6 +10,7 @@ import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
 import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
@@ -77,7 +78,7 @@ public class OrganizationService {
      * Создание проекта.
      * Создание хранилища (postgis) на геосервере.
      */
-    public void createProject(OrgMqRequest dto) throws IOException, RuntimeException {
+    public void createProject(OrgMqRequest dto) throws IOException, RuntimeException, SQLException {
         String projectName = dto.getProjectName();
         String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
         String storeName = databaseName + "_store";

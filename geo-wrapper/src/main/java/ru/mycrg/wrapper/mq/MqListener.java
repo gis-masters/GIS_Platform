@@ -20,6 +20,7 @@ import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import static ru.mycrg.common.enums.EventType.CREATE_ORG;
@@ -142,7 +143,7 @@ public class MqListener {
 
                 mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
             }
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | RuntimeException | SQLException e) {
             log.error("Неудалось создать проект: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
         }

@@ -13,6 +13,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+DROP SCHEMA IF EXISTS fiz CASCADE;
+
 CREATE SCHEMA fiz;
 ALTER SCHEMA fiz OWNER TO fiz;
 SET default_tablespace = '';
@@ -14824,7 +14826,6 @@ CREATE SEQUENCE fiz.watertransportobj_point_objectid_seq
 ALTER TABLE fiz.watertransportobj_point_objectid_seq OWNER TO fiz;
 
 --
--- TOC entry 9110 (class 0 OID 0)
 -- Dependencies: 955
 -- Name: watertransportobj_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
 --

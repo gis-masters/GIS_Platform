@@ -1,5 +1,10 @@
 @import url(../../_app/app.component.css);
 
+.projects-container {
+  overflow: auto;
+  height: calc(100% - 35px);
+}
+
 .project-item {
   background: lightsteelblue;
 
