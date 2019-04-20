@@ -1,12 +1,12 @@
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
-import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
-import {ServerPropertiesService} from '../server-properties.service';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
+import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
+import {ServerPropertiesService} from '../server-properties.service';
+import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -70,8 +70,13 @@ export class ProjectsService {
     return this.http.post(this.projectsUrl + '/import', payload);
   }
 
-  private fetchProjectsLayers(projects: CrgProject[]) {
+  private fetchProjectsLayers(projects: CrgProject[]):  Observable<CrgProject[]> {
     const observableTasks = [];
+
+    if (!projects.length) {
+      return of([]);
+    }
+
     projects.forEach((project: CrgProject) => {
       observableTasks.push(this.fetchProjectLayers(project));
     });
