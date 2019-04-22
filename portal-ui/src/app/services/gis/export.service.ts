@@ -26,8 +26,6 @@ export class ExportService {
       resources: resources
     };
 
-    this.logger.info('ExportService exportGml: ', payload);
-
     return this.http
                .post<ExportGmlResponse>(this.serverProp.exportGmlUrl,
                   JSON.stringify(payload),

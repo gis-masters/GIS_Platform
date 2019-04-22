@@ -10,7 +10,6 @@ import ru.mycrg.wrapper.exceptions.RuleNotFoundException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
 
 class GmlUtil {
 
@@ -56,6 +55,13 @@ class GmlUtil {
         }
 
         return "";
+    }
+
+    static int calculatePercent(long done, long total) {
+        int result = Math.round(((float) done / (float) total) * 100);
+
+        // 2% на остальные действия после основной выборки.
+        return result > 98 ? 98 : result;
     }
 
     @NotNull

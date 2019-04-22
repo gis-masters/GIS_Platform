@@ -110,10 +110,11 @@ public class MqListener {
         try {
             Map<String, String> paths = gmlGenerator.generate(request);
 
-            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), paths, ProcessStatus.DONE));
+            mqEvents.gmlResponse(new GmlMqResponse(request, paths, ProcessStatus.DONE, 100));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла.", e);
-            mqEvents.gmlResponse(new GmlMqResponse(request.getId(), ProcessStatus.ERROR, e.getLocalizedMessage()));
+            mqEvents.gmlResponse(
+                    new GmlMqResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100));
         }
     }
 

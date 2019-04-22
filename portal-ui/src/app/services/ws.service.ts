@@ -35,20 +35,15 @@ export class WsService {
   }
 
   connect() {
-    this.logger.info('Attempt to CONNECT');
-
     // TODO: CORS щишибка на websocket когда конектимся через 8100, попробую здесь напрямую к 8088. Или попробывать
     // добавить корс вебсокет секьюрити и на 8100
     const socket = new SockJS(this.propertiesService.host + ':8088/crg-ws-endpoint?access_token=' + this.storageService.getAccessToken());
-    // const socket = new SockJS('http://10.10.10.121:8088/crg-ws-endpoint?access_token=' + this.storageService.getAccessToken());
 
     this.stompClient = Stomp.over(socket);
 
     const _this = this;
     this.stompClient.connect({}, function (frame) {
       _this.setConnected(true);
-      // console.log('Connected: ' + frame);
-
       _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
         _this._wsMsg$.next(JSON.parse(data.body));
       });
@@ -80,6 +75,7 @@ export interface ExportWsMsg {
   pathToFile: string;
   pathToLog: string;
   status: string;
+  progress: string;
 }
 
 export enum WsMessageType {

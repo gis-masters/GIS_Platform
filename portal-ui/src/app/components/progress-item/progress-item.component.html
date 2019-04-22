@@ -1,6 +1,8 @@
 <div class="progress-item">
   <div class="progress-icon">
-    <mat-spinner class="crg-spinner crg-center" *ngIf="event.payload.payload.status === 'PENDING'"></mat-spinner>
+    <mat-progress-spinner class="crg-spinner crg-center" [value]="event.payload.payload.progress"
+                          *ngIf="event.payload.payload.status === 'PENDING'">
+    </mat-progress-spinner>
     <mat-icon class="crg-progress-done success" *ngIf="event.payload.payload.status === 'DONE'">done_all</mat-icon>
     <mat-icon class="crg-progress-done error" *ngIf="event.payload.payload.status === 'ERROR'">error_outline</mat-icon>
   </div>

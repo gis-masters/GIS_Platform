@@ -68,7 +68,7 @@ public class GmlGenerationService {
         Optional<GmlProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
             GmlProcess gmlProcess = processById.get();
-            wsNotificationService.send(new WsMessageDto<>(EXPORT, response),gmlProcess.getRequest().getId());
+            wsNotificationService.send(new WsMessageDto<>(EXPORT, response), gmlProcess.getRequest().getId());
 
             gmlProcess.addResponse(response);
         } else {

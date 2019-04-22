@@ -8,10 +8,14 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKBReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import ru.mycrg.common.*;
+import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.mq.IMqEvents;
 import ru.mycrg.wrapper.service.CacheService;
 import ru.mycrg.wrapper.service.FileService;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 import static ru.mycrg.wrapper.service.gml.GmlUtil.*;
 
 @Service
@@ -34,6 +39,14 @@ public class GmlGenerator {
 
     private WKBReader wkb = new WKBReader();
     private long idCounter = 1;
+    private long totalRows = 0;
+    private long progress = 0;
+
+    @Autowired
+    private DatasourceFactory datasourceFactory;
+
+    @Autowired
+    private BaseDaoService baseDaoService;
 
     private final IMqEvents mqEvents;
     private final FileService fileService;
@@ -54,12 +67,10 @@ public class GmlGenerator {
     public Map<String, String> generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException,
             TransformerException {
         idCounter = 1;
-        log.info("Start gml generation");
+        log.debug("Start gml generation");
 
         Map<String, String> paths = new HashMap<>();
         GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
-
-        mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Генерация файлов"));
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
         String pathToGml = fileService.save(documentHolder.getGmlDocument(), randomFileName + ".gml");
@@ -68,6 +79,7 @@ public class GmlGenerator {
         paths.put("gml", pathToGml);
         // paths.put("log", pathToLog);
 
+        log.debug("Done gml generation");
         return paths;
     }
 
@@ -79,26 +91,74 @@ public class GmlGenerator {
      */
     @NotNull
     private GmlDocumentHolder createDomDocuments(GmlMqRequest request) throws ParserConfigurationException {
-        mqEvents.gmlResponse(new GmlMqResponse(request.getId(), PENDING, "Инициализация..."));
-
         GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
+        mqEvents.gmlResponse(new GmlMqResponse(request, PENDING, "Инициализация...", 1));
         log.debug("Handle {} sources", request.getResourceProjections().size());
+
+        progress = 0;
+        totalRows = calculateTotalRows(request);
         request
                 .getResourceProjections()
-                .forEach(resource -> handleResource(request.getFgistpRules(), docHolder, resource));
+                .forEach(resource -> handleResource(request, docHolder, resource));
 
         return docHolder;
     }
 
-    private void handleResource(List<EntityTypeDto> rules, GmlDocumentHolder docHolder, ResourceProjection resource) {
+    private long calculateTotalRows(GmlMqRequest request) {
+        return request
+                .getResourceProjections().stream()
+                .mapToLong(resource -> baseDaoService.countTotalRows(resource))
+                .sum();
+    }
+
+    private void handleResource(GmlMqRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
         log.debug("Handle source: {}", resource.toString());
 
         try {
-            EntityTypeDto feature = getRuleByTableName(rules, resource.getTableName());
+            EntityTypeDto feature = getRuleByTableName(request.getFgistpRules(), resource.getTableName());
+            JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
-            addFeatureToDocument(docHolder, feature, cacheService.fetchData(resource));
-            // generateLogDomModel(docHolder, feature, cacheService.fetchViolations(resource));
+            int offset = 0;
+            while (true) {
+                List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, batchSize, offset);
+                if (batch.isEmpty()) {
+                    break;
+                }
+
+                batch.forEach(propFromDb -> {
+                    String id = generateId();
+                    Element featureMember = addFeatureMember(docHolder, feature.getOriginName(), id);
+
+                    // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
+                    feature.getProperties().stream()
+                            .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+                            .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+                                    propFromDb, simplePropertyDto));
+
+                    // Отдельно обрабатываем геометрию
+                    Object crg_b_geometry = propFromDb.get("crg_b_geometry");
+                    if (crg_b_geometry != null) {
+                        Geometry geometry;
+                        try {
+                            geometry = wkb.read((byte[]) crg_b_geometry);
+
+                            generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
+                        } catch (ParseException e) {
+                            log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
+                        }
+                    }
+
+                    addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
+                });
+
+                progress += batchSize;
+                mqEvents.gmlResponse(
+                        new GmlMqResponse(request, PENDING, "Обработка " + feature.getTitle(),
+                                GmlUtil.calculatePercent(progress, totalRows)));
+
+                offset++;
+            }
         } catch (Exception e) {
             log.error("Ошибка при обработке ресурса: " + resource.toString(), e);
         }
@@ -143,40 +203,40 @@ public class GmlGenerator {
         }
     }
 
-    private void addFeatureToDocument(GmlDocumentHolder docHolder,
-                                      EntityTypeDto feature,
-                                      Queue<List<Map<String, Object>>> queue) {
-        log.debug("generate GML Document for feature {}", feature.getName());
-
-        while (!queue.isEmpty()) {
-            // Обрабатываем партию данных из БД
-            queue.poll().forEach(propFromDb -> {
-                String id = generateId();
-                Element featureMember = addFeatureMember(docHolder, feature.getOriginName(), id);
-
-                // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
-                feature.getProperties().stream()
-                        .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                        .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
-                                propFromDb, simplePropertyDto));
-
-                // Отдельно обрабатываем геометрию
-                Object crg_b_geometry = propFromDb.get("crg_b_geometry");
-                if (crg_b_geometry != null) {
-                    Geometry geometry;
-                    try {
-                        geometry = wkb.read((byte[]) crg_b_geometry);
-
-                        generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
-                    } catch (ParseException e) {
-                        log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
-                    }
-                }
-
-                addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
-            });
-        }
-    }
+//    private void addFeatureToDocument(GmlDocumentHolder docHolder,
+//                                      EntityTypeDto feature,
+//                                      Queue<List<Map<String, Object>>> queue) {
+//        log.debug("generate GML Document for feature {}", feature.getName());
+//
+//        while (!queue.isEmpty()) {
+//            // Обрабатываем партию данных из БД
+//            queue.poll().forEach(propFromDb -> {
+//                String id = generateId();
+//                Element featureMember = addFeatureMember(docHolder, feature.getOriginName(), id);
+//
+//                // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
+//                feature.getProperties().stream()
+//                        .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+//                        .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+//                                propFromDb, simplePropertyDto));
+//
+//                // Отдельно обрабатываем геометрию
+//                Object crg_b_geometry = propFromDb.get("crg_b_geometry");
+//                if (crg_b_geometry != null) {
+//                    Geometry geometry;
+//                    try {
+//                        geometry = wkb.read((byte[]) crg_b_geometry);
+//
+//                        generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
+//                    } catch (ParseException e) {
+//                        log.warn("Ошибка при попытке распарсить геометрию. {}", e.getLocalizedMessage());
+//                    }
+//                }
+//
+//                addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
+//            });
+//        }
+//    }
 
     private void addObjectMember(GmlDocumentHolder docHolder, String id, String description, Object classid) {
         Document gmlDocument = docHolder.getGmlDocument();

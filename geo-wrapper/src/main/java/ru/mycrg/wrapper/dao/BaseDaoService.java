@@ -132,6 +132,13 @@ public class BaseDaoService {
         return datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
     }
 
+    public Long countTotalRows(ResourceProjection resource) {
+        String schemaName = resource.getSchemaName();
+        String sqlRequest = String.format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
+
+        return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForObject(sqlRequest, Long.class);
+    }
+
     @Transactional
     public boolean isValidated(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
@@ -220,7 +227,7 @@ public class BaseDaoService {
      */
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
-        log.debug("fetchBatch: {}/{}", limit, offset);
+        log.debug("Fetch next. Limit: {} offset: {}", limit, offset);
 
         String sqlRequest = String.format("SELECT ST_AsBinary(shape) as " +
                         "crg_b_geometry, * FROM %s.%s LIMIT ? OFFSET ?",
