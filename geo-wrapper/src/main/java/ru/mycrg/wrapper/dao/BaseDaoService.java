@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class GisStorage {
+public class BaseDaoService {
 
-    private static final Logger log = LoggerFactory.getLogger(GisStorage.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseDaoService.class);
 
     private ResourceLoader resourceLoader;
     private DatasourceFactory datasourceFactory;
@@ -37,8 +36,8 @@ public class GisStorage {
     private static final String NOT_IMPORT = "NotImport";
 
     @Autowired
-    public GisStorage(DatasourceFactory datasourceFactory,
-                      ResourceLoader resourceLoader) {
+    public BaseDaoService(DatasourceFactory datasourceFactory,
+                          ResourceLoader resourceLoader) {
         this.datasourceFactory = datasourceFactory;
         this.resourceLoader = resourceLoader;
     }
@@ -51,8 +50,7 @@ public class GisStorage {
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
         // Подсоединяемся к только что созданной БД и создаем расширние postgis
-        initConnection(dbName).execute("CREATE EXTENSION postgis;");
-
+        datasourceFactory.getJdbcTemplate(dbName).execute("CREATE EXTENSION postgis;");
         datasourceFactory.removeDatasourceByDbName(dbName);
 
         log.debug("Successfully created");
@@ -65,7 +63,7 @@ public class GisStorage {
         String table = validationMqRequest.getEntityType().getTableName();
         String extensionTableName = table + "_extension";
 
-        JdbcTemplate jdbcTemplate = initConnection(validationMqRequest.getDbName());
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName());
 
         String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
                 "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
@@ -86,7 +84,7 @@ public class GisStorage {
 
         log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
-        JdbcTemplate jdbcTemplate = initConnection(mqRequest.getDbName());
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +
                 "ON CONFLICT(object_id) DO UPDATE " +
@@ -110,17 +108,6 @@ public class GisStorage {
     }
 
     @Transactional
-    public List<Map<String, Object>> fetchViolationsBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
-                                                          int limit, int offset) {
-        String extensionTableName = target.getTableName() + "_extension";
-
-        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
-                target.getSchemaName(), extensionTableName);
-
-        return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
-    }
-
-    @Transactional
     public List<Map<String, Object>> getViolations(ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
@@ -130,7 +117,8 @@ public class GisStorage {
         String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
                 schemaName, extensionTableName);
 
-        return initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest, limit, limit * offset);
+        return datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForList(sqlRequest, limit,
+                limit * offset);
     }
 
     @Transactional
@@ -141,7 +129,7 @@ public class GisStorage {
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
                 schemaName, extensionTableName);
 
-        return initConnection(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
+        return datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
     }
 
     @Transactional
@@ -151,7 +139,8 @@ public class GisStorage {
 
         String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
 
-        List<Map<String, Object>> result = initConnection(validationMqRequest.getDbName()).queryForList(sqlRequest);
+        List<Map<String, Object>> result =
+                datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForList(sqlRequest);
 
         log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
 
@@ -208,13 +197,16 @@ public class GisStorage {
         });
     }
 
-    public JdbcTemplate initConnection(final String dbName) {
-        return new JdbcTemplate(datasourceFactory.getDatasource(dbName));
-    }
+    public List<Map<String, Object>> fetchViolationsBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
+                                                          int limit, int offset) {
+        log.debug("fetchViolationsBatch: {}/{}", limit, offset);
 
-    private boolean isNeedPrepareTable(List<GeoMapping> mapping) {
-        return mapping.stream()
-                .anyMatch(geoMapping -> AS_IS.equals(geoMapping.getTarget().getType()));
+        String extensionTableName = target.getTableName() + "_extension";
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
+                target.getSchemaName(), extensionTableName);
+
+        return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
 
     /**
@@ -228,6 +220,8 @@ public class GisStorage {
      */
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
+        log.debug("fetchBatch: {}/{}", limit, offset);
+
         String sqlRequest = String.format("SELECT ST_AsBinary(shape) as " +
                         "crg_b_geometry, * FROM %s.%s LIMIT ? OFFSET ?",
                 target.getSchemaName(), target.getTableName());
@@ -374,6 +368,11 @@ public class GisStorage {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
+    }
+
+    private boolean isNeedPrepareTable(List<GeoMapping> mapping) {
+        return mapping.stream()
+                .anyMatch(geoMapping -> AS_IS.equals(geoMapping.getTarget().getType()));
     }
 
 }

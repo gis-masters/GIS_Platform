@@ -10,12 +10,12 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.dao.BaseDaoService;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class GisStorageTest {
+public class BaseDaoServiceTest {
 
     @Mock
     Environment environment;
@@ -34,7 +34,7 @@ public class GisStorageTest {
     @Test
     @Ignore
     public void shouldConvertToJSON() {
-        GisStorage gisStorage = new GisStorage(new DatasourceFactory(environment, jdbcTemplate), resourceLoader);
+        BaseDaoService baseDaoService = new BaseDaoService(new DatasourceFactory(environment, jdbcTemplate), resourceLoader);
 
         ValidationMqRequest mqRequest = new ValidationMqRequest();
         mqRequest.setDbName("gis");
@@ -43,7 +43,7 @@ public class GisStorageTest {
 
         when(environment.getProperty("spring.datasource.url")).thenReturn("jdbc:postgresql://127.0.0.1:5434/postgres");
 
-        Long aLong = gisStorage.countTotalViolations(mqRequest);
+        Long aLong = baseDaoService.countTotalViolations(mqRequest);
 
         assertTrue(aLong > 0);
     }

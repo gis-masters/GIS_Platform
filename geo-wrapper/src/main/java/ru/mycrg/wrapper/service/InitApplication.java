@@ -3,15 +3,15 @@ package ru.mycrg.wrapper.service;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.dao.BaseDaoService;
 
 @Component
 public class InitApplication {
 
-    private final GisStorage gisStorage;
+    private final BaseDaoService baseDaoService;
 
-    public InitApplication(GisStorage gisStorage) {
-        this.gisStorage = gisStorage;
+    public InitApplication(BaseDaoService baseDaoService) {
+        this.baseDaoService = baseDaoService;
     }
 
     @EventListener(ContextRefreshedEvent.class)

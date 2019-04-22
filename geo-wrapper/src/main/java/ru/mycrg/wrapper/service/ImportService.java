@@ -7,23 +7,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportMqRequest;
-import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.DatasourceFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 
 @Service
 public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final GisStorage gisStorage;
+    private final BaseDaoService baseDaoService;
+    private final DatasourceFactory datasourceFactory;
 
     private Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-    private final int BATCH_SIZE = 100;
 
-    public ImportService(GisStorage gisStorage) {
-        this.gisStorage = gisStorage;
+    public ImportService(BaseDaoService baseDaoService,
+                         DatasourceFactory datasourceFactory) {
+        this.baseDaoService = baseDaoService;
+        this.datasourceFactory = datasourceFactory;
     }
 
     /**
@@ -37,21 +42,22 @@ public class ImportService {
         log.debug("Start import from: {} to: {}", request.printSource(), request.printTarget());
 
         String sourceDbName = request.getSourceResource().getDbName();
-        JdbcTemplate jdbcTemplate = gisStorage.initConnection(sourceDbName);
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
         String tableName = request.getTargetResource().getTableName();
         String schemaName = request.getTargetResource().getSchemaName();
 
-        gisStorage.truncate(jdbcTemplate,
+        baseDaoService.truncate(jdbcTemplate,
                 Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, tableName)));
-        gisStorage.doImport(jdbcTemplate, request);
+        baseDaoService.doImport(jdbcTemplate, request);
 
         // GlobalId and encoding
         log.debug("start encoding");
         ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
         int offset = 0;
         while (true) {
-            List<Map<String, Object>> batch = gisStorage.fetchBatch(jdbcTemplate, resourceProjection, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch =
+                    baseDaoService.fetchBatch(jdbcTemplate, resourceProjection, batchSize, offset);
             if (batch.isEmpty()) {
                 break;
             }
@@ -70,7 +76,7 @@ public class ImportService {
         while (true) {
             List<Map<String, Object>> nextBatch = queue.poll();
             if (nextBatch != null) {
-                gisStorage.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
+                baseDaoService.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
             } else {
                 break;
             }

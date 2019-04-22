@@ -10,7 +10,8 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
 import java.io.IOException;
@@ -25,14 +26,12 @@ public class ValidationService {
 
     private final IMqEvents mqEvents;
     private final IValidator validator;
-    private final GisStorage gisStorage;
+    private final BaseDaoService baseDaoService;
 
     private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
     private Queue<List<ObjectValidationResult>> violationsQueue = new ArrayDeque<>();
     private long totalViolations;
     private boolean isNotValidatedYet = true;
-
-    private final int BATCH_SIZE = 100;
 
     /**
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
@@ -41,10 +40,10 @@ public class ValidationService {
     private String CLASS_ID = "classid";
 
     @Autowired
-    public ValidationService(IValidator validator, IMqEvents mqEvents, GisStorage gisStorage) {
+    public ValidationService(IValidator validator, IMqEvents mqEvents, BaseDaoService baseDaoService) {
         this.mqEvents = mqEvents;
         this.validator = validator;
-        this.gisStorage = gisStorage;
+        this.baseDaoService = baseDaoService;
     }
 
     /**
@@ -56,8 +55,8 @@ public class ValidationService {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
         // определим как будем подсчитывать общее кол-во ошибок в слое.
-        if (gisStorage.isValidated(validationMqRequest)) {
-            totalViolations = gisStorage.countTotalViolations(validationMqRequest);
+        if (baseDaoService.isValidated(validationMqRequest)) {
+            totalViolations = baseDaoService.countTotalViolations(validationMqRequest);
             isNotValidatedYet = false;
         } else {
             totalViolations = 0;
@@ -72,8 +71,8 @@ public class ValidationService {
         while (true) {
             response.setResults(new ArrayList<>());
 
-            List<Map<String, Object>> batch = gisStorage
-                    .fetchBatchOfRowsNeededToValidation(validationMqRequest, BATCH_SIZE, offset);
+            List<Map<String, Object>> batch = baseDaoService
+                    .fetchBatchOfRowsNeededToValidation(validationMqRequest, DaoProperties.batchSize, offset);
             if (batch.isEmpty()) {
                 break;
             }
@@ -97,7 +96,7 @@ public class ValidationService {
             if (nextViolations != null) {
                 sendPendingResponse(validationMqRequest, nextViolations);
 
-                gisStorage.saveValidationResults(validationMqRequest, nextViolations);
+                baseDaoService.saveValidationResults(validationMqRequest, nextViolations);
             } else {
                 response.setTotal(totalViolations);
                 response.setStatus(ProcessStatus.DONE);
@@ -118,15 +117,15 @@ public class ValidationService {
     public ValidationMqResponse getResults(ValidationMqRequest validationMqRequest) throws IOException {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
-        Long totalViolations = gisStorage.countTotalViolations(validationMqRequest);
+        Long totalViolations = baseDaoService.countTotalViolations(validationMqRequest);
         if (totalViolations > 0) {
-            List<Map<String, Object>> violations = gisStorage.getViolations(validationMqRequest);
+            List<Map<String, Object>> violations = baseDaoService.getViolations(validationMqRequest);
 
             log.info("Found {} violations", violations.size());
             response.setResults(Util.mapToViolations(violations));
             response.setValidated(true);
         } else {
-            response.setValidated(gisStorage.isValidated(validationMqRequest));
+            response.setValidated(baseDaoService.isValidated(validationMqRequest));
         }
 
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
@@ -147,8 +146,8 @@ public class ValidationService {
     public ValidationMqResponse getInfo(ValidationMqRequest validationMqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(validationMqRequest);
 
-        response.setValidated(gisStorage.isValidated(validationMqRequest));
-        response.setTotal(gisStorage.countTotalViolations(validationMqRequest));
+        response.setValidated(baseDaoService.isValidated(validationMqRequest));
+        response.setTotal(baseDaoService.countTotalViolations(validationMqRequest));
 
         LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
         response.setLastValidated(localDateTime != null ? localDateTime.toString(): null);

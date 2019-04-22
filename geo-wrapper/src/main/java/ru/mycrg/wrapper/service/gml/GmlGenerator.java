@@ -8,13 +8,12 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKBReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import ru.mycrg.common.*;
-import ru.mycrg.wrapper.dao.GisStorage;
 import ru.mycrg.wrapper.mq.IMqEvents;
+import ru.mycrg.wrapper.service.CacheService;
 import ru.mycrg.wrapper.service.FileService;
 import ru.mycrg.wrapper.service.validation.Util;
 
@@ -34,17 +33,16 @@ public class GmlGenerator {
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
     private WKBReader wkb = new WKBReader();
-    private final int BATCH_SIZE = 100;
     private long idCounter = 1;
 
-    private final GisStorage gisStorage;
-    private final FileService fileService;
     private final IMqEvents mqEvents;
+    private final FileService fileService;
+    private final CacheService cacheService;
 
-    public GmlGenerator(GisStorage gisStorage, FileService fileService, IMqEvents mqEvents) {
+    public GmlGenerator(FileService fileService, IMqEvents mqEvents, CacheService cacheService) {
         this.mqEvents = mqEvents;
-        this.gisStorage = gisStorage;
         this.fileService = fileService;
+        this.cacheService = cacheService;
     }
 
     /**
@@ -55,9 +53,10 @@ public class GmlGenerator {
      */
     public Map<String, String> generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException,
             TransformerException {
-        log.info("Start gml generation. idCounter: {}", idCounter);
-        Map<String, String> paths = new HashMap<>();
+        idCounter = 1;
+        log.info("Start gml generation");
 
+        Map<String, String> paths = new HashMap<>();
         GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
 
         mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Генерация файлов"));
@@ -79,12 +78,14 @@ public class GmlGenerator {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    public GmlDocumentHolder createDomDocuments(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
+    private GmlDocumentHolder createDomDocuments(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
         GmlDocumentHolder documentHolder = createXmlDocument(gmlMqRequest.getDocSchema());
         mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Инициализация..."));
 
-        log.debug("{} sources", gmlMqRequest.getResourceProjections().size());
+        log.debug("Handle {} sources", gmlMqRequest.getResourceProjections().size());
         gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
+            log.debug("source: {}", resourceProjection.toString());
+
             String tableName = resourceProjection.getTableName();
             Optional<EntityTypeDto> rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
             if (rule.isPresent()) {
@@ -92,8 +93,8 @@ public class GmlGenerator {
                 mqEvents.gmlResponse(
                         new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Обработка: " + feature.getTitle()));
 
-                generateGmlDomModel(documentHolder, feature, resourceProjection);
-                generateLogDomModel(documentHolder, feature, resourceProjection);
+                generateGmlDomModel(documentHolder, feature, cacheService.fetchData(resourceProjection));
+                generateLogDomModel(documentHolder, feature, cacheService.fetchViolations(resourceProjection));
             } else {
                 log.warn("Не найдено правило для: " + tableName);
             }
@@ -102,10 +103,10 @@ public class GmlGenerator {
         return documentHolder;
     }
 
-    private void generateLogDomModel(GmlDocumentHolder docHolder, EntityTypeDto fType, ResourceProjection resource) {
+    private void generateLogDomModel(GmlDocumentHolder docHolder,
+                                     EntityTypeDto fType,
+                                     Queue<List<Map<String, Object>>> queue) {
         log.debug("generate LOG Document for feature: {}", fType.getName());
-
-        Queue<List<Map<String, Object>>> queue = getViolationsData(resource);
 
         Document logDocument = docHolder.getLogDocument();
         Element logRootNode = docHolder.getLogRootNode();
@@ -136,15 +137,15 @@ public class GmlGenerator {
                     }
                 });
             } catch (IOException e) {
-                log.error("Error parsin violations");
+                log.error("Error parsing violations");
             }
         }
     }
 
-    private void generateGmlDomModel(GmlDocumentHolder docHolder, EntityTypeDto feature, ResourceProjection resource) {
+    private void generateGmlDomModel(GmlDocumentHolder docHolder,
+                                     EntityTypeDto feature,
+                                     Queue<List<Map<String, Object>>> queue) {
         log.debug("generate GML Document for feature {}", feature.getName());
-
-        Queue<List<Map<String, Object>>> queue = getData(resource);
 
         while (!queue.isEmpty()) {
             // Обрабатываем партию данных из БД
@@ -155,9 +156,8 @@ public class GmlGenerator {
                 // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
                 feature.getProperties().stream()
                         .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                        .forEach(simplePropertyDto -> {
-                            fillFeatureMember(featureMember, docHolder.getGmlDocument(), propFromDb, simplePropertyDto);
-                        });
+                        .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+                                propFromDb, simplePropertyDto));
 
                 // Отдельно обрабатываем геометрию
                 Object crg_b_geometry = propFromDb.get("crg_b_geometry");
@@ -314,7 +314,7 @@ public class GmlGenerator {
      * @return Обьект содержащий document и все ключевые ноды.
      */
     private GmlDocumentHolder createXmlDocument(String docSchema) throws ParserConfigurationException {
-        log.debug("create file");
+        log.debug("create xml document");
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -344,48 +344,6 @@ public class GmlGenerator {
         logDoc.appendChild(logRootNode);
 
         return new GmlDocumentHolder(mainDoc, logDoc, gmlFeatureCollection, objectCollection, logRootNode);
-    }
-
-    private Queue<List<Map<String, Object>>> getData(ResourceProjection target) {
-        log.debug("Get data from: {}", target.toString());
-
-        Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-        JdbcTemplate jdbcTemplate = gisStorage.initConnection(target.getDbName());
-
-        int offset = 0;
-        while (true) {
-            List<Map<String, Object>> batch = gisStorage.fetchBatch(jdbcTemplate, target, BATCH_SIZE, offset);
-            if (batch.isEmpty()) {
-                break;
-            }
-
-            queue.offer(batch);
-
-            offset++;
-        }
-
-        return queue;
-    }
-
-    private Queue<List<Map<String, Object>>> getViolationsData(@NotNull ResourceProjection target) {
-        log.debug("Get violations from: {}", target.toString());
-
-        Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-        JdbcTemplate jdbcTemplate = gisStorage.initConnection(target.getDbName());
-
-        int offset = 0;
-        while (true) {
-            List<Map<String, Object>> batch = gisStorage.fetchViolationsBatch(jdbcTemplate, target, BATCH_SIZE, offset);
-            if (batch.isEmpty()) {
-                break;
-            }
-
-            queue.offer(batch);
-
-            offset++;
-        }
-
-        return queue;
     }
 
     @NotNull

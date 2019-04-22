@@ -46,7 +46,7 @@ public class MqSender implements IMqEvents {
 
     @Override
     public void gmlResponse(GmlMqResponse payload) {
-        log.debug("Send gml response");
+        log.trace("Send gml response");
 
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_GML_RESPONSE, MqProperties.KEY_GML_RESPONSE, payload);
     }

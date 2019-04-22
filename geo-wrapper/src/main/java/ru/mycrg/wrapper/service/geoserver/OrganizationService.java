@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.service.geoserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.wrapper.dao.GisStorage;
+import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
 import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
 import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
@@ -31,17 +31,17 @@ public class OrganizationService {
     private final WorkspacesService workspacesService;
     private final UsersAndRolesService usersAndRolesService;
     private final RulesService rulesService;
-    private final GisStorage gisStorage;
+    private final BaseDaoService baseDaoService;
     private final StorageService storageService;
 
     @Autowired
     public OrganizationService(WorkspacesService workspacesService, UsersAndRolesService usersAndRolesService,
-                               RulesService rulesService, StorageService storageService, GisStorage gisStorage) {
+                               RulesService rulesService, StorageService storageService, BaseDaoService baseDaoService) {
         this.workspacesService = workspacesService;
         this.usersAndRolesService = usersAndRolesService;
         this.rulesService = rulesService;
         this.storageService = storageService;
-        this.gisStorage = gisStorage;
+        this.baseDaoService = baseDaoService;
     }
 
     /**
@@ -71,7 +71,7 @@ public class OrganizationService {
         usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
 
         // В БД
-        gisStorage.createDb(dbName);
+        baseDaoService.createDb(dbName);
     }
 
     /**
@@ -93,7 +93,7 @@ public class OrganizationService {
         rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
 
         // В БД создаем схему и инициализируем в ней шаблонную структуру
-        gisStorage.initP10Template(databaseName, projectName);
+        baseDaoService.initP10Template(databaseName, projectName);
     }
 
 }

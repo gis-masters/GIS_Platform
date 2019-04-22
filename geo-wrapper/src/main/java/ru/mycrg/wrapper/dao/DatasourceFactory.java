@@ -50,23 +50,19 @@ public class DatasourceFactory {
         }
     }
 
-    // jdbc:postgresql://postgis:5432/postgres
-    // jdbc:postgresql://127.0.0.1:5434/postgres
-    // jdbc:postgresql://any-other-service-name:5434/postgres
-    private String getConnectionUrl(String dbName) {
-        String result;
-
-        String[] splitedUrl = Objects.requireNonNull(environment.getProperty("spring.datasource.url")).split("/");
-        result = splitedUrl[0] + "//" + splitedUrl[2] + "/" + dbName;
-
-        log.debug("Url to new Db: {}", result);
-        return result;
-    }
-
     public JdbcTemplate getInitialJdbcTemplate() {
         return jdbcTemplate;
     }
 
+    public JdbcTemplate getJdbcTemplate(final String dbName) {
+        log.debug("get new JdbcTemplate for: {}", dbName);
+
+        return new JdbcTemplate(getDatasource(dbName));
+    }
+
+    // jdbc:postgresql://postgis:5432/postgres
+    // jdbc:postgresql://127.0.0.1:5434/postgres
+    // jdbc:postgresql://any-other-service-name:5434/postgres
     public void removeDatasourceByDbName(String name) {
         log.debug("Remove datasource for DB: {}", name);
 
@@ -79,5 +75,15 @@ public class DatasourceFactory {
 
             dataSources.remove(name);
         }
+    }
+
+    private String getConnectionUrl(String dbName) {
+        String result;
+
+        String[] splitedUrl = Objects.requireNonNull(environment.getProperty("spring.datasource.url")).split("/");
+        result = splitedUrl[0] + "//" + splitedUrl[2] + "/" + dbName;
+
+        log.debug("Url to new Db: {}", result);
+        return result;
     }
 }
