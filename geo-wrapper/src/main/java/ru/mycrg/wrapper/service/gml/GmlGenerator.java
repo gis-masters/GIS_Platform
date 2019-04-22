@@ -63,10 +63,10 @@ public class GmlGenerator {
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
         String pathToGml = fileService.save(documentHolder.getGmlDocument(), randomFileName + ".gml");
-        String pathToLog = fileService.save(documentHolder.getLogDocument(), randomFileName + ".log");
+        // String pathToLog = fileService.save(documentHolder.getLogDocument(), randomFileName + ".log");
 
         paths.put("gml", pathToGml);
-        paths.put("log", pathToLog);
+        // paths.put("log", pathToLog);
 
         return paths;
     }
@@ -74,33 +74,34 @@ public class GmlGenerator {
     /**
      * Сгенерируем dom модели основного файла с данными и лога с ошибками, предварительно проведя валидацию.
      *
-     * @param gmlMqRequest Запрос
+     * @param request Запрос
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(GmlMqRequest gmlMqRequest) throws ParserConfigurationException {
-        GmlDocumentHolder documentHolder = createXmlDocument(gmlMqRequest.getDocSchema());
-        mqEvents.gmlResponse(new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Инициализация..."));
+    private GmlDocumentHolder createDomDocuments(GmlMqRequest request) throws ParserConfigurationException {
+        mqEvents.gmlResponse(new GmlMqResponse(request.getId(), PENDING, "Инициализация..."));
 
-        log.debug("Handle {} sources", gmlMqRequest.getResourceProjections().size());
-        gmlMqRequest.getResourceProjections().forEach(resourceProjection -> {
-            log.debug("source: {}", resourceProjection.toString());
+        GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
-            String tableName = resourceProjection.getTableName();
-            Optional<EntityTypeDto> rule = getRuleByTableName(gmlMqRequest.getFgistpRules(), tableName);
-            if (rule.isPresent()) {
-                EntityTypeDto feature = rule.get();
-                mqEvents.gmlResponse(
-                        new GmlMqResponse(gmlMqRequest.getId(), PENDING, "Обработка: " + feature.getTitle()));
+        log.debug("Handle {} sources", request.getResourceProjections().size());
+        request
+                .getResourceProjections()
+                .forEach(resource -> handleResource(request.getFgistpRules(), docHolder, resource));
 
-                generateGmlDomModel(documentHolder, feature, cacheService.fetchData(resourceProjection));
-                generateLogDomModel(documentHolder, feature, cacheService.fetchViolations(resourceProjection));
-            } else {
-                log.warn("Не найдено правило для: " + tableName);
-            }
-        });
+        return docHolder;
+    }
 
-        return documentHolder;
+    private void handleResource(List<EntityTypeDto> rules, GmlDocumentHolder docHolder, ResourceProjection resource) {
+        log.debug("Handle source: {}", resource.toString());
+
+        try {
+            EntityTypeDto feature = getRuleByTableName(rules, resource.getTableName());
+
+            addFeatureToDocument(docHolder, feature, cacheService.fetchData(resource));
+            // generateLogDomModel(docHolder, feature, cacheService.fetchViolations(resource));
+        } catch (Exception e) {
+            log.error("Ошибка при обработке ресурса: " + resource.toString(), e);
+        }
     }
 
     private void generateLogDomModel(GmlDocumentHolder docHolder,
@@ -142,9 +143,9 @@ public class GmlGenerator {
         }
     }
 
-    private void generateGmlDomModel(GmlDocumentHolder docHolder,
-                                     EntityTypeDto feature,
-                                     Queue<List<Map<String, Object>>> queue) {
+    private void addFeatureToDocument(GmlDocumentHolder docHolder,
+                                      EntityTypeDto feature,
+                                      Queue<List<Map<String, Object>>> queue) {
         log.debug("generate GML Document for feature {}", feature.getName());
 
         while (!queue.isEmpty()) {

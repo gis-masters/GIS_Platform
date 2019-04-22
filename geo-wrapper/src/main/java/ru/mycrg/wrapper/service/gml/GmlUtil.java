@@ -5,22 +5,25 @@ import org.locationtech.jts.geom.Coordinate;
 import ru.mycrg.common.EntityTypeDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.wrapper.exceptions.RuleNotFoundException;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
-public class GmlUtil {
+class GmlUtil {
 
-    public static Optional<EntityTypeDto> getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName) {
+    static EntityTypeDto getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName)
+            throws RuleNotFoundException {
         return entityTypes.stream()
                 .filter(entityType -> entityType.getTableName().toLowerCase().equals(tableName.toLowerCase()))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new RuleNotFoundException(tableName));
     }
 
     @NotNull
-    public static String convertToString(@NotNull Coordinate[] coordinates) {
+    static String convertToString(@NotNull Coordinate[] coordinates) {
         StringBuilder result = new StringBuilder();
         for (Coordinate coordinate : coordinates) {
             result
@@ -34,7 +37,7 @@ public class GmlUtil {
     }
 
     // Исправляем конвертацию BigDecimal -> "0E-8"
-    public static String getString(Object value) {
+    static String getString(Object value) {
         if (value instanceof BigDecimal) {
             return ((BigDecimal) value).toPlainString();
         }
@@ -43,12 +46,7 @@ public class GmlUtil {
     }
 
     @NotNull
-    private static String trimCoordinate(double d) {
-        return new DecimalFormat("#0.00").format(d).replace(",", ".");
-    }
-
-    @NotNull
-    public static String getDefaultValue(SimplePropertyDto property) {
+    static String getDefaultValue(SimplePropertyDto property) {
         if (property.getValueType() == ValueType.INT || property.getValueType() == ValueType.CHOICE) {
             return "0";
         }
@@ -58,6 +56,11 @@ public class GmlUtil {
         }
 
         return "";
+    }
+
+    @NotNull
+    private static String trimCoordinate(double d) {
+        return new DecimalFormat("#0.00").format(d).replace(",", ".");
     }
 
 }
