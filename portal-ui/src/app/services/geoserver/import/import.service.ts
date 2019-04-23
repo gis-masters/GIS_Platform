@@ -34,13 +34,11 @@ export class ImportService {
    * Инициируем импорт во временное хранилище.
    */
   initScratchImport(): Observable<InputStartResponseDto | any> {
-    const orgId = this.localStorageService.getByKey(StorageKeys.orgId);
+    const orgId = this.localStorageService.getOrganizationId();
     const scratchWorkspace = 'scratch_database_' + orgId;
 
     const workspace = scratchWorkspace;
     const storage = scratchWorkspace + '_store';
-
-    this.logger.info('Init import to: ', workspace, storage);
 
     const payload = {
       import: {

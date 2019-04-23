@@ -1,14 +1,15 @@
+import {map} from 'rxjs/operators';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
+import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {TaskImport} from './import/taskImport';
 import {WorkImport} from './import/workImport';
 import {NameHrefProjection} from './projections';
-import {forkJoin, Observable} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {ServerPropertiesService} from '../server-properties.service';
 import {ProjectModel} from './import/projectModel';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {LocalStorageService} from '../local-storage.service';
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class WorkspacesService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
+              private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
   }
@@ -52,8 +54,9 @@ export class WorkspacesService {
    * @param table Название таблицы
    */
   publishLayer(projectModel: ProjectModel, table: string): Observable<any> {
+    const orgId = this.storageService.getOrganizationId();
     const workspaceName = projectModel.crgProject.geoserverName;
-    const storeName = 'database_' + projectModel.crgProject.id + '_store';
+    const storeName = 'database_' + orgId + '_store';
 
     return this.http.post(
       this.geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + storeName + '/featuretypes',

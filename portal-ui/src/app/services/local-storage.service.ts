@@ -31,4 +31,13 @@ export class LocalStorageService {
   clearProject(): void {
     this.clearByKey(StorageKeys.projectKey);
   }
+
+  getOrganizationId(): void {
+    const orgId = this.getByKey(StorageKeys.orgId);
+    if (!!orgId) {
+      return orgId;
+    } else {
+      throw Error('Не удалось получить id организации');
+    }
+  }
 }
