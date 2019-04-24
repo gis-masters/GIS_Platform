@@ -5,27 +5,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportMqRequest;
-import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
+import ru.mycrg.gis.service.BaseProcessService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ImportService {
+public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final MqSender mqSender;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
-
-    private List<ImportProcess> importProcesses = new ArrayList<>();
 
     public ImportService(MqSender mqSender,
                          UserRepository userRepository,
@@ -48,7 +46,7 @@ public class ImportService {
                 .orElseThrow(() -> new EntityNotFoundException("Not found user organization"));
 
         ImportProcess process = new ImportProcess(workImport);
-        importProcesses.add(process);
+        processes.add(process);
 
         workImport.getImportTasks().forEach(importTask -> {
             ImportMqRequest importMqRequest = new ImportMqRequest(
@@ -69,26 +67,6 @@ public class ImportService {
         });
 
         return process.getFutureResponse();
-    }
-
-    public void progress(ImportMqResponse response) {
-        if (response.getId() == null) {
-            log.warn("Return invalid response");
-        }
-
-        Optional<ImportProcess> processById = getProcessById(response.getId());
-        if (processById.isPresent()) {
-            ImportProcess process = processById.get();
-            process.addResponse(response);
-        } else {
-            log.warn("Not found import process by id: {}", response.getId());
-        }
-    }
-
-    private Optional<ImportProcess> getProcessById(UUID id) {
-        return importProcesses.stream()
-                .filter(importProcess -> importProcess.getId().equals(id))
-                .findFirst();
     }
 
 }

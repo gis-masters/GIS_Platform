@@ -44,8 +44,8 @@ public class ValidationProcessTest {
         CompletableFuture<List<ValidationResponseDto>> futureResponse = process.getFutureResponse();
 
         // Act
-        process.handleResponse(response1);
-        process.handleResponse(response2);
+        process.handleMqResponse(response1);
+        process.handleMqResponse(response2);
 
         // Assert
         // Проверяем что при данных запросах и ответах обработчика, корректно сформируется конечный ответ на UI

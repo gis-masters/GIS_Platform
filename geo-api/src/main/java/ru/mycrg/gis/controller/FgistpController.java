@@ -22,7 +22,7 @@ import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.gml.GmlGenerationService;
-import ru.mycrg.gis.service.validation.IValidationService;
+import ru.mycrg.gis.service.validation.ValidationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -36,13 +36,13 @@ public class FgistpController {
     private static Logger log = LoggerFactory.getLogger(FgistpController.class);
 
     private final FgistpRuleService fgistpRuleService;
-    private final IValidationService validationService;
+    private final ValidationService validationService;
     private final GmlGenerationService gmlGenerationService;
     private final GmlStorageService gmlStorageService;
 
     @Autowired
     public FgistpController(FgistpRuleService fgistpRuleService,
-                            IValidationService validationService,
+                            ValidationService validationService,
                             GmlStorageService gmlStorageService,
                             GmlGenerationService gmlGenerationService) {
         this.fgistpRuleService = fgistpRuleService;

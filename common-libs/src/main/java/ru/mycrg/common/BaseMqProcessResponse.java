@@ -7,7 +7,7 @@ import java.util.UUID;
 public class BaseMqProcessResponse {
 
     private UUID id;
-    private int progress;
+    private int progress = -1;
     private ProcessStatus status;
 
     public BaseMqProcessResponse() {}

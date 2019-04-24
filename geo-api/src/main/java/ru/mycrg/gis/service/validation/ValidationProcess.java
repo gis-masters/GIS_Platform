@@ -2,54 +2,37 @@ package ru.mycrg.gis.service.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
+import ru.mycrg.gis.service.CrgProcess;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-/**
- * Сущность которая содержит запросы и процессит ответы.
- */
-public class ValidationProcess {
+public class ValidationProcess extends CrgProcess {
 
-    private static Logger log = LoggerFactory.getLogger(ValidationServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
-    private UUID id;
     private String userName;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private ProcessStatus status;
     private Set<ValidationRequestDto> requests = new HashSet<>();
     private Map<String, List<ValidationMqResponse>> mqResponses = new HashMap<>();
-    private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
     private int completeResponseCounter = 0;
     private RequestType requestType;
+    private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
 
     public ValidationProcess() {
-        this.id = UUID.randomUUID();
-        this.status = ProcessStatus.PENDING;
-        this.startTime = LocalDateTime.now();
+        super();
     }
 
-    public void addRequest(List<ValidationRequestDto> request) {
-        request.stream()
-                .distinct()
-                .forEach((ValidationRequestDto requestDto) -> {
-                    requests.add(requestDto);
-                });
-    }
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        ValidationMqResponse response = (ValidationMqResponse) mqResponse;
 
-    /**
-     * Добавление и обработка ответа.
-     * @param response {@link ValidationMqResponse}
-     */
-    public void handleResponse(ValidationMqResponse response) {
         if (mqResponses.containsKey(response.getResourceId())) {
             List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
             responses.add(response);
@@ -61,21 +44,29 @@ public class ValidationProcess {
         }
 
         if (response.isDone() || response.isEmpty() || response.isError()) {
-            status = response.getStatus();
+            setStatus(response.getStatus());
 
             completeResponseCounter++;
             if (completeResponseCounter == requests.size()) {
-                log.info("Last completed. The process {} is successfully completed", id);
+                log.info("Last completed. The process {} is successfully completed", getId());
 
                 futureResponse.complete(prepareResponse());
             } else {
-                log.info("One more part of process {} DONE", id);
+                log.info("One more part of process {} DONE", getId());
             }
         } else if (response.isPending()) {
-            log.info("Process {} is PENDING yet", id);
+            log.info("Process {} is PENDING yet", getId());
         } else {
             log.warn("Unsupported response status: {}", response.getStatus());
         }
+    }
+
+    public void addRequest(List<ValidationRequestDto> request) {
+        request.stream()
+                .distinct()
+                .forEach((ValidationRequestDto requestDto) -> {
+                    requests.add(requestDto);
+                });
     }
 
     private List<ValidationResponseDto> prepareResponse() {
@@ -104,32 +95,8 @@ public class ValidationProcess {
                 .findFirst();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public Set<ValidationRequestDto> getRequests() {
         return requests;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public ProcessStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProcessStatus status) {
-        this.status = status;
     }
 
     public String getUserName() {
@@ -155,4 +122,5 @@ public class ValidationProcess {
     public void setRequestType(RequestType requestType) {
         this.requestType = requestType;
     }
+
 }

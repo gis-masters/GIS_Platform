@@ -3,12 +3,16 @@ package ru.mycrg.gis.service.gml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.GmlMqRequest;
 import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.queue.MqSender;
+import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.CrgProcess;
+import ru.mycrg.gis.service.Processable;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
@@ -23,11 +27,9 @@ import java.util.concurrent.CompletableFuture;
 import static ru.mycrg.gis.enums.ProcessType.EXPORT;
 
 @Service
-public class GmlGenerationService {
+public class GmlGenerationService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(GmlGenerationService.class);
-
-    private List<GmlProcess> gmlProcesses = new ArrayList<>();
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
@@ -43,7 +45,7 @@ public class GmlGenerationService {
 
     public CompletableFuture<GmlMqResponse> initProcess(GmlRequestDto request) {
         GmlProcess process = new GmlProcess(request);
-        gmlProcesses.add(process);
+        processes.add(process);
 
         GmlMqRequest mqRequest = new GmlMqRequest(process.getId());
         mqRequest.setDocSchema(request.getDocSchema());
@@ -60,26 +62,21 @@ public class GmlGenerationService {
         return process.getFutureResponse();
     }
 
-    public void progress(GmlMqResponse response) {
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse response) {
         if (response.getId() == null) {
             log.warn("Return invalid response");
         }
 
-        Optional<GmlProcess> processById = getProcessById(response.getId());
+        Optional<CrgProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
-            GmlProcess gmlProcess = processById.get();
+            GmlProcess gmlProcess = (GmlProcess) processById.get();
             wsNotificationService.send(new WsMessageDto<>(EXPORT, response), gmlProcess.getRequest().getId());
 
-            gmlProcess.addResponse(response);
+            gmlProcess.handleMqResponse(response);
         } else {
             log.warn("Not found gml process by id: {}", response.getId());
         }
-    }
-
-    private Optional<GmlProcess> getProcessById(UUID id) {
-        return gmlProcesses.stream()
-                .filter(importProcess -> importProcess.getId().equals(id))
-                .findFirst();
     }
 
 }
