@@ -21,8 +21,6 @@ services:
       POSTGRES_PASSWORD: $DB_PASS
     ports:
       - "5432:5432"
-    volumes:
-      - /opt/data/postgres:/var/lib/postgresql/data
 
 
   postgis:
@@ -31,8 +29,6 @@ services:
     restart: always
     ports:
       - "5434:5432"
-    volumes:
-      - /opt/data/postgis:/var/lib/postgresql
     environment:
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
@@ -46,7 +42,6 @@ services:
     volumes:
       - ~/dev/docker-scripts/setenv.sh:/usr/local/tomcat/bin/setenv.sh
       - ~/dev/work-yalta:/opt/yalta
-      - /opt/data/geoserver:/opt/geoserver/data_dir
 
 
 
