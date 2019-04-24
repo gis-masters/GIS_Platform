@@ -12,13 +12,14 @@ import {FgistpRulesService} from '../gis/fgistp-rules.service';
 import {filter, flatMap, map, refCount} from 'rxjs/operators';
 import {publishReplay} from 'rxjs/internal/operators/publishReplay';
 import {ServerPropertiesService} from '../server-properties.service';
-import {tap} from "rxjs/internal/operators/tap";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService {
 
+  // TODO: Случалось что при смене пользователя(приложение не перезагружалось) в layers оставалась старая инфа
+  // и информация в connectionInfo не соответствовала дейстительности
   private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>([]);
   public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
     .pipe(

@@ -55,7 +55,8 @@ public class ValidationServiceImpl implements IValidationService {
         processes.add(process);
 
         process.getRequests().forEach(requestDto -> {
-            log.debug("Start process: {} Request type: {}", process.getId(), process.getRequestType());
+            log.debug("Start process: {} / For resource: {} / Request type: {}",
+                    process.getId(), requestDto.getResourceId(), process.getRequestType());
 
             mqSender.sendValidationRequest(
                     prepareMqRequest(page, size, process.getRequestType(), process.getId(), requestDto));
