@@ -9,6 +9,8 @@ public class ImportMqResponse extends BaseMqProcessResponse {
 
     private String layerName;
 
+    public ImportMqResponse() {}
+
     public ImportMqResponse(UUID id, String tableName, ProcessStatus status) {
         super(id, status);
 

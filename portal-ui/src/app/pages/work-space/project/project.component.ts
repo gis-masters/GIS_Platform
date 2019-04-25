@@ -74,8 +74,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
             this.projectsService.fetchProjects();
           },
           errors => {
-            if (errors.error.toString().includes('already exists')) {
-              this.errorMsg = 'Проект с таким названием уже существует';
+            if (errors.error.status === 409) {
+              this.errorMsg = errors.error.message;
             } else {
               this.errorMsg = 'Ошибка при создании проекта';
             }

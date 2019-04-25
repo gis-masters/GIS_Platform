@@ -34,7 +34,43 @@ public class ValidationService extends BaseProcessService {
         this.ruleService = ruleService;
     }
 
-    public CompletableFuture<List<ValidationResponseDto>> initProcess(String userName,
+    /**
+     * Запустить процесс валидации.
+     *
+     * @param name Имя пользователя
+     * @param request Список ресурсов {@link ValidationRequestDto}
+     */
+    public CompletableFuture<List<ValidationResponseDto>> validate(String name,
+                                                                   List<ValidationRequestDto> request) {
+        return initProcess(name, request, 0, 25, RequestType.INIT);
+    }
+
+    /**
+     * Получить общую информацию о валидации слоя.
+     *
+     * @param name Имя пользователя
+     * @param request Список ресурсов {@link ValidationRequestDto}
+     */
+    public CompletableFuture<List<ValidationResponseDto>> getInfo(String name,
+                                                                   List<ValidationRequestDto> request) {
+        return initProcess(name, request, 0, 25, RequestType.INFO);
+    }
+
+    /**
+     * Выборка непосредственно ошибок валидации.
+     *
+     * @param name Имя пользователя
+     * @param request Список ресурсов {@link ValidationRequestDto}
+     * @param nPage Номер страницы
+     * @param nSize Размер страницы
+     */
+    public CompletableFuture<List<ValidationResponseDto>> getResult(String name,
+                                                                    List<ValidationRequestDto> request,
+                                                                    int nPage, int nSize) {
+        return initProcess(name, request, nPage, nSize, RequestType.GET);
+    }
+
+    private CompletableFuture<List<ValidationResponseDto>> initProcess(String userName,
                                                                       List<ValidationRequestDto> request,
                                                                       int page, int size,
                                                                       RequestType type) {
@@ -71,5 +107,4 @@ public class ValidationService extends BaseProcessService {
                 requestDto.getSchemaName(),
                 MapperUtil.mapEntityTypeToDto(entityType));
     }
-
 }

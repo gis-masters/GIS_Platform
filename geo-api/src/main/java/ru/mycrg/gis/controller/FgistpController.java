@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.GmlMqResponse;
-import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
@@ -84,7 +83,7 @@ public class FgistpController {
 
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INIT);
+        return validationService.validate(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation/info")
@@ -93,7 +92,7 @@ public class FgistpController {
             Principal principal) {
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INFO);
+        return validationService.getInfo(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation")
@@ -115,7 +114,7 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequestType.GET);
+        return validationService.getResult(principal.getName(), request, nPage, nSize);
     }
 
     @ResponseBody
