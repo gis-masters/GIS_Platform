@@ -4,9 +4,8 @@ import ru.mycrg.common.enums.RequestType;
 
 import java.util.UUID;
 
-public class ValidationMqRequest {
+public class ValidationMqRequest extends BaseMqRequest {
 
-    private UUID id;
     private String dbName;
     private String schemaName;
     private String tableName;
@@ -19,7 +18,8 @@ public class ValidationMqRequest {
 
     public ValidationMqRequest(UUID id, RequestType type, int page, int size,
                                String dbName, String schemaName, EntityTypeDto entityType) {
-        this.id = id;
+        super(id);
+
         this.type = type;
         this.page = page;
         this.size = size;
@@ -52,14 +52,6 @@ public class ValidationMqRequest {
 
     public void setEntityType(EntityTypeDto entityType) {
         this.entityType = entityType;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public int getPage() {

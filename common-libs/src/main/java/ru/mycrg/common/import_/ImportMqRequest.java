@@ -1,35 +1,26 @@
 package ru.mycrg.common.import_;
 
+import ru.mycrg.common.BaseMqRequest;
 import ru.mycrg.common.ResourceProjection;
 
 import java.util.List;
 import java.util.UUID;
 
-public class ImportMqRequest {
+public class ImportMqRequest extends BaseMqRequest {
 
-    private UUID id;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
     private List<GeoMapping> mapping;
-
-    public ImportMqRequest() {}
 
     public ImportMqRequest(UUID id,
                            ResourceProjection sourceResource,
                            ResourceProjection targetResource,
                            List<GeoMapping> mapping) {
-        this.id = id;
+        super(id);
+
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;
         this.mapping = mapping;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public ResourceProjection getSourceResource() {

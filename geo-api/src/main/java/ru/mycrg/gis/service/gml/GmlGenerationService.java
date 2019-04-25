@@ -12,16 +12,12 @@ import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.CrgProcess;
-import ru.mycrg.gis.service.Processable;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static ru.mycrg.gis.enums.ProcessType.EXPORT;

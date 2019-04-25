@@ -4,7 +4,7 @@ import ru.mycrg.common.enums.EventType;
 
 import java.io.Serializable;
 
-public class OrgMqRequest implements Serializable {
+public class OrgMqRequest extends BaseMqRequest implements Serializable {
 
     private Long orgId;
     private String rawPassword;
