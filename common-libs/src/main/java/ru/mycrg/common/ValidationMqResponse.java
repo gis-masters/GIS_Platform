@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ValidationMqResponse extends BaseMqProcessResponse {
 
-    private String resourceId;
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
@@ -19,14 +18,10 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public ValidationMqResponse(ValidationMqRequest request) {
         this.setId(request.getId());
-
-        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }
 
     public ValidationMqResponse(ValidationMqRequest request, ProcessStatus status) {
         super(request.getId(), status);
-
-        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }
 
     public List<ObjectValidationResult> getResults() {
@@ -69,11 +64,4 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
         this.requestType = requestType;
     }
 
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }
 }

@@ -1,10 +1,10 @@
 package ru.mycrg.gis.service.validation;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
@@ -16,7 +16,6 @@ import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -37,7 +36,7 @@ public class ValidationService extends BaseProcessService {
     /**
      * Запустить процесс валидации.
      *
-     * @param name Имя пользователя
+     * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
     public CompletableFuture<List<ValidationResponseDto>> validate(String name,
@@ -48,21 +47,21 @@ public class ValidationService extends BaseProcessService {
     /**
      * Получить общую информацию о валидации слоя.
      *
-     * @param name Имя пользователя
+     * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
     public CompletableFuture<List<ValidationResponseDto>> getInfo(String name,
-                                                                   List<ValidationRequestDto> request) {
+                                                                  List<ValidationRequestDto> request) {
         return initProcess(name, request, 0, 25, RequestType.INFO);
     }
 
     /**
      * Выборка непосредственно ошибок валидации.
      *
-     * @param name Имя пользователя
+     * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
-     * @param nPage Номер страницы
-     * @param nSize Размер страницы
+     * @param nPage   Номер страницы
+     * @param nSize   Размер страницы
      */
     public CompletableFuture<List<ValidationResponseDto>> getResult(String name,
                                                                     List<ValidationRequestDto> request,
@@ -71,9 +70,9 @@ public class ValidationService extends BaseProcessService {
     }
 
     private CompletableFuture<List<ValidationResponseDto>> initProcess(String userName,
-                                                                      List<ValidationRequestDto> request,
-                                                                      int page, int size,
-                                                                      RequestType type) {
+                                                                       List<ValidationRequestDto> request,
+                                                                       int page, int size,
+                                                                       RequestType type) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -86,25 +85,17 @@ public class ValidationService extends BaseProcessService {
         processes.add(process);
 
         process.getRequests().forEach(requestDto -> {
-            log.debug("Start process: {} / For resource: {} / Request type: {}",
-                    process.getId(), requestDto.getResourceId(), process.getRequestType());
+            ValidationMqRequest mqRequest = new ValidationMqRequest(process.getId(), type, page, size);
 
-            mqSender.sendValidationRequest(
-                    prepareMqRequest(page, size, process.getRequestType(), process.getId(), requestDto));
+            EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
+            mqRequest.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
+            mqRequest.addResourceProjections(new ResourceProjection(requestDto.getDbName(),
+                    requestDto.getSchemaName(), requestDto.getTableName()));
+
+            mqSender.sendValidationRequest(mqRequest);
         });
 
         return process.getFutureResponse();
     }
 
-    @NotNull
-    private ValidationMqRequest prepareMqRequest(int page, int size, RequestType type,
-                                                 UUID processId, ValidationRequestDto requestDto) {
-        EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
-
-        return new ValidationMqRequest(
-                processId, type, page, size,
-                requestDto.getDbName(),
-                requestDto.getSchemaName(),
-                MapperUtil.mapEntityTypeToDto(entityType));
-    }
 }

@@ -11,9 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.*;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqRequest;
@@ -60,10 +58,10 @@ public class BaseDaoService {
 
     @Transactional
     public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(JdbcTemplate jdbcTemplate,
-                                                                        ValidationMqRequest validationMqRequest,
+                                                                        ResourceProjection resource,
                                                                         int limit, int offset) {
-        String schema = validationMqRequest.getSchemaName();
-        String table = validationMqRequest.getEntityType().getTableName();
+        String schema = resource.getSchemaName();
+        String table = resource.getTableName();
         String extensionTableName = table + "_extension";
 
         String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
@@ -78,10 +76,10 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public void saveValidationResults(JdbcTemplate jdbcTemplate, ValidationMqRequest mqRequest,
+    public void saveValidationResults(JdbcTemplate jdbcTemplate, ResourceProjection resource,
                                       List<ObjectValidationResult> violations) throws NumberFormatException {
-        String schema = mqRequest.getSchemaName();
-        String extensionTableName = mqRequest.getTableName() + "_extension";
+        String schema = resource.getSchemaName();
+        String extensionTableName = resource.getTableName() + "_extension";
 
         log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
@@ -108,23 +106,21 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public List<Map<String, Object>> getViolations(ValidationMqRequest validationMqRequest) {
-        String schemaName = validationMqRequest.getSchemaName();
-        String extensionTableName = validationMqRequest.getTableName() + "_extension";
-        int limit = validationMqRequest.getSize();
-        int offset = validationMqRequest.getPage();
+    public List<Map<String, Object>> getViolations(ResourceProjection resource, int limit, int offset) {
+        String schemaName = resource.getSchemaName();
+        String extensionTableName = resource.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
                 schemaName, extensionTableName);
 
-        return datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForList(sqlRequest, limit,
+        return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForList(sqlRequest, limit,
                 limit * offset);
     }
 
     @Transactional
-    public Long countTotalViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
-        String schemaName = validationMqRequest.getSchemaName();
-        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+    public Long countTotalViolations(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
+        String schemaName = resource.getSchemaName();
+        String extensionTableName = resource.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
                 schemaName, extensionTableName);
@@ -140,9 +136,9 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public boolean isValidated(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
-        String schemaName = validationMqRequest.getSchemaName();
-        String extensionTableName = validationMqRequest.getTableName() + "_extension";
+    public boolean isValidated(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
+        String schemaName = resource.getSchemaName();
+        String extensionTableName = resource.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
 
@@ -158,10 +154,11 @@ public class BaseDaoService {
      * Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт,
      * TODO: под каждую организацию своя помойка
      * в схему которая определена как рабочая, но все это в пределах одной БД. <p>
-     *  - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
-     *  - Перенос из исходной таблицы в рабочую
+     * - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
+     * - Перенос из исходной таблицы в рабочую
+     *
      * @param jdbcTemplate Коннекшн к БД
-     * @param request Даные для импорта
+     * @param request      Даные для импорта
      */
     @Transactional
     public void doImport(JdbcTemplate jdbcTemplate, ImportMqRequest request) {
@@ -185,7 +182,7 @@ public class BaseDaoService {
      * Подразумевает очистку таблиц впаре с таблицей "_extension"
      *
      * @param jdbcTemplate Коннекшн к БД
-     * @param targets Описание ресурсов к которым нужно применить очистку
+     * @param targets      Описание ресурсов к которым нужно применить очистку
      */
     @Transactional
     public void truncate(JdbcTemplate jdbcTemplate, List<ResourceProjection> targets) {
@@ -220,9 +217,9 @@ public class BaseDaoService {
      * Геометрия в бинарном формате "crg_b_geometry"
      *
      * @param jdbcTemplate Коннекш к БД
-     * @param target Данные ресурса из которого производится выборка
-     * @param limit Размер партии
-     * @param offset Смещение
+     * @param target       Данные ресурса из которого производится выборка
+     * @param limit        Размер партии
+     * @param offset       Смещение
      */
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
@@ -247,12 +244,13 @@ public class BaseDaoService {
 
     /**
      * Инициализация шаблонной структуры 10 приказа. <p>
-     *
+     * <p>
      * В указанной БД создается указанная схема, если схема существует и наполнена таблицами ничего сделано не будет.
-     *
+     * <p>
      * Шаблон разворачивается следубщим образом, есть sql скрипты сгенереные из БД, но в них указана дефолтная схема
      * "fiz", которая переименовывается в нужное название уже после.
-     * @param dbName Имя БД
+     *
+     * @param dbName     Имя БД
      * @param schemaName Имя схемы
      */
     public void initP10Template(String dbName, String schemaName) throws SQLException {

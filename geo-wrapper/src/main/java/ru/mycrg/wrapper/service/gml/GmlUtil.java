@@ -11,14 +11,21 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
-class GmlUtil {
+public class GmlUtil {
 
-    static EntityTypeDto getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName)
+    public static EntityTypeDto getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName)
             throws RuleNotFoundException {
         return entityTypes.stream()
                 .filter(entityType -> entityType.getTableName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new RuleNotFoundException(tableName));
+    }
+
+    public static int calculatePercent(long processedRows, long totalRows) {
+        int result = Math.round(((float) processedRows / (float) totalRows) * 100);
+
+        // 2% на остальные действия после основной выборки.
+        return result > 98 ? 98 : result;
     }
 
     @NotNull
@@ -34,8 +41,8 @@ class GmlUtil {
 
         return result.toString().trim();
     }
-
     // Исправляем конвертацию BigDecimal -> "0E-8"
+
     static String getString(Object value) {
         if (value instanceof BigDecimal) {
             return ((BigDecimal) value).toPlainString();
@@ -55,13 +62,6 @@ class GmlUtil {
         }
 
         return "";
-    }
-
-    static int calculatePercent(long done, long total) {
-        int result = Math.round(((float) done / (float) total) * 100);
-
-        // 2% на остальные действия после основной выборки.
-        return result > 98 ? 98 : result;
     }
 
     @NotNull

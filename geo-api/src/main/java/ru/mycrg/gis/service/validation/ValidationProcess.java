@@ -20,8 +20,7 @@ public class ValidationProcess extends CrgProcess {
 
     private String userName;
     private Set<ValidationRequestDto> requests = new HashSet<>();
-    private Map<String, List<ValidationMqResponse>> mqResponses = new HashMap<>();
-    private int completeResponseCounter = 0;
+    private List<ValidationMqResponse> mqResponses = new ArrayList<>();
     private RequestType requestType;
     private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
 
@@ -33,32 +32,33 @@ public class ValidationProcess extends CrgProcess {
     public void handleMqResponse(BaseMqProcessResponse mqResponse) {
         ValidationMqResponse response = (ValidationMqResponse) mqResponse;
 
-        if (mqResponses.containsKey(response.getResourceId())) {
-            List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
-            responses.add(response);
-        } else {
-            List<ValidationMqResponse> responses = new ArrayList<>();
-            responses.add(response);
 
-            mqResponses.put(response.getResourceId(), responses);
-        }
-
-        if (response.isDone() || response.isEmpty() || response.isError()) {
-            setStatus(response.getStatus());
-
-            completeResponseCounter++;
-            if (completeResponseCounter == requests.size()) {
-                log.info("Last completed. The process {} is successfully completed", getId());
-
-                futureResponse.complete(prepareResponse());
-            } else {
-                log.info("One more part of process {} DONE", getId());
-            }
-        } else if (response.isPending()) {
-            log.info("Process {} is PENDING yet", getId());
-        } else {
-            log.warn("Unsupported response status: {}", response.getStatus());
-        }
+//        if (mqResponses.containsKey(response.getResourceId())) {
+//            List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
+//            responses.add(response);
+//        } else {
+//            List<ValidationMqResponse> responses = new ArrayList<>();
+//            responses.add(response);
+//
+//            mqResponses.put(response.getResourceId(), responses);
+//        }
+//
+//        if (response.isDone() || response.isEmpty() || response.isError()) {
+//            setStatus(response.getStatus());
+//
+//            completeResponseCounter++;
+//            if (completeResponseCounter == requests.size()) {
+//                log.info("Last completed. The process {} is successfully completed", getId());
+//
+//                futureResponse.complete(prepareResponse());
+//            } else {
+//                log.info("One more part of process {} DONE", getId());
+//            }
+//        } else if (response.isPending()) {
+//            log.info("Process {} is PENDING yet", getId());
+//        } else {
+//            log.warn("Unsupported response status: {}", response.getStatus());
+//        }
     }
 
     public void addRequest(List<ValidationRequestDto> request) {
@@ -69,31 +69,31 @@ public class ValidationProcess extends CrgProcess {
                 });
     }
 
-    private List<ValidationResponseDto> prepareResponse() {
-        return requests
-                .stream()
-                .map(ValidationRequestDto::getResourceId)
-                .map(resourceId -> {
-                    try {
-                        return getFinishResponse(resourceId)
-                                .map(ValidationResponseDto::new)
-                                .orElseGet(() -> new ValidationResponseDto(ProcessStatus.ERROR));
-                    } catch (NullPointerException e) {
-                        return new ValidationResponseDto(ProcessStatus.ERROR);
-                    }
-                })
-                .collect(Collectors.toList());
-    }
+//    private List<ValidationResponseDto> prepareResponse() {
+//        return requests
+//                .stream()
+//                .map(ValidationRequestDto::getResourceId)
+//                .map(resourceId -> {
+//                    try {
+//                        return getFinishResponse(resourceId)
+//                                .map(ValidationResponseDto::new)
+//                                .orElseGet(() -> new ValidationResponseDto(ProcessStatus.ERROR));
+//                    } catch (NullPointerException e) {
+//                        return new ValidationResponseDto(ProcessStatus.ERROR);
+//                    }
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     /**
      * Для заданного ресурса, среди всех ответов обработчика, найти завершающий.
      * DONE, ERROR or EMPTY
      */
-    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) throws NullPointerException {
-        return mqResponses.get(resourceId).stream()
-                .filter(response -> !response.isPending())
-                .findFirst();
-    }
+//    private Optional<ValidationMqResponse> getFinishResponse(String resourceId) throws NullPointerException {
+//        return mqResponses.get(resourceId).stream()
+//                .filter(response -> !response.isPending())
+//                .findFirst();
+//    }
 
     public Set<ValidationRequestDto> getRequests() {
         return requests;
@@ -109,10 +109,6 @@ public class ValidationProcess extends CrgProcess {
 
     public CompletableFuture<List<ValidationResponseDto>> getFutureResponse() {
         return futureResponse;
-    }
-
-    public Map<String, List<ValidationMqResponse>> getMqResponses() {
-        return mqResponses;
     }
 
     public RequestType getRequestType() {

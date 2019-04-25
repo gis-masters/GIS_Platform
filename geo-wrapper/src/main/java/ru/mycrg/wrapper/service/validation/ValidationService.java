@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -18,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+import static ru.mycrg.wrapper.service.gml.GmlUtil.calculatePercent;
+import static ru.mycrg.wrapper.service.gml.GmlUtil.getRuleByTableName;
 
 @Service
 @Transactional
@@ -29,6 +30,9 @@ public class ValidationService {
     private final IValidator validator;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
+
+    private int totalRows = 0;
+    private int processedRows = 0;
 
     private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
     private long totalViolations;
@@ -57,39 +61,53 @@ public class ValidationService {
     public void startValidation(ValidationMqRequest mqRequest) {
         log.debug("Start validation");
 
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+        ValidationMqResponse response = new ValidationMqResponse();
 
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
+        totalRows = (int) calculateTotalRows(mqRequest.getResourceProjections());
 
-        mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Инициализация...", 1));
+        mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Инициализация...", 0));
+
+        mqRequest
+                .getResourceProjections()
+                .forEach(resource -> {
+                    EntityTypeDto featureByName = getRuleByTableName(mqRequest.getFeatures(), resource.getTableName());
+
+                    validateResource(mqRequest.getId(), resource, featureByName, processedRows);
+                });
+    }
+
+    private void validateResource(UUID id, ResourceProjection resource, EntityTypeDto feature, int processedRows) {
+        log.debug("Validate resource: {}", resource.getResourceId());
+
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
         // определим как будем подсчитывать общее кол-во ошибок в слое.
-        if (baseDaoService.isValidated(jdbcTemplate, mqRequest)) {
-            totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
+        if (baseDaoService.isValidated(jdbcTemplate, resource)) {
+            totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, resource);
             isNotValidatedYet = false;
         } else {
             totalViolations = 0;
             isNotValidatedYet = true;
         }
 
-        lastCalculatedValidation.put(response.getResourceId(), LocalDateTime.now());
-        response.setValidated(true);
-        response.setLastValidated(LocalDateTime.now().toString());
+        lastCalculatedValidation.put(resource.getResourceId(), LocalDateTime.now());
 
         Queue<List<ObjectValidationResult>> violationsQueue = new ArrayDeque<>();
         int offset = 0;
         while (true) {
-            response.setResults(new ArrayList<>());
-
             List<Map<String, Object>> batch = baseDaoService.fetchBatchOfRowsNeededToValidation(jdbcTemplate,
-                    mqRequest, DaoProperties.batchSize, offset);
+                    resource, DaoProperties.batchSize, offset);
             if (batch.isEmpty()) {
                 break;
             }
 
-            mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Выборка...", 1));
-            violationsQueue.offer(validateBatch(batch, mqRequest.getEntityType()));
+            mqEvents.validationResponse(new BaseMqProcessResponse(id, PENDING,
+                    "Обработка: " + feature.getOriginName(),
+                    calculatePercent(processedRows, totalRows)));
 
+            violationsQueue.offer(validateBatch(batch, feature));
+
+            processedRows += batch.size();
             offset++;
         }
 
@@ -107,14 +125,12 @@ public class ValidationService {
         while (true) {
             List<ObjectValidationResult> nextViolations = violationsQueue.poll();
             if (nextViolations != null) {
-                sendPendingResponse(mqRequest, nextViolations);
+                mqEvents.validationResponse(new BaseMqProcessResponse(id, PENDING,
+                        "Сохранение: " + feature.getOriginName(),
+                        calculatePercent(processedRows, totalRows)));
 
-                baseDaoService.saveValidationResults(jdbcTemplate, mqRequest, nextViolations);
+                baseDaoService.saveValidationResults(jdbcTemplate, resource, nextViolations);
             } else {
-                response.setTotal(totalViolations);
-                response.setStatus(ProcessStatus.DONE);
-
-                mqEvents.validationResponse(response);
                 break;
             }
         }
@@ -129,25 +145,25 @@ public class ValidationService {
      * @param mqRequest Запрос
      */
     public ValidationMqResponse getResults(ValidationMqRequest mqRequest) throws IOException {
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+        // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
         ValidationMqResponse response = new ValidationMqResponse(mqRequest);
 
-        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
-        if (totalViolations > 0) {
-            List<Map<String, Object>> violations = baseDaoService.getViolations(mqRequest);
-
-            log.info("Found {} violations", violations.size());
-            response.setResults(Util.mapToViolations(violations));
-            response.setValidated(true);
-        } else {
-            response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-        }
-
-        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-        response.setTotal(totalViolations);
-        response.setStatus(ProcessStatus.DONE);
+//        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
+//        if (totalViolations > 0) {
+//            List<Map<String, Object>> violations = baseDaoService.getViolations(mqRequest);
+//
+//            log.info("Found {} violations", violations.size());
+//            response.setResults(Util.mapToViolations(violations));
+//            response.setValidated(true);
+//        } else {
+//            response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
+//        }
+//
+//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
+//        response.setTotal(totalViolations);
+//        response.setStatus(ProcessStatus.DONE);
 
         return response;
     }
@@ -160,16 +176,16 @@ public class ValidationService {
      * @param mqRequest Запрос
      */
     public ValidationMqResponse getInfo(ValidationMqRequest mqRequest) {
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+//        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
         ValidationMqResponse response = new ValidationMqResponse(mqRequest);
 
-        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
-
-        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-        response.setStatus(ProcessStatus.DONE);
+//        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
+//        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
+//
+//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
+//        response.setStatus(ProcessStatus.DONE);
 
         return response;
     }
@@ -208,12 +224,10 @@ public class ValidationService {
                 .count();
     }
 
-    private void sendPendingResponse(ValidationMqRequest validationMqRequest,
-                                     List<ObjectValidationResult> violationResults) {
-        ValidationMqResponse pendingResponse = new ValidationMqResponse(validationMqRequest);
-        pendingResponse.setStatus(ProcessStatus.PENDING);
-        pendingResponse.setResults(violationResults);
-
-        mqEvents.validationResponse(pendingResponse);
+    private long calculateTotalRows(List<ResourceProjection> resources) {
+        return resources.stream()
+                .mapToLong(baseDaoService::countTotalRows)
+                .sum();
     }
+
 }

@@ -37,13 +37,12 @@ public class BaseDaoServiceTest {
         BaseDaoService baseDaoService = new BaseDaoService(new DatasourceFactory(environment, jdbcTemplate), resourceLoader);
 
         ValidationMqRequest mqRequest = new ValidationMqRequest();
-        mqRequest.setDbName("gis");
-        mqRequest.setSchemaName("fiz");
-        mqRequest.setTableName("electricline");
 
         when(environment.getProperty("spring.datasource.url")).thenReturn("jdbc:postgresql://127.0.0.1:5434/postgres");
 
-        Long aLong = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
+        long aLong = mqRequest.getResourceProjections().stream()
+                .mapToLong(baseDaoService::countTotalRows)
+                .sum();
 
         assertTrue(aLong > 0);
     }

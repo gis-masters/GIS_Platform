@@ -36,7 +36,7 @@ public class GmlGenerator {
     private WKBReader wkb = new WKBReader();
     private long idCounter = 1;
     private long totalRows = 0;
-    private long progress = 0;
+    private long processedRows = 0;
 
     private final IMqEvents mqEvents;
     private final FileService fileService;
@@ -91,7 +91,7 @@ public class GmlGenerator {
         mqEvents.gmlResponse(new GmlMqResponse(request, PENDING, "Инициализация...", 1));
         log.debug("Handle {} sources", request.getResourceProjections().size());
 
-        progress = 0;
+        processedRows = 0;
         totalRows = calculateTotalRows(request);
         request
                 .getResourceProjections()
@@ -147,10 +147,10 @@ public class GmlGenerator {
                     addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
                 });
 
-                progress += batchSize;
+                processedRows += batch.size();
                 mqEvents.gmlResponse(
                         new GmlMqResponse(request, PENDING, "Обработка " + feature.getTitle(),
-                                GmlUtil.calculatePercent(progress, totalRows)));
+                                GmlUtil.calculatePercent(processedRows, totalRows)));
 
                 offset++;
             }

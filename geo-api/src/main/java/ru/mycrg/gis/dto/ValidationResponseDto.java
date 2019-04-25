@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ValidationResponseDto {
 
-    private String resourceId;
     private ProcessStatus status;
     private boolean isValidated;
     private long totalViolations;
@@ -23,20 +22,11 @@ public class ValidationResponseDto {
     }
 
     public ValidationResponseDto(ValidationMqResponse response) {
-        this.resourceId = response.getResourceId();
         this.status = response.getStatus();
         this.isValidated = response.isValidated();
         this.totalViolations = response.getTotal();
         this.lastValidationDateTime = response.getLastValidated();
         this.objects = response.getResults();
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
     }
 
     public ProcessStatus getStatus() {

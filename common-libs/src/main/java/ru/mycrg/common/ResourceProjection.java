@@ -14,6 +14,10 @@ public class ResourceProjection {
         this.tableName = tableName;
     }
 
+    public String getResourceId() {
+        return String.join(".", dbName, schemaName, tableName);
+    }
+
     public String getDbName() {
         return dbName;
     }
@@ -40,6 +44,6 @@ public class ResourceProjection {
 
     @Override
     public String toString() {
-        return String.join(".", dbName, schemaName, tableName);
+        return getResourceId();
     }
 }
