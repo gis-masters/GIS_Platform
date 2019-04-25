@@ -12,6 +12,8 @@ public class ImportMqRequest extends BaseMqRequest {
     private ResourceProjection targetResource;
     private List<GeoMapping> mapping;
 
+    public ImportMqRequest() {}
+
     public ImportMqRequest(UUID id,
                            ResourceProjection sourceResource,
                            ResourceProjection targetResource,
