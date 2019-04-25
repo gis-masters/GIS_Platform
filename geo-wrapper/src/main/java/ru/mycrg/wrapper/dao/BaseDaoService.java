@@ -81,7 +81,7 @@ public class BaseDaoService {
         String schema = resource.getSchemaName();
         String extensionTableName = resource.getTableName() + "_extension";
 
-        log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
+        log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +
@@ -129,10 +129,14 @@ public class BaseDaoService {
     }
 
     public Long countTotalRows(ResourceProjection resource) {
-        String schemaName = resource.getSchemaName();
-        String sqlRequest = String.format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
+        try {
+            String schemaName = resource.getSchemaName();
+            String sqlRequest = String.format("SELECT count(*) FROM %s.%s", schemaName, resource.getTableName());
 
-        return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForObject(sqlRequest, Long.class);
+            return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForObject(sqlRequest, Long.class);
+        } catch (Exception e) {
+            return 0L;
+        }
     }
 
     @Transactional

@@ -39,7 +39,7 @@ public class ValidationService extends BaseProcessService {
      * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<List<ValidationResponseDto>> validate(String name,
+    public CompletableFuture<ValidationResponseDto> validate(String name,
                                                                    List<ValidationRequestDto> request) {
         return initProcess(name, request, 0, 25, RequestType.INIT);
     }
@@ -50,7 +50,7 @@ public class ValidationService extends BaseProcessService {
      * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<List<ValidationResponseDto>> getInfo(String name,
+    public CompletableFuture<ValidationResponseDto> getInfo(String name,
                                                                   List<ValidationRequestDto> request) {
         return initProcess(name, request, 0, 25, RequestType.INFO);
     }
@@ -63,13 +63,13 @@ public class ValidationService extends BaseProcessService {
      * @param nPage   Номер страницы
      * @param nSize   Размер страницы
      */
-    public CompletableFuture<List<ValidationResponseDto>> getResult(String name,
+    public CompletableFuture<ValidationResponseDto> getResult(String name,
                                                                     List<ValidationRequestDto> request,
                                                                     int nPage, int nSize) {
         return initProcess(name, request, nPage, nSize, RequestType.GET);
     }
 
-    private CompletableFuture<List<ValidationResponseDto>> initProcess(String userName,
+    private CompletableFuture<ValidationResponseDto> initProcess(String userName,
                                                                        List<ValidationRequestDto> request,
                                                                        int page, int size,
                                                                        RequestType type) {
@@ -84,16 +84,16 @@ public class ValidationService extends BaseProcessService {
 
         processes.add(process);
 
-        process.getRequests().forEach(requestDto -> {
-            ValidationMqRequest mqRequest = new ValidationMqRequest(process.getId(), type, page, size);
+        ValidationMqRequest mqRequest = new ValidationMqRequest(process.getId(), type, page, size);
 
+        process.getRequests().forEach(requestDto -> {
             EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
             mqRequest.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
             mqRequest.addResourceProjections(new ResourceProjection(requestDto.getDbName(),
                     requestDto.getSchemaName(), requestDto.getTableName()));
-
-            mqSender.sendValidationRequest(mqRequest);
         });
+
+        mqSender.sendValidationRequest(mqRequest);
 
         return process.getFutureResponse();
     }

@@ -10,6 +10,7 @@ import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.service.CrgProcess;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class ValidationProcess extends CrgProcess {
     private Set<ValidationRequestDto> requests = new HashSet<>();
     private List<ValidationMqResponse> mqResponses = new ArrayList<>();
     private RequestType requestType;
-    private CompletableFuture<List<ValidationResponseDto>> futureResponse = new CompletableFuture<>();
+    private CompletableFuture<ValidationResponseDto> futureResponse = new CompletableFuture<>();
 
     public ValidationProcess() {
         super();
@@ -32,6 +33,20 @@ public class ValidationProcess extends CrgProcess {
     public void handleMqResponse(BaseMqProcessResponse mqResponse) {
         ValidationMqResponse response = (ValidationMqResponse) mqResponse;
 
+        log.debug("mqResponse: {}", mqResponse.toString());
+
+        if (!futureResponse.isDone()) {
+            log.debug("complete feature");
+            futureResponse.complete(new ValidationResponseDto(ProcessStatus.DONE));
+        }
+
+        if (response.getStatus() == ProcessStatus.DONE) {
+            setEndTime(LocalDateTime.now());
+
+            log.info("Process id: {} is {}", getId(), response.getStatus());
+        } else {
+            log.debug("Process: {} is: {}", getId(), response.getStatus());
+        }
 
 //        if (mqResponses.containsKey(response.getResourceId())) {
 //            List<ValidationMqResponse> responses = this.mqResponses.get(response.getResourceId());
@@ -107,7 +122,7 @@ public class ValidationProcess extends CrgProcess {
         this.userName = userName;
     }
 
-    public CompletableFuture<List<ValidationResponseDto>> getFutureResponse() {
+    public CompletableFuture<ValidationResponseDto> getFutureResponse() {
         return futureResponse;
     }
 

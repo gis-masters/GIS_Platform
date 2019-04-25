@@ -76,10 +76,10 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public CompletableFuture<List<ValidationResponseDto>> initValidation(
+    public CompletableFuture<ValidationResponseDto> initValidation(
             @RequestBody List<ValidationRequestDto> request,
             Principal principal) {
-        log.debug("Init validation for: {} classes", request.size());
+        log.debug("Init validation for: {} resources", request.size());
 
         validateRequest(request);
 
@@ -87,7 +87,7 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/info")
-    public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(
+    public CompletableFuture<ValidationResponseDto> getCommonInfo(
             @RequestBody List<ValidationRequestDto> request,
             Principal principal) {
         validateRequest(request);
@@ -96,7 +96,7 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation")
-    public CompletableFuture<List<ValidationResponseDto>> getValidationResults(
+    public CompletableFuture<ValidationResponseDto> getValidationResults(
             @RequestBody List<ValidationRequestDto> request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
