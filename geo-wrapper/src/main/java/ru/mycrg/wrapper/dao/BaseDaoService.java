@@ -59,13 +59,12 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(ValidationMqRequest validationMqRequest,
+    public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(JdbcTemplate jdbcTemplate,
+                                                                        ValidationMqRequest validationMqRequest,
                                                                         int limit, int offset) {
         String schema = validationMqRequest.getSchemaName();
         String table = validationMqRequest.getEntityType().getTableName();
         String extensionTableName = table + "_extension";
-
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName());
 
         String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
                 "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
@@ -79,14 +78,13 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public void saveValidationResults(ValidationMqRequest mqRequest,
+    public void saveValidationResults(JdbcTemplate jdbcTemplate, ValidationMqRequest mqRequest,
                                       List<ObjectValidationResult> violations) throws NumberFormatException {
         String schema = mqRequest.getSchemaName();
         String extensionTableName = mqRequest.getTableName() + "_extension";
 
         log.info("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +
                 "ON CONFLICT(object_id) DO UPDATE " +
@@ -124,14 +122,14 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public Long countTotalViolations(ValidationMqRequest validationMqRequest) {
+    public Long countTotalViolations(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
                 schemaName, extensionTableName);
 
-        return datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForObject(sqlRequest, Long.class);
+        return jdbcTemplate.queryForObject(sqlRequest, Long.class);
     }
 
     public Long countTotalRows(ResourceProjection resource) {
@@ -142,14 +140,13 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public boolean isValidated(ValidationMqRequest validationMqRequest) {
+    public boolean isValidated(JdbcTemplate jdbcTemplate, ValidationMqRequest validationMqRequest) {
         String schemaName = validationMqRequest.getSchemaName();
         String extensionTableName = validationMqRequest.getTableName() + "_extension";
 
         String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
 
-        List<Map<String, Object>> result =
-                datasourceFactory.getJdbcTemplate(validationMqRequest.getDbName()).queryForList(sqlRequest);
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sqlRequest);
 
         log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
 

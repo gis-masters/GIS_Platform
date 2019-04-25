@@ -43,7 +43,7 @@ public class BaseDaoServiceTest {
 
         when(environment.getProperty("spring.datasource.url")).thenReturn("jdbc:postgresql://127.0.0.1:5434/postgres");
 
-        Long aLong = baseDaoService.countTotalViolations(mqRequest);
+        Long aLong = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
 
         assertTrue(aLong > 0);
     }

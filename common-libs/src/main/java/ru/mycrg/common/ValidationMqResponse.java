@@ -24,8 +24,7 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
     }
 
     public ValidationMqResponse(ValidationMqRequest request, ProcessStatus status) {
-        this.setId(request.getId());
-        this.setStatus(status);
+        super(request.getId(), status);
 
         this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
     }

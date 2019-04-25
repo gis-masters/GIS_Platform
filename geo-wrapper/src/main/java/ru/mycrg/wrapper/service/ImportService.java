@@ -23,8 +23,6 @@ public class ImportService {
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
-    private Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-
     public ImportService(BaseDaoService baseDaoService,
                          DatasourceFactory datasourceFactory) {
         this.baseDaoService = baseDaoService;
@@ -54,6 +52,8 @@ public class ImportService {
         // GlobalId and encoding
         log.debug("start encoding");
         ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
+
+        Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
         int offset = 0;
         while (true) {
             List<Map<String, Object>> batch =
@@ -89,7 +89,7 @@ public class ImportService {
      * Импорт плагин геосервера кодирует в ISO_8859_1. Поэтому есть необходимость разкодировать обратно
      * Попутно есть желание проставить globalid всем обьектам у которых его нет
      * @param batch Пачка строк из БД
-     * @return В результате обработке верну такую же структуру данных но с колонками которые были затронуты в ходе
+     * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.
      */
     private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch) {

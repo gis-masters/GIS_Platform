@@ -8,6 +8,7 @@ public class BaseMqProcessResponse {
 
     private UUID id;
     private int progress = -1;
+    private String description;
     private ProcessStatus status;
 
     public BaseMqProcessResponse() {}
@@ -15,6 +16,13 @@ public class BaseMqProcessResponse {
     public BaseMqProcessResponse(UUID id, ProcessStatus status) {
         this.id = id;
         this.status = status;
+    }
+
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, String description, int progress) {
+        this.id = id;
+        this.status = status;
+        this.progress = progress;
+        this.description = description;
     }
 
     public boolean isDone() {
@@ -55,5 +63,13 @@ public class BaseMqProcessResponse {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
