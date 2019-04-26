@@ -21,8 +21,6 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static ru.mycrg.gis.enums.ProcessType.VALIDATION;
-
 @Service
 public class ValidationService extends BaseProcessService {
 
@@ -84,7 +82,7 @@ public class ValidationService extends BaseProcessService {
             ruleService.updateRules();
         }
 
-        CrgProcess process = new CrgProcess(request);
+        CrgProcess<ValidationRequestDto> process = new CrgProcess<>(request);
 
         processes.add(process);
 
@@ -111,7 +109,7 @@ public class ValidationService extends BaseProcessService {
         Optional<CrgProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
             CrgProcess process = processById.get();
-            wsNotificationService.send(new WsMessageDto<>(VALIDATION, response), process.getRequest().getWsUiId());
+            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
 
             process.complete(response);
         } else {

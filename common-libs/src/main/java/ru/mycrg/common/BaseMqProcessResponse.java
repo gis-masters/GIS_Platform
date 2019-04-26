@@ -15,12 +15,14 @@ public class BaseMqProcessResponse {
 
     public BaseMqProcessResponse() {}
 
-    public BaseMqProcessResponse(RequestType type) {
-        this.type = type;
-    }
-
     public BaseMqProcessResponse(UUID id, ProcessStatus status) {
         this.id = id;
+        this.status = status;
+    }
+
+    public BaseMqProcessResponse(UUID id, RequestType type, ProcessStatus status) {
+        this.id = id;
+        this.type = type;
         this.status = status;
     }
 
@@ -45,6 +47,10 @@ public class BaseMqProcessResponse {
 
     public boolean isPending() {
         return status == ProcessStatus.PENDING;
+    }
+
+    public boolean isNull() {
+        return status == null;
     }
 
     public UUID getId() {

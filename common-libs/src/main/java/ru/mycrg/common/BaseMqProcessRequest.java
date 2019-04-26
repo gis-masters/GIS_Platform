@@ -16,10 +16,6 @@ public class BaseMqProcessRequest {
         this.id = id;
     }
 
-    public BaseMqProcessRequest(RequestType type) {
-        this.type = type;
-    }
-
     public BaseMqProcessRequest(UUID id, RequestType type) {
         this.id = id;
         this.type = type;

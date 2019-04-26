@@ -3,6 +3,7 @@ package ru.mycrg.common;
 import ru.mycrg.common.enums.RequestType;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class OrgMqProcessRequest extends BaseMqProcessRequest implements Serializable {
 
@@ -12,15 +13,24 @@ public class OrgMqProcessRequest extends BaseMqProcessRequest implements Seriali
     private String email;
     private String userName;
 
+    private String projectName;
+
     public OrgMqProcessRequest() {}
 
-    public OrgMqProcessRequest(long orgId, String email, String password, RequestType type) {
-        super(type);
+    public OrgMqProcessRequest(UUID id, long orgId, String email, String password, RequestType type) {
+        super(id, type);
 
         this.orgId = orgId;
         this.email = email;
         this.userName = email;
         this.rawPassword = password;
+    }
+
+    public OrgMqProcessRequest(UUID id, long orgId, String geoserverName, RequestType type) {
+        super(id, type);
+
+        this.orgId = orgId;
+        this.projectName = geoserverName;
     }
 
     public Long getOrgId() {
@@ -61,6 +71,14 @@ public class OrgMqProcessRequest extends BaseMqProcessRequest implements Seriali
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     @Override

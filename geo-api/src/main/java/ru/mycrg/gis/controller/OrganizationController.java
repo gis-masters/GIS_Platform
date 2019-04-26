@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.UUID;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -94,7 +95,7 @@ public class OrganizationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        mqEvents.sendOrgEvent(new OrgMqProcessRequest(newOrganization.getId(),
+        mqEvents.sendOrgEvent(new OrgMqProcessRequest(UUID.randomUUID(), newOrganization.getId(),
                 createDto.getEmail(),
                 createDto.getPassword(),
                 RequestType.CREATE_ORG));

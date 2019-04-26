@@ -5,6 +5,8 @@ public enum RequestType {
     VALIDATION_INIT,
     VALIDATION_GET,
 
+    GML_EXPORT,
+
     CREATE_ORG,
     CREATE_PROJECT,
     DELETE_ORG,

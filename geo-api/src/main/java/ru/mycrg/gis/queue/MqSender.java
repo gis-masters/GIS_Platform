@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.OrgMqProcessRequest;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -22,7 +23,7 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void sendOrgEvent(BaseMqProcessRequest payload) {
+    public void sendOrgEvent(OrgMqProcessRequest payload) {
         send(FANOUT_ORG_INIT, KEY_ORG_INIT, payload);
     }
 

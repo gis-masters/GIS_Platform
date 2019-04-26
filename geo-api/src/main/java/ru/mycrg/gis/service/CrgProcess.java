@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.BaseRequest;
+import ru.mycrg.gis.dto.Websocketable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class CrgProcess implements Completable {
+public class CrgProcess<T extends BaseRequest> implements Completable, Websocketable {
 
     private static Logger log = LoggerFactory.getLogger(CrgProcess.class);
 
@@ -19,15 +20,20 @@ public class CrgProcess implements Completable {
     private LocalDateTime endTime;
     private ProcessStatus status;
 
-    private BaseRequest request;
+    private T request;
     private CompletableFuture<BaseMqProcessResponse> futureResponse = new CompletableFuture<>();
 
     public CrgProcess() {}
 
-    public CrgProcess(BaseRequest request) {
+    public CrgProcess(T request) {
         this.status = ProcessStatus.PENDING;
         this.startTime = LocalDateTime.now();
         this.request = request;
+    }
+
+    @Override
+    public String getWsUiId() {
+        return request.getWsUiId();
     }
 
     @Override
@@ -71,7 +77,7 @@ public class CrgProcess implements Completable {
         this.status = status;
     }
 
-    public BaseRequest getRequest() {
+    public T getRequest() {
         return request;
     }
 

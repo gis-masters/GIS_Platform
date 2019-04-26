@@ -1,24 +1,24 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.gis.enums.ProcessType;
+import ru.mycrg.common.enums.RequestType;
 
 public class WsMessageDto<T> {
 
-    private ProcessType type;
+    private RequestType type;
     private T payload;
 
     public WsMessageDto() {}
 
-    public WsMessageDto(ProcessType type, T response) {
+    public WsMessageDto(RequestType type, T response) {
         this.type = type;
         this.payload = response;
     }
 
-    public ProcessType getType() {
+    public RequestType getType() {
         return type;
     }
 
-    public void setType(ProcessType type) {
+    public void setType(RequestType type) {
         this.type = type;
     }
 

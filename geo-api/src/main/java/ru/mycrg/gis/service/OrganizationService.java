@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.enums.EntityStatus;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
@@ -76,7 +76,6 @@ public class OrganizationService {
 
         newOrganization = mapDtoToOrganization(organizationCreateDto);
         newOrganization.addUser(newUser);
-        newOrganization.setStatus(EntityStatus.PENDING);
 
         organizationRepository.save(newOrganization);
         // We use email as login
@@ -139,7 +138,7 @@ public class OrganizationService {
         organizationRepository
                 .findById(id)
                 .ifPresent(organization -> {
-                    organization.setStatus(EntityStatus.READY);
+                    organization.setStatus(ProcessStatus.DONE);
                     organizationRepository.save(organization);
 
                     User user = organization.getUsers().get(0);

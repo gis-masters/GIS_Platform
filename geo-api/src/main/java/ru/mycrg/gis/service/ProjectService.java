@@ -4,9 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.ProjectMqProcessRequest;
+import ru.mycrg.common.OrgMqProcessRequest;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.controller.ProjectController;
-import ru.mycrg.gis.dto.BaseRequest;
+import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.EntityCreationException;
@@ -67,11 +68,11 @@ public class ProjectService extends BaseProcessService {
             organization.addProject(newProject);
             organizationService.save(organization);
 
-            ProjectMqProcessRequest mqRequest = new ProjectMqProcessRequest(organization.getId(), newProject.getGeoserverName());
-
-            // создаем процесс
-            CrgProcess process = new CrgProcess(new BaseRequest());
+            CrgProcess process = new CrgProcess<>(new ProjectRequestDto(newProject.getGeoserverName()));
             processes.add(process);
+
+            OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), organization.getId(),
+                    newProject.getGeoserverName(), RequestType.CREATE_PROJECT);
 
             // Отсылаем евент
             mqEvents.sendOrgEvent(mqRequest);
@@ -92,7 +93,25 @@ public class ProjectService extends BaseProcessService {
 
         Optional<CrgProcess> processById = getProcessById(mqResponse.getId());
         if (processById.isPresent()) {
-            processById.get().complete(mqResponse);
+            CrgProcess process = processById.get();
+
+            process.complete(mqResponse);
+
+            ProjectRequestDto request = (ProjectRequestDto) process.getRequest();
+
+            Optional<Project> projectOptional = projectRepository.findByGeoserverName(request.getProjectName());
+            if (projectOptional.isPresent()) {
+                Project project = projectOptional.get();
+                if (mqResponse.isNull()) {
+                    project.setStatus(mqResponse.getStatus());
+                } else {
+                    log.warn("Status must not be empty: {}", mqResponse.getStatus());
+                }
+
+                projectRepository.save(project);
+            } else {
+                log.warn("Not found project by name: {}", request.getProjectName());
+            }
         } else {
             log.warn("Not found create project process by id: {}", mqResponse.getId());
         }

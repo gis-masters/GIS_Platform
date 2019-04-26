@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
-import ru.mycrg.gis.enums.EntityStatus;
 import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
@@ -93,7 +93,7 @@ public class OrganizationServiceTest {
         // ASSERT
         assertEquals(result.getName(), newName);
         assertEquals(result.getPhone(), newPhone);
-        assertEquals(result.getStatus(), EntityStatus.NEW);
+        assertEquals(result.getStatus(), ProcessStatus.PENDING);
     }
 
     @Test(expected = OrganizationNotFoundException.class)
