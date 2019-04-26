@@ -11,7 +11,7 @@ import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.enums.OrganizationStatus;
+import ru.mycrg.gis.enums.EntityStatus;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
@@ -76,7 +76,7 @@ public class OrganizationService {
 
         newOrganization = mapDtoToOrganization(organizationCreateDto);
         newOrganization.addUser(newUser);
-        newOrganization.setStatus(OrganizationStatus.PENDING);
+        newOrganization.setStatus(EntityStatus.PENDING);
 
         organizationRepository.save(newOrganization);
         // We use email as login
@@ -139,7 +139,7 @@ public class OrganizationService {
         organizationRepository
                 .findById(id)
                 .ifPresent(organization -> {
-                    organization.setStatus(OrganizationStatus.READY);
+                    organization.setStatus(EntityStatus.READY);
                     organizationRepository.save(organization);
 
                     User user = organization.getUsers().get(0);

@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.projects(
   id bigserial NOT NULL UNIQUE,
   internal_name character varying(255),
   geoserver_name character varying(255),
+  status character varying(20),
   extra json,
   CONSTRAINT projects_pkey PRIMARY KEY (id)
 );
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS public.organization(
   id bigserial NOT NULL UNIQUE,
   name character varying(255),
   phone character varying(255),
-  status character varying(255),
+  status character varying(20),
   CONSTRAINT organization_pkey PRIMARY KEY (id)
 )
 WITH (OIDS = FALSE)

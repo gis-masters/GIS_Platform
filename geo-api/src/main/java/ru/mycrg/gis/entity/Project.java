@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import ru.mycrg.gis.enums.EntityStatus;
 
 import javax.persistence.*;
 
@@ -25,6 +26,9 @@ public class Project {
 
     @Column
     private String internalName;
+
+    @Enumerated(value = EnumType.STRING)
+    private EntityStatus status = EntityStatus.NEW;
 
     @Type(type = "jsonb-node")
     @Column(columnDefinition = "json")
@@ -67,5 +71,13 @@ public class Project {
 
     public void setExtra(JsonNode extra) {
         this.extra = extra;
+    }
+
+    public EntityStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EntityStatus status) {
+        this.status = status;
     }
 }

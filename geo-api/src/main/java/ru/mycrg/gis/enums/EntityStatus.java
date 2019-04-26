@@ -1,6 +1,6 @@
 package ru.mycrg.gis.enums;
 
-public enum OrganizationStatus {
+public enum EntityStatus {
     NEW,
     PENDING,
     READY,

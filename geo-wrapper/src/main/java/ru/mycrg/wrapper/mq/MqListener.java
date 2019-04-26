@@ -98,7 +98,7 @@ public class MqListener {
                 log.warn("Not supported type");
             }
         } catch (Exception e) {
-            log.error("Не удалось провалидировать 111.", e);
+            log.error("Не удалось провалидировать", e);
             mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
         }
     }

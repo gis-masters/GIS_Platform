@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -22,7 +20,6 @@ import static ru.mycrg.wrapper.service.gml.GmlUtil.calculatePercent;
 import static ru.mycrg.wrapper.service.gml.GmlUtil.getRuleByTableName;
 
 @Service
-@Transactional
 public class ValidationService {
 
     private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
@@ -138,7 +135,7 @@ public class ValidationService {
             mqEvents.validationResponse(
                     new BaseMqProcessResponse(mqRequest.getId(), SUB_DONE, resource.getTableName(), -1));
         } catch (Exception e) {
-            log.error("Не удалось провалидировать.", e);
+            log.error("Не удалось провалидировать: " + resource.getTableName(), e);
             mqEvents.validationResponse(
                     new BaseMqProcessResponse(mqRequest.getId(), ERROR, resource.getTableName(), -1));
         }
