@@ -70,6 +70,60 @@ public class ValidationService {
         mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), DONE, "", 100));
     }
 
+    /**
+     * Выборка результатов валидации.<ul>
+     *
+     * <li>- Все обьекты с ошибками
+     * <li>- Время последней проверки
+     *
+     * @param mqRequest Запрос
+     */
+    public ValidationMqResponse getResults(ValidationMqRequest mqRequest) throws IOException {
+        // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
+
+//        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
+//        if (totalViolations > 0) {
+//            List<Map<String, Object>> violations = baseDaoService.getViolations(mqRequest);
+//
+//            log.info("Found {} violations", violations.size());
+//            response.setResults(Util.mapToViolations(violations));
+//            response.setValidated(true);
+//        } else {
+//            response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
+//        }
+//
+//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
+//        response.setTotal(totalViolations);
+//        response.setStatus(ProcessStatus.DONE);
+
+        return response;
+    }
+
+    /**
+     * Подгатавливаем ответ на информационный запрос.<ul>
+     * <li>- Общее кол-во ошибок слоя
+     * <li>- Время последней проверки
+     *
+     * @param mqRequest Запрос
+     */
+    public ValidationMqResponse getInfo(ValidationMqRequest mqRequest) {
+//        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
+
+//        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
+//        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
+//
+//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
+//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
+//        response.setStatus(ProcessStatus.DONE);
+
+        return response;
+    }
+
     private void validateResource(ValidationMqRequest mqRequest, ResourceProjection resource, int processedRows) {
         log.debug("Validate resource: {}", resource.getResourceId());
 
@@ -139,60 +193,6 @@ public class ValidationService {
             mqEvents.validationResponse(
                     new BaseMqProcessResponse(mqRequest.getId(), ERROR, resource.getTableName(), -1));
         }
-    }
-
-    /**
-     * Выборка результатов валидации.<ul>
-     *
-     * <li>- Все обьекты с ошибками
-     * <li>- Время последней проверки
-     *
-     * @param mqRequest Запрос
-     */
-    public ValidationMqResponse getResults(ValidationMqRequest mqRequest) throws IOException {
-        // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
-
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
-
-//        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
-//        if (totalViolations > 0) {
-//            List<Map<String, Object>> violations = baseDaoService.getViolations(mqRequest);
-//
-//            log.info("Found {} violations", violations.size());
-//            response.setResults(Util.mapToViolations(violations));
-//            response.setValidated(true);
-//        } else {
-//            response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-//        }
-//
-//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-//        response.setTotal(totalViolations);
-//        response.setStatus(ProcessStatus.DONE);
-
-        return response;
-    }
-
-    /**
-     * Подгатавливаем ответ на информационный запрос.<ul>
-     * <li>- Общее кол-во ошибок слоя
-     * <li>- Время последней проверки
-     *
-     * @param mqRequest Запрос
-     */
-    public ValidationMqResponse getInfo(ValidationMqRequest mqRequest) {
-//        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
-
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
-
-//        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-//        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
-//
-//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-//        response.setStatus(ProcessStatus.DONE);
-
-        return response;
     }
 
     private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
