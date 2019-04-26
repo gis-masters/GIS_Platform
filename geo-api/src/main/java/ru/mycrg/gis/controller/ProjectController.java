@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.entity.Project;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
@@ -40,6 +41,18 @@ public class ProjectController {
         List<Project> projects = projectService.getProjectByUser(principal.getName());
 
         return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable long id, Principal principal) {
+        log.debug("Request get projects for user: {}", principal.getName());
+
+        Project projectById = projectService.getProjectByUser(principal.getName()).stream()
+                .filter(project -> project.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + id));
+
+        return ResponseEntity.ok(projectById);
     }
 
     @PostMapping("/{name}")

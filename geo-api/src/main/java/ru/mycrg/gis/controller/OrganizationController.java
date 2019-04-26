@@ -53,6 +53,7 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.getOrganizationByUser(principal.getName()).getId());
     }
 
+    // TODO: Добавить авторизацию, закрыть доступ неавторизированным пользователям
     @GetMapping
     public ResponseEntity<Iterable<Organization>> getOrganizations(
             @ApiParam(defaultValue = "asc", value = "Сортировка по id организации")
