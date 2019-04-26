@@ -2,19 +2,8 @@ package ru.mycrg.gis.unit;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.mycrg.common.ValidationMqResponse;
-import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.gis.dto.ValidationRequestDto;
-import ru.mycrg.gis.dto.ValidationResponseDto;
-import ru.mycrg.gis.service.validation.ValidationProcess;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ValidationProcessTest {
 

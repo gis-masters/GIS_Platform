@@ -4,19 +4,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqRequest;
 import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
-import ru.mycrg.gis.dto.ValidationResponseDto;
+import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.CrgProcess;
+import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import static ru.mycrg.gis.enums.ProcessType.VALIDATION;
 
 @Service
 public class ValidationService extends BaseProcessService {
@@ -25,12 +30,15 @@ public class ValidationService extends BaseProcessService {
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
+    private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
-                             FgistpRuleService ruleService) {
+                             FgistpRuleService ruleService,
+                             WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
+        this.wsNotificationService = wsNotificationService;
     }
 
     /**
@@ -39,54 +47,50 @@ public class ValidationService extends BaseProcessService {
      * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<ValidationResponseDto> validate(String name,
-                                                                   List<ValidationRequestDto> request) {
-        return initProcess(name, request, 0, 25, RequestType.INIT);
+    public CompletableFuture<BaseMqProcessResponse> validate(String name,
+                                                             ValidationRequestDto request,
+                                                             RequestType type) {
+        return initProcess(name, request, type, 0, 25);
     }
 
     /**
      * Получить общую информацию о валидации слоя.
-     *
      * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<ValidationResponseDto> getInfo(String name,
-                                                                  List<ValidationRequestDto> request) {
-        return initProcess(name, request, 0, 25, RequestType.INFO);
+    public CompletableFuture<BaseMqProcessResponse> getInfo(String name,
+                                                            ValidationRequestDto request,
+                                                            RequestType type) {
+        return initProcess(name, request, type, 0, 25);
     }
 
     /**
      * Выборка непосредственно ошибок валидации.
-     *
      * @param name    Имя пользователя
      * @param request Список ресурсов {@link ValidationRequestDto}
      * @param nPage   Номер страницы
      * @param nSize   Размер страницы
      */
-    public CompletableFuture<ValidationResponseDto> getResult(String name,
-                                                                    List<ValidationRequestDto> request,
-                                                                    int nPage, int nSize) {
-        return initProcess(name, request, nPage, nSize, RequestType.GET);
+    public CompletableFuture<BaseMqProcessResponse> getResult(String name,
+                                                              ValidationRequestDto request,
+                                                              RequestType type, int nPage, int nSize) {
+        return initProcess(name, request, type, nPage, nSize);
     }
 
-    private CompletableFuture<ValidationResponseDto> initProcess(String userName,
-                                                                       List<ValidationRequestDto> request,
-                                                                       int page, int size,
-                                                                       RequestType type) {
+    private CompletableFuture<BaseMqProcessResponse> initProcess(String name,
+                                                                 ValidationRequestDto request,
+                                                                 RequestType type, int page, int size) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
-        ValidationProcess process = new ValidationProcess();
-        process.setUserName(userName);
-        process.setRequestType(type);
-        process.addRequest(request);
+        CrgProcess process = new CrgProcess(request);
 
         processes.add(process);
 
         ValidationMqRequest mqRequest = new ValidationMqRequest(process.getId(), type, page, size);
 
-        process.getRequests().forEach(requestDto -> {
+        request.getResources().forEach(requestDto -> {
             EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
             mqRequest.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
             mqRequest.addResourceProjections(new ResourceProjection(requestDto.getDbName(),
@@ -96,6 +100,23 @@ public class ValidationService extends BaseProcessService {
         mqSender.sendValidationRequest(mqRequest);
 
         return process.getFutureResponse();
+    }
+
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse response) {
+        if (response.getId() == null) {
+            log.warn("Return invalid response");
+        }
+
+        Optional<CrgProcess> processById = getProcessById(response.getId());
+        if (processById.isPresent()) {
+            CrgProcess process = processById.get();
+            wsNotificationService.send(new WsMessageDto<>(VALIDATION, response), process.getRequest().getWsUiId());
+
+            process.complete(response);
+        } else {
+            log.warn("Not found gml process by id: {}", response.getId());
+        }
     }
 
 }

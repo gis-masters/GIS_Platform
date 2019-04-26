@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.common.enums.EventType;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
@@ -17,7 +16,6 @@ import ru.mycrg.gis.service.import_.WorkImport;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -74,7 +72,7 @@ public class ProjectController {
     }
 
     @PostMapping("/import")
-    public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport, Principal principal) {
+    public CompletableFuture<BaseMqProcessResponse> initImport(@RequestBody WorkImport workImport, Principal principal) {
         log.debug("User {} initImport request", principal.getName());
 
         return importService.initProcess(workImport, principal.getName());

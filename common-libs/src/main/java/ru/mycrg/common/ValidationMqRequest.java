@@ -4,7 +4,6 @@ import ru.mycrg.common.enums.RequestType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class ValidationMqRequest extends BaseMqRequest {

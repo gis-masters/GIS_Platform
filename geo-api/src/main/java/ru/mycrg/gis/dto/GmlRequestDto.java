@@ -2,11 +2,10 @@ package ru.mycrg.gis.dto;
 
 import java.util.List;
 
-public class GmlRequestDto {
+public class GmlRequestDto extends BaseRequest {
 
     private String docSchema;
-    private String id;
-    private List<ValidationRequestDto> resources;
+    private List<ResourceProjectionDto> resources;
 
     public GmlRequestDto() {}
 
@@ -18,19 +17,12 @@ public class GmlRequestDto {
         this.docSchema = docSchema;
     }
 
-    public List<ValidationRequestDto> getResources() {
+    public List<ResourceProjectionDto> getResources() {
         return resources;
     }
 
-    public void setResources(List<ValidationRequestDto> resources) {
+    public void setResources(List<ResourceProjectionDto> resources) {
         this.resources = resources;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

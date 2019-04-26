@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.GmlMqRequest;
-import ru.mycrg.common.GmlMqResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
@@ -39,8 +38,8 @@ public class GmlGenerationService extends BaseProcessService {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public CompletableFuture<GmlMqResponse> initProcess(GmlRequestDto request) {
-        GmlProcess process = new GmlProcess(request);
+    public CompletableFuture<BaseMqProcessResponse> initProcess(GmlRequestDto request) {
+        CrgProcess process = new CrgProcess(request);
         processes.add(process);
 
         GmlMqRequest mqRequest = new GmlMqRequest(process.getId());
@@ -66,10 +65,10 @@ public class GmlGenerationService extends BaseProcessService {
 
         Optional<CrgProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
-            GmlProcess gmlProcess = (GmlProcess) processById.get();
-            wsNotificationService.send(new WsMessageDto<>(EXPORT, response), gmlProcess.getRequest().getId());
+            CrgProcess process = processById.get();
+            wsNotificationService.send(new WsMessageDto<>(EXPORT, response), process.getRequest().getWsUiId());
 
-            gmlProcess.handleMqResponse(response);
+            process.complete(response);
         } else {
             log.warn("Not found gml process by id: {}", response.getId());
         }
