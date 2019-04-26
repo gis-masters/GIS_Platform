@@ -102,7 +102,7 @@ public class ProjectService extends BaseProcessService {
             Optional<Project> projectOptional = projectRepository.findByGeoserverName(request.getProjectName());
             if (projectOptional.isPresent()) {
                 Project project = projectOptional.get();
-                if (mqResponse.isNull()) {
+                if (!mqResponse.isNull()) {
                     project.setStatus(mqResponse.getStatus());
                 } else {
                     log.warn("Status must not be empty: {}", mqResponse.getStatus());
