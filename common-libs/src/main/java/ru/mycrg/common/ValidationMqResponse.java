@@ -16,11 +16,11 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(ValidationMqRequest request) {
+    public ValidationMqResponse(ValidationMqProcessRequest request) {
         this.setId(request.getId());
     }
 
-    public ValidationMqResponse(ValidationMqRequest request, ProcessStatus status) {
+    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status) {
         super(request.getId(), status);
     }
 

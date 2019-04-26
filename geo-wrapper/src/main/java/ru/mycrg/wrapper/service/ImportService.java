@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqProcessRequest;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 
@@ -36,7 +36,7 @@ public class ImportService {
      * - Проверка и при необходимости генерация GLOBALID
      */
     @Transactional
-    public void doImport(ImportMqRequest request) {
+    public void doImport(ImportMqProcessRequest request) {
         log.debug("Start import from: {} to: {}", request.printSource(), request.printTarget());
 
         String sourceDbName = request.getSourceResource().getDbName();

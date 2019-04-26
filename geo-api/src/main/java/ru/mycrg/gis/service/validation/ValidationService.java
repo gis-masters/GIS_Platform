@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqProcessRequest;
 import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
@@ -88,7 +88,7 @@ public class ValidationService extends BaseProcessService {
 
         processes.add(process);
 
-        ValidationMqRequest mqRequest = new ValidationMqRequest(process.getId(), type, page, size);
+        ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(), type, page, size);
 
         request.getResources().forEach(requestDto -> {
             EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
@@ -115,7 +115,7 @@ public class ValidationService extends BaseProcessService {
 
             process.complete(response);
         } else {
-            log.warn("Not found gml process by id: {}", response.getId());
+            log.warn("Not found validation process by id: {}", response.getId());
         }
     }
 

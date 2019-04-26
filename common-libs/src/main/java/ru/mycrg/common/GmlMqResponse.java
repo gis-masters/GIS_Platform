@@ -11,7 +11,7 @@ public class GmlMqResponse extends BaseMqProcessResponse {
 
     public GmlMqResponse() {}
 
-    public GmlMqResponse(GmlMqRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
+    public GmlMqResponse(GmlMqProcessRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
         this.setId(request.getId());
         this.setStatus(status);
         this.setProgress(percentOfProgress);
@@ -20,7 +20,7 @@ public class GmlMqResponse extends BaseMqProcessResponse {
         this.pathToLog = paths.get("log");
     }
 
-    public GmlMqResponse(GmlMqRequest request, ProcessStatus status, String description, int percentOfProgress) {
+    public GmlMqResponse(GmlMqProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
         super(request.getId(), status, description, percentOfProgress);
     }
 

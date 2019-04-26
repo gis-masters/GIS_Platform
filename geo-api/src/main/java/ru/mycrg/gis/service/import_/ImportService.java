@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqProcessRequest;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
@@ -58,7 +58,7 @@ public class ImportService extends BaseProcessService {
         processes.add(process);
 
         workImport.getImportTasks().forEach(importTask -> {
-            ImportMqRequest importMqRequest = new ImportMqRequest(
+            ImportMqProcessRequest importMqRequest = new ImportMqProcessRequest(
                     process.getId(),
                     // Источником для рабочего импорта является общее хранилище "scratch"
                     new ResourceProjection(
@@ -91,7 +91,7 @@ public class ImportService extends BaseProcessService {
 
             process.complete(response);
         } else {
-            log.warn("Not found gml process by id: {}", response.getId());
+            log.warn("Not found import process by id: {}", response.getId());
         }
     }
 }

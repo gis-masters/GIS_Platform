@@ -1,10 +1,10 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.EventType;
+import ru.mycrg.common.enums.RequestType;
 
 import java.io.Serializable;
 
-public class OrgMqRequest extends BaseMqRequest implements Serializable {
+public class OrgMqProcessRequest extends BaseMqProcessRequest implements Serializable {
 
     private Long orgId;
     private String rawPassword;
@@ -12,23 +12,15 @@ public class OrgMqRequest extends BaseMqRequest implements Serializable {
     private String email;
     private String userName;
 
-    private String projectName;
+    public OrgMqProcessRequest() {}
 
-    private EventType type;
+    public OrgMqProcessRequest(long orgId, String email, String password, RequestType type) {
+        super(type);
 
-    public OrgMqRequest() {}
-
-    public OrgMqRequest(long orgId, EventType type) {
-        this.orgId = orgId;
-        this.type = type;
-    }
-
-    public OrgMqRequest(long orgId, String email, String password, EventType type) {
         this.orgId = orgId;
         this.email = email;
         this.userName = email;
         this.rawPassword = password;
-        this.type = type;
     }
 
     public Long getOrgId() {
@@ -71,31 +63,15 @@ public class OrgMqRequest extends BaseMqRequest implements Serializable {
         this.userName = userName;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public void setType(EventType type) {
-        this.type = type;
-    }
-
     @Override
     public String toString() {
-        return "OrgMqRequest{" +
+        return "OrgMqProcessRequest{" +
                 "orgId=" + orgId +
+                ", rawPassword='" + rawPassword + '\'' +
                 ", comment='" + comment + '\'' +
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", type=" + type +
+                ", type='" + getType() + '\'' +
                 '}';
     }
 }

@@ -10,21 +10,21 @@ import ru.mycrg.common.*;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.RequestType;
-import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqProcessRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
-import ru.mycrg.wrapper.service.geoserver.OrganizationService;
-import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
+import ru.mycrg.wrapper.service.geoserver.OrganizationService;
+import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static ru.mycrg.common.enums.EventType.CREATE_ORG;
-import static ru.mycrg.common.enums.EventType.CREATE_PROJECT;
+import static ru.mycrg.common.enums.RequestType.CREATE_ORG;
+import static ru.mycrg.common.enums.RequestType.CREATE_PROJECT;
 
 @Service
 public class MqListener {
@@ -50,7 +50,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
-    public void handleOrganizationEvent(final OrgMqRequest mqRequest) {
+    public void handleOrganizationEvent(final BaseMqProcessRequest mqRequest) {
         log.info("handleOrganizationEvent. Получено сообщение {}", mqRequest.toString());
 
         switch (mqRequest.getType()) {
@@ -62,7 +62,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_IMPORT_INIT)
-    public void initImport(ImportMqRequest request) {
+    public void initImport(ImportMqProcessRequest request) {
         log.debug("Получено сообщение initImport");
         try {
             importService.doImport(request);
@@ -84,15 +84,15 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_VALIDATION_START)
-    public void validation(final ValidationMqRequest mqRequest) {
+    public void validation(final ValidationMqProcessRequest mqRequest) {
         log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
 
         try {
-            if (mqRequest.getType() == RequestType.INIT) {
+            if (mqRequest.getType() == RequestType.VALIDATION_INIT) {
                 validationService.startValidation(mqRequest);
-            } else if (mqRequest.getType() == RequestType.GET) {
+            } else if (mqRequest.getType() == RequestType.VALIDATION_GET) {
                 mqEvents.validationResponse(validationService.getResults(mqRequest));
-            } else if (mqRequest.getType() == RequestType.INFO) {
+            } else if (mqRequest.getType() == RequestType.VALIDATION_INFO) {
                 mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");
@@ -104,7 +104,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_GML_INIT)
-    public void gmlInit(GmlMqRequest request) {
+    public void gmlInit(GmlMqProcessRequest request) {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
@@ -135,31 +135,35 @@ public class MqListener {
         }
     }
 
-    private void createProject(OrgMqRequest dto) {
+    private void createProject(BaseMqProcessRequest mqRequest) {
+        ProjectMqProcessRequest request = (ProjectMqProcessRequest) mqRequest;
+
         try {
             if (authService.authorize().isPresent()) {
-                log.debug("Try create project: {}", dto.getProjectName());
+                log.debug("Try create project: {}", request.getProjectName());
 
-                organizationService.createProject(dto);
+                organizationService.createProject(request);
 
-                mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
+                mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException | SQLException e) {
             log.error("Неудалось создать проект: ", e);
-            mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
+            mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
         }
     }
 
-    private void createOrg(OrgMqRequest dto) {
+    private void createOrg(BaseMqProcessRequest dto) {
+        OrgMqProcessRequest request = (OrgMqProcessRequest) dto;
+
         try {
             if (authService.authorize().isPresent()) {
                 try {
-                    organizationService.createOrganization(dto);
+                    organizationService.createOrganization(request);
 
-                    mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_ORG, ProcessStatus.DONE));
+                    mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_ORG, ProcessStatus.DONE));
                 } catch (IOException | RuntimeException e) {
                     log.error("Неудалось создать организацию на геосервере: ", e);
-                    mqEvents.orgEventResponse(new OrgMqResponse(dto.getOrgId(), CREATE_ORG, ProcessStatus.ERROR));
+                    mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_ORG, ProcessStatus.ERROR));
                 }
             }
         } catch (IOException e) {

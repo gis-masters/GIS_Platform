@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqRequest;
-import ru.mycrg.common.OrgMqRequest;
+import ru.mycrg.common.BaseMqProcessRequest;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -23,29 +22,26 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void sendOrgEvent(OrgMqRequest creationDto) {
-        log.info("Send init orgCreation event: {}", creationDto.toString());
-
-        // TODO: привести к общему виду
-        rabbitTemplate.convertAndSend(FANOUT_ORG_INIT, KEY_ORG_INIT, creationDto);
+    public void sendOrgEvent(BaseMqProcessRequest payload) {
+        send(FANOUT_ORG_INIT, KEY_ORG_INIT, payload);
     }
 
     @Override
-    public void initImport(BaseMqRequest payload) {
+    public void initImport(BaseMqProcessRequest payload) {
         send(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, payload);
     }
 
     @Override
-    public void sendValidationRequest(BaseMqRequest payload) {
+    public void sendValidationRequest(BaseMqProcessRequest payload) {
         send(FANOUT_VALIDATION_START, KEY_VALIDATION_START, payload);
     }
 
     @Override
-    public void sendGmlInit(BaseMqRequest payload) {
+    public void sendGmlInit(BaseMqProcessRequest payload) {
         send(FANOUT_GML_INIT, KEY_GML_INIT, payload);
     }
 
-    private void send(String fanout, String key, BaseMqRequest payload) {
+    private void send(String fanout, String key, BaseMqProcessRequest payload) {
         log.debug("Send {} ", payload.getId());
 
         rabbitTemplate.convertAndSend(fanout, key, payload);

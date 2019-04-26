@@ -1,39 +1,31 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.EventType;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.RequestType;
 
 import java.io.Serializable;
 
-public class OrgMqResponse implements Serializable {
+public class OrgMqResponse extends BaseMqProcessResponse implements Serializable {
 
-    private Long id;
-    private EventType eventType;
+    private Long orgId;
     private ProcessStatus status;
 
     public OrgMqResponse() {
     }
 
-    public OrgMqResponse(Long id, EventType eventType, ProcessStatus status) {
-        this.id = id;
-        this.eventType = eventType;
+    public OrgMqResponse(Long id, RequestType type, ProcessStatus status) {
+        super(type);
+
+        this.orgId = id;
         this.status = status;
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrgId() {
+        return orgId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
     }
 
     public ProcessStatus getStatus() {

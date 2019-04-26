@@ -1,6 +1,7 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.RequestType;
 
 import java.util.UUID;
 
@@ -10,8 +11,13 @@ public class BaseMqProcessResponse {
     private int progress = -1;
     private String description;
     private ProcessStatus status;
+    private RequestType type;
 
     public BaseMqProcessResponse() {}
+
+    public BaseMqProcessResponse(RequestType type) {
+        this.type = type;
+    }
 
     public BaseMqProcessResponse(UUID id, ProcessStatus status) {
         this.id = id;
@@ -73,12 +79,22 @@ public class BaseMqProcessResponse {
         this.description = description;
     }
 
+    public RequestType getType() {
+        return type;
+    }
+
+    public void setType(RequestType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "BaseMqProcessResponse{" +
+                "id=" + id +
                 ", progress=" + progress +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", type=" + type +
                 '}';
     }
 }

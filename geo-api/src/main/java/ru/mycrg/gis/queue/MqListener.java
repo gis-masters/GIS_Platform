@@ -18,6 +18,8 @@ import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.ValidationService;
 
 import static ru.mycrg.common.config.MqProperties.*;
+import static ru.mycrg.common.enums.RequestType.CREATE_ORG;
+import static ru.mycrg.common.enums.RequestType.CREATE_PROJECT;
 
 @Component
 @EnableRabbit
@@ -46,9 +48,9 @@ public class MqListener {
 
     @RabbitListener(queues = QUEUE_ORG_CREATED)
     public void created(OrgMqResponse response) {
-        switch (response.getEventType()) {
-            case CREATE_ORG: organizationService.organizationCreated(response.getId()); break;
-            case CREATE_PROJECT: projectService.handleResponse(response); break;
+        switch (response.getType()) {
+            case CREATE_ORG: organizationService.organizationCreated(response.getOrgId()); break;
+            case CREATE_PROJECT: projectService.handleMqResponse(response); break;
             default: log.warn("Not processable event type");
         }
     }

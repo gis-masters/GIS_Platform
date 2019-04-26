@@ -59,7 +59,7 @@ public class GmlGenerator {
      * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public Map<String, String> generate(GmlMqRequest gmlMqRequest) throws ParserConfigurationException,
+    public Map<String, String> generate(GmlMqProcessRequest gmlMqRequest) throws ParserConfigurationException,
             TransformerException {
         idCounter = 1;
         log.debug("Start gml generation");
@@ -85,7 +85,7 @@ public class GmlGenerator {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(GmlMqRequest request) throws ParserConfigurationException {
+    private GmlDocumentHolder createDomDocuments(GmlMqProcessRequest request) throws ParserConfigurationException {
         GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
         mqEvents.gmlResponse(new GmlMqResponse(request, PENDING, "Инициализация...", 1));
@@ -100,14 +100,14 @@ public class GmlGenerator {
         return docHolder;
     }
 
-    private long calculateTotalRows(GmlMqRequest request) {
+    private long calculateTotalRows(GmlMqProcessRequest request) {
         return request
                 .getResourceProjections().stream()
                 .mapToLong(baseDaoService::countTotalRows)
                 .sum();
     }
 
-    private void handleResource(GmlMqRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
+    private void handleResource(GmlMqProcessRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
         log.debug("Handle source: {}", resource.toString());
 
         try {

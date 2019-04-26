@@ -56,7 +56,7 @@ public class ValidationService {
      *
      * @param mqRequest Запрос
      */
-    public void startValidation(ValidationMqRequest mqRequest) {
+    public void startValidation(ValidationMqProcessRequest mqRequest) {
         log.debug("Start validation");
 
         totalRows = (int) calculateTotalRows(mqRequest.getResourceProjections());
@@ -78,7 +78,7 @@ public class ValidationService {
      *
      * @param mqRequest Запрос
      */
-    public ValidationMqResponse getResults(ValidationMqRequest mqRequest) throws IOException {
+    public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) throws IOException {
         // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
         ValidationMqResponse response = new ValidationMqResponse(mqRequest);
@@ -109,7 +109,7 @@ public class ValidationService {
      *
      * @param mqRequest Запрос
      */
-    public ValidationMqResponse getInfo(ValidationMqRequest mqRequest) {
+    public ValidationMqResponse getInfo(ValidationMqProcessRequest mqRequest) {
 //        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
         ValidationMqResponse response = new ValidationMqResponse(mqRequest);
@@ -124,7 +124,7 @@ public class ValidationService {
         return response;
     }
 
-    private void validateResource(ValidationMqRequest mqRequest, ResourceProjection resource, int processedRows) {
+    private void validateResource(ValidationMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
         log.debug("Validate resource: {}", resource.getResourceId());
 
         try {

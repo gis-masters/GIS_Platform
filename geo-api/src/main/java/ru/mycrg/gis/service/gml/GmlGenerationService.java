@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.GmlMqRequest;
+import ru.mycrg.common.GmlMqProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
@@ -42,7 +42,7 @@ public class GmlGenerationService extends BaseProcessService {
         CrgProcess process = new CrgProcess(request);
         processes.add(process);
 
-        GmlMqRequest mqRequest = new GmlMqRequest(process.getId());
+        GmlMqProcessRequest mqRequest = new GmlMqProcessRequest(process.getId());
         mqRequest.setDocSchema(request.getDocSchema());
 
         request.getResources().forEach(resource -> {

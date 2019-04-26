@@ -6,20 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ValidationMqRequest extends BaseMqRequest {
+public class ValidationMqProcessRequest extends BaseMqProcessRequest {
 
     private int page = 0;
     private int size = 25;
-    private RequestType type;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityTypeDto> features = new ArrayList<>();
 
-    public ValidationMqRequest() {}
+    public ValidationMqProcessRequest() {}
 
-    public ValidationMqRequest(UUID id, RequestType type, int page, int size) {
-        super(id);
+    public ValidationMqProcessRequest(UUID id, RequestType type, int page, int size) {
+        super(id, type);
 
-        this.type = type;
         this.page = page;
         this.size = size;
     }
@@ -38,14 +36,6 @@ public class ValidationMqRequest extends BaseMqRequest {
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public RequestType getType() {
-        return type;
-    }
-
-    public void setType(RequestType type) {
-        this.type = type;
     }
 
     public void addFeatureProjections(EntityTypeDto featureProjection) {

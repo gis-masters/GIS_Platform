@@ -3,10 +3,10 @@ package ru.mycrg.gis.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.common.OrgMqResponse;
-import ru.mycrg.common.enums.EventType;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.ProjectMqProcessRequest;
 import ru.mycrg.gis.controller.ProjectController;
+import ru.mycrg.gis.dto.BaseRequest;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.EntityCreationException;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProjectService {
+public class ProjectService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
@@ -67,9 +67,13 @@ public class ProjectService {
             organization.addProject(newProject);
             organizationService.save(organization);
 
-            OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
-            mqRequest.setProjectName(newProject.getGeoserverName());
+            ProjectMqProcessRequest mqRequest = new ProjectMqProcessRequest(organization.getId(), newProject.getGeoserverName());
 
+            // создаем процесс
+            CrgProcess process = new CrgProcess(new BaseRequest());
+            processes.add(process);
+
+            // Отсылаем евент
             mqEvents.sendOrgEvent(mqRequest);
 
             return newProject;
@@ -80,7 +84,18 @@ public class ProjectService {
         log.warn("Not implemented yet...");
     }
 
-    public void handleResponse(OrgMqResponse response) {
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
+            log.warn("Return invalid mqResponse");
+        }
 
+        Optional<CrgProcess> processById = getProcessById(mqResponse.getId());
+        if (processById.isPresent()) {
+            processById.get().complete(mqResponse);
+        } else {
+            log.warn("Not found create project process by id: {}", mqResponse.getId());
+        }
     }
+
 }

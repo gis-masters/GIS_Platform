@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GmlMqRequest extends BaseMqRequest {
+public class GmlMqProcessRequest extends BaseMqProcessRequest {
 
     private String docSchema = "Doc.20301010000";
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
-    public GmlMqRequest() {}
+    public GmlMqProcessRequest() {}
 
-    public GmlMqRequest(UUID id) {
+    public GmlMqProcessRequest(UUID id) {
         super(id);
     }
 
