@@ -3,7 +3,6 @@ package ru.mycrg.wrapper.service.geoserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.ProjectMqProcessRequest;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
 import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
@@ -79,7 +78,7 @@ public class OrganizationService {
      * Создание проекта.
      * Создание хранилища (postgis) на геосервере.
      */
-    public void createProject(ProjectMqProcessRequest dto) throws IOException, RuntimeException, SQLException {
+    public void createProject(OrgMqProcessRequest dto) throws IOException, RuntimeException, SQLException {
         String projectName = dto.getProjectName();
         String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
         String storeName = databaseName + "_store";

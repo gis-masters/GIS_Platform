@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static ru.mycrg.common.enums.RequestType.CREATE_ORG;
-import static ru.mycrg.common.enums.RequestType.CREATE_PROJECT;
-
 @Service
 public class MqListener {
 
@@ -50,7 +47,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
-    public void handleOrganizationEvent(final BaseMqProcessRequest mqRequest) {
+    public void handleOrganizationEvent(final OrgMqProcessRequest mqRequest) {
         log.info("handleOrganizationEvent. Получено сообщение {}", mqRequest.toString());
 
         switch (mqRequest.getType()) {
@@ -135,20 +132,18 @@ public class MqListener {
         }
     }
 
-    private void createProject(BaseMqProcessRequest mqRequest) {
-        ProjectMqProcessRequest request = (ProjectMqProcessRequest) mqRequest;
-
+    private void createProject(OrgMqProcessRequest request) {
         try {
             if (authService.authorize().isPresent()) {
                 log.debug("Try create project: {}", request.getProjectName());
 
                 organizationService.createProject(request);
 
-                mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_PROJECT, ProcessStatus.DONE));
+                mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException | SQLException e) {
             log.error("Неудалось создать проект: ", e);
-            mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_PROJECT, ProcessStatus.ERROR));
+            mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }
     }
 
@@ -160,10 +155,10 @@ public class MqListener {
                 try {
                     organizationService.createOrganization(request);
 
-                    mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_ORG, ProcessStatus.DONE));
+                    mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
                 } catch (IOException | RuntimeException e) {
                     log.error("Неудалось создать организацию на геосервере: ", e);
-                    mqEvents.orgEventResponse(new OrgMqResponse(request.getOrgId(), CREATE_ORG, ProcessStatus.ERROR));
+                    mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
                 }
             }
         } catch (IOException e) {
