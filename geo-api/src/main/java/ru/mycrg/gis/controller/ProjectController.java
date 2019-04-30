@@ -64,7 +64,7 @@ public class ProjectController {
         Project newProject = projectService.create(name, principal.getName());
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/projects/{id}")
+                .path("/{id}")
                 .buildAndExpand(newProject.getId())
                 .toUri();
 
