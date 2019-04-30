@@ -15,8 +15,6 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   @Input() isActive;
 
-  EXPORT = WsMessageType.EXPORT;
-
   events: IEvent[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();

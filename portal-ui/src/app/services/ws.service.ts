@@ -2,11 +2,11 @@ import SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {TokenStorageService} from './token-storage.service';
-import {ServerPropertiesService} from './server-properties.service';
+import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
-import {StringUtil} from './util/StringUtil';
+import {TokenStorageService} from './token-storage.service';
+import {ServerPropertiesService} from './server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +79,14 @@ export interface ExportWsMsg {
 }
 
 export enum WsMessageType {
-  EXPORT,
+  VALIDATION_INFO = 'VALIDATION_INFO',
+  VALIDATION_INIT = 'VALIDATION_INIT',
+  VALIDATION_GET = 'VALIDATION_GET',
+
+  GML_EXPORT = 'GML_EXPORT',
+
+  CREATE_ORG = 'CREATE_ORG',
+  CREATE_PROJECT = 'CREATE_PROJECT',
+  DELETE_ORG = 'DELETE_ORG',
+  DELETE_PROJECT = 'DELETE_PROJECT',
 }

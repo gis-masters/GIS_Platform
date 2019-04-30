@@ -21,7 +21,7 @@ export class ExportService {
   exportGml(crgLayers: CrgLayer[], docSchema: string): Observable<ExportGmlResponse> {
     const resources: ConnectionInfo[] = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
     const payload: ExportGmlRequest = {
-      id: this.wsService.getId(),
+      wsUiId: this.wsService.getId(),
       docSchema: docSchema,
       resources: resources
     };
@@ -42,7 +42,7 @@ export interface ExportGmlResponse {
 }
 
 export interface ExportGmlRequest {
-  id: string;
+  wsUiId: string;
   docSchema: string;
   resources: ConnectionInfo[];
 }

@@ -5,6 +5,7 @@ import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
+import {ProcessStatus} from '../../../services/process-status';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
@@ -26,6 +27,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
   errorMsg = '';
 
   private unsubscribe$: Subject<void> = new Subject<void>();
+  pending = ProcessStatus.PENDING;
+  done = ProcessStatus.DONE;
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -69,17 +72,39 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     this.projectsService
         .create(this.projectName)
-        .subscribe(response => {
+        .subscribe((project: CrgProject) => {
             this.isEditMode = false;
             this.projectsService.fetchProjects();
+
+            this.checkProjectStatus(project);
           },
           errors => {
             if (errors.error.status === 409) {
               this.errorMsg = errors.error.message;
             } else {
+              this.logger.warn('', errors);
               this.errorMsg = 'Ошибка при создании проекта';
             }
           });
+  }
+
+  private checkProjectStatus(newProject: CrgProject) {
+    const startTime = Date.now();
+    const checkStatusInterval = setInterval(() => {
+      if (startTime - Date.now() > 60000) {
+        clearInterval(checkStatusInterval);
+      }
+
+      this.projectsService.getById(newProject.id)
+          .subscribe((project: CrgProject) => {
+            if (project.status === ProcessStatus.DONE) {
+              this.projectsService.fetchProjects();
+              clearInterval(checkStatusInterval);
+            } else {
+              this.logger.info('-', project);
+            }
+          });
+    }, 5000);
   }
 
   cancel(event) {
@@ -114,4 +139,5 @@ export class ProjectComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 }

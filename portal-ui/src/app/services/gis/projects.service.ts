@@ -7,6 +7,7 @@ import {LayersService} from '../geoserver/layers.service';
 import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
 import {ServerPropertiesService} from '../server-properties.service';
 import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
+import {ProcessStatus} from '../process-status';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,10 @@ export class ProjectsService {
         .subscribe((projects: CrgProject[]) => {
           this._projects$.next(projects);
         });
+  }
+
+  getById(id: string): Observable<CrgProject> {
+    return this.http.get<CrgProject>(this.projectsUrl + '/' + id);
   }
 
   create(name: string): Observable<any> {
@@ -99,7 +104,6 @@ export class ProjectsService {
                  })
                );
   }
-
 }
 
 export interface CrgProject {
@@ -109,4 +113,5 @@ export interface CrgProject {
   href?: string;
   type?: string;
   layersCount?: number;
+  status?: ProcessStatus;
 }
