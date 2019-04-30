@@ -56,7 +56,7 @@ public class ProjectController {
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity createProject(@PathVariable String name, Principal principal) {
+    public ResponseEntity<Project> createProject(@PathVariable String name, Principal principal) {
         if (principal != null) {
             log.debug("Request for createProject from: {}", principal.getName());
         }
@@ -71,7 +71,7 @@ public class ProjectController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity(headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(newProject, headers, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
