@@ -20,7 +20,7 @@ public class BaseMqProcessResponse {
         this.status = status;
     }
 
-    public BaseMqProcessResponse(UUID id, RequestType type, ProcessStatus status) {
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type) {
         this.id = id;
         this.type = type;
         this.status = status;
@@ -31,6 +31,14 @@ public class BaseMqProcessResponse {
         this.status = status;
         this.progress = progress;
         this.description = description;
+    }
+
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, int progress, String description) {
+        this.id = id;
+        this.progress = progress;
+        this.description = description;
+        this.status = status;
+        this.type = type;
     }
 
     public boolean isDone() {

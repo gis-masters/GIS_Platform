@@ -46,9 +46,8 @@ public class ValidationService extends BaseProcessService {
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
     public CompletableFuture<BaseMqProcessResponse> validate(String name,
-                                                             ValidationRequestDto request,
-                                                             RequestType type) {
-        return initProcess(name, request, type, 0, 25);
+                                                             ValidationRequestDto request) {
+        return initProcess(name, request, RequestType.VALIDATION_INIT, 0, 25);
     }
 
     /**
@@ -57,9 +56,8 @@ public class ValidationService extends BaseProcessService {
      * @param request Список ресурсов {@link ValidationRequestDto}
      */
     public CompletableFuture<BaseMqProcessResponse> getInfo(String name,
-                                                            ValidationRequestDto request,
-                                                            RequestType type) {
-        return initProcess(name, request, type, 0, 25);
+                                                            ValidationRequestDto request) {
+        return initProcess(name, request, RequestType.VALIDATION_INFO, 0, 25);
     }
 
     /**
@@ -70,9 +68,8 @@ public class ValidationService extends BaseProcessService {
      * @param nSize   Размер страницы
      */
     public CompletableFuture<BaseMqProcessResponse> getResult(String name,
-                                                              ValidationRequestDto request,
-                                                              RequestType type, int nPage, int nSize) {
-        return initProcess(name, request, type, nPage, nSize);
+                                                              ValidationRequestDto request, int nPage, int nSize) {
+        return initProcess(name, request, RequestType.VALIDATION_GET, nPage, nSize);
     }
 
     private CompletableFuture<BaseMqProcessResponse> initProcess(String name,

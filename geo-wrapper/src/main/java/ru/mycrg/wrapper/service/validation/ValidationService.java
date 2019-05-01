@@ -61,13 +61,13 @@ public class ValidationService {
 
         totalRows = (int) calculateTotalRows(mqRequest.getResourceProjections());
 
-        mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Инициализация...", 0));
+        mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING, "Инициализация...", 0));
 
         mqRequest
                 .getResourceProjections()
                 .forEach(resource -> validateResource(mqRequest, resource, processedRows));
 
-        mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), DONE, "", 100));
+        mqEvents.validationResponse(new ValidationMqResponse(mqRequest, DONE, "", 100));
     }
 
     /**
@@ -81,7 +81,7 @@ public class ValidationService {
     public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) throws IOException {
         // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest, PENDING);
 
 //        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
 //        if (totalViolations > 0) {
@@ -112,7 +112,7 @@ public class ValidationService {
     public ValidationMqResponse getInfo(ValidationMqProcessRequest mqRequest) {
 //        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
 
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest);
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest, PENDING);
 
 //        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
 //        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
@@ -152,7 +152,7 @@ public class ValidationService {
                     break;
                 }
 
-                mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING,
+                mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING,
                         "Обработка: " + feature.getTitle(),
                         calculatePercent(processedRows, totalRows)));
 
@@ -176,7 +176,7 @@ public class ValidationService {
                 if (nextViolations != null) {
                     log.debug("Save validation results. Total: {}", totalViolations);
 
-                    mqEvents.validationResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING,
+                    mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING,
                             "Сохранение: " + feature.getTitle(),
                             calculatePercent(processedRows, totalRows)));
 
@@ -187,11 +187,11 @@ public class ValidationService {
             }
 
             mqEvents.validationResponse(
-                    new BaseMqProcessResponse(mqRequest.getId(), SUB_DONE, resource.getTableName(), -1));
+                    new ValidationMqResponse(mqRequest, SUB_DONE, resource.getTableName(), -1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
             mqEvents.validationResponse(
-                    new BaseMqProcessResponse(mqRequest.getId(), ERROR, resource.getTableName(), -1));
+                    new ValidationMqResponse(mqRequest, ERROR, resource.getTableName(), -1));
         }
     }
 

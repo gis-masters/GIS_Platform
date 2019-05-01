@@ -11,7 +11,7 @@ public class OrgMqResponse extends BaseMqProcessResponse implements Serializable
     public OrgMqResponse() {}
 
     public OrgMqResponse(OrgMqProcessRequest request, ProcessStatus status) {
-        super(request.getId(), request.getType(), status);
+        super(request.getId(), status, request.getType());
 
         this.orgId = request.getOrgId();
     }

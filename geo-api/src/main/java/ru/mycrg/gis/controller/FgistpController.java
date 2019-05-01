@@ -82,7 +82,7 @@ public class FgistpController {
 
         validateRequest(request);
 
-        return validationService.validate(principal.getName(), request, RequestType.VALIDATION_INIT);
+        return validationService.validate(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation/info")
@@ -91,7 +91,7 @@ public class FgistpController {
             Principal principal) {
         validateRequest(request);
 
-        return validationService.getInfo(principal.getName(), request, RequestType.VALIDATION_INFO);
+        return validationService.getInfo(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation")
@@ -113,7 +113,7 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.getResult(principal.getName(), request, RequestType.VALIDATION_GET, nPage, nSize);
+        return validationService.getResult(principal.getName(), request, nPage, nSize);
     }
 
     @ResponseBody

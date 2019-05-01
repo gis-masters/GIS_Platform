@@ -14,12 +14,12 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(ValidationMqProcessRequest request) {
-        this.setId(request.getId());
+    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status) {
+        super(request.getId(), status, request.getType());
     }
 
-    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status) {
-        super(request.getId(), status);
+    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
+        super(request.getId(), status, request.getType(), progress, msg);
     }
 
     public List<ObjectValidationResult> getResults() {

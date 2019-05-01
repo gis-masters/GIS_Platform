@@ -45,6 +45,8 @@ export class WsService {
     this.stompClient.connect({}, function (frame) {
       _this.setConnected(true);
       _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
+        console.log('+++ ', JSON.parse(data.body));
+
         _this._wsMsg$.next(JSON.parse(data.body));
       });
     });

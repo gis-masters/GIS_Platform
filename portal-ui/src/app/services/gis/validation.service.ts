@@ -1,6 +1,7 @@
+import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
 import {MatPaginator, MatSort} from '@angular/material';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
@@ -13,12 +14,18 @@ export class ValidationService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private wsService: WsService,
               private serverProp: ServerPropertiesService) {
     this.logger.info('ValidationService constructor');
   }
 
   validateLayers(crgLayers: CrgLayer[]): Observable<ValidationResponse[]> {
-    const payload = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+    const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      resources: resources
+    };
 
     return this.http
                .post<ValidationResponse[]>(this.serverProp.initValidationUrl,
