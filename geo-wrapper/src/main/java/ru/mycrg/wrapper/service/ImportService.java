@@ -119,8 +119,13 @@ public class ImportService {
     }
 
     private long calculateTotalRows(List<ImportFeature> importFeatures) {
-        log.warn("Implement ME !!!");
-        return 0L;
+        return importFeatures.stream()
+                .map(importFeature -> {
+                    ResourceProjection source = importFeature.getSourceResource();
+                    return new ResourceProjection(source.getDbName(), source.getSchemaName(), source.getTableName());
+                })
+                .mapToLong(baseDaoService::countTotalRows)
+                .sum();
     }
 
     /**
