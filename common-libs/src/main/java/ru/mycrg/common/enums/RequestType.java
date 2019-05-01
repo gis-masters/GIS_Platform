@@ -7,6 +7,8 @@ public enum RequestType {
 
     GML_EXPORT,
 
+    IMPORT,
+
     CREATE_ORG,
     CREATE_PROJECT,
     DELETE_ORG,

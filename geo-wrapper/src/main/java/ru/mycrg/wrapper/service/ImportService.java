@@ -4,15 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqProcessRequest;
+import ru.mycrg.common.import_.ImportFeature;
+import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
+import ru.mycrg.wrapper.mq.IMqEvents;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 
 @Service
@@ -20,13 +24,33 @@ public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
+    private final IMqEvents mqEvents;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
+    private int totalRows = 0;
+    private int processedRows = 0;
+
     public ImportService(BaseDaoService baseDaoService,
+                         IMqEvents mqEvents,
                          DatasourceFactory datasourceFactory) {
+        this.mqEvents = mqEvents;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
+    }
+
+    public void doImport(ImportMqRequest mqRequest) {
+        log.debug("Start import");
+
+        totalRows = (int) calculateTotalRows(mqRequest.getImportFeatures());
+
+        mqEvents.importResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Инициализация...", 0));
+
+        mqRequest
+                .getImportFeatures()
+                .forEach(feature -> importFeature(mqRequest, feature, processedRows));
+
+        mqEvents.importResponse(new BaseMqProcessResponse(mqRequest.getId(), DONE, "", 100));
     }
 
     /**
@@ -35,54 +59,68 @@ public class ImportService {
      * - Сам импорт
      * - Проверка и при необходимости генерация GLOBALID
      */
-    @Transactional
-    public void doImport(ImportMqProcessRequest request) {
-        log.debug("Start import from: {} to: {}", request.printSource(), request.printTarget());
+    private void importFeature(ImportMqRequest mqRequest, ImportFeature feature, int processedRows) {
+        log.debug("Start import from: {} to: {}", feature.printSource(), feature.printTarget());
 
-        String sourceDbName = request.getSourceResource().getDbName();
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
+        try {
+            String sourceDbName = feature.getSourceResource().getDbName();
+            JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
-        String tableName = request.getTargetResource().getTableName();
-        String schemaName = request.getTargetResource().getSchemaName();
+            String tableName = feature.getTargetResource().getTableName();
+            String schemaName = feature.getTargetResource().getSchemaName();
 
-        baseDaoService.truncate(jdbcTemplate,
-                Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, tableName)));
-        baseDaoService.doImport(jdbcTemplate, request);
+            baseDaoService.truncate(jdbcTemplate,
+                    Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, tableName)));
+            baseDaoService.doImport(jdbcTemplate, feature);
 
-        // GlobalId and encoding
-        log.debug("start encoding");
-        ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
+            // GlobalId and encoding
+            log.debug("start encoding");
+            ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
 
-        Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-        int offset = 0;
-        while (true) {
-            List<Map<String, Object>> batch =
-                    baseDaoService.fetchBatch(jdbcTemplate, resourceProjection, batchSize, offset);
-            if (batch.isEmpty()) {
-                break;
+            Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
+            int offset = 0;
+            while (true) {
+                List<Map<String, Object>> batch =
+                        baseDaoService.fetchBatch(jdbcTemplate, resourceProjection, batchSize, offset);
+                if (batch.isEmpty()) {
+                    break;
+                }
+
+                List<Map<String, Object>> touchedParams = handleBatch(batch);
+
+                queue.offer(touchedParams);
+
+                offset++;
             }
 
-            List<Map<String, Object>> touchedParams = handleBatch(batch);
-
-            queue.offer(touchedParams);
-
-            offset++;
-        }
-
-        // Вставляю сюда очередь, и обрабатываю сформированные данные позже, потому как чтение происходит быстрее а
-        // запись медленее, и если читать пачку из базы -> сразу обрабатывать -> пытаться записать то половина данных
-        // пропадает. Так как новые данные приходят быстро и перетерают старые.
-        // Кроме того выборка и обработка кусочками дает возможность отсылать оперативную инфу по прогрессу.
-        while (true) {
-            List<Map<String, Object>> nextBatch = queue.poll();
-            if (nextBatch != null) {
-                baseDaoService.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
-            } else {
-                break;
+            // Вставляю сюда очередь, и обрабатываю сформированные данные позже, потому как чтение происходит быстрее а
+            // запись медленее, и если читать пачку из базы -> сразу обрабатывать -> пытаться записать то половина данных
+            // пропадает. Так как новые данные приходят быстро и перетерают старые.
+            // Кроме того выборка и обработка кусочками дает возможность отсылать оперативную инфу по прогрессу.
+            while (true) {
+                List<Map<String, Object>> nextBatch = queue.poll();
+                if (nextBatch != null) {
+                    baseDaoService.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
+                } else {
+                    break;
+                }
             }
-        }
 
-        log.debug("end encoding");
+            mqEvents.importResponse(
+                    new ImportMqResponse(mqRequest.getId(), feature.getTargetResource().getTableName(), SUB_DONE, -1));
+        } catch (Exception e) {
+            String msg = String.format("Не удалось импортировать из: %s в: %s",
+                    feature.printSource(), feature.printTarget());
+
+            log.error(msg, e);
+            mqEvents.importResponse(
+                    new ImportMqResponse(mqRequest.getId(), feature.getTargetResource().getTableName(), ERROR, -1));
+        }
+    }
+
+    private long calculateTotalRows(List<ImportFeature> importFeatures) {
+        log.warn("Implement ME !!!");
+        return 0L;
     }
 
     /**

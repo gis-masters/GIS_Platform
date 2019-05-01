@@ -1,14 +1,13 @@
 import {map} from 'rxjs/operators';
 import {NGXLogger} from 'ngx-logger';
-import {GeoUtil} from '../../util/GeoUtil';
+import {ImportFlow} from './importFlow';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
+import {GeoUtil} from '../../util/GeoUtil';
 import {BaseService} from '../../base.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ServerPropertiesService} from '../../server-properties.service';
-import {ImportFlow} from './importFlow';
 import {LocalStorageService} from '../../local-storage.service';
-import {StorageKeys} from '../../storage-keys';
+import {ServerPropertiesService} from '../../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -78,16 +77,11 @@ export class ImportService {
 
   /**
    * Последний шаг, после всех приготовлений, стартуем импорт.
-   * @param importId -
    */
-  startUpload(importId: number): Observable<any> {
-    this.logger.info('Upload import: ', importId);
-
-    return this.http.post(this.importUrl + '/' + importId, {});
-  }
-
   startScratchUpload() {
-    return this.startUpload(this.importFlow.scratch_import.import.id);
+    this.logger.info('Start scratch import: ', this.importFlow.scratch_import.import.id);
+
+    return this.http.post(this.importUrl + '/' + this.importFlow.scratch_import.import.id, {});
   }
 
   getImportLayer(task: ImportTaskShort): Observable<ImportLayer> {

@@ -18,8 +18,6 @@ import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.ValidationService;
 
 import static ru.mycrg.common.config.MqProperties.*;
-import static ru.mycrg.common.enums.RequestType.CREATE_ORG;
-import static ru.mycrg.common.enums.RequestType.CREATE_PROJECT;
 
 @Component
 @EnableRabbit

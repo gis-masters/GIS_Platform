@@ -10,7 +10,7 @@ import ru.mycrg.common.*;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.RequestType;
-import ru.mycrg.common.import_.ImportMqProcessRequest;
+import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.ImportService;
@@ -59,24 +59,13 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_IMPORT_INIT)
-    public void initImport(ImportMqProcessRequest request) {
+    public void initImport(ImportMqRequest request) {
         log.debug("Получено сообщение initImport");
         try {
             importService.doImport(request);
-
-            mqEvents.importResponse(
-                    new ImportMqResponse(
-                            request.getId(),
-                            request.getSourceResource().getTableName(),
-                            ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
-
-            mqEvents.importResponse(
-                    new ImportMqResponse(
-                            request.getId(),
-                            request.getSourceResource().getTableName(),
-                            ProcessStatus.ERROR));
+            mqEvents.importResponse(new ImportMqResponse(request.getId(), ProcessStatus.ERROR));
         }
     }
 

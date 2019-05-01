@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqProcessRequest;
+import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.import_.ImportFeature;
+import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
@@ -52,11 +54,13 @@ public class ImportService extends BaseProcessService {
                 .findOrganizationByUsersContaining(user)
                 .orElseThrow(() -> new EntityNotFoundException("Not found user organization"));
 
-        CrgProcess process = new CrgProcess();
+        CrgProcess<WorkImport> process = new CrgProcess<>(workImport);
         processes.add(process);
 
+        ImportMqRequest importMqRequest = new ImportMqRequest(process.getId(), RequestType.IMPORT);
+
         workImport.getImportTasks().forEach(importTask -> {
-            ImportMqProcessRequest importMqRequest = new ImportMqProcessRequest(
+            ImportFeature importFeature = new ImportFeature(
                     process.getId(),
                     // Источником для рабочего импорта является общее хранилище "scratch"
                     new ResourceProjection(
@@ -70,8 +74,10 @@ public class ImportService extends BaseProcessService {
                             importTask.getWorkTableName()),
                     importTask.getMapping());
 
-            mqSender.initImport(importMqRequest);
+            importMqRequest.addImportFeature(importFeature);
         });
+
+        mqSender.initImport(importMqRequest);
 
         return process.getFutureResponse();
     }

@@ -77,8 +77,6 @@ export class DataImportComponent {
   }
 
   private uploadToScratch() {
-    this.logger.info('Start upload to scratch store');
-
     this.importService
         .startScratchUpload()
         .subscribe(

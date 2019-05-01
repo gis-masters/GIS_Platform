@@ -1,7 +1,6 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.RequestType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,6 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
-    private RequestType requestType;
     private List<ObjectValidationResult> results = new ArrayList<>();
 
     public ValidationMqResponse() {}
@@ -54,14 +52,6 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public void setLastValidated(String lastValidated) {
         this.lastValidated = lastValidated;
-    }
-
-    public RequestType getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
     }
 
 }
