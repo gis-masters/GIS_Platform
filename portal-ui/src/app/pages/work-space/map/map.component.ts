@@ -81,13 +81,18 @@ export class MapComponent implements OnInit, OnDestroy {
     this.communicationService
         .validationDialog$()
         .subscribe((data: ValidationDialogData) => {
-          if (data && data.layers.length > 0) {
+          if (data && data.show) {
             this.isValidationDialogShow = true;
-            this.validationDialogData = data;
+
+            if (data.layers && data.layers.length > 0) {
+              this.validationDialogData = data;
+            } else {
+              this.logger.warn('Empty data: ', data);
+              this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
+                {duration: 10000});
+            }
           } else {
-            this.logger.warn('Empty data: ', data);
-            this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
-              {duration: 10000});
+            this.isValidationDialogShow = false;
           }
         });
 

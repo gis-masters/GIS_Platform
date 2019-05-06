@@ -3,6 +3,7 @@ import {Component, Input} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
 import {DownloadFileService} from '../../services/download-file.service';
 import {saveAs} from 'file-saver';
+import {ExportWsMsg} from '../../services/ws.service';
 
 @Component({
   selector: 'crg-progress-item',
@@ -36,10 +37,13 @@ export class ProgressItemComponent {
 
   download(mode) {
     let fileName;
+    const wsMessage = this.event.payload;
+    const exportWsMsg = wsMessage.payload as ExportWsMsg;
+
     if (mode) {
-      fileName = this.event.payload.payload.pathToFile.split('/')[3];
+      fileName = exportWsMsg.pathToFile.split('/')[3];
     } else {
-      fileName = this.event.payload.payload.pathToLog.split('/')[3];
+      fileName = exportWsMsg.pathToLog.split('/')[3];
     }
 
     this.fileService.download(fileName)

@@ -13,6 +13,7 @@ import {CommunicationService} from '../../../services/communication.service';
 export class ValidationDialogComponent {
   @ViewChild(MatSelectionList) layers: MatSelectionList;
   @Input() data: ValidationDialogData;
+
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
 
@@ -29,6 +30,9 @@ export class ValidationDialogComponent {
   }
 
   initValidation() {
+    this.filterTerm = '';
+    this.communicationService.validationDialog.emit({show: false, layers: null});
+
     this.communicationService.selectedForValidation.emit(this.selectedLayers);
     this.communicationService.stepperEvents.emit(4);
   }
@@ -51,5 +55,6 @@ export class ValidationDialogComponent {
 }
 
 export interface ValidationDialogData {
+  show: boolean;
   layers: CrgLayer[];
 }

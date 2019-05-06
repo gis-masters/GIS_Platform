@@ -5,9 +5,11 @@ import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {AuthService} from '../../../services/auth.service';
 import {StringUtil} from '../../../services/util/StringUtil';
+import {ProcessStatus} from '../../../services/process-status';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
+import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
@@ -33,8 +35,11 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
+  commonProgress = 0;
+
   constructor(private logger: NGXLogger,
               private router: Router,
+              private wsService: WsService,
               private snackBar: MatSnackBar,
               private datastoreService: DatastoreService,
               private validationService: ValidationService,
@@ -92,6 +97,13 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
           this.isEditMode = true;
           this.objectsToEdit = objects;
         });
+
+    this.wsService.messages$
+      .pipe(
+        filter(value => !!value),
+        filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
+      )
+      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage));
   }
 
   ngOnDestroy(): void {
@@ -116,20 +128,21 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
     this.validationService
         .validateLayers(crgLayers)
-        .subscribe((responses: ValidationResponse[]) => {
-          this.isValidationInited = false;
-
-          if (!responses) {
+        .subscribe((response: ValidationWsMsg) => {
+          if (!response) {
+            this.isValidationInited = false;
             this.logger.error('Server response is empty');
             this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
           } else {
-            responses.forEach((response: ValidationResponse) => {
-              if (response.status === 'ERROR') {
-                this.logger.warn('Error for feature: ', response);
-              } else {
-                this.commonInfo.set(response.resourceId.split(':')[2], response);
-              }
-            });
+            // this.logger.info('response is valid check progress via websocket', response);
+
+            // response.forEach((response: ValidationResponse) => {
+            //   if (response.status === 'ERROR') {
+            //     this.logger.warn('Error for feature: ', response);
+            //   } else {
+            //     this.commonInfo.set(response.resourceId.split(':')[2], response);
+            //   }
+            // });
           }
         }, error => {
           this.isValidationInited = false;
@@ -146,7 +159,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   reValidate() {
     const copy = Object.assign([], this.layers);
-    this.communicationService.validationDialog.emit({layers: copy});
+    this.communicationService.validationDialog.emit({show: true, layers: copy});
   }
 
   switchMode() {
@@ -155,5 +168,19 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   getGeometryType(name: string) {
     return StringUtil.splitGeomType(name);
+  }
+
+  private handleWsMessage(wsMessage: IWsMessage) {
+    this.logger.info('handleWsMessage:', wsMessage);
+
+    const validationWsMsg = wsMessage.payload as ValidationWsMsg;
+    if (validationWsMsg.status === ProcessStatus.PENDING) {
+      this.commonProgress = validationWsMsg.progress;
+    } else if (validationWsMsg.status === ProcessStatus.SUB_DONE) {
+      // есть инфа о названии слоя
+      this.commonInfo.set(validationWsMsg.description, null);
+    } else if (validationWsMsg.status === ProcessStatus.DONE) {
+      this.isValidationInited = false;
+    }
   }
 }

@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {WsService} from '../ws.service';
+import {ValidationWsMsg, WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
 import {MatPaginator, MatSort} from '@angular/material';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -19,7 +19,7 @@ export class ValidationService {
     this.logger.info('ValidationService constructor');
   }
 
-  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationResponse[]> {
+  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationWsMsg> {
     const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
 
     const payload = {
@@ -28,7 +28,7 @@ export class ValidationService {
     };
 
     return this.http
-               .post<ValidationResponse[]>(this.serverProp.initValidationUrl,
+               .post<ValidationWsMsg>(this.serverProp.initValidationUrl,
                      JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}});
   }

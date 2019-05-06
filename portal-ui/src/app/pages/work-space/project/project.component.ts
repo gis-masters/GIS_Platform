@@ -100,8 +100,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
             if (project.status === ProcessStatus.DONE) {
               this.projectsService.fetchProjects();
               clearInterval(checkStatusInterval);
-            } else {
-              this.logger.info('-', project);
             }
           });
     }, 5000);

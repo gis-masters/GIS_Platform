@@ -7,6 +7,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';
+import {BugObject} from "./gis/validation.service";
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,7 @@ export class WsService {
     this.stompClient.connect({}, function (frame) {
       _this.setConnected(true);
       _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
-        console.log('+++ ', JSON.parse(data.body));
+        // console.log('+++ +++', JSON.parse(data.body));
 
         _this._wsMsg$.next(JSON.parse(data.body));
       });
@@ -68,7 +69,7 @@ export class WsService {
 
 export interface IWsMessage {
   type: WsMessageType;
-  payload: ExportWsMsg;
+  payload: ExportWsMsg | ValidationWsMsg;
 }
 
 export interface ExportWsMsg {
@@ -77,7 +78,23 @@ export interface ExportWsMsg {
   pathToFile: string;
   pathToLog: string;
   status: string;
-  progress: string;
+  progress: number;
+}
+
+export interface ValidationWsMsg {
+  id: string;
+  description: string;
+  results: BugObject[];
+  status: string;
+  progress: number;
+  total: number;
+  type?: WsMessageType;
+  validated: boolean;
+  lastValidated: string;
+  pending?: boolean;
+  error?: boolean;
+  done?: boolean;
+  empty?: boolean;
 }
 
 export enum WsMessageType {
