@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqResponse;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.common.import_.ImportMqResponse;
 
 @Service
 public class MqSender implements IMqEvents {
@@ -30,12 +32,12 @@ public class MqSender implements IMqEvents {
     }
 
     @Override
-    public void validationResponse(BaseMqProcessResponse response) {
+    public void validationResponse(ValidationMqResponse response) {
         send(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
     }
 
     @Override
-    public void importResponse(BaseMqProcessResponse payload) {
+    public void importResponse(ImportMqResponse payload) {
         send(MqProperties.FANOUT_IMPORT_RESPONSE, MqProperties.KEY_IMPORT_RESPONSE, payload);
     }
 

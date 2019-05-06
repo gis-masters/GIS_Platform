@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;

@@ -79,25 +79,36 @@ public class ValidationService {
      * @param mqRequest Запрос
      */
     public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) throws IOException {
-        // JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest, DONE);
 
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest, PENDING);
+        mqRequest
+                .getResourceProjections()
+                .forEach(resource -> {
+                    log.debug("Get info for: {}", resource.getResourceId());
 
-//        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, mqRequest);
-//        if (totalViolations > 0) {
-//            List<Map<String, Object>> violations = baseDaoService.getViolations(mqRequest);
-//
-//            log.info("Found {} violations", violations.size());
-//            response.setResults(Util.mapToViolations(violations));
-//            response.setValidated(true);
-//        } else {
-//            response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-//        }
-//
-//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-//        response.setTotal(totalViolations);
-//        response.setStatus(ProcessStatus.DONE);
+                    try {
+                        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
+
+                        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, resource);
+                        if (totalViolations > 0) {
+                            List<Map<String, Object>> violations = baseDaoService.getViolations(resource,
+                                    mqRequest.getSize(), mqRequest.getPage());
+
+                            log.info("Found {} violations", violations.size());
+                            response.setResults(Util.mapToViolations(violations));
+                            response.setValidated(true);
+                        } else {
+                            response.setValidated(baseDaoService.isValidated(jdbcTemplate, resource));
+                        }
+
+                        LocalDateTime localDateTime = lastCalculatedValidation.get(resource.getResourceId());
+                        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
+                        response.setTotal(totalViolations);
+                        response.setStatus(DONE);
+                    } catch (Exception e) {
+                        log.error("Не выбрать результаты валидации для: " + resource.getResourceId(), e);
+                    }
+                });
 
         return response;
     }
@@ -110,16 +121,32 @@ public class ValidationService {
      * @param mqRequest Запрос
      */
     public ValidationMqResponse getInfo(ValidationMqProcessRequest mqRequest) {
-//        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(mqRequest.getDbName());
+        ValidationMqResponse response = new ValidationMqResponse(mqRequest, DONE);
 
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest, PENDING);
+        mqRequest
+                .getResourceProjections()
+                .forEach(resource -> {
+                    log.debug("Get info for: {}", resource.getResourceId());
 
-//        response.setValidated(baseDaoService.isValidated(jdbcTemplate, mqRequest));
-//        response.setTotal(baseDaoService.countTotalViolations(jdbcTemplate, mqRequest));
-//
-//        LocalDateTime localDateTime = lastCalculatedValidation.get(response.getResourceId());
-//        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-//        response.setStatus(ProcessStatus.DONE);
+                    ValidationInfo validationInfo = new ValidationInfo(resource.getTableName());
+                    try {
+
+                        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
+
+                        validationInfo.setValidated(baseDaoService.isValidated(jdbcTemplate, resource));
+                        validationInfo.setTotalViolations(baseDaoService.countTotalViolations(jdbcTemplate, resource));
+
+                        LocalDateTime localDateTime = lastCalculatedValidation.get(resource.getResourceId());
+                        validationInfo.setLastValidationDateTime(localDateTime != null ? localDateTime.toString() : null);
+
+                        validationInfo.setStatus(DONE);
+                    } catch (Exception e) {
+                        validationInfo.setStatus(ERROR);
+                        log.error("Не удалось собрать инфу для: " + resource.getTableName(), e);
+                    }
+
+                    response.addBrieflyInfo(validationInfo);
+                });
 
         return response;
     }

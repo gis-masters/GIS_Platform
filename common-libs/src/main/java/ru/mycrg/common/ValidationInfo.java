@@ -1,32 +1,19 @@
-package ru.mycrg.gis.dto;
+package ru.mycrg.common;
 
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ValidationInfo {
 
-public class ValidationResponseDto {
-
+    private String featureName;
     private ProcessStatus status;
     private boolean isValidated;
     private long totalViolations;
     private String lastValidationDateTime;
-    private List<ObjectValidationResult> objects = new ArrayList<>();
 
-    public ValidationResponseDto() {}
+    public ValidationInfo() {}
 
-    public ValidationResponseDto(ProcessStatus status) {
-        this.status = status;
-    }
-
-    public ValidationResponseDto(ValidationMqResponse response) {
-        this.status = response.getStatus();
-        this.isValidated = response.isValidated();
-        this.totalViolations = response.getTotal();
-        this.lastValidationDateTime = response.getLastValidated();
-        this.objects = response.getResults();
+    public ValidationInfo(String featureName) {
+        this.featureName = featureName;
     }
 
     public ProcessStatus getStatus() {
@@ -61,11 +48,11 @@ public class ValidationResponseDto {
         this.lastValidationDateTime = lastValidationDateTime;
     }
 
-    public List<ObjectValidationResult> getObjects() {
-        return objects;
+    public String getFeatureName() {
+        return featureName;
     }
 
-    public void setObjects(List<ObjectValidationResult> objects) {
-        this.objects = objects;
+    public void setFeatureName(String featureName) {
+        this.featureName = featureName;
     }
 }

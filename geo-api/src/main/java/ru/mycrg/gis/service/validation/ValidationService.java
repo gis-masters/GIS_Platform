@@ -106,7 +106,10 @@ public class ValidationService extends BaseProcessService {
         Optional<CrgProcess> processById = getProcessById(response.getId());
         if (processById.isPresent()) {
             CrgProcess process = processById.get();
-            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+
+            if (RequestType.VALIDATION_INIT.equals(response.getType())) {
+                wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+            }
 
             process.complete(response);
         } else {

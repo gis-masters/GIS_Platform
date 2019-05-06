@@ -44,13 +44,13 @@ public class ImportService {
 
         totalRows = (int) calculateTotalRows(mqRequest.getImportFeatures());
 
-        mqEvents.importResponse(new BaseMqProcessResponse(mqRequest.getId(), PENDING, "Инициализация...", 0));
+        mqEvents.importResponse(new ImportMqResponse(mqRequest.getId(), PENDING, "Инициализация...", 0));
 
         mqRequest
                 .getImportFeatures()
                 .forEach(feature -> importFeature(mqRequest, feature, processedRows));
 
-        mqEvents.importResponse(new BaseMqProcessResponse(mqRequest.getId(), DONE, "", 100));
+        mqEvents.importResponse(new ImportMqResponse(mqRequest.getId(), DONE, "", 100));
     }
 
     /**
@@ -107,14 +107,14 @@ public class ImportService {
             }
 
             mqEvents.importResponse(
-                    new ImportMqResponse(mqRequest.getId(), feature.getTargetResource().getTableName(), SUB_DONE, -1));
+                    new ImportMqResponse(mqRequest.getId(), SUB_DONE, feature.getTargetResource().getTableName(), -1));
         } catch (Exception e) {
             String msg = String.format("Не удалось импортировать из: %s в: %s",
                     feature.printSource(), feature.printTarget());
 
             log.error(msg, e);
             mqEvents.importResponse(
-                    new ImportMqResponse(mqRequest.getId(), feature.getTargetResource().getTableName(), ERROR, -1));
+                    new ImportMqResponse(mqRequest.getId(), ERROR, feature.getTargetResource().getTableName(), -1));
         }
     }
 

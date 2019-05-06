@@ -12,7 +12,11 @@ import {DatastoreService} from '../../../services/geoserver/datastore.service';
 import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
+import {
+  ValidationBrieflyInfo,
+  ValidationInfoResponse,
+  ValidationService
+} from '../../../services/gis/validation.service';
 import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../../services/communication.service';
 
 @Component({
@@ -25,7 +29,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   @Input() isActive: boolean;
 
   layers: CrgLayer[] = [];
-  commonInfo: Map<string, ValidationResponse> = new Map<string, ValidationResponse>();
+  commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
 
   step = 0;
   isValidationInited = false;
@@ -69,17 +73,17 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
           } else {
             this.validationService
                 .getLayerStatistic(layers)
-                .subscribe((responses: ValidationResponse[]) => {
+                .subscribe((infoResponse: ValidationInfoResponse) => {
                   this.isValidationInited = false;
 
-                  if (!responses) {
-                    this.logger.warn('Cant get layer info', responses);
+                  if (!infoResponse) {
+                    this.logger.warn('Cant get layer info', infoResponse);
                   } else {
-                    responses.forEach((response: ValidationResponse) => {
-                      if (response.status === 'ERROR') {
-                        this.logger.warn('Error for feature: ', response);
+                    infoResponse.briefly.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+                      if (brieflyInfo.status === 'ERROR') {
+                        this.logger.warn('Error for feature: ', brieflyInfo);
                       } else {
-                        this.commonInfo.set(response.resourceId.split(':')[2], response);
+                        this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
                       }
                     });
                   }
@@ -103,7 +107,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         filter(value => !!value),
         filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
       )
-      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage));
+      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
   }
 
   ngOnDestroy(): void {
@@ -170,10 +174,9 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
     return StringUtil.splitGeomType(name);
   }
 
-  private handleWsMessage(wsMessage: IWsMessage) {
-    this.logger.info('handleWsMessage:', wsMessage);
+  private handleWsMessage(validationWsMsg: ValidationWsMsg) {
+    this.logger.info('handleWsMessage:', validationWsMsg);
 
-    const validationWsMsg = wsMessage.payload as ValidationWsMsg;
     if (validationWsMsg.status === ProcessStatus.PENDING) {
       this.commonProgress = validationWsMsg.progress;
     } else if (validationWsMsg.status === ProcessStatus.SUB_DONE) {

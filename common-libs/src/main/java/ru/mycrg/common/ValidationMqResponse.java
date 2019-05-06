@@ -7,10 +7,14 @@ import java.util.List;
 
 public class ValidationMqResponse extends BaseMqProcessResponse {
 
+    // При выборке результатов проверки
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
     private List<ObjectValidationResult> results = new ArrayList<>();
+
+    // При общем информационном запросе
+    private List<ValidationInfo> briefly = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
@@ -20,14 +24,6 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
         super(request.getId(), status, request.getType(), progress, msg);
-    }
-
-    public List<ObjectValidationResult> getResults() {
-        return results;
-    }
-
-    public void setResults(List<ObjectValidationResult> results) {
-        this.results = results;
     }
 
     public Long getTotal() {
@@ -54,4 +50,19 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
         this.lastValidated = lastValidated;
     }
 
+    public List<ValidationInfo> getBriefly() {
+        return briefly;
+    }
+
+    public void addBrieflyInfo(ValidationInfo validationInfo) {
+        briefly.add(validationInfo);
+    }
+
+    public List<ObjectValidationResult> getResults() {
+        return results;
+    }
+
+    public void setResults(List<ObjectValidationResult> results) {
+        this.results = results;
+    }
 }
