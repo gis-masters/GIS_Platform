@@ -12,7 +12,7 @@ import {ValidationResultsResponse, ValidationService} from '../../../services/gi
 import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {ProcessStatus} from "../../../services/process-status";
+import {ProcessStatus} from '../../../services/process-status';
 
 @Component({
   selector: 'crg-bugs-table',

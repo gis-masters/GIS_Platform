@@ -71,27 +71,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
           if (layers.length < 1) {
             this.isValidationInited = false;
           } else {
-            this.validationService
-                .getLayerStatistic(layers)
-                .subscribe((infoResponse: ValidationInfoResponse) => {
-                  this.isValidationInited = false;
-
-                  if (!infoResponse) {
-                    this.logger.warn('Cant get layer info', infoResponse);
-                  } else {
-                    infoResponse.briefly.forEach((brieflyInfo: ValidationBrieflyInfo) => {
-                      if (brieflyInfo.status === 'ERROR') {
-                        this.logger.warn('Error for feature: ', brieflyInfo);
-                      } else {
-                        this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
-                      }
-                    });
-                  }
-                }, error => {
-                  this.isValidationInited = false;
-
-                  this.logger.error('Cant get validation info: ', error);
-                });
+            this.updateBrieflyInfo(layers);
           }
         });
 
@@ -138,15 +118,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
             this.logger.error('Server response is empty');
             this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
           } else {
-            // this.logger.info('response is valid check progress via websocket', response);
-
-            // response.forEach((response: ValidationResponse) => {
-            //   if (response.status === 'ERROR') {
-            //     this.logger.warn('Error for feature: ', response);
-            //   } else {
-            //     this.commonInfo.set(response.resourceId.split(':')[2], response);
-            //   }
-            // });
+            this.updateBrieflyInfo(crgLayers);
           }
         }, error => {
           this.isValidationInited = false;
@@ -185,5 +157,29 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
     } else if (validationWsMsg.status === ProcessStatus.DONE) {
       this.isValidationInited = false;
     }
+  }
+
+  private updateBrieflyInfo(layers: CrgLayer[]) {
+    this.validationService
+        .getLayerStatistic(layers)
+        .subscribe((infoResponse: ValidationInfoResponse) => {
+          this.isValidationInited = false;
+
+          if (!infoResponse) {
+            this.logger.warn('Cant get layer info', infoResponse);
+          } else {
+            infoResponse.briefly.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+              if (brieflyInfo.status === 'ERROR') {
+                this.logger.warn('Error for feature: ', brieflyInfo);
+              } else {
+                this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
+              }
+            });
+          }
+        }, error => {
+          this.isValidationInited = false;
+
+          this.logger.error('Cant get validation info: ', error);
+        });
   }
 }

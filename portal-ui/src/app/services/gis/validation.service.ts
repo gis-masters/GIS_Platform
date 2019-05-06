@@ -6,7 +6,7 @@ import {ValidationWsMsg, WsService} from '../ws.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
-import {ProcessStatus} from "../process-status";
+import {ProcessStatus} from '../process-status';
 
 @Injectable({
   providedIn: 'root'
