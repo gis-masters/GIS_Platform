@@ -1,10 +1,12 @@
+import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
 import {MatPaginator, MatSort} from '@angular/material';
+import {ValidationWsMsg, WsService} from '../ws.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
+import {ProcessStatus} from '../process-status';
 
 @Injectable({
   providedIn: 'root'
@@ -13,28 +15,45 @@ export class ValidationService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private wsService: WsService,
               private serverProp: ServerPropertiesService) {
     this.logger.info('ValidationService constructor');
   }
 
-  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationResponse[]> {
-    const payload = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+  /**
+   * Провалидировать слоя.
+   * @param crgLayers Слоя на валидацию.
+   */
+  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationWsMsg> {
+    const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      resources: resources
+    };
 
     return this.http
-               .post<ValidationResponse[]>(this.serverProp.initValidationUrl,
+               .post<ValidationWsMsg>(this.serverProp.initValidationUrl,
                      JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}});
   }
 
-  getValidationResults(data: ConnectionInfo, paginator: MatPaginator, sorter: MatSort): Observable<ValidationResponse[]> {
+  getValidationResults(data: ConnectionInfo,
+                       paginator: MatPaginator, sorter: MatSort): Observable<ValidationResultsResponse> {
     return this.getValidationResults_(data,
                                      paginator.pageIndex, paginator.pageSize,
                                      sorter.active, sorter.direction);
   }
 
+  /**
+   * * Выборка результатов валидации.
+   */
   getValidationResults_(data: ConnectionInfo, page: number, size: number, sortBy: string,
-                        sortDirection: string): Observable<ValidationResponse[]> {
-    const payload = [data];
+                        sortDirection: string): Observable<ValidationResultsResponse> {
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      resources: [data]
+    };
 
     const params = new HttpParams()
       .set('page', page ? String(page) : '0')
@@ -42,28 +61,62 @@ export class ValidationService {
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
     return this.http
-               .post<ValidationResponse[]>(this.serverProp.validationUrl,
+               .post<ValidationResultsResponse>(this.serverProp.validationUrl,
                      JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}, params: params});
   }
 
-  getLayerStatistic(crgLayers: CrgLayer[]) {
-    const payload = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+  /**
+   * Получить краткую статистику по слоям
+   * @param crgLayers Слои
+   */
+  getLayerStatistic(crgLayers: CrgLayer[]): Observable<ValidationInfoResponse> {
+    const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      resources: resources
+    };
 
     return this.http
-               .post(this.serverProp.validationInfo,
+               .post<ValidationInfoResponse>(this.serverProp.validationInfo,
                  JSON.stringify(payload),
                  {headers: {'Content-Type': 'application/json'}});
   }
 
 }
 
-export interface ValidationResponse {
-  resourceId: string;
+export interface ValidationBaseResponse {
+  id: string;
+  description: string;
+  progress: number;
+  status: ProcessStatus;
+  type: string;
+
+  pending: boolean;
+  done: boolean;
+  empty: boolean;
+  error: boolean;
+  null: boolean;
+}
+
+export interface ValidationResultsResponse {
+  validated: boolean;
+  total: number;
+  lastValidated: string;
+  results: BugObject[];
+  status: ProcessStatus;
+}
+
+export interface ValidationInfoResponse extends ValidationBaseResponse {
+  briefly: ValidationBrieflyInfo[];
+}
+
+export interface ValidationBrieflyInfo {
+  featureName: string;
   validated: boolean;
   totalViolations: number;
   lastValidationDateTime: string;
-  objects: BugObject[];
   status: string;
 }
 

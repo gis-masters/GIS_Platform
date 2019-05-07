@@ -1,15 +1,15 @@
 import {NGXLogger} from 'ngx-logger';
 import {debounceTime} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
-import {CommunicationService, ObjectDto} from '../../services/communication.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {TransformFeatureService} from '../../services/gis/transform-feature.service';
-import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {ValidationService} from '../../services/gis/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
+import {OpenLayersService} from '../../services/open-layer/open-layers.service';
+import {CommunicationService, ObjectDto} from '../../services/communication.service';
+import {TransformFeatureService} from '../../services/gis/transform-feature.service';
+import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-edit-object',
@@ -110,7 +110,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
           if (!!this.featureType) {
             this.prepareEditForm(this.wfsFeature.properties);
           } else {
-            this.logger.warn('Not found rure by feature name: ', objectDto.crgLayer.name);
+            this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
           }
 
           this.openLayers.showFeature(wfsFeature);

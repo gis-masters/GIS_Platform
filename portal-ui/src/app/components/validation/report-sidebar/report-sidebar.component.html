@@ -12,7 +12,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="fiz-loading-shade" *ngIf="isValidationInited">
-            <mat-spinner></mat-spinner>
+            <mat-progress-spinner [value]="commonProgress"></mat-progress-spinner>
           </div>
 
           <div class="h-100" style="width: 100%">

@@ -10,11 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.GmlMqResponse;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
-import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.exceptions.FileNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
@@ -22,12 +20,11 @@ import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.gml.GmlGenerationService;
-import ru.mycrg.gis.service.validation.IValidationService;
+import ru.mycrg.gis.service.validation.ValidationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -36,13 +33,13 @@ public class FgistpController {
     private static Logger log = LoggerFactory.getLogger(FgistpController.class);
 
     private final FgistpRuleService fgistpRuleService;
-    private final IValidationService validationService;
+    private final ValidationService validationService;
     private final GmlGenerationService gmlGenerationService;
     private final GmlStorageService gmlStorageService;
 
     @Autowired
     public FgistpController(FgistpRuleService fgistpRuleService,
-                            IValidationService validationService,
+                            ValidationService validationService,
                             GmlStorageService gmlStorageService,
                             GmlGenerationService gmlGenerationService) {
         this.fgistpRuleService = fgistpRuleService;
@@ -77,28 +74,28 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public CompletableFuture<List<ValidationResponseDto>> initValidation(
-            @RequestBody List<ValidationRequestDto> request,
+    public CompletableFuture<BaseMqProcessResponse> initValidation(
+            @RequestBody ValidationRequestDto request,
             Principal principal) {
-        log.debug("Init validation for: {} classes", request.size());
+        log.debug("Init validation for: {} resources", request.getResources().size());
 
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INIT);
+        return validationService.validate(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation/info")
-    public CompletableFuture<List<ValidationResponseDto>> getCommonInfo(
-            @RequestBody List<ValidationRequestDto> request,
+    public CompletableFuture<BaseMqProcessResponse> getCommonInfo(
+            @RequestBody ValidationRequestDto request,
             Principal principal) {
         validateRequest(request);
 
-        return validationService.initProcess(principal.getName(), request, 0, 25, RequestType.INFO);
+        return validationService.getInfo(principal.getName(), request);
     }
 
     @PostMapping("/fgistp/validation")
-    public CompletableFuture<List<ValidationResponseDto>> getValidationResults(
-            @RequestBody List<ValidationRequestDto> request,
+    public CompletableFuture<BaseMqProcessResponse> getValidationResults(
+            @RequestBody ValidationRequestDto request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
             Principal principal) {
@@ -115,12 +112,12 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.initProcess(principal.getName(), request, nPage, nSize, RequestType.GET);
+        return validationService.getResult(principal.getName(), request, nPage, nSize);
     }
 
     @ResponseBody
     @PostMapping("/fgistp/export/gml")
-    public CompletableFuture<GmlMqResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
+    public CompletableFuture<BaseMqProcessResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
         log.debug("Gml generation request");
 
         return gmlGenerationService.initProcess(request);
@@ -129,8 +126,8 @@ public class FgistpController {
     /**
      * Если есть пустые/незаполненные параметры(хотябы у одного) - считаем это некорректной работой UI.
      */
-    private void validateRequest(List<ValidationRequestDto> request) {
-        request.forEach(requestDto -> {
+    private void validateRequest(ValidationRequestDto request) {
+        request.getResources().forEach(requestDto -> {
             String dbName = requestDto.getDbName();
             String schemaName = requestDto.getSchemaName();
             String tableName = requestDto.getTableName();

@@ -11,10 +11,11 @@ import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
+import ru.mycrg.gis.service.Processable;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.gml.GmlGenerationService;
 import ru.mycrg.gis.service.import_.ImportService;
-import ru.mycrg.gis.service.validation.IValidationService;
+import ru.mycrg.gis.service.validation.ValidationService;
 
 import static ru.mycrg.common.config.MqProperties.*;
 
@@ -24,15 +25,15 @@ public class MqListener {
 
     private static final Logger log = LoggerFactory.getLogger(MqListener.class);
 
-    private final IValidationService validationService;
-    private final ImportService importService;
-    private final GmlGenerationService gmlGenerationService;
+    private final Processable validationService;
+    private final Processable importService;
+    private final Processable gmlGenerationService;
     private final OrganizationService organizationService;
     private final ProjectService projectService;
 
     @Autowired
     public MqListener(OrganizationService organizationService,
-                      IValidationService validationService,
+                      ValidationService validationService,
                       ImportService importService,
                       ProjectService projectService,
                       GmlGenerationService gmlGenerationService) {
@@ -45,27 +46,25 @@ public class MqListener {
 
     @RabbitListener(queues = QUEUE_ORG_CREATED)
     public void created(OrgMqResponse response) {
-        switch (response.getEventType()) {
-            case CREATE_ORG: organizationService.organizationCreated(response.getId()); break;
-            case CREATE_PROJECT: projectService.handleResponse(response); break;
+        switch (response.getType()) {
+            case CREATE_ORG: organizationService.organizationCreated(response.getOrgId()); break;
+            case CREATE_PROJECT: projectService.handleMqResponse(response); break;
             default: log.warn("Not processable event type");
         }
     }
 
     @RabbitListener(queues = QUEUE_VALIDATION_RESULT)
     public void validationResult(ValidationMqResponse response) {
-        validationService.progress(response);
+        validationService.handleMqResponse(response);
     }
 
     @RabbitListener(queues = QUEUE_IMPORT_RESPONSE)
     public void importResponse(ImportMqResponse response) {
-        importService.progress(response);
+        importService.handleMqResponse(response);
     }
 
     @RabbitListener(queues = QUEUE_GML_RESPONSE)
     public void gmlResponse(GmlMqResponse response) {
-        log.info("gmlResponse: {}", response.getId());
-
-        gmlGenerationService.progress(response);
+        gmlGenerationService.handleMqResponse(response);
     }
 }

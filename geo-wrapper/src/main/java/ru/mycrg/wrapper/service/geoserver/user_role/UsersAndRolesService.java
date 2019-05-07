@@ -69,7 +69,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
     // пользователя - email. Никаких извращений писать не буду предусматриваю только валидный e-mail
     public String castyl(String userName) {
         if (userName == null) {
-            return userName;
+            return null;
         }
 
         String[] splited = userName.split("\\.");

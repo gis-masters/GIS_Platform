@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.config.MqProperties;
@@ -27,28 +27,29 @@ public class MqSender implements IMqEvents {
     public void orgEventResponse(OrgMqResponse response) {
         log.info("Send created event: {}:{}", response.getId(), response.getStatus());
 
+        // TODO: привести к общему виду
         rabbitTemplate.convertAndSend(MqProperties.FANOUT_ORG_CREATED, MqProperties.KEY_ORG_CREATED, response);
     }
 
     @Override
     public void validationResponse(ValidationMqResponse response) {
-        log.info("Send {} response: {}", response.getStatus(), response.getId());
-
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
+        send(MqProperties.FANOUT_VALIDATION_RESULT, MqProperties.KEY_VALIDATION_RESULT, response);
     }
 
     @Override
     public void importResponse(ImportMqResponse payload) {
-        log.debug("Send {} response: {} / {}", payload.getId(), payload.getLayerName(), payload.getStatus());
-
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_IMPORT_RESPONSE, MqProperties.KEY_IMPORT_RESPONSE, payload);
+        send(MqProperties.FANOUT_IMPORT_RESPONSE, MqProperties.KEY_IMPORT_RESPONSE, payload);
     }
 
     @Override
-    public void gmlResponse(GmlMqResponse payload) {
-        log.trace("Send gml response");
+    public void gmlResponse(BaseMqProcessResponse payload) {
+        send(MqProperties.FANOUT_GML_RESPONSE, MqProperties.KEY_GML_RESPONSE, payload);
+    }
 
-        rabbitTemplate.convertAndSend(MqProperties.FANOUT_GML_RESPONSE, MqProperties.KEY_GML_RESPONSE, payload);
+    private void send(String fanout, String key, BaseMqProcessResponse payload) {
+        log.debug("Send {} status: {}", payload.getId(), payload.getStatus());
+
+        rabbitTemplate.convertAndSend(fanout, key, payload);
     }
 
 }

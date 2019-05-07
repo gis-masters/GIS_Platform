@@ -1,18 +1,13 @@
 package ru.mycrg.gis.queue;
 
-import ru.mycrg.common.GmlMqRequest;
-import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.common.ValidationMqRequest;
-import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.OrgMqProcessRequest;
 
 public interface IMqEvents {
 
-    void sendOrgEvent(OrgMqRequest msg);
-
-    void initImport(ImportMqRequest importMqRequest);
-
-    void sendValidationRequest(ValidationMqRequest validationMqRequest);
-
-    void sendGmlInit(GmlMqRequest payload);
+    void sendOrgEvent(OrgMqProcessRequest msg);
+    void initImport(BaseMqProcessRequest importMqRequest);
+    void sendValidationRequest(BaseMqProcessRequest validationMqRequest);
+    void sendGmlInit(BaseMqProcessRequest payload);
 
 }

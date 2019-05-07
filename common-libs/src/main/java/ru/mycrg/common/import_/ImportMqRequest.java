@@ -1,66 +1,27 @@
 package ru.mycrg.common.import_;
 
-import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.enums.RequestType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ImportMqRequest {
+public class ImportMqRequest extends BaseMqProcessRequest {
 
-    private UUID id;
-    private ResourceProjection sourceResource;
-    private ResourceProjection targetResource;
-    private List<GeoMapping> mapping;
+    private List<ImportFeature> importFeatures = new ArrayList<>();
 
     public ImportMqRequest() {}
 
-    public ImportMqRequest(UUID id,
-                           ResourceProjection sourceResource,
-                           ResourceProjection targetResource,
-                           List<GeoMapping> mapping) {
-        this.id = id;
-        this.sourceResource = sourceResource;
-        this.targetResource = targetResource;
-        this.mapping = mapping;
+    public ImportMqRequest(UUID id, RequestType type) {
+        super(id, type);
     }
 
-    public UUID getId() {
-        return id;
+    public List<ImportFeature> getImportFeatures() {
+        return importFeatures;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public ResourceProjection getSourceResource() {
-        return sourceResource;
-    }
-
-    public void setSourceResource(ResourceProjection sourceResource) {
-        this.sourceResource = sourceResource;
-    }
-
-    public ResourceProjection getTargetResource() {
-        return targetResource;
-    }
-
-    public void setTargetResource(ResourceProjection targetResource) {
-        this.targetResource = targetResource;
-    }
-
-    public List<GeoMapping> getMapping() {
-        return mapping;
-    }
-
-    public void setMapping(List<GeoMapping> mapping) {
-        this.mapping = mapping;
-    }
-
-    public String printSource() {
-        return String.join(".", sourceResource.getDbName(), sourceResource.getSchemaName(), sourceResource.getTableName());
-    }
-
-    public String printTarget() {
-        return String.join(".", targetResource.getDbName(), targetResource.getSchemaName(), targetResource.getTableName());
+    public void addImportFeature(ImportFeature importFeature) {
+        this.importFeatures.add(importFeature);
     }
 }

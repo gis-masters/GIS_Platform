@@ -1,41 +1,29 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.RequestType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationMqResponse extends BaseMqProcessResponse {
 
-    private String resourceId;
+    // При выборке результатов проверки
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
-    private RequestType requestType;
     private List<ObjectValidationResult> results = new ArrayList<>();
+
+    // При общем информационном запросе
+    private List<ValidationInfo> briefly = new ArrayList<>();
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(ValidationMqRequest request) {
-        this.setId(request.getId());
-
-        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
+    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status) {
+        super(request.getId(), status, request.getType());
     }
 
-    public ValidationMqResponse(ValidationMqRequest request, ProcessStatus status) {
-        this.setId(request.getId());
-        this.setStatus(status);
-
-        this.resourceId = String.join(":", request.getDbName(), request.getSchemaName(), request.getTableName());
-    }
-
-    public List<ObjectValidationResult> getResults() {
-        return results;
-    }
-
-    public void setResults(List<ObjectValidationResult> results) {
-        this.results = results;
+    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
+        super(request.getId(), status, request.getType(), msg, progress);
     }
 
     public Long getTotal() {
@@ -62,19 +50,19 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
         this.lastValidated = lastValidated;
     }
 
-    public RequestType getRequestType() {
-        return requestType;
+    public List<ValidationInfo> getBriefly() {
+        return briefly;
     }
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
+    public void addBrieflyInfo(ValidationInfo validationInfo) {
+        briefly.add(validationInfo);
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public List<ObjectValidationResult> getResults() {
+        return results;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+    public void setResults(List<ObjectValidationResult> results) {
+        this.results = results;
     }
 }

@@ -1,11 +1,12 @@
-import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from './util/GeoUtil';
 import {Injectable} from '@angular/core';
+import {catchError} from 'rxjs/operators';
 import {AuthService} from './auth.service';
+import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {TokenStorageService} from './token-storage.service';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,11 @@ export class JwtInterceptorService implements HttpInterceptor {
       });
     }
 
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // console.log('Global error interceptor: ', error);
+
+        return throwError(error);
+      }));
   }
 }

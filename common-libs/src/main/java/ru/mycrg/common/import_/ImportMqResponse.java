@@ -1,21 +1,24 @@
 package ru.mycrg.common.import_;
 
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 
-import java.util.UUID;
+public class ImportMqResponse extends BaseMqProcessResponse {
 
-public class ImportMqResponse {
-
-    private UUID id;
     private String layerName;
-    private ProcessStatus status;
 
-    public ImportMqResponse() {}
+    public ImportMqResponse(ImportMqRequest request, ProcessStatus status) {
+        super(request.getId(), status, request.getType());
+    }
 
-    public ImportMqResponse(UUID id, String tableName, ProcessStatus status) {
-        this.id = id;
-        this.layerName = tableName;
-        this.status = status;
+    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String description, int progress) {
+        super(request.getId(), status, request.getType(), description, progress);
+    }
+
+    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String layerName) {
+        super(request.getId(), status, request.getType());
+
+        this.layerName = layerName;
     }
 
     public String getLayerName() {
@@ -26,19 +29,4 @@ public class ImportMqResponse {
         this.layerName = layerName;
     }
 
-    public ProcessStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProcessStatus status) {
-        this.status = status;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 }

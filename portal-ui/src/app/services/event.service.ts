@@ -34,7 +34,10 @@ export class EventService {
 
     // Не буду тут заморачиваться с отписками потому как этот сервис живет постоянно
     this.wsService.messages$
-        .pipe(filter(value => !!value))
+        .pipe(
+          filter(value => !!value),
+          filter((msg: IWsMessage) => msg.type === WsMessageType.GML_EXPORT),
+        )
         .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
   }
 

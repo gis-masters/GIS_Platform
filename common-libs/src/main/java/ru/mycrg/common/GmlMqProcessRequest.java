@@ -1,28 +1,21 @@
 package ru.mycrg.common;
 
+import ru.mycrg.common.enums.RequestType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GmlMqRequest {
+public class GmlMqProcessRequest extends BaseMqProcessRequest {
 
-    private UUID id;
     private String docSchema = "Doc.20301010000";
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
-    public GmlMqRequest() {}
+    public GmlMqProcessRequest() {}
 
-    public GmlMqRequest(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    public GmlMqProcessRequest(UUID id) {
+        super(id, RequestType.GML_EXPORT);
     }
 
     public String getDocSchema() {

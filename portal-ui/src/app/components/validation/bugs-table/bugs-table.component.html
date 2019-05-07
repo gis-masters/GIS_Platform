@@ -1,4 +1,4 @@
-<div *ngIf="data.objects.length < 1 && data.validated && !isLoadingResults">
+<div *ngIf="data.results.length < 1 && data.validated && !isLoadingResults">
   <div *ngIf="data.status === 'DONE'">
     <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
         *ngIf="!!data.validated">Ошибок нет</h6>
@@ -12,15 +12,15 @@
   </div>
 </div>
 
-<div class="validation-results-container mat-elevation-z8" [hidden]="data.objects?.length === 0 && !isLoadingResults">
+<div class="validation-results-container mat-elevation-z8" [hidden]="data.results?.length === 0 && !isLoadingResults">
   <div class="example-loading-shade" *ngIf="isLoadingResults">
     <mat-spinner></mat-spinner>
   </div>
 
-  <div [hidden]="data.objects?.length === 0">
+  <div [hidden]="data.results?.length === 0">
     <div class="validation-results-table-container scroll">
 
-      <table mat-table [dataSource]="data.objects" class="example-table" multiTemplateDataRows
+      <table mat-table [dataSource]="data.results" class="example-table" multiTemplateDataRows
              matSort matSortActive="objectid">
 
         <ng-container matColumnDef="objectid">

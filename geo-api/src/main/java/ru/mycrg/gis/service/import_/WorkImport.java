@@ -1,8 +1,10 @@
 package ru.mycrg.gis.service.import_;
 
+import ru.mycrg.gis.dto.BaseRequest;
+
 import java.util.List;
 
-public class WorkImport {
+public class WorkImport extends BaseRequest {
 
     private String targetSchema;
     private List<ImportTask> importTasks;

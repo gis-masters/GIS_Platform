@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.mycrg.common.ValidationMqRequest;
+import ru.mycrg.common.ValidationMqProcessRequest;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 
@@ -36,14 +36,13 @@ public class BaseDaoServiceTest {
     public void shouldConvertToJSON() {
         BaseDaoService baseDaoService = new BaseDaoService(new DatasourceFactory(environment, jdbcTemplate), resourceLoader);
 
-        ValidationMqRequest mqRequest = new ValidationMqRequest();
-        mqRequest.setDbName("gis");
-        mqRequest.setSchemaName("fiz");
-        mqRequest.setTableName("electricline");
+        ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest();
 
         when(environment.getProperty("spring.datasource.url")).thenReturn("jdbc:postgresql://127.0.0.1:5434/postgres");
 
-        Long aLong = baseDaoService.countTotalViolations(mqRequest);
+        long aLong = mqRequest.getResourceProjections().stream()
+                .mapToLong(baseDaoService::countTotalRows)
+                .sum();
 
         assertTrue(aLong > 0);
     }

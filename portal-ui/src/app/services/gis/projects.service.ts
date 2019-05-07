@@ -1,7 +1,9 @@
 import {NGXLogger} from 'ngx-logger';
+import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
+import {ProcessStatus} from '../process-status';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
 import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
@@ -25,6 +27,7 @@ export class ProjectsService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private wsService: WsService,
               private layerService: LayersService,
               private baseService: BaseService,
               private serverProp: ServerPropertiesService) {
@@ -45,6 +48,10 @@ export class ProjectsService {
         });
   }
 
+  getById(id: string): Observable<CrgProject> {
+    return this.http.get<CrgProject>(this.projectsUrl + '/' + id);
+  }
+
   create(name: string): Observable<any> {
     return this.http.post(this.projectsUrl + '/' + name, {});
   }
@@ -63,6 +70,7 @@ export class ProjectsService {
     this.logger.info('doWorkImport: ', workImport);
 
     const payload = {
+      wsUiId: this.wsService.getId(),
       targetSchema: workImport.projectModel.crgProject.geoserverName,
       importTasks: workImport.tasks
     };
@@ -99,7 +107,6 @@ export class ProjectsService {
                  })
                );
   }
-
 }
 
 export interface CrgProject {
@@ -109,4 +116,5 @@ export interface CrgProject {
   href?: string;
   type?: string;
   layersCount?: number;
+  status?: ProcessStatus;
 }

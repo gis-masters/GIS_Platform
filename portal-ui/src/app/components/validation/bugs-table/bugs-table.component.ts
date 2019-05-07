@@ -4,14 +4,15 @@ import {merge} from 'rxjs/internal/observable/merge';
 import {MatPaginator, MatSort} from '@angular/material';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {startWith} from 'rxjs/internal/operators/startWith';
+import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ValidationResponse, ValidationService} from '../../../services/gis/validation.service';
-import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
+import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ValidationResultsResponse, ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -35,13 +36,12 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['objectid', 'classid', 'violationsCounter'];
-  data: ValidationResponse = {
-    objects: [],
+  data: ValidationResultsResponse = {
+    results: [],
     validated: false,
-    totalViolations: 0,
-    lastValidationDateTime: '',
-    resourceId: '',
-    status: ''
+    total: 0,
+    lastValidated: '',
+    status: ProcessStatus.EMPTY,
   };
 
   isLoadingResults = true;
@@ -88,13 +88,13 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
             return of(null);
           }
         }),
-      ).subscribe((response: ValidationResponse[]) => this.handleResponse(response));
+      ).subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
   }
 
   getValidation() {
     this.validationService
         .getValidationResults_(this.crgLayer.connectionInfo, 0, this.defaultPageSize, '', 'asc')
-        .subscribe((response: ValidationResponse[]) => this.handleResponse(response));
+        .subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
   }
 
   getClassIdAlias(element) {
@@ -118,11 +118,13 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
     this.communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);
   }
 
-  private handleResponse(response: ValidationResponse[]) {
+  private handleResponse(response: ValidationResultsResponse) {
     if (response) {
-      this.data = response[0];
-      this.totalElements = response[0].totalViolations;
+      this.data = response;
+      this.totalElements = response.total;
       this.isLoadingResults = false;
+    } else {
+      this.logger.warn('Incorrect response: ', response);
     }
   }
 }

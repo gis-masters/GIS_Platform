@@ -3,10 +3,11 @@ package ru.mycrg.gis.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.common.OrgMqResponse;
-import ru.mycrg.common.enums.EventType;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.OrgMqProcessRequest;
+import ru.mycrg.common.enums.RequestType;
 import ru.mycrg.gis.controller.ProjectController;
+import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.EntityCreationException;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProjectService {
+public class ProjectService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
@@ -53,27 +54,67 @@ public class ProjectService {
         log.debug("Create project: {}", projectName);
 
         Organization organization = organizationService.getOrganizationByUser(userName);
+        Optional<Project> projectWithSameName = organization.getProjects().stream()
+                .filter(project -> project.getInternalName().equals(projectName))
+                .findFirst();
 
-        Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
-        newProject.setGeoserverName(newProject.getGeoserverName() + "_" + newProject.getId());
-        projectRepository.save(newProject);
+        if (projectWithSameName.isPresent()) {
+            throw new EntityCreationException("Проект с таким именем уже существует");
+        } else {
+            Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
+            newProject.setGeoserverName(newProject.getGeoserverName() + "_" + newProject.getId());
+            projectRepository.save(newProject);
 
-        organization.addProject(newProject);
-        organizationService.save(organization);
+            organization.addProject(newProject);
+            organizationService.save(organization);
 
-        OrgMqRequest mqRequest = new OrgMqRequest(organization.getId(), EventType.CREATE_PROJECT);
-        mqRequest.setProjectName(newProject.getGeoserverName());
+            CrgProcess process = new CrgProcess<>(new ProjectRequestDto(newProject.getGeoserverName()));
+            processes.add(process);
 
-        mqEvents.sendOrgEvent(mqRequest);
+            OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), organization.getId(),
+                    newProject.getGeoserverName(), RequestType.CREATE_PROJECT);
 
-        return newProject;
+            // Отсылаем евент
+            mqEvents.sendOrgEvent(mqRequest);
+
+            return newProject;
+        }
     }
 
     public void delete(long id) {
         log.warn("Not implemented yet...");
     }
 
-    public void handleResponse(OrgMqResponse response) {
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
+            log.warn("Return invalid mqResponse");
+        }
 
+        Optional<CrgProcess> processById = getProcessById(mqResponse.getId());
+        if (processById.isPresent()) {
+            CrgProcess process = processById.get();
+
+            process.complete(mqResponse);
+
+            ProjectRequestDto request = (ProjectRequestDto) process.getRequest();
+
+            Optional<Project> projectOptional = projectRepository.findByGeoserverName(request.getProjectName());
+            if (projectOptional.isPresent()) {
+                Project project = projectOptional.get();
+                if (!mqResponse.isNull()) {
+                    project.setStatus(mqResponse.getStatus());
+                } else {
+                    log.warn("Status must not be empty: {}", mqResponse.getStatus());
+                }
+
+                projectRepository.save(project);
+            } else {
+                log.warn("Not found project by name: {}", request.getProjectName());
+            }
+        } else {
+            log.warn("Not found create project process by id: {}", mqResponse.getId());
+        }
     }
+
 }

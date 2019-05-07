@@ -1,6 +1,6 @@
 package ru.mycrg.gis.entity;
 
-import ru.mycrg.gis.enums.OrganizationStatus;
+import ru.mycrg.common.enums.ProcessStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Organization {
     private List<Project> projects = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
-    private OrganizationStatus status = OrganizationStatus.NEW;
+    private ProcessStatus status = ProcessStatus.PENDING;
 
     public Organization() {}
 
@@ -77,11 +77,11 @@ public class Organization {
         this.users = users;
     }
 
-    public OrganizationStatus getStatus() {
+    public ProcessStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OrganizationStatus status) {
+    public void setStatus(ProcessStatus status) {
         this.status = status;
     }
 

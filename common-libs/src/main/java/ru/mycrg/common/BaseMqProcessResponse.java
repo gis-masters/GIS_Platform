@@ -1,20 +1,39 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.RequestType;
 
 import java.util.UUID;
 
 public class BaseMqProcessResponse {
 
     private UUID id;
-    private int progress;
+    private int progress = -1;
+    private String description;
     private ProcessStatus status;
+    private RequestType type;
 
     public BaseMqProcessResponse() {}
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status) {
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type) {
         this.id = id;
         this.status = status;
+        this.type = type;
+    }
+
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description) {
+        this.id = id;
+        this.status = status;
+        this.type = type;
+        this.description = description;
+    }
+
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description, int progress) {
+        this.id = id;
+        this.status = status;
+        this.type = type;
+        this.description = description;
+        this.progress = progress;
     }
 
     public boolean isDone() {
@@ -31,6 +50,10 @@ public class BaseMqProcessResponse {
 
     public boolean isPending() {
         return status == ProcessStatus.PENDING;
+    }
+
+    public boolean isNull() {
+        return status == null;
     }
 
     public UUID getId() {
@@ -55,5 +78,32 @@ public class BaseMqProcessResponse {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public RequestType getType() {
+        return type;
+    }
+
+    public void setType(RequestType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseMqProcessResponse{" +
+                "id=" + id +
+                ", progress=" + progress +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", type=" + type +
+                '}';
     }
 }

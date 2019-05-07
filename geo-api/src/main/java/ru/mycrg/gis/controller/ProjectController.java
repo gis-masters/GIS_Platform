@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.common.OrgMqRequest;
-import ru.mycrg.common.enums.EventType;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.entity.Project;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
@@ -17,7 +17,6 @@ import ru.mycrg.gis.service.import_.WorkImport;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -44,16 +43,27 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable long id, Principal principal) {
+        log.debug("Request get projects for user: {}", principal.getName());
+
+        Project projectById = projectService.getProjectByUser(principal.getName()).stream()
+                .filter(project -> project.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + id));
+
+        return ResponseEntity.ok(projectById);
+    }
+
     @PostMapping("/{name}")
-    public ResponseEntity createProject(@PathVariable String name, Principal principal) {
+    public ResponseEntity<Project> createProject(@PathVariable String name, Principal principal) {
         if (principal != null) {
             log.debug("Request for createProject from: {}", principal.getName());
         }
 
         Project newProject = projectService.create(name, principal.getName());
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/{id}")
                 .buildAndExpand(newProject.getId())
                 .toUri();
@@ -61,7 +71,7 @@ public class ProjectController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity(headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(newProject, headers, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
@@ -74,7 +84,7 @@ public class ProjectController {
     }
 
     @PostMapping("/import")
-    public CompletableFuture<Map<String, String>> initImport(@RequestBody WorkImport workImport, Principal principal) {
+    public CompletableFuture<BaseMqProcessResponse> initImport(@RequestBody WorkImport workImport, Principal principal) {
         log.debug("User {} initImport request", principal.getName());
 
         return importService.initProcess(workImport, principal.getName());
