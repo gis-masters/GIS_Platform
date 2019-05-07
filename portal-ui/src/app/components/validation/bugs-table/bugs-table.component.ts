@@ -4,15 +4,15 @@ import {merge} from 'rxjs/internal/observable/merge';
 import {MatPaginator, MatSort} from '@angular/material';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {startWith} from 'rxjs/internal/operators/startWith';
+import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ValidationResultsResponse, ValidationService} from '../../../services/gis/validation.service';
-import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {ProcessStatus} from '../../../services/process-status';
+import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ValidationResultsResponse, ValidationService} from '../../../services/gis/validation.service';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -39,8 +39,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   data: ValidationResultsResponse = {
     results: [],
     validated: false,
-    totalViolations: 0,
-    lastValidationDateTime: '',
+    total: 0,
+    lastValidated: '',
     status: ProcessStatus.EMPTY,
   };
 
@@ -121,8 +121,10 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   private handleResponse(response: ValidationResultsResponse) {
     if (response) {
       this.data = response;
-      this.totalElements = response.totalViolations;
+      this.totalElements = response.total;
       this.isLoadingResults = false;
+    } else {
+      this.logger.warn('Incorrect response: ', response);
     }
   }
 }

@@ -102,8 +102,8 @@ export interface ValidationBaseResponse {
 
 export interface ValidationResultsResponse {
   validated: boolean;
-  totalViolations: number;
-  lastValidationDateTime: string;
+  total: number;
+  lastValidated: string;
   results: BugObject[];
   status: ProcessStatus;
 }
