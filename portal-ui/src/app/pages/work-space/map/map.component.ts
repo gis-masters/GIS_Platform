@@ -70,7 +70,7 @@ export class MapComponent implements OnInit, OnDestroy {
             this.wfsService.getFeatures(this.layers[0].complexName)
                 .subscribe((layer: WfsFeatureCollection) => {
                   if (layer && layer.bbox) {
-                    this.openLayers.fitToBbox(layer.bbox);
+                    this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
                   } else {
                     this.logger.info('Cant position to layer', layer);
                   }

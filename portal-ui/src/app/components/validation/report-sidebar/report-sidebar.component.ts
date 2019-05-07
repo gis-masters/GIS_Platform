@@ -115,14 +115,11 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         .subscribe((response: ValidationWsMsg) => {
           if (!response) {
             this.isValidationInited = false;
-            this.logger.error('Server response is empty');
+            this.logger.error('Server response is empty', response);
             this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
-          } else {
-            this.updateBrieflyInfo(crgLayers);
           }
         }, error => {
           this.isValidationInited = false;
-
           this.logger.error('Cant validate layers: ', error);
           this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
         });
@@ -147,7 +144,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   private handleWsMessage(validationWsMsg: ValidationWsMsg) {
-    this.logger.info('handleWsMessage:', validationWsMsg);
+    // this.logger.info('handleWsMessage:', validationWsMsg);
 
     if (validationWsMsg.status === ProcessStatus.PENDING) {
       this.commonProgress = validationWsMsg.progress;
@@ -156,6 +153,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
       this.commonInfo.set(validationWsMsg.description, null);
     } else if (validationWsMsg.status === ProcessStatus.DONE) {
       this.isValidationInited = false;
+      this.updateBrieflyInfo(this.layers);
     }
   }
 

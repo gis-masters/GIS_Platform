@@ -81,12 +81,6 @@ export class OpenLayersService {
     return imageLayer;
   }
 
-  fitToBbox(bbox: any) {
-    this._map
-        .getView()
-        .fit(bbox, {padding: [50, 50, 50, 50], constrainResolution: false});
-  }
-
   /**
    * Принимает список включенных слоев.
    * Проходит по всем слоям на карте проставляет true для всех переданных слоев и false для всех остальных.
@@ -185,6 +179,13 @@ export class OpenLayersService {
     this._map = value;
   }
 
+  // Очистить карту от слоя, который отображал обьект.
+  removeBugObjectsLayer() {
+    if (this.bugObjectLayer) {
+      this._map.removeLayer(this.bugObjectLayer);
+    }
+  }
+
   /**
    * позиционируемся и подсвечиваем.
    */
@@ -193,11 +194,10 @@ export class OpenLayersService {
     this.paintFeature(wfsFeature);
   }
 
-  // Очистить карту от слоя, который отображал обьект.
-  removeBugObjectsLayer() {
-    if (this.bugObjectLayer) {
-      this._map.removeLayer(this.bugObjectLayer);
-    }
+  fitToBbox(bbox: any, padding: [number, number, number, number]) {
+    this._map
+      .getView()
+      .fit(bbox, {padding: padding, constrainResolution: false});
   }
 
   private positionToFeature(feature: WfsFeature) {
@@ -207,12 +207,22 @@ export class OpenLayersService {
     if (feature.geometry.type === 'Point') {
       view.centerOn(feature.geometry.coordinates, size, [570, 500]);
     } else if (feature.geometry.type === 'MultiLineString') {
-      view.fit(new MultiLineString(feature.geometry.coordinates), {constrainResolution: false});
+      this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
     } else if (feature.geometry.type === 'MultiPolygon') {
-      view.fit(new MultiPolygon(feature.geometry.coordinates), {constrainResolution: false});
+      this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
     } else {
       console.warn('Not supported geometry type: ', feature.geometry);
     }
+  }
+
+  private getBbox(feature: WfsFeature): [] {
+    for (const key in feature.properties) {
+      if (key === 'bbox') {
+        return feature.properties[key];
+      }
+    }
+
+    return [];
   }
 
   private paintFeature(feature: WfsFeature) {
@@ -254,5 +264,4 @@ export class OpenLayersService {
 
     this._map.addLayer(vector);
   }
-
 }

@@ -110,7 +110,7 @@ export class EditObjectComponent implements OnChanges, OnInit {
           if (!!this.featureType) {
             this.prepareEditForm(this.wfsFeature.properties);
           } else {
-            this.logger.warn('Not found rure by feature name: ', objectDto.crgLayer.name);
+            this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
           }
 
           this.openLayers.showFeature(wfsFeature);
