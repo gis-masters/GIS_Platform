@@ -23,7 +23,7 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
     }
 
     public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
-        super(request.getId(), status, request.getType(), progress, msg);
+        super(request.getId(), status, request.getType(), msg, progress);
     }
 
     public Long getTotal() {

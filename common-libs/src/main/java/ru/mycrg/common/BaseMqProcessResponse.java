@@ -15,30 +15,25 @@ public class BaseMqProcessResponse {
 
     public BaseMqProcessResponse() {}
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status) {
-        this.id = id;
-        this.status = status;
-    }
-
     public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type) {
         this.id = id;
-        this.type = type;
         this.status = status;
+        this.type = type;
     }
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status, String description, int progress) {
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description) {
         this.id = id;
         this.status = status;
-        this.progress = progress;
+        this.type = type;
         this.description = description;
     }
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, int progress, String description) {
+    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description, int progress) {
         this.id = id;
-        this.progress = progress;
-        this.description = description;
         this.status = status;
         this.type = type;
+        this.description = description;
+        this.progress = progress;
     }
 
     public boolean isDone() {

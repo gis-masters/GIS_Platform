@@ -65,7 +65,7 @@ public class MqListener {
             importService.doImport(request);
         } catch (Exception e) {
             log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
-            mqEvents.importResponse(new ImportMqResponse(request.getId(), ProcessStatus.ERROR));
+            mqEvents.importResponse(new ImportMqResponse(request, ProcessStatus.ERROR));
         }
     }
 

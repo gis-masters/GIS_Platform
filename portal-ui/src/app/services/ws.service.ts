@@ -4,10 +4,10 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {BugObject} from './gis/validation.service';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';
-import {BugObject} from "./gis/validation.service";
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,7 @@ export class WsService {
     this.stompClient.connect({}, function (frame) {
       _this.setConnected(true);
       _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
-        // console.log('+++ +++', JSON.parse(data.body));
+        console.log('+ - +', JSON.parse(data.body));
 
         _this._wsMsg$.next(JSON.parse(data.body));
       });
