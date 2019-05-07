@@ -182,13 +182,13 @@ public class OrganizationAPITest {
     }
 
     @Test
-    public void ee_OrganizationStatus_ShouldBe_Ready() {
+    public void ee_OrganizationStatus_ShouldBe_Done() {
         requestJwt
             .when()
                 .get("/2")
             .then().statusCode(200)
                 .and()
-                .body("status", equalTo("READY"));
+                .body("status", equalTo("DONE"));
     }
 
     @Test
