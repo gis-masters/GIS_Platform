@@ -149,5 +149,7 @@ services:
     depends_on:
     - geo-api
     - geoserver
+    volumes:
+      - /opt/nginx/conf.d:/etc/nginx/conf.d
     ports:
     - 80:80
