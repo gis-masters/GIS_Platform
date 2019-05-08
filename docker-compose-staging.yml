@@ -52,7 +52,7 @@ services:
 
   registry:
     container_name: crg-registry
-    image: $DOCKER_CRG_HOST/crg-registry
+    image: $DOCKER_CRG_HOST/crg-registry:staging
     restart: always
     ports:
       - 8761:8761
@@ -65,7 +65,7 @@ services:
 
   jwt-service:
     container_name: jwt-service
-    image: $DOCKER_CRG_HOST/jwt-service
+    image: $DOCKER_CRG_HOST/jwt-service:staging
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
@@ -78,7 +78,7 @@ services:
 
   gateway:
     container_name: crg-gateway
-    image: $DOCKER_CRG_HOST/crg-gateway
+    image: $DOCKER_CRG_HOST/crg-gateway:staging
     restart: always
     depends_on:
       - registry
@@ -93,7 +93,7 @@ services:
 
   geo-api:
     container_name: geo-api
-    image: $DOCKER_CRG_HOST/geo-api
+    image: $DOCKER_CRG_HOST/geo-api:staging
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
@@ -125,7 +125,7 @@ services:
 
   geo-wrapper:
     container_name: geo-wrapper
-    image: $DOCKER_CRG_HOST/geo-wrapper
+    image: $DOCKER_CRG_HOST/geo-wrapper:staging
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
@@ -150,7 +150,7 @@ services:
 
   portal-ui:
     container_name: crg-ui
-    image: $DOCKER_CRG_HOST/crg-ui
+    image: $DOCKER_CRG_HOST/crg-ui:staging
     restart: always
     depends_on:
     - geo-api
