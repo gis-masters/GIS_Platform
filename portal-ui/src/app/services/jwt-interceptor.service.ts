@@ -36,7 +36,15 @@ export class JwtInterceptorService implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // console.log('Global error interceptor: ', error);
+        if (error.status === 401) {
+          const refreshToken = this.tokenStorage.getRefreshToken();
+          if (refreshToken) {
+            // TODO: попробывать получить аксесс токен по refreshToken (вместо логаута)
+            this.authService.logout();
+          } else {
+            this.authService.logout();
+          }
+        }
 
         return throwError(error);
       }));
