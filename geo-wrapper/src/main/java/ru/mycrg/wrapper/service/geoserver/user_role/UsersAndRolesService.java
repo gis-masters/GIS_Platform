@@ -39,9 +39,12 @@ public class UsersAndRolesService extends GeoServerBaseService {
                         "    <password>" + password + "</password>\n" +
                         "</user>");
 
+        String url = String.format("http://%s/geoserver/rest/security/usergroup/service/%s/users",
+                geoserverHost(), userServiceName());
+
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())
-                .url("http://" + geoserverHost() + "/geoserver/rest/security/usergroup/users")
+                .url(url)
                 .post(body)
                 .build();
 

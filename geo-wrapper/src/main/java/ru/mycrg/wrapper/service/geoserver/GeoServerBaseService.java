@@ -4,6 +4,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,15 @@ public abstract class GeoServerBaseService {
 
     protected String geoserverHost() {
         return properties.getGeoserverHost();
+    }
+
+    @NotNull
+    protected String userServiceName() {
+        if (properties.getUserServiceName() == null) {
+            return "default";
+        } else {
+            return properties.getUserServiceName();
+        }
     }
 
     protected String dbOwnerUser() {

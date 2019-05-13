@@ -15,6 +15,7 @@ public class CrgProperties {
     private String geoserverPassword;
 
     private String gmlStoragePath;
+    private String userServiceName;
 
     // TODO: Непонятно зачем это свойство дублирует основной jdbc url.
     private String postgisHost;
@@ -75,5 +76,13 @@ public class CrgProperties {
         return Optional
                 .ofNullable(gmlStoragePath)
                 .orElseThrow(() -> new IllegalStateException("Not set gmlStoragePath"));
+    }
+
+    public void setUserServiceName(String userServiceName) {
+        this.userServiceName = userServiceName;
+    }
+
+    public String getUserServiceName() {
+        return userServiceName;
     }
 }
