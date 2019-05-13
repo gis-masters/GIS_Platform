@@ -12,6 +12,10 @@ export class LocalStorageService {
 
   }
 
+  cleanUp() {
+    window.localStorage.clear();
+  }
+
   saveByKey(key: string, payload: any): void {
     window.localStorage.setItem(key, payload);
   }

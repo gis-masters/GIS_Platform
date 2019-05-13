@@ -3,6 +3,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {LocalStorageService} from './local-storage.service';
 import {filter, publishReplay, refCount} from 'rxjs/operators';
 import {IWsMessage, WsMessageType, WsService} from './ws.service';
 
@@ -26,7 +27,8 @@ export class EventService {
     );
 
   constructor(private logger: NGXLogger,
-              private wsService: WsService) {
+              private wsService: WsService,
+              private storageService: LocalStorageService) {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
       this._events$.next(savedEvents);
@@ -85,7 +87,7 @@ export class EventService {
   }
 
   private saveToLocalStorage(events: IEvent[]): void {
-    window.localStorage.setItem(this.EVENTS_KEY, JSON.stringify(events));
+    this.storageService.saveByKey(this.EVENTS_KEY, JSON.stringify(events));
   }
 
   private getFromLocalStorage(): IEvent[] {

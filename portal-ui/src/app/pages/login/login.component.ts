@@ -4,10 +4,10 @@ import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
-import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
-import {OrganizationService} from '../../services/gis/organization.service';
+import {StorageKeys} from '../../services/storage-keys';
 import {LocalStorageService} from '../../services/local-storage.service';
-import {StorageKeys} from "../../services/storage-keys";
+import {OrganizationService} from '../../services/gis/organization.service';
+import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
 
 @Component({
   selector: 'crg-login',
@@ -49,7 +49,9 @@ export class LoginComponent {
             this.logger.info('Authenticate success');
 
             this.authService.authenticated = true;
-            this.tokenStorage.saveToken(authModel);
+            this.tokenStorage.saveAuthModel(authModel);
+            this.tokenStorage.saveAccessToken(authModel.access_token);
+            this.tokenStorage.saveRefreshToken(authModel.refresh_token);
 
             this.organizationService.getInfo()
                 .subscribe((orgId: any) => {
