@@ -85,7 +85,6 @@ public class OrgMqProcessRequest extends BaseMqProcessRequest implements Seriali
     public String toString() {
         return "OrgMqProcessRequest{" +
                 "orgId=" + orgId +
-                ", rawPassword='" + rawPassword + '\'' +
                 ", comment='" + comment + '\'' +
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +

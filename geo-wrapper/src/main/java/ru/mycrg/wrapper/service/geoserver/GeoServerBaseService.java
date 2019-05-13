@@ -4,6 +4,8 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import ru.mycrg.wrapper.config.CrgProperties;
@@ -12,6 +14,8 @@ import ru.mycrg.wrapper.exceptions.GeoserverException;
 import java.io.IOException;
 
 public abstract class GeoServerBaseService {
+
+    private static final Logger log = LoggerFactory.getLogger(GeoServerBaseService.class);
 
     @Autowired
     private CrgProperties properties;
@@ -29,6 +33,9 @@ public abstract class GeoServerBaseService {
 
         if (!response.isSuccessful()) {
             response.close();
+
+            log.error("Geoserver error body: {}", response.toString());
+
             throw new GeoserverException(msg, response.message());
         } else {
             response.close();
