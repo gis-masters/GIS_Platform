@@ -1,5 +1,7 @@
 package ru.mycrg.wrapper.service.geoserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
@@ -28,6 +30,8 @@ import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
 @Service
 public class OrganizationService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrganizationService.class);
+
     private final WorkspacesService workspacesService;
     private final UsersAndRolesService usersAndRolesService;
     private final RulesService rulesService;
@@ -53,6 +57,8 @@ public class OrganizationService {
      * - создаем БД
      */
     public void createOrganization(OrgMqProcessRequest dto) throws IOException, RuntimeException {
+        log.debug("Create organization on geoserver: {}", dto.getOrgId());
+
         String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
         String dbName = "database_" + dto.getOrgId();
         String scratchWorkspaceName = "scratch_" + dbName;

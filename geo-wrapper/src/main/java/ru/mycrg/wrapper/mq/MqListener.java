@@ -146,12 +146,16 @@ public class MqListener {
 
                     mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
                 } catch (IOException | RuntimeException e) {
+                    // TODO: Здесь мы должны понимать что именно не удалось выполнить не геосервере и принять меры.
+
                     log.error("Неудалось создать организацию на геосервере: ", e);
                     mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
                 }
             }
         } catch (IOException e) {
-            log.error("Неудалось создать организацию на геосервере: ", e);
+            log.error("-- Неудалось создать организацию на геосервере: ", e);
+
+            mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }
     }
 

@@ -16,6 +16,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     private static final Logger log = LoggerFactory.getLogger(UsersAndRolesService.class);
 
     public void createRole(String role) throws IOException {
+        log.debug("create role: {}", role);
+
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "");
 
         Request request = new Request.Builder()
@@ -28,6 +30,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     }
 
     public void createUser(String user, String password) throws IOException {
+        log.debug("create user: {}", user);
+
         RequestBody body = RequestBody.create(GeoServerConstants.XML_ATOM_MEDIA_TYPE,
                 "<user>\n" +
                         "    <enabled>true</enabled>\n" +

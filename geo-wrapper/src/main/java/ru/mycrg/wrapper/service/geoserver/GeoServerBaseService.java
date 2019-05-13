@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public abstract class GeoServerBaseService {
 
-    private static final Logger log = LoggerFactory.getLogger(GeoServerBaseService.class);
+    public static final Logger log = LoggerFactory.getLogger(GeoServerBaseService.class);
 
     @Autowired
     private CrgProperties properties;

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
@@ -17,6 +18,7 @@ import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -85,6 +87,10 @@ public class OrganizationService {
         return newOrganization;
     }
 
+    public void save(Organization organization) {
+        organizationRepository.save(organization);
+    }
+
     /**
      * Обновление организации.
      * <p>
@@ -131,24 +137,30 @@ public class OrganizationService {
         organizationRepository.deleteById(id);
     }
 
-    public void organizationCreated(Long id) {
-        log.info("Создана организация с id: {}", id);
+    public void handleMqResponse(OrgMqResponse response) {
+        log.debug("Mq response. Organization: {}", response.getOrgId());
 
-        // Update status
-        organizationRepository
-                .findById(id)
-                .ifPresent(organization -> {
-                    organization.setStatus(ProcessStatus.DONE);
-                    organizationRepository.save(organization);
+        Organization organization = organizationRepository
+                .findById(response.getOrgId())
+                .orElseThrow(() -> new EntityNotFoundException("Not found organization by id: " + response.getOrgId()));
 
-                    User user = organization.getUsers().get(0);
-                    user.setEnabled(true);
-                    userRepository.save(user);
-                });
-    }
+        if (ProcessStatus.DONE.equals(response.getStatus())) {
+            organization.setStatus(ProcessStatus.DONE);
+            organizationRepository.save(organization);
 
-    public void save(Organization organization) {
-        organizationRepository.save(organization);
+            User orgAdmin = organization.getUsers().get(0);
+            orgAdmin.setEnabled(true);
+            userRepository.save(orgAdmin);
+
+            log.info("Organization with user successfully created");
+        } else {
+            log.error("Error creation organization: {}", response.getOrgId());
+
+            // Удаляем орг. и пользователя который был создан как админ для неё.
+            User orgAdmin = organization.getUsers().get(0);
+            userRepository.delete(orgAdmin);
+            organizationRepository.delete(organization);
+        }
     }
 
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {

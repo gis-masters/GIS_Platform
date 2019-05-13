@@ -26,7 +26,7 @@ public class AuthService extends GeoServerBaseService {
         String username = getRootUser();
         String password = getRootPassword();
 
-        log.info("authorize by url: {} / user: {}", "http://" + geoserverHost() +"/oauth/token", username);
+        log.info("Try authorize by url: {} / user: {}", "http://" + geoserverHost() +"/oauth/token", username);
 
         MediaType mediaType = MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
         RequestBody body = RequestBody.create(mediaType, "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
@@ -55,6 +55,7 @@ public class AuthService extends GeoServerBaseService {
             ObjectMapper mapper = new ObjectMapper();
             jwtTokenHolder = mapper.readValue(response.body().string(), JWTTokenHolder.class);
 
+            log.debug("Success");
             response.close();
             return Optional.of(true);
         }

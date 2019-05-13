@@ -12,6 +12,8 @@ import java.io.IOException;
 public class WorkspacesService extends GeoServerBaseService {
 
     public void createWorkspace(String name) throws IOException {
+        log.debug("create workspace: {}", name);
+
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "{\"workspace\": {\"name\": \"" + name + "\"}}");
 
         Request request = new Request.Builder()

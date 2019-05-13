@@ -14,6 +14,8 @@ public class StorageService extends GeoServerBaseService {
 
     public void createStorage(final String databaseName, final String schemaName,
                               final String workspaceName, final String dataStoreName) throws IOException {
+        log.debug("create storage: {}", dataStoreName);
+
         String host = postgisHost().split(":")[0];
         String port = postgisHost().split(":")[1];
 

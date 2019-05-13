@@ -46,10 +46,19 @@ public class MqListener {
 
     @RabbitListener(queues = QUEUE_ORG_CREATED)
     public void created(OrgMqResponse response) {
-        switch (response.getType()) {
-            case CREATE_ORG: organizationService.organizationCreated(response.getOrgId()); break;
-            case CREATE_PROJECT: projectService.handleMqResponse(response); break;
-            default: log.warn("Not processable event type");
+        try {
+            switch (response.getType()) {
+                case CREATE_ORG:
+                    organizationService.handleMqResponse(response);
+                    break;
+                case CREATE_PROJECT:
+                    projectService.handleMqResponse(response);
+                    break;
+                default:
+                    log.warn("Not processable event type");
+            }
+        } catch (Exception e) {
+            log.error("Error handle mqResponse: {}", response.toString());
         }
     }
 

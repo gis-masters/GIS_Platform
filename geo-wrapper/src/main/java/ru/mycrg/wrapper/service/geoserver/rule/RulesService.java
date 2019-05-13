@@ -31,6 +31,8 @@ public class RulesService extends GeoServerBaseService {
      * @param role Роль
      */
     public void addLayersRule(String rule, String role) throws IOException {
+        log.debug("addLayersRule: Rule: {} Role: {}", rule, role);
+
         Request getLayersRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())
                 .url("http://" + geoserverHost() + "/geoserver/rest/security/acl/layers")
