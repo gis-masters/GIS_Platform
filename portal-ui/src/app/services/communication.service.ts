@@ -67,6 +67,7 @@ export interface SidebarData {
 export enum ActionType {
   OPEN,
   CLOSE,
+  CLOSE_ALL,
   SWITCH
 }
 

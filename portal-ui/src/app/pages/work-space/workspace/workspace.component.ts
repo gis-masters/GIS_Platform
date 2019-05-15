@@ -44,6 +44,13 @@ export class WorkspaceComponent implements OnDestroy {
       return;
     }
 
+    if (data.action === ActionType.CLOSE_ALL) {
+      this.isInfoSidebarActive = false;
+      this.isBugReportSidebarActive = false;
+
+      return;
+    }
+
     if (data.target === SidebarType.INFO) {
       switch (data.action) {
         case ActionType.CLOSE: this.isInfoSidebarActive = false; break;

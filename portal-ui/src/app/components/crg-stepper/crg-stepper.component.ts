@@ -31,9 +31,11 @@ export class CrgStepperComponent {
     }
     if (this.activeStep === 1) {
       this.router.navigate(['/workspace/projects']);
+      this.communicationService.sidebarManager.emit({action: ActionType.CLOSE_ALL, target: null});
     }
     if (this.activeStep === 2) {
       this.router.navigate(['/workspace/data_import']);
+      this.communicationService.sidebarManager.emit({action: ActionType.CLOSE_ALL, target: null});
     }
     if (this.activeStep === 3) {
       this.router.navigate(['/workspace/map']);
