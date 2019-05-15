@@ -148,7 +148,7 @@ public class ImportService {
 
                 if ("globalid".equals(key)) {
                     String valueAsString = (String) value;
-                    if (valueAsString == null) {
+                    if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
                         params.put(key, UUID.randomUUID());
                     }
                 }
