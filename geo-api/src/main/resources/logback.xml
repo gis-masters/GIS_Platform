@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/logs/wrapper.log</file>
+        <file>/opt/logs/api.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/opt/logs/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/opt/logs/api.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
@@ -26,7 +26,7 @@
     </appender>
 
 
-    <logger name="ru.mycrg.wrapper" level="DEBUG"></logger>
+    <logger name="ru.mycrg.gis" level="DEBUG"></logger>
 <!--    <logger name="com.zaxxer.hikari" level="DEBUG"></logger>-->
 <!--    <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="DEBUG"></logger>-->
 
