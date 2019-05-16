@@ -44,55 +44,6 @@ services:
 
 
 
-
-
-  apm-server:
-    container_name: apm-server
-    image: docker.elastic.co/apm/apm-server:7.0.1
-    ports:
-      - "8200:8200"
-    volumes:
-      - /opt/apm-server-7.0.1-linux-x86_64/apm-server.yml:/usr/share/apm-server/apm-server.yml
-
-  elasticsearch:
-    container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.1
-    volumes:
-      - /opt/elastics-config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-
-  logstash:
-    container_name: logstash
-    image: docker.elastic.co/logstash/logstash:7.0.1
-    volumes:
-      - /opt/elastics-config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - /opt/elastics-config/pipeline:/usr/share/logstash/pipeline:ro
-    ports:
-      - "5000:5000"
-      - "9600:9600"
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:7.0.1
-    volumes:
-      - /opt/elastics-config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-
-
-
-
-
   registry:
     container_name: crg-registry
     image: $DOCKER_CRG_HOST/crg-registry
