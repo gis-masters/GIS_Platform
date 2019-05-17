@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {ProcessStatus} from '../process-status';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
+import {LocalStorageService} from '../local-storage.service';
 import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
 import {ServerPropertiesService} from '../server-properties.service';
 import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
@@ -17,12 +18,13 @@ export class ProjectsService {
 
   private projectsUrl = this.serverProp.baseUrl + '/projects';
 
-  private _projects$: BehaviorSubject<CrgProject[]> = new BehaviorSubject<CrgProject[]>([]);
+  private _projects$: BehaviorSubject<CrgProject[]> = new BehaviorSubject<CrgProject[]>(undefined);
   public projects$: Observable<CrgProject[]> = this._projects$.asObservable()
     .pipe(
       // компоненты при подписке должны видеть одно последнее значение в потоке
       publishReplay(1),
-      refCount()
+      refCount(),
+      filter(data => !!data)
     );
 
   constructor(private http: HttpClient,
@@ -30,6 +32,7 @@ export class ProjectsService {
               private wsService: WsService,
               private layerService: LayersService,
               private baseService: BaseService,
+              private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
 
@@ -76,6 +79,11 @@ export class ProjectsService {
     };
 
     return this.http.post(this.projectsUrl + '/import', payload);
+  }
+
+  changeProject() {
+    this.storageService.clearProject();
+    this.layerService.clearCache();
   }
 
   private fetchProjectsLayers(projects: CrgProject[]):  Observable<CrgProject[]> {

@@ -1,7 +1,7 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {takeUntil} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
@@ -22,6 +22,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   isEditMode = false;
   projects: CrgProject[] = [];
+  isProjectsLoaded = false;
   projectName = '';
   activeProject: string;
   errorMsg = '';
@@ -37,7 +38,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
               private ruleService: FgistpRulesService,
               private dialog: MatDialog,
               private communicationService: CommunicationService) {
-    this.storageService.clearProject();
     this.communicationService.stepperEvents.emit(1);
   }
 
@@ -47,7 +47,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     this.projectsService.projects$
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((projects: CrgProject[]) => this.projects = projects);
+        .subscribe((projects: CrgProject[]) => {
+          this.isProjectsLoaded = true;
+          this.projects = projects;
+        });
   }
 
   ngOnDestroy(): void {
@@ -88,23 +91,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
           });
   }
 
-  private checkProjectStatus(newProject: CrgProject) {
-    const startTime = Date.now();
-    const checkStatusInterval = setInterval(() => {
-      if (startTime - Date.now() > 60000) {
-        clearInterval(checkStatusInterval);
-      }
-
-      this.projectsService.getById(newProject.id)
-          .subscribe((project: CrgProject) => {
-            if (project.status === ProcessStatus.DONE) {
-              this.projectsService.fetchProjects();
-              clearInterval(checkStatusInterval);
-            }
-          });
-    }, 5000);
-  }
-
   cancel(event) {
     event.stopPropagation();
 
@@ -136,6 +122,23 @@ export class ProjectComponent implements OnInit, OnDestroy {
             .subscribe(response => this.projectsService.fetchProjects());
       }
     });
+  }
+
+  private checkProjectStatus(newProject: CrgProject) {
+    const startTime = Date.now();
+    const checkStatusInterval = setInterval(() => {
+      if (startTime - Date.now() > 60000) {
+        clearInterval(checkStatusInterval);
+      }
+
+      this.projectsService.getById(newProject.id)
+        .subscribe((project: CrgProject) => {
+          if (project.status === ProcessStatus.DONE) {
+            this.projectsService.fetchProjects();
+            clearInterval(checkStatusInterval);
+          }
+        });
+    }, 5000);
   }
 
 }

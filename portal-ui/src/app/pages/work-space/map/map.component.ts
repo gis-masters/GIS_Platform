@@ -1,7 +1,7 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
-import {filter, takeUntil} from 'rxjs/operators';
+import {filter, takeUntil, tap} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
@@ -115,6 +115,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.info('+++ map');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

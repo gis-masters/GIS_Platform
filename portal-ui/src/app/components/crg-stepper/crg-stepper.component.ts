@@ -1,6 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component} from '@angular/core';
+import {ProjectsService} from '../../services/gis/projects.service';
 import {LayersService} from '../../services/geoserver/layers.service';
 import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
 
@@ -17,7 +18,8 @@ export class CrgStepperComponent {
   constructor(private router: Router,
               private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private layersService: LayersService) {
+              private layersService: LayersService,
+              private projectService: ProjectsService) {
     communicationService.stepperEvents.subscribe(step => this.activeStep = step);
   }
 
@@ -30,6 +32,8 @@ export class CrgStepperComponent {
       this.activeStep = selectedStep;
     }
     if (this.activeStep === 1) {
+      this.projectService.changeProject();
+
       this.router.navigate(['/workspace/projects']);
       this.communicationService.sidebarManager.emit({action: ActionType.CLOSE_ALL, target: null});
     }

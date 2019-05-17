@@ -18,14 +18,12 @@ import {ServerPropertiesService} from '../server-properties.service';
 })
 export class LayersService {
 
-  // TODO: Случалось что при смене пользователя(приложение не перезагружалось) в layers оставалась старая инфа
-  // и информация в connectionInfo не соответствовала дейстительности
-  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>([]);
+  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>(undefined);
   public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
     .pipe(
       // компоненты при подписке должны видеть одно последнее значение в потоке
       publishReplay(1),
-      refCount()
+      refCount(),
     );
 
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
@@ -62,6 +60,19 @@ export class LayersService {
         .subscribe(value => {
           this._layers$.next(value);
         });
+  }
+
+  fizFetchingLayers(project: CrgProject): Observable<CrgLayer[]> {
+    return this.http
+      .get<GeoLayer>(this.layersUrl)
+      .pipe(
+        filter(value => value && !!value['layers']),
+        map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
+        map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
+        map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
+        flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
+        map((layers: CrgLayer[]) => this.filterProjectLayers(project, layers)),
+      );
   }
 
   countProjectLayers(project: CrgProject): Observable<number> {
@@ -165,6 +176,9 @@ export class LayersService {
     return crgLayers;
   }
 
+  clearCache() {
+    this._layers$.next(undefined);
+  }
 }
 
 export interface CrgLayer {

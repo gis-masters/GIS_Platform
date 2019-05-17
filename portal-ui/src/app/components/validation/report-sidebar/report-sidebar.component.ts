@@ -2,7 +2,7 @@ import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
-import {filter, takeUntil} from 'rxjs/operators';
+import {filter, takeUntil, tap} from 'rxjs/operators';
 import {AuthService} from '../../../services/auth.service';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {ProcessStatus} from '../../../services/process-status';
@@ -91,6 +91,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.info('+++ report');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
