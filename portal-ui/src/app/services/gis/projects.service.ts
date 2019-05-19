@@ -4,12 +4,13 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
 import {ProcessStatus} from '../process-status';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
+import {NameHrefProjection} from '../geoserver/projections';
 import {LocalStorageService} from '../local-storage.service';
-import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
 import {ServerPropertiesService} from '../server-properties.service';
-import {filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -85,35 +86,38 @@ export class ProjectsService {
     this.storageService.clearProject();
   }
 
-  private fetchProjectsLayers(projects: CrgProject[]):  Observable<CrgProject[]> {
-    const observableTasks = [];
+  private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {
+    return this.layerService
+      .getAllLayers()
+      .pipe(
+        map((layers: NameHrefProjection[]) => {
+          projects.forEach((project: CrgProject) => project.layersCount = this.countLayers(project, layers));
 
-    if (!projects.length) {
-      return of([]);
-    }
+          return projects;
+        }),
+        catchError(err => {
+          this.logger.error('Cant get layers from geoserver: ', err);
+          return [];
+        })
+      );
+  }
 
-    projects.forEach((project: CrgProject) => {
-      observableTasks.push(this.fetchProjectLayers(project));
+  private countLayers(project: CrgProject, layers: NameHrefProjection[]): number {
+    let counter = 0;
+    layers.forEach((layer: NameHrefProjection) => {
+      const projectName = layer.name.split(':')[0];
+      if (projectName) {
+        if (project.geoserverName === projectName) {
+          counter++;
+        }
+      } else {
+        this.logger.warn('Incorrect layer name');
+      }
     });
 
-    return forkJoin(observableTasks);
+    return counter;
   }
 
-  private fetchProjectLayers(project: CrgProject): Observable<CrgProject> {
-    return this.layerService
-               .countProjectLayers(project)
-               .pipe(
-                 map((value: number) => {
-                   if (value) {
-                     project.layersCount = value;
-                   } else {
-                     project.layersCount = 0;
-                   }
-
-                   return project;
-                 })
-               );
-  }
 }
 
 export interface CrgProject {

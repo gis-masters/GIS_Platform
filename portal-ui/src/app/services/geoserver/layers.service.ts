@@ -46,21 +46,17 @@ export class LayersService {
       );
   }
 
-  countProjectLayers(project: CrgProject): Observable<number> {
+  /**
+   * Все слоя с геосервера в виде наименования и ссылки
+   * (без scrath слоев)
+   */
+  getAllLayers(): Observable<NameHrefProjection[]> {
     return this.http
                .get<GeoLayer>(this.layersUrl)
                .pipe(
-                 filter(value => !!value),
-                 map((geoLayer: GeoLayer) => {
-                   if (geoLayer.layers && geoLayer.layers.layer) {
-                     return geoLayer.layers.layer.filter((layer: NameHrefProjection) => {
-                       return layer.name.split(':')[0] === project.geoserverName;
-                     });
-                   } else {
-                     return [];
-                   }
-                 }),
-                 map((layers: NameHrefProjection[]) => layers.length)
+                 filter(value => value && !!value['layers']),
+                 map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
+                 map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
                );
   }
 
