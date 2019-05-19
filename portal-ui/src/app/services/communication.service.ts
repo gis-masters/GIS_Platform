@@ -1,8 +1,9 @@
 import {NGXLogger} from 'ngx-logger';
 import {CrgLayer} from './geoserver/layers.service';
+import {SidebarData} from './side-bar-manager.service';
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
+import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -57,22 +58,4 @@ export class CommunicationService {
 export interface ObjectDto {
   id: string;
   crgLayer: CrgLayer;
-}
-
-export interface SidebarData {
-  action: ActionType;
-  target: SidebarType;
-}
-
-export enum ActionType {
-  OPEN,
-  CLOSE,
-  CLOSE_ALL,
-  SWITCH
-}
-
-export enum SidebarType {
-  INFO,       // Информационная панель
-  LAYERS,     // Левая панель со слоями
-  BUG_REPORT, // Панель отображения и редактирования ошибок
 }

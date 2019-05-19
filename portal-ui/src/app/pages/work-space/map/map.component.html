@@ -6,9 +6,7 @@
 
 <mat-sidenav-container class="example-sidenav-container-fiz">
   <mat-sidenav-content>
-    <crg-layers-sidebar [isActive]="isLayersSidebarActive"
-                        [layers]="layers">
-    </crg-layers-sidebar>
+    <crg-layers-sidebar [isActive]="isLayersSidebarActive" [layers]="layers"></crg-layers-sidebar>
 
     <!--Карта-->
     <div id="fiz-openLayer-map" class="crg-map"></div>
@@ -26,3 +24,5 @@
           [(visible)]="isGmlDialogShow">
   <crg-export-dialog [layers]="gmlDialogData"></crg-export-dialog>
 </p-dialog>
+
+<crg-report-sidebar [isActive]="isBugReportSidebarActive" [layers]="layers"></crg-report-sidebar>

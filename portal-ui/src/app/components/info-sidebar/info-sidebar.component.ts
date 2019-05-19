@@ -1,10 +1,9 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {filter, takeUntil} from 'rxjs/operators';
-import {WsMessageType} from '../../services/ws.service';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
-import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-info-sidebar',
@@ -21,7 +20,7 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private eventService: EventService,
-              private communicationService: CommunicationService) {
+              private sideBarManager: SideBarManager) {
 
   }
 
@@ -42,6 +41,6 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
   }
 
   closeMe() {
-    this.communicationService.sidebarManager.emit({action: ActionType.CLOSE, target: SidebarType.INFO});
+    this.sideBarManager.do(SidebarType.INFO, ActionType.CLOSE);
   }
 }

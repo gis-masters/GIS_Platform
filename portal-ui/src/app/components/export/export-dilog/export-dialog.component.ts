@@ -4,8 +4,9 @@ import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
+import {CommunicationService} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/gis/export.service';
-import {ActionType, CommunicationService, SidebarType} from '../../../services/communication.service';
+import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -64,6 +65,7 @@ export class ExportDialogComponent {
   private isExportInited = false;
 
   constructor(private logger: NGXLogger,
+              private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private exportService: ExportService) {
   }
@@ -84,7 +86,7 @@ export class ExportDialogComponent {
           this.communicationService.stepperEvents.emit(5);
         });
 
-    this.communicationService.sidebarManager.emit({action: ActionType.OPEN, target: SidebarType.INFO});
+    this.sideBarManager.do(SidebarType.INFO, ActionType.OPEN);
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 

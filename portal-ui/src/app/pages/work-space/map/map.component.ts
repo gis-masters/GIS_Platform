@@ -1,17 +1,18 @@
 import {NGXLogger} from 'ngx-logger';
 import {Subject, throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
-import {catchError, tap} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {catchError, filter, tap} from 'rxjs/operators';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
+import {CommunicationService} from '../../../services/communication.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {ActionType, CommunicationService} from '../../../services/communication.service';
 import {WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
+import {ActionType, SidebarData, SidebarType} from '../../../services/side-bar-manager.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
 @Component({
@@ -25,13 +26,14 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layers: CrgLayer[] = undefined;
 
+  isLayersSidebarActive = false;
+  isBugReportSidebarActive = false;
+
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
-
   isGmlDialogShow = false;
-  gmlDialogData: CrgLayer[];
 
-  isLayersSidebarActive = false;
+  gmlDialogData: CrgLayer[];
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -110,6 +112,18 @@ export class MapComponent implements OnInit, OnDestroy {
               this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
                 {duration: 10000});
             }
+          }
+        });
+
+    this.communicationService.sidebarManager$()
+        .pipe(filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT))
+        .subscribe((data: SidebarData) => {
+          switch (data.action) {
+            case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
+            case ActionType.OPEN:   this.isBugReportSidebarActive = true;  break;
+            case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
+            default:
+              this.logger.warn('Unsupported action type: ', data.action);
           }
         });
   }

@@ -3,7 +3,8 @@ import {Router} from '@angular/router';
 import {Component} from '@angular/core';
 import {ProjectsService} from '../../services/gis/projects.service';
 import {LayersService} from '../../services/geoserver/layers.service';
-import {ActionType, CommunicationService, SidebarType} from '../../services/communication.service';
+import {CommunicationService} from '../../services/communication.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-crg-stepper',
@@ -17,6 +18,7 @@ export class CrgStepperComponent {
 
   constructor(private router: Router,
               private logger: NGXLogger,
+              private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private layersService: LayersService,
               private projectService: ProjectsService) {
@@ -35,15 +37,15 @@ export class CrgStepperComponent {
       this.projectService.changeProject();
 
       this.router.navigate(['/workspace/projects']);
-      this.communicationService.sidebarManager.emit({action: ActionType.CLOSE_ALL, target: null});
+      this.sideBarManager.closeAll();
     }
     if (this.activeStep === 2) {
       this.router.navigate(['/workspace/data_import']);
-      this.communicationService.sidebarManager.emit({action: ActionType.CLOSE_ALL, target: null});
+      this.sideBarManager.closeAll();
     }
     if (this.activeStep === 3) {
       this.router.navigate(['/workspace/map']);
-      this.communicationService.sidebarManager.emit({action: ActionType.SWITCH, target: SidebarType.BUG_REPORT});
+      this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.SWITCH);
     }
     if (this.activeStep === 4) {
       this.router.navigate(['/workspace/map']);

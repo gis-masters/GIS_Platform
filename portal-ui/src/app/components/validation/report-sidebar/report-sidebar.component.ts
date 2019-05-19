@@ -2,14 +2,13 @@ import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
-import {filter, takeUntil, tap} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {AuthService} from '../../../services/auth.service';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {ProcessStatus} from '../../../services/process-status';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {DatastoreService} from '../../../services/geoserver/datastore.service';
-import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {
@@ -17,7 +16,9 @@ import {
   ValidationInfoResponse,
   ValidationService
 } from '../../../services/gis/validation.service';
-import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../../services/communication.service';
+import {CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
+import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -27,8 +28,8 @@ import {ActionType, CommunicationService, ObjectDto, SidebarType} from '../../..
 export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   @Input() isActive: boolean;
+  @Input() layers: CrgLayer[];
 
-  layers: CrgLayer[] = [];
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
 
   step = 0;
@@ -47,6 +48,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
               private snackBar: MatSnackBar,
               private datastoreService: DatastoreService,
               private validationService: ValidationService,
+              private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private authService: AuthService,
               private openLayersService: OpenLayersService,
@@ -127,7 +129,7 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
 
   closeMe() {
     this.openLayersService.removeBugObjectsLayer();
-    this.communicationService.sidebarManager.emit({action: ActionType.CLOSE, target: SidebarType.BUG_REPORT});
+    this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.CLOSE);
   }
 
   reValidate() {
