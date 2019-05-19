@@ -5,26 +5,17 @@ import {BaseService} from '../base.service';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../gis/projects.service';
 import {DatastoreService} from './datastore.service';
-import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
-import {filter, flatMap, map, refCount} from 'rxjs/operators';
-import {publishReplay} from 'rxjs/internal/operators/publishReplay';
+import {filter, flatMap, map} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService {
-
-  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>(undefined);
-  public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
-    .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
-      publishReplay(1),
-      refCount(),
-    );
 
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
 
@@ -35,18 +26,14 @@ export class LayersService {
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     logger.info('LayersService start');
-
-    this.layers$.subscribe();
-  }
-
-  public getCurrent(): CrgLayer[] {
-    return this._layers$.getValue();
   }
 
   /**
    * Собираем все о слоях.
    */
   fetchLayers(project: CrgProject): Observable<CrgLayer[]> {
+    this.logger.info('--- fetchLayers ---');
+
     return this.http
       .get<GeoLayer>(this.layersUrl)
       .pipe(
@@ -160,9 +147,6 @@ export class LayersService {
     return crgLayers;
   }
 
-  clearCache() {
-    this._layers$.next(undefined);
-  }
 }
 
 export interface CrgLayer {

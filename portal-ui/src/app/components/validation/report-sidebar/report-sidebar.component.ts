@@ -1,16 +1,11 @@
-import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
-import {filter, takeUntil} from 'rxjs/operators';
-import {AuthService} from '../../../services/auth.service';
+import {filter} from 'rxjs/operators';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {ProcessStatus} from '../../../services/process-status';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
-import {DatastoreService} from '../../../services/geoserver/datastore.service';
+import {CrgLayer} from '../../../services/geoserver/layers.service';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {
   ValidationBrieflyInfo,
   ValidationInfoResponse,
@@ -25,7 +20,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../../services/side-ba
   templateUrl: './report-sidebar.component.html',
   styleUrls: ['./report-sidebar.component.css']
 })
-export class ReportSidebarComponent implements OnInit, OnDestroy {
+export class ReportSidebarComponent implements OnInit, OnChanges {
 
   @Input() isActive: boolean;
   @Input() layers: CrgLayer[];
@@ -38,45 +33,21 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   isEditMode = false;
   objectsToEdit: ObjectDto[] = [];
 
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
   commonProgress = 0;
 
   constructor(private logger: NGXLogger,
-              private router: Router,
               private wsService: WsService,
               private snackBar: MatSnackBar,
-              private datastoreService: DatastoreService,
               private validationService: ValidationService,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
-              private authService: AuthService,
-              private openLayersService: OpenLayersService,
-              private ruleService: FgistpRulesService,
-              private layersService: LayersService) {
+              private openLayersService: OpenLayersService) {
     this.communicationService
         .selectedForValidationLayers$()
         .subscribe((data: CrgLayer[]) => this.initValidation(data));
   }
 
   ngOnInit() {
-    this.layersService.layers$
-        .pipe(
-          filter(value => !!value && !!value.length),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((layers: CrgLayer[]) => {
-          this.isValidationInited = true;
-
-          this.layers = layers;
-
-          if (layers.length < 1) {
-            this.isValidationInited = false;
-          } else {
-            this.updateBrieflyInfo(layers);
-          }
-        });
-
     this.communicationService
         .editView$()
         .subscribe((objects: ObjectDto[]) => {
@@ -85,16 +56,17 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
         });
 
     this.wsService.messages$
-      .pipe(
-        filter(value => !!value),
-        filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
-      )
-      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
+        .pipe(
+          filter(value => !!value),
+          filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
+        )
+        .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['layers']) {
+      this.updateBrieflyInfo(this.layers);
+    }
   }
 
   setStep(index: number) {
@@ -164,6 +136,10 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   private updateBrieflyInfo(layers: CrgLayer[]) {
+    if (!layers || layers.length === 0) {
+      return;
+    }
+
     this.validationService
         .getLayerStatistic(layers)
         .subscribe((infoResponse: ValidationInfoResponse) => {
@@ -186,4 +162,5 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
           this.logger.error('Cant get validation info: ', error);
         });
   }
+
 }

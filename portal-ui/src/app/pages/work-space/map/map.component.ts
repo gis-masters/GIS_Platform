@@ -104,14 +104,8 @@ export class MapComponent implements OnInit, OnDestroy {
           if (data.action === ActionType.CLOSE) {
             this.isGmlDialogShow = false;
           } else {
-            if (data.layers.length > 0) {
-              this.isGmlDialogShow = true;
-              this.gmlDialogData = data.layers;
-            } else {
-              this.logger.warn('Empty data: ', data.layers);
-              this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
-                {duration: 10000});
-            }
+            this.isGmlDialogShow = true;
+            this.gmlDialogData = this.layers;
           }
         });
 

@@ -132,12 +132,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
       }
 
       this.projectsService.getById(newProject.id)
-        .subscribe((project: CrgProject) => {
-          if (project.status === ProcessStatus.DONE) {
-            this.projectsService.fetchProjects();
-            clearInterval(checkStatusInterval);
-          }
-        });
+          .subscribe((project: CrgProject) => {
+            if (project.status === ProcessStatus.DONE) {
+              this.projectsService.fetchProjects();
+              clearInterval(checkStatusInterval);
+            }
+          });
     }, 5000);
   }
 

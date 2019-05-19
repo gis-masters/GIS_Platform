@@ -2,7 +2,6 @@ import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component} from '@angular/core';
 import {ProjectsService} from '../../services/gis/projects.service';
-import {LayersService} from '../../services/geoserver/layers.service';
 import {CommunicationService} from '../../services/communication.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
@@ -20,7 +19,6 @@ export class CrgStepperComponent {
               private logger: NGXLogger,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
-              private layersService: LayersService,
               private projectService: ProjectsService) {
     communicationService.stepperEvents.subscribe(step => this.activeStep = step);
   }
@@ -49,8 +47,7 @@ export class CrgStepperComponent {
     }
     if (this.activeStep === 4) {
       this.router.navigate(['/workspace/map']);
-      const copyOfLayers = Object.assign([], this.layersService.getCurrent());
-      this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: copyOfLayers});
+      this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
     }
   }
 }

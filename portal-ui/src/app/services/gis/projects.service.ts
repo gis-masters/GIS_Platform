@@ -83,7 +83,6 @@ export class ProjectsService {
 
   changeProject() {
     this.storageService.clearProject();
-    this.layerService.clearCache();
   }
 
   private fetchProjectsLayers(projects: CrgProject[]):  Observable<CrgProject[]> {
