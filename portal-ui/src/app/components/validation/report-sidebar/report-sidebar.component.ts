@@ -133,8 +133,12 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   reValidate() {
-    const copy = Object.assign([], this.layers);
-    this.communicationService.validationDialog.emit({show: true, layers: copy});
+    if (this.layers && this.layers.length > 0) {
+      const copy = Object.assign([], this.layers);
+      this.communicationService.validationDialog.emit({show: true, layers: copy});
+    } else {
+      this.logger.info('Не подгружены слоя');
+    }
   }
 
   switchMode() {

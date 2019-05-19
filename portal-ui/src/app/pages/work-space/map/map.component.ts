@@ -53,32 +53,32 @@ export class MapComponent implements OnInit, OnDestroy {
     this.ruleService.getRules().subscribe();
 
     this.currentProject = this.storageService.getProject().crgProject;
-    this.layersService.fizFetchingLayers(this.currentProject)
-      .pipe(
-        tap(layers => this.layers = layers),
-        catchError(err => {
-          this.logger.error('layers-sidebar layers error', err);
-          return throwError(err);
-        })
-      ).subscribe((layers: CrgLayer[]) => {
-        layers.forEach((layer, index) => {
-          this.openLayers
-              .addLayerToMap(layer.complexName)
-              .setZIndex(layers.length - index);
-        });
+    this.layersService.fetchLayers(this.currentProject)
+        .pipe(
+          tap(layers => this.layers = layers),
+          catchError(err => {
+            this.logger.error('layers-sidebar layers error', err);
+            return throwError(err);
+          })
+        ).subscribe((layers: CrgLayer[]) => {
+          layers.forEach((layer, index) => {
+            this.openLayers
+                .addLayerToMap(layer.complexName)
+                .setZIndex(layers.length - index);
+          });
 
-        // Позиционируемся на первом из загруженных слоев
-        if (layers.length > 0) {
-          this.wfsService.getFeatures(layers[0].complexName)
-              .subscribe((layer: WfsFeatureCollection) => {
-                if (layer && layer.bbox) {
-                  this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
-                } else {
-                  this.logger.info('Cant position to layer', layer);
-                }
-              });
-        }
-      });
+          // Позиционируемся на первом из загруженных слоев
+          if (layers.length > 0) {
+            this.wfsService.getFeatures(layers[0].complexName)
+                .subscribe((layer: WfsFeatureCollection) => {
+                  if (layer && layer.bbox) {
+                    this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
+                  } else {
+                    this.logger.info('Cant position to layer', layer);
+                  }
+                });
+          }
+        });
 
     this.communicationService
         .validationDialog$()

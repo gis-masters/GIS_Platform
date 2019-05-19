@@ -44,25 +44,9 @@ export class LayersService {
   }
 
   /**
-   * Получаем слоя с геосервера.
+   * Собираем все о слоях.
    */
-  fetchLayers(project: CrgProject): void {
-    this.http
-        .get<GeoLayer>(this.layersUrl)
-        .pipe(
-          filter(value => value && !!value['layers']),
-          map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
-          map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
-          map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-          flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
-          map((layers: CrgLayer[]) => this.filterProjectLayers(project, layers)),
-        )
-        .subscribe(value => {
-          this._layers$.next(value);
-        });
-  }
-
-  fizFetchingLayers(project: CrgProject): Observable<CrgLayer[]> {
+  fetchLayers(project: CrgProject): Observable<CrgLayer[]> {
     return this.http
       .get<GeoLayer>(this.layersUrl)
       .pipe(
