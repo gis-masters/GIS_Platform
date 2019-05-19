@@ -1,6 +1,8 @@
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {takeUntil} from 'rxjs/operators';
+import {Component, OnDestroy} from '@angular/core';
 import {ProjectsService} from '../../services/gis/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
@@ -11,16 +13,25 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
   styleUrls: ['./crg-stepper.component.css']
 })
 
-export class CrgStepperComponent {
+export class CrgStepperComponent implements OnDestroy {
 
   activeStep = 5;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private router: Router,
               private logger: NGXLogger,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private projectService: ProjectsService) {
-    communicationService.stepperEvents.subscribe(step => this.activeStep = step);
+    communicationService.stepperEvents
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(step => this.activeStep = step);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   doAction(selectedStep) {

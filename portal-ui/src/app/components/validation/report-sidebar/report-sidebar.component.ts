@@ -1,11 +1,12 @@
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
-import {filter} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {
   ValidationBrieflyInfo,
   ValidationInfoResponse,
@@ -20,7 +21,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../../services/side-ba
   templateUrl: './report-sidebar.component.html',
   styleUrls: ['./report-sidebar.component.css']
 })
-export class ReportSidebarComponent implements OnInit, OnChanges {
+export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() isActive: boolean;
   @Input() layers: CrgLayer[];
@@ -35,6 +36,8 @@ export class ReportSidebarComponent implements OnInit, OnChanges {
 
   commonProgress = 0;
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(private logger: NGXLogger,
               private wsService: WsService,
               private snackBar: MatSnackBar,
@@ -43,13 +46,14 @@ export class ReportSidebarComponent implements OnInit, OnChanges {
               private communicationService: CommunicationService,
               private openLayersService: OpenLayersService) {
     this.communicationService
-        .selectedForValidationLayers$()
+        .selectedForValidation
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: CrgLayer[]) => this.initValidation(data));
   }
 
   ngOnInit() {
-    this.communicationService
-        .editView$()
+    this.communicationService.editView
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((objects: ObjectDto[]) => {
           this.isEditMode = true;
           this.objectsToEdit = objects;
@@ -59,6 +63,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges {
         .pipe(
           filter(value => !!value),
           filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
+          takeUntil(this.unsubscribe$)
         )
         .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
   }
@@ -73,6 +78,11 @@ export class ReportSidebarComponent implements OnInit, OnChanges {
     if (layersChange && this.isActive) {
       this.updateBrieflyInfo(this.layers);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   setStep(index: number) {

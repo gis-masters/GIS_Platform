@@ -1,5 +1,6 @@
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {filter} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {EventService, IEvent} from '../../../services/event.service';
@@ -20,6 +21,8 @@ export class WorkspaceComponent implements OnDestroy {
   notificationCounter = 0;
   isInfoSidebarActive = false;
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
               private eventService: EventService,
@@ -35,8 +38,11 @@ export class WorkspaceComponent implements OnDestroy {
         .pipe(filter(value => !!value))
         .subscribe((events: IEvent[]) => this.notificationCounter = events.length);
 
-    this.communicationService.sidebarManager$()
-        .pipe(filter((data: SidebarData) => data.target === SidebarType.INFO))
+    this.communicationService.sidebarManager
+        .pipe(
+          filter((data: SidebarData) => data.target === SidebarType.INFO),
+          takeUntil(this.unsubscribe$)
+        )
         .subscribe((data: SidebarData) => {
           switch (data.action) {
             case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
@@ -49,6 +55,9 @@ export class WorkspaceComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 

@@ -36,8 +36,7 @@ export class SideBarManager {
   }
 
   private emit(target: SidebarType, action: ActionType) {
-    this.communicationService
-        .sidebarManager$()
+    this.communicationService.sidebarManager
         .emit({target: target, action: action});
   }
 }
@@ -50,7 +49,6 @@ export interface SidebarData {
 export enum ActionType {
   OPEN,
   CLOSE,
-  CLOSE_ALL,
   SWITCH
 }
 

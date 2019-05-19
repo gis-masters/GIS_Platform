@@ -2,7 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Subject, throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
-import {catchError, filter, tap} from 'rxjs/operators';
+import {catchError, filter, takeUntil, tap} from 'rxjs/operators';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
@@ -34,6 +34,7 @@ export class MapComponent implements OnInit, OnDestroy {
   isGmlDialogShow = false;
 
   gmlDialogData: CrgLayer[];
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -80,8 +81,8 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         });
 
-    this.communicationService
-        .validationDialog$()
+    this.communicationService.validationDialog
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: ValidationDialogData) => {
           if (data && data.show) {
             this.isValidationDialogShow = true;
@@ -98,8 +99,8 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         });
 
-    this.communicationService
-        .gmlDialog$()
+    this.communicationService.gmlDialog
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: GmlDialogData) => {
           if (data.action === ActionType.CLOSE) {
             this.isGmlDialogShow = false;
@@ -109,8 +110,11 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         });
 
-    this.communicationService.sidebarManager$()
-        .pipe(filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT))
+    this.communicationService.sidebarManager
+        .pipe(
+          filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT),
+          takeUntil(this.unsubscribe$)
+        )
         .subscribe((data: SidebarData) => {
           switch (data.action) {
             case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
