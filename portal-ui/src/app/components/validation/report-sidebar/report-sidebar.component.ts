@@ -64,7 +64,13 @@ export class ReportSidebarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['layers']) {
+    const isActiveChange = changes['isActive'];
+    const layersChange = changes['layers'];
+    if (isActiveChange && isActiveChange.currentValue) {
+      this.updateBrieflyInfo(this.layers);
+    }
+
+    if (layersChange && this.isActive) {
       this.updateBrieflyInfo(this.layers);
     }
   }

@@ -32,17 +32,15 @@ export class LayersService {
    * Собираем все о слоях.
    */
   fetchLayers(project: CrgProject): Observable<CrgLayer[]> {
-    this.logger.info('--- fetchLayers ---');
-
     return this.http
       .get<GeoLayer>(this.layersUrl)
       .pipe(
         filter(value => value && !!value['layers']),
         map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
         map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
+        map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
         flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
-        map((layers: CrgLayer[]) => this.filterProjectLayers(project, layers)),
       );
   }
 
@@ -107,8 +105,12 @@ export class LayersService {
     return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 
-  private filterProjectLayers(project: CrgProject, layers: CrgLayer[]) {
-    return layers.filter((layer: CrgLayer) => layer.connectionInfo.schemaName === project.geoserverName);
+  private filterProjectLayers(project: CrgProject, layers: NameHrefProjection[]) {
+    return layers.filter((layer: CrgLayer) => {
+      const projectName = layer.name.split(':')[0];
+
+      return projectName === project.geoserverName;
+    });
   }
 
   private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
