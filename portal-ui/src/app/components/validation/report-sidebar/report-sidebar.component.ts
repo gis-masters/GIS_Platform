@@ -91,7 +91,6 @@ export class ReportSidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.info('+++ report');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

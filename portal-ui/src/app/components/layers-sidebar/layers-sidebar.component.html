@@ -4,9 +4,9 @@
     <mat-nav-list>
       <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
                           (selectionChange)="handleSelection(fizLayers)">
-        <ng-container *ngIf="layers$ | async; else layersLoading">
+        <ng-container *ngIf="layers; else layersLoading">
           <mat-list-option class="example-box" style="height: 64px"
-                           *ngFor="let layer of layers$ | async" cdkDrag [value]="layer">
+                           *ngFor="let layer of layers" cdkDrag [value]="layer">
             <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
           </mat-list-option>
         </ng-container>
@@ -14,6 +14,7 @@
         <ng-template #layersLoading>
           <div class="col-12 text-center">
             Загрузка слоев...
+            <mat-progress-bar mode="query"></mat-progress-bar>
           </div>
         </ng-template>
       </mat-selection-list>

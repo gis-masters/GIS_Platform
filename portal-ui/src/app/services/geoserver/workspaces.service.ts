@@ -1,4 +1,3 @@
-import {map} from 'rxjs/operators';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
@@ -7,7 +6,7 @@ import {TaskImport} from './import/taskImport';
 import {WorkImport} from './import/workImport';
 import {NameHrefProjection} from './projections';
 import {ProjectModel} from './import/projectModel';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {LocalStorageService} from '../local-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
 
@@ -18,31 +17,12 @@ export class WorkspacesService {
 
   private geoserverWorkspaceUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
 
-  private JSON_FORMAT = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
-
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('WorkspacesService start');
-  }
-
-  /**
-   * Получить все слоя рабочей области.
-   * @param name Название рабочей области.
-   */
-  getLayers(name: string): Observable<any> {
-    this.logger.info('All layers for workspace: ', name);
-
-    return this.http
-               .get<NameHrefProjection>(this.geoserverWorkspaceUrl + '/' + name + '/layers')
-               .pipe(
-                 map((response: any) => response.layers.layer)
-               );
-
   }
 
   /**
@@ -68,8 +48,6 @@ export class WorkspacesService {
    * @param workImport -
    */
   publishLayers(workImport: WorkImport): Observable<any> {
-    this.logger.info('Publish ' + workImport.tasks.length + ' layers');
-
     const observableTasks = [];
     workImport.tasks.forEach((task: TaskImport) => {
       observableTasks.push(this.publishLayer(workImport.projectModel, task.workTableName));

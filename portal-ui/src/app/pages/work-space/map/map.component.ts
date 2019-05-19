@@ -1,18 +1,18 @@
-import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {Subject, throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
-import {filter, takeUntil, tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 import {ActionType, CommunicationService} from '../../../services/communication.service';
-import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
+import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
+import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
 @Component({
   selector: 'crg-map',
@@ -22,7 +22,8 @@ import {WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.
 export class MapComponent implements OnInit, OnDestroy {
 
   currentProject: CrgProject;
-  layers: CrgLayer[] = [];
+
+  layers: CrgLayer[] = undefined;
 
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
@@ -42,41 +43,40 @@ export class MapComponent implements OnInit, OnDestroy {
               private storageService: LocalStorageService,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
-    this.currentProject = this.storageService.getProject().crgProject;
     this.communicationService.stepperEvents.emit(3);
   }
 
   ngOnInit() {
     this.openLayers.createMap();
     this.ruleService.getRules().subscribe();
-    this.layersService.fetchLayers(this.currentProject);
 
-    // Подписываемся на слоя чтобы докидывать их на карту
-    this.layersService.layers$
-        .pipe(
-          filter(value => !!value && !!value.length),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((layers: CrgLayer[]) => {
-          this.layers = layers;
-          this.layers.forEach((layer, index) => {
-            this.openLayers
-                .addLayerToMap(layer.complexName)
-                .setZIndex(layers.length - index);
-          });
-
-          // Позиционируемся на первом из загруженных слоев
-          if (this.layers.length > 0) {
-            this.wfsService.getFeatures(this.layers[0].complexName)
-                .subscribe((layer: WfsFeatureCollection) => {
-                  if (layer && layer.bbox) {
-                    this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
-                  } else {
-                    this.logger.info('Cant position to layer', layer);
-                  }
-                });
-          }
+    this.currentProject = this.storageService.getProject().crgProject;
+    this.layersService.fizFetchingLayers(this.currentProject)
+      .pipe(
+        tap(layers => this.layers = layers),
+        catchError(err => {
+          this.logger.error('layers-sidebar layers error', err);
+          return throwError(err);
+        })
+      ).subscribe((layers: CrgLayer[]) => {
+        layers.forEach((layer, index) => {
+          this.openLayers
+              .addLayerToMap(layer.complexName)
+              .setZIndex(layers.length - index);
         });
+
+        // Позиционируемся на первом из загруженных слоев
+        if (layers.length > 0) {
+          this.wfsService.getFeatures(layers[0].complexName)
+              .subscribe((layer: WfsFeatureCollection) => {
+                if (layer && layer.bbox) {
+                  this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
+                } else {
+                  this.logger.info('Cant position to layer', layer);
+                }
+              });
+        }
+      });
 
     this.communicationService
         .validationDialog$()
@@ -115,7 +115,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.info('+++ map');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
