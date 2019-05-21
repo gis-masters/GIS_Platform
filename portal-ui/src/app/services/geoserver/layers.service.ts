@@ -52,7 +52,7 @@ export class LayersService {
     return this.http
                .get<GeoLayer>(this.layersUrl)
                .pipe(
-                 filter(value => value && !!value['layers']),
+                 filter(value => !!value),
                  map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
                  map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
                );
@@ -102,6 +102,10 @@ export class LayersService {
   }
 
   private filterScratchLayers(layers: NameHrefProjection[]) {
+    if (!layers) {
+      return [];
+    }
+
     return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 

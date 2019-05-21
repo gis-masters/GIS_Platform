@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
 import {ProcessStatus} from '../process-status';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
 import {NameHrefProjection} from '../geoserver/projections';
@@ -44,7 +44,6 @@ export class ProjectsService {
     this.http
         .get<CrgProject[]>(this.projectsUrl)
         .pipe(
-          filter((projects: CrgProject[]) => !!projects),
           flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
         )
         .subscribe((projects: CrgProject[]) => {
@@ -87,6 +86,10 @@ export class ProjectsService {
   }
 
   private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {
+    if (projects.length === 0) {
+      return of([]);
+    }
+
     return this.layerService
       .getAllLayers()
       .pipe(
