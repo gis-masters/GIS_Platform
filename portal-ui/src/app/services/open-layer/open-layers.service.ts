@@ -43,7 +43,7 @@ export class OpenLayersService {
 
   createMap() {
     const layers = [
-      // Слой подлжка
+      // Слой подложка
       new TileLayer({
         source: new OSM()
       })
@@ -59,6 +59,10 @@ export class OpenLayersService {
       layers: layers,
       target: 'fiz-openLayer-map',
       view: this.view
+    });
+
+    this._map.on('singleclick', function(event) {
+      console.log('event: ', event.coordinate);
     });
   }
 
@@ -265,3 +269,4 @@ export class OpenLayersService {
     this._map.addLayer(vector);
   }
 }
+

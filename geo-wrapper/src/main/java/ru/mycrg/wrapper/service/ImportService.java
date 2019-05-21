@@ -146,17 +146,17 @@ public class ImportService {
                     params.put(key, value);
                 }
 
+                if (value instanceof String) {
+                    String decoded =
+                            new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                    params.put(key, decoded);
+                }
+
                 if ("globalid".equals(key)) {
                     String valueAsString = (String) value;
                     if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
                         params.put(key, UUID.randomUUID());
                     }
-                }
-
-                if (value instanceof String) {
-                    String decoded =
-                            new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-                    params.put(key, decoded);
                 }
             });
 
