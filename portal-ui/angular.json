@@ -117,6 +117,9 @@
             "production": {
               "browserTarget": "gis-portal:build:production"
             },
+            "staging": {
+              "browserTarget": "gis-portal:build:staging"
+            },
             "test": {
               "browserTarget": "gis-portal:build:test"
             }
