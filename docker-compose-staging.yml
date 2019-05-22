@@ -58,6 +58,7 @@ services:
       - 8761:8761
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -71,6 +72,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -86,6 +88,7 @@ services:
       - 8100:8100
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -113,6 +116,7 @@ services:
       - /opt/fgistp:/opt/fgistp
       - /opt/gml:/opt/gml
       - /opt/logs:/opt/logs
+      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     depends_on:
       - database
       - rabbitmq
@@ -143,6 +147,7 @@ services:
       - /opt/fgistp:/opt/fgistp
       - /opt/gml:/opt/gml
       - /opt/logs:/opt/logs
+      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
