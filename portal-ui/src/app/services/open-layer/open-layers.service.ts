@@ -2,20 +2,20 @@ import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
-import MultiLineString from 'ol/geom/MultiLineString.js';
-import MultiPolygon from 'ol/geom/MultiPolygon.js';
-import ImageWMS from 'ol/source/ImageWMS.js';
-import MousePosition from 'ol/control/MousePosition.js';
 import {NGXLogger} from 'ngx-logger';
-import {Injectable} from '@angular/core';
+import ImageWMS from 'ol/source/ImageWMS.js';
+import {Fill, Stroke, Style} from 'ol/style.js';
+import {createStringXY} from 'ol/coordinate.js';
+import MultiPolygon from 'ol/geom/MultiPolygon.js';
 import {WmsService} from '../geoserver/wms.service';
+import {WfsFeature} from '../geoserver/wfs.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import MousePosition from 'ol/control/MousePosition.js';
+import MultiLineString from 'ol/geom/MultiLineString.js';
+import {OSM, Vector as VectorSource} from 'ol/source.js';
+import {defaults as defaultControls} from 'ol/control.js';
 import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {Fill, Stroke, Style} from 'ol/style.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {WfsFeature} from '../geoserver/wfs.service';
-import {defaults as defaultControls} from 'ol/control.js';
-import {createStringXY} from 'ol/coordinate.js';
 
 export let BEARER_TOKEN = '';
 
@@ -24,9 +24,11 @@ export let BEARER_TOKEN = '';
 })
 export class OpenLayersService {
 
-  private _map;
+  mapClick$ = new EventEmitter<[number, number]>();
 
+  private _map;
   view: View;
+
   bugObjectLayer: VectorLayer;
 
   mousePositionControl = new MousePosition({
@@ -61,8 +63,14 @@ export class OpenLayersService {
       view: this.view
     });
 
+    const mapClick = this.mapClick$;
     this._map.on('singleclick', function(event) {
-      console.log('event: ', event.coordinate);
+      if (event.coordinate) {
+        mapClick.emit(event.coordinate);
+      } else {
+        console.warn('No coordinate', event.coordinate);
+        mapClick.emit([0, 0]);
+      }
     });
   }
 
@@ -204,6 +212,18 @@ export class OpenLayersService {
       .fit(bbox, {padding: padding, constrainResolution: false});
   }
 
+  /**
+   * Возвращает видимые слоя. (Без подлжки)
+   */
+  getVisibleLayers() {
+    this._map.getLayers()
+        .forEach((vrLayer) => {
+          if (vrLayer.getVisible()) {
+            console.log('--------', vrLayer);
+          }
+        });
+  }
+
   private positionToFeature(feature: WfsFeature) {
     const view = this._map.getView();
     const size = this._map.getSize();
@@ -231,7 +251,6 @@ export class OpenLayersService {
 
   private paintFeature(feature: WfsFeature) {
     this.removeBugObjectsLayer();
-
     let drawFeature;
     if (feature.geometry.type === 'Point') {
       drawFeature = new Feature({
@@ -268,5 +287,6 @@ export class OpenLayersService {
 
     this._map.addLayer(vector);
   }
+
 }
 

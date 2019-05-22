@@ -2,6 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Subject, throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
+import {WfsUtil} from '../../../services/open-layer/WfsUtil';
 import {catchError, filter, takeUntil, tap} from 'rxjs/operators';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
@@ -123,6 +124,17 @@ export class MapComponent implements OnInit, OnDestroy {
             default:
               this.logger.warn('Unsupported action type: ', data.action);
           }
+        });
+
+    this.openLayers.mapClick$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((coordinate: [number, number]) => {
+          // TODO: get visible layers
+          this.openLayers.getVisibleLayers();
+
+          const xml = WfsUtil.makeXmlIntersect(['kollizii_2:naturalriskzone', 'kollizii_2:transportobj'], coordinate);
+
+          console.log('--------------------', xml);
         });
   }
 
