@@ -11,8 +11,6 @@ import {error} from '@angular/compiler/src/util';
 })
 export class WfsService {
 
-  private _wfsUrl = this.serverProp.geoServerUrl;
-
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private baseService: BaseService,
@@ -44,10 +42,21 @@ export class WfsService {
                .get<WfsFeatureCollection>(url);
   }
 
+  /**
+   * Выборка обьектов слоя по XML фильтру.
+   * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
+   */
+  getFeaturesByFilter(xml: string): Observable<WfsFeatureCollection> {
+    const url = this.serverProp.geoServerUrl + '/wfs';
+
+    return this.http
+               .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
+  }
+
   private prepareLink(typeName: string, objectId: string) {
     const workspaceName = typeName.split(':')[0];
 
-    return this._wfsUrl + '/' + workspaceName + '/ows'
+    return this.serverProp.geoServerUrl + '/' + workspaceName + '/ows'
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
@@ -55,17 +64,9 @@ export class WfsService {
   private prepareFeaturesLink(typeName: string) {
     const workspaceName = typeName.split(':')[0];
 
-    return this._wfsUrl + '/' + workspaceName + '/ows'
+    return this.serverProp.geoServerUrl + '/' + workspaceName + '/ows'
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857';
-  }
-
-  get wfsUrl(): string {
-    return this._wfsUrl;
-  }
-
-  set wfsUrl(value: string) {
-    this._wfsUrl = value;
   }
 }
 
@@ -93,4 +94,16 @@ export interface WfsFeature {
 interface WfsGeometry {
   type: string;
   coordinates: any;
+}
+
+// TODO: Перенести позже в более общее место (пока применяю только для WFS поэтому тут)
+export interface GeoserverJSONException {
+  version: string;
+  exceptions: ExceptionItem[];
+}
+
+export interface ExceptionItem {
+  code: string;
+  locator: string;
+  text: string;
 }

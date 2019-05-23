@@ -35,6 +35,9 @@ export class ServerPropertiesService {
     return this._baseUrl;
   }
 
+  /**
+   * http://localhost:8080/geoserver
+   */
   get geoServerUrl(): string {
     return this._geoServerUrl;
   }

@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {TokenStorageService} from './token-storage.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ServerPropertiesService} from './server-properties.service';
+import {ProjectsService} from "./gis/projects.service";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient,
               private router: Router,
               private tokenStorage: TokenStorageService,
+              private projectService: ProjectsService,
               private serverProperties: ServerPropertiesService,
               private logger: NGXLogger) {
     logger.debug('AuthService start');
@@ -52,6 +54,8 @@ export class AuthService {
   }
 
   logout() {
+    this.projectService.clearCache();
+
     this.tokenStorage.signOut();
 
     this._authenticated = false;

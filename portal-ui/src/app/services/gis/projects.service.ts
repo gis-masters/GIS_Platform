@@ -85,6 +85,10 @@ export class ProjectsService {
     this.storageService.clearProject();
   }
 
+  clearCache() {
+    this._projects$.next(undefined);
+  }
+
   private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {
     if (projects.length === 0) {
       return of([]);
@@ -120,7 +124,6 @@ export class ProjectsService {
 
     return counter;
   }
-
 }
 
 export interface CrgProject {

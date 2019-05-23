@@ -213,15 +213,18 @@ export class OpenLayersService {
   }
 
   /**
-   * Возвращает видимые слоя. (Без подлжки)
+   * Возвращает видимые слоя. (Без подложки: TILE)
    */
   getVisibleLayers() {
+    const result = [];
     this._map.getLayers()
-        .forEach((vrLayer) => {
-          if (vrLayer.getVisible()) {
-            console.log('--------', vrLayer);
+        .forEach(vrLayer => {
+          if (vrLayer.getVisible() && vrLayer.getType() !== 'TILE') {
+            result.push(vrLayer);
           }
         });
+
+    return result;
   }
 
   private positionToFeature(feature: WfsFeature) {

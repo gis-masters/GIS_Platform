@@ -11,7 +11,7 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
+import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 import {ActionType, SidebarData, SidebarType} from '../../../services/side-bar-manager.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
@@ -72,11 +72,11 @@ export class MapComponent implements OnInit, OnDestroy {
           // Позиционируемся на первом из загруженных слоев
           if (layers.length > 0) {
             this.wfsService.getFeatures(layers[0].complexName)
-                .subscribe((layer: WfsFeatureCollection) => {
-                  if (layer && layer.bbox) {
-                    this.openLayers.fitToBbox(layer.bbox, [50, 50, 50, 50]);
+                .subscribe((fCollection: WfsFeatureCollection) => {
+                  if (fCollection && fCollection.bbox) {
+                    this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
                   } else {
-                    this.logger.info('Cant position to layer', layer);
+                    this.logger.info('Cant position to layer', fCollection);
                   }
                 });
           }
@@ -128,14 +128,36 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.openLayers.mapClick$
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((coordinate: [number, number]) => {
-          // TODO: get visible layers
-          this.openLayers.getVisibleLayers();
+        .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
+  }
 
-          const xml = WfsUtil.makeXmlIntersect(['kollizii_2:naturalriskzone', 'kollizii_2:transportobj'], coordinate);
+  /**
+   * Отобразить информацию об обьектах, которые пересекают заданные координаты.
+   */
+  private showFeaturesInfo(coordinate: [number, number]) {
+    // Из видимых слоев достанем название источника
+    const visibleLayersComplexName = this.openLayers.getVisibleLayers().map(vrLayer => {
+      const source = vrLayer.getSource();
+      if (source && source.params_ && source.params_['LAYERS']) {
+        return source.params_['LAYERS'];
+      } else {
+        this.logger.warn('Unexpected source: ', source);
+      }
+    });
 
-          console.log('--------------------', xml);
-        });
+    if (visibleLayersComplexName.length > 0) {
+      // Формируем xml для запроса к WFS
+      const xml = WfsUtil.makeXmlIntersect(visibleLayersComplexName, coordinate);
+
+      this.wfsService.getFeaturesByFilter(xml)
+          .subscribe((featureCollection: WfsFeatureCollection) => {
+            this.logger.info('Here ', featureCollection.features.length + ' objects');
+          }, (exception: GeoserverJSONException) => {
+            this.logger.error('errorResponse: ', exception);
+          });
+    } else {
+      this.logger.debug('No visible layers');
+    }
   }
 
   ngOnDestroy(): void {
