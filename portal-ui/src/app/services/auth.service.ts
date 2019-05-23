@@ -1,10 +1,10 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
+import {ProjectsService} from './gis/projects.service';
 import {TokenStorageService} from './token-storage.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ServerPropertiesService} from './server-properties.service';
-import {ProjectsService} from "./gis/projects.service";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -19,14 +19,18 @@ export class AuthService {
               private logger: NGXLogger) {
     logger.debug('AuthService start');
 
-    if (tokenStorage.getAccessToken()) {
-      this._authenticated = true;
+    const authModel = this.tokenStorage.getAuthModel();
+    if (authModel) {
+      if (authModel.created_in + (authModel.expires_in * 1000) > Date.now()) {
+        this._authenticated = true;
+      } else {
+        // TODO: try use refresh token
+        this.logger.info('Token expired');
+      }
     }
   }
 
   authenticate(credentials) {
-    this.logger.info('Try auth: ', credentials);
-
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
@@ -62,9 +66,8 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  // TODO: Создание новой орг в модуле аутентификации???
   registration(regData: RegData) {
-    // this.logger.info('Try register new organization: ', regData);
-
     const payload = {
       email: regData.email,
       name: regData.company,

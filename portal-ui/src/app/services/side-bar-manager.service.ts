@@ -22,9 +22,15 @@ export class SideBarManager {
     if (target === SidebarType.INFO) {
       this.emit(SidebarType.INFO, action);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
+      this.emit(SidebarType.FEATURES, ActionType.CLOSE);
     } else if (target === SidebarType.BUG_REPORT) {
       this.emit(SidebarType.BUG_REPORT, action);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
+      this.emit(SidebarType.FEATURES, ActionType.CLOSE);
+    } else if (target === SidebarType.FEATURES) {
+      this.emit(SidebarType.FEATURES, action);
+      this.emit(SidebarType.INFO, ActionType.CLOSE);
+      this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
     } else {
       this.logger.warn('Not supported sidebar type: ', target);
     }
@@ -53,7 +59,8 @@ export enum ActionType {
 }
 
 export enum SidebarType {
-  INFO,       // Информационная панель
-  LAYERS,     // Левая панель со слоями
-  BUG_REPORT, // Панель отображения и редактирования ошибок
+  INFO = 'INFO',            // Информационная панель
+  LAYERS = 'LAYERS',        // Левая панель со слоями
+  BUG_REPORT = 'BUG_REPORT',  // Панель отображения и редактирования ошибок
+  FEATURES = 'FEATURES',    // Панель отображения выделенных фич
 }

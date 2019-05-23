@@ -35,7 +35,8 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
 import {ProjectComponent} from './pages/work-space/project/project.component';
-import {DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
+import {DeleteDialogComponent} from './components/delete-dialog/delete-dialog.component';
+import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import {DeleteDialogComponent } from './components/delete-dialog/delete-dialog.c
     CrgStepperComponent,
     ProjectComponent,
     DeleteDialogComponent,
+    ViewFeaturesComponent,
   ],
   imports: [
     AppRoutingModule,

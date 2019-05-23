@@ -1,0 +1,10 @@
+<div [ngClass]="isActive? 'crg-view-features-sidebar' : 'crg-view-features-sidebar_hidden'">
+  <div class="crg-sidebar-header">
+    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+    Обьекты
+  </div>
+
+  <div>
+    Выделено {{features.length}} фич
+  </div>
+</div>

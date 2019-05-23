@@ -11,9 +11,9 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {ActionType, SidebarData, SidebarType} from '../../../services/side-bar-manager.service';
+import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
 @Component({
@@ -29,13 +29,14 @@ export class MapComponent implements OnInit, OnDestroy {
 
   isLayersSidebarActive = false;
   isBugReportSidebarActive = false;
+  isFeaturesSidebarActive = false;
+  selectedFeatures: any;
 
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
   isGmlDialogShow = false;
 
   gmlDialogData: CrgLayer[];
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -45,6 +46,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private wfsService: WfsService,
               private ruleService: FgistpRulesService,
               private storageService: LocalStorageService,
+              private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
     this.communicationService.stepperEvents.emit(3);
@@ -113,16 +115,29 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService.sidebarManager
         .pipe(
-          filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT),
+          filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT ||
+            data.target === SidebarType.FEATURES),
           takeUntil(this.unsubscribe$)
         )
         .subscribe((data: SidebarData) => {
-          switch (data.action) {
-            case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
-            case ActionType.OPEN:   this.isBugReportSidebarActive = true;  break;
-            case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
-            default:
-              this.logger.warn('Unsupported action type: ', data.action);
+          console.log('--------------------------', data.target);
+
+          if (data.target === SidebarType.BUG_REPORT) {
+            switch (data.action) {
+              case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
+              case ActionType.OPEN:   this.isBugReportSidebarActive = true;  break;
+              case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
+              default:
+                this.logger.warn('Unsupported action type: ', data.action);
+            }
+          } else if (data.target === SidebarType.FEATURES) {
+            switch (data.action) {
+              case ActionType.CLOSE:  this.isFeaturesSidebarActive = false; break;
+              case ActionType.OPEN:   this.isFeaturesSidebarActive = true;  break;
+              case ActionType.SWITCH: this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive; break;
+              default:
+                this.logger.warn('Unsupported action type: ', data.action);
+            }
           }
         });
 
@@ -155,7 +170,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.wfsService.getFeaturesByFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
-            // this.logger.info('Here ', featureCollection.features, featureCollection.features.length + ' features');
+            this.selectedFeatures = featureCollection.features;
+            this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
 
             this.openLayers.clearDraft();
             featureCollection.features.forEach(feature => {

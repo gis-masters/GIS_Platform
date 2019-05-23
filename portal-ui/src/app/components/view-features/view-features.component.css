@@ -1,0 +1,46 @@
+.crg-view-features-sidebar {
+  z-index: 100;
+  position: fixed;
+  top: 55px;
+  left: calc(100% - 550px);
+
+  height: calc(100% - 55px);
+  width: 550px;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.crg-view-features-sidebar_hidden {
+  z-index: 100;
+  position: fixed;
+  top: 55px;
+  left: 100%;
+
+  height: calc(100% - 55px);
+  width: 550px;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.crg-sidebar-header {
+  font-size: larger;
+  padding: 20px;
+}
+
+.crg-close-icon {
+  cursor: pointer;
+  color: grey;
+  float: right;
+}

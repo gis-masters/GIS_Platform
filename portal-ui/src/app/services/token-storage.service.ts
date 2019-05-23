@@ -23,6 +23,10 @@ export class TokenStorageService {
     this.storageService.saveByKey(this.AUTH_MODEL, JSON.stringify(authModel));
   }
 
+  getAuthModel(): AuthModel {
+    return JSON.parse(this.storageService.getByKey(this.AUTH_MODEL));
+  }
+
   saveAccessToken(token: string) {
     this.saveToken(this.ACCESS_TOKEN_KEY, token);
   }

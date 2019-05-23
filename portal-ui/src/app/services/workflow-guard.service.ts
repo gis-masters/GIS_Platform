@@ -1,7 +1,6 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {StorageKeys} from './storage-keys';
 import {LocalStorageService} from './local-storage.service';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
