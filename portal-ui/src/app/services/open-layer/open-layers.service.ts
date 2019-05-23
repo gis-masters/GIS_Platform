@@ -3,16 +3,17 @@ import View from 'ol/View.js';
 import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 import {NGXLogger} from 'ngx-logger';
+import {OSM, Vector} from 'ol/source.js';
 import ImageWMS from 'ol/source/ImageWMS.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {createStringXY} from 'ol/coordinate.js';
+import {VectorSource} from 'ol/source/Vector.js';
 import MultiPolygon from 'ol/geom/MultiPolygon.js';
 import {WmsService} from '../geoserver/wms.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {EventEmitter, Injectable} from '@angular/core';
 import MousePosition from 'ol/control/MousePosition.js';
 import MultiLineString from 'ol/geom/MultiLineString.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {TokenStorageService} from '../token-storage.service';
 import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
@@ -28,7 +29,7 @@ export class OpenLayersService {
 
   private _map;
   private view: View;
-  private draftLayer: VectorLayer;
+  private draftSource: VectorLayer;
 
   // Кол-во десятичных в координатах
   private PRECISION = 4;
@@ -40,8 +41,8 @@ export class OpenLayersService {
   private DRAFT_LAYER_ZINDEX = 10000;
 
   mousePositionControl = new MousePosition({
-    coordinateFormat: createStringXY(this.PRECISION),
-    projection: 'EPSG:4326',
+    coordinateFormat: createStringXY(this.PRECISION / 2),
+    projection: 'EPSG:3857',
     undefinedHTML: '&nbsp;'
   });
 
@@ -52,11 +53,9 @@ export class OpenLayersService {
   }
 
   createMap() {
-    const layers = [
-      new TileLayer({
-        source: new OSM()
-      }),
-    ];
+    this.draftSource = new Vector({
+      features: []
+    });
 
     this.view = new View({
       center: [3803333, 5542377],
@@ -64,12 +63,30 @@ export class OpenLayersService {
     });
 
     this._map = new Map({
-      controls: defaultControls().extend([this.mousePositionControl]),
-      layers: layers,
       target: 'fiz-openLayer-map',
-      view: this.view
+      controls: defaultControls().extend([this.mousePositionControl]),
+      view: this.view,
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        }),
+        new VectorLayer({
+          source: this.draftSource,
+          zIndex: this.DRAFT_LAYER_ZINDEX,
+          style: new Style({
+            fill: new Fill({
+              color: 'rgba(255, 255, 255, 0.3)'
+            }),
+            stroke: new Stroke({
+              color: '#ff0018',
+              width: 2
+            })
+          })
+        })
+      ]
     });
 
+    // MAP EVENTS
     const mapClick = this.mapClick$;
     this._map.on('singleclick', function(event) {
       if (event.coordinate) {
@@ -103,7 +120,7 @@ export class OpenLayersService {
     //       geometry: bufferPolygon,
     //     });
     //
-    //     const draftLayer = new VectorLayer({
+    //     const draftSource = new VectorLayer({
     //       source: new VectorSource({
     //         features: [feature]
     //       }),
@@ -118,7 +135,7 @@ export class OpenLayersService {
     //         })
     //       })
     //     });
-    //     this.addLayer(draftLayer);
+    //     this.addLayer(draftSource);
     //   }
     // });
   }
@@ -241,10 +258,8 @@ export class OpenLayersService {
   }
 
   // Очистить карту от слоя, который отображал обьект.
-  removeDraftLayer() {
-    if (this.draftLayer) {
-      this._map.removeLayer(this.draftLayer);
-    }
+  clearDraft() {
+    this.draftSource.clear();
   }
 
   /**
@@ -252,12 +267,14 @@ export class OpenLayersService {
    */
   showFeature(wfsFeature: WfsFeature) {
     this.positionToFeature(wfsFeature);
+
+    this.clearDraft();
     this.paintFeature(wfsFeature);
   }
 
-  drawPolygon(polygon) {
+  drawPolygon(coordinates) {
     const feature = {
-      geometry: {type: 'MultiPolygon', coordinates: polygon.getCoordinates()},
+      geometry: {type: 'MultiPolygon', coordinates: coordinates},
       type: '',
       id: '',
       geometry_name: '',
@@ -298,7 +315,7 @@ export class OpenLayersService {
 
     const res = Number(Number(this.getResolution() * this.HIT_TOLERANCE).toFixed(this.PRECISION));
 
-    console.log('pos/res', pos, res);
+    // console.log('pos/res', pos, res);
 
     const d = 2;
     const buffer = [[[
@@ -309,7 +326,7 @@ export class OpenLayersService {
       [pos[0] + (res / d),        pos[1] + (res / d)]
     ]]];
 
-    console.log('buffer', buffer);
+    // console.log('buffer', buffer);
 
     return new MultiPolygon(buffer);
   }
@@ -339,9 +356,7 @@ export class OpenLayersService {
     return [];
   }
 
-  private paintFeature(feature: WfsFeature) {
-    this.removeDraftLayer();
-
+  paintFeature(feature: WfsFeature) {
     let drawFeature;
     if (feature.geometry.type === 'Point') {
       drawFeature = new Feature({
@@ -359,26 +374,7 @@ export class OpenLayersService {
       console.warn('Not supported geometry type: ', feature.geometry);
     }
 
-    // TODO: Не создавать каждый раз этот слой а добавлять в драфт слой, который создается с картой сразу
-    const draftLayer = new VectorLayer({
-      source: new VectorSource({
-        features: [drawFeature]
-      }),
-      zIndex: this.DRAFT_LAYER_ZINDEX,
-      style: new Style({
-        fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.3)'
-        }),
-        stroke: new Stroke({
-          color: '#ff0018',
-          width: 2
-        })
-      })
-    });
-
-    this.draftLayer = draftLayer;
-
-    this._map.addLayer(draftLayer);
+    this.draftSource.addFeature(drawFeature);
   }
 }
 

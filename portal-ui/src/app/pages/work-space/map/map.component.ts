@@ -151,15 +151,16 @@ export class MapComponent implements OnInit, OnDestroy {
       // Формируем xml для запроса к WFS
       const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
 
-
-
-      this.openLayers.drawPolygon(buffer);
-
-
+      this.openLayers.drawPolygon(buffer.getCoordinates());
 
       this.wfsService.getFeaturesByFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
-            this.logger.info('Here ', featureCollection.features.length + ' features');
+            // this.logger.info('Here ', featureCollection.features, featureCollection.features.length + ' features');
+
+            this.openLayers.clearDraft();
+            featureCollection.features.forEach(feature => {
+              this.openLayers.paintFeature(feature);
+            });
           }, (exception: GeoserverJSONException) => {
             this.logger.error('errorResponse: ', exception);
           });
