@@ -141,17 +141,25 @@ export class MapComponent implements OnInit, OnDestroy {
       if (source && source.params_ && source.params_['LAYERS']) {
         return source.params_['LAYERS'];
       } else {
-        this.logger.warn('Unexpected source: ', source);
+        // this.logger.warn('Unexpected source: ', source);
       }
-    });
+    }).filter(value => !!value);
 
     if (visibleLayersComplexName.length > 0) {
+      const buffer = this.openLayers.getBufferByCoordinates(coordinate);
+
       // Формируем xml для запроса к WFS
-      const xml = WfsUtil.makeXmlIntersect(visibleLayersComplexName, coordinate);
+      const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
+
+
+
+      this.openLayers.drawPolygon(buffer);
+
+
 
       this.wfsService.getFeaturesByFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
-            this.logger.info('Here ', featureCollection.features.length + ' objects');
+            this.logger.info('Here ', featureCollection.features.length + ' features');
           }, (exception: GeoserverJSONException) => {
             this.logger.error('errorResponse: ', exception);
           });

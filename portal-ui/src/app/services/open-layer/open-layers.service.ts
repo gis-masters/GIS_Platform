@@ -27,12 +27,20 @@ export class OpenLayersService {
   mapClick$ = new EventEmitter<[number, number]>();
 
   private _map;
-  view: View;
+  private view: View;
+  private draftLayer: VectorLayer;
 
-  bugObjectLayer: VectorLayer;
+  // Кол-во десятичных в координатах
+  private PRECISION = 4;
+
+  // Hit-detection tolerance. Pixels inside the square around the given position will be checked for features.
+  private HIT_TOLERANCE = 10;
+
+  // ZIndex чернового слоя который используется для подсвечивания обьектов
+  private DRAFT_LAYER_ZINDEX = 10000;
 
   mousePositionControl = new MousePosition({
-    coordinateFormat: createStringXY(4),
+    coordinateFormat: createStringXY(this.PRECISION),
     projection: 'EPSG:4326',
     undefinedHTML: '&nbsp;'
   });
@@ -45,10 +53,9 @@ export class OpenLayersService {
 
   createMap() {
     const layers = [
-      // Слой подложка
       new TileLayer({
         source: new OSM()
-      })
+      }),
     ];
 
     this.view = new View({
@@ -72,6 +79,48 @@ export class OpenLayersService {
         mapClick.emit([0, 0]);
       }
     });
+
+    // this._map.on('pointermove', function(event) {
+    //   const _view_ = this.getView();
+    //
+    //   const pos = event.coordinate;
+    //   if (pos) {
+    //     pos[0] = Number(pos[0].toFixed(4));
+    //     pos[1] = Number(pos[1].toFixed(4));
+    //
+    //     const res = Number(Number(_view_.getResolution() * 10).toFixed(4));
+    //     const d = 2;
+    //     const buffer = [[[
+    //       [pos[0] + (res / d),        pos[1] + (res / d)],
+    //       [pos[0] + (res / d) - res,  pos[1] + (res / d)],
+    //       [pos[0] + (res / d) - res,  pos[1] + (res / d) - res],
+    //       [pos[0] + (res / d),        pos[1] + (res / d) - res],
+    //       [pos[0] + (res / d),        pos[1] + (res / d)]
+    //     ]]];
+    //
+    //     const bufferPolygon = new MultiPolygon(buffer);
+    //     const feature = new Feature({
+    //       geometry: bufferPolygon,
+    //     });
+    //
+    //     const draftLayer = new VectorLayer({
+    //       source: new VectorSource({
+    //         features: [feature]
+    //       }),
+    //       zIndex: 10000,
+    //       style: new Style({
+    //         fill: new Fill({
+    //           color: 'rgba(255, 255, 255, 0.3)'
+    //         }),
+    //         stroke: new Stroke({
+    //           color: '#ff0018',
+    //           width: 2
+    //         })
+    //       })
+    //     });
+    //     this.addLayer(draftLayer);
+    //   }
+    // });
   }
 
   addLayerToMap(complexLayerName: string) {
@@ -192,9 +241,9 @@ export class OpenLayersService {
   }
 
   // Очистить карту от слоя, который отображал обьект.
-  removeBugObjectsLayer() {
-    if (this.bugObjectLayer) {
-      this._map.removeLayer(this.bugObjectLayer);
+  removeDraftLayer() {
+    if (this.draftLayer) {
+      this._map.removeLayer(this.draftLayer);
     }
   }
 
@@ -204,6 +253,18 @@ export class OpenLayersService {
   showFeature(wfsFeature: WfsFeature) {
     this.positionToFeature(wfsFeature);
     this.paintFeature(wfsFeature);
+  }
+
+  drawPolygon(polygon) {
+    const feature = {
+      geometry: {type: 'MultiPolygon', coordinates: polygon.getCoordinates()},
+      type: '',
+      id: '',
+      geometry_name: '',
+      properties: ''
+    };
+
+    this.paintFeature(feature);
   }
 
   fitToBbox(bbox: any, padding: [number, number, number, number]) {
@@ -225,6 +286,32 @@ export class OpenLayersService {
         });
 
     return result;
+  }
+
+  getResolution() {
+    return this.view.getResolution();
+  }
+
+  getBufferByCoordinates(pos: [number, number]) {
+    pos[0] = Number(pos[0].toFixed(this.PRECISION));
+    pos[1] = Number(pos[1].toFixed(this.PRECISION));
+
+    const res = Number(Number(this.getResolution() * this.HIT_TOLERANCE).toFixed(this.PRECISION));
+
+    console.log('pos/res', pos, res);
+
+    const d = 2;
+    const buffer = [[[
+      [pos[0] + (res / d),        pos[1] + (res / d)],
+      [pos[0] + (res / d) - res,  pos[1] + (res / d)],
+      [pos[0] + (res / d) - res,  pos[1] + (res / d) - res],
+      [pos[0] + (res / d),        pos[1] + (res / d) - res],
+      [pos[0] + (res / d),        pos[1] + (res / d)]
+    ]]];
+
+    console.log('buffer', buffer);
+
+    return new MultiPolygon(buffer);
   }
 
   private positionToFeature(feature: WfsFeature) {
@@ -253,7 +340,8 @@ export class OpenLayersService {
   }
 
   private paintFeature(feature: WfsFeature) {
-    this.removeBugObjectsLayer();
+    this.removeDraftLayer();
+
     let drawFeature;
     if (feature.geometry.type === 'Point') {
       drawFeature = new Feature({
@@ -271,10 +359,12 @@ export class OpenLayersService {
       console.warn('Not supported geometry type: ', feature.geometry);
     }
 
-    const vector = new VectorLayer({
+    // TODO: Не создавать каждый раз этот слой а добавлять в драфт слой, который создается с картой сразу
+    const draftLayer = new VectorLayer({
       source: new VectorSource({
         features: [drawFeature]
       }),
+      zIndex: this.DRAFT_LAYER_ZINDEX,
       style: new Style({
         fill: new Fill({
           color: 'rgba(255, 255, 255, 0.3)'
@@ -286,10 +376,9 @@ export class OpenLayersService {
       })
     });
 
-    this.bugObjectLayer = vector;
+    this.draftLayer = draftLayer;
 
-    this._map.addLayer(vector);
+    this._map.addLayer(draftLayer);
   }
-
 }
 
