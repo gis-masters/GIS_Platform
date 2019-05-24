@@ -2,5 +2,6 @@
 export enum StorageKeys {
 
   orgId = 'orgId',
-  projectKey = 'project'
+  projectKey = 'project',
+  logModel = 'logModel'
 }

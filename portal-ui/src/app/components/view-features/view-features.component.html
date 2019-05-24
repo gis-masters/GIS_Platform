@@ -4,7 +4,13 @@
     Обьекты
   </div>
 
-  <div>
-    Выделено {{features.length}} фич
-  </div>
+  <ng-container *ngIf="features; else noFeatures">
+    Выделено {{features.length}} обьектов
+  </ng-container>
+
+  <ng-template #noFeatures>
+    <div class="col-12 text-center">
+      Обьекты не выбраны
+    </div>
+  </ng-template>
 </div>

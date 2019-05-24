@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
+import {Injectable} from '@angular/core';
 import {StorageKeys} from './storage-keys';
+import {LogModel} from './logger/fiz.logger';
 import {ProjectModel} from './geoserver/import/projectModel';
 
 @Injectable({
@@ -8,7 +8,7 @@ import {ProjectModel} from './geoserver/import/projectModel';
 })
 export class LocalStorageService {
 
-  constructor(private logger: NGXLogger) {
+  constructor() {
 
   }
 
@@ -43,5 +43,13 @@ export class LocalStorageService {
     } else {
       throw Error('Не удалось получить id организации');
     }
+  }
+
+  setLogModel(model: LogModel) {
+    this.saveByKey(StorageKeys.logModel, JSON.stringify(model));
+  }
+
+  getLogModel(): LogModel {
+    return JSON.parse(this.getByKey(StorageKeys.logModel)) as LogModel;
   }
 }

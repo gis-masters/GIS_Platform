@@ -12,6 +12,7 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
+import {FizLogger} from '../../../services/logger/fiz.logger';
 import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
@@ -42,6 +43,7 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private layersService: LayersService,
               private logger: NGXLogger,
+              private log: FizLogger,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
               private ruleService: FgistpRulesService,
@@ -49,6 +51,8 @@ export class MapComponent implements OnInit, OnDestroy {
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
+    this.log.info('MapComponent.constructor', 'test');
+
     this.communicationService.stepperEvents.emit(3);
   }
 
@@ -120,8 +124,6 @@ export class MapComponent implements OnInit, OnDestroy {
           takeUntil(this.unsubscribe$)
         )
         .subscribe((data: SidebarData) => {
-          console.log('--------------------------', data.target);
-
           if (data.target === SidebarType.BUG_REPORT) {
             switch (data.action) {
               case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
@@ -170,13 +172,17 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.wfsService.getFeaturesByFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
-            this.selectedFeatures = featureCollection.features;
-            this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
-
             this.openLayers.clearDraft();
-            featureCollection.features.forEach(feature => {
-              this.openLayers.paintFeature(feature);
-            });
+            if (featureCollection.features && featureCollection.features.length > 0) {
+              this.selectedFeatures = featureCollection.features;
+              this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
+
+              featureCollection.features.forEach(feature => {
+                this.openLayers.paintFeature(feature);
+              });
+            } else {
+              this.logger.info('No features selected');
+            }
           }, (exception: GeoserverJSONException) => {
             this.logger.error('errorResponse: ', exception);
           });
