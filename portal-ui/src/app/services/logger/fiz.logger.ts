@@ -25,6 +25,15 @@ export class FizLogger {
                 level: LogLevel.DEBUG
               },
             ]
+          },
+          {
+            key: 'featuresSidebar',
+            types: [
+              {
+                mod: LogMode.DEV,
+                level: LogLevel.DEBUG
+              },
+            ]
           }
         ]
       };
@@ -87,11 +96,6 @@ export class FizLogger {
     } else {
       return undefined;
     }
-  }
-
-  private isFirstMoreOrEqualSecond(definedLevel: LogLevel, INFO: LogLevel) {
-
-    return false;
   }
 
 }

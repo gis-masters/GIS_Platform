@@ -5,7 +5,7 @@
     <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
         *ngIf="!data.validated">Валидация не выполнялась</h6>
     <h6 class="float-right" style="font-size: inherit; padding-right: 10px"
-        *ngIf="!!data.lastValidationDateTime">Время последней проверки: {{data.lastValidationDateTime}}</h6>
+        *ngIf="!!data.lastValidated">Время последней проверки: {{data.lastValidated}}</h6>
   </div>
   <div *ngIf="data.status === 'ERROR'">
     <h6 class="float-left" style="font-size: inherit">Ошибка валидации</h6>
