@@ -5,7 +5,13 @@
   </div>
 
   <ng-container *ngIf="features; else noFeatures">
-    Выделено {{features.length}} обьектов
+    <mat-nav-list role="list">
+      <mat-list-item role="listitem" *ngFor="let feature of features; let index = index">
+        <div>
+          {{index + 1}}. {{rulesService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
   </ng-container>
 
   <ng-template #noFeatures>

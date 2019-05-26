@@ -77,7 +77,9 @@ export class FgistpRulesService {
         .forEach((simpleProperty: SimpleProperty) => {
           if (simpleProperty.enumerations) {
             simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
-              if (item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
+              if (element.classId && item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
+                result = item.title;
+              } else if (element.classid && item.value.toLowerCase() === element.classid.toString().toLowerCase()) {
                 result = item.title;
               }
             });

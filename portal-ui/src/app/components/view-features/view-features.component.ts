@@ -1,6 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
+import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
@@ -16,6 +17,7 @@ export class ViewFeaturesComponent implements OnInit {
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
+              private rulesService: FgistpRulesService,
               private openLayersService: OpenLayersService) { }
 
   ngOnInit() {
