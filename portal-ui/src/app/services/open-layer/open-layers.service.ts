@@ -1,22 +1,19 @@
-import Map from 'ol/Map.js';
-import View from 'ol/View.js';
-import Feature from 'ol/Feature.js';
-import Point from 'ol/geom/Point.js';
+import {MultiLineString, MultiPolygon, Point} from 'ol/geom';
+import {Feature, Map, View} from 'ol';
 import {NGXLogger} from 'ngx-logger';
-import {OSM, Vector} from 'ol/source.js';
-import ImageWMS from 'ol/source/ImageWMS.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
+import {ImageWMS, OSM} from 'ol/source';
 import {createStringXY} from 'ol/coordinate.js';
-import {VectorSource} from 'ol/source/Vector.js';
-import MultiPolygon from 'ol/geom/MultiPolygon.js';
 import {WmsService} from '../geoserver/wms.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {EventEmitter, Injectable} from '@angular/core';
 import MousePosition from 'ol/control/MousePosition.js';
-import MultiLineString from 'ol/geom/MultiLineString.js';
 import {defaults as defaultControls} from 'ol/control.js';
 import {TokenStorageService} from '../token-storage.service';
-import {Image as ImageLayer, Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
+import VectorLayer from 'ol/layer/Vector';
+import TileLayer from 'ol/layer/Tile';
+import VectorSource from 'ol/source/Vector';
+import ImageLayer from 'ol/layer/Image';
 
 export let BEARER_TOKEN = '';
 
@@ -25,11 +22,11 @@ export let BEARER_TOKEN = '';
 })
 export class OpenLayersService {
 
-  mapClick$ = new EventEmitter<[number, number]>();
+  mapClick$ = new EventEmitter<number[]>();
 
-  private _map;
+  private _map: Map;
   private view: View;
-  private draftSource: VectorLayer;
+  private draftSource: VectorSource;
 
   // Кол-во десятичных в координатах
   private PRECISION = 4;
@@ -53,7 +50,7 @@ export class OpenLayersService {
   }
 
   createMap() {
-    this.draftSource = new Vector({
+    this.draftSource = new VectorSource({
       features: []
     });
 
@@ -87,13 +84,12 @@ export class OpenLayersService {
     });
 
     // MAP EVENTS
-    const mapClick = this.mapClick$;
-    this._map.on('singleclick', function(event) {
+    this._map.on('singleclick', event =>  {
       if (event.coordinate) {
-        mapClick.emit(event.coordinate);
+        this.mapClick$.emit(event.coordinate);
       } else {
         console.warn('No coordinate', event.coordinate);
-        mapClick.emit([0, 0]);
+        this.mapClick$.emit([0, 0]);
       }
     });
 
@@ -205,7 +201,7 @@ export class OpenLayersService {
   public imageLayers() {
     const result = [];
     this._map.getLayers().forEach((vrLayer) => {
-      if (vrLayer.type === 'IMAGE') {
+      if (vrLayer.getType() === 'IMAGE') {
         result.push(vrLayer);
       }
     });
@@ -247,14 +243,6 @@ export class OpenLayersService {
 
       return undefined;
     }
-  }
-
-  public getMap() {
-    return this._map;
-  }
-
-  public setMap(value) {
-    this._map = value;
   }
 
   // Очистить карту от слоя, который отображал обьект.

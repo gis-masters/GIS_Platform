@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import WFS from 'ol/format/WFS.js';
-import Feature from 'ol/Feature.js';
 import {NGXLogger} from 'ngx-logger';
 import {HttpClient} from '@angular/common/http';
 import {CrgLayer} from '../geoserver/layers.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import {WfsFeature} from '../geoserver/wfs.service';
+import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
+import {Feature} from 'ol';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class TransformFeatureService {
               private propertiesService: ServerPropertiesService) {
   }
 
-  updateFeature(feature: Feature, newProperties: any, crgLayer: CrgLayer) {
+  updateFeature(feature: WfsFeature, newProperties: any, crgLayer: CrgLayer) {
     const workspace = crgLayer.complexName.split(':')[0];
 
     const gmlFormat = this.prepareGMLOptions(workspace, crgLayer.name);
@@ -41,11 +42,12 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
-  private prepareGMLOptions(workspace, featureType) {
+  private prepareGMLOptions(workspace, featureType): WriteTransactionOptions {
     return {
       featureNS: 'castyl_for_remove',
       featureType: featureType,
-      featurePrefix: workspace
+      featurePrefix: workspace,
+      nativeElements: []
     };
   }
 

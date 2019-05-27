@@ -1,7 +1,7 @@
-import WFS from 'ol/format/WFS';
-import Point from 'ol/geom/Point.js';
+import {WFS} from 'ol/format';
+import {Point} from 'ol/geom';
 import {intersects} from 'ol/format/filter';
-import MultiPolygon from 'ol/geom/MultiPolygon.js';
+import MultiPolygon from 'ol/geom/MultiPolygon';
 
 export class WfsUtil {
 
@@ -10,7 +10,9 @@ export class WfsUtil {
       srsName: 'EPSG:3857',
       featureTypes: featuresComplexName,
       outputFormat: 'application/json',
-      filter: intersects('shape', new Point(coordinates))
+      filter: intersects('shape', new Point(coordinates)),
+      featureNS: '',
+      featurePrefix: ''
     });
 
     return new XMLSerializer().serializeToString(featureRequest);
@@ -21,7 +23,9 @@ export class WfsUtil {
       srsName: 'EPSG:3857',
       featureTypes: featuresComplexName,
       outputFormat: 'application/json',
-      filter: intersects('shape', polygon)
+      filter: intersects('shape', polygon),
+      featureNS: '',
+      featurePrefix: ''
     });
 
     return new XMLSerializer().serializeToString(featureRequest);
