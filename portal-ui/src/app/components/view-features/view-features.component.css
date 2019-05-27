@@ -2,7 +2,7 @@
 
 .crg-view-feature-content {
   overflow: auto;
-  max-height: 100%;
+  height: calc(100vh - 105px);
 }
 
 .crg-view-features-sidebar {
