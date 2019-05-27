@@ -1,3 +1,10 @@
+@import url(../../pages/_app/app.component.css);
+
+.crg-view-feature-content {
+  overflow: auto;
+  max-height: 100%;
+}
+
 .crg-view-features-sidebar {
   z-index: 100;
   position: fixed;
@@ -43,4 +50,28 @@
   cursor: pointer;
   color: grey;
   float: right;
+}
+
+.feature-info {
+  height: 100%;
+  width: 98%;
+  position: absolute;
+  top: 0;
+  left: 5px;
+
+  display: grid;
+  grid-column-gap: 3px;
+  grid-template-rows: 34% 66%;
+  grid-template-columns: 7% 93%;
+}
+
+.feature-alias {
+  grid-column-start: 2;
+  grid-row-start: 2;
+
+  font-size: small;
+}
+
+.feature-id {
+  font-weight: bold;
 }

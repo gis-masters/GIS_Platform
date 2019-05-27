@@ -3,6 +3,7 @@ import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-edit-feature',
@@ -18,6 +19,7 @@ export class EditFeatureComponent implements OnInit, OnChanges {
   private fProperties: string[];
 
   constructor(private logger: NGXLogger,
+              private openLayers: OpenLayersService,
               private rulesService: FgistpRulesService,
               private formBuilder: FormBuilder) {
 
@@ -27,8 +29,10 @@ export class EditFeatureComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.editFeatureForm = this.formBuilder.group({});
     if (changes['feature']) {
+      this.openLayers.showFeature(this.feature);
+
+      this.editFeatureForm = this.formBuilder.group({});
       this.fProperties = Object.keys(this.feature.properties).map(key => key);
       this.fProperties.forEach(key => {
         const formControl = new FormControl(this.feature.properties[key]);
@@ -39,6 +43,8 @@ export class EditFeatureComponent implements OnInit, OnChanges {
 
   close() {
     this.closeMe.emit(true);
+
+    this.openLayers.clearDraft();
   }
 
   editFeature() {

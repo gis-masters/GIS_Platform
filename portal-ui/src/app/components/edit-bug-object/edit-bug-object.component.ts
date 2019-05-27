@@ -154,6 +154,17 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
           value: currentValue
         });
       } else {
+        this.editFeatureForm.addControl(key, new FormControl(currentValue));
+        this.editFeatureData.push({
+          name: key,
+          property: {
+            name: key,
+            title: key,
+            valueType: 'STRING'
+          },
+          value: currentValue
+        });
+
         this.logger.info('Свойство: ' + key + ' отсутствует в описании типа по приказу');
       }
     }

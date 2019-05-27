@@ -3,6 +3,7 @@ import {Subject, throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {WfsUtil} from '../../../services/open-layer/WfsUtil';
+import {FizLogger} from '../../../services/logger/fiz.logger';
 import {catchError, filter, takeUntil, tap} from 'rxjs/operators';
 import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
@@ -12,7 +13,6 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {FizLogger} from '../../../services/logger/fiz.logger';
 import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
@@ -168,14 +168,12 @@ export class MapComponent implements OnInit, OnDestroy {
       // Формируем xml для запроса к WFS
       const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
 
-      this.openLayers.drawPolygon(buffer.getCoordinates());
+      // this.openLayers.drawPolygon(buffer.getCoordinates());
 
       this.wfsService.getFeaturesByFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
             if (featureCollection.features && featureCollection.features.length > 0) {
-              console.log('featureCollection.features', featureCollection.features);
-
               this.selectedFeatures = featureCollection.features;
               this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
 
