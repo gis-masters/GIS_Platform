@@ -90,6 +90,12 @@ export class FgistpRulesService {
     return result;
   }
 
+  /**
+   * По наименованию фичи, попытаемся найти алиас в ее свойствах.
+   * Если алиас найти неудалось просто вернем код.
+   * @param layerName Наименование фичи
+   * @param propertyName код свойства
+   */
   getPropertyAlias(layerName: string, propertyName: string) {
     let result;
     const featureByName = this.getFeatureByName(layerName);

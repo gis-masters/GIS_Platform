@@ -12,11 +12,11 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
 
 @Component({
-  selector: 'crg-edit-object',
-  templateUrl: './edit-object.component.html',
-  styleUrls: ['./edit-object.component.css']
+  selector: 'crg-edit-bug-object',
+  templateUrl: './edit-bug-object.component.html',
+  styleUrls: ['./edit-bug-object.component.css']
 })
-export class EditObjectComponent implements OnChanges, OnInit {
+export class EditBugObjectComponent implements OnChanges, OnInit {
 
   @Input() data: ObjectDto[];
   @Output() closeMe = new EventEmitter<boolean>();

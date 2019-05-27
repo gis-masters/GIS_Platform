@@ -1,0 +1,21 @@
+@import url(../../pages/_app/app.component.css);
+
+.edit-content {
+  overflow: auto;
+  height: calc(100% - 50px) !important;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.fiz-edit-item {
+  align-items: center;
+  padding: 4px 6px 4px 6px;
+}
+
+.edit-item-title {
+  font-family: monospace;
+  font-weight: bold;
+  line-height: 1.1
+}

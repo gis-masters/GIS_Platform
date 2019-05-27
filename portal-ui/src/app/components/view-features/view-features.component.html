@@ -1,22 +1,30 @@
 <div [ngClass]="isActive? 'crg-view-features-sidebar' : 'crg-view-features-sidebar_hidden'">
-  <div class="crg-sidebar-header">
-    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
-    Обьекты
+  <div *ngIf="!isEditMode">
+    <div class="crg-sidebar-header">
+      <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+      Обьекты
+    </div>
+
+    <ng-container *ngIf="features; else noFeatures">
+      <mat-nav-list role="list">
+        <mat-list-item role="listitem" *ngFor="let feature of features; let index = index"
+                       (click)="selectFeature(feature)">
+          <div>
+            {{index + 1}}. {{rulesService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
+          </div>
+        </mat-list-item>
+      </mat-nav-list>
+    </ng-container>
+
+    <ng-template #noFeatures>
+      <div class="col-12 text-center">
+        Обьекты не выбраны
+      </div>
+    </ng-template>
   </div>
 
-  <ng-container *ngIf="features; else noFeatures">
-    <mat-nav-list role="list">
-      <mat-list-item role="listitem" *ngFor="let feature of features; let index = index">
-        <div>
-          {{index + 1}}. {{rulesService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
-        </div>
-      </mat-list-item>
-    </mat-nav-list>
-  </ng-container>
+  <div *ngIf="isEditMode">
+    <crg-edit-feature [feature]="selectedFeature" (closeMe)="switchMode()"></crg-edit-feature>
+  </div>
 
-  <ng-template #noFeatures>
-    <div class="col-12 text-center">
-      Обьекты не выбраны
-    </div>
-  </ng-template>
 </div>

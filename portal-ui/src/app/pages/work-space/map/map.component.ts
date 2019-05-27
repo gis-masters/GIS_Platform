@@ -174,6 +174,8 @@ export class MapComponent implements OnInit, OnDestroy {
           .subscribe((featureCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
             if (featureCollection.features && featureCollection.features.length > 0) {
+              console.log('featureCollection.features', featureCollection.features);
+
               this.selectedFeatures = featureCollection.features;
               this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
 

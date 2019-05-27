@@ -11,12 +11,18 @@ import {PrimeNgModule} from './prime-ng.module';
 import {NgxMaskModule} from 'ngx-mask';
 import {AlertModule} from 'ngx-bootstrap';
 import {FileUploadModule} from 'ng2-file-upload';
-import {GeometryPipe} from './pipes/geometry.pipe';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+
+import {GeometryPipe} from './pipes/geometry.pipe';
+import {FilterLayersPipe} from './pipes/filter-layers.pipe';
+
 import {AppComponent} from './pages/_app/app.component';
+import {ProjectComponent} from './pages/work-space/project/project.component';
+
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {EditObjectComponent} from './components/edit-object/edit-object.component';
+import {EditBugObjectComponent} from './components/edit-bug-object/edit-bug-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
 import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
@@ -31,12 +37,10 @@ import {InfoSidebarComponent} from './components/info-sidebar/info-sidebar.compo
 import {LayersSidebarComponent} from './components/layers-sidebar/layers-sidebar.component';
 import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/jwt-interceptor.service';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
-import {ProjectComponent} from './pages/work-space/project/project.component';
 import {DeleteDialogComponent} from './components/delete-dialog/delete-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
+import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +58,7 @@ import {ViewFeaturesComponent} from './components/view-features/view-features.co
     ValidationDialogComponent,
     LayerObjectsComponent,
     FilterLayersPipe,
-    EditObjectComponent,
+    EditBugObjectComponent,
     ErrorsBadgeComponent,
     ExportDialogComponent,
     InfoSidebarComponent,
@@ -64,6 +68,7 @@ import {ViewFeaturesComponent} from './components/view-features/view-features.co
     ProjectComponent,
     DeleteDialogComponent,
     ViewFeaturesComponent,
+    EditFeatureComponent,
   ],
   imports: [
     AppRoutingModule,
