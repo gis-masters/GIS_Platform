@@ -16,7 +16,7 @@ export class EditFeatureComponent implements OnInit, OnChanges {
   @Output() closeMe = new EventEmitter<boolean>();
 
   editFeatureForm: FormGroup;
-  private fProperties: string[];
+  fProperties: string[];
 
   constructor(private logger: NGXLogger,
               private openLayers: OpenLayersService,
