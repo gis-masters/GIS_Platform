@@ -35,30 +35,32 @@ export class CrgStepperComponent implements OnDestroy {
   }
 
   doAction(selectedStep) {
-    if (selectedStep > this.activeStep) {
-      return;
-    }
+    if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
+      console.log('++++++', this.activeStep, selectedStep);
 
-    if (selectedStep <= this.activeStep) {
-      this.activeStep = selectedStep;
-    }
-    if (this.activeStep === 1) {
-      this.projectService.changeProject();
+      // if (!(selectedStep === 4 && this.activeStep === 3)) {
+      //   this.activeStep = selectedStep;
+      // }
 
-      this.router.navigate(['/workspace/projects']);
-      this.sideBarManager.closeAll();
-    }
-    if (this.activeStep === 2) {
-      this.router.navigate(['/workspace/data_import']);
-      this.sideBarManager.closeAll();
-    }
-    if (this.activeStep === 3) {
-      this.router.navigate(['/workspace/map']);
-      this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.SWITCH);
-    }
-    if (this.activeStep === 4) {
-      this.router.navigate(['/workspace/map']);
-      this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
+      if (selectedStep === 1) {
+        this.projectService.changeProject();
+
+        this.router.navigate(['/workspace/projects']);
+        this.sideBarManager.closeAll();
+      }
+      if (selectedStep === 2) {
+        this.router.navigate(['/workspace/data_import']);
+        this.sideBarManager.closeAll();
+      }
+      if (selectedStep === 3) {
+        this.router.navigate(['/workspace/map']);
+        this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.SWITCH);
+      }
+      if (selectedStep === 4) {
+        this.router.navigate(['/workspace/map']);
+        this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
+      }
     }
   }
+
 }
