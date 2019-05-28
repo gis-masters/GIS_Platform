@@ -126,6 +126,10 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
    */
   private prepareEditForm(featureProperties: any) {
     for (const key of Object.keys(featureProperties)) {
+      if (key === 'bbox') {
+        return;
+      }
+
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
       const property = this.getPropertiesByName(key, this.featureType.properties);
       if (property) {
