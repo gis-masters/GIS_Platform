@@ -9,7 +9,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
-import {filter, flatMap, map} from 'rxjs/operators';
+import {delay, filter, flatMap, map} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -39,6 +39,7 @@ export class LayersService {
         map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
         map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
+        delay(1000), // wait rules
         map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
         flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
       );

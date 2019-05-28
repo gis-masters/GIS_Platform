@@ -42,6 +42,8 @@ export class FgistpRulesService {
 
   public getLayerTitle(layerName: string): string {
     if (!this.featuresXsdDefinition.xsdFeatures || this.featuresXsdDefinition.xsdFeatures.length < 1) {
+      this.logger.warn('xsd feature definition not ready yet');
+
       return layerName;
     }
 

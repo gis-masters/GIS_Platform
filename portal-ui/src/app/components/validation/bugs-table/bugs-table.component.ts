@@ -123,6 +123,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
       this.data = response;
       this.totalElements = response.total;
       this.isLoadingResults = false;
+    } else if (response === null) {
+      return;
     } else {
       this.logger.warn('Incorrect response: ', response);
     }
