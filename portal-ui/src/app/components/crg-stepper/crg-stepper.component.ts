@@ -36,12 +36,6 @@ export class CrgStepperComponent implements OnDestroy {
 
   doAction(selectedStep) {
     if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
-      console.log('++++++', this.activeStep, selectedStep);
-
-      // if (!(selectedStep === 4 && this.activeStep === 3)) {
-      //   this.activeStep = selectedStep;
-      // }
-
       if (selectedStep === 1) {
         this.projectService.changeProject();
 

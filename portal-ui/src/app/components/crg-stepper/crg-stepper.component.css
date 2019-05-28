@@ -13,10 +13,23 @@
   border-width: 0;
 }
 
+.step-1:hover {
+  transform: scale(1.2);
+}
+.step-2:hover {
+  transform: scale(1.2);
+}
+.step-3:hover {
+  transform: scale(1.2);
+}
+.step-4:hover {
+  transform: scale(1.2);
+}
+
 .stepper-icon {
   position: relative;
-  left: 7px;
-  top: 7px;
+  left: 8px;
+  top: 8px;
   font-size: 25px;
 }
 
