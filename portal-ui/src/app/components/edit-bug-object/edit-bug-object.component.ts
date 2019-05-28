@@ -9,7 +9,7 @@ import {CommunicationService, ObjectDto} from '../../services/communication.serv
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -49,12 +49,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
 
     this.editFeatureForm.valueChanges
         .pipe(debounceTime(100))
-        .subscribe(val => {
-          // const newFeatureProperties = Object.assign({}, this.wfsFeature.properties);
-          this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureType);
-
-          // this.logger.info('!!!!!!!!!!!!!!!!!', val);
-        });
+        .subscribe(val => this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureType));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,8 +77,10 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
         newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
       });
 
+      const crgLayer = this.object.crgLayer;
+      const workspaceName = crgLayer.complexName.split(':')[0];
       this.transformFeatureService
-          .updateFeature(this.wfsFeature, newProperties, this.object.crgLayer)
+          .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.name, newProperties)
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
               this.closeMe.emit(true);
@@ -131,7 +128,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const property = this.getPropertiesByName(key, this.featureType.properties);
+      const property = this.rulesService.getPropertiesByName(key, this.featureType.properties);
       if (property) {
         // Добавляем валидации
         const formControl = new FormControl(currentValue, {
@@ -155,7 +152,8 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
         this.editFeatureData.push({
           name: key,
           property: property,
-          value: currentValue
+          value: currentValue,
+          isFgistpProperty: true
         });
       } else {
         this.editFeatureForm.addControl(key, new FormControl(currentValue));
@@ -164,26 +162,15 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
           property: {
             name: key,
             title: key,
-            valueType: 'STRING'
+            valueType: 'STRING',
           },
-          value: currentValue
+          value: currentValue,
+          isFgistpProperty: false
         });
 
         this.logger.info('Свойство: ' + key + ' отсутствует в описании типа по приказу');
       }
     }
-  }
-
-  /**
-   * Ищем свойство, среди тех что есть в XSD схеме.
-   *
-   * @param key Наименование свойства, полученное из "фичи" геосервера
-   * @param properties Свойства полученные из XSD схемы.
-   */
-  private getPropertiesByName(key: string, properties: SimpleProperty[]) {
-    return properties.find((simpleProperty: SimpleProperty) => {
-      return simpleProperty.name === key.toUpperCase();
-    });
   }
 
   private getDirtyAndValidProperties(): EditFeatureItem[] {
@@ -204,12 +191,8 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
 
   close() {
     this.closeMe.emit(true);
+
+    this.openLayers.clearDraft();
   }
 
-}
-
-interface EditFeatureItem {
-  name: string;
-  value: string;
-  property: SimpleProperty;
 }

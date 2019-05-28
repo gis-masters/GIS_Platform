@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {HttpClient} from '@angular/common/http';
-import {CrgLayer} from '../geoserver/layers.service';
-import {ServerPropertiesService} from '../server-properties.service';
-import {WfsFeature} from '../geoserver/wfs.service';
-import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
 import {Feature} from 'ol';
+import {NGXLogger} from 'ngx-logger';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,34 +19,23 @@ export class TransformFeatureService {
               private propertiesService: ServerPropertiesService) {
   }
 
-  updateFeature(feature: WfsFeature, newProperties: any, crgLayer: CrgLayer) {
-    const workspace = crgLayer.complexName.split(':')[0];
-
-    const gmlFormat = this.prepareGMLOptions(workspace, crgLayer.name);
-
-    // let featureProperties = feature.properties;
-    // this.prepareProperties(featureProperties, newProperties);
+  updateFeature(featureId: string, workspaceName: string, layerName: string, newProperties: any) {
+    const options = {
+      featureNS: 'castyl_for_remove',
+      featureType: layerName,
+      featurePrefix: workspaceName,
+      nativeElements: []
+    } as WriteTransactionOptions;
 
     const featureClone = new Feature(newProperties);
-    featureClone.setId(feature.id);
+    featureClone.setId(featureId);
 
-    const node = this.formatWFS.writeTransaction(null, [featureClone], null, gmlFormat);
+    const node = this.formatWFS.writeTransaction(null, [featureClone], null, options);
     const payload = this.xs.serializeToString(node)
-                           .replace('xmlns:' + workspace + '="castyl_for_remove"', '');
-
-    // this.logger.info('Transaction payload: ', payload);
+                           .replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
 
     return this.http
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
-  }
-
-  private prepareGMLOptions(workspace, featureType): WriteTransactionOptions {
-    return {
-      featureNS: 'castyl_for_remove',
-      featureType: featureType,
-      featurePrefix: workspace,
-      nativeElements: []
-    };
   }
 
 }

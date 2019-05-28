@@ -9,6 +9,7 @@ import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
 import {NameHrefProjection} from '../geoserver/projections';
 import {LocalStorageService} from '../local-storage.service';
+import {ProjectModel} from '../geoserver/import/projectModel';
 import {ServerPropertiesService} from '../server-properties.service';
 import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
 
@@ -81,12 +82,16 @@ export class ProjectsService {
     return this.http.post(this.projectsUrl + '/import', payload);
   }
 
+  clearCache() {
+    this._projects$.next(undefined);
+  }
+
   changeProject() {
     this.storageService.clearProject();
   }
 
-  clearCache() {
-    this._projects$.next(undefined);
+  getCurrent(): ProjectModel {
+    return this.storageService.getProject();
   }
 
   private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {

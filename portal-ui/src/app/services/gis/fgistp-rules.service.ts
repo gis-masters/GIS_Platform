@@ -116,6 +116,18 @@ export class FgistpRulesService {
   }
 
   /**
+   * Ищем свойство, среди тех что есть в XSD схеме.
+   *
+   * @param key Наименование свойства, полученное из "фичи" геосервера
+   * @param properties Свойства полученные из XSD схемы.
+   */
+  getPropertiesByName(key: string, properties: SimpleProperty[]) {
+    return properties.find((simpleProperty: SimpleProperty) => {
+      return simpleProperty.name === key.toUpperCase();
+    });
+  }
+
+  /**
    * По присланному с сервера типу ошибки сформируем его короткое и неточное описание, выводимое пользователю,
    * в выпадающем списке в таблице с ошибками.
    * @param errorTypes Тип ошибки
@@ -189,4 +201,11 @@ export interface SimpleProperty {
   totalDigits?: number;
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
+}
+
+export interface EditFeatureItem {
+  name: string;
+  value: string;
+  property: SimpleProperty;
+  isFgistpProperty: boolean;
 }
