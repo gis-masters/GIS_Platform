@@ -22,77 +22,36 @@ export class FizLogger {
     }
   }
 
-  debug(key: string, msg: string) {
-    if (this.keyNotExist(key)) {
-      this.addNewKey(key);
-    }
-
-    const definedLevel = this.getItemLevel(key);
-    if (definedLevel) {
-      if (LogLevel.DEBUG >= definedLevel) {
-        console.log(new Date().toISOString() + ' DEBUG ' + msg);
-
-        // Делаю return для простоты тестирования
-        return msg;
-      } else {
-        return undefined;
-      }
-    } else {
-      return undefined;
-    }
+  debug(key: string, msg: string, object?: any): string | undefined {
+    return this.base(LogLevel.DEBUG, key, msg, object);
   }
 
-  info(key: string, msg: string) {
-    if (this.keyNotExist(key)) {
-      this.addNewKey(key);
-    }
-
-    const definedLevel = this.getItemLevel(key);
-    if (definedLevel) {
-      if (LogLevel.INFO >= definedLevel) {
-        console.log(new Date().toISOString() + ' INFO ' + msg);
-
-        // Делаю return для простоты тестирования
-        return msg;
-      } else {
-        return undefined;
-      }
-    } else {
-      return undefined;
-    }
+  info(key: string, msg: string, object?: any): string | undefined {
+    return this.base(LogLevel.INFO, key, msg, object);
   }
 
-  warn(key: string, msg: string) {
-    if (this.keyNotExist(key)) {
-      this.addNewKey(key);
-    }
-
-    const definedLevel = this.getItemLevel(key);
-    if (definedLevel) {
-      if (LogLevel.WARN >= definedLevel) {
-        console.log(new Date().toISOString() + ' WARN ' + msg);
-
-        // Делаю return для простоты тестирования
-        return msg;
-      } else {
-        return undefined;
-      }
-    } else {
-      return undefined;
-    }
+  warn(key: string, msg: string, object?: any): string | undefined {
+    return this.base(LogLevel.WARN, key, msg, object);
   }
 
-  error(key: string, msg: string) {
+  error(key: string, msg: string, object?: any): string | undefined {
+    return this.base(LogLevel.ERROR, key, msg, object);
+  }
+
+  private base(logLevel: LogLevel, key: string, msg: string, object?: any): string | undefined {
     if (this.keyNotExist(key)) {
       this.addNewKey(key);
     }
 
     const definedLevel = this.getItemLevel(key);
     if (definedLevel) {
-      if (LogLevel.ERROR >= definedLevel) {
-        console.log(new Date().toISOString() + ' ERROR ' + msg);
+      if (logLevel >= definedLevel) {
+        if (object) {
+          console.log(new Date().toISOString() + ' ' + this.print(logLevel) + ' ' + msg, object);
+        } else {
+          console.log(new Date().toISOString() + ' ' + this.print(logLevel) + ' ' + msg);
+        }
 
-        // Делаю return для простоты тестирования
         return msg;
       } else {
         return undefined;
@@ -162,6 +121,16 @@ export class FizLogger {
   private updateLogModel(logModel: LogModel) {
     this.logModel = logModel;
     this.storageService.setLogModel(logModel);
+  }
+
+  private print(logLevel: LogLevel): string {
+    switch (logLevel) {
+      case LogLevel.DEBUG: return 'DEBUG';
+      case LogLevel.INFO: return 'INFO';
+      case LogLevel.WARN: return 'WARN';
+      case LogLevel.ERROR: return 'ERROR';
+      default: return 'unknow level';
+    }
   }
 }
 

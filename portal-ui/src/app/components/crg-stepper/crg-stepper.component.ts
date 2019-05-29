@@ -1,5 +1,4 @@
 import {Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy} from '@angular/core';
@@ -20,7 +19,6 @@ export class CrgStepperComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private router: Router,
-              private logger: NGXLogger,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private projectService: ProjectsService) {

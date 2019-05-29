@@ -12,6 +12,7 @@ import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
+import {FizLogger} from '../../../services/logger/fiz.logger';
 
 @Component({
   selector: 'crg-project',
@@ -33,6 +34,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private router: Router,
+              private log: FizLogger,
               private storageService: LocalStorageService,
               private projectsService: ProjectsService,
               private ruleService: FgistpRulesService,
@@ -48,6 +50,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.projectsService.projects$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((projects: CrgProject[]) => {
+          this.log.info('projects', 'projects$ on component', projects);
+
           this.isProjectsLoaded = true;
           this.projects = projects;
         });

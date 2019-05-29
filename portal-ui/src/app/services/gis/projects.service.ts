@@ -1,7 +1,7 @@
-import {NGXLogger} from 'ngx-logger';
 import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
+import {FizLogger} from '../logger/fiz.logger';
 import {HttpClient} from '@angular/common/http';
 import {ProcessStatus} from '../process-status';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -30,13 +30,13 @@ export class ProjectsService {
     );
 
   constructor(private http: HttpClient,
-              private logger: NGXLogger,
+              private log: FizLogger,
               private wsService: WsService,
               private layerService: LayersService,
               private baseService: BaseService,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
-    logger.info('WorkspacesService start');
+    log.info('projects', 'ProjectsService start');
 
     this.projects$.subscribe();
   }
@@ -48,6 +48,8 @@ export class ProjectsService {
           flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
         )
         .subscribe((projects: CrgProject[]) => {
+          this.log.info('projects', '_projects$.next: ', projects);
+
           this._projects$.next(projects);
         });
   }
@@ -71,7 +73,7 @@ export class ProjectsService {
    * К какой организации привязан пользователь тоже разберется бекенд.
    */
   doWorkImport(workImport: WorkImport) {
-    this.logger.info('doWorkImport: ', workImport);
+    this.log.info('projects', 'doWorkImport', workImport);
 
     const payload = {
       wsUiId: this.wsService.getId(),
@@ -108,7 +110,7 @@ export class ProjectsService {
           return projects;
         }),
         catchError(err => {
-          this.logger.error('Cant get layers from geoserver: ', err);
+          this.log.error('Cant get layers from geoserver: ', err);
           return [];
         })
       );
@@ -123,7 +125,7 @@ export class ProjectsService {
           counter++;
         }
       } else {
-        this.logger.warn('Incorrect layer name');
+        this.log.warn('projects', 'Incorrect layer name');
       }
     });
 
