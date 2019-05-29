@@ -35,11 +35,11 @@ public class ProjectService extends BaseProcessService {
         this.organizationService = organizationService;
     }
 
-    public List<Project> getProjectByUser(String name) {
-        return organizationService
-                .getOrganizationByUser(name)
-                .getProjects();
-    }
+//    public List<Project> getProjectByUser(String name) {
+//        return organizationService
+//                .getOrganizationByUser(name)
+//                .getProjects();
+//    }
 
     /**
      * Создаем проект у нас.

@@ -14,7 +14,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class Project {
+public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,9 @@ public class Project {
     @Type(type = "jsonb-node")
     @Column(columnDefinition = "json")
     private JsonNode extra;
+
+    @ManyToOne
+    private Organization organization;
 
     public Project() {}
 
@@ -79,5 +82,13 @@ public class Project {
 
     public void setStatus(ProcessStatus status) {
         this.status = status;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

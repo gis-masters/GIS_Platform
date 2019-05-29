@@ -38,21 +38,21 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getProjects(Principal principal) {
         log.debug("Request get projects for user: {}", principal.getName());
 
-        List<Project> projects = projectService.getProjectByUser(principal.getName());
+        // List<Project> projects = projectService.getProjectByUser(principal.getName());
 
-        return ResponseEntity.ok(projects);
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable long id, Principal principal) {
         log.debug("Request get projects for user: {}", principal.getName());
 
-        Project projectById = projectService.getProjectByUser(principal.getName()).stream()
-                .filter(project -> project.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + id));
+//        Project projectById = projectService.getProjectByUser(principal.getName()).stream()
+//                .filter(project -> project.getId() == id)
+//                .findFirst()
+//                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + id));
 
-        return ResponseEntity.ok(projectById);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/{name}")

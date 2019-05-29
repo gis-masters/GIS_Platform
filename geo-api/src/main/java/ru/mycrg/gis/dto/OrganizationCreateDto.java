@@ -11,6 +11,7 @@ public class OrganizationCreateDto {
     private String name;
 
     @NotBlank(message = "Please provide phone")
+    @Length(max = 20, message = "No more than 20 characters")
     private String phone;
 
     @NotBlank(message = "Please provide user surname")
@@ -23,6 +24,7 @@ public class OrganizationCreateDto {
 
     @Email
     @NotBlank
+    @Length(max = 60, message = "No more than 60 characters")
     private String email;
 
     //    ^                 # start-of-string

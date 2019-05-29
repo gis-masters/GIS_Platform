@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "organization")
-public class Organization {
+@Table(name = "organizations")
+public class Organization extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +21,14 @@ public class Organization {
     @Column
     private String phone;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<User> users = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<Project> projects = new ArrayList<>();
-
     @Enumerated(value = EnumType.STRING)
     private ProcessStatus status = ProcessStatus.PENDING;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects = new ArrayList<>();
 
     public Organization() {}
 
@@ -38,11 +38,17 @@ public class Organization {
     }
 
     public void addUser(User user) {
-        this.users.add(user);
+        users.add(user);
     }
 
     public void addProject(Project project) {
-        this.projects.add(project);
+        projects.add(project);
+        project.setOrganization(this);
+    }
+
+    public void removeProject(Project project) {
+        projects.remove(project);
+        project.setOrganization(null);
     }
 
     public long getId() {
