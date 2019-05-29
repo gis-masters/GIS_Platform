@@ -9,44 +9,45 @@ export class FizLogger {
 
   constructor(private storageService: LocalStorageService) {
     const logModel = this.storageService.getLogModel();
-    if (!logModel) {
-      this.logModel = {
-        mode: LogMode.DEV,
-        logItems: [
-          {
-            key: 'MapComponent.constructor',
-            types: [
-              {
-                mod: LogMode.DEV,
-                level: LogLevel.DEBUG
-              },
-              {
-                mod: LogMode.PROD,
-                level: LogLevel.DEBUG
-              },
-            ]
-          },
-          {
-            key: 'featuresSidebar',
-            types: [
-              {
-                mod: LogMode.DEV,
-                level: LogLevel.DEBUG
-              },
-            ]
-          }
-        ]
-      };
 
-      this.storageService.setLogModel(this.logModel);
+    if (!logModel) {
+      this.updateLogModel({
+        mode: LogMode.DEV,
+        logItems: [],
+        defaultLevel: LogLevel.INFO
+      });
     } else {
       this.logModel = logModel;
       console.log('Log mod: ', logModel.mode);
     }
   }
 
+  debug(key: string, msg: string) {
+    if (this.keyNotExist(key)) {
+      this.addNewKey(key);
+    }
+
+    const definedLevel = this.getItemLevel(key);
+    if (definedLevel) {
+      if (LogLevel.DEBUG >= definedLevel) {
+        console.log(new Date().toISOString() + ' DEBUG ' + msg);
+
+        // Делаю return для простоты тестирования
+        return msg;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  }
+
   info(key: string, msg: string) {
-    const definedLevel = this.findLevelByKeyAndMode(key);
+    if (this.keyNotExist(key)) {
+      this.addNewKey(key);
+    }
+
+    const definedLevel = this.getItemLevel(key);
     if (definedLevel) {
       if (LogLevel.INFO >= definedLevel) {
         console.log(new Date().toISOString() + ' INFO ' + msg);
@@ -61,30 +62,56 @@ export class FizLogger {
     }
   }
 
-  info_(key: string, msg: string, object: any) {
+  warn(key: string, msg: string) {
+    if (this.keyNotExist(key)) {
+      this.addNewKey(key);
+    }
 
+    const definedLevel = this.getItemLevel(key);
+    if (definedLevel) {
+      if (LogLevel.WARN >= definedLevel) {
+        console.log(new Date().toISOString() + ' WARN ' + msg);
+
+        // Делаю return для простоты тестирования
+        return msg;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
   }
 
-  debug(key: string, msg: string, object: any) {
-    const logModel: LogModel = this.storageService.getLogModel();
+  error(key: string, msg: string) {
+    if (this.keyNotExist(key)) {
+      this.addNewKey(key);
+    }
 
-    // this.logger.info();
+    const definedLevel = this.getItemLevel(key);
+    if (definedLevel) {
+      if (LogLevel.ERROR >= definedLevel) {
+        console.log(new Date().toISOString() + ' ERROR ' + msg);
+
+        // Делаю return для простоты тестирования
+        return msg;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
   }
 
   getLogModel(): LogModel {
     return this.logModel;
   }
 
-  setLogModel(logModel: LogModel) {
-    this.logModel = logModel;
-  }
-
   /**
-   * Исходя из уровня лога и ключа, получаем настроенный уровень лога.
+   * Вщзвращает уровень лога для данного ключа.
    * @param searchKey Если настройки по ключу не нйдены или ключ есть но не заданы параметры для
-   * конкретного режима верну undefined.
+   * конкретного режима вернет undefined.
    */
-  private findLevelByKeyAndMode(searchKey: string): LogLevel | undefined {
+  private getItemLevel(searchKey: string): LogLevel | undefined {
     const logItem: LogItem = _.findLast(this.logModel.logItems, ['key', searchKey]);
     if (logItem) {
       const logType: LogType = _.findLast(logItem.types, ['mod', this.logModel.mode]);
@@ -98,11 +125,50 @@ export class FizLogger {
     }
   }
 
+  /**
+   * Если в модели нет ключа то мы его создаем с дефолтным значением определенным в модели.
+   *
+   * @param key Искомы ключ
+   */
+  private addNewKey(key: string): void {
+    const mode = this.logModel.mode;
+    const _types = [];
+    if (mode === LogMode.DEV) {
+      _types.push({
+        mod: LogMode.DEV,
+        level: LogLevel.INFO
+      });
+    } else if (mode === LogMode.PROD) {
+      _types.push({
+        mod: LogMode.PROD,
+        level: LogLevel.INFO
+      });
+    } else {
+      console.log('Unsupported logMode');
+    }
+
+    this.logModel.logItems.push({
+      key: key,
+      types: _types
+    });
+
+    this.updateLogModel(this.logModel);
+  }
+
+  private keyNotExist(key: string) {
+    return !this.logModel.logItems.find((logItem: LogItem) => logItem.key === key);
+  }
+
+  private updateLogModel(logModel: LogModel) {
+    this.logModel = logModel;
+    this.storageService.setLogModel(logModel);
+  }
 }
 
 export interface LogModel {
   mode: LogMode;
   logItems: LogItem[];
+  defaultLevel: LogLevel;
 }
 
 export interface LogItem {
@@ -111,7 +177,7 @@ export interface LogItem {
 
 }
 
-interface LogType {
+export interface LogType {
   mod: LogMode;
   level: LogLevel;
 }

@@ -51,7 +51,10 @@ export class MapComponent implements OnInit, OnDestroy {
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
-    this.log.info('MapComponent.constructor', 'test');
+    this.log.debug('mapComponent', 'debug test');
+    this.log.info('mapComponent', 'info test');
+    this.log.warn('mapComponent', 'warn test');
+    this.log.error('mapComponent', 'error test');
 
     this.communicationService.stepperEvents.emit(3);
   }
