@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Project;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -35,36 +36,30 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getProjects(@PathVariable Long orgId, Principal principal) {
-        log.debug("Request get projects for user: {}", principal.getName());
+    public ResponseEntity<List<Project>> getProjects(@PathVariable Long orgId) {
+        log.debug("Request get projects for org: {}", orgId);
 
         List<Project> projects = projectService.getProjects(orgId);
 
         return ResponseEntity.ok(projects);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable long id, Principal principal) {
-        log.debug("Request get projects for user: {}", principal.getName());
+    @GetMapping("/{projectId}")
+    public ResponseEntity<Project> getProjectById(@PathVariable Long orgId, @PathVariable Long projectId) {
+        log.debug("Request get project: {} for org: {}", projectId, orgId);
 
-//        Project projectById = projectService.getProjectByUser(principal.getName()).stream()
-//                .filter(project -> project.getId() == id)
-//                .findFirst()
-//                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + id));
-
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(projectService.getProject(orgId, projectId));
     }
 
-    @PostMapping("/{name}")
-    public ResponseEntity<Project> createProject(@PathVariable String name, Principal principal) {
-        if (principal != null) {
-            log.debug("Request for createProject from: {}", principal.getName());
-        }
+    @PostMapping
+    public ResponseEntity<Project> createProject(@PathVariable Long orgId,
+                                                 @Valid @RequestBody ProjectRequestDto projectDto) {
+        log.debug("Request for createProject for org: {}", orgId);
 
-        Project newProject = projectService.create(name, principal.getName());
+        Project newProject = projectService.create(orgId, projectDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/{id}")
+                .path("/{projectId}")
                 .buildAndExpand(newProject.getId())
                 .toUri();
 
@@ -74,11 +69,11 @@ public class ProjectController {
         return new ResponseEntity<>(newProject, headers, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/{id}")
-    public HttpStatus deleteProject(@PathVariable long id) {
-        log.debug("Delete project by id: {}", id);
+    @DeleteMapping("/{projectId}")
+    public HttpStatus deleteProject(@PathVariable long orgId, @PathVariable long projectId) {
+        log.debug("Request delete project with id: {} for org: {}", projectId, orgId);
 
-        projectService.delete(id);
+        projectService.delete(orgId, projectId);
 
         return HttpStatus.NO_CONTENT;
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "organizations")
-public class Organization extends BaseEntity {
+public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +39,6 @@ public class Organization extends BaseEntity {
 
     public void addUser(User user) {
         users.add(user);
-    }
-
-    public void addProject(Project project) {
-        projects.add(project);
-        project.setOrganization(this);
     }
 
     public void removeProject(Project project) {

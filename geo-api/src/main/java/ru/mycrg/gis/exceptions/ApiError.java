@@ -1,4 +1,4 @@
-package ru.mycrg.gis.controller;
+package ru.mycrg.gis.exceptions;
 
 import org.springframework.http.HttpStatus;
 

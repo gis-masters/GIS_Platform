@@ -27,6 +27,8 @@ public class XsdRule {
     @Column(columnDefinition = "json")
     private JsonNode classRule;
 
+    public XsdRule() {}
+
     public long getId() {
         return id;
     }

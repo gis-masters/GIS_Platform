@@ -1,5 +1,6 @@
 package ru.mycrg.gis.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
@@ -14,7 +15,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class Project extends BaseEntity {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,13 +36,15 @@ public class Project extends BaseEntity {
     private JsonNode extra;
 
     @ManyToOne
+    @JsonIgnore
     private Organization organization;
 
     public Project() {}
 
-    public Project(String internalName, String geoserverName) {
+    public Project(String internalName, String geoserverName, Organization organization) {
         this.internalName = internalName;
         this.geoserverName = geoserverName.toLowerCase();
+        this.organization = organization;
     }
 
     public long getId() {

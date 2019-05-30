@@ -26,6 +26,8 @@ public class CustomRule {
     @Type(type="text")
     private String classRule;
 
+    public CustomRule() {}
+
     public long getId() {
         return id;
     }

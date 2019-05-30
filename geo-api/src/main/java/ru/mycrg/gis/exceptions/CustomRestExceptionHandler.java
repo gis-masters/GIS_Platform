@@ -1,4 +1,4 @@
-package ru.mycrg.gis.controller;
+package ru.mycrg.gis.exceptions;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.TypeMismatchException;
@@ -19,10 +19,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.mycrg.gis.exceptions.CrgBadRequestException;
-import ru.mycrg.gis.exceptions.CrgConflictException;
-import ru.mycrg.gis.exceptions.CrgFailedException;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;

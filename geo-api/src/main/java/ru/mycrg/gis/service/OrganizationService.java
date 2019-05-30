@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.gis.controller.CustomRestExceptionHandler;
+import ru.mycrg.gis.exceptions.CustomRestExceptionHandler;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;

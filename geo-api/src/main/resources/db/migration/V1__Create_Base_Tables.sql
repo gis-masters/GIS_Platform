@@ -4,8 +4,6 @@ CREATE TABLE IF NOT EXISTS public.organizations
     name       character varying(500),
     phone      character varying(20),
     status     character varying(20),
-    created_on timestamp without time zone,
-    updated_on timestamp without time zone,
     CONSTRAINT organizations_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE public.organizations
@@ -20,8 +18,6 @@ CREATE TABLE IF NOT EXISTS public.users
     password   character varying(255),
     sur_name   character varying(100),
     username   character varying(60),
-    created_on timestamp without time zone,
-    updated_on timestamp without time zone,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT ukr43af9ap4edm43mmtq01oddj6 UNIQUE (username)
 ) TABLESPACE pg_default;
@@ -35,8 +31,6 @@ CREATE TABLE IF NOT EXISTS public.projects
     geoserver_name  character varying(255),
     status          character varying(20),
     extra           json,
-    created_on      timestamp without time zone,
-    updated_on      timestamp without time zone,
     organization_id integer   NOT NULL,
     CONSTRAINT projects_pkey PRIMARY KEY (id),
     CONSTRAINT fk3gwrleyyq6prcnqekmkobbimd FOREIGN KEY (organization_id)
