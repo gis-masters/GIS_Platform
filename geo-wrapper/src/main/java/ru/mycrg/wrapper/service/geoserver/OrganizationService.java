@@ -12,12 +12,9 @@ import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
 import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.WRITE;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
 
 /**
@@ -78,28 +75,6 @@ public class OrganizationService {
 
         // В БД
         baseDaoService.createDb(dbName);
-    }
-
-    /**
-     * Создание проекта.
-     * Создание хранилища (postgis) на геосервере.
-     */
-    public void createProject(OrgMqProcessRequest dto) throws IOException, RuntimeException, SQLException {
-        String projectName = dto.getProjectName();
-        String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
-        String storeName = databaseName + "_store";
-
-        // На геосервере создаем рабочую область и хранилище.
-        workspacesService.createWorkspace(projectName);
-        storageService.createStorage(databaseName, projectName, projectName, storeName);
-
-        // Задаем правила доступа к рабочей области проекта
-        rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
-        // Задаю правило WRITE потому как не давало менять фичу через wfs
-        rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
-
-        // В БД создаем схему и инициализируем в ней шаблонную структуру
-        baseDaoService.initP10Template(databaseName, projectName);
     }
 
 }

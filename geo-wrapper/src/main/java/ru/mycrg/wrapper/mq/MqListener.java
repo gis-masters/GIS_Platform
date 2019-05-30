@@ -16,6 +16,7 @@ import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.OrganizationService;
+import ru.mycrg.wrapper.service.geoserver.ProjectService;
 import ru.mycrg.wrapper.service.gml.GmlGenerator;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
@@ -30,13 +31,15 @@ public class MqListener {
 
     private final IMqEvents mqEvents;
     private final OrganizationService organizationService;
+    private final ProjectService projectService;
     private final AuthService authService;
     private final ValidationService validationService;
     private final ImportService importService;
     private final GmlGenerator gmlGenerator;
 
     @Autowired
-    public MqListener(IMqEvents mqEvents, OrganizationService organizationService, AuthService authService, GmlGenerator gmlGenerator,
+    public MqListener(IMqEvents mqEvents, OrganizationService organizationService, AuthService authService,
+                      GmlGenerator gmlGenerator, ProjectService projectService,
                       ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
         this.organizationService = organizationService;
@@ -44,6 +47,7 @@ public class MqListener {
         this.gmlGenerator = gmlGenerator;
         this.importService = importService;
         this.validationService = validationService;
+        this.projectService = projectService;
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
@@ -53,6 +57,7 @@ public class MqListener {
         switch (mqRequest.getType()) {
             case CREATE_ORG: createOrg(mqRequest); break;
             case CREATE_PROJECT: createProject(mqRequest); break;
+            case DELETE_PROJECT: deleteProject(mqRequest); break;
             default:
                 log.warn("Not processable event type");
         }
@@ -124,13 +129,28 @@ public class MqListener {
     private void createProject(OrgMqProcessRequest request) {
         try {
             if (authService.authorize().isPresent()) {
-                log.debug("Try create project: {}", request.getProjectName());
+                log.debug("Request create project: {}", request.getProjectName());
 
-                organizationService.createProject(request);
+                projectService.createProject(request);
 
                 mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException | SQLException e) {
+            log.error("Неудалось создать проект: ", e);
+            mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
+        }
+    }
+
+    private void deleteProject(OrgMqProcessRequest request) {
+        try {
+            if (authService.authorize().isPresent()) {
+                log.debug("Request delete project: {}", request.getProjectName());
+
+                projectService.deleteProject(request);
+
+                mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
+            }
+        } catch (IOException | RuntimeException e) {
             log.error("Неудалось создать проект: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }

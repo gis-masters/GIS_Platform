@@ -18,7 +18,7 @@ import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/op
 })
 export class ProjectsService {
 
-  private projectsUrl = this.serverProp.baseUrl + '/projects';
+  private projectsUrl = this.serverProp.organizationsUrl;
 
   private _projects$: BehaviorSubject<CrgProject[]> = new BehaviorSubject<CrgProject[]>(undefined);
   public projects$: Observable<CrgProject[]> = this._projects$.asObservable()
@@ -37,6 +37,8 @@ export class ProjectsService {
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     log.info('projects', 'ProjectsService start');
+
+    this.projectsUrl = this.projectsUrl + '/' + this.storageService.getOrganizationId() + '/projects';
 
     this.projects$.subscribe();
   }
@@ -59,11 +61,15 @@ export class ProjectsService {
   }
 
   create(name: string): Observable<any> {
-    return this.http.post(this.projectsUrl + '/' + name, {});
+    const payload = {
+      'projectName': name
+    };
+
+    return this.http.post(this.projectsUrl, payload);
   }
 
-  delete(name: string): Observable<any> {
-    return this.http.delete(this.projectsUrl + '/' + name);
+  delete(id: string): Observable<any> {
+    return this.http.delete(this.projectsUrl + '/' + id);
   }
 
   /**

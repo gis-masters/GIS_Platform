@@ -102,6 +102,15 @@ public class ProjectService extends BaseProcessService {
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
 
         organization.removeProject(project);
+
+        CrgProcess process = new CrgProcess<>(new ProjectRequestDto(project.getGeoserverName()));
+        processes.add(process);
+
+        OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
+                project.getGeoserverName(), RequestType.DELETE_PROJECT);
+
+        // Отсылаем евент
+        mqEvents.sendOrgEvent(mqRequest);
     }
 
     @Override
@@ -121,18 +130,23 @@ public class ProjectService extends BaseProcessService {
             Optional<Project> projectOptional = projectRepository.findByGeoserverName(request.getProjectName());
             if (projectOptional.isPresent()) {
                 Project project = projectOptional.get();
-                if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-                    projectRepository.delete(project);
-                } else {
-                    if (!mqResponse.isNull()) {
-                        project.setStatus(mqResponse.getStatus());
 
-                        log.info("Successfully created project: {}", project.getGeoserverName());
+                if (mqResponse.getType() == RequestType.CREATE_PROJECT) {
+                    if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+                        projectRepository.delete(project);
                     } else {
-                        log.warn("Status must not be empty: {}", mqResponse.getStatus());
-                    }
+                        if (!mqResponse.isNull()) {
+                            project.setStatus(mqResponse.getStatus());
 
-                    projectRepository.save(project);
+                            log.info("Successfully created project: {}", project.getGeoserverName());
+                        } else {
+                            log.warn("Status must not be empty: {}", mqResponse.getStatus());
+                        }
+
+                        projectRepository.save(project);
+                    }
+                } else {
+                    log.warn("Other project event type");
                 }
             } else {
                 log.warn("Not found project by name: {}", request.getProjectName());

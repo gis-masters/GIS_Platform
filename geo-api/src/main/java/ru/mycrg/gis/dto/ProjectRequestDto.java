@@ -1,7 +1,6 @@
 package ru.mycrg.gis.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class ProjectRequestDto extends BaseRequest {
