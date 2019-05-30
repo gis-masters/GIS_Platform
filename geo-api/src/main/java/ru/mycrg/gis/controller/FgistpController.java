@@ -14,7 +14,7 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
-import ru.mycrg.gis.exceptions.FileNotFoundException;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -158,7 +158,9 @@ public class FgistpController {
             String absolutePath = resource.getFile().getAbsolutePath();
             contentType = request.getServletContext().getMimeType(absolutePath);
         } catch (IOException e) {
-            throw  new FileNotFoundException("Wrong file URL");
+            log.error("Wrong file URL", e);
+
+            throw  new CrgNotFoundException("Wrong file URL");
         }
 
         if (contentType == null) {

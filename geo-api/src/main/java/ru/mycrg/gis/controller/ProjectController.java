@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping(value = "/projects")
+@RequestMapping(value = "/organizations/{orgId}/projects")
 public class ProjectController {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
@@ -35,12 +35,12 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getProjects(Principal principal) {
+    public ResponseEntity<List<Project>> getProjects(@PathVariable Long orgId, Principal principal) {
         log.debug("Request get projects for user: {}", principal.getName());
 
-        // List<Project> projects = projectService.getProjectByUser(principal.getName());
+        List<Project> projects = projectService.getProjects(orgId);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/{id}")

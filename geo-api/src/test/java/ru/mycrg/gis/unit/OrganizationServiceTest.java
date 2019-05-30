@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
-import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
@@ -96,12 +96,12 @@ public class OrganizationServiceTest {
         assertEquals(result.getStatus(), ProcessStatus.PENDING);
     }
 
-    @Test(expected = OrganizationNotFoundException.class)
+    @Test(expected = CrgNotFoundException.class)
     public void throwExceptionByFoundingNotExistEntity() {
         organizationService.findById(100L);
     }
 
-    @Test(expected = OrganizationNotFoundException.class)
+    @Test(expected = CrgNotFoundException.class)
     public void throwExceptionByDeletingNotExistEntity() {
         organizationService.deleteById(100L);
     }

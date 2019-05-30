@@ -10,7 +10,7 @@ import ru.mycrg.gis.controller.ProjectController;
 import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Project;
-import ru.mycrg.gis.exceptions.EntityCreationException;
+import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
@@ -41,6 +41,10 @@ public class ProjectService extends BaseProcessService {
 //                .getProjects();
 //    }
 
+    public List<Project> getProjects(Long orgId) {
+        return organizationService.findById(orgId).getProjects();
+    }
+
     /**
      * Создаем проект у нас.
      * Находим организацию в которой состоит пользователь и для этой организации создаем проект.
@@ -59,7 +63,7 @@ public class ProjectService extends BaseProcessService {
                 .findFirst();
 
         if (projectWithSameName.isPresent()) {
-            throw new EntityCreationException("Проект с таким именем уже существует");
+            throw new CrgConflictException("Проект с таким именем уже существует");
         } else {
             Project newProject = projectRepository.save(new Project(projectName, Translit.doIt(projectName)));
             newProject.setGeoserverName(newProject.getGeoserverName() + "_" + newProject.getId());
@@ -116,5 +120,4 @@ public class ProjectService extends BaseProcessService {
             log.warn("Not found create project process by id: {}", mqResponse.getId());
         }
     }
-
 }

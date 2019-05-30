@@ -15,8 +15,8 @@ import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.exceptions.EntityCreationException;
-import ru.mycrg.gis.exceptions.OrganizationCreateException;
+import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
@@ -47,13 +47,6 @@ public class OrganizationController {
         this.organizationService = organizationService;
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<Long> getMyOrganizationInfo(Principal principal) {
-        log.debug("get org info(...only id yet) for user: {}", principal.getName());
-
-        return ResponseEntity.ok(organizationService.getOrganizationByUser(principal.getName()).getId());
-    }
-
     // TODO: Добавить авторизацию, закрыть доступ неавторизированным пользователям
     @GetMapping
     public ResponseEntity<Iterable<Organization>> getOrganizations(
@@ -74,7 +67,7 @@ public class OrganizationController {
 
         Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
         if (userByEmail.isPresent()) {
-            throw new EntityCreationException("Данный email уже занят");
+            throw new CrgConflictException("Данный email уже занят");
         }
 
         Organization newOrganization;
@@ -83,7 +76,7 @@ public class OrganizationController {
         } catch (Exception e) {
             log.error("Неудалось создать организацию: ", e);
 
-            throw new OrganizationCreateException();
+            throw new CrgFailedException("Неудалось создать организацию: " + createDto.getName());
         }
 
         URI location = ServletUriComponentsBuilder
@@ -101,6 +94,14 @@ public class OrganizationController {
                 RequestType.CREATE_ORG));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
+    }
+
+    // TODO: Очень странная фигня с этим инфо (Возвращает id организации пользователя)
+    @GetMapping("/info")
+    public ResponseEntity<Long> getMyOrganizationInfo(Principal principal) {
+        log.debug("get org info(...only id yet) for user: {}", principal.getName());
+
+        return ResponseEntity.ok(organizationService.getOrganizationByUser(principal.getName()).getId());
     }
 
     @GetMapping("/{id}")

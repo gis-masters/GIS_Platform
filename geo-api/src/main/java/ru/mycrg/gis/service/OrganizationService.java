@@ -6,15 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.gis.controller.CustomRestExceptionHandler;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.exceptions.OrganizationNotFoundException;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.UserRepository;
 
@@ -55,7 +54,7 @@ public class OrganizationService {
         if (user.isPresent()) {
             return organizationRepository
                     .findOrganizationByUsersContaining(user.get())
-                    .orElseThrow(() -> new OrganizationNotFoundException(userName));
+                    .orElseThrow(() -> new CrgNotFoundException("Не удалось найти организацию для: " + userName));
         } else {
             log.warn("Not found user: {}", userName);
 
@@ -113,13 +112,13 @@ public class OrganizationService {
      *
      * @param id Идентификатор организации.
      * @return {@link Organization}
-     * @throws OrganizationNotFoundException Обрабатывать это исключение не нужно.
-     *                                       Даное исключение обрабатывает {@link ExceptionHandler @ExceptionHandler}
+     * @throws CrgNotFoundException Обрабатывать это исключение не нужно.
+*                                   Даное исключение обрабатывает {@link CustomRestExceptionHandler @ExceptionHandler}
      */
-    public Organization findById(long id) throws OrganizationNotFoundException {
+    public Organization findById(long id) throws CrgNotFoundException {
         return organizationRepository
                 .findById(id)
-                .orElseThrow(() -> new OrganizationNotFoundException(id));
+                .orElseThrow(() -> new CrgNotFoundException("Не найдена организация с id: " + id));
     }
 
     /**

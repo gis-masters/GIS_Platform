@@ -7,7 +7,7 @@ import org.mockito.MockitoAnnotations;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
-import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
@@ -27,7 +27,7 @@ public class FgistpRuleServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = FgistpRuleNotFoundException.class)
+    @Test(expected = CrgNotFoundException.class)
     public void shouldThrowException() {
         assertNull(ruleService.getRuleByName("someFeatureName"));
     }

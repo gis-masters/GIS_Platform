@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.exceptions.CrgFailedException;
-import ru.mycrg.gis.exceptions.FgistpRuleNotFoundException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.repository.XsdRuleRepository;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
@@ -141,18 +141,17 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         return fgistpRules;
     }
 
-    public EntityType getRuleByName(String featureName) throws FgistpRuleNotFoundException {
+    public EntityType getRuleByName(String featureName) throws CrgNotFoundException {
         Optional<EntityType> optionalFeature = fgistpRules.getFeatureTypeByName(featureName);
         if (optionalFeature.isPresent()) {
             EntityType entityType = optionalFeature.get();
-            customRuleRepository.findCustomRuleByClassName(entityType.getName())
-                    .ifPresent(customRule -> {
-                        entityType.setCustomRuleFunction(customRule.getClassRule());
-                    });
+            customRuleRepository
+                    .findCustomRuleByClassName(entityType.getName())
+                    .ifPresent(customRule -> entityType.setCustomRuleFunction(customRule.getClassRule()));
 
             return entityType;
         } else {
-            throw new FgistpRuleNotFoundException(featureName);
+            throw new CrgNotFoundException("Не найдено правило для класса: " + featureName);
         }
     }
 
