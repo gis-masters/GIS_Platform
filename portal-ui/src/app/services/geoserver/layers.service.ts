@@ -1,15 +1,15 @@
-import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
+import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
+import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../gis/projects.service';
 import {DatastoreService} from './datastore.service';
-import {forkJoin, Observable} from 'rxjs';
+import {delay, filter, flatMap, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
-import {delay, filter, flatMap, map} from 'rxjs/operators';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -20,12 +20,12 @@ export class LayersService {
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
 
   constructor(private http: HttpClient,
-              private logger: NGXLogger,
+              private log: FizLogger,
               private baseService: BaseService,
               private ruleService: FgistpRulesService,
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
-    logger.info('LayersService start');
+    this.log.debug('setUp', 'LayersService constructor');
   }
 
   /**
@@ -68,7 +68,7 @@ export class LayersService {
                    if (data && data.dataStore) {
                      layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
                    } else {
-                     this.logger.warn('Error fetching connection info for layer', layer.name);
+                     this.log.warn('layers', 'Error fetching connection info for layer', layer.name);
                    }
 
                    return layer;

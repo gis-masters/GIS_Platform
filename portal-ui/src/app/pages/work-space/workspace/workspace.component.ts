@@ -1,12 +1,14 @@
 import {Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
+import {ActivatedRoute} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
+import {FizLogger} from '../../../services/logger/fiz.logger';
+import {UserInfoModel} from '../../../services/gis/users.service';
 import {EventService, IEvent} from '../../../services/event.service';
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {LayersService} from '../../../services/geoserver/layers.service';
+import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
@@ -14,25 +16,23 @@ import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../ser
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.css']
 })
-export class WorkspaceComponent implements OnDestroy {
-  mobileQuery: MediaQueryList;
-  _mobileQueryListener: () => void;
+export class WorkspaceComponent implements OnDestroy, OnInit {
 
   notificationCounter = 0;
   isInfoSidebarActive = false;
+  userModel: UserInfoModel;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private authService: AuthService,
+              private route: ActivatedRoute,
               private eventService: EventService,
-              private layersService: LayersService,
               private sideBarManager: SideBarManager,
+              private storageService: LocalStorageService,
               private communicationService: CommunicationService,
-              private logger: NGXLogger) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+              private log: FizLogger) {
+    this.log.debug('setUp', 'WorkspaceComponent constructor');
 
     this.eventService.events$
         .pipe(filter(value => !!value))
@@ -49,16 +49,26 @@ export class WorkspaceComponent implements OnDestroy {
             case ActionType.OPEN: this.isInfoSidebarActive = true;  break;
             case ActionType.SWITCH: this.isInfoSidebarActive = !this.isInfoSidebarActive; break;
             default:
-              this.logger.warn('Unsupported action type: ', data.action);
+              this.log.warn('infoSidebar', 'Unsupported action type: ', data.action);
           }
         });
+  }
+
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      const userModel = data['orgInfo'];
+      if (userModel) {
+        this.log.info('organization', 'userModel = ', userModel);
+
+        this.userModel = userModel;
+        this.storageService.saveUserModel(userModel);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-
-    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
   logout() {

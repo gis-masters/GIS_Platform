@@ -88,3 +88,8 @@
   font-family: monospace;
   font-size: smaller;
 }
+
+.step-name {
+  position: relative;
+  top: 15px;
+}

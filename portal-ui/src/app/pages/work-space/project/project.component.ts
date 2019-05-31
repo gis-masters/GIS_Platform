@@ -2,7 +2,7 @@ import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
 import {FizLogger} from '../../../services/logger/fiz.logger';
@@ -33,7 +33,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
   done = ProcessStatus.DONE;
 
   constructor(private logger: NGXLogger,
-              private route: ActivatedRoute,
               private router: Router,
               private log: FizLogger,
               private storageService: LocalStorageService,
@@ -41,19 +40,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
               private ruleService: FgistpRulesService,
               private dialog: MatDialog,
               private communicationService: CommunicationService) {
+    this.log.debug('setUp', 'ProjectComponent constructor');
+
     this.communicationService.stepperEvents.emit(1);
   }
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      const userModel = data['orgInfo'];
-      if (userModel) {
-        this.log.info('organization', 'userModel = ', userModel);
-
-        this.storageService.saveUserModel(userModel);
-      }
-    });
-
     this.ruleService.getRules().subscribe();
     this.projectsService.fetchProjects();
 

@@ -24,15 +24,12 @@ const routes: Routes = [
   {
     path: 'workspace',
     component: WorkspaceComponent,
+    resolve: {
+      orgInfo: OrganizationInfoResolver
+    },
     children: [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
-      {
-        path: 'projects',
-        component: ProjectComponent,
-        resolve: {
-          orgInfo: OrganizationInfoResolver
-        }
-      },
+      {path: 'projects', component: ProjectComponent},
       {path: 'data_import', component: DataImportComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
       {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
