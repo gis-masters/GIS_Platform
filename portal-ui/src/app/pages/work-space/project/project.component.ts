@@ -1,18 +1,18 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
+import {FizLogger} from '../../../services/logger/fiz.logger';
 import {ProcessStatus} from '../../../services/process-status';
-import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {LocalStorageService} from '../../../services/local-storage.service';
+import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
-import {FizLogger} from '../../../services/logger/fiz.logger';
 
 @Component({
   selector: 'crg-project',
@@ -33,6 +33,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   done = ProcessStatus.DONE;
 
   constructor(private logger: NGXLogger,
+              private route: ActivatedRoute,
               private router: Router,
               private log: FizLogger,
               private storageService: LocalStorageService,
@@ -44,6 +45,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.route.data.subscribe(data => {
+      const userModel = data['orgInfo'];
+      if (userModel) {
+        this.log.info('organization', 'userModel = ', userModel);
+
+        this.storageService.saveUserModel(userModel);
+      }
+    });
+
     this.ruleService.getRules().subscribe();
     this.projectsService.fetchProjects();
 

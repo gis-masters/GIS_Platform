@@ -34,7 +34,7 @@ export class WorkspacesService {
    * @param table Название таблицы
    */
   publishLayer(projectModel: ProjectModel, table: string): Observable<any> {
-    const orgId = this.storageService.getOrganizationId();
+    const orgId = this.storageService.getOrgId();
     const workspaceName = projectModel.crgProject.geoserverName;
     const storeName = 'database_' + orgId + '_store';
 

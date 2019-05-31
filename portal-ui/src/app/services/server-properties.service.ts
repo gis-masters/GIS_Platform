@@ -13,6 +13,7 @@ export class ServerPropertiesService {
   private _geoServerUrl = this._baseUrl + '/geoserver';
   private _authServerUrl = this._baseUrl + '/oauth/token';
   private _organizationsUrl = this._baseUrl + '/organizations';
+  private _usersUrl = this._baseUrl + '/users';
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
   private _validationUrl = this._baseUrl + '/fgistp/validation';
   private _initValidationUrl = this._validationUrl + '/init';
@@ -72,6 +73,14 @@ export class ServerPropertiesService {
 
   get wsUrl(): string {
     return this._wsUrl;
+  }
+
+  get usersUrl(): string {
+    return this._usersUrl;
+  }
+
+  set usersUrl(value: string) {
+    this._usersUrl = value;
   }
 
 }

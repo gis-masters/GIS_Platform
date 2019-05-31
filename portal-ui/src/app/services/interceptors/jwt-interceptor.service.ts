@@ -1,11 +1,11 @@
 import {NGXLogger} from 'ngx-logger';
-import {GeoUtil} from './util/GeoUtil';
+import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
 import {catchError} from 'rxjs/operators';
-import {AuthService} from './auth.service';
+import {AuthService} from '../auth.service';
 import {Observable, throwError} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {TokenStorageService} from './token-storage.service';
+import {environment} from '../../../environments/environment';
+import {TokenStorageService} from '../token-storage.service';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
 @Injectable({

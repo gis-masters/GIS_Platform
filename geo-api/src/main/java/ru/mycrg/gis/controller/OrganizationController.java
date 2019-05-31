@@ -15,15 +15,14 @@ import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.exceptions.CrgConflictException;
+import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -94,14 +93,6 @@ public class OrganizationController {
                 RequestType.CREATE_ORG));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
-    }
-
-    // TODO: Очень странная фигня с этим инфо (Возвращает id организации пользователя)
-    @GetMapping("/info")
-    public ResponseEntity<Long> getMyOrganizationInfo(Principal principal) {
-        log.debug("get org info(...only id yet) for user: {}", principal.getName());
-
-        return ResponseEntity.ok(organizationService.getOrganizationByUser(principal.getName()).getId());
     }
 
     @GetMapping("/{id}")

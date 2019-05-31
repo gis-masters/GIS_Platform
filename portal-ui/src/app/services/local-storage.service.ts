@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {StorageKeys} from './storage-keys';
 import {LogModel} from './logger/fiz.logger';
+import {UserInfoModel} from './gis/users.service';
 import {ProjectModel} from './geoserver/import/projectModel';
 
 @Injectable({
@@ -36,12 +37,20 @@ export class LocalStorageService {
     this.clearByKey(StorageKeys.projectKey);
   }
 
-  getOrganizationId(): number {
-    const orgId = this.getByKey(StorageKeys.orgId);
-    if (!!orgId) {
-      return orgId;
+  getOrgId(): number {
+    return this.getUserInfo().orgId;
+  }
+
+  saveUserModel(model: UserInfoModel) {
+    this.saveByKey(StorageKeys.userModel, JSON.stringify(model));
+  }
+
+  getUserInfo(): UserInfoModel {
+    const userModel = JSON.parse(this.getByKey(StorageKeys.userModel)) as UserInfoModel;
+    if (!!userModel) {
+      return userModel;
     } else {
-      throw Error('Не удалось получить id организации');
+      console.warn('Не удалось получить инфо о пользователе');
     }
   }
 

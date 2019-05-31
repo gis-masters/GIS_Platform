@@ -18,7 +18,7 @@ import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/op
 })
 export class ProjectsService {
 
-  private projectsUrl = this.serverProp.organizationsUrl;
+  private orgUrl = this.serverProp.organizationsUrl + '/';
 
   private _projects$: BehaviorSubject<CrgProject[]> = new BehaviorSubject<CrgProject[]>(undefined);
   public projects$: Observable<CrgProject[]> = this._projects$.asObservable()
@@ -36,16 +36,14 @@ export class ProjectsService {
               private baseService: BaseService,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
-    log.info('projects', 'ProjectsService start');
-
-    this.projectsUrl = this.projectsUrl + '/' + this.storageService.getOrganizationId() + '/projects';
-
     this.projects$.subscribe();
   }
 
   fetchProjects(): void {
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+
     this.http
-        .get<CrgProject[]>(this.projectsUrl)
+        .get<CrgProject[]>(url)
         .pipe(
           flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
         )
@@ -57,19 +55,25 @@ export class ProjectsService {
   }
 
   getById(id: string): Observable<CrgProject> {
-    return this.http.get<CrgProject>(this.projectsUrl + '/' + id);
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects' + '/' + id;
+
+    return this.http.get<CrgProject>(url);
   }
 
   create(name: string): Observable<any> {
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+
     const payload = {
       'projectName': name
     };
 
-    return this.http.post(this.projectsUrl, payload);
+    return this.http.post(url, payload);
   }
 
   delete(id: string): Observable<any> {
-    return this.http.delete(this.projectsUrl + '/' + id);
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects' + '/' + id;
+
+    return this.http.delete(url);
   }
 
   /**
@@ -81,16 +85,19 @@ export class ProjectsService {
   doWorkImport(workImport: WorkImport) {
     this.log.info('projects', 'doWorkImport', workImport);
 
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/import';
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workImport.projectModel.crgProject.geoserverName,
       importTasks: workImport.tasks
     };
 
-    return this.http.post(this.projectsUrl + '/import', payload);
+    return this.http.post(url, payload);
   }
 
   clearCache() {
+    this.log.info('projects', 'clearCache');
+
     this._projects$.next(undefined);
   }
 

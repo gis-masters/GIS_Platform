@@ -4,9 +4,7 @@ import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
-import {StorageKeys} from '../../services/storage-keys';
 import {LocalStorageService} from '../../services/local-storage.service';
-import {OrganizationService} from '../../services/gis/organization.service';
 import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
 
 @Component({
@@ -27,7 +25,6 @@ export class LoginComponent {
               private http: HttpClient,
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
-              private organizationService: OrganizationService,
               private storageService: LocalStorageService,
               private logger: NGXLogger,
               private router: Router) {
@@ -53,12 +50,7 @@ export class LoginComponent {
             this.tokenStorage.saveAccessToken(authModel.access_token);
             this.tokenStorage.saveRefreshToken(authModel.refresh_token);
 
-            this.organizationService.getInfo()
-                .subscribe((orgId: any) => {
-                  this.storageService.saveByKey(StorageKeys.orgId, orgId);
-
-                  this.router.navigateByUrl('/workspace');
-                });
+            this.router.navigateByUrl('/workspace/projects');
           }, response => {
             this.logger.error('error: ', response);
 

@@ -145,8 +145,9 @@ public class MqListener {
         try {
             if (authService.authorize().isPresent()) {
                 log.debug("Request delete project: {}", request.getProjectName());
+                log.debug("NOT IMPLEMENTED YET...");
 
-                projectService.deleteProject(request);
+                // projectService.deleteProject(request);
 
                 mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
             }

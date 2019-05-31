@@ -61,6 +61,10 @@ zuul:
       path: /organizations/**
       url: http://geo-api:8088/organizations/
 
+    gis-users:
+      path: /users/**
+      url: http://geo-api:8088/users/
+
     # Geoserver
     geoserver:
       path: /geoserver/**

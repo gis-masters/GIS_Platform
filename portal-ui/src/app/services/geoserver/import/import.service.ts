@@ -33,7 +33,7 @@ export class ImportService {
    * Инициируем импорт во временное хранилище.
    */
   initScratchImport(): Observable<InputStartResponseDto | any> {
-    const orgId = this.localStorageService.getOrganizationId();
+    const orgId = this.localStorageService.getOrgId();
     const scratchWorkspace = 'scratch_database_' + orgId;
 
     const workspace = scratchWorkspace;

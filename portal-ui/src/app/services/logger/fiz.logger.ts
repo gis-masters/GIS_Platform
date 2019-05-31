@@ -14,7 +14,7 @@ export class FizLogger {
       this.updateLogModel({
         mode: LogMode.DEV,
         logItems: [],
-        defaultLevel: LogLevel.INFO
+        defaultLevel: LogLevel.WARN
       });
     } else {
       this.logModel = logModel;
@@ -92,15 +92,16 @@ export class FizLogger {
   private addNewKey(key: string): void {
     const mode = this.logModel.mode;
     const _types = [];
+
     if (mode === LogMode.DEV) {
       _types.push({
         mod: LogMode.DEV,
-        level: LogLevel.INFO
+        level: this.logModel.defaultLevel
       });
     } else if (mode === LogMode.PROD) {
       _types.push({
         mod: LogMode.PROD,
-        level: LogLevel.INFO
+        level: this.logModel.defaultLevel
       });
     } else {
       console.log('Unsupported logMode');

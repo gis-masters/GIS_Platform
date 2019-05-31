@@ -1,7 +1,7 @@
 
 export enum StorageKeys {
 
-  orgId = 'orgId',
+  userModel = 'userModel',
   projectKey = 'project',
   logModel = 'logModel'
 }

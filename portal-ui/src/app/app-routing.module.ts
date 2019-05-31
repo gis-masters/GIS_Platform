@@ -13,6 +13,8 @@ import {WorkspaceComponent} from './pages/work-space/workspace/workspace.compone
 import {DataImportComponent} from './pages/work-space/data-import/data-import.component';
 import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
 
+import {OrganizationInfoResolver} from './services/resolvers/project-resolver.service';
+
 const routes: Routes = [
   {path: '', component: LandingComponent},
   {path: 'login', component: LoginComponent},
@@ -24,7 +26,13 @@ const routes: Routes = [
     component: WorkspaceComponent,
     children: [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
-      {path: 'projects', component: ProjectComponent},
+      {
+        path: 'projects',
+        component: ProjectComponent,
+        resolve: {
+          orgInfo: OrganizationInfoResolver
+        }
+      },
       {path: 'data_import', component: DataImportComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
       {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
