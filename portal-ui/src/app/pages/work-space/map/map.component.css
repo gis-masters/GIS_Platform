@@ -1,3 +1,5 @@
+@import url(../../_app/app.component.css);
+
 .example-sidenav-container-fiz {
   height: calc(100% + 36px);
 }

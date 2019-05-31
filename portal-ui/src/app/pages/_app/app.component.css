@@ -34,3 +34,8 @@
 .workspace-page_toolbar>h6 {
   z-index: 1;
 }
+
+.fiz-toolbar {
+  position: relative;
+  top: 12px;
+}
