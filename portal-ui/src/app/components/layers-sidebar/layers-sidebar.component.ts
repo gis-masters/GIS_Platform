@@ -5,6 +5,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
+import {ActionType, SideBarManager, SidebarType} from "../../services/side-bar-manager.service";
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -23,7 +24,8 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
-              private openLayers: OpenLayersService) {
+              private openLayers: OpenLayersService,
+              private sideBarManager: SideBarManager) {
   }
 
   ngOnInit() {}
@@ -59,7 +61,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   }
 
   openAttributeTable(layer) {
-    console.log(' --- 1 ', layer);
+    this.sideBarManager.do(SidebarType.ATTRIBUTES, ActionType.OPEN);
   }
 
   ZoomTo(layer) {

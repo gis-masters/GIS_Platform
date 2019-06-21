@@ -1,0 +1,33 @@
+<div [ngClass]="isActive? 'crg-attr-sidebar' : 'crg-attr-sidebar_hidden'">
+  <div class="crg-attr-sidebar-header">
+    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+    Атрибуты
+  </div>
+
+  <div class="crg-attr-content">
+    <p-table [columns]="cols" [value]="cars" selectionMode="multiple" [(selection)]="selectedCars2"
+             [metaKeySelection]="true"
+             (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+
+      // HEADER
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+
+      // BODY
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+</div>

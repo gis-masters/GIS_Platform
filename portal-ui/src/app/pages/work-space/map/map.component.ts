@@ -31,6 +31,7 @@ export class MapComponent implements OnInit, OnDestroy {
   isLayersSidebarActive = false;
   isBugReportSidebarActive = false;
   isFeaturesSidebarActive = false;
+  isAttrSidebarActive = false;
   selectedFeatures: any;
 
   isValidationDialogShow = false;
@@ -122,24 +123,31 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService.sidebarManager
         .pipe(
-          filter((data: SidebarData) => data.target === SidebarType.BUG_REPORT ||
-            data.target === SidebarType.FEATURES),
+          filter((data: SidebarData) => this.isMapSidebar(data)),
           takeUntil(this.unsubscribe$)
         )
         .subscribe((data: SidebarData) => {
           if (data.target === SidebarType.BUG_REPORT) {
             switch (data.action) {
-              case ActionType.CLOSE:  this.isBugReportSidebarActive = false; break;
-              case ActionType.OPEN:   this.isBugReportSidebarActive = true;  break;
+              case ActionType.CLOSE:  this.isBugReportSidebarActive = false;    break;
+              case ActionType.OPEN:   this.isBugReportSidebarActive = true;     break;
               case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
               default:
                 this.logger.warn('Unsupported action type: ', data.action);
             }
           } else if (data.target === SidebarType.FEATURES) {
             switch (data.action) {
-              case ActionType.CLOSE:  this.isFeaturesSidebarActive = false; break;
-              case ActionType.OPEN:   this.isFeaturesSidebarActive = true;  break;
+              case ActionType.CLOSE:  this.isFeaturesSidebarActive = false;    break;
+              case ActionType.OPEN:   this.isFeaturesSidebarActive = true;     break;
               case ActionType.SWITCH: this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive; break;
+              default:
+                this.logger.warn('Unsupported action type: ', data.action);
+            }
+          } else if (data.target === SidebarType.ATTRIBUTES) {
+            switch (data.action) {
+              case ActionType.CLOSE:  this.isAttrSidebarActive = false;    break;
+              case ActionType.OPEN:   this.isAttrSidebarActive = true;     break;
+              case ActionType.SWITCH: this.isAttrSidebarActive = !this.isAttrSidebarActive; break;
               default:
                 this.logger.warn('Unsupported action type: ', data.action);
             }
@@ -199,4 +207,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  private isMapSidebar(data: SidebarData) {
+    return  data.target === SidebarType.BUG_REPORT ||
+            data.target === SidebarType.FEATURES ||
+            data.target === SidebarType.ATTRIBUTES;
+  }
 }

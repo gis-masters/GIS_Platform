@@ -21,7 +21,6 @@ import {AppComponent} from './pages/_app/app.component';
 import {ProjectComponent} from './pages/work-space/project/project.component';
 
 import {HeaderComponent} from './components/header/header.component';
-import {FooterComponent} from './components/footer/footer.component';
 import {EditBugObjectComponent} from './components/edit-bug-object/edit-bug-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
@@ -41,13 +40,13 @@ import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.componen
 import {DeleteDialogComponent} from './components/delete-dialog/delete-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
+import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';
 
 @NgModule({
   declarations: [
     routingComponents,
     AppComponent,
     HeaderComponent,
-    FooterComponent,
     MappingCardComponent,
     LayerListItemComponent,
     MappingPairComponent,
@@ -69,6 +68,7 @@ import {EditFeatureComponent} from './components/edit-feature/edit-feature.compo
     DeleteDialogComponent,
     ViewFeaturesComponent,
     EditFeatureComponent,
+    AttributesSidebarComponent,
   ],
   imports: [
     AppRoutingModule,
