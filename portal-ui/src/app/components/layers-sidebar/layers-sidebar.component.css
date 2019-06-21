@@ -45,3 +45,8 @@
   overflow: auto;
   max-height: calc(100% - 70px);
 }
+
+.mat-menu-item{
+  line-height: 30px;
+  height: 30px;
+}

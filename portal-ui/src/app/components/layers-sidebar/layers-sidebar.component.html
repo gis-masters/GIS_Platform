@@ -6,7 +6,15 @@
                           (selectionChange)="handleSelection(fizLayers)">
         <ng-container *ngIf="layers; else layersLoading">
           <mat-list-option class="example-box" style="height: 64px"
-                           *ngFor="let layer of layers" cdkDrag [value]="layer">
+                           *ngFor="let layer of layers" cdkDrag [value]="layer"
+                           (contextmenu)="onContextMenu($event)">
+            <div style="position: fixed"
+                 [style.left]="contextMenuPosition.x"
+                 [style.top]="contextMenuPosition.y"
+                 [matMenuTriggerFor]="contextMenu"
+                 [matMenuTriggerData]="{item: layer}">
+            </div>
+
             <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
           </mat-list-option>
         </ng-container>
@@ -22,3 +30,24 @@
 
   </div>
 </div>
+
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+
+    <button mat-menu-item (click)="openAttributeTable(item)">
+      <mat-icon>list_alt</mat-icon>
+      <span>Открыть таблицу атрибутов</span>
+    </button>
+
+    <button mat-menu-item (click)="ZoomTo(item)">
+      <mat-icon>zoom_out_map</mat-icon>
+      <span>Zoom to</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item>
+      <span>One more option</span>
+    </button>
+  </ng-template>
+</mat-menu>

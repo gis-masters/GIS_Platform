@@ -1,9 +1,9 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {CrgLayer} from '../../services/geoserver/layers.service';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MatListOption, MatSelectionList} from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 
 @Component({
@@ -15,6 +15,10 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
 
   @Input() isActive;
   @Input() layers: CrgLayer[];
+
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -46,4 +50,19 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }
 
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.openMenu();
+  }
+
+  openAttributeTable(layer) {
+    console.log(' --- 1 ', layer);
+  }
+
+  ZoomTo(layer) {
+    console.log(' --- 2 ', layer);
+  }
 }
