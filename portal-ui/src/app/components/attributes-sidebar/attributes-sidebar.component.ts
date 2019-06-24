@@ -30,7 +30,7 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes['layer'];
     if (layerChanged && !layerChanged.isFirstChange()) {
-      this.loadObjectsLazy({rows: 10, first: 0});
+      this.loadObjectsLazy({rows: 20, first: 0});
     }
   }
 

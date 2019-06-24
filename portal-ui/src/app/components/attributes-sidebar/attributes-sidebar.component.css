@@ -20,11 +20,37 @@
 }
 
 .crg-attr-sidebar-header {
-  padding: 5px;
+  padding: 2px;
 }
 
 .layerTitle {
   font-weight: 500;
   color: grey;
   font-style: italic;
+}
+
+::ng-deep body .ui-table .ui-table-thead > tr > th {
+  padding: 0 0 0 2px;
+}
+
+::ng-deep body .ui-table .ui-table-tbody > tr > td {
+  padding: 0 0 0 2px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+::ng-deep .ui-table-scrollable-body {
+  min-height: 315px;
+}
+
+::ng-deep body .ui-table .ui-table-tbody > tr.ui-state-highlight {
+  background-color: #d6effc;
+  color: black;
+}
+
+::ng-deep body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+  background-color: #d6effc;
+  color: black;
 }

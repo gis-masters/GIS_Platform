@@ -47,7 +47,7 @@ export class WfsService {
       exceptions: 'application/json',
       typeName: complexName,
       startindex: startindex ? startindex.toString() : '0',
-      count: count ? count.toString() : '10'
+      count: count ? count.toString() : '20'
     };
 
     return this.http

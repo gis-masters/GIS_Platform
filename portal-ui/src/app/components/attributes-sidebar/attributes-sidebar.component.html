@@ -8,14 +8,14 @@
     <p-table [columns]="cols" [value]="features" selectionMode="multiple" [(selection)]="selectedFeatures"
              [metaKeySelection]="true" [resizableColumns]="true"
              [lazy]="true" (onLazyLoad)="loadObjectsLazy($event)"
-             [paginator]="true" [rows]="10" [totalRecords]="totalFeatures"
+             [paginator]="true" [rows]="20" [totalRecords]="totalFeatures"
              [loading]="loading"
-             [scrollable]="true" [style]="{width:'100%'}" scrollHeight="300px"
+             [scrollable]="true" [style]="{width:'100%'}" scrollHeight="315px"
              (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-          <col *ngFor="let col of columns" style="width:150px">
+          <col *ngFor="let col of columns" style="width: 310px">
         </colgroup>
       </ng-template>
 
