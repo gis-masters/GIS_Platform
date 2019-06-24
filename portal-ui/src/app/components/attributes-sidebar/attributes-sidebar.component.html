@@ -1,25 +1,36 @@
 <div class="crg-attr-sidebar">
   <div class="crg-attr-sidebar-header">
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
-    Атрибуты
+    <span class="layerTitle">{{layer.title}}</span>
   </div>
 
   <div class="crg-attr-content">
-    <p-table [columns]="cols" [value]="cars" selectionMode="multiple" [(selection)]="selectedCars2"
-             [metaKeySelection]="true"
+    <p-table [columns]="cols" [value]="features" selectionMode="multiple" [(selection)]="selectedFeatures"
+             [metaKeySelection]="true" [resizableColumns]="true"
+             [lazy]="true" (onLazyLoad)="loadObjectsLazy($event)"
+             [paginator]="true" [rows]="10" [totalRecords]="totalFeatures"
+             [loading]="loading"
+             [scrollable]="true" [style]="{width:'100%'}" scrollHeight="300px"
              (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" style="width:150px">
+        </colgroup>
+      </ng-template>
 
       // HEADER
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns">
+          <th *ngFor="let col of columns" pResizableColumn>
             {{col.header}}
           </th>
         </tr>
       </ng-template>
 
       // BODY
-      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
+                   class="ui-resizable-column">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td *ngFor="let col of columns">
             {{rowData[col.field]}}

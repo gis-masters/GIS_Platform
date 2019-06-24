@@ -14,31 +14,31 @@ export class SideBarManager {
               private communicationService: CommunicationService) {
   }
 
-  do(sidebarAction: SidebarAction) {
-    if (sidebarAction.target === SidebarType.LAYERS) {
+  do(sidebar: Sidebar) {
+    if (sidebar.target === SidebarType.LAYERS) {
       return;
     }
 
-    if (sidebarAction.target === SidebarType.INFO) {
-      this.emit(SidebarType.INFO, sidebarAction.action);
+    if (sidebar.target === SidebarType.INFO) {
+      this.emit(SidebarType.INFO, sidebar.action);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
-    } else if (sidebarAction.target === SidebarType.BUG_REPORT) {
-      this.emit(SidebarType.BUG_REPORT, sidebarAction.action);
+    } else if (sidebar.target === SidebarType.BUG_REPORT) {
+      this.emit(SidebarType.BUG_REPORT, sidebar.action);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
-    } else if (sidebarAction.target === SidebarType.FEATURES) {
-      this.emit(SidebarType.FEATURES, sidebarAction.action);
+    } else if (sidebar.target === SidebarType.FEATURES) {
+      this.emit(SidebarType.FEATURES, sidebar.action);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
-    } else if (sidebarAction.target === SidebarType.ATTRIBUTES) {
-      this.emit(SidebarType.ATTRIBUTES, sidebarAction.action, sidebarAction.data);
+    } else if (sidebar.target === SidebarType.ATTRIBUTES) {
+      this.emit(SidebarType.ATTRIBUTES, sidebar.action, sidebar.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
     } else {
-      this.logger.warn('Not supported sidebar type: ', sidebarAction.target);
+      this.logger.warn('Not supported sidebar type: ', sidebar.target);
     }
   }
 
@@ -53,8 +53,7 @@ export class SideBarManager {
   }
 }
 
-export interface SidebarAction {
-  // TODO: rename properties: 'action' to 'type' maybe
+export interface Sidebar {
   action: ActionType;
   target: SidebarType;
   data?: any;

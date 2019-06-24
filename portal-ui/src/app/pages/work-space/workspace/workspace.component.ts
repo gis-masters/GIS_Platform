@@ -9,7 +9,7 @@ import {EventService, IEvent} from '../../../services/event.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionType, SidebarAction, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-workspace',
@@ -40,10 +40,10 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
 
     this.communicationService.sidebarManager
         .pipe(
-          filter((data: SidebarAction) => data.target === SidebarType.INFO),
+          filter((data: Sidebar) => data.target === SidebarType.INFO),
           takeUntil(this.unsubscribe$)
         )
-        .subscribe((data: SidebarAction) => {
+        .subscribe((data: Sidebar) => {
           switch (data.action) {
             case ActionType.CLOSE: this.isInfoSidebarActive = false; break;
             case ActionType.OPEN: this.isInfoSidebarActive = true;  break;

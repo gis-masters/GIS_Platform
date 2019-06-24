@@ -1,118 +1,57 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {WfsService} from '../../services/geoserver/wfs.service';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {CrgLayer} from '../../services/geoserver/layers.service';
+import {LazyLoadEvent} from 'primeng/api';
 
 @Component({
   selector: 'crg-attributes-sidebar',
   templateUrl: './attributes-sidebar.component.html',
   styleUrls: ['./attributes-sidebar.component.css']
 })
-export class AttributesSidebarComponent implements OnInit {
+export class AttributesSidebarComponent implements OnInit, OnChanges {
 
-  @Input() feature: CrgLayer;
+  @Input() layer: CrgLayer;
 
-  cars = [];
+  features: WfsFeature[] = [];
+  totalFeatures: number;
 
-  selectedCars2: any;
-  cols = [
-    { field: 'vin', header: 'Vin' },
-    { field: 'year', header: 'Year' },
-    { field: 'brand', header: 'Brand' },
-    { field: 'color', header: 'Color' }
-  ];
+  selectedFeatures: any;
+  cols = [];
+
+  loading = true;
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService) { }
 
   ngOnInit() {
-    console.log('attr: ', this.feature);
-
-    // this.openLayersService.getVisibleLayers();
-
-    // this.wfsService.getFeatures('someFeature')
-    //     .subscribe((fCollection: WfsFeatureCollection) => {
-    //       console.log('fCollection: ', fCollection);
-    //     });
-
-    this.cars = [
-      {
-        'vin': '1',
-        'year': 1990,
-        'brand': 'Mercedes',
-        'color': 'red'
-      },
-      {
-        'vin': '3',
-        'year': 1999,
-        'brand': 'Opel',
-        'color': 'red'
-      },
-      {
-        'vin': '4',
-        'year': 1995,
-        'brand': 'Opel',
-        'color': 'green'
-      },
-      {
-        'vin': '5',
-        'year': 2005,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '6',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '7',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '8',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '9',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '10',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '11',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '12',
-        'year': 2006,
-        'brand': 'Mazda',
-        'color': 'red'
-      },
-      {
-        'vin': '2',
-        'year': 2000,
-        'brand': 'Mercedes',
-        'color': 'black'
-      }
-    ];
   }
 
-  closeMe() {
-    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
+  ngOnChanges(changes: SimpleChanges): void {
+    const layerChanged = changes['layer'];
+    if (layerChanged && !layerChanged.isFirstChange()) {
+      this.loadObjectsLazy({rows: 10, first: 0});
+    }
+  }
+
+  loadObjectsLazy(event: LazyLoadEvent) {
+    this.loading = true;
+    this.wfsService.getFeatures(this.layer.complexName, event.first, event.rows)
+        .subscribe((fCollection: WfsFeatureCollection) => {
+          if (fCollection) {
+            this.loading = false;
+
+            this.totalFeatures = fCollection.totalFeatures;
+            this.makeColsFromFeatureProperties(fCollection.features[0]);
+
+            this.features = fCollection.features.map((feature: WfsFeature) => {
+              const viewFeature = feature.properties;
+              viewFeature['id'] = feature.id.split('.')[1];
+
+              return viewFeature;
+            });
+          }
+        });
   }
 
   onRowSelect(event) {
@@ -122,4 +61,25 @@ export class AttributesSidebarComponent implements OnInit {
   onRowUnselect(event) {
     console.log('UnSelected: ', event.data);
   }
+
+  closeMe() {
+    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
+  }
+
+  private makeColsFromFeatureProperties(wfsFeature: WfsFeature) {
+    this.cols = [{
+      field: 'id',
+      header: 'ID'
+    }];
+
+    Object.keys(wfsFeature.properties).forEach(property => {
+      if (property !== 'bbox') {
+        this.cols.push({
+          field: property,
+          header: property
+        });
+      }
+    });
+  }
+
 }

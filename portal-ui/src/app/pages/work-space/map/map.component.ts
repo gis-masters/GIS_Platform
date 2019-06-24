@@ -13,7 +13,7 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {ActionType, SidebarAction, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
@@ -126,35 +126,35 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService.sidebarManager
         .pipe(
-          filter((data: SidebarAction) => this.isMapSidebar(data)),
+          filter((data: Sidebar) => this.isMapSidebar(data)),
           takeUntil(this.unsubscribe$)
         )
-        .subscribe((sidebarAction: SidebarAction) => {
-          if (sidebarAction.target === SidebarType.BUG_REPORT) {
-            switch (sidebarAction.action) {
+        .subscribe((sidebar: Sidebar) => {
+          if (sidebar.target === SidebarType.BUG_REPORT) {
+            switch (sidebar.action) {
               case ActionType.CLOSE:  this.isBugReportSidebarActive = false;    break;
               case ActionType.OPEN:   this.isBugReportSidebarActive = true;     break;
               case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', sidebarAction.action);
+                this.logger.warn('Unsupported action type: ', sidebar.action);
             }
-          } else if (sidebarAction.target === SidebarType.FEATURES) {
-            switch (sidebarAction.action) {
+          } else if (sidebar.target === SidebarType.FEATURES) {
+            switch (sidebar.action) {
               case ActionType.CLOSE:  this.isFeaturesSidebarActive = false;    break;
               case ActionType.OPEN:   this.isFeaturesSidebarActive = true;     break;
               case ActionType.SWITCH: this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', sidebarAction.action);
+                this.logger.warn('Unsupported action type: ', sidebar.action);
             }
-          } else if (sidebarAction.target === SidebarType.ATTRIBUTES) {
-            this.attrSidebarData = sidebarAction.data;
+          } else if (sidebar.target === SidebarType.ATTRIBUTES) {
+            this.attrSidebarData = sidebar.data;
 
-            switch (sidebarAction.action) {
+            switch (sidebar.action) {
               case ActionType.CLOSE:  this.isAttrSidebarActive = false;    break;
               case ActionType.OPEN:   this.isAttrSidebarActive = true;     break;
               case ActionType.SWITCH: this.isAttrSidebarActive = !this.isAttrSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', sidebarAction.action);
+                this.logger.warn('Unsupported action type: ', sidebar.action);
             }
           }
         });
@@ -183,7 +183,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.openLayers.drawPolygon(buffer.getCoordinates());
 
-      this.wfsService.getFeaturesByFilter(xml)
+      this.wfsService.getFeaturesByXmlFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
             if (featureCollection.features && featureCollection.features.length > 0) {
@@ -212,9 +212,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   }
 
-  private isMapSidebar(sidebarAction: SidebarAction) {
-    return  sidebarAction.target === SidebarType.BUG_REPORT ||
-            sidebarAction.target === SidebarType.FEATURES ||
-            sidebarAction.target === SidebarType.ATTRIBUTES;
+  private isMapSidebar(sidebar: Sidebar) {
+    return  sidebar.target === SidebarType.BUG_REPORT ||
+            sidebar.target === SidebarType.FEATURES ||
+            sidebar.target === SidebarType.ATTRIBUTES;
   }
 }

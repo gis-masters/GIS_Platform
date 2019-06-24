@@ -5,7 +5,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {ActionType, SideBarManager, SidebarType} from "../../services/side-bar-manager.service";
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -22,6 +22,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   contextMenuPosition = { x: '0px', y: '0px' };
 
   private unsubscribe$: Subject<void> = new Subject<void>();
+  private selectedLayer: CrgLayer;
 
   constructor(private logger: NGXLogger,
               private openLayers: OpenLayersService,
@@ -52,16 +53,17 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }
 
-  onContextMenu(event: MouseEvent) {
+  onContextMenu(event: MouseEvent, layer: CrgLayer) {
     event.preventDefault();
 
+    this.selectedLayer = layer;
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.openMenu();
   }
 
-  openAttributeTable(layer: CrgLayer) {
-    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.OPEN, data: layer});
+  openAttributeTable() {
+    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.OPEN, data: this.selectedLayer});
   }
 
   ZoomTo(layer) {

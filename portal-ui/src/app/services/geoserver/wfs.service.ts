@@ -35,18 +35,30 @@ export class WfsService {
                );
   }
 
-  getFeatures(complexName: string): Observable<WfsFeatureCollection> {
-    const url = this.prepareFeaturesLink(complexName);
+  getFeatures(complexName: string, startindex?: number, count?: number): Observable<WfsFeatureCollection> {
+    const url = this.serverProp.geoServerUrl + '/wfs';
+
+    const params = {
+      service: 'wfs',
+      version: '2.0.0',
+      request: 'GetFeature',
+      srsName: 'EPSG:3857',
+      outputFormat: 'application/json',
+      exceptions: 'application/json',
+      typeName: complexName,
+      startindex: startindex ? startindex.toString() : '0',
+      count: count ? count.toString() : '10'
+    };
 
     return this.http
-               .get<WfsFeatureCollection>(url);
+               .get<WfsFeatureCollection>(url, {params: params});
   }
 
   /**
    * Выборка обьектов слоя по XML фильтру.
    * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
    */
-  getFeaturesByFilter(xml: string): Observable<WfsFeatureCollection> {
+  getFeaturesByXmlFilter(xml: string): Observable<WfsFeatureCollection> {
     const url = this.serverProp.geoServerUrl + '/wfs';
 
     return this.http
@@ -61,13 +73,6 @@ export class WfsService {
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
-  private prepareFeaturesLink(typeName: string) {
-    const workspaceName = typeName.split(':')[0];
-
-    return this.serverProp.geoServerUrl + '/' + workspaceName + '/ows'
-                        + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
-                        + '&outputFormat=application%2Fjson&srsName=EPSG:3857';
-  }
 }
 
 import {ServerPropertiesService} from '../server-properties.service';

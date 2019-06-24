@@ -7,12 +7,12 @@
         <ng-container *ngIf="layers; else layersLoading">
           <mat-list-option class="example-box" style="height: 64px"
                            *ngFor="let layer of layers" cdkDrag [value]="layer"
-                           (contextmenu)="onContextMenu($event)">
+                           (contextmenu)="onContextMenu($event, layer)">
             <div style="position: fixed"
                  [style.left]="contextMenuPosition.x"
                  [style.top]="contextMenuPosition.y"
                  [matMenuTriggerFor]="contextMenu"
-                 [matMenuTriggerData]="{item: layer}">
+                 [matMenuTriggerData]="{layer: layer}">
             </div>
 
             <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
@@ -32,9 +32,9 @@
 </div>
 
 <mat-menu #contextMenu="matMenu">
-  <ng-template matMenuContent let-item="item">
+  <ng-template matMenuContent let-item="layer">
 
-    <button mat-menu-item (click)="openAttributeTable(item)">
+    <button mat-menu-item (click)="openAttributeTable()">
       <mat-icon>list_alt</mat-icon>
       <span>Открыть таблицу атрибутов</span>
     </button>
