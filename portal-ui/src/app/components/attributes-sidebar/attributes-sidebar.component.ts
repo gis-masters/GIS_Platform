@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {WfsService} from '../../services/geoserver/wfs.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import {CrgLayer} from '../../services/geoserver/layers.service';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -8,7 +10,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 })
 export class AttributesSidebarComponent implements OnInit {
 
-  @Input() isActive;
+  @Input() feature: CrgLayer;
 
   cars = [];
 
@@ -20,9 +22,19 @@ export class AttributesSidebarComponent implements OnInit {
     { field: 'color', header: 'Color' }
   ];
 
-  constructor(private sideBarManager: SideBarManager) { }
+  constructor(private sideBarManager: SideBarManager,
+              private wfsService: WfsService) { }
 
   ngOnInit() {
+    console.log('attr: ', this.feature);
+
+    // this.openLayersService.getVisibleLayers();
+
+    // this.wfsService.getFeatures('someFeature')
+    //     .subscribe((fCollection: WfsFeatureCollection) => {
+    //       console.log('fCollection: ', fCollection);
+    //     });
+
     this.cars = [
       {
         'vin': '1',
@@ -100,7 +112,7 @@ export class AttributesSidebarComponent implements OnInit {
   }
 
   closeMe() {
-    this.sideBarManager.do(SidebarType.ATTRIBUTES, ActionType.CLOSE);
+    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }
 
   onRowSelect(event) {

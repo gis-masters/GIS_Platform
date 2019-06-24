@@ -60,11 +60,11 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     this.contextMenu.openMenu();
   }
 
-  openAttributeTable(layer) {
-    this.sideBarManager.do(SidebarType.ATTRIBUTES, ActionType.OPEN);
+  openAttributeTable(layer: CrgLayer) {
+    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.OPEN, data: layer});
   }
 
   ZoomTo(layer) {
-    console.log(' --- 2 ', layer);
+    console.log('Not implemented yet...', layer);
   }
 }

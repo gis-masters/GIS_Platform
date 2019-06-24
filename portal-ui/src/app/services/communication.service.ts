@@ -1,5 +1,5 @@
 import {CrgLayer} from './geoserver/layers.service';
-import {SidebarData} from './side-bar-manager.service';
+import {SidebarAction} from './side-bar-manager.service';
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
@@ -9,7 +9,7 @@ import {ValidationDialogData} from '../components/validation/validation-dialog/v
 })
 export class CommunicationService {
 
-  @Output() sidebarManager = new EventEmitter<SidebarData>();
+  @Output() sidebarManager = new EventEmitter<SidebarAction>();
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
   @Output() gmlDialog = new EventEmitter<GmlDialogData>();

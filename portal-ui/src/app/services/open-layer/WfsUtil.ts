@@ -31,4 +31,14 @@ export class WfsUtil {
     return new XMLSerializer().serializeToString(featureRequest);
   }
 
+  // Из BaseLayer достанем название источника
+  public static getComplexLayerName(baseLayer: any): string | undefined {
+    const source = baseLayer.getSource();
+    if (source && source.params_ && source.params_['LAYERS']) {
+      return source.params_['LAYERS'];
+    } else {
+      return undefined;
+    }
+  }
+
 }

@@ -14,6 +14,7 @@ import VectorLayer from 'ol/layer/Vector';
 import TileLayer from 'ol/layer/Tile';
 import VectorSource from 'ol/source/Vector';
 import ImageLayer from 'ol/layer/Image';
+import BaseLayer from "ol/layer/Base";
 
 export let BEARER_TOKEN = '';
 
@@ -281,7 +282,7 @@ export class OpenLayersService {
   /**
    * Возвращает видимые слоя. (Без подложки: TILE)
    */
-  getVisibleLayers() {
+  getVisibleLayers(): BaseLayer[] {
     const result = [];
     this._map.getLayers()
         .forEach(vrLayer => {

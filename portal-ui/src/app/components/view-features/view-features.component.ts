@@ -48,7 +48,7 @@ export class ViewFeaturesComponent implements OnChanges {
 
   closeMe() {
     this.openLayers.clearDraft();
-    this.sideBarManager.do(SidebarType.FEATURES, ActionType.CLOSE);
+    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
 
   switchMode() {

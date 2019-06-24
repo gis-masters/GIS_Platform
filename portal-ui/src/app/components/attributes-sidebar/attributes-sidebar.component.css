@@ -15,22 +15,6 @@
   transition-duration: 0.3s;
 }
 
-.crg-attr-sidebar_hidden {
-  z-index: 100;
-  position: fixed;
-
-  height: 400px;
-  width: 100%;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
-
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-}
-
 .crg-close-icon {
   cursor: pointer;
   color: grey;

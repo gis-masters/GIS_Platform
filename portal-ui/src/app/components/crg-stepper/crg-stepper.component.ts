@@ -46,7 +46,7 @@ export class CrgStepperComponent implements OnDestroy {
       }
       if (selectedStep === 3) {
         this.router.navigate(['/workspace/map']);
-        this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.SWITCH);
+        this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
       }
       if (selectedStep === 4) {
         this.router.navigate(['/workspace/map']);

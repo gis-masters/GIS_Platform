@@ -41,6 +41,6 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
   }
 
   closeMe() {
-    this.sideBarManager.do(SidebarType.INFO, ActionType.CLOSE);
+    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.CLOSE});
   }
 }

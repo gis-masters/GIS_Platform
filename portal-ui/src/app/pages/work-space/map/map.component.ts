@@ -13,7 +13,7 @@ import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {ActionType, SidebarData, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ActionType, SidebarAction, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
@@ -31,7 +31,10 @@ export class MapComponent implements OnInit, OnDestroy {
   isLayersSidebarActive = false;
   isBugReportSidebarActive = false;
   isFeaturesSidebarActive = false;
+
   isAttrSidebarActive = false;
+  attrSidebarData;
+
   selectedFeatures: any;
 
   isValidationDialogShow = false;
@@ -123,33 +126,35 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.communicationService.sidebarManager
         .pipe(
-          filter((data: SidebarData) => this.isMapSidebar(data)),
+          filter((data: SidebarAction) => this.isMapSidebar(data)),
           takeUntil(this.unsubscribe$)
         )
-        .subscribe((data: SidebarData) => {
-          if (data.target === SidebarType.BUG_REPORT) {
-            switch (data.action) {
+        .subscribe((sidebarAction: SidebarAction) => {
+          if (sidebarAction.target === SidebarType.BUG_REPORT) {
+            switch (sidebarAction.action) {
               case ActionType.CLOSE:  this.isBugReportSidebarActive = false;    break;
               case ActionType.OPEN:   this.isBugReportSidebarActive = true;     break;
               case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', data.action);
+                this.logger.warn('Unsupported action type: ', sidebarAction.action);
             }
-          } else if (data.target === SidebarType.FEATURES) {
-            switch (data.action) {
+          } else if (sidebarAction.target === SidebarType.FEATURES) {
+            switch (sidebarAction.action) {
               case ActionType.CLOSE:  this.isFeaturesSidebarActive = false;    break;
               case ActionType.OPEN:   this.isFeaturesSidebarActive = true;     break;
               case ActionType.SWITCH: this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', data.action);
+                this.logger.warn('Unsupported action type: ', sidebarAction.action);
             }
-          } else if (data.target === SidebarType.ATTRIBUTES) {
-            switch (data.action) {
+          } else if (sidebarAction.target === SidebarType.ATTRIBUTES) {
+            this.attrSidebarData = sidebarAction.data;
+
+            switch (sidebarAction.action) {
               case ActionType.CLOSE:  this.isAttrSidebarActive = false;    break;
               case ActionType.OPEN:   this.isAttrSidebarActive = true;     break;
               case ActionType.SWITCH: this.isAttrSidebarActive = !this.isAttrSidebarActive; break;
               default:
-                this.logger.warn('Unsupported action type: ', data.action);
+                this.logger.warn('Unsupported action type: ', sidebarAction.action);
             }
           }
         });
@@ -159,19 +164,16 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   /**
    * Отобразить информацию об обьектах, которые пересекают заданные координаты.
    */
   private showFeaturesInfo(coordinate: [number, number]) {
-    // Из видимых слоев достанем название источника
-    const visibleLayersComplexName = this.openLayers.getVisibleLayers().map(vrLayer => {
-      const source = vrLayer.getSource();
-      if (source && source.params_ && source.params_['LAYERS']) {
-        return source.params_['LAYERS'];
-      } else {
-        // this.logger.warn('Unexpected source: ', source);
-      }
-    }).filter(value => !!value);
+    const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();
 
     if (visibleLayersComplexName.length > 0) {
       const buffer = this.openLayers.getBufferByCoordinates(coordinate);
@@ -186,7 +188,7 @@ export class MapComponent implements OnInit, OnDestroy {
             this.openLayers.clearDraft();
             if (featureCollection.features && featureCollection.features.length > 0) {
               this.selectedFeatures = featureCollection.features;
-              this.sideBarManager.do(SidebarType.FEATURES, ActionType.OPEN);
+              this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN});
 
               featureCollection.features.forEach(feature => {
                 this.openLayers.paintFeature(feature);
@@ -202,14 +204,17 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  private getComplexNamesOfVisibleLayers(): string[] {
+    return this.openLayers
+      .getVisibleLayers()
+      .map(vrLayer => WfsUtil.getComplexLayerName(vrLayer))
+      .filter(value => !!value);
+
   }
 
-  private isMapSidebar(data: SidebarData) {
-    return  data.target === SidebarType.BUG_REPORT ||
-            data.target === SidebarType.FEATURES ||
-            data.target === SidebarType.ATTRIBUTES;
+  private isMapSidebar(sidebarAction: SidebarAction) {
+    return  sidebarAction.target === SidebarType.BUG_REPORT ||
+            sidebarAction.target === SidebarType.FEATURES ||
+            sidebarAction.target === SidebarType.ATTRIBUTES;
   }
 }

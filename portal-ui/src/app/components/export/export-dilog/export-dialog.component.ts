@@ -86,7 +86,7 @@ export class ExportDialogComponent {
           this.communicationService.stepperEvents.emit(5);
         });
 
-    this.sideBarManager.do(SidebarType.INFO, ActionType.OPEN);
+    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 

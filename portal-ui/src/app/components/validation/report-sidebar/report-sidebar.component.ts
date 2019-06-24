@@ -117,7 +117,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   closeMe() {
     this.openLayersService.clearDraft();
-    this.sideBarManager.do(SidebarType.BUG_REPORT, ActionType.CLOSE);
+    this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.CLOSE});
   }
 
   reValidate() {

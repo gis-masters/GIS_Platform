@@ -14,31 +14,31 @@ export class SideBarManager {
               private communicationService: CommunicationService) {
   }
 
-  do(target: SidebarType, action: ActionType) {
-    if (target === SidebarType.LAYERS) {
+  do(sidebarAction: SidebarAction) {
+    if (sidebarAction.target === SidebarType.LAYERS) {
       return;
     }
 
-    if (target === SidebarType.INFO) {
-      this.emit(SidebarType.INFO, action);
+    if (sidebarAction.target === SidebarType.INFO) {
+      this.emit(SidebarType.INFO, sidebarAction.action);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
-    } else if (target === SidebarType.BUG_REPORT) {
-      this.emit(SidebarType.BUG_REPORT, action);
+    } else if (sidebarAction.target === SidebarType.BUG_REPORT) {
+      this.emit(SidebarType.BUG_REPORT, sidebarAction.action);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
-    } else if (target === SidebarType.FEATURES) {
-      this.emit(SidebarType.FEATURES, action);
+    } else if (sidebarAction.target === SidebarType.FEATURES) {
+      this.emit(SidebarType.FEATURES, sidebarAction.action);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
-    } else if (target === SidebarType.ATTRIBUTES) {
-      this.emit(SidebarType.ATTRIBUTES, action);
+    } else if (sidebarAction.target === SidebarType.ATTRIBUTES) {
+      this.emit(SidebarType.ATTRIBUTES, sidebarAction.action, sidebarAction.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
     } else {
-      this.logger.warn('Not supported sidebar type: ', target);
+      this.logger.warn('Not supported sidebar type: ', sidebarAction.target);
     }
   }
 
@@ -47,15 +47,17 @@ export class SideBarManager {
     this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
   }
 
-  private emit(target: SidebarType, action: ActionType) {
+  private emit(target: SidebarType, action: ActionType, data?: any) {
     this.communicationService.sidebarManager
-        .emit({target: target, action: action});
+        .emit({target: target, action: action, data: data});
   }
 }
 
-export interface SidebarData {
+export interface SidebarAction {
+  // TODO: rename properties: 'action' to 'type' maybe
   action: ActionType;
   target: SidebarType;
+  data?: any;
 }
 
 export enum ActionType {
