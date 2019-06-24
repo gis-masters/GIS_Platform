@@ -22,8 +22,9 @@
       // HEADER
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" pResizableColumn>
+          <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field">
             {{col.header}}
+            <p-sortIcon [field]="col.field" *ngIf="col.field !== 'objectid'"></p-sortIcon>
           </th>
         </tr>
       </ng-template>

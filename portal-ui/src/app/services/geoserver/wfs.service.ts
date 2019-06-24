@@ -1,10 +1,12 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {BaseService} from '../base.service';
+import {LazyLoadEvent} from 'primeng/api';
 import {filter, map} from 'rxjs/operators';
+import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
 import {error} from '@angular/compiler/src/util';
+import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +37,7 @@ export class WfsService {
                );
   }
 
-  getFeatures(complexName: string, startindex?: number, count?: number): Observable<WfsFeatureCollection> {
+  getFeatures(complexName: string, lazyLoadEvent?: LazyLoadEvent): Observable<WfsFeatureCollection> {
     const url = this.serverProp.geoServerUrl + '/wfs';
 
     const params = {
@@ -46,8 +48,9 @@ export class WfsService {
       outputFormat: 'application/json',
       exceptions: 'application/json',
       typeName: complexName,
-      startindex: startindex ? startindex.toString() : '0',
-      count: count ? count.toString() : '20'
+      startindex: lazyLoadEvent ? lazyLoadEvent.first.toString() : '0',
+      count: lazyLoadEvent ? lazyLoadEvent.rows.toString() : '20',
+      sortBy: this.generateSortParam(lazyLoadEvent)
     };
 
     return this.http
@@ -73,9 +76,23 @@ export class WfsService {
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
-}
+  private generateSortParam(lazyLoadEvent: LazyLoadEvent): string {
+    if (!lazyLoadEvent) {
+      return '';
+    }
 
-import {ServerPropertiesService} from '../server-properties.service';
+    if (lazyLoadEvent.sortField === 'objectid') {
+      return '';
+    }
+
+    let order = '+A';
+    if (lazyLoadEvent.sortOrder < 0) {
+      order = '+D';
+    }
+
+    return (lazyLoadEvent.sortField) ? lazyLoadEvent.sortField + order : '';
+  }
+}
 
 export interface WfsFeatureCollection {
   type: string;

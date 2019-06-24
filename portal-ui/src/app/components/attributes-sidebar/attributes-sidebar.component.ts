@@ -35,8 +35,10 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
   }
 
   loadObjectsLazy(event: LazyLoadEvent) {
+    console.log('event: ', event);
+
     this.loading = true;
-    this.wfsService.getFeatures(this.layer.complexName, event.first, event.rows)
+    this.wfsService.getFeatures(this.layer.complexName, event)
         .subscribe((fCollection: WfsFeatureCollection) => {
           if (fCollection) {
             this.loading = false;
@@ -46,7 +48,7 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
 
             this.features = fCollection.features.map((feature: WfsFeature) => {
               const viewFeature = feature.properties;
-              viewFeature['id'] = feature.id.split('.')[1];
+              viewFeature['objectid'] = feature.id.split('.')[1];
 
               return viewFeature;
             });
@@ -68,7 +70,7 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
 
   private makeColsFromFeatureProperties(wfsFeature: WfsFeature) {
     this.cols = [{
-      field: 'id',
+      field: 'objectid',
       header: 'ID'
     }];
 
