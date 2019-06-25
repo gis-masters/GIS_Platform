@@ -29,6 +29,13 @@
   font-style: italic;
 }
 
+.attr-search {
+  float: right;
+  margin: 0 2px 2px 0;
+  height: 25px;
+  width: 333px;
+}
+
 ::ng-deep body .ui-table .ui-table-thead > tr > th {
   padding: 0 0 0 2px;
 }

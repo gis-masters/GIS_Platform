@@ -1,18 +1,31 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {WfsFeature, WfsFeatureCollection, WfsGeometry, WfsService} from '../../services/geoserver/wfs.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {CrgLayer} from '../../services/geoserver/layers.service';
+import {fromEvent} from 'rxjs';
 import {LazyLoadEvent} from 'primeng/api';
+import {CrgLayer} from '../../services/geoserver/layers.service';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import {WfsFeature, WfsFeatureCollection, WfsGeometry, WfsService} from '../../services/geoserver/wfs.service';
 
 @Component({
   selector: 'crg-attributes-sidebar',
   templateUrl: './attributes-sidebar.component.html',
   styleUrls: ['./attributes-sidebar.component.css']
 })
-export class AttributesSidebarComponent implements OnInit, OnChanges {
+export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input() layer: CrgLayer;
+
+  @ViewChild('attributeFilter') filterInput: ElementRef;
 
   features: AttributeFeature[] = [];
   selectedFeatures: AttributeFeature[];
@@ -22,12 +35,26 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
 
   loading = true;
 
+  private lastEvent: LazyLoadEvent;
+
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
               private openLayersService: OpenLayersService) { }
 
-  ngOnInit() {
+  ngAfterViewInit(): void {
+    fromEvent(this.filterInput.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => event.target.value),
+        debounceTime(500),
+        distinctUntilChanged() // If previous query is different from current
+      )
+      .subscribe(value => {
+        this.lastEvent.globalFilter = value;
+
+        this.loadObjectsLazy(this.lastEvent);
+      });
   }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes['layer'];
@@ -37,6 +64,9 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
   }
 
   loadObjectsLazy(event: LazyLoadEvent) {
+    console.log('this.lastEvent: ', this.lastEvent);
+
+    this.lastEvent = event;
     this.loading = true;
     this.wfsService.getFeatures(this.layer.complexName, event)
         .subscribe((fCollection: WfsFeatureCollection) => {
@@ -44,7 +74,7 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
             this.loading = false;
 
             this.totalFeatures = fCollection.totalFeatures;
-            this.makeColsFromFeatureProperties(fCollection.features[0]);
+            this.fillColsFromFeatureProperties(fCollection.features[0]);
 
             this.features = fCollection.features.map(feature => this.mapWfsFeatureToAttrFeature(feature));
           }
@@ -66,10 +96,15 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
   }
 
   closeMe() {
+    this.openLayersService.clearDraft();
     this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }
 
-  private makeColsFromFeatureProperties(wfsFeature: WfsFeature) {
+  ngOnDestroy(): void {
+    this.openLayersService.clearDraft();
+  }
+
+  private fillColsFromFeatureProperties(wfsFeature: WfsFeature) {
     this.cols = [{
       field: 'objectid',
       header: 'ID'
@@ -118,6 +153,7 @@ export class AttributesSidebarComponent implements OnInit, OnChanges {
       properties: featureClone
     } as WfsFeature;
   }
+
 }
 
 export interface AttributeFeature {

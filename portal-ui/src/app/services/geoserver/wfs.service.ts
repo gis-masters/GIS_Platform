@@ -42,14 +42,14 @@ export class WfsService {
 
     const params = {
       service: 'wfs',
-      version: '2.0.0',
+      // version: '2.0.0',
       request: 'GetFeature',
       srsName: 'EPSG:3857',
       outputFormat: 'application/json',
       exceptions: 'application/json',
       typeName: complexName,
-      startindex: lazyLoadEvent ? lazyLoadEvent.first.toString() : '0',
-      count: lazyLoadEvent ? lazyLoadEvent.rows.toString() : '20',
+      startindex: (lazyLoadEvent && lazyLoadEvent.first) ? lazyLoadEvent.first.toString() : '0',
+      count: (lazyLoadEvent && lazyLoadEvent.rows) ? lazyLoadEvent.rows.toString() : '20',
       sortBy: this.generateSortParam(lazyLoadEvent)
     };
 

@@ -2,16 +2,26 @@
   <div class="crg-attr-sidebar-header">
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
+
+    <input #attributeFilter class="attr-search" type="text" placeholder="Global Filter">
   </div>
 
   <div class="crg-attr-content">
-    <p-table [columns]="cols" [value]="features" selectionMode="multiple" [(selection)]="selectedFeatures"
+    <p-table #crgAttributeTable [columns]="cols" [value]="features" selectionMode="multiple"
+             [(selection)]="selectedFeatures"
              [metaKeySelection]="true" [resizableColumns]="true"
              [lazy]="true" (onLazyLoad)="loadObjectsLazy($event)"
              [paginator]="true" [rows]="20" [totalRecords]="totalFeatures"
              [loading]="loading"
              [scrollable]="true" [style]="{width:'100%'}" scrollHeight="315px"
              (onRowSelect)="handleSelection()" (onRowUnselect)="handleSelection()">
+
+<!--      <ng-template pTemplate="caption">-->
+<!--        <div style="text-align: right">-->
+<!--          <input type="text" pInputText size="50" placeholder="Global Filter"-->
+<!--                 (input)="crgAttributeTable.filterGlobal($event.target.value, 'contains')" style="width:auto">-->
+<!--        </div>-->
+<!--      </ng-template>-->
 
       // COLUMN STYLING
       <ng-template pTemplate="colgroup" let-columns>
