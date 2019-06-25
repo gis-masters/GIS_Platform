@@ -7,7 +7,9 @@ bootstrap table theme
 }
 
 .ngx-datatable.bootstrap .datatable-header {
+  background-color: lightgray;
   height: unset !important;
+  border-bottom: 1px solid grey;
 }
 
 .ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
