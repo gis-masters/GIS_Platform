@@ -8,6 +8,7 @@ import {MaterialModule} from './material.module';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import {PrimeNgModule} from './prime-ng.module';
 
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {NgxMaskModule} from 'ngx-mask';
 import {AlertModule} from 'ngx-bootstrap';
 import {FileUploadModule} from 'ng2-file-upload';
@@ -87,7 +88,8 @@ import {AttributesSidebarComponent} from './components/attributes-sidebar/attrib
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.WARN
     }),
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NgxDatatableModule
   ],
   entryComponents: [
     DeleteDialogComponent

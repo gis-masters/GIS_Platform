@@ -28,7 +28,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   @ViewChild('attributeFilter') filterInput: ElementRef;
 
   features: AttributeFeature[] = [];
-  selectedFeatures: AttributeFeature[];
+  selectedFeatures: AttributeFeature[] = [];
   totalFeatures: number;
 
   cols = [];
@@ -37,22 +37,54 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   private lastEvent: LazyLoadEvent;
 
+  rows = [
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King Burger King Burger King Burger King Burger King Burger' +
+        ' King Burger King Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
+    { name: 'Dany', gender: 'Male', company: 'KFC' },
+    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+  ];
+  columns = [
+    { prop: 'name' },
+    { name: 'Gender' },
+    { name: 'Company' }
+  ];
+
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
               private openLayersService: OpenLayersService) { }
 
   ngAfterViewInit(): void {
-    fromEvent(this.filterInput.nativeElement, 'keyup')
-      .pipe(
-        map((event: any) => event.target.value),
-        debounceTime(500),
-        distinctUntilChanged() // If previous query is different from current
-      )
-      .subscribe(value => {
-        this.lastEvent.globalFilter = value;
+    // fromEvent(this.filterInput.nativeElement, 'keyup')
+    //   .pipe(
+    //     map((event: any) => event.target.value),
+    //     debounceTime(500),
+    //     distinctUntilChanged() // If previous query is different from current
+    //   )
+    //   .subscribe(value => {
+    //     this.lastEvent.globalFilter = value;
+    //
+    //     this.loadObjectsLazy(this.lastEvent);
+    //   });
 
-        this.loadObjectsLazy(this.lastEvent);
-      });
+    this.loadObjectsLazy({rows: 20, first: 0});
   }
 
 
@@ -154,6 +186,16 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     } as WfsFeature;
   }
 
+  onSelect({ selected }) {
+    console.log('Select Event', selected, this.selectedFeatures);
+
+    this.selectedFeatures.splice(0, this.selectedFeatures.length);
+    this.selectedFeatures.push(...selected);
+  }
+
+  setPage(event) {
+    console.log('--- +++', event);
+  }
 }
 
 export interface AttributeFeature {

@@ -2,55 +2,31 @@
   <div class="crg-attr-sidebar-header">
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
-
-    <input #attributeFilter class="attr-search" type="text" placeholder="Global Filter">
   </div>
 
   <div class="crg-attr-content">
-    <p-table #crgAttributeTable [columns]="cols" [value]="features" selectionMode="multiple"
-             [(selection)]="selectedFeatures"
-             [metaKeySelection]="true" [resizableColumns]="true"
-             [lazy]="true" (onLazyLoad)="loadObjectsLazy($event)"
-             [paginator]="true" [rows]="20" [totalRecords]="totalFeatures"
-             [loading]="loading"
-             [scrollable]="true" [style]="{width:'100%'}" scrollHeight="315px"
-             (onRowSelect)="handleSelection()" (onRowUnselect)="handleSelection()">
 
-<!--      <ng-template pTemplate="caption">-->
-<!--        <div style="text-align: right">-->
-<!--          <input type="text" pInputText size="50" placeholder="Global Filter"-->
-<!--                 (input)="crgAttributeTable.filterGlobal($event.target.value, 'contains')" style="width:auto">-->
-<!--        </div>-->
-<!--      </ng-template>-->
+    <ngx-datatable class="bootstrap" style="height: 100%;"
+      [rows]="rows"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [rowHeight]="25"
+      [footerHeight]="40"
+      [selected]="selectedFeatures"
+      [selectionType]="'multi'"
+      (select)='onSelect($event)'
+       [externalPaging]="true"
+       [count]="rows.length"
+       [offset]="0"
+       (page)='setPage($event)'
+     [scrollbarV]="true"
+     [scrollbarH]="true">
 
-      // COLUMN STYLING
-      <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-          <col *ngFor="let col of columns" style="width: 310px">
-        </colgroup>
-      </ng-template>
+      <ngx-datatable-column name=" - Name" [width]="100"></ngx-datatable-column>
+      <ngx-datatable-column name=" - Gender"></ngx-datatable-column>
+      <ngx-datatable-column name=" - Company"></ngx-datatable-column>
+    </ngx-datatable>
 
-      // HEADER
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field">
-            {{col.header}}
-            <p-sortIcon [field]="col.field" *ngIf="col.field !== 'objectid'"></p-sortIcon>
-          </th>
-        </tr>
-      </ng-template>
-
-      // BODY
-      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
-                   class="ui-resizable-column">
-        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-          <td *ngFor="let col of columns">
-            {{rowData[col.field]}}
-          </td>
-        </tr>
-      </ng-template>
-
-    </p-table>
   </div>
 
 </div>

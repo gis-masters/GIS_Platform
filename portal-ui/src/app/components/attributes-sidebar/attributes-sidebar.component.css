@@ -1,9 +1,9 @@
 .crg-attr-sidebar {
   z-index: 100;
   position: fixed;
-  top: calc(100% - 400px);
+  top: calc(100% - 439px);
 
-  height: 400px;
+  height: 410px;
   width: 100%;
 
   background-color: white;
@@ -11,6 +11,10 @@
   -webkit-box-shadow: 0 -2px 10px 0 rgba(50, 50, 50, 0.25);
   -moz-box-shadow:    0 -2px 10px 0 rgba(50, 50, 50, 0.25);
   box-shadow:         0 -2px 10px 0 rgba(50, 50, 50, 0.25);
+}
+
+.crg-attr-content {
+  height: 100%;
 }
 
 .crg-close-icon {
@@ -60,4 +64,8 @@
 ::ng-deep body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
   background-color: #d6effc;
   color: black;
+}
+
+::ng-deep .ngx-datatable .datatable-body {
+  height: 250px;
 }
