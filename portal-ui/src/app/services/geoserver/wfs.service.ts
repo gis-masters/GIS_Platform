@@ -113,7 +113,7 @@ export interface WfsFeature {
   properties: any;
 }
 
-interface WfsGeometry {
+export interface WfsGeometry {
   type: string;
   coordinates: any;
 }

@@ -11,8 +11,9 @@
              [paginator]="true" [rows]="20" [totalRecords]="totalFeatures"
              [loading]="loading"
              [scrollable]="true" [style]="{width:'100%'}" scrollHeight="315px"
-             (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+             (onRowSelect)="handleSelection()" (onRowUnselect)="handleSelection()">
 
+      // COLUMN STYLING
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of columns" style="width: 310px">
