@@ -1,7 +1,7 @@
 .crg-attr-sidebar {
   z-index: 100;
   position: fixed;
-  top: calc(100% - 449px);
+  top: calc(100% - 446px);
 
   height: 420px;
   width: 100%;
@@ -15,6 +15,9 @@
 
 .crg-attr-content {
   height: 100%;
+
+  border-top: inset;
+  border-width: thin;
 }
 
 .crg-close-icon {

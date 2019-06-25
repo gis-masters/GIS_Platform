@@ -12,7 +12,7 @@ bootstrap table theme
 
 .ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
   vertical-align: bottom;
-  padding: 0.50rem;
+  padding: 0.10rem;
   border-bottom: 1px solid #d1d4d7;
 }
 
@@ -30,7 +30,7 @@ bootstrap table theme
 }
 
 .ngx-datatable.bootstrap .datatable-body .datatable-body-row.active {
-  background-color: #7abeff;
+  background-color: #018ace;
   color: #FFF;
 }
 
