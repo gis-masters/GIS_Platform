@@ -38,32 +38,35 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   private lastEvent: LazyLoadEvent;
 
   rows = [
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King Burger King Burger King Burger King Burger King Burger' +
-        ' King Burger King Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
-    { name: 'Austin', gender: 'Male', company: 'Swimlane' },
-    { name: 'Dany', gender: 'Male', company: 'KFC' },
-    { name: 'Molly', gender: 'Female', company: 'Burger King' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
+    { name: 'Austin1', gender: 'Male', name2: 'Austin1', gender2: 'Maleasda', name3: 'Auasdstin', gender3: 'Masd ale' +
+        ' Masd ale', company: 'Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane' +
+        ' Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane' },
   ];
   columns = [
     { prop: 'name' },
     { name: 'Gender' },
+    { prop2: 'name2' },
+    { name2: 'Gender2' },
+    { prop3: 'name3' },
+    { name4: 'Gender3' },
     { name: 'Company' }
   ];
 

@@ -1,9 +1,9 @@
 .crg-attr-sidebar {
   z-index: 100;
   position: fixed;
-  top: calc(100% - 439px);
+  top: calc(100% - 449px);
 
-  height: 410px;
+  height: 420px;
   width: 100%;
 
   background-color: white;
