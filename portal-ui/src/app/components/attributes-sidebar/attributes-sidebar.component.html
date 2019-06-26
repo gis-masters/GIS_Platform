@@ -5,32 +5,22 @@
   </div>
 
   <div class="crg-attr-content">
-
     <ngx-datatable class="bootstrap" style="height: 100%;"
-      [rows]="rows"
-      [columns]="columns"
-      [columnMode]="'force'"
-      [rowHeight]="25"
-      [footerHeight]="40"
-      [selected]="selectedFeatures"
-      [selectionType]="'multi'"
-      (select)='onSelect($event)'
-       [externalPaging]="true"
-       [count]="rows.length"
-       [offset]="0"
-       (page)='setPage($event)'
-     [scrollbarV]="true"
-     [scrollbarH]="true">
-
-      <ngx-datatable-column name=" - Name" [width]="100"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Gender"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Name2"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Gender2"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Name3"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Gender3"></ngx-datatable-column>
-      <ngx-datatable-column name=" - Company"></ngx-datatable-column>
+                   [rows]="features"
+                   [columns]="columns"
+                   [columnMode]="'force'"
+                   [rowHeight]="25"
+                   [footerHeight]="40"
+                   [selected]="selectedFeatures"
+                   [selectionType]="'multi'"
+                   (select)='onSelect($event)'
+                   [externalPaging]="true"
+                   [count]="totalFeatures"
+                   [offset]="0"
+                   (page)='setPage($event)'
+                   [scrollbarV]="true"
+                   [scrollbarH]="true">
     </ngx-datatable>
-
   </div>
 
 </div>

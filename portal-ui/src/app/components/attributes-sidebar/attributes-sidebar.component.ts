@@ -15,6 +15,7 @@ import {
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsGeometry, WfsService} from '../../services/geoserver/wfs.service';
+import {TableColumn} from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -27,48 +28,15 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   @ViewChild('attributeFilter') filterInput: ElementRef;
 
-  features: AttributeFeature[] = [];
-  selectedFeatures: AttributeFeature[] = [];
+  features: WfsFeature[] = [];
+  selectedFeatures: WfsFeature[] = [];
   totalFeatures: number;
 
-  cols = [];
+  columns: TableColumn[] = [];
 
   loading = true;
 
   private lastEvent: LazyLoadEvent;
-
-  rows = [
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin', gender: 'Male', name2: 'Austin', gender2: 'Male', name3: 'Austin', gender3: 'Male', company: 'Swimlane' },
-    { name: 'Austin1', gender: 'Male', name2: 'Austin1', gender2: 'Maleasda', name3: 'Auasdstin', gender3: 'Masd ale' +
-        ' Masd ale', company: 'Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane' +
-        ' Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane Swimlane' },
-  ];
-  columns = [
-    { prop: 'name' },
-    { name: 'Gender' },
-    { prop2: 'name2' },
-    { name2: 'Gender2' },
-    { prop3: 'name3' },
-    { name4: 'Gender3' },
-    { name: 'Company' }
-  ];
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
@@ -109,9 +77,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             this.loading = false;
 
             this.totalFeatures = fCollection.totalFeatures;
-            this.fillColsFromFeatureProperties(fCollection.features[0]);
+            this.prepareColumns(fCollection.features[0]);
 
-            this.features = fCollection.features.map(feature => this.mapWfsFeatureToAttrFeature(feature));
+            this.features = fCollection.features.map((feature: WfsFeature) => {
+              // TODO: возможно стоит вынести непосредственно в  сервис
+              feature.id = feature.id.split('.')[1];
+
+              return feature;
+            });
           }
         });
   }
@@ -122,11 +95,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     // Подсвечиваем выделенные если есть
     if (this.selectedFeatures.length > 0) {
-      this.selectedFeatures.forEach((feature: AttributeFeature) => {
-        const wfsFeature = this.mapAttrFeatureToWfsFeature(feature);
-
-        this.openLayersService.paintFeature(wfsFeature);
-      });
+      this.selectedFeatures.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
     }
   }
 
@@ -139,74 +108,46 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.openLayersService.clearDraft();
   }
 
-  private fillColsFromFeatureProperties(wfsFeature: WfsFeature) {
-    this.cols = [{
-      field: 'objectid',
-      header: 'ID'
-    }];
+  private prepareColumns(wfsFeature: WfsFeature) {
+    this.columns = [
+      {
+        name: 'ID',
+        prop: 'id',
+        sortable: false,
+        resizeable: false, width: 100,
+      }
+    ];
 
     Object.keys(wfsFeature.properties).forEach(property => {
       if (property !== 'bbox') {
-        this.cols.push({
-          field: property,
-          header: property
-        });
+        const newProperty: TableColumn = {
+          name: property,
+          prop: 'properties.' + property,
+        };
+
+        if (property.toLowerCase() === 'globalid') {
+          newProperty.width = 300;
+          newProperty.resizeable = false;
+        }
+
+        if (property.toLowerCase() === 'classid') {
+          newProperty.width = 80;
+          newProperty.resizeable = false;
+        }
+
+        this.columns.push(newProperty);
       }
     });
   }
 
-  /**
-   * Немогу запихнуть в таблицу фичу как она есть: WfsFeature,
-   * поэтому в этом компоненте определена своя модель AttributeFeature.
-   * В эту модель запихиваю атрибуты оригинальной фичи чтобы иметь возможность делать обратное преобразование из
-   * AttributeFeature в WfsFeature.
-   * @param feature Фича с геосервера.
-   */
-  private mapWfsFeatureToAttrFeature(feature: WfsFeature) {
-    const viewFeature: AttributeFeature = feature.properties;
-    viewFeature.objectid = feature.id.split('.')[1];
-    viewFeature.originalFeature = {
-      id: feature.id,
-      type: feature.type,
-      geometry: feature.geometry,
-      geometry_name: feature.geometry_name
-    };
-
-    return viewFeature;
-  }
-
-  private mapAttrFeatureToWfsFeature(feature: AttributeFeature) {
-    const featureClone = Object.assign({}, feature);
-    delete featureClone['objectid'];
-    delete featureClone['originalFeature'];
-
-    return {
-      id: feature.originalFeature.id,
-      geometry_name: feature.originalFeature.geometry_name,
-      geometry: feature.originalFeature.geometry,
-      type: feature.originalFeature.type,
-      properties: featureClone
-    } as WfsFeature;
-  }
-
   onSelect({ selected }) {
-    console.log('Select Event', selected, this.selectedFeatures);
-
     this.selectedFeatures.splice(0, this.selectedFeatures.length);
     this.selectedFeatures.push(...selected);
+
+    console.log('Select Event', this.selectedFeatures);
   }
 
   setPage(event) {
     console.log('--- +++', event);
   }
-}
-
-export interface AttributeFeature {
-  objectid: string;
-  originalFeature: {
-    id: string;
-    type: string;
-    geometry: WfsGeometry;
-    geometry_name: string;
-  };
 }
