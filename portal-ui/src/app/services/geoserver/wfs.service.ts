@@ -81,20 +81,16 @@ export class WfsService {
   }
 
   private generateSortParam(requestModel: RequestModel): string {
-    if (!requestModel || !requestModel.sort) {
-      return '';
-    }
-
-    if (requestModel.sort.field === 'objectid') {
+    if (!requestModel || !requestModel.sort || !requestModel.sort.column) {
       return '';
     }
 
     let order = '+A';
-    if (requestModel.sort.order < 0) {
+    if (requestModel.sort.newValue === 'desc') {
       order = '+D';
     }
 
-    return (requestModel.sort.field) ? requestModel.sort.field + order : '';
+    return (requestModel.sort.column.name) ? requestModel.sort.column.name + order : '';
   }
 }
 

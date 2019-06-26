@@ -16,6 +16,8 @@ export interface Pageable {
 }
 
 export interface Sortable {
-  field?: string;
-  order?: number;
+  column?: any;
+  sorts?: any;
+  newValue?: string;
+  prevValue?: string;
 }

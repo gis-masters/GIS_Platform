@@ -5,6 +5,10 @@
   </div>
 
   <div class="crg-attr-content">
+<!--    <div *ngIf="!loading" style="width: 100%; text-align: -webkit-center">-->
+<!--      <mat-spinner></mat-spinner>-->
+<!--    </div>-->
+
     <ngx-datatable class="bootstrap" style="height: 100%;"
                    [rows]="features"
                    [columns]="columns"
@@ -13,13 +17,18 @@
                    [footerHeight]="40"
                    [selected]="selectedFeatures"
                    [selectionType]="'multi'"
-                   (select)='onSelect($event)'
+
+                   [loadingIndicator]="loading"
 
                    [externalPaging]="true"
+                   [externalSorting]="true"
                    [count]="totalFeatures"
-                   [offset]="0"
-                   [limit]="13"
+                   [offset]="pageInfo.offset"
+                   [limit]="pageInfo.pageSize"
+
                    (page)='setPage($event)'
+                   (sort)="onSort($event)"
+                   (select)='onSelect($event)'
 
                    [scrollbarH]="true">
     </ngx-datatable>

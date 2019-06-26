@@ -1,6 +1,7 @@
-import {BehaviorSubject, combineLatest, Subject} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
+import {TableColumn} from '@swimlane/ngx-datatable';
+import {BehaviorSubject, combineLatest} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {
   AfterViewInit,
   Component,
@@ -12,10 +13,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
+import {Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {TableColumn} from '@swimlane/ngx-datatable';
-import {Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -28,13 +28,18 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   @ViewChild('attributeFilter') filterInput: ElementRef;
 
+  pageInfo: Pageable = {
+    pageSize: 13,
+    offset: 0
+  };
+
   features: WfsFeature[] = [];
   selectedFeatures: WfsFeature[] = [];
   totalFeatures: number;
 
   columns: TableColumn[] = [];
 
-  loading = true;
+  loading = false;
 
   private requestModel: RequestModel;
   // TODO: отписаться от событий при дестрое
@@ -51,16 +56,16 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
                   this.sortEvent$.pipe(debounceTime(50)),
                   this.filterEvent$.pipe(debounceTime(500)))
       .pipe(
-        map(([page, sort, filter]) => {
-          // console.log('RequestModel: ', page, sort, filter);
+        map(([pageInfo, sortInfo, filterInfo]) => {
+          // console.log('RequestModel: ', pageInfo, sortInfo, filterInfo);
 
           return {
-            page: page[0],
-            sort: sort[0],
-            filter: filter[0]
+            page: pageInfo[0],
+            sort: sortInfo[0],
+            filter: filterInfo[0]
           } as RequestModel;
         }),
-        // distinctUntilChanged(), // If previous query is different from current
+        debounceTime(10)
       )
       .subscribe((requestModel: RequestModel) => {
         this.loadFeatures(requestModel);
@@ -87,7 +92,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             this.totalFeatures = fCollection.totalFeatures;
             this.prepareColumns(fCollection.features[0]);
 
-            console.log('fCollection: ', fCollection);
+            // console.log('fCollection: ', fCollection);
 
             this.features = fCollection.features.map((feature: WfsFeature) => {
               // TODO: возможно стоит вынести непосредственно в  сервис
@@ -113,7 +118,16 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   setPage(pageInfo: Pageable) {
+    this.pageInfo = pageInfo;
+
     this.pageEvent$.next([pageInfo]);
+  }
+
+  onSort(sortInfo: Sortable) {
+    this.pageInfo.offset = 0;
+
+    this.pageEvent$.next([this.pageInfo]);
+    this.sortEvent$.next([sortInfo]);
   }
 
   closeMe() {
@@ -135,26 +149,31 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       }
     ];
 
-    Object.keys(wfsFeature.properties).forEach(property => {
-      if (property !== 'bbox') {
-        const newProperty: TableColumn = {
-          name: property,
-          prop: 'properties.' + property,
-        };
+    if (wfsFeature) {
+      Object.keys(wfsFeature.properties).forEach(property => {
+        if (property !== 'bbox') {
+          const newProperty: TableColumn = {
+            name: property,
+            prop: 'properties.' + property,
+          };
 
-        if (property.toLowerCase() === 'globalid') {
-          newProperty.width = 300;
-          newProperty.resizeable = false;
+          if (property.toLowerCase() === 'globalid') {
+            newProperty.width = 300;
+            newProperty.resizeable = false;
+          }
+
+          if (property.toLowerCase() === 'classid') {
+            newProperty.width = 80;
+            newProperty.resizeable = false;
+          }
+
+          this.columns.push(newProperty);
         }
+      });
+    } else {
+      console.warn('No wfsFeature');
+    }
 
-        if (property.toLowerCase() === 'classid') {
-          newProperty.width = 80;
-          newProperty.resizeable = false;
-        }
-
-        this.columns.push(newProperty);
-      }
-    });
   }
 
 }
