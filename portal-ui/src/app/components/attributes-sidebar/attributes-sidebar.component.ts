@@ -9,7 +9,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  SimpleChanges,
+  SimpleChanges, TemplateRef,
   ViewChild
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
@@ -27,6 +27,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   @Input() layer: CrgLayer;
 
   @ViewChild('attributeFilter') filterInput: ElementRef;
+  @ViewChild('headerFilterTemplate') headerFilterTemplate: TemplateRef<any>;
 
   pageInfo: Pageable = {
     pageSize: 13,
@@ -146,6 +147,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         prop: 'id',
         sortable: false,
         resizeable: false, width: 100,
+        headerTemplate: this.headerFilterTemplate,
       }
     ];
 
@@ -155,6 +157,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           const newProperty: TableColumn = {
             name: property,
             prop: 'properties.' + property,
+            // headerTemplate: this.headerFilterTemplate
           };
 
           if (property.toLowerCase() === 'globalid') {
