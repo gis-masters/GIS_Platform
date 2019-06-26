@@ -14,11 +14,13 @@
                    [selected]="selectedFeatures"
                    [selectionType]="'multi'"
                    (select)='onSelect($event)'
+
                    [externalPaging]="true"
                    [count]="totalFeatures"
                    [offset]="0"
+                   [limit]="13"
                    (page)='setPage($event)'
-                   [scrollbarV]="true"
+
                    [scrollbarH]="true">
     </ngx-datatable>
   </div>

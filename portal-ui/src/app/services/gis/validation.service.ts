@@ -56,7 +56,7 @@ export class ValidationService {
     };
 
     const params = new HttpParams()
-      .set('page', page ? String(page) : '0')
+      .set('requestModel.ts', page ? String(page) : '0')
       .set('size', page ? String(size) : '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 

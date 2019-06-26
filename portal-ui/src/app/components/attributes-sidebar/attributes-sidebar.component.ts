@@ -1,5 +1,4 @@
-import {fromEvent} from 'rxjs';
-import {LazyLoadEvent} from 'primeng/api';
+import {BehaviorSubject, combineLatest, Subject} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {
@@ -14,8 +13,9 @@ import {
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {WfsFeature, WfsFeatureCollection, WfsGeometry, WfsService} from '../../services/geoserver/wfs.service';
+import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {TableColumn} from '@swimlane/ngx-datatable';
+import {Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -36,48 +36,58 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   loading = true;
 
-  private lastEvent: LazyLoadEvent;
+  private requestModel: RequestModel;
+  // TODO: отписаться от событий при дестрое
+  private pageEvent$: BehaviorSubject<Pageable[]> = new BehaviorSubject<Pageable[]>([{}]);
+  private sortEvent$: BehaviorSubject<Sortable[]> = new BehaviorSubject<Sortable[]>([{}]);
+  private filterEvent$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([{}]);
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
               private openLayersService: OpenLayersService) { }
 
   ngAfterViewInit(): void {
-    // fromEvent(this.filterInput.nativeElement, 'keyup')
-    //   .pipe(
-    //     map((event: any) => event.target.value),
-    //     debounceTime(500),
-    //     distinctUntilChanged() // If previous query is different from current
-    //   )
-    //   .subscribe(value => {
-    //     this.lastEvent.globalFilter = value;
-    //
-    //     this.loadObjectsLazy(this.lastEvent);
-    //   });
+    combineLatest(this.pageEvent$.pipe(debounceTime(50)),
+                  this.sortEvent$.pipe(debounceTime(50)),
+                  this.filterEvent$.pipe(debounceTime(500)))
+      .pipe(
+        map(([page, sort, filter]) => {
+          // console.log('RequestModel: ', page, sort, filter);
 
-    this.loadObjectsLazy({rows: 20, first: 0});
+          return {
+            page: page[0],
+            sort: sort[0],
+            filter: filter[0]
+          } as RequestModel;
+        }),
+        // distinctUntilChanged(), // If previous query is different from current
+      )
+      .subscribe((requestModel: RequestModel) => {
+        this.loadFeatures(requestModel);
+      });
   }
 
 
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes['layer'];
     if (layerChanged && !layerChanged.isFirstChange()) {
-      this.loadObjectsLazy({rows: 20, first: 0});
+      this.loadFeatures();
     }
   }
 
-  loadObjectsLazy(event: LazyLoadEvent) {
-    console.log('this.lastEvent: ', this.lastEvent);
+  loadFeatures(requestModel?: RequestModel) {
+    // console.log('loadObjectsLazy: ', requestModel);
 
-    this.lastEvent = event;
     this.loading = true;
-    this.wfsService.getFeatures(this.layer.complexName, event)
+    this.wfsService.getFeatures(this.layer.complexName, requestModel)
         .subscribe((fCollection: WfsFeatureCollection) => {
           if (fCollection) {
             this.loading = false;
 
             this.totalFeatures = fCollection.totalFeatures;
             this.prepareColumns(fCollection.features[0]);
+
+            console.log('fCollection: ', fCollection);
 
             this.features = fCollection.features.map((feature: WfsFeature) => {
               // TODO: возможно стоит вынести непосредственно в  сервис
@@ -89,7 +99,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         });
   }
 
-  handleSelection() {
+  onSelect({ selected }) {
+    this.selectedFeatures.splice(0, this.selectedFeatures.length);
+    this.selectedFeatures.push(...selected);
+
     // Очищаем предыдущие
     this.openLayersService.clearDraft();
 
@@ -97,6 +110,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     if (this.selectedFeatures.length > 0) {
       this.selectedFeatures.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
     }
+  }
+
+  setPage(pageInfo: Pageable) {
+    this.pageEvent$.next([pageInfo]);
   }
 
   closeMe() {
@@ -140,14 +157,4 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     });
   }
 
-  onSelect({ selected }) {
-    this.selectedFeatures.splice(0, this.selectedFeatures.length);
-    this.selectedFeatures.push(...selected);
-
-    console.log('Select Event', this.selectedFeatures);
-  }
-
-  setPage(event) {
-    console.log('--- +++', event);
-  }
 }
