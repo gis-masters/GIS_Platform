@@ -19,7 +19,6 @@
                    [columnMode]="'force'"
                    [rowHeight]="25"
                    [footerHeight]="40"
-                   [selected]="selectedFeatures"
                    [selectionType]="'multi'"
 
                    [externalPaging]="true"
@@ -27,6 +26,8 @@
                    [count]="totalFeatures"
                    [offset]="pageInfo.offset"
                    [limit]="pageInfo.pageSize"
+
+                   [rowIdentity]="customRowIdentity"
 
                    (page)='setPage($event)'
                    (sort)="onSort($event)"

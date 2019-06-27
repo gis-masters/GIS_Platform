@@ -1,7 +1,7 @@
 import {debounceTime, map} from 'rxjs/operators';
-import {TableColumn} from '@swimlane/ngx-datatable';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
+import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
   AfterViewInit,
   Component,
@@ -26,29 +26,27 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   @Input() layer: CrgLayer;
 
+  @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
   @ViewChild('attributeFilter') filterInput: ElementRef;
   @ViewChild('headerFilterTemplate') headerFilterTemplate: TemplateRef<any>;
 
+  features: WfsFeature[] = [];
+  totalFeatures: number;
+  columns: TableColumn[] = [];
+  customRowIdentity = ((row: WfsFeature) => row.id);
   pageInfo: Pageable = {
     pageSize: 20,
     offset: 0
   };
 
-  features: WfsFeature[] = [];
-  selectedFeatures: WfsFeature[] = [];
-  totalFeatures: number;
-
-  columns: TableColumn[] = [];
-
-  loading = false;
+  loading = true;
+  isFilterActive = false;
 
   private requestModel: RequestModel;
   // TODO: отписаться от событий при дестрое
   private pageEvent$: BehaviorSubject<Pageable[]> = new BehaviorSubject<Pageable[]>([{}]);
   private sortEvent$: BehaviorSubject<Sortable[]> = new BehaviorSubject<Sortable[]>([{}]);
   private filterEvent$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([{}]);
-
-  isFilterActive = false;
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
@@ -98,31 +96,28 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             // console.log('fCollection: ', fCollection);
 
             this.features = fCollection.features.map((feature: WfsFeature) => {
-              // TODO: возможно стоит вынести непосредственно в  сервис
+              // TODO: возможно стоит вынести непосредственно в сервис
               feature.id = feature.id.split('.')[1];
 
               return feature;
             });
+
           }
         });
   }
 
-  onSelect({ selected }) {
-    this.selectedFeatures.splice(0, this.selectedFeatures.length);
-    this.selectedFeatures.push(...selected);
-
+  onSelect({selected}) {
     // Очищаем предыдущие
     this.openLayersService.clearDraft();
 
     // Подсвечиваем выделенные если есть
-    if (this.selectedFeatures.length > 0) {
-      this.selectedFeatures.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
+    if (this.attributeTable.selected.length > 0) {
+      this.attributeTable.selected.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
     }
   }
 
   setPage(pageInfo: Pageable) {
     this.pageInfo = pageInfo;
-
     this.pageEvent$.next([pageInfo]);
   }
 
