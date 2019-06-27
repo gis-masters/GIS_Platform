@@ -8,8 +8,12 @@ bootstrap table theme
 
 .ngx-datatable.bootstrap .datatable-header {
   background-color: #dcdcdc;
-  height: unset !important;
+  height: 50px !important;
   border-bottom: 1px solid #a9a7a7;
+}
+
+.ngx-datatable.bootstrap .datatable-body {
+  height: 325px!important;
 }
 
 .ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
@@ -21,10 +25,6 @@ bootstrap table theme
 
 .ngx-datatable.bootstrap .datatable-header .datatable-header-cell .datatable-header-cell-label {
   line-height: 24px;
-}
-
-.ngx-datatable.bootstrap .datatable-body {
-  min-height: 346px;
 }
 
 .ngx-datatable.bootstrap .datatable-body .datatable-body-row {
@@ -120,4 +120,14 @@ bootstrap table theme
   background-color: #dcdcdc;
   border-top: none;
   border-bottom: 1px solid #c3c3c3;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell .sort-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell .datatable-header-cell-template-wrap {
+  height: 46px;
 }
