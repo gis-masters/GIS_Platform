@@ -29,6 +29,10 @@
 
                    [rowIdentity]="customRowIdentity"
 
+                   [summaryRow]="enableSummary"
+                   [summaryPosition]="'top'"
+                   [summaryHeight]="30"
+
                    (page)='setPage($event)'
                    (sort)="onSort($event)"
                    (select)='onSelect($event)'
@@ -38,9 +42,10 @@
                    [scrollbarH]="true">
     </ngx-datatable>
 
-    <ng-template #headerFilterTemplate let-column="column">
-      <span class="float-left">{{column.name}}</span>
-      <mat-icon class="crg-close-icon">filter_list</mat-icon>
+    <ng-template #filterTemplate let-row="row" let-value="value">
+      <div class="filter-container">
+
+      </div>
     </ng-template>
   </div>
 

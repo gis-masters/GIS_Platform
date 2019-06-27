@@ -74,3 +74,9 @@
 ::ng-deep .ngx-datatable .datatable-body {
   height: 250px;
 }
+
+.filter-container {
+  height: 25px;
+  max-height: 25px;
+  overflow: hidden;
+}

@@ -107,6 +107,17 @@ bootstrap table theme
   padding: 0 3px;
 }
 
+.ngx-datatable.bootstrap .datatable-summary-row .datatable-body-row {
+  background-color: #dcdcdc;
+  border-bottom: 1px solid #c3c3c3;
+}
+
 .ngx-datatable.bootstrap .datatable-summary-row .datatable-body-row .datatable-body-cell {
-  font-weight: bold;
+  border-right: 1px solid #a9a7a7;
+}
+
+.ngx-datatable.bootstrap .datatable-summary-row .datatable-body-row:hover {
+  background-color: #dcdcdc;
+  border-top: none;
+  border-bottom: 1px solid #c3c3c3;
 }
