@@ -38,7 +38,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     offset: 0
   };
 
-  enableSummary = false;
+  enableFilter = false;
   loading = true;
 
   private requestModel: RequestModel;
@@ -128,7 +128,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   switchFilter() {
-    this.enableSummary = !this.enableSummary;
+    this.enableFilter = !this.enableFilter;
   }
 
   closeMe() {
@@ -147,7 +147,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         prop: 'id',
         sortable: false,
         resizeable: false, width: 100,
-        // headerTemplate: this.headerFilterTemplate,
+        headerTemplate: this.filterTemplate,
         // summaryTemplate: this.headerFilterTemplate
       }
     ];
@@ -158,7 +158,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           const newProperty: TableColumn = {
             name: property,
             prop: 'properties.' + property,
-            summaryTemplate: this.filterTemplate
+            headerTemplate: this.filterTemplate,
           };
 
           if (property.toLowerCase() === 'globalid') {

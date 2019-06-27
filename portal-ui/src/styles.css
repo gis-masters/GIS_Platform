@@ -2,6 +2,7 @@
 
 @import '~@swimlane/ngx-datatable/release/index.css';
 @import 'bootstrap.css';
+@import 'bootstrap2.css';
 @import '~@swimlane/ngx-datatable/release/assets/icons.css';
 
 html, body { height: 100%; }

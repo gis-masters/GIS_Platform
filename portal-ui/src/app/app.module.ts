@@ -42,6 +42,7 @@ import {DeleteDialogComponent} from './components/delete-dialog/delete-dialog.co
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
 import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';
+import {TableFilterComponent} from './components/table-filter/table-filter.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {AttributesSidebarComponent} from './components/attributes-sidebar/attrib
     ViewFeaturesComponent,
     EditFeatureComponent,
     AttributesSidebarComponent,
+    TableFilterComponent,
   ],
   imports: [
     AppRoutingModule,

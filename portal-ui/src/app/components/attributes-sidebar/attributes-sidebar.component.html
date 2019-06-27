@@ -3,7 +3,7 @@
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
 
-    <mat-icon class="crg-close-icon" (click)="switchFilter()">filter_list</mat-icon>
+    <mat-icon class="crg-filter-icon" (click)="switchFilter()">filter_list</mat-icon>
   </div>
 
   <div class="crg-attr-content">
@@ -13,7 +13,7 @@
 
     <!--    <div *ngIf="isFilterActive" style="width: 100%; height: 20px; background-color: #008ace"></div>-->
 
-    <ngx-datatable class="bootstrap"
+    <ngx-datatable [ngClass]="{'bootstrap': enableFilter, 'fiz-bootstrap': !enableFilter}"
                    [rows]="features"
                    [columns]="columns"
                    [columnMode]="'force'"
@@ -29,10 +29,6 @@
 
                    [rowIdentity]="customRowIdentity"
 
-                   [summaryRow]="enableSummary"
-                   [summaryPosition]="'top'"
-                   [summaryHeight]="30"
-
                    (page)='setPage($event)'
                    (sort)="onSort($event)"
                    (select)='onSelect($event)'
@@ -42,10 +38,14 @@
                    [scrollbarH]="true">
     </ngx-datatable>
 
-    <ng-template #filterTemplate let-row="row" let-value="value">
-      <div class="filter-container">
-
+    <ng-template #filterTemplate let-column="column" let-sort="sortFn" let-sortDir="sortDir"
+                 ngx-datatable-header-template>
+      <div class="mobile-hidden" (click)="sort($event, sortDir, sortFn)">
+        {{column.name}}
+        <span class="sort-btn"></span>
       </div>
+
+      <crg-table-filter *ngIf="enableFilter" [propertyName]="column.name"></crg-table-filter>
     </ng-template>
   </div>
 

@@ -22,6 +22,14 @@
   border-width: thin;
 }
 
+.crg-filter-icon {
+  cursor: pointer;
+  color: grey;
+  float: right;
+
+  margin-right: 20px;
+}
+
 .crg-close-icon {
   cursor: pointer;
   color: grey;
@@ -45,38 +53,8 @@
   width: 333px;
 }
 
-::ng-deep body .ui-table .ui-table-thead > tr > th {
-  padding: 0 0 0 2px;
-}
-
-::ng-deep body .ui-table .ui-table-tbody > tr > td {
-  padding: 0 0 0 2px;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-::ng-deep .ui-table-scrollable-body {
-  min-height: 315px;
-}
-
-::ng-deep body .ui-table .ui-table-tbody > tr.ui-state-highlight {
-  background-color: #d6effc;
-  color: black;
-}
-
-::ng-deep body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
-  background-color: #d6effc;
-  color: black;
-}
-
-::ng-deep .ngx-datatable .datatable-body {
-  height: 250px;
-}
-
 .filter-container {
-  height: 25px;
-  max-height: 25px;
+  height: 50px;
+  max-height: 50px;
   overflow: hidden;
 }
