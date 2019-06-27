@@ -3,15 +3,17 @@
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
 
-    <mat-icon class="crg-close-icon">filter_list</mat-icon>
+    <mat-icon class="crg-close-icon" (click)="switchFilter()">filter_list</mat-icon>
   </div>
 
   <div class="crg-attr-content">
-<!--    <div *ngIf="!loading" style="width: 100%; text-align: -webkit-center">-->
-<!--      <mat-spinner></mat-spinner>-->
-<!--    </div>-->
+    <div *ngIf="loading" class="fiz-loading-shade">
+      <mat-spinner></mat-spinner>
+    </div>
 
-    <ngx-datatable class="bootstrap" style="height: 100%;"
+    <!--    <div *ngIf="isFilterActive" style="width: 100%; height: 20px; background-color: #008ace"></div>-->
+
+    <ngx-datatable class="bootstrap"
                    [rows]="features"
                    [columns]="columns"
                    [columnMode]="'force'"
@@ -19,8 +21,6 @@
                    [footerHeight]="40"
                    [selected]="selectedFeatures"
                    [selectionType]="'multi'"
-
-                   [loadingIndicator]="loading"
 
                    [externalPaging]="true"
                    [externalSorting]="true"
@@ -32,6 +32,8 @@
                    (sort)="onSort($event)"
                    (select)='onSelect($event)'
 
+                   [virtualization]="false"
+                   [scrollbarV]="true"
                    [scrollbarH]="true">
     </ngx-datatable>
 

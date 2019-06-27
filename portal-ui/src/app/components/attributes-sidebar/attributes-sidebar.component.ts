@@ -30,7 +30,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   @ViewChild('headerFilterTemplate') headerFilterTemplate: TemplateRef<any>;
 
   pageInfo: Pageable = {
-    pageSize: 13,
+    pageSize: 20,
     offset: 0
   };
 
@@ -47,6 +47,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   private pageEvent$: BehaviorSubject<Pageable[]> = new BehaviorSubject<Pageable[]>([{}]);
   private sortEvent$: BehaviorSubject<Sortable[]> = new BehaviorSubject<Sortable[]>([{}]);
   private filterEvent$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([{}]);
+
+  isFilterActive = false;
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
@@ -129,6 +131,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     this.pageEvent$.next([this.pageInfo]);
     this.sortEvent$.next([sortInfo]);
+  }
+
+  switchFilter() {
+    this.isFilterActive = !this.isFilterActive;
   }
 
   closeMe() {
