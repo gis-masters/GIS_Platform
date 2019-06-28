@@ -11,7 +11,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 })
 export class FgistpRulesService {
 
-  featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
+  private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,

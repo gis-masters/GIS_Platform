@@ -1,4 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {FilterEvent} from '../../services/models/requestModel';
+import {SimpleProperty} from '../../services/gis/fgistp-rules.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'crg-table-filter',
@@ -7,12 +9,22 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class TableFilterComponent implements OnInit {
 
-  @Input() propertyName: any;
+  @Input() property: SimpleProperty;
+  @Output() filterEvent = new EventEmitter<FilterEvent>();
 
   constructor() { }
 
   ngOnInit() {
-    console.log('value', this.propertyName);
+    // console.log('-');
   }
 
+  onChange(value: string) {
+    console.log('value', value);
+    this.filterEvent.emit({value: value, property: this.property});
+  }
+
+  onKeyUp(value: string) {
+    console.log('value: ', value);
+    this.filterEvent.emit({value: value, property: this.property});
+  }
 }

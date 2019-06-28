@@ -1,3 +1,16 @@
-<p>
-  table-filter works!
-</p>
+<div *ngIf="!!property">
+
+  <div *ngIf="property?.valueType?.includes('CHOICE')">
+    <select class="content" (change)="onChange($event.target.value)">
+      <option [value]="''"></option>
+      <option *ngFor="let enumOption of property.enumerations"
+              [value]="enumOption.value">
+        <span class="cut-text">{{enumOption.title}}</span>
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="property?.valueType?.includes('STRING')">
+    <input class="content" type="text" (keyup)="onKeyUp($event.target.value)">
+  </div>
+</div>

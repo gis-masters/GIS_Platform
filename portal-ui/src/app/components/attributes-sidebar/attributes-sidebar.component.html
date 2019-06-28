@@ -11,13 +11,11 @@
       <mat-spinner></mat-spinner>
     </div>
 
-    <!--    <div *ngIf="isFilterActive" style="width: 100%; height: 20px; background-color: #008ace"></div>-->
-
     <ngx-datatable [ngClass]="{'bootstrap': enableFilter, 'fiz-bootstrap': !enableFilter}"
                    [rows]="features"
                    [columns]="columns"
                    [columnMode]="'force'"
-                   [rowHeight]="25"
+                   [rowHeight]="20"
                    [footerHeight]="40"
                    [selectionType]="'multi'"
 
@@ -41,11 +39,12 @@
     <ng-template #filterTemplate let-column="column" let-sort="sortFn" let-sortDir="sortDir"
                  ngx-datatable-header-template>
       <div class="mobile-hidden" (click)="sort($event, sortDir, sortFn)">
-        {{column.name}}
+        <span style="cursor: pointer">{{column.name}}</span>
         <span class="sort-btn"></span>
       </div>
 
-      <crg-table-filter *ngIf="enableFilter" [propertyName]="column.name"></crg-table-filter>
+      <crg-table-filter *ngIf="enableFilter" [property]="getProperty(column.name)"
+                        (filterEvent)="onFilterChange($event)"></crg-table-filter>
     </ng-template>
   </div>
 

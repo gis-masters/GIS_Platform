@@ -1,4 +1,4 @@
-import {debounceTime, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, tap} from 'rxjs/operators';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
@@ -13,9 +13,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
+import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
+import {SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {FizLogger} from '../../services/logger/fiz.logger';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -25,9 +27,12 @@ import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geose
 export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input() layer: CrgLayer;
+  @Input() featureDescription: XsdFeature;
 
   @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
+
+  isNeedPrepareColumn = true;
 
   features: WfsFeature[] = [];
   totalFeatures: number;
@@ -41,41 +46,32 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   enableFilter = false;
   loading = true;
 
-  private requestModel: RequestModel;
-  // TODO: отписаться от событий при дестрое
-  private pageEvent$: BehaviorSubject<Pageable[]> = new BehaviorSubject<Pageable[]>([{}]);
-  private sortEvent$: BehaviorSubject<Sortable[]> = new BehaviorSubject<Sortable[]>([{}]);
-  private filterEvent$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([{}]);
+  // TODO: отписаться
+  private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private log: FizLogger,
               private openLayersService: OpenLayersService) { }
 
   ngAfterViewInit(): void {
-    combineLatest(this.pageEvent$.pipe(debounceTime(50)),
-                  this.sortEvent$.pipe(debounceTime(50)),
-                  this.filterEvent$.pipe(debounceTime(500)))
-      .pipe(
-        map(([pageInfo, sortInfo, filterInfo]) => {
-          // console.log('RequestModel: ', pageInfo, sortInfo, filterInfo);
-
-          return {
-            page: pageInfo[0],
-            sort: sortInfo[0],
-            filter: filterInfo[0]
-          } as RequestModel;
-        }),
-        debounceTime(10)
-      )
-      .subscribe((requestModel: RequestModel) => {
-        this.loadFeatures(requestModel);
-      });
+    this.requestModel$
+        .pipe(
+          tap(console.log),
+          debounceTime(50)
+        )
+        .subscribe((requestModel: RequestModel) => {
+          this.loadFeatures(requestModel);
+        });
   }
 
 
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes['layer'];
     if (layerChanged && !layerChanged.isFirstChange()) {
+      this.isNeedPrepareColumn = true;
+      this.requestModel$.next({page: {pageSize: 20, offset: 0}});
+
       this.loadFeatures();
     }
   }
@@ -90,9 +86,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             this.loading = false;
 
             this.totalFeatures = fCollection.totalFeatures;
-            this.prepareColumns(fCollection.features[0]);
 
-            // console.log('fCollection: ', fCollection);
+            if (this.isNeedPrepareColumn) {
+              this.prepareColumns(fCollection.features[0]);
+              this.isNeedPrepareColumn = false;
+            }
 
             this.features = fCollection.features.map((feature: WfsFeature) => {
               // TODO: возможно стоит вынести непосредственно в сервис
@@ -100,7 +98,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
               return feature;
             });
-
           }
         });
   }
@@ -117,18 +114,28 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   setPage(pageInfo: Pageable) {
     this.pageInfo = pageInfo;
-    this.pageEvent$.next([pageInfo]);
+
+    const oldRequest = this.requestModel$.getValue();
+    oldRequest.page = pageInfo;
+
+    this.requestModel$.next(oldRequest);
   }
 
   onSort(sortInfo: Sortable) {
-    this.pageInfo.offset = 0;
+    const oldRequest = this.requestModel$.getValue();
+    oldRequest.page.offset = 0;
+    oldRequest.sort = sortInfo;
 
-    this.pageEvent$.next([this.pageInfo]);
-    this.sortEvent$.next([sortInfo]);
+    this.requestModel$.next(oldRequest);
   }
 
   switchFilter() {
     this.enableFilter = !this.enableFilter;
+  }
+
+  getProperty(name: string): SimpleProperty {
+    return this.featureDescription.properties
+               .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
 
   closeMe() {
@@ -180,4 +187,28 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   }
 
+  onFilterChange(filterEvent: FilterEvent) {
+    const oldRequest = this.requestModel$.getValue();
+    oldRequest.page.offset = 0;
+
+    const oldFilter = oldRequest.filter;
+
+    if (oldFilter) {
+      let isNotExist = true;
+      oldFilter.forEach((oldFilterEvent: FilterEvent) => {
+        if (oldFilterEvent && oldFilterEvent.property && oldFilterEvent.property.name === filterEvent.property.name) {
+          oldFilterEvent.value = filterEvent.value;
+          isNotExist = false;
+        }
+      });
+
+      if (isNotExist) {
+        oldFilter.push(filterEvent);
+      }
+    } else {
+      oldRequest.filter = [filterEvent];
+    }
+
+    this.requestModel$.next(oldRequest);
+  }
 }

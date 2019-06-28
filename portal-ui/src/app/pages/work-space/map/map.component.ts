@@ -9,11 +9,11 @@ import {CrgProject} from '../../../services/gis/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {FeatureXsdDefinition, FgistpRulesService, XsdFeature} from '../../../services/gis/fgistp-rules.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 
@@ -33,7 +33,7 @@ export class MapComponent implements OnInit, OnDestroy {
   isFeaturesSidebarActive = false;
 
   isAttrSidebarActive = false;
-  attrSidebarData;
+  selectedLayer;
 
   selectedFeatures: any;
 
@@ -43,6 +43,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   gmlDialogData: CrgLayer[];
   private unsubscribe$: Subject<void> = new Subject<void>();
+  private featuresDescription: XsdFeature[];
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private layersService: LayersService,
@@ -65,7 +66,14 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.openLayers.createMap();
-    this.ruleService.getRules().subscribe();
+    this.ruleService.getRules()
+        .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
+          if (entityTypesDefinition.xsdFeatures) {
+            this.featuresDescription = entityTypesDefinition.xsdFeatures;
+          } else {
+            this.logger.warn('Empty rules? ', entityTypesDefinition);
+          }
+        });
 
     this.currentProject = this.storageService.getProject().crgProject;
     this.layersService.fetchLayers(this.currentProject)
@@ -147,7 +155,7 @@ export class MapComponent implements OnInit, OnDestroy {
                 this.logger.warn('Unsupported action type: ', sidebar.action);
             }
           } else if (sidebar.target === SidebarType.ATTRIBUTES) {
-            this.attrSidebarData = sidebar.data;
+            this.selectedLayer = sidebar.data;
 
             switch (sidebar.action) {
               case ActionType.CLOSE:  this.isAttrSidebarActive = false;    break;
@@ -162,6 +170,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.mapClick$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
+  }
+
+  getFeature(selectedLayer: CrgLayer) {
+    return this.featuresDescription.find((feature: XsdFeature) => feature.name === selectedLayer.name);
   }
 
   ngOnDestroy(): void {

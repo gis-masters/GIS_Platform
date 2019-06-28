@@ -2,11 +2,12 @@ import {Observable} from 'rxjs';
 import {RequestModel} from '../models/requestModel';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {count, filter, map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
 import {error} from '@angular/compiler/src/util';
 import {ServerPropertiesService} from '../server-properties.service';
+import {Util} from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -54,8 +55,13 @@ export class WfsService {
       typeName: complexName,
       startindex: startIndex.toString(),
       count: countRows,
-      sortBy: this.generateSortParam(requestModel)
+      sortBy: Util.generateSortParam(requestModel)
     };
+
+    const cqlFilter = Util.generateFilter(requestModel);
+    if (cqlFilter !== undefined) {
+      params['CQL_FILTER'] = cqlFilter;
+    }
 
     return this.http
                .get<WfsFeatureCollection>(url, {params: params});
@@ -80,18 +86,6 @@ export class WfsService {
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
-  private generateSortParam(requestModel: RequestModel): string {
-    if (!requestModel || !requestModel.sort || !requestModel.sort.column) {
-      return '';
-    }
-
-    let order = '+A';
-    if (requestModel.sort.newValue === 'desc') {
-      order = '+D';
-    }
-
-    return (requestModel.sort.column.name) ? requestModel.sort.column.name + order : '';
-  }
 }
 
 export interface WfsFeatureCollection {

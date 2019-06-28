@@ -1,12 +1,10 @@
-/**
- * An object used to get page information from the server
- */
+import {SimpleProperty} from '../gis/fgistp-rules.service';
+
 export interface RequestModel {
   page?: Pageable;
   sort?: Sortable;
-  filter?: any;
+  filter?: FilterEvent[];
 }
-
 
 export interface Pageable {
   pageSize?: number;
@@ -20,4 +18,9 @@ export interface Sortable {
   sorts?: any;
   newValue?: string;
   prevValue?: string;
+}
+
+export interface FilterEvent {
+  property?: SimpleProperty;
+  value?: string;
 }
