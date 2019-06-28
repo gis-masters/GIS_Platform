@@ -59,7 +59,7 @@ export class WfsService {
     };
 
     const cqlFilter = Util.generateFilter(requestModel);
-    if (cqlFilter !== undefined) {
+    if (!!cqlFilter) {
       params['CQL_FILTER'] = cqlFilter;
     }
 

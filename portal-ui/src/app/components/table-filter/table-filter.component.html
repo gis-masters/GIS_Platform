@@ -1,7 +1,7 @@
 <div *ngIf="!!property">
 
   <div *ngIf="property?.valueType?.includes('CHOICE')">
-    <select class="content" (change)="onChange($event.target.value)">
+    <select #filterSelect class="content">
       <option [value]="''"></option>
       <option *ngFor="let enumOption of property.enumerations"
               [value]="enumOption.value">
@@ -10,7 +10,7 @@
     </select>
   </div>
 
-  <div *ngIf="property?.valueType?.includes('STRING')">
-    <input class="content" type="text" (keyup)="onKeyUp($event.target.value)">
+  <div *ngIf="isInputProperties(property?.valueType)">
+    <input #filterInput class="content" type="text">
   </div>
 </div>

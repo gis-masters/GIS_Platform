@@ -1,5 +1,5 @@
-import {debounceTime, distinctUntilChanged, map, tap} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest} from 'rxjs';
+import {debounceTime, tap} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
@@ -64,7 +64,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           this.loadFeatures(requestModel);
         });
   }
-
 
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes['layer'];
@@ -204,15 +203,21 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     if (oldFilter) {
       let isNotExist = true;
-      oldFilter.forEach((oldFilterEvent: FilterEvent) => {
+      oldFilter.forEach((oldFilterEvent: FilterEvent, index) => {
         if (oldFilterEvent && oldFilterEvent.property && oldFilterEvent.property.name === filterEvent.property.name) {
-          oldFilterEvent.value = filterEvent.value;
           isNotExist = false;
+          if (filterEvent.value === '') {
+            oldFilter.splice(index, 1);
+          } else {
+            oldFilterEvent.value = filterEvent.value;
+          }
         }
       });
 
       if (isNotExist) {
-        oldFilter.push(filterEvent);
+        if (filterEvent.value !== '') {
+          oldFilter.push(filterEvent);
+        }
       }
     } else {
       oldRequest.filter = [filterEvent];

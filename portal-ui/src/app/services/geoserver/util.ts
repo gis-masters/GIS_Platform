@@ -31,7 +31,7 @@ export class Util {
         filterString += ' AND ';
       }
 
-      filterString = filterString + this.parseFilter(filterString, filterEvent);
+      filterString = filterString + this.parseFilter(filterEvent);
     });
 
     console.log('CQL: ', filterString);
@@ -39,9 +39,17 @@ export class Util {
     return filterString;
   }
 
-  private static parseFilter(filterString: string, filterEvent: FilterEvent): string {
+  private static parseFilter(filterEvent: FilterEvent): string {
+    // name LIKE %some%
     if (filterEvent.property.valueType === 'STRING') {
       return filterEvent.property.name.toLowerCase() + ' LIKE \'%' + filterEvent.value + '%\'';
     }
+
+    // voltage IN(110)
+    if (filterEvent.property.valueType === 'CHOICE') {
+      return filterEvent.property.name.toLowerCase() + ' IN(' + filterEvent.value + ')';
+    }
+
+    return '';
   }
 }
