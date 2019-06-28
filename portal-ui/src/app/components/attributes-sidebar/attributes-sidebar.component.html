@@ -3,7 +3,8 @@
     <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
 
-    <mat-icon class="crg-filter-icon" (click)="switchFilter()">filter_list</mat-icon>
+    <mat-icon [ngClass]="{'crg-filter-icon-active': enableFilter, 'crg-filter-icon': !enableFilter}"
+              (click)="switchFilter()">filter_list</mat-icon>
   </div>
 
   <div class="crg-attr-content">

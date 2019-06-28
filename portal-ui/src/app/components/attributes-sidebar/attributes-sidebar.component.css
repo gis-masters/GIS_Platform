@@ -30,6 +30,14 @@
   margin-right: 20px;
 }
 
+.crg-filter-icon-active {
+  cursor: pointer;
+  color: #007bff;
+  float: right;
+
+  margin-right: 20px;
+}
+
 .crg-close-icon {
   cursor: pointer;
   color: grey;

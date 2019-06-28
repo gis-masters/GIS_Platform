@@ -72,6 +72,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       this.isNeedPrepareColumn = true;
       this.requestModel$.next({page: {pageSize: 20, offset: 0}});
 
+      this.attributeTable.selected = [];
+      this.openLayersService.clearDraft();
       this.loadFeatures();
     }
   }
@@ -131,6 +133,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   switchFilter() {
     this.enableFilter = !this.enableFilter;
+    if (!this.enableFilter) {
+      const oldRequest = this.requestModel$.getValue();
+      oldRequest.page.offset = 0;
+      oldRequest.filter = [];
+
+      this.requestModel$.next(oldRequest);
+    }
   }
 
   getProperty(name: string): SimpleProperty {
