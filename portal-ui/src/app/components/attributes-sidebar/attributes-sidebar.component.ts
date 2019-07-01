@@ -31,9 +31,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
 
+  currentPositionFeature: WfsFeature;
   features: WfsFeature[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
@@ -189,6 +191,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
       {
+        name: '',
+        prop: '',
+        sortable: false,
+        resizeable: false,
+        width: 20,
+        cellTemplate: this.cellTemplate
+      },
+      {
         name: 'ID',
         prop: 'id',
         sortable: false,
@@ -224,5 +234,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       console.warn('No wfsFeature');
     }
 
+  }
+
+  onActivate(event: any) {
+    if (event.type === 'dblclick') {
+      this.currentPositionFeature = event.row;
+
+      this.openLayersService.showFeature(event.row);
+    }
   }
 }

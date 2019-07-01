@@ -31,11 +31,18 @@
                    (page)='setPage($event)'
                    (sort)="onSort($event)"
                    (select)='onSelect($event)'
+                   (activate)="onActivate($event)"
 
                    [virtualization]="false"
                    [scrollbarV]="true"
                    [scrollbarH]="true">
     </ngx-datatable>
+
+    <ng-template #cellTemplate let-row="row" let-value="value">
+      <div *ngIf="currentPositionFeature?.id === row.id">
+        >
+      </div>
+    </ng-template>
 
     <ng-template #filterTemplate let-column="column" let-sort="sortFn" let-sortDir="sortDir"
                  ngx-datatable-header-template>
