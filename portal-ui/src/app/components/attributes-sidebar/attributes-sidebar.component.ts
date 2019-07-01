@@ -96,7 +96,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
             this.totalFeatures = fCollection.totalFeatures;
 
-            console.log('++++++++: ', this.featureDescription);
+            // console.log('++++++++: ', this.featureDescription);
 
             if (this.isNeedPrepareColumn) {
               this.prepareColumns(fCollection.features[0]);
@@ -112,8 +112,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
               return wfsFeatureView;
             });
-
-            console.log('++++++++: ', this.features[0]);
           }
         });
   }
@@ -157,6 +155,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   getSimpleProperty(name: string): SimpleProperty | undefined {
+    if (!name) {
+      return;
+    }
+
     return this.featureDescription.properties
                .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
@@ -212,7 +214,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         cellTemplate: this.cellTemplate
       },
       {
-        name: 'ID',
+        name: this.viewSettings.viewMode === ViewMode.internal ? 'ID' : 'Идентификатор',
         prop: 'id',
         sortable: false,
         resizeable: false, width: 100,
@@ -225,8 +227,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       Object.keys(wfsFeature.properties).forEach(property => {
         if (property !== 'bbox') {
           const newProperty: TableColumn = {
-            name: property,
-            prop: this.definePropSourse(property),
+            name: this.defineColumnName(property),
+            prop: this.definePropertySourse(property),
             headerTemplate: this.filterTemplate,
           };
 
@@ -295,7 +297,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     return resultObject;
   }
 
-  private definePropSourse(property: string) {
+  private definePropertySourse(property: string) {
     if (this.viewSettings.viewMode === ViewMode.internal) {
       return 'properties.' + property;
     } else if (this.viewSettings.viewMode === ViewMode.alias) {
@@ -303,6 +305,18 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
 
     return 'properties.' + property;
+  }
+
+  private defineColumnName(property: string) {
+    let result = property;
+    if (this.viewSettings.viewMode === ViewMode.alias) {
+      const simpleProperty = this.getSimpleProperty(property);
+      if (simpleProperty) {
+        result = simpleProperty.title;
+      }
+    }
+
+    return result;
   }
 }
 

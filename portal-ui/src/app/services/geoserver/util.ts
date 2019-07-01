@@ -12,7 +12,9 @@ export class Util {
       order = '+D';
     }
 
-    return (requestModel.sort.column.name) ? requestModel.sort.column.name + order : '';
+    const columnName = requestModel.sort.column.prop.split('.')[1];
+
+    return (columnName) ? columnName + order : '';
   }
 
   static generateFilter(requestModel: RequestModel): string | undefined {
