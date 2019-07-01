@@ -45,6 +45,15 @@ export class Util {
       return filterEvent.property.name.toLowerCase() + ' LIKE \'%' + filterEvent.value + '%\'';
     }
 
+    // area BETWEEN n AND n+1
+    if (filterEvent.property.valueType === 'DOUBLE') {
+      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + (Number(filterEvent.value) + 1);
+    }
+
+    if (filterEvent.property.valueType === 'INT') {
+      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + Number(filterEvent.value) + 0.9;
+    }
+
     // voltage IN(110)
     if (filterEvent.property.valueType === 'CHOICE') {
       return filterEvent.property.name.toLowerCase() + ' IN(' + filterEvent.value + ')';

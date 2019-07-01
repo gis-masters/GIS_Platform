@@ -155,6 +155,37 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.openLayersService.clearDraft();
   }
 
+  onFilterChange(filterEvent: FilterEvent) {
+    const oldRequest = this.requestModel$.getValue();
+    oldRequest.page.offset = 0;
+
+    const oldFilter = oldRequest.filter;
+
+    if (oldFilter) {
+      let isNotExist = true;
+      oldFilter.forEach((oldFilterEvent: FilterEvent, index) => {
+        if (oldFilterEvent && oldFilterEvent.property && oldFilterEvent.property.name === filterEvent.property.name) {
+          isNotExist = false;
+          if (filterEvent.value === '') {
+            oldFilter.splice(index, 1);
+          } else {
+            oldFilterEvent.value = filterEvent.value;
+          }
+        }
+      });
+
+      if (isNotExist) {
+        if (filterEvent.value !== '') {
+          oldFilter.push(filterEvent);
+        }
+      }
+    } else {
+      oldRequest.filter = [filterEvent];
+    }
+
+    this.requestModel$.next(oldRequest);
+  }
+
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
       {
@@ -193,36 +224,5 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       console.warn('No wfsFeature');
     }
 
-  }
-
-  onFilterChange(filterEvent: FilterEvent) {
-    const oldRequest = this.requestModel$.getValue();
-    oldRequest.page.offset = 0;
-
-    const oldFilter = oldRequest.filter;
-
-    if (oldFilter) {
-      let isNotExist = true;
-      oldFilter.forEach((oldFilterEvent: FilterEvent, index) => {
-        if (oldFilterEvent && oldFilterEvent.property && oldFilterEvent.property.name === filterEvent.property.name) {
-          isNotExist = false;
-          if (filterEvent.value === '') {
-            oldFilter.splice(index, 1);
-          } else {
-            oldFilterEvent.value = filterEvent.value;
-          }
-        }
-      });
-
-      if (isNotExist) {
-        if (filterEvent.value !== '') {
-          oldFilter.push(filterEvent);
-        }
-      }
-    } else {
-      oldRequest.filter = [filterEvent];
-    }
-
-    this.requestModel$.next(oldRequest);
   }
 }
