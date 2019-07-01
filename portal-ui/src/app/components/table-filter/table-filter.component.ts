@@ -1,8 +1,9 @@
-import {fromEvent} from 'rxjs';
+import {fromEvent, Subject} from 'rxjs';
 import {FilterEvent} from '../../services/models/requestModel';
 import {SimpleProperty} from '../../services/gis/fgistp-rules.service';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {MatSelectChange} from '@angular/material';
 
 @Component({
   selector: 'crg-table-filter',
@@ -14,13 +15,14 @@ export class TableFilterComponent implements AfterViewInit {
   @Input() property: SimpleProperty;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
   @ViewChild('filterInput') filterInput: ElementRef;
-  @ViewChild('filterSelect') filterSelect: ElementRef;
+
+  selectionChangeEvent$: Subject<any> = new Subject<any>();
 
   constructor() {
   }
 
   ngAfterViewInit(): void {
-    console.log('prop:', this.property);
+    // console.log('prop:', this.property);
 
     if (this.filterInput) {
       fromEvent(this.filterInput.nativeElement, 'keyup')
@@ -30,19 +32,7 @@ export class TableFilterComponent implements AfterViewInit {
           distinctUntilChanged()
         )
         .subscribe(value => {
-          this.filterEvent.emit({value: value, property: this.property});
-        });
-    }
-
-    if (this.filterSelect) {
-      fromEvent(this.filterSelect.nativeElement, 'change')
-        .pipe(
-          map((e: any) => e.target.value),
-          debounceTime(100),
-          distinctUntilChanged()
-        )
-        .subscribe(value => {
-          this.filterEvent.emit({value: value, property: this.property});
+          this.filterEvent.emit({value: [value], property: this.property});
         });
     }
   }
@@ -57,5 +47,12 @@ export class TableFilterComponent implements AfterViewInit {
         valueType.includes('DOUBLE')) {
       return true;
     }
+  }
+
+  onSelection(event: MatSelectChange) {
+    console.log('-+-', event);
+
+    this.selectionChangeEvent$.next(event.value);
+    this.filterEvent.emit({value: event.value, property: this.property});
   }
 }

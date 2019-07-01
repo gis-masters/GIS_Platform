@@ -168,7 +168,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       oldFilter.forEach((oldFilterEvent: FilterEvent, index) => {
         if (oldFilterEvent && oldFilterEvent.property && oldFilterEvent.property.name === filterEvent.property.name) {
           isNotExist = false;
-          if (filterEvent.value === '') {
+          if (filterEvent.value.length === 0) {
             oldFilter.splice(index, 1);
           } else {
             oldFilterEvent.value = filterEvent.value;
@@ -177,7 +177,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       });
 
       if (isNotExist) {
-        if (filterEvent.value !== '') {
+        if (filterEvent.value.length > 0) {
           oldFilter.push(filterEvent);
         }
       }
@@ -222,10 +222,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             newProperty.resizeable = false;
           }
 
-          if (property.toLowerCase() === 'classid') {
-            newProperty.width = 80;
-            newProperty.resizeable = false;
-          }
+          // if (property.toLowerCase() === 'classid') {
+          //   newProperty.width = 80;
+          //   newProperty.resizeable = false;
+          // }
 
           this.columns.push(newProperty);
         }

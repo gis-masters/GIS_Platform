@@ -22,5 +22,5 @@ export interface Sortable {
 
 export interface FilterEvent {
   property?: SimpleProperty;
-  value?: string;
+  value?: string[];
 }
