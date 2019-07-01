@@ -11,8 +11,8 @@
   background-color: white;
 
   -webkit-box-shadow: 0 -2px 10px 0 rgba(50, 50, 50, 0.25);
-  -moz-box-shadow:    0 -2px 10px 0 rgba(50, 50, 50, 0.25);
-  box-shadow:         0 -2px 10px 0 rgba(50, 50, 50, 0.25);
+  -moz-box-shadow: 0 -2px 10px 0 rgba(50, 50, 50, 0.25);
+  box-shadow: 0 -2px 10px 0 rgba(50, 50, 50, 0.25);
 }
 
 .crg-attr-content {
@@ -65,4 +65,16 @@
   height: 50px;
   max-height: 50px;
   overflow: hidden;
+}
+
+.right-side {
+  float: right;
+}
+
+.view-mode-selector {
+  width: 100px;
+  float: right;
+  margin-right: 5px;
+  border: outset;
+  border-width: thin;
 }

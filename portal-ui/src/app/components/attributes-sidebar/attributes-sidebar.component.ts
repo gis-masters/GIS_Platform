@@ -18,6 +18,9 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
+import {MatSelectChange} from '@angular/material';
+import {ValueTitleProjection} from '../../services/geoserver/projections';
+import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -36,7 +39,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   isNeedPrepareColumn = true;
 
   currentPositionFeature: WfsFeature;
-  features: WfsFeature[] = [];
+  features: WfsFeatureView[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
   customRowIdentity = ((row: WfsFeature) => row.id);
@@ -47,6 +50,9 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   enableFilter = false;
   loading = true;
+  viewSettings: AttributeTableViewSettings = {
+    viewMode: ViewMode.internal
+  };
 
   // TODO: отписаться
   private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
@@ -90,6 +96,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
             this.totalFeatures = fCollection.totalFeatures;
 
+            console.log('++++++++: ', this.featureDescription);
+
             if (this.isNeedPrepareColumn) {
               this.prepareColumns(fCollection.features[0]);
               this.isNeedPrepareColumn = false;
@@ -99,8 +107,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               // TODO: возможно стоит вынести непосредственно в сервис
               feature.id = feature.id.split('.')[1];
 
-              return feature;
+              const wfsFeatureView: WfsFeatureView = feature;
+              wfsFeatureView.aliases = this.fillAliases(feature.properties);
+
+              return wfsFeatureView;
             });
+
+            console.log('++++++++: ', this.features[0]);
           }
         });
   }
@@ -143,7 +156,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
   }
 
-  getProperty(name: string): SimpleProperty {
+  getSimpleProperty(name: string): SimpleProperty | undefined {
     return this.featureDescription.properties
                .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
@@ -213,7 +226,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         if (property !== 'bbox') {
           const newProperty: TableColumn = {
             name: property,
-            prop: 'properties.' + property,
+            prop: this.definePropSourse(property),
             headerTemplate: this.filterTemplate,
           };
 
@@ -243,4 +256,56 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       this.openLayersService.showFeature(event.row);
     }
   }
+
+  onViewModeChange(event: MatSelectChange) {
+    this.isNeedPrepareColumn = true;
+    this.loadFeatures();
+  }
+
+  private getValueTitle(value: string, enumerations: ValueTitleProjection[]): string {
+    let result = value;
+    enumerations.forEach((item: ValueTitleProjection) => {
+      if (!item || !value) {
+        return;
+      }
+
+      if (item.value.toString() === value.toString()) {
+        result = item.title;
+      }
+    });
+
+    return result;
+  }
+
+  private fillAliases(properties: {}): {} {
+    const resultObject = {};
+
+    Object.keys(properties).forEach(property => {
+      const simpleProperty = this.getSimpleProperty(property);
+      if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+        const valueTitle = this.getValueTitle(properties[property], simpleProperty.enumerations);
+        if (valueTitle) {
+          resultObject[property] = valueTitle;
+        }
+      } else {
+        resultObject[property] = properties[property];
+      }
+    });
+
+    return resultObject;
+  }
+
+  private definePropSourse(property: string) {
+    if (this.viewSettings.viewMode === ViewMode.internal) {
+      return 'properties.' + property;
+    } else if (this.viewSettings.viewMode === ViewMode.alias) {
+      return 'aliases.' + property;
+    }
+
+    return 'properties.' + property;
+  }
+}
+
+export interface WfsFeatureView extends WfsFeature {
+  aliases?: {};
 }

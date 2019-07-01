@@ -1,10 +1,18 @@
 <div class="crg-attr-sidebar">
   <div class="crg-attr-sidebar-header">
-    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
     <span class="layerTitle">{{layer.title}}</span>
 
-    <mat-icon [ngClass]="{'crg-filter-icon-active': enableFilter, 'crg-filter-icon': !enableFilter}"
-              (click)="switchFilter()">filter_list</mat-icon>
+    <div class="right-side">
+      <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+
+      <mat-icon [ngClass]="{'crg-filter-icon-active': enableFilter, 'crg-filter-icon': !enableFilter}"
+                (click)="switchFilter()">filter_list</mat-icon>
+
+      <mat-select class="view-mode-selector" [(ngModel)]="viewSettings.viewMode" (selectionChange)="onViewModeChange($event)">
+        <mat-option value="internal">internal</mat-option>
+        <mat-option value="alias">alias</mat-option>
+      </mat-select>
+    </div>
   </div>
 
   <div class="crg-attr-content">
@@ -51,7 +59,7 @@
         <span class="sort-btn"></span>
       </div>
 
-      <crg-table-filter *ngIf="enableFilter" [property]="getProperty(column.name)"
+      <crg-table-filter *ngIf="enableFilter" [property]="getSimpleProperty(column.name)"
                         (filterEvent)="onFilterChange($event)"></crg-table-filter>
     </ng-template>
   </div>

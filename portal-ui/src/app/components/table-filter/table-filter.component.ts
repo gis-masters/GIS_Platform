@@ -50,8 +50,6 @@ export class TableFilterComponent implements AfterViewInit {
   }
 
   onSelection(event: MatSelectChange) {
-    console.log('-+-', event);
-
     this.selectionChangeEvent$.next(event.value);
     this.filterEvent.emit({value: event.value, property: this.property});
   }
