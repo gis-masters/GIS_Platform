@@ -20,16 +20,16 @@ export class SideBarManager {
     }
 
     if (sidebar.target === SidebarType.INFO) {
-      this.emit(SidebarType.INFO, sidebar.action);
+      this.emit(SidebarType.INFO, sidebar.action, sidebar.data);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
     } else if (sidebar.target === SidebarType.BUG_REPORT) {
-      this.emit(SidebarType.BUG_REPORT, sidebar.action);
+      this.emit(SidebarType.BUG_REPORT, sidebar.action, sidebar.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.FEATURES, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
     } else if (sidebar.target === SidebarType.FEATURES) {
-      this.emit(SidebarType.FEATURES, sidebar.action);
+      this.emit(SidebarType.FEATURES, sidebar.action, sidebar.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
       this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);

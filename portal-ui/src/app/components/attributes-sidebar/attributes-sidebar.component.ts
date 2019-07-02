@@ -21,6 +21,7 @@ import {FizLogger} from '../../services/logger/fiz.logger';
 import {MatSelectChange} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
+import {ViewFeaturesData} from '../view-features/view-features.component';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -319,7 +320,17 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   editFeatures() {
-    console.log('to edit: ', this.attributeTable.selected);
+    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(this.attributeTable.selected));
+    clonedFeatures.forEach((feature: WfsFeature) => {
+      feature.id = this.layer.name + '.' + feature.id;
+    });
+
+    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+      data: {
+        features: clonedFeatures,
+        mode: 'multipleEdit'
+      } as ViewFeaturesData
+    });
   }
 }
 

@@ -16,6 +16,7 @@ import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../service
 import {FeatureXsdDefinition, FgistpRulesService, XsdFeature} from '../../../services/gis/fgistp-rules.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
+import {ViewFeaturesData} from '../../../components/view-features/view-features.component';
 
 @Component({
   selector: 'crg-map',
@@ -30,12 +31,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
   isLayersSidebarActive = false;
   isBugReportSidebarActive = false;
+
   isFeaturesSidebarActive = false;
+  viewFeaturesData: ViewFeaturesData;
 
   isAttrSidebarActive = false;
   selectedLayer;
-
-  selectedFeatures: any;
 
   isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
@@ -147,6 +148,9 @@ export class MapComponent implements OnInit, OnDestroy {
                 this.logger.warn('Unsupported action type: ', sidebar.action);
             }
           } else if (sidebar.target === SidebarType.FEATURES) {
+            console.log('sidebar: ', sidebar);
+            this.viewFeaturesData = sidebar.data;
+
             switch (sidebar.action) {
               case ActionType.CLOSE:  this.isFeaturesSidebarActive = false;    break;
               case ActionType.OPEN:   this.isFeaturesSidebarActive = true;     break;
@@ -198,9 +202,14 @@ export class MapComponent implements OnInit, OnDestroy {
       this.wfsService.getFeaturesByXmlFilter(xml)
           .subscribe((featureCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
+
             if (featureCollection.features && featureCollection.features.length > 0) {
-              this.selectedFeatures = featureCollection.features;
-              this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN});
+              this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+                data: {
+                  features: featureCollection.features,
+                  mode: 'view'
+                } as ViewFeaturesData
+              });
 
               featureCollection.features.forEach(feature => {
                 this.openLayers.paintFeature(feature);

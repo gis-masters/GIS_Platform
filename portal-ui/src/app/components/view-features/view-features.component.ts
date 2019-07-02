@@ -2,6 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
 import {PageEvent} from '@angular/material/typings/paginator';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
+import {EditFeatureData} from '../edit-feature/edit-feature.component';
 import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
@@ -15,26 +16,28 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 export class ViewFeaturesComponent implements OnChanges {
 
   @Input() isActive: boolean;
-  @Input() features: WfsFeature[];
+  @Input() data: ViewFeaturesData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   isEditMode = false;
-  selectedFeature: WfsFeature;
+  isSingleEdit = true;
+  editFeatureData: EditFeatureData;
   pageIndex = 0;
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
               private rulesService: FgistpRulesService,
               private openLayers: OpenLayersService) {
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['features']) {
-      if (this.features && this.features.length === 1) {
-        this.selectFeature(this.features[0]);
-      } else if (this.features && this.features.length > 1) {
+    const dataChanged = changes['data'];
+    if (dataChanged && !dataChanged.isFirstChange()) {
+      const currentValue = dataChanged.currentValue;
+      if (currentValue && currentValue.features && currentValue.features.length === 1) {
+        this.selectFeature(currentValue.features[0]);
+      } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
         this.isEditMode = false;
       }
     }
@@ -56,12 +59,18 @@ export class ViewFeaturesComponent implements OnChanges {
   }
 
   selectFeature(feature: WfsFeature) {
-    this.selectedFeature = feature;
     this.isEditMode = true;
+    this.isSingleEdit = true;
+    this.editFeatureData = {feature: feature, mode: 'single'} as EditFeatureData;
   }
 
   handlePageEvent(event: PageEvent) {
     console.log('handlePageEvent', event);
     this.pageIndex = event.pageIndex;
   }
+}
+
+export interface ViewFeaturesData {
+  features: WfsFeature[];
+  mode: string;
 }

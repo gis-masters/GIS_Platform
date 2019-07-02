@@ -5,9 +5,9 @@
       Обьекты
     </div>
 
-    <ng-container *ngIf="features; else noFeatures">
+    <ng-container *ngIf="data?.features; else noFeatures">
       <mat-nav-list role="list" class="crg-view-feature-content scroll">
-        <mat-list-item role="listitem" *ngFor="let feature of features; let index = index"
+        <mat-list-item role="listitem" *ngFor="let feature of data?.features; let index = index"
                        (click)="selectFeature(feature)" style="height: 60px">
           <div class="feature-info">
             <div class="fiz-p">
@@ -32,7 +32,7 @@
   </div>
 
   <div *ngIf="isEditMode">
-    <crg-edit-feature [feature]="selectedFeature" (closeMe)="switchMode()"></crg-edit-feature>
+    <crg-edit-feature [data]="editFeatureData" (closeMe)="switchMode()"></crg-edit-feature>
   </div>
 
 </div>

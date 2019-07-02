@@ -15,7 +15,7 @@ import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gi
 })
 export class EditFeatureComponent implements OnChanges {
 
-  @Input() feature: WfsFeature;
+  @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
 
   editFeatureForm: FormGroup;
@@ -34,18 +34,21 @@ export class EditFeatureComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['feature']) {
+    const dataChanged = changes['data'];
+    if (dataChanged) {
       this.editFeatureData = [];
-      this.openLayers.showFeature(this.feature);
+      const currentData: EditFeatureData = dataChanged.currentValue;
 
-      this.xsdFeature = this.rulesService.getFeatureByName(this.feature.id.split('.')[0]);
+      this.openLayers.showFeature(currentData.feature);
+
+      this.xsdFeature = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
-      Object.keys(this.feature.properties)
+      Object.keys(currentData.feature.properties)
             .map(key => key)
             .filter(key => key !== 'bbox')
             .forEach(key => {
-              const currentValue = this.feature.properties[key];
+              const currentValue = currentData.feature.properties[key];
               const property = this.rulesService.getPropertiesByName(key, this.xsdFeature.properties);
               if (property) {
                 this.editFeatureData.push({
@@ -81,7 +84,7 @@ export class EditFeatureComponent implements OnChanges {
     // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
     const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
 
-    if (this.feature && this.feature.properties) {
+    if (this.data && this.data.feature && this.data.feature.properties) {
       const newProperties = {};
       dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
         newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
@@ -89,7 +92,7 @@ export class EditFeatureComponent implements OnChanges {
 
       const projectModel = this.projectsService.getCurrent();
       this.transformFeatureService
-          .updateFeature(this.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
+          .updateFeature(this.data.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
               this.closeMe.emit(true);
@@ -124,4 +127,9 @@ export class EditFeatureComponent implements OnChanges {
     this.openLayers.clearDraft();
   }
 
+}
+
+export interface EditFeatureData {
+  feature: WfsFeature;
+  mode: string;
 }
