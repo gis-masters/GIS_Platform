@@ -36,7 +36,7 @@ export class Util {
       filterString = filterString + this.parseFilter(filterEvent);
     });
 
-    console.log('CQL: ', filterString);
+    // console.log('CQL: ', filterString);
 
     return filterString;
   }

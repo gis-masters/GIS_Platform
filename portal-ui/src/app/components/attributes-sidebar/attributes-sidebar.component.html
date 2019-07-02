@@ -55,12 +55,12 @@
     <ng-template #filterTemplate let-column="column" let-sort="sortFn" let-sortDir="sortDir"
                  ngx-datatable-header-template>
       <div (click)="sort($event, sortDir, sortFn)">
-        <span style="cursor: pointer">{{column.name}}</span>
-        <span class="sort-btn"></span>
-
-        <crg-table-filter *ngIf="enableFilter" [property]="getSimpleProperty(column.prop.split('.')[1])"
-                          (filterEvent)="onFilterChange($event)"></crg-table-filter>
+        <div class="cut-text w-95 cur-p">{{column.name}}</div>
+        <div class="sort-btn"></div>
       </div>
+
+      <crg-table-filter *ngIf="enableFilter" [property]="getSimpleProperty(column.prop.split('.')[1])"
+                        (filterEvent)="onFilterChange($event)"></crg-table-filter>
     </ng-template>
   </div>
 

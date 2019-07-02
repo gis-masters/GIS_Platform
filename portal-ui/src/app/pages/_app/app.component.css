@@ -39,3 +39,7 @@
   position: relative;
   top: 12px;
 }
+
+.cur-p {
+  cursor: pointer;
+}

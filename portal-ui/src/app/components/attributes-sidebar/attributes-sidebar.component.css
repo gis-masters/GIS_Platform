@@ -78,3 +78,7 @@
   border: outset;
   border-width: thin;
 }
+
+.w-95 {
+  width: 95%;
+}

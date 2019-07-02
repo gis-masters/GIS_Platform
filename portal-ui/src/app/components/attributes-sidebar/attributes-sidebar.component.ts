@@ -51,7 +51,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   enableFilter = false;
   loading = true;
   viewSettings: AttributeTableViewSettings = {
-    viewMode: ViewMode.internal
+    viewMode: ViewMode.alias
   };
 
   // TODO: отписаться
@@ -65,7 +65,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   ngAfterViewInit(): void {
     this.requestModel$
         .pipe(
-          tap(console.log),
           debounceTime(50)
         )
         .subscribe((requestModel: RequestModel) => {

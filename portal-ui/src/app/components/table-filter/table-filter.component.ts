@@ -32,7 +32,11 @@ export class TableFilterComponent implements AfterViewInit {
           distinctUntilChanged()
         )
         .subscribe(value => {
-          this.filterEvent.emit({value: [value], property: this.property});
+          if (!!value) {
+            this.filterEvent.emit({value: [value], property: this.property});
+          } else {
+            this.filterEvent.emit({value: [], property: this.property});
+          }
         });
     }
   }
