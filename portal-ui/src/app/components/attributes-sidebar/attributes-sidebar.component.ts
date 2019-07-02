@@ -317,6 +317,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     return result;
   }
+
+  editFeatures() {
+    console.log('to edit: ', this.attributeTable.selected);
+  }
 }
 
 export interface WfsFeatureView extends WfsFeature {

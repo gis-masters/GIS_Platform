@@ -3,7 +3,6 @@ import {MatSnackBar} from '@angular/material';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProjectsService} from '../../services/gis/projects.service';
-import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
@@ -30,7 +29,6 @@ export class EditFeatureComponent implements OnChanges {
               private projectsService: ProjectsService,
               private openLayers: OpenLayersService,
               private rulesService: FgistpRulesService,
-              private communicationService: CommunicationService,
               private transformFeatureService: TransformFeatureService) {
 
   }
