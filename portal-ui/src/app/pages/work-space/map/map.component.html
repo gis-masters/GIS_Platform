@@ -28,6 +28,7 @@
 </p-dialog>
 
 <crg-report-sidebar [isActive]="isBugReportSidebarActive" [layers]="layers"></crg-report-sidebar>
-<crg-view-features [isActive]="isFeaturesSidebarActive" [data]="viewFeaturesData"></crg-view-features>
+
+<crg-view-features *ngIf="isFeaturesSidebarActive" [data]="viewFeaturesData"></crg-view-features>
 <crg-attributes-sidebar *ngIf="isAttrSidebarActive" [layer]="selectedLayer"
                         [featureDescription]="getFeature(selectedLayer)"></crg-attributes-sidebar>

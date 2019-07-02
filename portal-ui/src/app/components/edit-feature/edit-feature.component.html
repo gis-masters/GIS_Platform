@@ -6,7 +6,7 @@
     </div>
   </div>
 
-  <div class="row edit-content scroll">
+  <div [ngClass]="isAttributeSidebarOpened? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
 
     <form class="example-form col-md-12" [formGroup]="editFeatureForm">
       <div *ngFor="let editFeatureItem of editFeatureData">

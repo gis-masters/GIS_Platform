@@ -2,10 +2,10 @@ import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
 import {PageEvent} from '@angular/material/typings/paginator';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {EditFeatureData} from '../edit-feature/edit-feature.component';
+import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
@@ -13,15 +13,15 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
   templateUrl: './view-features.component.html',
   styleUrls: ['./view-features.component.css']
 })
-export class ViewFeaturesComponent implements OnChanges {
+export class ViewFeaturesComponent implements OnChanges, OnInit {
 
-  @Input() isActive: boolean;
   @Input() data: ViewFeaturesData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   isEditMode = false;
   isSingleEdit = true;
+  isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
   pageIndex = 0;
 
@@ -31,20 +31,31 @@ export class ViewFeaturesComponent implements OnChanges {
               private openLayers: OpenLayersService) {
   }
 
+  ngOnInit(): void {
+    this.sideBarManager.currentState$
+        .subscribe(sidebarsState => {
+          const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
+          if (attrSidebarState === ActionType.OPEN) {
+            this.isAttributeSidebarOpened = true;
+          } else {
+            this.isAttributeSidebarOpened = false;
+          }
+        });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     const dataChanged = changes['data'];
     if (dataChanged && !dataChanged.isFirstChange()) {
-      const currentValue = dataChanged.currentValue;
+      const currentValue = dataChanged.currentValue as ViewFeaturesData;
       if (currentValue && currentValue.features && currentValue.features.length === 1) {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
-        this.isEditMode = false;
-      }
-    }
-
-    if (changes['isActive']) {
-      if (this.isActive === false) {
-        this.openLayers.clearDraft();
+        if (currentValue.mode === EditFeatureMode.multipleEdit) {
+          console.log('!!!!!!!!!!!!!!!!!!! EditFeatureMode.multipleEdit');
+          this.isEditMode = false;
+        } else {
+          this.isEditMode = false;
+        }
       }
     }
   }
@@ -61,7 +72,7 @@ export class ViewFeaturesComponent implements OnChanges {
   selectFeature(feature: WfsFeature) {
     this.isEditMode = true;
     this.isSingleEdit = true;
-    this.editFeatureData = {feature: feature, mode: 'single'} as EditFeatureData;
+    this.editFeatureData = {feature: feature, mode: EditFeatureMode.single} as EditFeatureData;
   }
 
   handlePageEvent(event: PageEvent) {
@@ -72,5 +83,5 @@ export class ViewFeaturesComponent implements OnChanges {
 
 export interface ViewFeaturesData {
   features: WfsFeature[];
-  mode: string;
+  mode: EditFeatureMode;
 }

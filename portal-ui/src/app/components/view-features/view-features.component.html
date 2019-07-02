@@ -1,4 +1,4 @@
-<div [ngClass]="isActive? 'crg-view-features-sidebar' : 'crg-view-features-sidebar_hidden'">
+<div [ngClass]="isAttributeSidebarOpened? 'crg-view-features-sidebar short-sidebar' : 'crg-view-features-sidebar full-sidebar'">
   <div *ngIf="!isEditMode">
     <div class="crg-sidebar-header">
       <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
@@ -6,7 +6,9 @@
     </div>
 
     <ng-container *ngIf="data?.features; else noFeatures">
-      <mat-nav-list role="list" class="crg-view-feature-content scroll">
+<!--      short-h-->
+      <mat-nav-list role="list"
+                    [ngClass]="isAttributeSidebarOpened? 'feature-content scroll short-h' : 'feature-content scroll full-h'">
         <mat-list-item role="listitem" *ngFor="let feature of data?.features; let index = index"
                        (click)="selectFeature(feature)" style="height: 60px">
           <div class="feature-info">

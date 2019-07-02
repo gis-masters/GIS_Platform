@@ -1,6 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {CommunicationService} from './communication.service';
+import {BehaviorSubject} from 'rxjs';
 
 /**
  * Сервис с логикой показа всплывающих окон
@@ -9,6 +10,14 @@ import {CommunicationService} from './communication.service';
   providedIn: 'root'
 })
 export class SideBarManager {
+
+  currentState$: BehaviorSubject<{}> = new BehaviorSubject<{}>({
+    'INFO': ActionType.CLOSE,
+    'LAYERS': ActionType.CLOSE,
+    'FEATURES': ActionType.CLOSE,
+    'BUG_REPORT': ActionType.CLOSE,
+    'ATTRIBUTES': ActionType.CLOSE,
+  });
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService) {
@@ -32,8 +41,15 @@ export class SideBarManager {
       this.emit(SidebarType.FEATURES, sidebar.action, sidebar.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
-      this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
+      // this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
     } else if (sidebar.target === SidebarType.ATTRIBUTES) {
+      const currentState = this.currentState$.getValue();
+      currentState[SidebarType.ATTRIBUTES] = sidebar.action;
+      currentState[SidebarType.INFO] = ActionType.CLOSE;
+      currentState[SidebarType.BUG_REPORT] = ActionType.CLOSE;
+      this.currentState$.next(currentState);
+
+      // TODO: переделать
       this.emit(SidebarType.ATTRIBUTES, sidebar.action, sidebar.data);
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
@@ -45,6 +61,8 @@ export class SideBarManager {
   closeAll() {
     this.emit(SidebarType.INFO, ActionType.CLOSE);
     this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
+    this.emit(SidebarType.ATTRIBUTES, ActionType.CLOSE);
+    this.emit(SidebarType.FEATURES, ActionType.CLOSE);
   }
 
   private emit(target: SidebarType, action: ActionType, data?: any) {

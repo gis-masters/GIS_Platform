@@ -17,6 +17,7 @@ import {FeatureXsdDefinition, FgistpRulesService, XsdFeature} from '../../../ser
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {ViewFeaturesData} from '../../../components/view-features/view-features.component';
+import {EditFeatureMode} from '../../../components/edit-feature/edit-feature.component';
 
 @Component({
   selector: 'crg-map',
@@ -207,7 +208,7 @@ export class MapComponent implements OnInit, OnDestroy {
               this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
                 data: {
                   features: featureCollection.features,
-                  mode: 'view'
+                  mode: EditFeatureMode.single
                 } as ViewFeaturesData
               });
 

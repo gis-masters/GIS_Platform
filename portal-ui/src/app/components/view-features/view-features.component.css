@@ -1,8 +1,23 @@
 @import url(../../pages/_app/app.component.css);
 
-.crg-view-feature-content {
-  overflow: auto;
+.full-h {
   height: calc(100vh - 105px);
+}
+
+.short-h {
+  height: calc(100vh - 551px);
+}
+
+.feature-content {
+  overflow: auto;
+}
+
+.full-sidebar {
+  height: calc(100% - 55px);
+}
+
+.short-sidebar {
+  height: calc(100% - 501px);
 }
 
 .crg-view-features-sidebar {
@@ -11,7 +26,7 @@
   top: 55px;
   left: calc(100% - 550px);
 
-  height: calc(100% - 55px);
+  /*height: calc(100% - 55px);*/
   width: 550px;
 
   background-color: white;

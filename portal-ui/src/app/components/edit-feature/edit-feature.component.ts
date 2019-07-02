@@ -5,21 +5,23 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProjectsService} from '../../services/gis/projects.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-edit-feature',
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent implements OnChanges {
+export class EditFeatureComponent implements OnChanges, OnInit {
 
   @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
 
   editFeatureForm: FormGroup;
   editFeatureData: EditFeatureItem[] = [];
+  isAttributeSidebarOpened = false;
 
   private xsdFeature: XsdFeature;
 
@@ -27,10 +29,23 @@ export class EditFeatureComponent implements OnChanges {
               private snackBar: MatSnackBar,
               private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
+              private sideBarManager: SideBarManager,
               private openLayers: OpenLayersService,
               private rulesService: FgistpRulesService,
               private transformFeatureService: TransformFeatureService) {
 
+  }
+
+  ngOnInit(): void {
+    this.sideBarManager.currentState$
+        .subscribe(sidebarsState => {
+          const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
+          if (attrSidebarState === ActionType.OPEN) {
+            this.isAttributeSidebarOpened = true;
+          } else {
+            this.isAttributeSidebarOpened = false;
+          }
+        });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -131,5 +146,10 @@ export class EditFeatureComponent implements OnChanges {
 
 export interface EditFeatureData {
   feature: WfsFeature;
-  mode: string;
+  mode: EditFeatureMode;
+}
+
+export enum EditFeatureMode {
+  multipleEdit = 'multipleEdit',
+  single = 'single'
 }

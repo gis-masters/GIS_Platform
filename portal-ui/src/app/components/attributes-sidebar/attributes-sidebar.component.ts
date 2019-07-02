@@ -22,6 +22,7 @@ import {MatSelectChange} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
+import {EditFeatureMode} from '../edit-feature/edit-feature.component';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -328,7 +329,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
-        mode: 'multipleEdit'
+        mode: EditFeatureMode.multipleEdit
       } as ViewFeaturesData
     });
   }

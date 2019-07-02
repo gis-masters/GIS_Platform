@@ -1,8 +1,15 @@
 @import url(../../pages/_app/app.component.css);
 
+.full-h {
+  height: calc(100vh - 105px);
+}
+
+.short-h {
+  height: calc(100vh - 551px);
+}
+
 .edit-content {
   overflow: auto;
-  height: calc(100vh - 105px);
 }
 
 .fiz-edit-item {
