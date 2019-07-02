@@ -1,6 +1,8 @@
+import {APP_VERSION} from './var';
+
 export const environment = {
   production: false,
-  version: 'Default 0.0.11',
+  version: APP_VERSION,
   server: {
     'host': '10.10.10.121',
     'port': 8100
