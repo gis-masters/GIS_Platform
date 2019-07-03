@@ -6,18 +6,13 @@
     </div>
 
     <ng-container *ngIf="data?.features; else noFeatures">
-<!--      short-h-->
       <mat-nav-list role="list"
                     [ngClass]="isAttributeSidebarOpened? 'feature-content scroll short-h' : 'feature-content scroll full-h'">
         <mat-list-item role="listitem" *ngFor="let feature of data?.features; let index = index"
                        (click)="selectFeature(feature)" style="height: 60px">
           <div class="feature-info">
-            <div class="fiz-p">
-              {{index + 1}}.
-            </div>
-            <div class="feature-id">
-              ID: {{feature.id.split('.')[1]}}
-            </div>
+            <div class="fiz-p">{{index + 1}}.</div>
+            <div class="feature-id">ID: {{feature.id.split('.')[1]}}</div>
             <div class="feature-alias">
               {{rulesService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
             </div>

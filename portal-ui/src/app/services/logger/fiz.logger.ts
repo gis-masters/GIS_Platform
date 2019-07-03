@@ -14,7 +14,7 @@ export class FizLogger {
       this.updateLogModel({
         mode: LogMode.DEV,
         logItems: [],
-        defaultLevel: LogLevel.WARN
+        defaultLevel: LogLevel.INFO
       });
     } else {
       this.logModel = logModel;

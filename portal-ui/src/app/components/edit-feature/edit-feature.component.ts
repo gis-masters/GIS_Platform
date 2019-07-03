@@ -5,9 +5,9 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProjectsService} from '../../services/gis/projects.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-edit-feature',
@@ -54,7 +54,9 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       this.editFeatureData = [];
       const currentData: EditFeatureData = dataChanged.currentValue;
 
-      this.openLayers.showFeature(currentData.feature);
+      if (currentData.mode === EditFeatureMode.single) {
+        this.openLayers.showFeature(currentData.feature);
+      }
 
       this.xsdFeature = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
@@ -106,7 +108,9 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       });
 
       const projectModel = this.projectsService.getCurrent();
-      this.transformFeatureService
+
+      if (this.data.mode === EditFeatureMode.single) {
+        this.transformFeatureService
           .updateFeature(this.data.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
@@ -117,6 +121,21 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
             }
           });
+      } else {
+        this.transformFeatureService
+            .updateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
+            .subscribe(response => {
+              const countFeatures = Object.keys(this.data.featuresId).length;
+
+              if (response.includes('<wfs:totalUpdated>' + countFeatures + '</wfs:totalUpdated>')) {
+                this.closeMe.emit(true);
+                this.snackBar.open('Сохранено', 'X', {duration: 3000});
+              } else {
+                this.logger.warn('UpdateFeature response: ', response);
+                this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+              }
+            });
+      }
     }
   }
 
@@ -147,6 +166,8 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 export interface EditFeatureData {
   feature: WfsFeature;
   mode: EditFeatureMode;
+  unsafeProperties?: {}; // Неодинаковые свойства фич (заполняется в режиме множественного редактирования)
+  featuresId?: {}; // Идентификаторы фич (заполняется в режиме множественного редактирования)
 }
 
 export enum EditFeatureMode {

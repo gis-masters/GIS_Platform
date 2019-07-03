@@ -38,4 +38,31 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
+  updateFeatures(featuresId: {}, workspaceName: string, layerName: string, newProperties: any) {
+    const options = {
+      featureNS: 'castyl_for_remove',
+      featureType: layerName,
+      featurePrefix: workspaceName,
+      nativeElements: []
+    } as WriteTransactionOptions;
+
+    const featuresForUpdate = [];
+    Object.keys(featuresId).forEach(featureId => {
+      const features = new Feature(newProperties);
+      features.setId(featureId);
+
+      featuresForUpdate.push(features);
+    });
+
+    const node = this.formatWFS.writeTransaction(null, featuresForUpdate, null, options);
+    let payload = this.xs.serializeToString(node);
+
+    Object.keys(featuresId).forEach(featureId => {
+      payload = payload.replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
+    });
+
+    return this.http
+               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
+  }
+
 }

@@ -329,7 +329,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
-        mode: EditFeatureMode.multipleEdit
+        mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
       } as ViewFeaturesData
     });
   }
