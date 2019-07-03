@@ -90,3 +90,10 @@
 .feature-id {
   font-weight: bold;
 }
+
+.edit-icon {
+  cursor: pointer;
+  color: grey;
+  float: right;
+  margin-right: 10px;
+}

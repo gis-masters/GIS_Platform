@@ -43,3 +43,9 @@
 .cur-p {
   cursor: pointer;
 }
+
+.fiz-border {
+  border-radius: 5px;
+  border: outset;
+  border-width: thin;
+}

@@ -161,6 +161,22 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     this.openLayers.clearDraft();
   }
 
+  getFeaturesCount(featuresId: {}) {
+    if (featuresId) {
+      return Object.keys(featuresId).length;
+    } else {
+      return undefined;
+    }
+  }
+
+  getTooltip(featuresId: {}) {
+    const featuresCount = this.getFeaturesCount(featuresId);
+    if (featuresCount) {
+      return 'Сохранить данные для ' + featuresCount + ' обьектов';
+    } else {
+      return 'Сохраниить обьект';
+    }
+  }
 }
 
 export interface EditFeatureData {

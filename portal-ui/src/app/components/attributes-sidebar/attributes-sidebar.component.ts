@@ -18,7 +18,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
-import {MatSelectChange} from '@angular/material';
+import {MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
@@ -46,7 +46,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   columns: TableColumn[] = [];
   customRowIdentity = ((row: WfsFeature) => row.id);
   pageInfo: Pageable = {
-    pageSize: 20,
+    pageSize: 100,
     offset: 0
   };
 
@@ -61,6 +61,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private snackBar: MatSnackBar,
               private log: FizLogger,
               private openLayersService: OpenLayersService) { }
 
@@ -78,7 +79,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     const layerChanged = changes['layer'];
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
-      this.requestModel$.next({page: {pageSize: 20, offset: 0}});
+      this.requestModel$.next({page: {pageSize: 100, offset: 0}});
 
       this.attributeTable.selected = [];
       this.openLayersService.clearDraft();
@@ -321,6 +322,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   editFeatures() {
+    if (this.attributeTable.selected.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+
     const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(this.attributeTable.selected));
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.name + '.' + feature.id;

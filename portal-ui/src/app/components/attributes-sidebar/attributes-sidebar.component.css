@@ -42,6 +42,7 @@
   cursor: pointer;
   color: grey;
   float: right;
+  margin-right: 2px;
 }
 
 .crg-attr-sidebar-header {
@@ -75,10 +76,12 @@
   width: 150px;
   float: right;
   margin-right: 5px;
-  border: outset;
-  border-width: thin;
 }
 
 .w-95 {
   width: 95%;
+}
+
+::ng-deep .mat-select-value {
+  padding-left: 5px;
 }

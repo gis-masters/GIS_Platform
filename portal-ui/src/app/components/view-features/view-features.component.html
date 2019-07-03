@@ -2,6 +2,8 @@
   <div *ngIf="!isEditMode">
     <div class="crg-sidebar-header">
       <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+      <mat-icon class="edit-icon fiz-border" (click)="editFeatures()"
+                matTooltip="Редактировать выделенные обьекты">edit</mat-icon>
       Обьекты
     </div>
 

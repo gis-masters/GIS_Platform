@@ -35,7 +35,9 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
       this.editFeatureData = Util.prepareFeatureForMultipleEdit(this.data.features);
       this.isEditMode = true;
     } else {
-      this.selectFeature(this.data.features[0]);
+      if (this.data.features.length === 1) {
+        this.selectFeature(this.data.features[0]);
+      }
     }
 
     this.sideBarManager.currentState$
@@ -81,6 +83,14 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
 
+  editFeatures() {
+    if (this.data.features.length === 1) {
+      this.selectFeature(this.data.features[0]);
+    } else {
+      this.editFeatureData = Util.prepareFeatureForMultipleEdit(this.data.features);
+      this.isEditMode = true;
+    }
+  }
 }
 
 export interface ViewFeaturesData {
