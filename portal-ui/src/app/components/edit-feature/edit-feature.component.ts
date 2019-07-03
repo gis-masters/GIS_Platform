@@ -7,7 +7,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
 
 @Component({
   selector: 'crg-edit-feature',
@@ -176,6 +176,19 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     } else {
       return 'Сохраниить обьект';
     }
+  }
+
+  isUnsafeProperty(property: SimpleProperty): boolean {
+    if (this.data.mode === EditFeatureMode.single) {
+      return false;
+    }
+
+    const propName = property.name.toLowerCase();
+    if (this.data.unsafeProperties[propName]) {
+      return true;
+    }
+
+    return false;
   }
 }
 
