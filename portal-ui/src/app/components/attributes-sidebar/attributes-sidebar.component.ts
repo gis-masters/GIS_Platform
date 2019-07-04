@@ -23,6 +23,7 @@ import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {EditFeatureMode} from '../edit-feature/edit-feature.component';
+import {fakeAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -212,8 +213,19 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         prop: '',
         sortable: false,
         resizeable: false,
-        width: 20,
+        width: 12,
         cellTemplate: this.cellTemplate
+      },
+      {
+        name: '',
+        prop: 'checkboxable',
+        sortable: false,
+        canAutoResize: false,
+        draggable: false,
+        resizeable: false,
+        width: 22,
+        headerCheckboxable: true,
+        checkboxable: true
       },
       {
         name: this.viewSettings.viewMode === ViewMode.internal ? 'ID' : 'Идентификатор',

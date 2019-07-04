@@ -77,7 +77,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
                 const formControl = new FormControl(currentValue);
 
-                if (this.isUnsafeProperty(property)) {
+                if (this.data.mode === EditFeatureMode.multipleEdit) {
                   formControl.disable();
                 }
 
@@ -95,6 +95,11 @@ export class EditFeatureComponent implements OnChanges, OnInit {
                 });
 
                 const formControl = new FormControl(currentValue);
+
+                if (this.data.mode === EditFeatureMode.multipleEdit) {
+                  formControl.disable();
+                }
+
                 this.editFeatureForm.addControl(key, formControl);
               }
             });
@@ -102,6 +107,10 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   }
 
   editFeature() {
+    if (this.editFeatureForm.pristine) {
+      return;
+    }
+
     // Сохраняем только те свойства что были затронуты пользователем и валидны
     // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
     const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
@@ -130,9 +139,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
         this.transformFeatureService
             .updateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
             .subscribe(response => {
-              const countFeatures = Object.keys(this.data.featuresId).length;
-
-              if (response.includes('<wfs:totalUpdated>' + countFeatures + '</wfs:totalUpdated>')) {
+              if (response.includes('<wfs:totalUpdated>' + this.data.total + '</wfs:totalUpdated>')) {
                 this.closeMe.emit(true);
                 this.snackBar.open('Сохранено', 'X', {duration: 3000});
               } else {
@@ -166,46 +173,30 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     this.openLayers.clearDraft();
   }
 
-  getFeaturesCount(featuresId: {}) {
-    if (featuresId) {
-      return Object.keys(featuresId).length;
-    } else {
-      return undefined;
-    }
-  }
-
-  getTooltip(featuresId: {}) {
-    const featuresCount = this.getFeaturesCount(featuresId);
+  getTooltip() {
+    const featuresCount = this.data.total;
     if (featuresCount) {
-      return 'Сохранить данные для ' + featuresCount + ' обьектов';
+      return 'Сохранить данные для ' + this.data.total + ' обьектов';
     } else {
       return 'Сохраниить обьект';
     }
   }
 
-  isUnsafeProperty(property: SimpleProperty): boolean {
-    if (this.data.mode === EditFeatureMode.single) {
-      return false;
+  switchControl(property: SimpleProperty) {
+    if (this.editFeatureForm.controls[property.name.toLowerCase()].disabled) {
+      // formControl.setValue('Оставить как есть');
+      this.editFeatureForm.controls[property.name.toLowerCase()].enable();
+    } else {
+      this.editFeatureForm.controls[property.name.toLowerCase()].disable();
     }
-
-    const propName = property.name.toLowerCase();
-    if (this.data.unsafeProperties[propName]) {
-      return true;
-    }
-
-    return false;
-  }
-
-  enableControl(property: SimpleProperty) {
-    this.editFeatureForm.controls[property.name.toLowerCase()].enable();
   }
 }
 
 export interface EditFeatureData {
-  feature: WfsFeature;
+  feature: WfsFeature;    // Шаблонная фича
   mode: EditFeatureMode;
-  unsafeProperties?: {}; // Неодинаковые свойства фич (заполняется в режиме множественного редактирования)
-  featuresId?: {}; // Идентификаторы фич (заполняется в режиме множественного редактирования)
+  featuresId?: []; // Идентификаторы фич (заполняется в режиме множественного редактирования)
+  total: number;
 }
 
 export enum EditFeatureMode {

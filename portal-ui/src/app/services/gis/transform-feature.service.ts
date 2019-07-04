@@ -38,7 +38,7 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
-  updateFeatures(featuresId: {}, workspaceName: string, layerName: string, newProperties: any) {
+  updateFeatures(featuresId: [], workspaceName: string, layerName: string, newProperties: any) {
     const options = {
       featureNS: 'castyl_for_remove',
       featureType: layerName,
@@ -47,7 +47,7 @@ export class TransformFeatureService {
     } as WriteTransactionOptions;
 
     const featuresForUpdate = [];
-    Object.keys(featuresId).forEach(featureId => {
+    featuresId.forEach(featureId => {
       const features = new Feature(newProperties);
       features.setId(featureId);
 

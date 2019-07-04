@@ -149,7 +149,6 @@ export class MapComponent implements OnInit, OnDestroy {
                 this.logger.warn('Unsupported action type: ', sidebar.action);
             }
           } else if (sidebar.target === SidebarType.FEATURES) {
-            console.log('sidebar: ', sidebar);
             this.viewFeaturesData = sidebar.data;
 
             switch (sidebar.action) {

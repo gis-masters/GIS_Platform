@@ -2,8 +2,8 @@
   <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
     <div class="col-12" style="padding-left: 5px; padding-right: 5px">
       <button mat-stroked-button color="primary" (click)="editFeature()" class="float-left"
-              matBadge="{{getFeaturesCount(data.featuresId)}}" matBadgePosition="after" matBadgeColor="accent"
-              matTooltip="{{getTooltip(data.featuresId)}}">
+              matBadge="{{data.total}}" matBadgePosition="after" matBadgeColor="accent"
+              matTooltip="{{getTooltip()}}" [disabled]="editFeatureForm.pristine">
         <mat-icon *ngIf="data.mode === 'multipleEdit'">list</mat-icon>
         Сохранить
       </button>
@@ -25,10 +25,10 @@
           <div class="col-6 px-0">
             <div class="input-group">
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
-              <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
                 <span class="input-group-text error-badge">
-                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
-                            matTooltip="Вы знаете что делаете?">error</mat-icon>
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
             </div>
@@ -44,10 +44,10 @@
           <div class="col-6 px-0">
             <div class="input-group">
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
-              <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
                 <span class="input-group-text error-badge">
-                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
-                            matTooltip="Вы знаете что делаете?">error</mat-icon>
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
             </div>
@@ -63,10 +63,10 @@
           <div class="col-6 px-0">
             <div class="input-group">
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
-              <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
                 <span class="input-group-text error-badge">
-                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
-                            matTooltip="Вы знаете что делаете?">error</mat-icon>
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
             </div>
@@ -84,12 +84,15 @@
                 </option>
               </select>
 
-              <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
                 <span class="input-group-text error-badge">
-                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
-                            matTooltip="Вы знаете что делаете?">error</mat-icon>
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
+
+<!--              <div class="multiedit-template" *ngIf="data.mode === 'multipleEdit'">-->
+<!--                <span class="template-text">Оставить как есть</span>-->
+<!--              </div>-->
             </div>
           </div>
         </div>

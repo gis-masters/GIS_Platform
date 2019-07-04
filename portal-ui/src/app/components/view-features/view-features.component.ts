@@ -1,4 +1,3 @@
-import {Util} from './util';
 import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
@@ -32,7 +31,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     if (this.data.mode === EditFeatureMode.multipleEdit) {
-      this.editFeatureData = Util.prepareFeatureForMultipleEdit(this.data.features);
+      this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
       this.isEditMode = true;
     } else {
       if (this.data.features.length === 1) {
@@ -59,7 +58,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
         if (currentValue.mode === EditFeatureMode.multipleEdit) {
-          this.editFeatureData = Util.prepareFeatureForMultipleEdit(currentValue.features);
+          this.editFeatureData = this.prepareDataForMultipleEdit(currentValue.features);
           this.isEditMode = true;
         } else {
           this.isEditMode = false;
@@ -87,10 +86,23 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
     if (this.data.features.length === 1) {
       this.selectFeature(this.data.features[0]);
     } else {
-      this.editFeatureData = Util.prepareFeatureForMultipleEdit(this.data.features);
+      this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
       this.isEditMode = true;
     }
   }
+
+  private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
+    const tamplateFeature: WfsFeature = features[0];
+    const listOfFeaturesId = features.map((feature: WfsFeature) => feature.id);
+
+    return {
+      feature: tamplateFeature,
+      mode: EditFeatureMode.multipleEdit,
+      featuresId: listOfFeaturesId,
+      total: features.length
+    } as EditFeatureData;
+  }
+
 }
 
 export interface ViewFeaturesData {
