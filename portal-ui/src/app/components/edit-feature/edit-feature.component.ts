@@ -76,6 +76,11 @@ export class EditFeatureComponent implements OnChanges, OnInit {
                 });
 
                 const formControl = new FormControl(currentValue);
+
+                if (this.isUnsafeProperty(property)) {
+                  formControl.disable();
+                }
+
                 this.editFeatureForm.addControl(key, formControl);
               } else {
                 this.editFeatureData.push({
@@ -189,6 +194,10 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     }
 
     return false;
+  }
+
+  enableControl(property: SimpleProperty) {
+    this.editFeatureForm.controls[property.name.toLowerCase()].enable();
   }
 }
 

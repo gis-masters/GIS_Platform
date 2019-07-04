@@ -27,7 +27,8 @@
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
                 <span class="input-group-text error-badge">
-                  <mat-icon>error</mat-icon>
+                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
+                            matTooltip="Вы знаете что делаете?">error</mat-icon>
                 </span>
               </div>
             </div>
@@ -45,7 +46,8 @@
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
                 <span class="input-group-text error-badge">
-                  <mat-icon>error</mat-icon>
+                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
+                            matTooltip="Вы знаете что делаете?">error</mat-icon>
                 </span>
               </div>
             </div>
@@ -63,7 +65,8 @@
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
                 <span class="input-group-text error-badge">
-                  <mat-icon>error</mat-icon>
+                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
+                            matTooltip="Вы знаете что делаете?">error</mat-icon>
                 </span>
               </div>
             </div>
@@ -83,7 +86,8 @@
 
               <div class="input-group-append" *ngIf="isUnsafeProperty(editFeatureItem.property)">
                 <span class="input-group-text error-badge">
-                  <mat-icon>error</mat-icon>
+                  <mat-icon class="cur-p" (click)="enableControl(editFeatureItem.property)"
+                            matTooltip="Вы знаете что делаете?">error</mat-icon>
                 </span>
               </div>
             </div>
