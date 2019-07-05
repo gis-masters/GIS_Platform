@@ -41,10 +41,6 @@ export class WfsService {
   getFeatures(complexName: string, requestModel?: RequestModel): Observable<WfsFeatureCollection> {
     const url = this.serverProp.geoServerUrl + '/wfs';
 
-    const countRows = (requestModel && requestModel.page && requestModel.page.pageSize) ? requestModel.page.pageSize.toString() : '20';
-    const offset = (requestModel && requestModel.page && requestModel.page.offset) ? requestModel.page.offset.toString() : '0';
-    const startIndex = Number(offset) * Number(countRows);
-
     const params = {
       service: 'wfs',
       // version: '2.0.0',
@@ -53,10 +49,16 @@ export class WfsService {
       outputFormat: 'application/json',
       exceptions: 'application/json',
       typeName: complexName,
-      startindex: startIndex.toString(),
-      count: countRows,
       sortBy: Util.generateSortParam(requestModel)
     };
+
+    if (requestModel && requestModel.page) {
+      const countRows = (requestModel.page.pageSize) ? requestModel.page.pageSize.toString() : '100';
+      const offset = (requestModel.page.offset) ? requestModel.page.offset.toString() : '0';
+
+      params['startindex'] = Number(offset) * Number(countRows);
+      params['count'] = countRows;
+    }
 
     const cqlFilter = Util.generateFilter(requestModel);
     if (!!cqlFilter) {
@@ -64,7 +66,10 @@ export class WfsService {
     }
 
     return this.http
-               .get<WfsFeatureCollection>(url, {params: params});
+               .get<WfsFeatureCollection>(url, {params: params})
+               .pipe(
+                 map((fCollection: WfsFeatureCollection) => this.clearFeatureId(fCollection))
+               );
   }
 
   /**
@@ -86,6 +91,16 @@ export class WfsService {
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
+  private clearFeatureId(fCollection: WfsFeatureCollection): WfsFeatureCollection {
+    fCollection.features.forEach((feature: WfsFeature) => {
+      const splitElement = feature.id.split('.')[1];
+      if (splitElement) {
+        feature.id = splitElement;
+      }
+    });
+
+    return fCollection;
+  }
 }
 
 export interface WfsFeatureCollection {

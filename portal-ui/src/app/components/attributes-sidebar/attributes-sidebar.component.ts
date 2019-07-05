@@ -1,4 +1,4 @@
-import {debounceTime, tap} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
@@ -23,7 +23,6 @@ import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {EditFeatureMode} from '../edit-feature/edit-feature.component';
-import {fakeAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -84,37 +83,21 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
       this.attributeTable.selected = [];
       this.openLayersService.clearDraft();
-      this.loadFeatures();
+      this.loadFeatures({page: {pageSize: 100, offset: 0}});
     }
   }
 
   loadFeatures(requestModel?: RequestModel) {
-    // console.log('loadObjectsLazy: ', requestModel);
-
     this.loading = true;
     this.wfsService.getFeatures(this.layer.complexName, requestModel)
         .subscribe((fCollection: WfsFeatureCollection) => {
           if (fCollection) {
             this.loading = false;
-
             this.totalFeatures = fCollection.totalFeatures;
 
-            // console.log('++++++++: ', this.featureDescription);
-
-            if (this.isNeedPrepareColumn) {
-              this.prepareColumns(fCollection.features[0]);
-              this.isNeedPrepareColumn = false;
-            }
-
-            this.features = fCollection.features.map((feature: WfsFeature) => {
-              // TODO: возможно стоит вынести непосредственно в сервис
-              feature.id = feature.id.split('.')[1];
-
-              const wfsFeatureView: WfsFeatureView = feature;
-              wfsFeatureView.aliases = this.fillAliases(feature.properties);
-
-              return wfsFeatureView;
-            });
+            this.handleResponse(fCollection.features);
+          } else {
+            this.log.warn('attributes table', 'Unexpected response:', fCollection);
           }
         });
   }
@@ -206,6 +189,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.requestModel$.next(oldRequest);
   }
 
+  onActivate(event: any) {
+    if (event.type === 'dblclick') {
+      this.currentPositionFeature = event.row;
+
+      this.openLayersService.showFeature(event.row);
+    }
+  }
+
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
       {
@@ -251,31 +242,17 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             newProperty.resizeable = false;
           }
 
-          // if (property.toLowerCase() === 'classid') {
-          //   newProperty.width = 80;
-          //   newProperty.resizeable = false;
-          // }
-
           this.columns.push(newProperty);
         }
       });
     } else {
       console.warn('No wfsFeature');
     }
-
-  }
-
-  onActivate(event: any) {
-    if (event.type === 'dblclick') {
-      this.currentPositionFeature = event.row;
-
-      this.openLayersService.showFeature(event.row);
-    }
   }
 
   onViewModeChange(event: MatSelectChange) {
     this.isNeedPrepareColumn = true;
-    this.loadFeatures();
+    this.handleResponse(this.attributeTable.rows);
   }
 
   private getValueTitle(value: string, enumerations: ValueTitleProjection[]): string {
@@ -334,21 +311,59 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   editFeatures() {
-    if (this.attributeTable.selected.length < 1) {
+    // При сервер сайд паджинации галочка выделить все - НЕ выделит всё.
+    // Обработаем эту ситуацию: выгребем ВСЕ данные из API по текущему фильтру убрав паджинацию
+    if (this.attributeTable.allRowsSelected) {
+      const currentRequestModel = this.requestModel$.getValue();
+      const clonedRequestModel: RequestModel = JSON.parse(JSON.stringify(currentRequestModel));
+      clonedRequestModel.page = undefined;
+
+      this.loading = true;
+      this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
+          .subscribe((fCollection: WfsFeatureCollection) => {
+            if (fCollection) {
+              this.loading = false;
+
+              this.sendSelectedFeaturesToEdit(fCollection.features);
+            }
+          });
+    } else {
+      this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
+    }
+  }
+
+  private sendSelectedFeaturesToEdit(features: WfsFeature[]) {
+    if (features.length < 1) {
       this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
       return;
     }
 
-    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(this.attributeTable.selected));
+    // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
+    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(features));
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.name + '.' + feature.id;
     });
 
+    // Отсылка в сайдбар
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
         mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
       } as ViewFeaturesData
+    });
+  }
+
+  private handleResponse(features: WfsFeature[]) {
+    if (this.isNeedPrepareColumn) {
+      this.prepareColumns(features[0]);
+      this.isNeedPrepareColumn = false;
+    }
+
+    this.features = features.map((feature: WfsFeature) => {
+      const wfsFeatureView: WfsFeatureView = feature;
+      wfsFeatureView.aliases = this.fillAliases(feature.properties);
+
+      return wfsFeatureView;
     });
   }
 }
