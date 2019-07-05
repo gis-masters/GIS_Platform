@@ -31,6 +31,10 @@
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
             </div>
           </div>
         </div>
@@ -50,6 +54,10 @@
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
               </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
             </div>
           </div>
         </div>
@@ -68,6 +76,10 @@
                 <span class="input-group-text error-badge">
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
+              </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
               </div>
             </div>
           </div>
@@ -90,9 +102,9 @@
                 </span>
               </div>
 
-<!--              <div class="multiedit-template" *ngIf="data.mode === 'multipleEdit'">-->
-<!--                <span class="template-text">Оставить как есть</span>-->
-<!--              </div>-->
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
             </div>
           </div>
         </div>

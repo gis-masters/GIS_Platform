@@ -190,6 +190,10 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       this.editFeatureForm.controls[property.name.toLowerCase()].disable();
     }
   }
+
+  isShowTemplate(property: SimpleProperty): boolean {
+    return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
+  }
 }
 
 export interface EditFeatureData {
