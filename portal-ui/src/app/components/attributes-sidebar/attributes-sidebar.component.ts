@@ -46,7 +46,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   columns: TableColumn[] = [];
   customRowIdentity = ((row: WfsFeature) => row.id);
   pageInfo: Pageable = {
-    pageSize: 100,
+    pageSize: 25,
     offset: 0
   };
 
@@ -79,11 +79,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     const layerChanged = changes['layer'];
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
-      this.requestModel$.next({page: {pageSize: 100, offset: 0}});
+      this.requestModel$.next({page: {pageSize: 25, offset: 0}});
 
       this.attributeTable.selected = [];
       this.openLayersService.clearDraft();
-      this.loadFeatures({page: {pageSize: 100, offset: 0}});
+      this.loadFeatures({page: {pageSize: 25, offset: 0}});
     }
   }
 
@@ -95,7 +95,19 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             this.loading = false;
             this.totalFeatures = fCollection.totalFeatures;
 
-            this.handleResponse(fCollection.features);
+            if (this.isNeedPrepareColumn) {
+              // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
+              //  при открытии или при переходе на новый слой
+              this.prepareColumns(fCollection.features[0]);
+              this.isNeedPrepareColumn = false;
+            }
+
+            this.features = fCollection.features.map((feature: WfsFeature) => {
+              const wfsFeatureView: WfsFeatureView = feature;
+              wfsFeatureView.aliases = this.fillAliases(feature.properties);
+
+              return wfsFeatureView;
+            });
           } else {
             this.log.warn('attributes table', 'Unexpected response:', fCollection);
           }
@@ -197,6 +209,97 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
   }
 
+  editFeatures() {
+    // При сервер сайд паджинации галочка выделить все - НЕ выделит всё.
+    // Обработаем эту ситуацию: выгребем ВСЕ данные из API по текущему фильтру убрав паджинацию
+    if (this.attributeTable.allRowsSelected) {
+      const requestModel = this.requestModel$.getValue();
+      // Если нажали выделить все и эти все помещаются в одну страницу то доп. запрос не нужен
+      if (this.attributeTable.selected.length < requestModel.page.pageSize) {
+        this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
+        return;
+      }
+
+      const currentRequestModel = this.requestModel$.getValue();
+      const clonedRequestModel: RequestModel = JSON.parse(JSON.stringify(currentRequestModel));
+      clonedRequestModel.page = undefined;
+
+      this.loading = true;
+      this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
+        .subscribe((fCollection: WfsFeatureCollection) => {
+          if (fCollection) {
+            this.loading = false;
+
+            this.sendSelectedFeaturesToEdit(fCollection.features);
+          }
+        });
+    } else {
+      this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
+    }
+  }
+
+  onViewModeChange(event: MatSelectChange) {
+    if (this.viewSettings.viewMode === ViewMode.alias) {
+      // Название столбца
+      this.attributeTable.columns.forEach(column => {
+        const property = column.prop.toString();
+        if (property === 'id') {
+          column.name = 'Идентификатор';
+        } else {
+          const simpleProperty = this.getSimpleProperty(property.split('.')[1]);
+          if (simpleProperty) {
+            column.name = simpleProperty.title;
+          }
+        }
+      });
+
+      // Данные
+      const features: WfsFeatureView[] = this.attributeTable.rows;
+      features.forEach((feature: WfsFeatureView) => {
+        feature.updated = Date.now().toString();
+
+        Object.keys(feature.properties).forEach(prop => {
+          const simpleProperty = this.getSimpleProperty(prop);
+          if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+            const valueTitle = this.getValueTitle(feature.properties[prop], simpleProperty.enumerations);
+            if (valueTitle) {
+              feature.aliases[prop] = valueTitle;
+            } else {
+              feature.aliases[prop] = '';
+            }
+          }
+        });
+      });
+
+      this.features = [...features];
+    } else {
+      // Название столбца
+      this.attributeTable.columns.forEach(column => {
+        const property = column.prop.toString();
+        if (property === 'id') {
+          column.name = 'id';
+        } else {
+          column.name = property.split('.')[1];
+        }
+      });
+
+      // Данные
+      const features: WfsFeatureView[] = this.attributeTable.rows;
+      features.forEach((feature: WfsFeatureView) => {
+        feature.updated = Date.now().toString();
+
+        Object.keys(feature.properties).forEach(prop => {
+          const simpleProperty = this.getSimpleProperty(prop);
+          if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+            feature.aliases[prop] = feature.properties[prop];
+          }
+        });
+      });
+
+      this.features = [...features];
+    }
+  }
+
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
       {
@@ -233,7 +336,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         if (property !== 'bbox') {
           const newProperty: TableColumn = {
             name: this.defineColumnName(property),
-            prop: this.definePropertySourse(property),
+            prop: this.definePropertySource(property),
             headerTemplate: this.filterTemplate,
           };
 
@@ -250,9 +353,26 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
   }
 
-  onViewModeChange(event: MatSelectChange) {
-    this.isNeedPrepareColumn = true;
-    this.handleResponse(this.attributeTable.rows);
+  private fillAliases(properties: {}): {} {
+    const resultObject = {};
+
+    Object.keys(properties).forEach(property => {
+      const simpleProperty = this.getSimpleProperty(property);
+      if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+        if (this.viewSettings.viewMode === ViewMode.internal) {
+          resultObject[property] = properties[property];
+        } else {
+          const valueTitle = this.getValueTitle(properties[property], simpleProperty.enumerations);
+          if (valueTitle) {
+            resultObject[property] = valueTitle;
+          }
+        }
+      } else {
+        resultObject[property] = properties[property];
+      }
+    });
+
+    return resultObject;
   }
 
   private getValueTitle(value: string, enumerations: ValueTitleProjection[]): string {
@@ -270,25 +390,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     return result;
   }
 
-  private fillAliases(properties: {}): {} {
-    const resultObject = {};
-
-    Object.keys(properties).forEach(property => {
-      const simpleProperty = this.getSimpleProperty(property);
-      if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
-        const valueTitle = this.getValueTitle(properties[property], simpleProperty.enumerations);
-        if (valueTitle) {
-          resultObject[property] = valueTitle;
-        }
-      } else {
-        resultObject[property] = properties[property];
-      }
-    });
-
-    return resultObject;
-  }
-
-  private definePropertySourse(property: string) {
+  private definePropertySource(property: string) {
     if (this.viewSettings.viewMode === ViewMode.internal) {
       return 'properties.' + property;
     } else if (this.viewSettings.viewMode === ViewMode.alias) {
@@ -308,28 +410,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
 
     return result;
-  }
-
-  editFeatures() {
-    // При сервер сайд паджинации галочка выделить все - НЕ выделит всё.
-    // Обработаем эту ситуацию: выгребем ВСЕ данные из API по текущему фильтру убрав паджинацию
-    if (this.attributeTable.allRowsSelected) {
-      const currentRequestModel = this.requestModel$.getValue();
-      const clonedRequestModel: RequestModel = JSON.parse(JSON.stringify(currentRequestModel));
-      clonedRequestModel.page = undefined;
-
-      this.loading = true;
-      this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
-          .subscribe((fCollection: WfsFeatureCollection) => {
-            if (fCollection) {
-              this.loading = false;
-
-              this.sendSelectedFeaturesToEdit(fCollection.features);
-            }
-          });
-    } else {
-      this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
-    }
   }
 
   private sendSelectedFeaturesToEdit(features: WfsFeature[]) {
@@ -353,21 +433,9 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     });
   }
 
-  private handleResponse(features: WfsFeature[]) {
-    if (this.isNeedPrepareColumn) {
-      this.prepareColumns(features[0]);
-      this.isNeedPrepareColumn = false;
-    }
-
-    this.features = features.map((feature: WfsFeature) => {
-      const wfsFeatureView: WfsFeatureView = feature;
-      wfsFeatureView.aliases = this.fillAliases(feature.properties);
-
-      return wfsFeatureView;
-    });
-  }
 }
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
+  updated?: string;
 }
