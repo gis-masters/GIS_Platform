@@ -3,6 +3,7 @@ import {Sidebar} from './side-bar-manager.service';
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
+import {EditFeatureData} from '../components/edit-feature/edit-feature.component';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class CommunicationService {
   @Output() gmlDialog = new EventEmitter<GmlDialogData>();
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() stepperEvents = new EventEmitter<number>();
+  @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
 
   constructor() {}
 

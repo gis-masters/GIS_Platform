@@ -38,7 +38,7 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
-  updateFeatures(featuresId: [], workspaceName: string, layerName: string, newProperties: any) {
+  updateFeatures(featuresId: string[], workspaceName: string, layerName: string, newProperties: any) {
     const options = {
       featureNS: 'castyl_for_remove',
       featureType: layerName,

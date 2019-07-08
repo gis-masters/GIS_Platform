@@ -22,7 +22,8 @@ import {MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
-import {EditFeatureMode} from '../edit-feature/edit-feature.component';
+import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
+import {CommunicationService} from '../../services/communication.service';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -61,6 +62,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
               private openLayersService: OpenLayersService) { }
@@ -72,6 +74,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         )
         .subscribe((requestModel: RequestModel) => {
           this.loadFeatures(requestModel);
+        });
+
+    this.communicationService.featuresUpdate$
+        .subscribe((editFeatureData: EditFeatureData) => {
+          // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
+          const lastRequest = this.requestModel$.getValue();
+          this.loadFeatures(lastRequest);
         });
   }
 

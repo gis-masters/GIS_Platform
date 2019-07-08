@@ -3,6 +3,7 @@ import {MatSnackBar} from '@angular/material';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProjectsService} from '../../services/gis/projects.service';
+import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/gis/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
@@ -22,6 +23,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   editFeatureForm: FormGroup;
   editFeatureData: EditFeatureItem[] = [];
   isAttributeSidebarOpened = false;
+  isSaveInProgress = false;
 
   private xsdFeature: XsdFeature;
 
@@ -29,6 +31,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               private snackBar: MatSnackBar,
               private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
+              private communicationService: CommunicationService,
               private sideBarManager: SideBarManager,
               private openLayers: OpenLayersService,
               private rulesService: FgistpRulesService,
@@ -111,6 +114,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       return;
     }
 
+    this.isSaveInProgress = true;
     // Сохраняем только те свойства что были затронуты пользователем и валидны
     // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
     const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
@@ -125,23 +129,39 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
       if (this.data.mode === EditFeatureMode.single) {
         this.transformFeatureService
-          .updateFeature(this.data.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
-          .subscribe(response => {
-            if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
-              this.closeMe.emit(true);
-              this.snackBar.open('Сохранено', 'X', {duration: 3000});
-            } else {
-              this.logger.warn('UpdateFeature response: ', response);
-              this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
-            }
-          });
+            .updateFeature(this.data.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
+            .subscribe(response => {
+              this.isSaveInProgress = false;
+              if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
+                this.closeMe.emit(true);
+                this.snackBar.open('Сохранено', 'X', {duration: 3000});
+                this.communicationService.featuresUpdate$.emit({
+                  feature: this.data.feature,
+                  total: 1,
+                  mode: EditFeatureMode.single,
+                  properties: newProperties
+                });
+              } else {
+                this.logger.warn('UpdateFeature response: ', response);
+                this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+              }
+            });
       } else {
         this.transformFeatureService
             .updateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
             .subscribe(response => {
+              this.isSaveInProgress = false;
               if (response.includes('<wfs:totalUpdated>' + this.data.total + '</wfs:totalUpdated>')) {
                 this.closeMe.emit(true);
                 this.snackBar.open('Сохранено', 'X', {duration: 3000});
+
+                this.communicationService.featuresUpdate$.emit({
+                  feature: this.data.feature,
+                  featuresId: this.data.featuresId,
+                  total: this.data.total,
+                  mode: EditFeatureMode.multipleEdit,
+                  properties: newProperties
+                });
               } else {
                 this.logger.warn('UpdateFeature response: ', response);
                 this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
@@ -149,28 +169,6 @@ export class EditFeatureComponent implements OnChanges, OnInit {
             });
       }
     }
-  }
-
-  private getDirtyAndValidProperties(): EditFeatureItem[] {
-    const result: EditFeatureItem[] = [];
-    if (!this.editFeatureForm.dirty) {
-      return result;
-    }
-
-    this.editFeatureData.forEach((property: EditFeatureItem) => {
-      const formProperty = this.editFeatureForm.controls[property.name];
-      if (formProperty.dirty && formProperty.valid) {
-        result.push(property);
-      }
-    });
-
-    return result;
-  }
-
-  close() {
-    this.closeMe.emit(true);
-
-    this.openLayers.clearDraft();
   }
 
   getTooltip() {
@@ -194,13 +192,50 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   isShowTemplate(property: SimpleProperty): boolean {
     return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
   }
+
+  close() {
+    this.closeMe.emit(true);
+
+    this.openLayers.clearDraft();
+  }
+
+  private getDirtyAndValidProperties(): EditFeatureItem[] {
+    const result: EditFeatureItem[] = [];
+    if (!this.editFeatureForm.dirty) {
+      return result;
+    }
+
+    this.editFeatureData.forEach((property: EditFeatureItem) => {
+      const formProperty = this.editFeatureForm.controls[property.name];
+      if (formProperty.dirty && formProperty.valid) {
+        result.push(property);
+      }
+    });
+
+    return result;
+  }
+
+  private splitTo(arr, n): [] {
+    const plen = Math.ceil(arr.length / n);
+
+    return arr.reduce(function (p, c, i, a) {
+      if (i % plen === 0) {
+        p.push([]);
+      }
+
+      p[p.length - 1][i] = c;
+
+      return p;
+    }, []);
+  }
 }
 
 export interface EditFeatureData {
   feature: WfsFeature;    // Шаблонная фича
   mode: EditFeatureMode;
-  featuresId?: []; // Идентификаторы фич (заполняется в режиме множественного редактирования)
+  featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
   total: number;
+  properties?: {};
 }
 
 export enum EditFeatureMode {
