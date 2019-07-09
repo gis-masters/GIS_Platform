@@ -9,6 +9,8 @@ import {TransformFeatureService} from '../../services/gis/transform-feature.serv
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {from} from 'rxjs';
+import {concatMap} from 'rxjs/operators';
 
 @Component({
   selector: 'crg-edit-feature',
@@ -24,8 +26,10 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   editFeatureData: EditFeatureItem[] = [];
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
+  loadPercent = 0;
 
   private xsdFeature: XsdFeature;
+  private BATCH_SIZE = 200;
 
   constructor(private logger: NGXLogger,
               private snackBar: MatSnackBar,
@@ -147,26 +151,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               }
             });
       } else {
-        this.transformFeatureService
-            .updateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
-            .subscribe(response => {
-              this.isSaveInProgress = false;
-              if (response.includes('<wfs:totalUpdated>' + this.data.total + '</wfs:totalUpdated>')) {
-                this.closeMe.emit(true);
-                this.snackBar.open('Сохранено', 'X', {duration: 3000});
-
-                this.communicationService.featuresUpdate$.emit({
-                  feature: this.data.feature,
-                  featuresId: this.data.featuresId,
-                  total: this.data.total,
-                  mode: EditFeatureMode.multipleEdit,
-                  properties: newProperties
-                });
-              } else {
-                this.logger.warn('UpdateFeature response: ', response);
-                this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
-              }
-            });
+        this.batchUpdateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties);
       }
     }
   }
@@ -227,6 +212,66 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
       return p;
     }, []);
+  }
+
+  private batchUpdateFeatures(featuresId: string[], geoserverName: string, tableName: string, newProperties: {}) {
+    if (featuresId.length > this.BATCH_SIZE) {
+      const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
+      const onePartOf100 = 100 / countOfParts;
+
+      const result = this.splitTo(featuresId, countOfParts);
+
+      let i = 0;
+      from(result)
+        .pipe(
+          concatMap(features => this.transformFeatureService.updateFeatures(features, geoserverName, tableName, newProperties)),
+        ).subscribe(value => {
+          i++;
+          const percent = Math.ceil(onePartOf100 * i);
+          if (i >= countOfParts) {
+            this.loadPercent = percent > 100 ? 100 : percent;
+            this.isSaveInProgress = false;
+            this.closeMe.emit(true);
+            this.snackBar.open('Сохранено', 'X', {duration: 3000});
+
+            this.communicationService.featuresUpdate$.emit({
+              feature: this.data.feature,
+              featuresId: this.data.featuresId,
+              total: this.data.total,
+              mode: EditFeatureMode.multipleEdit,
+              properties: newProperties
+            });
+          } else {
+            this.loadPercent = percent > 100 ? 100 : percent;
+          }
+        });
+    } else {
+      this.transformFeatureService
+          .updateFeatures(featuresId, geoserverName, tableName, newProperties)
+          .subscribe(response => {
+            this.loadPercent = 100;
+            if (response.includes('<wfs:totalUpdated>' + this.data.total + '</wfs:totalUpdated>')) {
+              const timeout = setTimeout(() => {
+                this.isSaveInProgress = false;
+                this.closeMe.emit(true);
+                this.snackBar.open('Сохранено', 'X', {duration: 3000});
+
+                clearTimeout(timeout);
+              }, 100);
+
+              this.communicationService.featuresUpdate$.emit({
+                feature: this.data.feature,
+                featuresId: this.data.featuresId,
+                total: this.data.total,
+                mode: EditFeatureMode.multipleEdit,
+                properties: newProperties
+              });
+            } else {
+              this.logger.warn('UpdateFeature response: ', response);
+              this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+            }
+          });
+    }
   }
 }
 
