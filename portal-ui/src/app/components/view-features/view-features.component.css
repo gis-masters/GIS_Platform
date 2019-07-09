@@ -1,11 +1,11 @@
 @import url(../../pages/_app/app.component.css);
 
 .full-h {
-  height: calc(100vh - 105px);
+  height: calc(100vh - 170px);
 }
 
 .short-h {
-  height: calc(100vh - 551px);
+  height: calc(100vh - 620px);
 }
 
 .feature-content {
@@ -77,7 +77,7 @@
   display: grid;
   grid-column-gap: 3px;
   grid-template-rows: 34% 66%;
-  grid-template-columns: 7% 93%;
+  grid-template-columns: 3% 97%;
 }
 
 .feature-alias {
@@ -96,4 +96,9 @@
   color: grey;
   float: right;
   margin-right: 10px;
+}
+
+.paginator-style {
+  border-top-style: outset;
+  border-top-width: thin;
 }

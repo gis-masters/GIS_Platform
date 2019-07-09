@@ -1,5 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
+import {Pageable} from '../../services/models/requestModel';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
@@ -23,6 +24,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
 
+  viewFeatures: WfsFeature[] = [];
+  pageInfo: Pageable = {
+    pageSize: 25,
+  };
+
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
               private rulesService: FgistpRulesService,
@@ -30,6 +36,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+
     if (this.data.mode === EditFeatureMode.multipleEdit) {
       this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
       this.isEditMode = true;
@@ -57,6 +65,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
       if (currentValue && currentValue.features && currentValue.features.length === 1) {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
+        this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+
         if (currentValue.mode === EditFeatureMode.multipleEdit) {
           this.editFeatureData = this.prepareDataForMultipleEdit(currentValue.features);
           this.isEditMode = true;
@@ -103,6 +113,10 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
     } as EditFeatureData;
   }
 
+  onPaging(event) {
+    const start = this.pageInfo.pageSize * event.pageIndex;
+    this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
+  }
 }
 
 export interface ViewFeaturesData {
