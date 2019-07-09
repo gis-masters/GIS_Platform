@@ -3082,6 +3082,7 @@ CREATE TABLE fiz.street_line (
     note character varying(254),
     status smallint,
     reg_status smallint,
+    globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
@@ -3113,6 +3114,7 @@ CREATE TABLE fiz.streetv_line (
     note character varying(254),
     status smallint,
     reg_status smallint,
+    globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
@@ -3146,6 +3148,7 @@ CREATE TABLE fiz.telecomnetworkline_line (
     note character varying(254),
     status smallint,
     reg_status smallint,
+    globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
@@ -5651,14 +5654,7 @@ CREATE TABLE fiz.ozsn_type (
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.ozsn_type OWNER TO fiz;
-
---
-
--- Name: ozsn_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.ozsn_type_objectid_seq
     AS integer
@@ -5667,37 +5663,16 @@ CREATE SEQUENCE fiz.ozsn_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.ozsn_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8983 (class 0 OID 0)
--- Dependencies: 640
--- Name: ozsn_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.ozsn_type_objectid_seq OWNED BY fiz.ozsn_type.objectid;
 
-
 --
-
--- Name: pass_term; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pass_term (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.pass_term OWNER TO fiz;
-
---
-
--- Name: pass_term_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pass_term_objectid_seq
     AS integer
@@ -5706,37 +5681,16 @@ CREATE SEQUENCE fiz.pass_term_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pass_term_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8984 (class 0 OID 0)
--- Dependencies: 642
--- Name: pass_term_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pass_term_objectid_seq OWNED BY fiz.pass_term.objectid;
 
-
 --
-
--- Name: ped_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.ped_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.ped_type OWNER TO fiz;
-
---
-
--- Name: ped_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.ped_type_objectid_seq
     AS integer
@@ -5745,24 +5699,10 @@ CREATE SEQUENCE fiz.ped_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.ped_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8985 (class 0 OID 0)
--- Dependencies: 644
--- Name: ped_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.ped_type_objectid_seq OWNED BY fiz.ped_type.objectid;
 
-
 --
-
--- Name: pipeline_line; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pipeline_line (
     objectid integer NOT NULL,
     classid integer,
@@ -5787,14 +5727,7 @@ CREATE TABLE fiz.pipeline_line (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.pipeline_line OWNER TO fiz;
-
---
-
--- Name: pipeline_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.pipeline_line_extension (
     object_id integer NOT NULL,
@@ -5803,14 +5736,7 @@ CREATE TABLE fiz.pipeline_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.pipeline_line_extension OWNER TO fiz;
-
---
-
--- Name: pipeline_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pipeline_objectid_seq
     AS integer
@@ -5819,37 +5745,16 @@ CREATE SEQUENCE fiz.pipeline_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pipeline_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8986 (class 0 OID 0)
--- Dependencies: 647
--- Name: pipeline_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pipeline_objectid_seq OWNED BY fiz.pipeline_line.objectid;
 
-
 --
-
--- Name: pkio_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pkio_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.pkio_type OWNER TO fiz;
-
---
-
--- Name: pkio_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pkio_type_objectid_seq
     AS integer
@@ -5858,37 +5763,16 @@ CREATE SEQUENCE fiz.pkio_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pkio_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8987 (class 0 OID 0)
--- Dependencies: 649
--- Name: pkio_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pkio_type_objectid_seq OWNED BY fiz.pkio_type.objectid;
 
-
 --
-
--- Name: pl_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pl_type (
     objectid integer NOT NULL,
     code smallint,
     descroption character varying(255)
 );
-
-
 ALTER TABLE fiz.pl_type OWNER TO fiz;
-
---
-
--- Name: pl_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pl_type_objectid_seq
     AS integer
@@ -5897,37 +5781,16 @@ CREATE SEQUENCE fiz.pl_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pl_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8988 (class 0 OID 0)
--- Dependencies: 651
--- Name: pl_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pl_type_objectid_seq OWNED BY fiz.pl_type.objectid;
 
-
 --
-
--- Name: pline_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pline_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.pline_type OWNER TO fiz;
-
---
-
--- Name: pline_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pline_type_objectid_seq
     AS integer
@@ -5936,37 +5799,16 @@ CREATE SEQUENCE fiz.pline_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pline_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8989 (class 0 OID 0)
--- Dependencies: 653
--- Name: pline_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pline_type_objectid_seq OWNED BY fiz.pline_type.objectid;
 
-
 --
-
--- Name: power_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.power_type (
     objectid integer NOT NULL,
     code smallint,
     descroption character varying(255)
 );
-
-
 ALTER TABLE fiz.power_type OWNER TO fiz;
-
---
-
--- Name: power_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.power_type_objectid_seq
     AS integer
@@ -5975,37 +5817,16 @@ CREATE SEQUENCE fiz.power_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.power_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8990 (class 0 OID 0)
--- Dependencies: 655
--- Name: power_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.power_type_objectid_seq OWNED BY fiz.power_type.objectid;
 
-
 --
-
--- Name: prg_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prg_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.prg_type OWNER TO fiz;
-
---
-
--- Name: prg_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prg_type_objectid_seq
     AS integer
@@ -6014,24 +5835,10 @@ CREATE SEQUENCE fiz.prg_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prg_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8991 (class 0 OID 0)
--- Dependencies: 657
--- Name: prg_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prg_type_objectid_seq OWNED BY fiz.prg_type.objectid;
 
-
 --
-
--- Name: prison; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prison (
     objectid integer NOT NULL,
     classid integer,
@@ -6050,15 +5857,9 @@ CREATE TABLE fiz.prison (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.prison OWNER TO fiz;
 
 --
-
--- Name: prison_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prison_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6066,14 +5867,7 @@ CREATE TABLE fiz.prison_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.prison_extension OWNER TO fiz;
-
---
-
--- Name: prison_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prison_objectid_seq
     AS integer
@@ -6082,24 +5876,10 @@ CREATE SEQUENCE fiz.prison_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prison_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8992 (class 0 OID 0)
--- Dependencies: 660
--- Name: prison_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prison_objectid_seq OWNED BY fiz.prison.objectid;
 
-
 --
-
--- Name: prison_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prison_point (
     objectid integer NOT NULL,
     classid integer,
@@ -6118,15 +5898,9 @@ CREATE TABLE fiz.prison_point (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.prison_point OWNER TO fiz;
 
 --
-
--- Name: prison_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prison_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6134,14 +5908,7 @@ CREATE TABLE fiz.prison_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.prison_point_extension OWNER TO fiz;
-
---
-
--- Name: prison_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prison_point_objectid_seq
     AS integer
@@ -6150,37 +5917,16 @@ CREATE SEQUENCE fiz.prison_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prison_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8993 (class 0 OID 0)
--- Dependencies: 663
--- Name: prison_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prison_point_objectid_seq OWNED BY fiz.prison_point.objectid;
 
-
 --
-
--- Name: prkng_lvl; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prkng_lvl (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.prkng_lvl OWNER TO fiz;
-
---
-
--- Name: prkng_lvl_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prkng_lvl_objectid_seq
     AS integer
@@ -6189,37 +5935,16 @@ CREATE SEQUENCE fiz.prkng_lvl_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prkng_lvl_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8994 (class 0 OID 0)
--- Dependencies: 665
--- Name: prkng_lvl_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prkng_lvl_objectid_seq OWNED BY fiz.prkng_lvl.objectid;
 
-
 --
-
--- Name: prkng_time; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prkng_time (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.prkng_time OWNER TO fiz;
-
---
-
--- Name: prkng_time_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prkng_time_objectid_seq
     AS integer
@@ -6228,37 +5953,16 @@ CREATE SEQUENCE fiz.prkng_time_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prkng_time_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8995 (class 0 OID 0)
--- Dependencies: 667
--- Name: prkng_time_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prkng_time_objectid_seq OWNED BY fiz.prkng_time.objectid;
 
-
 --
-
--- Name: prkng_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prkng_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.prkng_type OWNER TO fiz;
-
---
-
--- Name: prkng_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prkng_type_objectid_seq
     AS integer
@@ -6267,37 +5971,16 @@ CREATE SEQUENCE fiz.prkng_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prkng_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8996 (class 0 OID 0)
--- Dependencies: 669
--- Name: prkng_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prkng_type_objectid_seq OWNED BY fiz.prkng_type.objectid;
 
-
 --
-
--- Name: prom_direct; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.prom_direct (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.prom_direct OWNER TO fiz;
-
---
-
--- Name: prom_direct_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.prom_direct_objectid_seq
     AS integer
@@ -6306,24 +5989,10 @@ CREATE SEQUENCE fiz.prom_direct_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.prom_direct_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8997 (class 0 OID 0)
--- Dependencies: 671
--- Name: prom_direct_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.prom_direct_objectid_seq OWNED BY fiz.prom_direct.objectid;
 
-
 --
-
--- Name: protectionzone; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.protectionzone (
     objectid integer NOT NULL,
     classid integer,
@@ -6336,15 +6005,9 @@ CREATE TABLE fiz.protectionzone (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.protectionzone OWNER TO fiz;
 
 --
-
--- Name: protectionzone_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.protectionzone_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6352,14 +6015,7 @@ CREATE TABLE fiz.protectionzone_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.protectionzone_extension OWNER TO fiz;
-
---
-
--- Name: protectionzone_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.protectionzone_objectid_seq
     AS integer
@@ -6368,38 +6024,18 @@ CREATE SEQUENCE fiz.protectionzone_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.protectionzone_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8998 (class 0 OID 0)
--- Dependencies: 674
--- Name: protectionzone_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.protectionzone_objectid_seq OWNED BY fiz.protectionzone.objectid;
 
-
 --
-
--- Name: proximity; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.proximity (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.proximity OWNER TO fiz;
 
 --
-
--- Name: proximity_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.proximity_objectid_seq
     AS integer
     START WITH 1
@@ -6407,37 +6043,16 @@ CREATE SEQUENCE fiz.proximity_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.proximity_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8999 (class 0 OID 0)
--- Dependencies: 676
--- Name: proximity_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.proximity_objectid_seq OWNED BY fiz.proximity.objectid;
 
-
 --
-
--- Name: pu_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.pu_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.pu_stype OWNER TO fiz;
-
---
-
--- Name: pu_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.pu_stype_objectid_seq
     AS integer
@@ -6446,24 +6061,10 @@ CREATE SEQUENCE fiz.pu_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.pu_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9000 (class 0 OID 0)
--- Dependencies: 678
--- Name: pu_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.pu_stype_objectid_seq OWNED BY fiz.pu_stype.objectid;
 
-
 --
-
--- Name: public; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.public (
     objectid integer NOT NULL,
     classid integer,
@@ -6488,14 +6089,7 @@ CREATE TABLE fiz.public (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.public OWNER TO fiz;
-
---
-
--- Name: public_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.public_extension (
     object_id integer NOT NULL,
@@ -6504,14 +6098,7 @@ CREATE TABLE fiz.public_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.public_extension OWNER TO fiz;
-
---
-
--- Name: public_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.public_objectid_seq
     AS integer
@@ -6520,24 +6107,10 @@ CREATE SEQUENCE fiz.public_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.public_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9001 (class 0 OID 0)
--- Dependencies: 681
--- Name: public_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.public_objectid_seq OWNED BY fiz.public.objectid;
 
-
 --
-
--- Name: public_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.public_point (
     objectid integer NOT NULL,
     classid integer,
@@ -6562,15 +6135,9 @@ CREATE TABLE fiz.public_point (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.public_point OWNER TO fiz;
 
 --
-
--- Name: public_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.public_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6578,14 +6145,7 @@ CREATE TABLE fiz.public_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.public_point_extension OWNER TO fiz;
-
---
-
--- Name: public_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.public_point_objectid_seq
     AS integer
@@ -6594,24 +6154,10 @@ CREATE SEQUENCE fiz.public_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.public_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9002 (class 0 OID 0)
--- Dependencies: 684
--- Name: public_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.public_point_objectid_seq OWNED BY fiz.public_point.objectid;
 
-
 --
-
--- Name: publictransportline_line; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportline_line (
     objectid integer NOT NULL,
     classid integer,
@@ -6629,15 +6175,9 @@ CREATE TABLE fiz.publictransportline_line (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportline_line OWNER TO fiz;
 
 --
-
--- Name: publictransportline_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportline_line_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6645,14 +6185,7 @@ CREATE TABLE fiz.publictransportline_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportline_line_extension OWNER TO fiz;
-
---
-
--- Name: publictransportline_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportline_objectid_seq
     AS integer
@@ -6661,24 +6194,10 @@ CREATE SEQUENCE fiz.publictransportline_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportline_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9003 (class 0 OID 0)
--- Dependencies: 687
--- Name: publictransportline_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportline_objectid_seq OWNED BY fiz.publictransportline_line.objectid;
 
-
 --
-
--- Name: publictransportobj; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportobj (
     objectid integer NOT NULL,
     classid integer,
@@ -6697,15 +6216,9 @@ CREATE TABLE fiz.publictransportobj (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportobj OWNER TO fiz;
 
 --
-
--- Name: publictransportobj_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportobj_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6713,14 +6226,7 @@ CREATE TABLE fiz.publictransportobj_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportobj_extension OWNER TO fiz;
-
---
-
--- Name: publictransportobj_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportobj_objectid_seq
     AS integer
@@ -6729,24 +6235,10 @@ CREATE SEQUENCE fiz.publictransportobj_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportobj_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9004 (class 0 OID 0)
--- Dependencies: 690
--- Name: publictransportobj_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportobj_objectid_seq OWNED BY fiz.publictransportobj.objectid;
 
-
 --
-
--- Name: publictransportobj_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportobj_point (
     objectid integer NOT NULL,
     classid integer,
@@ -6765,14 +6257,7 @@ CREATE TABLE fiz.publictransportobj_point (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportobj_point OWNER TO fiz;
-
---
-
--- Name: publictransportobj_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.publictransportobj_point_extension (
     object_id integer NOT NULL,
@@ -6781,14 +6266,7 @@ CREATE TABLE fiz.publictransportobj_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportobj_point_extension OWNER TO fiz;
-
---
-
--- Name: publictransportobj_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportobj_point_objectid_seq
     AS integer
@@ -6797,24 +6275,10 @@ CREATE SEQUENCE fiz.publictransportobj_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportobj_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9005 (class 0 OID 0)
--- Dependencies: 693
--- Name: publictransportobj_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportobj_point_objectid_seq OWNED BY fiz.publictransportobj_point.objectid;
 
-
 --
-
--- Name: publictransportservice; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportservice (
     objectid integer NOT NULL,
     classid integer,
@@ -6834,15 +6298,9 @@ CREATE TABLE fiz.publictransportservice (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportservice OWNER TO fiz;
 
 --
-
--- Name: publictransportservice_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportservice_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6850,14 +6308,7 @@ CREATE TABLE fiz.publictransportservice_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportservice_extension OWNER TO fiz;
-
---
-
--- Name: publictransportservice_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportservice_objectid_seq
     AS integer
@@ -6866,24 +6317,10 @@ CREATE SEQUENCE fiz.publictransportservice_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportservice_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9006 (class 0 OID 0)
--- Dependencies: 696
--- Name: publictransportservice_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportservice_objectid_seq OWNED BY fiz.publictransportservice.objectid;
 
-
 --
-
--- Name: publictransportservice_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportservice_point (
     objectid integer NOT NULL,
     classid integer,
@@ -6903,15 +6340,9 @@ CREATE TABLE fiz.publictransportservice_point (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportservice_point OWNER TO fiz;
 
 --
-
--- Name: publictransportservice_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportservice_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6919,14 +6350,7 @@ CREATE TABLE fiz.publictransportservice_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportservice_point_extension OWNER TO fiz;
-
---
-
--- Name: publictransportservice_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportservice_point_objectid_seq
     AS integer
@@ -6935,24 +6359,10 @@ CREATE SEQUENCE fiz.publictransportservice_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportservice_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9007 (class 0 OID 0)
--- Dependencies: 699
--- Name: publictransportservice_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportservice_point_objectid_seq OWNED BY fiz.publictransportservice_point.objectid;
 
-
 --
-
--- Name: publictransportstops; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportstops (
     objectid integer NOT NULL,
     classid integer,
@@ -6973,15 +6383,9 @@ CREATE TABLE fiz.publictransportstops (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportstops OWNER TO fiz;
 
 --
-
--- Name: publictransportstops_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportstops_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -6989,15 +6393,7 @@ CREATE TABLE fiz.publictransportstops_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportstops_extension OWNER TO fiz;
-
---
-
--- Name: publictransportstops_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.publictransportstops_objectid_seq
     AS integer
     START WITH 1
@@ -7005,24 +6401,10 @@ CREATE SEQUENCE fiz.publictransportstops_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportstops_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9008 (class 0 OID 0)
--- Dependencies: 702
--- Name: publictransportstops_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportstops_objectid_seq OWNED BY fiz.publictransportstops.objectid;
 
-
 --
-
--- Name: publictransportstops_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportstops_point (
     objectid integer NOT NULL,
     classid integer,
@@ -7043,15 +6425,9 @@ CREATE TABLE fiz.publictransportstops_point (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.publictransportstops_point OWNER TO fiz;
 
 --
-
--- Name: publictransportstops_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.publictransportstops_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -7059,14 +6435,7 @@ CREATE TABLE fiz.publictransportstops_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.publictransportstops_point_extension OWNER TO fiz;
-
---
-
--- Name: publictransportstops_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.publictransportstops_point_objectid_seq
     AS integer
@@ -7075,31 +6444,14 @@ CREATE SEQUENCE fiz.publictransportstops_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.publictransportstops_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9009 (class 0 OID 0)
--- Dependencies: 705
--- Name: publictransportstops_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.publictransportstops_point_objectid_seq OWNED BY fiz.publictransportstops_point.objectid;
-
-
---
-
--- Name: r_affinity; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.r_affinity (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.r_affinity OWNER TO fiz;
 
 CREATE SEQUENCE fiz.r_affinity_objectid_seq
@@ -9212,25 +8564,13 @@ ALTER TABLE fiz.spz_event_objectid_seq OWNER TO fiz;
 
 ALTER SEQUENCE fiz.spz_event_objectid_seq OWNED BY fiz.spz_event.objectid;
 
-
 --
-
--- Name: ssah_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.ssah_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.ssah_stype OWNER TO fiz;
-
---
-
--- Name: ssah_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.ssah_stype_objectid_seq
     AS integer
@@ -9239,37 +8579,16 @@ CREATE SEQUENCE fiz.ssah_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.ssah_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9059 (class 0 OID 0)
--- Dependencies: 827
--- Name: ssah_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.ssah_stype_objectid_seq OWNED BY fiz.ssah_stype.objectid;
 
-
 --
-
--- Name: st_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.st_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.st_stype OWNER TO fiz;
-
---
-
--- Name: st_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.st_stype_objectid_seq
     AS integer
@@ -9278,51 +8597,24 @@ CREATE SEQUENCE fiz.st_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.st_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9060 (class 0 OID 0)
--- Dependencies: 829
--- Name: st_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.st_stype_objectid_seq OWNED BY fiz.st_stype.objectid;
 
-
 --
-
--- Name: status; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.status (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.status OWNER TO fiz;
 
 --
-
--- Name: status_adm; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.status_adm (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.status_adm OWNER TO fiz;
-
---
-
--- Name: status_adm_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.status_adm_objectid_seq
     AS integer
@@ -9331,23 +8623,8 @@ CREATE SEQUENCE fiz.status_adm_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.status_adm_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9061 (class 0 OID 0)
--- Dependencies: 832
--- Name: status_adm_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.status_adm_objectid_seq OWNED BY fiz.status_adm.objectid;
-
-
---
-
--- Name: status_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.status_objectid_seq
     AS integer
@@ -9356,37 +8633,17 @@ CREATE SEQUENCE fiz.status_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.status_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9062 (class 0 OID 0)
--- Dependencies: 833
--- Name: status_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
 
 ALTER SEQUENCE fiz.status_objectid_seq OWNED BY fiz.status.objectid;
 
-
 --
-
--- Name: status_och; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.status_och (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.status_och OWNER TO fiz;
-
---
-
--- Name: status_och_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.status_och_objectid_seq
     AS integer
@@ -9395,37 +8652,16 @@ CREATE SEQUENCE fiz.status_och_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.status_och_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9063 (class 0 OID 0)
--- Dependencies: 835
--- Name: status_och_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.status_och_objectid_seq OWNED BY fiz.status_och.objectid;
 
-
 --
-
--- Name: status_pr; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.status_pr (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.status_pr OWNER TO fiz;
-
---
-
--- Name: status_pr_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.status_pr_objectid_seq
     AS integer
@@ -9434,38 +8670,16 @@ CREATE SEQUENCE fiz.status_pr_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.status_pr_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9064 (class 0 OID 0)
--- Dependencies: 837
--- Name: status_pr_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.status_pr_objectid_seq OWNED BY fiz.status_pr.objectid;
 
-
 --
-
--- Name: stop_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.stop_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.stop_type OWNER TO fiz;
-
---
-
--- Name: stop_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.stop_type_objectid_seq
     AS integer
     START WITH 1
@@ -9473,37 +8687,16 @@ CREATE SEQUENCE fiz.stop_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.stop_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9065 (class 0 OID 0)
--- Dependencies: 839
--- Name: stop_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.stop_type_objectid_seq OWNED BY fiz.stop_type.objectid;
 
-
 --
-
--- Name: store_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.store_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.store_type OWNER TO fiz;
-
---
-
--- Name: store_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.store_type_objectid_seq
     AS integer
@@ -9512,37 +8705,16 @@ CREATE SEQUENCE fiz.store_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.store_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9066 (class 0 OID 0)
--- Dependencies: 841
--- Name: store_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.store_type_objectid_seq OWNED BY fiz.store_type.objectid;
 
-
 --
-
--- Name: str_l_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.str_l_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.str_l_type OWNER TO fiz;
-
---
-
--- Name: str_l_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.str_l_type_objectid_seq
     AS integer
@@ -9551,24 +8723,10 @@ CREATE SEQUENCE fiz.str_l_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.str_l_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9067 (class 0 OID 0)
--- Dependencies: 843
--- Name: str_l_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.str_l_type_objectid_seq OWNED BY fiz.str_l_type.objectid;
 
-
 --
-
--- Name: str_r_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.str_r_type (
     objectid integer NOT NULL,
     code smallint,
@@ -10885,12 +10043,7 @@ ALTER TABLE fiz.transportobj_point_objectid_seq OWNER TO fiz;
 
 ALTER SEQUENCE fiz.transportobj_point_objectid_seq OWNED BY fiz.transportobj_point.objectid;
 
-
 --
-
--- Name: transpprotectionzone; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.transpprotectionzone (
     objectid integer NOT NULL,
     classid integer,
@@ -10903,15 +10056,9 @@ CREATE TABLE fiz.transpprotectionzone (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.transpprotectionzone OWNER TO fiz;
 
 --
-
--- Name: transpprotectionzone_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.transpprotectionzone_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -10919,14 +10066,7 @@ CREATE TABLE fiz.transpprotectionzone_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.transpprotectionzone_extension OWNER TO fiz;
-
---
-
--- Name: transpprotectionzone_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.transpprotectionzone_objectid_seq
     AS integer
@@ -10935,24 +10075,10 @@ CREATE SEQUENCE fiz.transpprotectionzone_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.transpprotectionzone_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9091 (class 0 OID 0)
--- Dependencies: 908
--- Name: transpprotectionzone_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.transpprotectionzone_objectid_seq OWNED BY fiz.transpprotectionzone.objectid;
 
-
 --
-
--- Name: transpsanitarygapzone; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.transpsanitarygapzone (
     objectid integer NOT NULL,
     classid integer,
@@ -10965,15 +10091,9 @@ CREATE TABLE fiz.transpsanitarygapzone (
     shape public.geometry,
     CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
 );
-
-
 ALTER TABLE fiz.transpsanitarygapzone OWNER TO fiz;
 
 --
-
--- Name: transpsanitarygapzone_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.transpsanitarygapzone_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -10981,14 +10101,7 @@ CREATE TABLE fiz.transpsanitarygapzone_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.transpsanitarygapzone_extension OWNER TO fiz;
-
---
-
--- Name: transpsanitarygapzone_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.transpsanitarygapzone_objectid_seq
     AS integer
@@ -10997,37 +10110,16 @@ CREATE SEQUENCE fiz.transpsanitarygapzone_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.transpsanitarygapzone_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9092 (class 0 OID 0)
--- Dependencies: 911
--- Name: transpsanitarygapzone_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.transpsanitarygapzone_objectid_seq OWNED BY fiz.transpsanitarygapzone.objectid;
 
-
 --
-
--- Name: trd_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.trd_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.trd_stype OWNER TO fiz;
-
---
-
--- Name: trd_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.trd_stype_objectid_seq
     AS integer
@@ -11036,37 +10128,16 @@ CREATE SEQUENCE fiz.trd_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.trd_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9093 (class 0 OID 0)
--- Dependencies: 913
--- Name: trd_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.trd_stype_objectid_seq OWNED BY fiz.trd_stype.objectid;
 
-
 --
-
--- Name: tunnel_t; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.tunnel_t (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.tunnel_t OWNER TO fiz;
-
---
-
--- Name: tunnel_t_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.tunnel_t_objectid_seq
     AS integer
@@ -11075,38 +10146,18 @@ CREATE SEQUENCE fiz.tunnel_t_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.tunnel_t_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9094 (class 0 OID 0)
--- Dependencies: 915
--- Name: tunnel_t_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.tunnel_t_objectid_seq OWNED BY fiz.tunnel_t.objectid;
 
-
 --
-
--- Name: type_law; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.type_law (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.type_law OWNER TO fiz;
 
 --
-
--- Name: type_law_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.type_law_objectid_seq
     AS integer
     START WITH 1
