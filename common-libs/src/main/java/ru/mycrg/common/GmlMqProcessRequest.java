@@ -1,6 +1,6 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ public class GmlMqProcessRequest extends BaseMqProcessRequest {
 
     public GmlMqProcessRequest() {}
 
-    public GmlMqProcessRequest(UUID id) {
-        super(id, RequestType.GML_EXPORT);
+    public GmlMqProcessRequest(long id) {
+        super(id, ProcessType.GML_EXPORT);
     }
 
     public String getDocSchema() {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.*;
 import ru.mycrg.common.config.MqProperties;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
@@ -79,11 +79,11 @@ public class MqListener {
         log.info("Получено сообщение, Validation process: {} - {}", mqRequest.getId(), mqRequest.getType());
 
         try {
-            if (mqRequest.getType() == RequestType.VALIDATION_INIT) {
+            if (mqRequest.getType() == ProcessType.VALIDATION_INIT) {
                 validationService.startValidation(mqRequest);
-            } else if (mqRequest.getType() == RequestType.VALIDATION_GET) {
+            } else if (mqRequest.getType() == ProcessType.VALIDATION_GET) {
                 mqEvents.validationResponse(validationService.getResults(mqRequest));
-            } else if (mqRequest.getType() == RequestType.VALIDATION_INFO) {
+            } else if (mqRequest.getType() == ProcessType.VALIDATION_INFO) {
                 mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.ValidationMqProcessRequest;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.queue.MqSender;
@@ -47,7 +47,7 @@ public class ValidationService extends BaseProcessService {
      */
     public CompletableFuture<BaseMqProcessResponse> validate(String name,
                                                              ValidationRequestDto request) {
-        return initProcess(name, request, RequestType.VALIDATION_INIT, 0, 25);
+        return initProcess(name, request, ProcessType.VALIDATION_INIT, 0, 25);
     }
 
     /**
@@ -57,7 +57,7 @@ public class ValidationService extends BaseProcessService {
      */
     public CompletableFuture<BaseMqProcessResponse> getInfo(String name,
                                                             ValidationRequestDto request) {
-        return initProcess(name, request, RequestType.VALIDATION_INFO, 0, 25);
+        return initProcess(name, request, ProcessType.VALIDATION_INFO, 0, 25);
     }
 
     /**
@@ -69,12 +69,12 @@ public class ValidationService extends BaseProcessService {
      */
     public CompletableFuture<BaseMqProcessResponse> getResult(String name,
                                                               ValidationRequestDto request, int nPage, int nSize) {
-        return initProcess(name, request, RequestType.VALIDATION_GET, nPage, nSize);
+        return initProcess(name, request, ProcessType.VALIDATION_GET, nPage, nSize);
     }
 
     private CompletableFuture<BaseMqProcessResponse> initProcess(String name,
                                                                  ValidationRequestDto request,
-                                                                 RequestType type, int page, int size) {
+                                                                 ProcessType type, int page, int size) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -107,7 +107,7 @@ public class ValidationService extends BaseProcessService {
         if (processById.isPresent()) {
             CrgProcess process = processById.get();
 
-            if (RequestType.VALIDATION_INIT.equals(response.getType())) {
+            if (ProcessType.VALIDATION_INIT.equals(response.getType())) {
                 wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
             }
 

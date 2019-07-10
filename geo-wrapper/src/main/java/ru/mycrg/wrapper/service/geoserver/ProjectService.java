@@ -13,8 +13,7 @@ import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
+import static ru.mycrg.common.CrgConstants.*;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.WRITE;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
@@ -44,8 +43,8 @@ public class ProjectService {
      */
     public void createProject(OrgMqProcessRequest dto) throws IOException, RuntimeException, SQLException {
         String projectName = dto.getProjectName();
-        String databaseName = DEFAULT_DB_NAME + "_" + dto.getOrgId();
-        String storeName = databaseName + "_store";
+        String databaseName = DEFAULT_DB_NAME + dto.getOrgId();
+        String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
         // На геосервере создаем рабочую область и хранилище.
         workspacesService.createWorkspace(projectName);

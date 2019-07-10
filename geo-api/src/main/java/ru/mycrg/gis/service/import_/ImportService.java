@@ -5,71 +5,55 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportFeature;
 import ru.mycrg.common.import_.ImportMqRequest;
-import ru.mycrg.gis.dto.WsMessageDto;
-import ru.mycrg.gis.entity.Organization;
-import ru.mycrg.gis.entity.User;
+import ru.mycrg.gis.dto.ProjectModel;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.repository.OrganizationRepository;
-import ru.mycrg.gis.repository.UserRepository;
-import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.CrgProcess;
+import ru.mycrg.gis.service.ProcessService;
+import ru.mycrg.gis.service.Processable;
+import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ImportService extends BaseProcessService {
+public class ImportService implements Processable {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final MqSender mqSender;
-    private final UserRepository userRepository;
-    private final OrganizationRepository organizationRepository;
+    private final ProjectService projectService;
+    private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
-                         UserRepository userRepository,
-                         WsNotificationService wsNotificationService,
-                         OrganizationRepository organizationRepository) {
+                         ProjectService projectService,
+                         ProcessService processService,
+                         WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
-        this.userRepository = userRepository;
+        this.projectService = projectService;
+        this.processService = processService;
         this.wsNotificationService = wsNotificationService;
-        this.organizationRepository = organizationRepository;
     }
 
-    // TODO: чтобы избежать лишних хожденияй в БД можно было бы на UI отдавать имя БД
-    // А может в будущем имя БД будет на UI, по другой причине, тогда здесь можно упростить
-    public CompletableFuture<BaseMqProcessResponse> initProcess(WorkImport workImport, String userName) {
-        User user = userRepository
-                .findUserByUsername(userName)
-                .orElseThrow(() -> new EntityNotFoundException("Not found user by name: " + userName));
+    public Process initProcess(Long orgId, Long projectId, WorkImport workImport) {
+        ProjectModel projectModel = projectService.getProject(orgId, projectId);
 
-        // Добираемся до организации пользователя, чтобы подглядеть название БД
-        Organization organization = organizationRepository
-                .findOrganizationByUsersContaining(user)
-                .orElseThrow(() -> new EntityNotFoundException("Not found user organization"));
+        Process process = processService.create(
+                String.format("Импорт в проект: %s", projectModel.getInternalName()),
+                ProcessType.IMPORT);
 
-        CrgProcess<WorkImport> process = new CrgProcess<>(workImport);
-        processes.add(process);
-
-        ImportMqRequest importMqRequest = new ImportMqRequest(process.getId(), RequestType.IMPORT);
-
+        ImportMqRequest importMqRequest = new ImportMqRequest(process.getId(), ProcessType.IMPORT);
         workImport.getImportTasks().forEach(importTask -> {
             ImportFeature importFeature = new ImportFeature(
-                    process.getId(),
-                    // Источником для рабочего импорта является общее хранилище "scratch"
                     new ResourceProjection(
-                            "database_" + organization.getId(),
-                            "public",
+                            projectModel.getDatabaseName(),
+                            "public", // Источником рабочего импорта является хранилище "scratch - public схема в БД"
                             importTask.getLayerName()),
-                    // БД организации это шаблонное название "database" + ID организвции
                     new ResourceProjection(
-                            "database_" + organization.getId(),
+                            projectModel.getDatabaseName(),
                             workImport.getTargetSchema(),
                             importTask.getWorkTableName()),
                     importTask.getMapping());
@@ -79,7 +63,7 @@ public class ImportService extends BaseProcessService {
 
         mqSender.initImport(importMqRequest);
 
-        return process.getFutureResponse();
+        return process;
     }
 
     @Override
@@ -88,12 +72,12 @@ public class ImportService extends BaseProcessService {
             log.warn("Return invalid response");
         }
 
-        Optional<CrgProcess> processById = getProcessById(response.getId());
+        Optional<Process> processById = processService.getProcessById(response.getId());
         if (processById.isPresent()) {
-            CrgProcess process = processById.get();
-            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+            Process process = processById.get();
 
-            process.complete(response);
+            processService.complete(process);
+//            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
         } else {
             log.warn("Not found import process by id: {}", response.getId());
         }

@@ -13,8 +13,7 @@ public class ImportFeature {
 
     public ImportFeature() {}
 
-    public ImportFeature(UUID id,
-                         ResourceProjection sourceResource,
+    public ImportFeature(ResourceProjection sourceResource,
                          ResourceProjection targetResource,
                          List<GeoMapping> mapping) {
         this.sourceResource = sourceResource;

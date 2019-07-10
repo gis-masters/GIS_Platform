@@ -1,31 +1,29 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.RequestType;
-
-import java.util.UUID;
+import ru.mycrg.common.enums.ProcessType;
 
 public class BaseMqProcessRequest {
 
-    private UUID id;
-    private RequestType type;
+    private long id;
+    private ProcessType type;
 
     public BaseMqProcessRequest() {
     }
 
-    public BaseMqProcessRequest(UUID id) {
+    public BaseMqProcessRequest(long id) {
         this.id = id;
     }
 
-    public BaseMqProcessRequest(UUID id, RequestType type) {
+    public BaseMqProcessRequest(long id, ProcessType type) {
         this.id = id;
         this.type = type;
     }
 
-    public UUID getId() {
+    public long getId() {
         return id;
     }
 
-    public RequestType getType() {
+    public ProcessType getType() {
         return type;
     }
 

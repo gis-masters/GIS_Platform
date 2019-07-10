@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.gis.dto.ExportRequestModel;
+import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ProjectRequestDto;
-import ru.mycrg.gis.entity.Project;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
@@ -36,27 +38,27 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getProjects(@PathVariable Long orgId) {
+    public ResponseEntity<List<ProjectModel>> getProjects(@PathVariable Long orgId) {
         log.debug("Request get projects for org: {}", orgId);
 
-        List<Project> projects = projectService.getProjects(orgId);
+        List<ProjectModel> projects = projectService.getProjects(orgId);
 
         return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long orgId, @PathVariable Long projectId) {
+    public ResponseEntity<ProjectModel> getProjectById(@PathVariable Long orgId, @PathVariable Long projectId) {
         log.debug("Request get project: {} for org: {}", projectId, orgId);
 
         return ResponseEntity.ok(projectService.getProject(orgId, projectId));
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@PathVariable Long orgId,
-                                                 @Valid @RequestBody ProjectRequestDto projectDto) {
+    public ResponseEntity<ProjectModel> createProject(@PathVariable Long orgId,
+                                                      @Valid @RequestBody ProjectRequestDto projectDto) {
         log.debug("Request for createProject for org: {}", orgId);
 
-        Project newProject = projectService.create(orgId, projectDto);
+        ProjectModel newProject = projectService.create(orgId, projectDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/{projectId}")
@@ -78,11 +80,32 @@ public class ProjectController {
         return HttpStatus.NO_CONTENT;
     }
 
-    @PostMapping("/import")
-    public CompletableFuture<BaseMqProcessResponse> initImport(@RequestBody WorkImport workImport, Principal principal) {
-        log.debug("User {} initImport request", principal.getName());
+    @PostMapping("/{projectId}/import")
+    public ResponseEntity<Process> initImport(@PathVariable Long orgId, @PathVariable Long projectId,
+                                              @RequestBody WorkImport workImport) {
+        log.debug("Request import for org: {} project: {}", orgId, projectId);
 
-        return importService.initProcess(workImport, principal.getName());
+        Process newProcess = importService.initProcess(orgId, projectId, workImport);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/{projectId}")
+                .buildAndExpand(newProcess.getId())
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
+
+        return new ResponseEntity<>(newProcess, headers, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/{projectId}/export")
+    public HttpStatus exportProjectLayers(@PathVariable Long orgId, @PathVariable Long projectId,
+                                          @Valid @RequestBody ExportRequestModel requestModel) {
+        log.debug("Request export layers. For projectId: {} Format: {}", projectId, requestModel.getFormat());
+
+        projectService.export(orgId, projectId, requestModel);
+
+        return HttpStatus.ACCEPTED;
     }
 
 }

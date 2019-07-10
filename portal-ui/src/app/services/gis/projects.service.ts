@@ -37,10 +37,11 @@ export class ProjectsService {
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     this.projects$.subscribe();
+    this.orgUrl = this.orgUrl + storageService.getOrgId();
   }
 
   fetchProjects(): void {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+    const url = this.orgUrl + '/projects';
 
     this.http
         .get<CrgProject[]>(url)
@@ -55,13 +56,13 @@ export class ProjectsService {
   }
 
   getById(id: string): Observable<CrgProject> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects' + '/' + id;
+    const url = this.orgUrl + '/projects/' + id;
 
     return this.http.get<CrgProject>(url);
   }
 
   create(name: string): Observable<any> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+    const url = this.orgUrl + '/projects';
 
     const payload = {
       'projectName': name
@@ -71,21 +72,20 @@ export class ProjectsService {
   }
 
   delete(id: string): Observable<any> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects' + '/' + id;
+    const url = this.orgUrl + '/projects/' + id;
 
     return this.http.delete(url);
   }
 
   /**
-   * Для выполнения импорта передаем на бекенд geoserverName(то имя под которым создам workspace на геосервере,
+   * Для выполнения импорта передаем на бекенд geoserverName(то имя под которым создан workspace на геосервере,
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
-   * К какой организации привязан пользователь тоже разберется бекенд.
    */
   doWorkImport(workImport: WorkImport) {
-    this.log.info('projects', 'doWorkImport', workImport);
+    this.log.info('projects', 'do Work Import', workImport);
 
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/import';
+    const url = this.orgUrl + '/projects/' + workImport.projectModel.crgProject.id + '/import';
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workImport.projectModel.crgProject.geoserverName,
@@ -150,6 +150,8 @@ export interface CrgProject {
   id: string;
   geoserverName: string;
   internalName: string;
+  databaseName?: string;
+  storeName?: string;
   href?: string;
   type?: string;
   layersCount?: number;

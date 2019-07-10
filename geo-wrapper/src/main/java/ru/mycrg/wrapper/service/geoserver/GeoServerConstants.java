@@ -8,7 +8,4 @@ public class GeoServerConstants {
     public static final MediaType XML_ATOM_MEDIA_TYPE = MediaType.parse("application/atom+xml");
     public static final MediaType XML_MEDIA_TYPE = MediaType.parse("application/xml");
 
-    public static final String DEFAULT_DB_NAME = "database";
-    public static final String DEFAULT_ROLE_NAME = "admin_";
-
 }

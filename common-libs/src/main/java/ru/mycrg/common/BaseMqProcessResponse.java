@@ -1,34 +1,34 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 
 import java.util.UUID;
 
 public class BaseMqProcessResponse {
 
-    private UUID id;
+    private Long id;
     private int progress = -1;
     private String description;
     private ProcessStatus status;
-    private RequestType type;
+    private ProcessType type;
 
     public BaseMqProcessResponse() {}
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type) {
+    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type) {
         this.id = id;
         this.status = status;
         this.type = type;
     }
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description) {
+    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description) {
         this.id = id;
         this.status = status;
         this.type = type;
         this.description = description;
     }
 
-    public BaseMqProcessResponse(UUID id, ProcessStatus status, RequestType type, String description, int progress) {
+    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, int progress) {
         this.id = id;
         this.status = status;
         this.type = type;
@@ -56,11 +56,11 @@ public class BaseMqProcessResponse {
         return status == null;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -88,11 +88,11 @@ public class BaseMqProcessResponse {
         this.description = description;
     }
 
-    public RequestType getType() {
+    public ProcessType getType() {
         return type;
     }
 
-    public void setType(RequestType type) {
+    public void setType(ProcessType type) {
         this.type = type;
     }
 

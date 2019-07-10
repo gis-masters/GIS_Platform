@@ -1,6 +1,6 @@
 package ru.mycrg.common.enums;
 
-public enum RequestType {
+public enum ProcessType {
     VALIDATION_INFO,
     VALIDATION_INIT,
     VALIDATION_GET,

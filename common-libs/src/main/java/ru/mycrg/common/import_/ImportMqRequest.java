@@ -1,11 +1,10 @@
 package ru.mycrg.common.import_;
 
 import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ImportMqRequest extends BaseMqProcessRequest {
 
@@ -13,7 +12,7 @@ public class ImportMqRequest extends BaseMqProcessRequest {
 
     public ImportMqRequest() {}
 
-    public ImportMqRequest(UUID id, RequestType type) {
+    public ImportMqRequest(long id, ProcessType type) {
         super(id, type);
     }
 

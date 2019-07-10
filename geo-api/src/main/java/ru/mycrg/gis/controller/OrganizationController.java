@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.RequestType;
+import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
@@ -90,7 +90,7 @@ public class OrganizationController {
         mqEvents.sendOrgEvent(new OrgMqProcessRequest(UUID.randomUUID(), newOrganization.getId(),
                 createDto.getEmail(),
                 createDto.getPassword(),
-                RequestType.CREATE_ORG));
+                ProcessType.CREATE_ORG));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
     }

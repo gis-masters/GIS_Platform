@@ -13,7 +13,7 @@ import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
 
 import java.io.IOException;
 
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.DEFAULT_ROLE_NAME;
+import static ru.mycrg.common.CrgConstants.DEFAULT_ROLE_NAME;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
 import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
 
