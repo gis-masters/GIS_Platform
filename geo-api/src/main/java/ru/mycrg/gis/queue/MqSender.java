@@ -43,7 +43,7 @@ public class MqSender implements IMqEvents {
     }
 
     private void send(String fanout, String key, BaseMqProcessRequest payload) {
-        log.debug("Send {} ", payload.getId());
+        log.debug("Send event to queue with id: {} ", payload.getId());
 
         rabbitTemplate.convertAndSend(fanout, key, payload);
     }

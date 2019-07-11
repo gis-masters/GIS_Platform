@@ -3,8 +3,6 @@ package ru.mycrg.common;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 
-import java.util.UUID;
-
 public class BaseMqProcessResponse {
 
     private Long id;

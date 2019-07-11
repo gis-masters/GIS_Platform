@@ -65,10 +65,11 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Process> deleteProject(@PathVariable long orgId, @PathVariable long projectId, Principal principal) {
+    public ResponseEntity<Process> deleteProject(@PathVariable long orgId, @PathVariable long projectId,
+                                                 Principal principal) {
         log.debug("Request delete project with id: {} for org: {}", projectId, orgId);
 
-        Process process = projectService.delete(orgId, projectId);
+        Process process = projectService.delete(orgId, projectId, principal);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
@@ -103,7 +104,7 @@ public class ProjectController {
 
 
     @NotNull
-    private HttpHeaders createHeadersWithLinkToTask(@PathVariable Long orgId, Process process) {
+    private HttpHeaders createHeadersWithLinkToTask(Long orgId, Process process) {
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/organizations/{orgId}/tasks/{processId}")
                 .buildAndExpand(orgId, process.getId())

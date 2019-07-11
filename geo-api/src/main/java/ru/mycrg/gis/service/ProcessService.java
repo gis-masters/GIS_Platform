@@ -38,11 +38,15 @@ public class ProcessService {
         process.setStatus(ProcessStatus.DONE);
 
         processRepository.save(process);
+
+        log.info("Successfully complete process: {}", process.getTitle());
     }
 
     public void error(Process process) {
         process.setStatus(ProcessStatus.ERROR);
 
         processRepository.save(process);
+
+        log.warn("Процесс {} завершился неудачей", process.getTitle());
     }
 }

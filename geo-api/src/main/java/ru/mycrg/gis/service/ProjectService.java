@@ -24,6 +24,7 @@ import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -115,26 +116,27 @@ public class ProjectService implements Processable {
     }
 
     @Transactional
-    public Process delete(long orgId, long projectId) {
-        log.info("Delete project by id: {}", projectId);
+    public Process delete(long orgId, long projectId, Principal principal) {
+        log.info("Init process Delete project by id: {}", projectId);
 
-        Organization organization = organizationService.findById(orgId);
         Project project = projectRepository
                 .findById(projectId)
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
 
+        Organization organization = organizationService.findById(orgId);
         organization.removeProject(project);
 
-//        CrgProcess process = new CrgProcess<>(new ProjectRequestDto(project.getGeoserverName()));
-//        processes.add(process);
-//
-//        OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
-//                project.getGeoserverName(), ProcessType.DELETE_PROJECT);
+        Process process = processService.create(principal.getName(),
+                String.format("Удаление проекта: %s", project.getInternalName()),
+                ProcessType.DELETE_PROJECT);
+
+        OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
+                project.getGeoserverName(), ProcessType.DELETE_PROJECT);
 
         // Отсылаем евент
-//        mqEvents.sendOrgEvent(mqRequest);
+        mqEvents.sendOrgEvent(mqRequest);
 
-        return null;
+        return process;
     }
 
     public void export(Long orgId, Long projectId, ExportRequestModel requestModel, Principal principal) {
@@ -153,31 +155,42 @@ public class ProjectService implements Processable {
         if (processById.isPresent()) {
             Process process = processById.get();
 
-            Long projectId = process.getExtra().get("id").asLong();
-
-            Optional<Project> projectOptional = projectRepository.findById(projectId);
-            if (projectOptional.isPresent()) {
-                Project project = projectOptional.get();
-
-                if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-                    projectRepository.delete(project);
-
-                    processService.error(process);
-
-                    log.warn("Процесс {} завершился неудачей", process.getTitle());
-                } else {
-                    processService.complete(process);
-
-                    project.setStatus(mqResponse.getStatus());
-                    projectRepository.save(project);
-
-                    log.info("Successfully created project: {}", project.getGeoserverName());
-                }
-            } else {
-                log.warn("Not found project by id: {}", projectId);
+            switch (mqResponse.getType()) {
+                case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
+                case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
             }
         } else {
             log.warn("Not found process by id: {}", mqResponse.getId());
+        }
+    }
+
+    private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
+        if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+            processService.error(process);
+        } else {
+            processService.complete(process);
+        }
+    }
+
+    private void handleProjectCreation(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
+        Long projectId = process.getExtra().get("id").asLong();
+
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+
+            if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+                projectRepository.delete(project);
+
+                processService.error(process);
+            } else {
+                processService.complete(process);
+
+                project.setStatus(mqResponse.getStatus());
+                projectRepository.save(project);
+            }
+        } else {
+            log.warn("Not found project by id: {}", projectId);
         }
     }
 

@@ -48,11 +48,10 @@ public class MqListener {
     public void created(OrgMqResponse response) {
         try {
             switch (response.getType()) {
-                case CREATE_ORG:
-                    organizationService.handleMqResponse(response);
+                case CREATE_ORG:        organizationService.handleMqResponse(response);
                     break;
                 case CREATE_PROJECT:
-                    projectService.handleMqResponse(response);
+                case DELETE_PROJECT:    projectService.handleMqResponse(response);
                     break;
                 default:
                     log.warn("Not processable event type");
