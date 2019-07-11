@@ -81,27 +81,19 @@ public class ProjectController {
 
         Process process = importService.initProcess(orgId, projectId, workImport, principal);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/{projectId}")
-                .buildAndExpand(process.getId())
-                .toUri();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(location);
-
-        return new ResponseEntity<>(process, headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{projectId}/export")
-    public HttpStatus exportProjectLayers(@PathVariable Long orgId, @PathVariable Long projectId,
-                                          @Valid @RequestBody ExportRequestModel requestModel, Principal principal) {
+    public ResponseEntity<Process> exportProjectLayers(@PathVariable Long orgId, @PathVariable Long projectId,
+                                                       @Valid @RequestBody ExportRequestModel requestModel,
+                                                       Principal principal) {
         log.debug("Request export layers. For projectId: {} Format: {}", projectId, requestModel.getFormat());
 
-        projectService.export(orgId, projectId, requestModel, principal);
+        Process process = projectService.export(orgId, projectId, requestModel, principal);
 
-        return HttpStatus.ACCEPTED;
+        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
-
 
     @NotNull
     private HttpHeaders createHeadersWithLinkToTask(Long orgId, Process process) {

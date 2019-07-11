@@ -6,6 +6,7 @@ public enum ProcessType {
     VALIDATION_GET,
 
     GML_EXPORT,
+    EXPORT,
 
     IMPORT,
 

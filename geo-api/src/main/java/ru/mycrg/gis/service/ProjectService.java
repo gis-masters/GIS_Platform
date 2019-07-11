@@ -139,10 +139,16 @@ public class ProjectService implements Processable {
         return process;
     }
 
-    public void export(Long orgId, Long projectId, ExportRequestModel requestModel, Principal principal) {
+    public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
         ProjectModel project = getProject(orgId, projectId, principal);
 
-        log.debug("Try export {} layers", requestModel.getLayers().size());
+        log.debug("Try export {} layers", request.getLayers().size());
+
+        Process process = processService.create(principal.getName(),
+                String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
+                ProcessType.EXPORT, request);
+
+        return process;
     }
 
     @Override
