@@ -16,6 +16,7 @@ import ru.mycrg.gis.service.Processable;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -38,10 +39,11 @@ public class ImportService implements Processable {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process initProcess(Long orgId, Long projectId, WorkImport workImport) {
-        ProjectModel projectModel = projectService.getProject(orgId, projectId);
+    public Process initProcess(Long orgId, Long projectId, WorkImport workImport, Principal principal) {
+        ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
         Process process = processService.create(
+                principal.getName(),
                 String.format("Импорт в проект: %s", projectModel.getInternalName()),
                 ProcessType.IMPORT);
 
@@ -76,8 +78,9 @@ public class ImportService implements Processable {
         if (processById.isPresent()) {
             Process process = processById.get();
 
-            processService.complete(process);
 //            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+
+            processService.complete(process);
         } else {
             log.warn("Not found import process by id: {}", response.getId());
         }

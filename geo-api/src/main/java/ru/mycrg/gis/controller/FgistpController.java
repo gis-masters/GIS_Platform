@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
@@ -74,27 +76,29 @@ public class FgistpController {
     }
 
     @PostMapping("/fgistp/validation/init")
-    public CompletableFuture<BaseMqProcessResponse> initValidation(
-            @RequestBody ValidationRequestDto request,
-            Principal principal) {
+    public ResponseEntity<Process> initValidation(@RequestBody ValidationRequestDto request, Principal principal) {
         log.debug("Init validation for: {} resources", request.getResources().size());
 
         validateRequest(request);
 
-        return validationService.validate(principal.getName(), request);
+        Process process = validationService.validate(principal.getName(), request);
+
+        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/fgistp/validation/info")
-    public CompletableFuture<BaseMqProcessResponse> getCommonInfo(
+    public ResponseEntity<Process> getCommonInfo(
             @RequestBody ValidationRequestDto request,
             Principal principal) {
         validateRequest(request);
 
-        return validationService.getInfo(principal.getName(), request);
+        Process process = validationService.getInfo(principal.getName(), request);
+
+        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/fgistp/validation")
-    public CompletableFuture<BaseMqProcessResponse> getValidationResults(
+    public ResponseEntity<Process> getValidationResults(
             @RequestBody ValidationRequestDto request,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
@@ -112,15 +116,19 @@ public class FgistpController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        return validationService.getResult(principal.getName(), request, nPage, nSize);
+        Process process = validationService.getResult(principal.getName(), request, nPage, nSize);
+
+        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
     }
 
     @ResponseBody
     @PostMapping("/fgistp/export/gml")
-    public CompletableFuture<BaseMqProcessResponse> gmlGeneration(@RequestBody GmlRequestDto request) {
+    public ResponseEntity<Process> gmlGeneration(@RequestBody GmlRequestDto request, Principal principal) {
         log.debug("Gml generation request");
 
-        return gmlGenerationService.initProcess(request);
+        Process process = gmlGenerationService.initProcess(request, principal);
+
+        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
     }
 
     /**
@@ -160,7 +168,7 @@ public class FgistpController {
         } catch (IOException e) {
             log.error("Wrong file URL", e);
 
-            throw  new CrgNotFoundException("Wrong file URL");
+            throw new CrgNotFoundException("Wrong file URL");
         }
 
         if (contentType == null) {

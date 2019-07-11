@@ -3,9 +3,11 @@ package ru.mycrg.gis.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.repository.ProcessRepository;
+import ru.mycrg.gis.service.fgistp.MapperUtil;
 
 import java.util.Optional;
 
@@ -20,8 +22,12 @@ public class ProcessService {
         this.processRepository = processRepository;
     }
 
-    public Process create(String name, ProcessType type) {
-        return processRepository.save(new Process(name, type));
+    public Process create(String userName, String title, ProcessType type) {
+        return processRepository.save(new Process(userName, title, type));
+    }
+
+    public Process create(String userName, String title, ProcessType type, Object extra) {
+        return processRepository.save(new Process(userName, title, type, MapperUtil.convertToJsonNode(extra)));
     }
 
     public Optional<Process> getProcessById(Long id) {
@@ -29,9 +35,14 @@ public class ProcessService {
     }
 
     public void complete(Process process) {
-        process.setActive(false);
+        process.setStatus(ProcessStatus.DONE);
 
         processRepository.save(process);
     }
 
+    public void error(Process process) {
+        process.setStatus(ProcessStatus.ERROR);
+
+        processRepository.save(process);
+    }
 }

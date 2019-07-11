@@ -4,22 +4,22 @@ import ru.mycrg.common.enums.ProcessType;
 
 public class BaseMqProcessRequest {
 
-    private long id;
+    private Long id;
     private ProcessType type;
 
     public BaseMqProcessRequest() {
     }
 
-    public BaseMqProcessRequest(long id) {
+    public BaseMqProcessRequest(Long id) {
         this.id = id;
     }
 
-    public BaseMqProcessRequest(long id, ProcessType type) {
+    public BaseMqProcessRequest(Long id, ProcessType type) {
         this.id = id;
         this.type = type;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.Where;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 
 import javax.persistence.*;
 
 @Entity
-@Where(clause="is_active=1")
 @Table(name="processes")
 @TypeDef(
         name = "jsonb-node",
@@ -24,11 +22,11 @@ public class Process {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @ManyToOne
-    private User user;
+    @Column
+    private String userName;
 
     @Column
-    private String name;
+    private String title;
 
     @Enumerated(value = EnumType.STRING)
     private ProcessStatus status = ProcessStatus.PENDING;
@@ -40,14 +38,19 @@ public class Process {
     @Column(columnDefinition = "json")
     private JsonNode extra;
 
-    @Column(name="is_active")
-    private Boolean active = true;
-
     public Process() {}
 
-    public Process(String name, ProcessType type) {
-        this.name = name;
+    public Process(String user, String title, ProcessType type) {
+        this.userName = user;
+        this.title = title;
         this.type = type;
+    }
+
+    public Process(String user, String title, ProcessType type, JsonNode extra) {
+        this.userName = user;
+        this.title = title;
+        this.type = type;
+        this.extra = extra;
     }
 
     public long getId() {
@@ -58,20 +61,20 @@ public class Process {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public ProcessStatus getStatus() {
@@ -88,14 +91,6 @@ public class Process {
 
     public void setExtra(JsonNode extra) {
         this.extra = extra;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
     public ProcessType getType() {

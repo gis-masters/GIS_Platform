@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<UserInfoModel> getUserInfo(Principal principal) {
         log.debug("get info for user: {}", principal.getName());
 
-        Organization organization = organizationService.getOrganizationByUser(principal.getName());
+        Organization organization = organizationService.getOrganizationByUserName(principal.getName());
 
         return ResponseEntity.ok(new UserInfoModel(principal.getName(), organization.getName(), organization.getId()));
     }

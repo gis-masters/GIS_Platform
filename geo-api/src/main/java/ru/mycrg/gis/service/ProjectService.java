@@ -1,5 +1,6 @@
 package ru.mycrg.gis.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,13 @@ import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.CrgConflictException;
+import ru.mycrg.gis.exceptions.CrgForbiddenException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,16 +52,21 @@ public class ProjectService implements Processable {
     }
 
     @Transactional
-    public List<ProjectModel> getProjects(Long orgId) {
-        return organizationService.findById(orgId)
+    public List<ProjectModel> getProjects(Long orgId, Principal principal) {
+        Organization organizationServiceById = organizationService.getOrganizationByUserName(principal.getName());
+        if (organizationServiceById.getId() != orgId) {
+            throw new CrgForbiddenException("Forbidden");
+        }
+
+        return organizationServiceById
                 .getProjects().stream()
                 .map(project -> mapToProjectModel(orgId, project))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ProjectModel getProject(Long orgId, Long projectId) {
-        return getProjects(orgId).stream()
+    public ProjectModel getProject(Long orgId, Long projectId, Principal principal) {
+        return getProjects(orgId, principal).stream()
                 .filter(project -> projectId == project.getId())
                 .findFirst()
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
@@ -69,32 +77,32 @@ public class ProjectService implements Processable {
      * Отправляем задание в очередь на создание проекта на геосервере
      *
      * @param orgId id организации
+     * @param principal
      * @return нашу сущность проекта  {@link Project}
      */
     @Transactional
-    public ProjectModel create(Long orgId, ProjectRequestDto projectDto) {
-        log.info("Init create project process: {}", projectDto.getProjectName());
+    public Process create(Long orgId, ProjectRequestDto dto, Principal principal) {
+        log.info("Init create project process: {}", dto.getProjectName());
 
         Organization organization = organizationService.findById(orgId);
         Optional<Project> projectWithSameName = organization.getProjects().stream()
-                .filter(project -> project.getInternalName().equals(projectDto.getProjectName()))
+                .filter(project -> project.getInternalName().equals(dto.getProjectName()))
                 .findFirst();
 
         if (projectWithSameName.isPresent()) {
             throw new CrgConflictException("Проект с таким именем уже существует");
         } else {
-            Process process = processService.create(
-                    String.format("Создание проекта: %s", projectDto.getProjectName()),
-                    ProcessType.CREATE_PROJECT);
-
-            Project newProject = new Project(projectDto.getProjectName(), Translit.doIt(projectDto.getProjectName()),
-                    organization);
+            Project newProject = new Project(dto.getProjectName(), Translit.doIt(dto.getProjectName()), organization);
             Project savedProject = projectRepository.save(newProject);
             savedProject.setGeoserverName(savedProject.getGeoserverName() + "_" + savedProject.getId());
 
             projectRepository.save(savedProject);
 
-//          new ProjectRequestDto(savedProject.getGeoserverName());
+            Process process = processService.create(
+                    principal.getName(),
+                    String.format("Создание проекта: %s", dto.getProjectName()),
+                    ProcessType.CREATE_PROJECT,
+                    savedProject);
 
             // Отсылаем евент
             OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
@@ -102,12 +110,12 @@ public class ProjectService implements Processable {
 
             mqEvents.sendOrgEvent(mqRequest);
 
-            return mapToProjectModel(orgId, savedProject);
+            return process;
         }
     }
 
     @Transactional
-    public void delete(long orgId, long projectId) {
+    public Process delete(long orgId, long projectId) {
         log.info("Delete project by id: {}", projectId);
 
         Organization organization = organizationService.findById(orgId);
@@ -125,50 +133,51 @@ public class ProjectService implements Processable {
 
         // Отсылаем евент
 //        mqEvents.sendOrgEvent(mqRequest);
+
+        return null;
     }
 
-    public void export(Long orgId, Long projectId, ExportRequestModel requestModel) {
-        ProjectModel project = getProject(orgId, projectId);
+    public void export(Long orgId, Long projectId, ExportRequestModel requestModel, Principal principal) {
+        ProjectModel project = getProject(orgId, projectId, principal);
 
         log.debug("Try export {} layers", requestModel.getLayers().size());
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+    public void handleMqResponse(@NotNull BaseMqProcessResponse mqResponse) {
         if (mqResponse.getId() == null) {
-            log.warn("Return invalid mqResponse");
+            log.warn("Return invalid mqResponse: {}", mqResponse);
         }
 
         Optional<Process> processById = processService.getProcessById(mqResponse.getId());
         if (processById.isPresent()) {
             Process process = processById.get();
 
-            Optional<Project> projectOptional = projectRepository.findByGeoserverName(process.getProjectName());
+            Long projectId = process.getExtra().get("id").asLong();
+
+            Optional<Project> projectOptional = projectRepository.findById(projectId);
             if (projectOptional.isPresent()) {
                 Project project = projectOptional.get();
 
-                if (mqResponse.getType() == ProcessType.CREATE_PROJECT) {
-                    if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-                        projectRepository.delete(project);
-                    } else {
-                        if (!mqResponse.isNull()) {
-                            project.setStatus(mqResponse.getStatus());
+                if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+                    projectRepository.delete(project);
 
-                            log.info("Successfully created project: {}", project.getGeoserverName());
-                        } else {
-                            log.warn("Status must not be empty: {}", mqResponse.getStatus());
-                        }
+                    processService.error(process);
 
-                        projectRepository.save(project);
-                    }
+                    log.warn("Процесс {} завершился неудачей", process.getTitle());
                 } else {
-                    log.warn("Other project event type");
+                    processService.complete(process);
+
+                    project.setStatus(mqResponse.getStatus());
+                    projectRepository.save(project);
+
+                    log.info("Successfully created project: {}", project.getGeoserverName());
                 }
             } else {
-                log.warn("Not found project by name: {}", request.getProjectName());
+                log.warn("Not found project by id: {}", projectId);
             }
         } else {
-            log.warn("Not found create project process by id: {}", mqResponse.getId());
+            log.warn("Not found process by id: {}", mqResponse.getId());
         }
     }
 

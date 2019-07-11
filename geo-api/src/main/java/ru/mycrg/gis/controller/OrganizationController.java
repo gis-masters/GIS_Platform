@@ -14,6 +14,7 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgFailedException;
@@ -24,7 +25,6 @@ import ru.mycrg.gis.service.OrganizationService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -87,7 +87,7 @@ public class OrganizationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        mqEvents.sendOrgEvent(new OrgMqProcessRequest(UUID.randomUUID(), newOrganization.getId(),
+        mqEvents.sendOrgEvent(new OrgMqProcessRequest(newOrganization.getId(), newOrganization.getId(),
                 createDto.getEmail(),
                 createDto.getPassword(),
                 ProcessType.CREATE_ORG));
@@ -119,6 +119,13 @@ public class OrganizationController {
         organizationService.update(id, organizationDto);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/tasks/{taskId}")
+    public ResponseEntity<Process> getOrganizationTasks(@PathVariable long id, @PathVariable long taskId) {
+        log.debug("Get organization task: {}", taskId);
+
+        return ResponseEntity.ok(organizationService.getProcessById(taskId));
     }
 
 }

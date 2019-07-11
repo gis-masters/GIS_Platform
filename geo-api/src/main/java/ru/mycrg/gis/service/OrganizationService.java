@@ -8,13 +8,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.gis.exceptions.CustomRestExceptionHandler;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.CustomRestExceptionHandler;
 import ru.mycrg.gis.repository.OrganizationRepository;
+import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,13 +34,16 @@ public class OrganizationService {
     private static Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
     private final UserRepository userRepository;
+    private final ProcessRepository processRepository;
     private final OrganizationRepository organizationRepository;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               ProcessRepository processRepository) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
+        this.processRepository = processRepository;
     }
 
     public Iterable<Organization> findAll() {
@@ -49,7 +54,7 @@ public class OrganizationService {
         return organizationRepository.findAll(pageable);
     }
 
-    public Organization getOrganizationByUser(String userName) {
+    public Organization getOrganizationByUserName(String userName) {
         Optional<User> user = userRepository.findUserByUsername(userName);
         if (user.isPresent()) {
             return organizationRepository
@@ -176,5 +181,11 @@ public class OrganizationService {
                 dto.getUserSurName(),
                 dto.getEmail()
             );
+    }
+
+    public Process getProcessById(long processId) {
+        return processRepository
+                .findById(processId)
+                .orElseThrow(() -> new CrgNotFoundException("Не найден процесс: " + processId));
     }
 }

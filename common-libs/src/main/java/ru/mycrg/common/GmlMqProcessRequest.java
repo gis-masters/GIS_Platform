@@ -14,7 +14,7 @@ public class GmlMqProcessRequest extends BaseMqProcessRequest {
 
     public GmlMqProcessRequest() {}
 
-    public GmlMqProcessRequest(long id) {
+    public GmlMqProcessRequest(Long id) {
         super(id, ProcessType.GML_EXPORT);
     }
 

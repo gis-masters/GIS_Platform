@@ -10,10 +10,9 @@ import ru.mycrg.common.ValidationMqProcessRequest;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
+import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.CrgProcess;
-import ru.mycrg.gis.service.WsNotificationService;
+import ru.mycrg.gis.service.*;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -22,66 +21,64 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ValidationService extends BaseProcessService {
+public class ValidationService implements Processable {
 
     private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
+    private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
                              FgistpRuleService ruleService,
+                             ProcessService processService,
                              WsNotificationService wsNotificationService) {
         this.mqSender = mqSender;
         this.ruleService = ruleService;
+        this.processService = processService;
         this.wsNotificationService = wsNotificationService;
     }
 
     /**
      * Запустить процесс валидации.
      *
-     * @param name    Имя пользователя
-     * @param request Список ресурсов {@link ValidationRequestDto}
+     * @param userName Имя пользователя
+     * @param request  Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<BaseMqProcessResponse> validate(String name,
-                                                             ValidationRequestDto request) {
-        return initProcess(name, request, ProcessType.VALIDATION_INIT, 0, 25);
+    public Process validate(String userName, ValidationRequestDto request) {
+        return initProcess(userName, request, ProcessType.VALIDATION_INIT, 0, 25);
     }
 
     /**
      * Получить общую информацию о валидации слоя.
-     * @param name    Имя пользователя
-     * @param request Список ресурсов {@link ValidationRequestDto}
+     *
+     * @param userName Имя пользователя
+     * @param request  Список ресурсов {@link ValidationRequestDto}
      */
-    public CompletableFuture<BaseMqProcessResponse> getInfo(String name,
-                                                            ValidationRequestDto request) {
-        return initProcess(name, request, ProcessType.VALIDATION_INFO, 0, 25);
+    public Process getInfo(String userName, ValidationRequestDto request) {
+        return initProcess(userName, request, ProcessType.VALIDATION_INFO, 0, 25);
     }
 
     /**
      * Выборка непосредственно ошибок валидации.
-     * @param name    Имя пользователя
-     * @param request Список ресурсов {@link ValidationRequestDto}
-     * @param nPage   Номер страницы
-     * @param nSize   Размер страницы
+     *
+     * @param userName Имя пользователя
+     * @param request  Список ресурсов {@link ValidationRequestDto}
+     * @param nPage    Номер страницы
+     * @param nSize    Размер страницы
      */
-    public CompletableFuture<BaseMqProcessResponse> getResult(String name,
-                                                              ValidationRequestDto request, int nPage, int nSize) {
-        return initProcess(name, request, ProcessType.VALIDATION_GET, nPage, nSize);
+    public Process getResult(String userName, ValidationRequestDto request, int nPage, int nSize) {
+        return initProcess(userName, request, ProcessType.VALIDATION_GET, nPage, nSize);
     }
 
-    private CompletableFuture<BaseMqProcessResponse> initProcess(String name,
-                                                                 ValidationRequestDto request,
-                                                                 ProcessType type, int page, int size) {
+    private Process initProcess(String userName, ValidationRequestDto request, ProcessType type, int page, int size) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
-        CrgProcess<ValidationRequestDto> process = new CrgProcess<>(request);
-
-        processes.add(process);
+        Process process = processService.create(userName, "", type, request);
 
         ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(), type, page, size);
 
@@ -94,7 +91,7 @@ public class ValidationService extends BaseProcessService {
 
         mqSender.sendValidationRequest(mqRequest);
 
-        return process.getFutureResponse();
+        return process;
     }
 
     @Override
@@ -103,15 +100,15 @@ public class ValidationService extends BaseProcessService {
             log.warn("Return invalid response");
         }
 
-        Optional<CrgProcess> processById = getProcessById(response.getId());
+        Optional<Process> processById = processService.getProcessById(response.getId());
         if (processById.isPresent()) {
-            CrgProcess process = processById.get();
+            Process process = processById.get();
 
-            if (ProcessType.VALIDATION_INIT.equals(response.getType())) {
-                wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
-            }
+//            if (ProcessType.VALIDATION_INIT.equals(response.getType())) {
+//                wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+//            }
 
-            process.complete(response);
+            processService.complete(process);
         } else {
             log.warn("Not found validation process by id: {}", response.getId());
         }

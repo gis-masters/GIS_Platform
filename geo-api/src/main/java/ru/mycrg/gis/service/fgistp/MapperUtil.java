@@ -27,7 +27,7 @@ public class MapperUtil {
         xsdRule.setClassName(entityType.getName());
 
         try {
-            JsonNode jsonNode = JacksonUtil.toJsonNode(getJson(mapEntityTypeToDto(entityType)));
+            JsonNode jsonNode = JacksonUtil.toJsonNode(getJsonString(mapEntityTypeToDto(entityType)));
             xsdRule.setClassRule(jsonNode);
         } catch (Exception e) {
             log.warn("Failed get json for: {} / With error: {}", entityType.getName(), e.getMessage());
@@ -105,6 +105,16 @@ public class MapperUtil {
         }
 
         return new EntityType(xsdRule.getClassName());
+    }
+
+    public static JsonNode convertToJsonNode(Object object) {
+        try {
+            return JacksonUtil.toJsonNode(getJsonString(object));
+        } catch (JsonProcessingException e) {
+            log.error("Failed convert to jsonNode: {}", e.getMessage());
+
+            return JacksonUtil.toJsonNode("");
+        }
     }
 
     static private EntityType mapDtoToEntityType(EntityTypeDto dto) {
@@ -188,9 +198,10 @@ public class MapperUtil {
     }
 
     @Nullable
-    static private String getJson(EntityTypeDto classType) throws JsonProcessingException {
+    static private String getJsonString(Object classType) throws JsonProcessingException {
         return new ObjectMapper().writer()
                 .withDefaultPrettyPrinter()
                 .writeValueAsString(classType);
     }
+
 }

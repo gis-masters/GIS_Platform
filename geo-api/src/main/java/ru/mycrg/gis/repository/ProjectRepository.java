@@ -9,6 +9,4 @@ import java.util.Optional;
 @Repository
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
 
-    Optional<Project> findByInternalName(String name);
-    Optional<Project> findByGeoserverName(String name);
 }
