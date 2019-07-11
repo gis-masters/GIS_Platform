@@ -38,10 +38,6 @@ public class BaseMqProcessResponse {
         return status == ProcessStatus.DONE;
     }
 
-    public boolean isEmpty() {
-        return status == ProcessStatus.EMPTY;
-    }
-
     public boolean isError() {
         return status == ProcessStatus.ERROR;
     }

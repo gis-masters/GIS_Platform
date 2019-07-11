@@ -17,8 +17,8 @@ public class ImportMqResponse extends BaseMqProcessResponse {
         super(request.getId(), status, request.getType(), description, progress);
     }
 
-    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String layerName) {
-        super(request.getId(), status, request.getType());
+    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String layerName, String description) {
+        super(request.getId(), status, request.getType(), description);
 
         this.layerName = layerName;
     }

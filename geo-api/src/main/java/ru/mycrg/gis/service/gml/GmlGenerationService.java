@@ -10,8 +10,8 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.GmlRequestDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.service.ProcessService;
-import ru.mycrg.gis.service.Processable;
+import ru.mycrg.gis.repository.ProcessRepository;
+import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
@@ -21,27 +21,27 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Service
-public class GmlGenerationService implements Processable {
+public class GmlGenerationService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(GmlGenerationService.class);
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
-    private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     public GmlGenerationService(MqSender mqSender,
                                 FgistpRuleService ruleService,
-                                ProcessService processService,
+                                ProcessRepository processRepository,
                                 WsNotificationService wsNotificationService) {
+        super(processRepository);
+
         this.mqSender = mqSender;
         this.ruleService = ruleService;
-        this.processService = processService;
         this.wsNotificationService = wsNotificationService;
     }
 
     public Process initProcess(GmlRequestDto request, Principal principal) {
-        Process process = processService.create(principal.getName(),"Выгрузка GML", ProcessType.GML_EXPORT, request);
+        Process process = create(principal.getName(),"Выгрузка GML", ProcessType.GML_EXPORT, request);
 
         GmlMqProcessRequest mqRequest = new GmlMqProcessRequest(process.getId());
         mqRequest.setDocSchema(request.getDocSchema());
@@ -59,21 +59,15 @@ public class GmlGenerationService implements Processable {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        if (response.getId() == null) {
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
         }
 
-        Optional<Process> processById = processService.getProcessById(response.getId());
-        if (processById.isPresent()) {
-            Process process = processById.get();
+        Process process = getProcessById(mqResponse.getId());
+        handleProcessResponse(process, mqResponse);
 
 //            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
-
-            processService.complete(process);
-        } else {
-            log.warn("Not found gml process by id: {}", response.getId());
-        }
     }
 
 }

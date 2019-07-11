@@ -9,10 +9,11 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportFeature;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.gis.dto.ProjectModel;
+import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.service.ProcessService;
-import ru.mycrg.gis.service.Processable;
+import ru.mycrg.gis.repository.ProcessRepository;
+import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 
@@ -20,32 +21,32 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Service
-public class ImportService implements Processable {
+public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final MqSender mqSender;
     private final ProjectService projectService;
-    private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
                          ProjectService projectService,
-                         ProcessService processService,
+                         ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
+        super(processRepository);
+
         this.mqSender = mqSender;
         this.projectService = projectService;
-        this.processService = processService;
         this.wsNotificationService = wsNotificationService;
     }
 
     public Process initProcess(Long orgId, Long projectId, WorkImport workImport, Principal principal) {
         ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
-        Process process = processService.create(
-                principal.getName(),
-                String.format("Импорт в проект: %s", projectModel.getInternalName()),
-                ProcessType.IMPORT);
+        Process process = create(principal.getName(),
+                String.format("Импорт %d слоёв в проект: %s",
+                        workImport.getImportTasks().size(), projectModel.getInternalName()),
+                ProcessType.IMPORT, workImport.getWsUiId());
 
         ImportMqRequest importMqRequest = new ImportMqRequest(process.getId(), ProcessType.IMPORT);
         workImport.getImportTasks().forEach(importTask -> {
@@ -56,7 +57,7 @@ public class ImportService implements Processable {
                             importTask.getLayerName()),
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
-                            workImport.getTargetSchema(),
+                            projectModel.getWorkspaceName(),
                             importTask.getWorkTableName()),
                     importTask.getMapping());
 
@@ -69,20 +70,15 @@ public class ImportService implements Processable {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        if (response.getId() == null) {
-            log.warn("Return invalid response");
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
+            log.warn("Return invalid mqResponse");
         }
 
-        Optional<Process> processById = processService.getProcessById(response.getId());
-        if (processById.isPresent()) {
-            Process process = processById.get();
+        Process process = getProcessById(mqResponse.getId());
+        handleProcessResponse(process, mqResponse);
 
-//            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
-
-            processService.complete(process);
-        } else {
-            log.warn("Not found import process by id: {}", response.getId());
-        }
+        String wsUiId = process.getExtra().toString();
+        wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 }

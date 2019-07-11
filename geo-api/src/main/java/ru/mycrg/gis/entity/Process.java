@@ -8,6 +8,7 @@ import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="processes")
@@ -99,5 +100,18 @@ public class Process {
 
     public void setType(ProcessType type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Process process = (Process) o;
+        return id == process.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

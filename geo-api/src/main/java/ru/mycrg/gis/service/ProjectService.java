@@ -20,6 +20,7 @@ import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgForbiddenException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.queue.IMqEvents;
+import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
 
@@ -33,22 +34,22 @@ import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
 
 @Service
-public class ProjectService implements Processable {
+public class ProjectService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
     private final IMqEvents mqEvents;
     private final ProjectRepository projectRepository;
-    private final ProcessService processService;
     private final OrganizationService organizationService;
 
     public ProjectService(ProjectRepository projectRepository,
+                          ProcessRepository processRepository,
                           IMqEvents mqEvents,
-                          ProcessService processService,
                           OrganizationService organizationService) {
+        super(processRepository);
+
         this.mqEvents = mqEvents;
         this.projectRepository = projectRepository;
-        this.processService = processService;
         this.organizationService = organizationService;
     }
 
@@ -99,7 +100,7 @@ public class ProjectService implements Processable {
 
             projectRepository.save(savedProject);
 
-            Process process = processService.create(
+            Process process = create(
                     principal.getName(),
                     String.format("Создание проекта: %s", dto.getProjectName()),
                     ProcessType.CREATE_PROJECT,
@@ -126,7 +127,7 @@ public class ProjectService implements Processable {
         Organization organization = organizationService.findById(orgId);
         organization.removeProject(project);
 
-        Process process = processService.create(principal.getName(),
+        Process process = create(principal.getName(),
                 String.format("Удаление проекта: %s", project.getInternalName()),
                 ProcessType.DELETE_PROJECT);
 
@@ -144,7 +145,7 @@ public class ProjectService implements Processable {
 
         log.debug("Try export {} layers", request.getLayers().size());
 
-        Process process = processService.create(principal.getName(),
+        Process process = create(principal.getName(),
                 String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
                 ProcessType.EXPORT, request);
 
@@ -157,26 +158,22 @@ public class ProjectService implements Processable {
             log.warn("Return invalid mqResponse: {}", mqResponse);
         }
 
-        Optional<Process> processById = processService.getProcessById(mqResponse.getId());
-        if (processById.isPresent()) {
-            Process process = processById.get();
+        Process process = getProcessById(mqResponse.getId());
+        handleProcessResponse(process, mqResponse);
 
-            switch (mqResponse.getType()) {
-                case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
-                case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
-            }
-        } else {
-            log.warn("Not found process by id: {}", mqResponse.getId());
+        switch (mqResponse.getType()) {
+            case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
+//            case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
         }
     }
 
-    private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
-        if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-            processService.error(process);
-        } else {
-            processService.complete(process);
-        }
-    }
+//    private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
+//        if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+//            error(process);
+//        } else {
+//            complete(process);
+//        }
+//    }
 
     private void handleProjectCreation(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
         Long projectId = process.getExtra().get("id").asLong();
@@ -187,11 +184,7 @@ public class ProjectService implements Processable {
 
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 projectRepository.delete(project);
-
-                processService.error(process);
             } else {
-                processService.complete(process);
-
                 project.setStatus(mqResponse.getStatus());
                 projectRepository.save(project);
             }

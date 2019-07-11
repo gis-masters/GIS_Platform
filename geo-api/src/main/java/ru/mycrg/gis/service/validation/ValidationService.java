@@ -12,6 +12,7 @@ import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
+import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.*;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
@@ -21,23 +22,23 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ValidationService implements Processable {
+public class ValidationService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
     private final MqSender mqSender;
     private final FgistpRuleService ruleService;
-    private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
                              FgistpRuleService ruleService,
-                             ProcessService processService,
+                             ProcessRepository processRepository,
                              WsNotificationService wsNotificationService) {
+        super(processRepository);
+
         this.mqSender = mqSender;
         this.ruleService = ruleService;
-        this.processService = processService;
         this.wsNotificationService = wsNotificationService;
     }
 
@@ -78,7 +79,7 @@ public class ValidationService implements Processable {
             ruleService.updateRules();
         }
 
-        Process process = processService.create(userName, "", type, request);
+        Process process = create(userName, "", type, request);
 
         ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(), type, page, size);
 
@@ -95,23 +96,17 @@ public class ValidationService implements Processable {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        if (response.getId() == null) {
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
         }
 
-        Optional<Process> processById = processService.getProcessById(response.getId());
-        if (processById.isPresent()) {
-            Process process = processById.get();
+        Process process = getProcessById(mqResponse.getId());
+        handleProcessResponse(process, mqResponse);
 
-//            if (ProcessType.VALIDATION_INIT.equals(response.getType())) {
-//                wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
-//            }
-
-            processService.complete(process);
-        } else {
-            log.warn("Not found validation process by id: {}", response.getId());
-        }
+//        if (ProcessType.VALIDATION_INIT.equals(response.getType())) {
+//            wsNotificationService.send(new WsMessageDto<>(response.getType(), response), process.getRequest().getWsUiId());
+//        }
     }
 
 }
