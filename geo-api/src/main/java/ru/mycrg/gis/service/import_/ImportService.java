@@ -1,5 +1,6 @@
 package ru.mycrg.gis.service.import_;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -8,17 +9,17 @@ import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportFeature;
 import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.ProjectService;
-import ru.mycrg.gis.service.WsNotificationService;
+import ru.mycrg.gis.service.*;
+import ru.mycrg.gis.service.fgistp.MapperUtil;
 
+import java.io.IOException;
 import java.security.Principal;
-import java.util.Optional;
 
 @Service
 public class ImportService extends BaseProcessService {
@@ -70,15 +71,50 @@ public class ImportService extends BaseProcessService {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+    public void handleMqResponse(BaseMqProcessResponse response) {
+        ImportMqResponse mqResponse = (ImportMqResponse) response;
         if (mqResponse.getId() == null) {
             log.warn("Return invalid mqResponse");
         }
 
         Process process = getProcessById(mqResponse.getId());
-        handleProcessResponse(process, mqResponse);
+        switch (mqResponse.getStatus()) {
+            case PENDING:
+            case SUB_ERROR:
+            case SUB_DONE:  addSubStep(process, mqResponse);   break;
+            case ERROR:     error(process);     break;
+            case DONE:      complete(process);  break;
+            default:
+                log.warn("Not supported process status. {}", process);
+        }
 
         String wsUiId = process.getExtra().toString();
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
+    }
+
+    private void addSubStep(Process process, ImportMqResponse response) {
+        process.setStatus(response.getStatus());
+
+        try {
+            String content = "{}";
+            if (process.getDetails() != null) {
+                content = process.getDetails().toString();
+            }
+
+            DetailsModel details = mapper.readValue(content, DetailsModel.class);
+
+            SubProcessModel subProcess = new SubProcessModel(response.getDirection(),
+                    response.getDescription(), response.getError());
+
+            details.addSubProcess(subProcess);
+
+            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
+
+            process.setDetails(jsonNode);
+        } catch (IOException e) {
+            log.error("Failed write details to process / Error: {}", e.getMessage());
+        }
+
+        log.debug("Add subStep to process: {}", process.getId());
     }
 }

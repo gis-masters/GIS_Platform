@@ -8,14 +8,12 @@ public class GmlMqResponse extends BaseMqProcessResponse {
 
     private String pathToFile;
     private String pathToLog;
+    private String layerName;
 
     public GmlMqResponse() {}
 
     public GmlMqResponse(GmlMqProcessRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
-        this.setId(request.getId());
-        this.setType(request.getType());
-        this.setStatus(status);
-        this.setProgress(percentOfProgress);
+        super(request.getId(), status, request.getType(), "Завершено", percentOfProgress);
 
         this.pathToFile = paths.get("gml");
         this.pathToLog = paths.get("log");
@@ -23,6 +21,25 @@ public class GmlMqResponse extends BaseMqProcessResponse {
 
     public GmlMqResponse(GmlMqProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
         super(request.getId(), status, request.getType(), description, percentOfProgress);
+    }
+
+    public GmlMqResponse(String layerName, GmlMqProcessRequest request, ProcessStatus status, String description,
+                         int percentOfProgress) {
+        super(request.getId(), status, request.getType(), description, percentOfProgress);
+
+        this.layerName = layerName;
+    }
+
+    public GmlMqResponse(GmlMqProcessRequest request, ProcessStatus status, String description,
+                         int percentOfProgress, String error) {
+        super(request.getId(), status, request.getType(), description, error, percentOfProgress);
+    }
+
+    public GmlMqResponse(String layerName, GmlMqProcessRequest request, ProcessStatus status, String description,
+                         int percentOfProgress, String error) {
+        super(request.getId(), status, request.getType(), description, error, percentOfProgress);
+
+        this.layerName = layerName;
     }
 
     public String getPathToFile() {
@@ -41,4 +58,11 @@ public class GmlMqResponse extends BaseMqProcessResponse {
         this.pathToLog = pathToLog;
     }
 
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
+    }
 }

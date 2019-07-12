@@ -39,6 +39,10 @@ public class Process {
     @Column(columnDefinition = "json")
     private JsonNode extra;
 
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "json")
+    private JsonNode details;
+
     public Process() {}
 
     public Process(String user, String title, ProcessType type) {
@@ -100,6 +104,14 @@ public class Process {
 
     public void setType(ProcessType type) {
         this.type = type;
+    }
+
+    public JsonNode getDetails() {
+        return details;
+    }
+
+    public void setDetails(JsonNode details) {
+        this.details = details;
     }
 
     @Override

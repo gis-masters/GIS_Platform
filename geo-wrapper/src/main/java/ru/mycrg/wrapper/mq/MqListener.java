@@ -69,8 +69,9 @@ public class MqListener {
         try {
             importService.doImport(request);
         } catch (Exception e) {
-            log.error("Ошибка при импорте: {}", e.getLocalizedMessage());
-            mqEvents.importResponse(new ImportMqResponse(request, ProcessStatus.ERROR));
+            log.error("Ошибка при импорте: {}", e.getMessage());
+            mqEvents.importResponse(
+                    new ImportMqResponse(request, ProcessStatus.ERROR, "Ошибка при импорте", e.getMessage()));
         }
     }
 
@@ -90,7 +91,11 @@ public class MqListener {
             }
         } catch (Exception e) {
             log.error("Не удалось провалидировать", e);
-            mqEvents.validationResponse(new ValidationMqResponse(mqRequest, ProcessStatus.ERROR));
+            ValidationMqResponse response = new ValidationMqResponse(mqRequest, ProcessStatus.ERROR);
+            response.setError(e.getMessage());
+            response.setDescription("Не удалось провалидировать");
+
+            mqEvents.validationResponse(response);
         }
     }
 
@@ -103,9 +108,9 @@ public class MqListener {
 
             mqEvents.gmlResponse(new GmlMqResponse(request, paths, ProcessStatus.DONE, 100));
         } catch (Exception e) {
-            log.error("Ошибка при генерирации файла.", e);
+            log.error("Ошибка при генерирации файла. {}", e.getMessage());
             mqEvents.gmlResponse(
-                    new GmlMqResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100));
+                    new GmlMqResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage()));
         }
     }
 

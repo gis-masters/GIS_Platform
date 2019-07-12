@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ValidationMqResponse extends BaseMqProcessResponse {
 
-    // При выборке результатов проверки
+    private String layerName;
     private Long total = 0L;
     private boolean isValidated;
     private String lastValidated;
@@ -22,8 +22,21 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
         super(request.getId(), status, request.getType());
     }
 
+    public ValidationMqResponse(String layerName, ValidationMqProcessRequest request, ProcessStatus status) {
+        super(request.getId(), status, request.getType());
+
+        this.layerName = layerName;
+    }
+
     public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
         super(request.getId(), status, request.getType(), msg, progress);
+    }
+
+    public ValidationMqResponse(String layerName, ValidationMqProcessRequest request, ProcessStatus status, String msg,
+                                int progress) {
+        super(request.getId(), status, request.getType(), msg, progress);
+
+        this.layerName = layerName;
     }
 
     public Long getTotal() {
@@ -64,5 +77,13 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public void setResults(List<ObjectValidationResult> results) {
         this.results = results;
+    }
+
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
     }
 }

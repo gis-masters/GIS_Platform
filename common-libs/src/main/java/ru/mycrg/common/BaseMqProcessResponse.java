@@ -8,6 +8,7 @@ public class BaseMqProcessResponse {
     private Long id;
     private int progress = -1;
     private String description;
+    private String error;
     private ProcessStatus status;
     private ProcessType type;
 
@@ -24,6 +25,24 @@ public class BaseMqProcessResponse {
         this.status = status;
         this.type = type;
         this.description = description;
+    }
+
+    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, String error) {
+        this.id = id;
+        this.status = status;
+        this.type = type;
+        this.description = description;
+        this.error = error;
+    }
+
+    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, String error,
+                                 int progress) {
+        this.id = id;
+        this.status = status;
+        this.type = type;
+        this.description = description;
+        this.error = error;
+        this.progress = progress;
     }
 
     public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, int progress) {
@@ -88,6 +107,14 @@ public class BaseMqProcessResponse {
 
     public void setType(ProcessType type) {
         this.type = type;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     @Override

@@ -62,20 +62,20 @@ public class ImportService {
     private void importFeature(ImportMqRequest mqRequest, ImportFeature feature, int processedRows) {
         log.debug("Start import from: {} to: {}", feature.printSource(), feature.printTarget());
 
+        String targetTable = feature.getTargetResource().getTableName();
         try {
             String sourceDbName = feature.getSourceResource().getDbName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
-            String tableName = feature.getTargetResource().getTableName();
             String schemaName = feature.getTargetResource().getSchemaName();
 
             baseDaoService.truncate(jdbcTemplate,
-                    Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, tableName)));
+                    Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, targetTable)));
             baseDaoService.doImport(jdbcTemplate, feature);
 
             // GlobalId and encoding
             log.debug("start encoding");
-            ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, tableName);
+            ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, targetTable);
 
             Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
             int offset = 0;
@@ -106,15 +106,14 @@ public class ImportService {
                 }
             }
 
-            mqEvents.importResponse(
-                    new ImportMqResponse(mqRequest, SUB_DONE, feature.getTargetResource().getTableName(), ""));
+            mqEvents.importResponse(new ImportMqResponse(feature, mqRequest, SUB_DONE, "Success"));
         } catch (Exception e) {
             String msg = String.format("Не удалось импортировать из: %s в: %s",
                     feature.printSource(), feature.printTarget());
 
             log.error(msg, e);
             mqEvents.importResponse(
-                    new ImportMqResponse(mqRequest, SUB_ERROR, feature.getTargetResource().getTableName(), e.getLocalizedMessage()));
+                    new ImportMqResponse(feature, mqRequest, SUB_ERROR, "Error", msg));
         }
     }
 

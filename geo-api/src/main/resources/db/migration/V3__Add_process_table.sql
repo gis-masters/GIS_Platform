@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.processes
     type      character varying(20),
     status    character varying(20),
     extra     json,
+    details   json,
     CONSTRAINT rus43af9ap4edm43mm3141oddj6 PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE public.processes

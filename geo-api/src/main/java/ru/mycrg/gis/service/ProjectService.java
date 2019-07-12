@@ -159,8 +159,6 @@ public class ProjectService extends BaseProcessService {
         }
 
         Process process = getProcessById(mqResponse.getId());
-        handleProcessResponse(process, mqResponse);
-
         switch (mqResponse.getType()) {
             case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
 //            case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
@@ -184,9 +182,15 @@ public class ProjectService extends BaseProcessService {
 
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 projectRepository.delete(project);
-            } else {
+
+                error(process);
+            } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
                 project.setStatus(mqResponse.getStatus());
                 projectRepository.save(project);
+
+                complete(process);
+            } else {
+                log.warn("Not supported process status for projectService. {}", process);
             }
         } else {
             log.warn("Not found project by id: {}", projectId);

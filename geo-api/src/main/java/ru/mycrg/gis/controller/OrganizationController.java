@@ -18,12 +18,14 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
@@ -122,10 +124,11 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/tasks/{taskId}")
-    public ResponseEntity<Process> getOrganizationTasks(@PathVariable long id, @PathVariable long taskId) {
+    public ResponseEntity<Process> getOrganizationTasks(@PathVariable long id, @PathVariable long taskId,
+                                                        Principal principal) {
         log.debug("Get organization task: {}", taskId);
 
-        return ResponseEntity.ok(organizationService.getProcessById(taskId));
+        return ResponseEntity.ok(organizationService.getProcessById(id, principal.getName(), taskId));
     }
 
 }

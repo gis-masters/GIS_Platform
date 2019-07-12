@@ -5,30 +5,52 @@ import ru.mycrg.common.enums.ProcessStatus;
 
 public class ImportMqResponse extends BaseMqProcessResponse {
 
-    private String layerName;
+    private String targetLayer;
+    private String sourceLayer;
 
     public ImportMqResponse() {}
 
-    public ImportMqResponse(ImportMqRequest request, ProcessStatus status) {
-        super(request.getId(), status, request.getType());
+    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String description, String error) {
+        super(request.getId(), status, request.getType(), description, error);
     }
 
     public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String description, int progress) {
         super(request.getId(), status, request.getType(), description, progress);
     }
 
-    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String layerName, String description) {
+    public ImportMqResponse(ImportFeature importFeature, ImportMqRequest request, ProcessStatus status,
+                            String description) {
         super(request.getId(), status, request.getType(), description);
 
-        this.layerName = layerName;
+        this.targetLayer = importFeature.getTargetResource().getTableName();
+        this.sourceLayer = importFeature.getSourceResource().getTableName();
     }
 
-    public String getLayerName() {
-        return layerName;
+    public ImportMqResponse(ImportFeature importFeature, ImportMqRequest request, ProcessStatus status,
+                            String description, String error) {
+        super(request.getId(), status, request.getType(), description, error);
+
+        this.targetLayer = importFeature.getTargetResource().getTableName();
+        this.sourceLayer = importFeature.getSourceResource().getTableName();
     }
 
-    public void setLayerName(String layerName) {
-        this.layerName = layerName;
+    public String getDirection() {
+        return sourceLayer + " -> " + targetLayer;
     }
 
+    public String getTargetLayer() {
+        return targetLayer;
+    }
+
+    public void setTargetLayer(String targetLayer) {
+        this.targetLayer = targetLayer;
+    }
+
+    public String getSourceLayer() {
+        return sourceLayer;
+    }
+
+    public void setSourceLayer(String sourceLayer) {
+        this.sourceLayer = sourceLayer;
+    }
 }

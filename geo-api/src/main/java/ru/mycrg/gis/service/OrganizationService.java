@@ -12,6 +12,7 @@ import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.exceptions.CustomRestExceptionHandler;
@@ -167,6 +168,24 @@ public class OrganizationService {
         }
     }
 
+    /**
+     * Процессы определенной организации
+     */
+    public Process getProcessById(Long orgId, String userName, long processId) {
+        // TODO Проверять доступ пользователя к организации, не отдавать процессы других организаций
+        return processRepository
+                .findById(processId)
+                .orElseThrow(() -> new CrgNotFoundException("Не найден процесс: " + processId));
+    }
+
+    public Project getProjectById(Long orgId, Long projectId) {
+        return findById(orgId)
+                .getProjects().stream()
+                .filter(project -> project.getId() == projectId)
+                .findFirst()
+                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
+    }
+
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {
         return new Organization(dto.getName(), dto.getPhone());
     }
@@ -175,17 +194,11 @@ public class OrganizationService {
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
         return
-            new User(
-                bCrypt.encode(dto.getPassword()),
-                dto.getUserName(),
-                dto.getUserSurName(),
-                dto.getEmail()
-            );
-    }
-
-    public Process getProcessById(long processId) {
-        return processRepository
-                .findById(processId)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден процесс: " + processId));
+                new User(
+                        bCrypt.encode(dto.getPassword()),
+                        dto.getUserName(),
+                        dto.getUserSurName(),
+                        dto.getEmail()
+                );
     }
 }

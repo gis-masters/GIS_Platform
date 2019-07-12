@@ -1,5 +1,6 @@
 package ru.mycrg.gis.controller;
 
+import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.gis.dto.ExportRequestModel;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ProjectRequestDto;
+import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
+import ru.mycrg.gis.service.validation.ValidationService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -29,11 +33,14 @@ public class ProjectController {
 
     private final ImportService importService;
     private final ProjectService projectService;
+    private final ValidationService validationService;
 
     public ProjectController(ImportService importService,
+                             ValidationService validationService,
                              ProjectService projectService) {
         this.importService = importService;
         this.projectService = projectService;
+        this.validationService = validationService;
     }
 
     @GetMapping
@@ -95,6 +102,56 @@ public class ProjectController {
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/{projectId}/validation")
+    public ResponseEntity<Process> getValidationResults(@PathVariable Long orgId, @PathVariable Long projectId,
+                                                        @RequestBody ValidationRequestDto request,
+                                                        @RequestParam(required = false, name = "page", defaultValue = "0") String page,
+                                                        @RequestParam(required = false, name = "size", defaultValue = "25") String size,
+                                                        Principal principal) {
+        log.info("Request get validation results: {}/{}", page, size);
+
+        validateRequest(request);
+
+        int nPage;
+        int nSize;
+        try {
+            nPage = Integer.parseInt(page);
+            nSize = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            throw new CrgBadRequestException(e.getLocalizedMessage());
+        }
+
+        Process process = validationService.getResult(orgId, projectId, principal.getName(), request, nPage, nSize);
+
+        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/{projectId}/validation")
+    public ResponseEntity<Process> initValidation(@PathVariable Long orgId, @PathVariable Long projectId,
+                                                  @RequestBody ValidationRequestDto request,
+                                                  Principal principal) {
+        log.debug("Init validation for: {} resources", request.getResources().size());
+
+        validateRequest(request);
+
+        Process process = validationService.validate(orgId, projectId, principal.getName(), request);
+
+        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{projectId}/validation/short")
+    public ResponseEntity<Process> getShortValidationInfo(@PathVariable Long orgId, @PathVariable Long projectId,
+                                                          @RequestBody ValidationRequestDto request,
+                                                          Principal principal) {
+        log.debug("Request get short validation info");
+
+        validateRequest(request);
+
+        Process process = validationService.getInfo(orgId, projectId, principal.getName(), request);
+
+        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+    }
+
     @NotNull
     private HttpHeaders createHeadersWithLinkToTask(Long orgId, Process process) {
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -107,4 +164,20 @@ public class ProjectController {
 
         return headers;
     }
+
+    /**
+     * Если есть пустые/незаполненные параметры(хотябы у одного) - считаем это некорректной работой UI.
+     */
+    private void validateRequest(ValidationRequestDto request) {
+        request.getResources().forEach(requestDto -> {
+            String dbName = requestDto.getDbName();
+            String schemaName = requestDto.getSchemaName();
+            String tableName = requestDto.getTableName();
+
+            if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
+                throw new CrgBadRequestException("Incorrect data: " + String.join(".", dbName, schemaName, tableName));
+            }
+        });
+    }
+
 }

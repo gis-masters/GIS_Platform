@@ -1,10 +1,9 @@
 package ru.mycrg.gis.service;
 
-import org.jetbrains.annotations.NotNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.entity.Process;
@@ -24,6 +23,8 @@ public abstract class BaseProcessService implements Processable {
     private final ProcessRepository processRepository;
 
     private Set<Process> processesCache = new HashSet<>();
+
+    protected ObjectMapper mapper = new ObjectMapper();
 
     public BaseProcessService(ProcessRepository processRepository) {
         this.processRepository = processRepository;
@@ -57,29 +58,7 @@ public abstract class BaseProcessService implements Processable {
         }
     }
 
-    protected void handleProcessResponse(@NotNull Process process, BaseMqProcessResponse mqResponse) {
-        switch (mqResponse.getStatus()) {
-            case PENDING:
-            case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);   break;
-            case ERROR:     error(process);     break;
-            case DONE:      complete(process);  break;
-            default:
-                log.warn("Not supported process status. {}", process);
-        }
-    }
-
-    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
-        process.setStatus(mqResponse.getStatus());
-
-        // TODO:
-
-        processRepository.save(process);
-
-        log.debug("Add subStep to process: {}", process.getId());
-    }
-
-    private void complete(Process process) {
+    protected void complete(Process process) {
         process.setStatus(ProcessStatus.DONE);
 
         processRepository.save(process);
@@ -88,7 +67,7 @@ public abstract class BaseProcessService implements Processable {
         log.info("Successfully complete process: {} / {}", process.getId(), process.getTitle());
     }
 
-    private void error(Process process) {
+    protected void error(Process process) {
         process.setStatus(ProcessStatus.ERROR);
 
         processRepository.save(process);

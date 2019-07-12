@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.util.*;
 
-import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 import static ru.mycrg.wrapper.service.gml.GmlUtil.*;
 
@@ -149,13 +149,19 @@ public class GmlGenerator {
 
                 processedRows += batch.size();
                 mqEvents.gmlResponse(
-                        new GmlMqResponse(request, PENDING, "Обработка " + feature.getTitle(),
+                        new GmlMqResponse(feature.getTitle(), request, SUB_DONE,
+                                "Обработка " + feature.getTitle(),
                                 GmlUtil.calculatePercent(processedRows, totalRows)));
 
                 offset++;
             }
         } catch (Exception e) {
-            log.error("Ошибка при обработке ресурса: " + resource.toString(), e);
+            log.error("Ошибка при обработке ресурса: " + resource.toString(), e.getMessage());
+
+            mqEvents.gmlResponse(
+                    new GmlMqResponse(resource.getTableName(), request, SUB_ERROR,
+                            "Не удалось обработать слой: " + resource.getTableName(),
+                            GmlUtil.calculatePercent(processedRows, totalRows), e.getMessage()));
         }
     }
 

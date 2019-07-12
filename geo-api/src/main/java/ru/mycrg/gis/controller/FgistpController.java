@@ -1,6 +1,5 @@
 package ru.mycrg.gis.controller;
 
-import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,23 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.gis.dto.GmlRequestDto;
-import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 import ru.mycrg.gis.service.gml.GmlGenerationService;
-import ru.mycrg.gis.service.validation.ValidationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class FgistpController {
@@ -35,17 +29,14 @@ public class FgistpController {
     private static Logger log = LoggerFactory.getLogger(FgistpController.class);
 
     private final FgistpRuleService fgistpRuleService;
-    private final ValidationService validationService;
     private final GmlGenerationService gmlGenerationService;
     private final GmlStorageService gmlStorageService;
 
     @Autowired
     public FgistpController(FgistpRuleService fgistpRuleService,
-                            ValidationService validationService,
                             GmlStorageService gmlStorageService,
                             GmlGenerationService gmlGenerationService) {
         this.fgistpRuleService = fgistpRuleService;
-        this.validationService = validationService;
         this.gmlStorageService = gmlStorageService;
         this.gmlGenerationService = gmlGenerationService;
     }
@@ -75,52 +66,6 @@ public class FgistpController {
         return fgistpRuleService.getRuleByName(className);
     }
 
-    @PostMapping("/fgistp/validation/init")
-    public ResponseEntity<Process> initValidation(@RequestBody ValidationRequestDto request, Principal principal) {
-        log.debug("Init validation for: {} resources", request.getResources().size());
-
-        validateRequest(request);
-
-        Process process = validationService.validate(principal.getName(), request);
-
-        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
-    }
-
-    @PostMapping("/fgistp/validation/info")
-    public ResponseEntity<Process> getCommonInfo(
-            @RequestBody ValidationRequestDto request,
-            Principal principal) {
-        validateRequest(request);
-
-        Process process = validationService.getInfo(principal.getName(), request);
-
-        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
-    }
-
-    @PostMapping("/fgistp/validation")
-    public ResponseEntity<Process> getValidationResults(
-            @RequestBody ValidationRequestDto request,
-            @RequestParam(required = false, name = "page", defaultValue = "0") String page,
-            @RequestParam(required = false, name = "size", defaultValue = "25") String size,
-            Principal principal) {
-        log.info("Request get validation results: {}/{}", page, size);
-
-        validateRequest(request);
-
-        int nPage;
-        int nSize;
-        try {
-            nPage = Integer.parseInt(page);
-            nSize = Integer.parseInt(size);
-        } catch (NumberFormatException e) {
-            throw new CrgBadRequestException(e.getLocalizedMessage());
-        }
-
-        Process process = validationService.getResult(principal.getName(), request, nPage, nSize);
-
-        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
-    }
-
     @ResponseBody
     @PostMapping("/fgistp/export/gml")
     public ResponseEntity<Process> gmlGeneration(@RequestBody GmlRequestDto request, Principal principal) {
@@ -129,21 +74,6 @@ public class FgistpController {
         Process process = gmlGenerationService.initProcess(request, principal);
 
         return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
-    }
-
-    /**
-     * Если есть пустые/незаполненные параметры(хотябы у одного) - считаем это некорректной работой UI.
-     */
-    private void validateRequest(ValidationRequestDto request) {
-        request.getResources().forEach(requestDto -> {
-            String dbName = requestDto.getDbName();
-            String schemaName = requestDto.getSchemaName();
-            String tableName = requestDto.getTableName();
-
-            if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
-                throw new CrgBadRequestException("Incorrect data: " + String.join(".", dbName, schemaName, tableName));
-            }
-        });
     }
 
     @GetMapping("/fgistp/export/gml/{fileName:.+}")

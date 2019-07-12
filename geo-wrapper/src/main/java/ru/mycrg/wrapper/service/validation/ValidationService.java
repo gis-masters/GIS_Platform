@@ -106,7 +106,7 @@ public class ValidationService {
                         response.setTotal(totalViolations);
                         response.setStatus(DONE);
                     } catch (Exception e) {
-                        log.error("Не выбрать результаты валидации для: " + resource.getResourceId(), e);
+                        log.error("Не удалось выбрать результаты валидации для: " + resource.getResourceId(), e);
                     }
                 });
 
@@ -214,11 +214,11 @@ public class ValidationService {
             }
 
             mqEvents.validationResponse(
-                    new ValidationMqResponse(mqRequest, SUB_DONE, resource.getTableName(), -1));
+                    new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_DONE, "Готово",-1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
             mqEvents.validationResponse(
-                    new ValidationMqResponse(mqRequest, ERROR, resource.getTableName(), -1));
+                    new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_ERROR, "Ошибка", -1));
         }
     }
 
