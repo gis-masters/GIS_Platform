@@ -104,13 +104,11 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/validation")
     public ResponseEntity<Process> getValidationResults(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                        @RequestBody ValidationRequestDto request,
+                                                        @Valid @RequestBody ValidationRequestDto request,
                                                         @RequestParam(required = false, name = "page", defaultValue = "0") String page,
                                                         @RequestParam(required = false, name = "size", defaultValue = "25") String size,
                                                         Principal principal) {
         log.info("Request get validation results: {}/{}", page, size);
-
-        validateRequest(request);
 
         int nPage;
         int nSize;
@@ -128,11 +126,9 @@ public class ProjectController {
 
     @PostMapping("/{projectId}/validation")
     public ResponseEntity<Process> initValidation(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                  @RequestBody ValidationRequestDto request,
+                                                  @Valid @RequestBody ValidationRequestDto request,
                                                   Principal principal) {
-        log.debug("Init validation for: {} resources", request.getResources().size());
-
-        validateRequest(request);
+        log.debug("Init validation for: {} resources", request.getLayers().size());
 
         Process process = validationService.validate(orgId, projectId, principal.getName(), request);
 
@@ -141,11 +137,9 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/validation/short")
     public ResponseEntity<Process> getShortValidationInfo(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                          @RequestBody ValidationRequestDto request,
+                                                          @Valid @RequestBody ValidationRequestDto request,
                                                           Principal principal) {
         log.debug("Request get short validation info");
-
-        validateRequest(request);
 
         Process process = validationService.getInfo(orgId, projectId, principal.getName(), request);
 
@@ -163,21 +157,6 @@ public class ProjectController {
         headers.setLocation(location);
 
         return headers;
-    }
-
-    /**
-     * Если есть пустые/незаполненные параметры(хотябы у одного) - считаем это некорректной работой UI.
-     */
-    private void validateRequest(ValidationRequestDto request) {
-        request.getResources().forEach(requestDto -> {
-            String dbName = requestDto.getDbName();
-            String schemaName = requestDto.getSchemaName();
-            String tableName = requestDto.getTableName();
-
-            if (Strings.isBlank(dbName) || Strings.isBlank(schemaName) || Strings.isBlank(tableName)) {
-                throw new CrgBadRequestException("Incorrect data: " + String.join(".", dbName, schemaName, tableName));
-            }
-        });
     }
 
 }

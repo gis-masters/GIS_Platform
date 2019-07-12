@@ -24,6 +24,8 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import java.io.IOException;
 import java.util.Optional;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+
 @Service
 public class ValidationService extends BaseProcessService {
 
@@ -93,16 +95,15 @@ public class ValidationService extends BaseProcessService {
         }
 
         Project projectById = organizationService.getProjectById(orgId, projectId);
-
         Process process = create(userName, "", type, request);
 
         ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(), type, page, size);
 
-        request.getResources().forEach(requestDto -> {
-            EntityType entityType = ruleService.getRuleByName(requestDto.getTableName());
+        request.getLayers().forEach(layerName -> {
+            EntityType entityType = ruleService.getRuleByName(layerName);
             mqRequest.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
-            mqRequest.addResourceProjections(new ResourceProjection(requestDto.getDbName(),
-                    requestDto.getSchemaName(), requestDto.getTableName()));
+            mqRequest.addResourceProjections(
+                    new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getGeoserverName(), layerName));
         });
 
         mqSender.sendValidationRequest(mqRequest);

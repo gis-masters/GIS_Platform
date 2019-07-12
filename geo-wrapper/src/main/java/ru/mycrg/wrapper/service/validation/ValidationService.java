@@ -217,8 +217,10 @@ public class ValidationService {
                     new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_DONE, "Готово",-1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
-            mqEvents.validationResponse(
-                    new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_ERROR, "Ошибка", -1));
+            ValidationMqResponse response = new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_ERROR, "Ошибка", -1);
+            response.setError(e.getMessage());
+
+            mqEvents.validationResponse(response);
         }
     }
 
