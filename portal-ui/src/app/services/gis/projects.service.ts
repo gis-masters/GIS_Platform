@@ -37,11 +37,10 @@ export class ProjectsService {
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     this.projects$.subscribe();
-    this.orgUrl = this.orgUrl + storageService.getOrgId();
   }
 
   fetchProjects(): void {
-    const url = this.orgUrl + '/projects';
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
 
     this.http
         .get<CrgProject[]>(url)
@@ -56,13 +55,13 @@ export class ProjectsService {
   }
 
   getById(id: string): Observable<CrgProject> {
-    const url = this.orgUrl + '/projects/' + id;
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + id;
 
     return this.http.get<CrgProject>(url);
   }
 
   create(name: string): Observable<any> {
-    const url = this.orgUrl + '/projects';
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
 
     const payload = {
       'projectName': name
@@ -72,7 +71,7 @@ export class ProjectsService {
   }
 
   delete(id: string): Observable<any> {
-    const url = this.orgUrl + '/projects/' + id;
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + id;
 
     return this.http.delete(url);
   }
@@ -85,7 +84,8 @@ export class ProjectsService {
   doWorkImport(workImport: WorkImport) {
     this.log.info('projects', 'do Work Import', workImport);
 
-    const url = this.orgUrl + '/projects/' + workImport.projectModel.crgProject.id + '/import';
+    const projectId = workImport.projectModel.crgProject.id;
+    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + projectId + '/import';
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workImport.projectModel.crgProject.geoserverName,
