@@ -15,9 +15,6 @@ export class ServerPropertiesService {
   private _organizationsUrl = this._baseUrl + '/organizations';
   private _usersUrl = this._baseUrl + '/users';
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
-  private _validationUrl = this._baseUrl + '/fgistp/validation';
-  private _initValidationUrl = this._validationUrl + '/init';
-  private _validationInfo = this._validationUrl + '/info';
   private _exportGmlUrl = this._baseUrl + '/fgistp/export/gml';
   private _wsUrl = this._baseUrl + '/crg-ws-endpoint';
 
@@ -53,18 +50,6 @@ export class ServerPropertiesService {
 
   get rulesUrl(): string {
     return this._rulesUrl;
-  }
-
-  get initValidationUrl(): string {
-    return this._initValidationUrl;
-  }
-
-  get validationUrl(): string {
-    return this._validationUrl;
-  }
-
-  get validationInfo(): string {
-    return this._validationInfo;
   }
 
   get exportGmlUrl(): string {

@@ -59,7 +59,7 @@ public class GmlGenerator {
      * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public Map<String, String> generate(GmlMqProcessRequest gmlMqRequest) throws ParserConfigurationException,
+    public Map<String, String> generate(MqExportProcessRequest gmlMqRequest) throws ParserConfigurationException,
             TransformerException {
         idCounter = 1;
         log.debug("Start gml generation");
@@ -85,10 +85,10 @@ public class GmlGenerator {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(GmlMqProcessRequest request) throws ParserConfigurationException {
+    private GmlDocumentHolder createDomDocuments(MqExportProcessRequest request) throws ParserConfigurationException {
         GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
-        mqEvents.gmlResponse(new GmlMqResponse(request, PENDING, "Инициализация...", 1));
+        mqEvents.gmlResponse(new MqExportResponse(request, PENDING, "Инициализация...", 1));
         log.debug("Handle {} sources", request.getResourceProjections().size());
 
         processedRows = 0;
@@ -100,14 +100,14 @@ public class GmlGenerator {
         return docHolder;
     }
 
-    private long calculateTotalRows(GmlMqProcessRequest request) {
+    private long calculateTotalRows(MqExportProcessRequest request) {
         return request
                 .getResourceProjections().stream()
                 .mapToLong(baseDaoService::countTotalRows)
                 .sum();
     }
 
-    private void handleResource(GmlMqProcessRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
+    private void handleResource(MqExportProcessRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
         log.debug("Handle source: {}", resource.toString());
 
         try {
@@ -149,7 +149,7 @@ public class GmlGenerator {
 
                 processedRows += batch.size();
                 mqEvents.gmlResponse(
-                        new GmlMqResponse(feature.getTitle(), request, SUB_DONE,
+                        new MqExportResponse(feature.getTitle(), request, SUB_DONE,
                                 "Обработка " + feature.getTitle(),
                                 GmlUtil.calculatePercent(processedRows, totalRows)));
 
@@ -159,7 +159,7 @@ public class GmlGenerator {
             log.error("Ошибка при обработке ресурса: " + resource.toString(), e.getMessage());
 
             mqEvents.gmlResponse(
-                    new GmlMqResponse(resource.getTableName(), request, SUB_ERROR,
+                    new MqExportResponse(resource.getTableName(), request, SUB_ERROR,
                             "Не удалось обработать слой: " + resource.getTableName(),
                             GmlUtil.calculatePercent(processedRows, totalRows), e.getMessage()));
         }

@@ -100,17 +100,17 @@ public class MqListener {
     }
 
     @RabbitListener(queues = MqProperties.QUEUE_GML_INIT)
-    public void gmlInit(GmlMqProcessRequest request) {
+    public void gmlInit(MqExportProcessRequest request) {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
             Map<String, String> paths = gmlGenerator.generate(request);
 
-            mqEvents.gmlResponse(new GmlMqResponse(request, paths, ProcessStatus.DONE, 100));
+            mqEvents.gmlResponse(new MqExportResponse(request, paths, ProcessStatus.DONE, 100));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла. {}", e.getMessage());
             mqEvents.gmlResponse(
-                    new GmlMqResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage()));
+                    new MqExportResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage()));
         }
     }
 

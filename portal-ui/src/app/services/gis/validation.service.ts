@@ -7,6 +7,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
 import {ProcessStatus} from '../process-status';
+import {LocalStorageService} from '../local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class ValidationService {
   constructor(private http: HttpClient,
               private logger: NGXLogger,
               private wsService: WsService,
+              private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     this.logger.info('ValidationService constructor');
   }
@@ -24,63 +26,61 @@ export class ValidationService {
    * Провалидировать слоя.
    * @param crgLayers Слоя на валидацию.
    */
-  validateLayers(crgLayers: CrgLayer[]): Observable<ValidationWsMsg> {
-    const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+  initValidation(crgLayers: CrgLayer[]): Observable<ValidationWsMsg> {
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
 
     const payload = {
       wsUiId: this.wsService.getId(),
-      resources: resources
+      layers: layerNames
     };
 
+    const projectId = this.storageService.getProject().crgProject.id;
+    const orgId = this.storageService.getOrgId();
+    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation';
+
     return this.http
-               .post<ValidationWsMsg>(this.serverProp.initValidationUrl,
-                     JSON.stringify(payload),
+               .post<ValidationWsMsg>(url, JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}});
   }
 
-  getValidationResults(data: ConnectionInfo,
-                       paginator: MatPaginator, sorter: MatSort): Observable<ValidationResultsResponse> {
-    return this.getValidationResults_(data,
-                                     paginator.pageIndex, paginator.pageSize,
-                                     sorter.active, sorter.direction);
-  }
-
   /**
-   * * Выборка результатов валидации.
+   * Выборка результатов валидации.
    */
-  getValidationResults_(data: ConnectionInfo, page: number, size: number, sortBy: string,
-                        sortDirection: string): Observable<ValidationResultsResponse> {
-    const payload = {
-      wsUiId: this.wsService.getId(),
-      resources: [data]
-    };
-
+  getValidationResults(layerName: string, page: number, size: number, sortBy: string,
+                       sortDirection: string): Observable<ValidationResultsResponse> {
     const params = new HttpParams()
+      .set('layerName', layerName)
       .set('page', page ? String(page) : '0')
       .set('size', page ? String(size) : '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
+    const projectId = this.storageService.getProject().crgProject.id;
+    const orgId = this.storageService.getOrgId();
+    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation';
+
     return this.http
-               .post<ValidationResultsResponse>(this.serverProp.validationUrl,
-                     JSON.stringify(payload),
-                     {headers: {'Content-Type': 'application/json'}, params: params});
+               .get<ValidationResultsResponse>(url,
+                 {headers: {'Content-Type': 'application/json'}, params: params});
   }
 
   /**
    * Получить краткую статистику по слоям
    * @param crgLayers Слои
    */
-  getLayerStatistic(crgLayers: CrgLayer[]): Observable<ValidationInfoResponse> {
-    const resources = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+  getShortInfo(crgLayers: CrgLayer[]): Observable<ValidationInfoResponse> {
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
 
     const payload = {
       wsUiId: this.wsService.getId(),
-      resources: resources
+      layers: layerNames
     };
 
+    const projectId = this.storageService.getProject().crgProject.id;
+    const orgId = this.storageService.getOrgId();
+    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';
+
     return this.http
-               .post<ValidationInfoResponse>(this.serverProp.validationInfo,
-                 JSON.stringify(payload),
+               .post<ValidationInfoResponse>(url, JSON.stringify(payload),
                  {headers: {'Content-Type': 'application/json'}});
   }
 

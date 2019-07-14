@@ -10,7 +10,6 @@ import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.controller.ProjectController;
-import ru.mycrg.gis.dto.ExportRequestModel;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Organization;
@@ -25,7 +24,6 @@ import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,6 +51,13 @@ public class ProjectService extends BaseProcessService {
         this.organizationService = organizationService;
     }
 
+    /**
+     * Проекты принадлежащие организации.
+     * Перед выборкой проверяет имеет ли права пользователь на доступ к проекту
+     * @param orgId
+     * @param principal
+     * @return
+     */
     @Transactional
     public List<ProjectModel> getProjects(Long orgId, Principal principal) {
         Organization organizationServiceById = organizationService.getOrganizationByUserName(principal.getName());
@@ -66,6 +71,13 @@ public class ProjectService extends BaseProcessService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Только проект который принадлежит указанной организации.
+     * @param orgId
+     * @param projectId
+     * @param principal
+     * @return
+     */
     @Transactional
     public ProjectModel getProject(Long orgId, Long projectId, Principal principal) {
         return getProjects(orgId, principal).stream()
@@ -136,18 +148,6 @@ public class ProjectService extends BaseProcessService {
 
         // Отсылаем евент
         mqEvents.sendOrgEvent(mqRequest);
-
-        return process;
-    }
-
-    public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
-        ProjectModel project = getProject(orgId, projectId, principal);
-
-        log.debug("Try export {} layers", request.getLayers().size());
-
-        Process process = create(principal.getName(),
-                String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
-                ProcessType.EXPORT, request);
 
         return process;
     }

@@ -4,39 +4,39 @@ import ru.mycrg.common.enums.ProcessStatus;
 
 import java.util.Map;
 
-public class GmlMqResponse extends BaseMqProcessResponse {
+public class MqExportResponse extends BaseMqProcessResponse {
 
     private String pathToFile;
     private String pathToLog;
     private String layerName;
 
-    public GmlMqResponse() {}
+    public MqExportResponse() {}
 
-    public GmlMqResponse(GmlMqProcessRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
+    public MqExportResponse(MqExportProcessRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
         super(request.getId(), status, request.getType(), "Завершено", percentOfProgress);
 
         this.pathToFile = paths.get("gml");
         this.pathToLog = paths.get("log");
     }
 
-    public GmlMqResponse(GmlMqProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
+    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
         super(request.getId(), status, request.getType(), description, percentOfProgress);
     }
 
-    public GmlMqResponse(String layerName, GmlMqProcessRequest request, ProcessStatus status, String description,
-                         int percentOfProgress) {
+    public MqExportResponse(String layerName, MqExportProcessRequest request, ProcessStatus status, String description,
+                            int percentOfProgress) {
         super(request.getId(), status, request.getType(), description, percentOfProgress);
 
         this.layerName = layerName;
     }
 
-    public GmlMqResponse(GmlMqProcessRequest request, ProcessStatus status, String description,
-                         int percentOfProgress, String error) {
+    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description,
+                            int percentOfProgress, String error) {
         super(request.getId(), status, request.getType(), description, error, percentOfProgress);
     }
 
-    public GmlMqResponse(String layerName, GmlMqProcessRequest request, ProcessStatus status, String description,
-                         int percentOfProgress, String error) {
+    public MqExportResponse(String layerName, MqExportProcessRequest request, ProcessStatus status, String description,
+                            int percentOfProgress, String error) {
         super(request.getId(), status, request.getType(), description, error, percentOfProgress);
 
         this.layerName = layerName;

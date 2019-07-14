@@ -1,6 +1,5 @@
 package ru.mycrg.gis.controller;
 
-import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.ProjectService;
+import ru.mycrg.gis.service.export.ExportService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
 import ru.mycrg.gis.service.validation.ValidationService;
@@ -33,12 +33,15 @@ public class ProjectController {
 
     private final ImportService importService;
     private final ProjectService projectService;
+    private final ExportService exportService;
     private final ValidationService validationService;
 
     public ProjectController(ImportService importService,
                              ValidationService validationService,
+                             ExportService exportService,
                              ProjectService projectService) {
         this.importService = importService;
+        this.exportService = exportService;
         this.projectService = projectService;
         this.validationService = validationService;
     }
@@ -97,18 +100,18 @@ public class ProjectController {
                                                        Principal principal) {
         log.debug("Request export layers. For projectId: {} Format: {}", projectId, requestModel.getFormat());
 
-        Process process = projectService.export(orgId, projectId, requestModel, principal);
+        Process process = exportService.export(orgId, projectId, requestModel, principal);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{projectId}/validation")
     public ResponseEntity<Process> getValidationResults(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                        @Valid @RequestBody ValidationRequestDto request,
+                                                        @RequestParam String layerName,
                                                         @RequestParam(required = false, name = "page", defaultValue = "0") String page,
                                                         @RequestParam(required = false, name = "size", defaultValue = "25") String size,
                                                         Principal principal) {
-        log.info("Request get validation results: {}/{}", page, size);
+        log.info("Request get validation results for layer: {} - {}/{}", layerName, page, size);
 
         int nPage;
         int nSize;
@@ -119,7 +122,7 @@ public class ProjectController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        Process process = validationService.getResult(orgId, projectId, principal.getName(), request, nPage, nSize);
+        Process process = validationService.getResult(orgId, projectId, principal, layerName, nPage, nSize);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
@@ -130,18 +133,18 @@ public class ProjectController {
                                                   Principal principal) {
         log.debug("Init validation for: {} resources", request.getLayers().size());
 
-        Process process = validationService.validate(orgId, projectId, principal.getName(), request);
+        Process process = validationService.validate(orgId, projectId, principal, request);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{projectId}/validation/short")
+    @PostMapping("/{projectId}/validation/short")
     public ResponseEntity<Process> getShortValidationInfo(@PathVariable Long orgId, @PathVariable Long projectId,
                                                           @Valid @RequestBody ValidationRequestDto request,
                                                           Principal principal) {
         log.debug("Request get short validation info");
 
-        Process process = validationService.getInfo(orgId, projectId, principal.getName(), request);
+        Process process = validationService.getInfo(orgId, projectId, principal, request);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }

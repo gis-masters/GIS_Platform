@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GmlMqProcessRequest extends BaseMqProcessRequest {
+public class MqExportProcessRequest extends BaseMqProcessRequest {
 
     private String docSchema = "Doc.20301010000";
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
-    public GmlMqProcessRequest() {}
+    public MqExportProcessRequest() {}
 
-    public GmlMqProcessRequest(Long id) {
+    public MqExportProcessRequest(Long id) {
         super(id, ProcessType.GML_EXPORT);
     }
 

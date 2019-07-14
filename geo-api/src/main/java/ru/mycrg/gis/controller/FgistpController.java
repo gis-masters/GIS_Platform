@@ -6,22 +6,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.dto.GmlRequestDto;
-import ru.mycrg.gis.entity.Process;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
-import ru.mycrg.gis.service.gml.GmlGenerationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.Principal;
 
 @RestController
 public class FgistpController {
@@ -29,16 +26,13 @@ public class FgistpController {
     private static Logger log = LoggerFactory.getLogger(FgistpController.class);
 
     private final FgistpRuleService fgistpRuleService;
-    private final GmlGenerationService gmlGenerationService;
     private final GmlStorageService gmlStorageService;
 
     @Autowired
     public FgistpController(FgistpRuleService fgistpRuleService,
-                            GmlStorageService gmlStorageService,
-                            GmlGenerationService gmlGenerationService) {
+                            GmlStorageService gmlStorageService) {
         this.fgistpRuleService = fgistpRuleService;
         this.gmlStorageService = gmlStorageService;
-        this.gmlGenerationService = gmlGenerationService;
     }
 
     @GetMapping("/fgistp/rules")
@@ -64,16 +58,6 @@ public class FgistpController {
         log.info("Get rule by name: {}", className);
 
         return fgistpRuleService.getRuleByName(className);
-    }
-
-    @ResponseBody
-    @PostMapping("/fgistp/export/gml")
-    public ResponseEntity<Process> gmlGeneration(@RequestBody GmlRequestDto request, Principal principal) {
-        log.debug("Gml generation request");
-
-        Process process = gmlGenerationService.initProcess(request, principal);
-
-        return new ResponseEntity<>(process, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/fgistp/export/gml/{fileName:.+}")

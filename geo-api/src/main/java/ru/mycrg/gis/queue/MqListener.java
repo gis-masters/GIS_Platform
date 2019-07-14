@@ -6,14 +6,14 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.MqExportResponse;
 import ru.mycrg.common.OrgMqResponse;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.gis.service.OrganizationService;
 import ru.mycrg.gis.service.Processable;
 import ru.mycrg.gis.service.ProjectService;
-import ru.mycrg.gis.service.gml.GmlGenerationService;
+import ru.mycrg.gis.service.export.ExportService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.ValidationService;
 
@@ -25,22 +25,22 @@ public class MqListener {
 
     private static final Logger log = LoggerFactory.getLogger(MqListener.class);
 
-    private final Processable validationService;
+    private final Processable projectService;
     private final Processable importService;
-    private final Processable gmlGenerationService;
+    private final Processable validationService;
+    private final Processable exportService;
     private final OrganizationService organizationService;
-    private final ProjectService projectService;
 
     @Autowired
     public MqListener(OrganizationService organizationService,
                       ValidationService validationService,
                       ImportService importService,
-                      ProjectService projectService,
-                      GmlGenerationService gmlGenerationService) {
+                      ExportService exportService,
+                      ProjectService projectService) {
         this.organizationService = organizationService;
         this.validationService = validationService;
         this.importService = importService;
-        this.gmlGenerationService = gmlGenerationService;
+        this.exportService = exportService;
         this.projectService = projectService;
     }
 
@@ -72,7 +72,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = QUEUE_GML_RESPONSE)
-    public void gmlResponse(GmlMqResponse response) {
-        gmlGenerationService.handleMqResponse(response);
+    public void gmlResponse(MqExportResponse response) {
+        exportService.handleMqResponse(response);
     }
 }

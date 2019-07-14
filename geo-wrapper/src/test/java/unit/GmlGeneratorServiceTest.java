@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
 import ru.mycrg.common.EntityTypeDto;
-import ru.mycrg.common.GmlMqProcessRequest;
+import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -35,7 +35,7 @@ public class GmlGeneratorServiceTest {
 
         DatasourceFactory datasourceFactory = new DatasourceFactory(env, jdbcTemplate);
 
-        GmlMqProcessRequest gmlMqRequest = new GmlMqProcessRequest();
+        MqExportProcessRequest gmlMqRequest = new MqExportProcessRequest();
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 

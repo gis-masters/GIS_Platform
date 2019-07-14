@@ -12,6 +12,10 @@ public class ValidationRequestDto extends BaseRequest {
 
     public ValidationRequestDto() {}
 
+    public ValidationRequestDto(String layerName) {
+        this.layers.add(layerName);
+    }
+
     public List<String> getLayers() {
         return layers;
     }

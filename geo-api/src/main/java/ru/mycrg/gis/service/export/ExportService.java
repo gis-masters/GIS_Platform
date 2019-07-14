@@ -1,71 +1,79 @@
-package ru.mycrg.gis.service.gml;
+package ru.mycrg.gis.service.export;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.GmlMqProcessRequest;
-import ru.mycrg.common.GmlMqResponse;
+import ru.mycrg.common.MqExportProcessRequest;
+import ru.mycrg.common.MqExportResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
-import ru.mycrg.gis.dto.GmlRequestDto;
-import ru.mycrg.gis.dto.WsMessageDto;
+import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.*;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
-import ru.mycrg.gis.service.DetailsModel;
-import ru.mycrg.gis.service.SubProcessModel;
 
 import java.io.IOException;
 import java.security.Principal;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+
 @Service
-public class GmlGenerationService extends BaseProcessService {
+public class ExportService extends BaseProcessService {
 
-    private static Logger log = LoggerFactory.getLogger(GmlGenerationService.class);
+    private static Logger log = LoggerFactory.getLogger(ExportService.class);
 
-    private final MqSender mqSender;
+    private final IMqEvents mqEvents;
     private final FgistpRuleService ruleService;
+    private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
-    public GmlGenerationService(MqSender mqSender,
-                                FgistpRuleService ruleService,
-                                ProcessRepository processRepository,
-                                WsNotificationService wsNotificationService) {
+    public ExportService(MqSender mqEvents,
+                         FgistpRuleService ruleService,
+                         ProcessRepository processRepository,
+                         ProjectService projectService,
+                         WsNotificationService wsNotificationService) {
         super(processRepository);
 
-        this.mqSender = mqSender;
+        this.mqEvents = mqEvents;
         this.ruleService = ruleService;
+        this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process initProcess(GmlRequestDto request, Principal principal) {
-        Process process = create(principal.getName(),"Выгрузка GML", ProcessType.GML_EXPORT, request);
+    public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
+        ProjectModel project = projectService.getProject(orgId, projectId, principal);
 
-        GmlMqProcessRequest mqRequest = new GmlMqProcessRequest(process.getId());
-        mqRequest.setDocSchema(request.getDocSchema());
+        log.debug("Try export {} layers", request.getLayers().size());
 
-        request.getResources().forEach(resource -> {
-            EntityType ruleByClassName = ruleService.getRuleByName(resource.getTableName());
-            mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
+        Process process = create(principal.getName(),
+                String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
+                ProcessType.EXPORT, request);
+
+        MqExportProcessRequest mqRequest = new MqExportProcessRequest(process.getId());
+        mqRequest.setDocSchema(request.getFormat());
+
+        request.getLayers().forEach(layerName -> {
+            // TODO
+            // EntityType ruleByClassName = ruleService.getRuleByName(layerName);
+            // mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
             mqRequest.addResource(
-                    new ResourceProjection(resource.getDbName(), resource.getSchemaName(), resource.getTableName()));
+                    new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
 
-        mqSender.sendGmlInit(mqRequest);
+        mqEvents.sendGmlInit(mqRequest);
 
         return process;
     }
 
     @Override
     public void handleMqResponse(BaseMqProcessResponse response) {
-        GmlMqResponse mqResponse = (GmlMqResponse) response;
+        MqExportResponse mqResponse = (MqExportResponse) response;
 
         if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
@@ -75,9 +83,15 @@ public class GmlGenerationService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);   break;
-            case ERROR:     error(process);     break;
-            case DONE:      complete(process);  break;
+            case SUB_DONE:
+                addSubStep(process, mqResponse);
+                break;
+            case ERROR:
+                error(process);
+                break;
+            case DONE:
+                complete(process);
+                break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -86,7 +100,7 @@ public class GmlGenerationService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, GmlMqResponse response) {
+    private void addSubStep(Process process, MqExportResponse response) {
         process.setStatus(response.getStatus());
 
         try {

@@ -1,12 +1,11 @@
-import {GeoUtil} from '../util/GeoUtil';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../gis/projects.service';
 import {DatastoreService} from './datastore.service';
-import {delay, filter, flatMap, map} from 'rxjs/operators';
+import {delay, filter, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../gis/fgistp-rules.service';
@@ -41,7 +40,7 @@ export class LayersService {
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         delay(1000), // wait rules
         map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-        flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
+        // flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
       );
   }
 
@@ -59,22 +58,22 @@ export class LayersService {
                );
   }
 
-  fetchLayerConnectionInfo(layer: CrgLayer) {
-    return this.getLayer(layer)
-               .pipe(
-                 filter((data: Layer) => !!data),
-                 flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
-                 map((data: any) => {
-                   if (data && data.dataStore) {
-                     layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
-                   } else {
-                     this.log.warn('layers', 'Error fetching connection info for layer', layer.name);
-                   }
-
-                   return layer;
-                 }),
-               );
-  }
+  // fetchLayerConnectionInfo(layer: CrgLayer) {
+  //   return this.getLayer(layer)
+  //              .pipe(
+  //                filter((data: Layer) => !!data),
+  //                flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
+  //                map((data: any) => {
+  //                  if (data && data.dataStore) {
+  //                    layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
+  //                  } else {
+  //                    this.log.warn('layers', 'Error fetching connection info for layer', layer.name);
+  //                  }
+  //
+  //                  return layer;
+  //                }),
+  //              );
+  // }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
     const params = new HttpParams();
@@ -114,18 +113,18 @@ export class LayersService {
     return layers.filter((layer: CrgLayer) => {
       const projectName = layer.name.split(':')[0];
 
-      return projectName === project.geoserverName;
+      return projectName === project.workspaceName;
     });
   }
 
-  private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
-    const observableTasks = [];
-    crgLayers.forEach((layer: CrgLayer) => {
-      observableTasks.push(this.fetchLayerConnectionInfo(layer));
-    });
-
-    return forkJoin(observableTasks);
-  }
+  // private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
+  //   const observableTasks = [];
+  //   crgLayers.forEach((layer: CrgLayer) => {
+  //     observableTasks.push(this.fetchLayerConnectionInfo(layer));
+  //   });
+  //
+  //   return forkJoin(observableTasks);
+  // }
 
   private mergeWithRules(layers: NameHrefProjection[]) {
     const crgLayers: CrgLayer[] = [];
@@ -138,12 +137,7 @@ export class LayersService {
         name: layerName,
         complexName: layer.name,
         href: layer.href,
-        title: layerTitle,
-        connectionInfo: {
-          dbName: '',
-          schemaName: '',
-          tableName: ''
-        }
+        title: layerTitle
       });
     });
 
@@ -157,7 +151,6 @@ export interface CrgLayer {
   complexName: string;  // Like: work_workspace:functionalzone
   title: string;        // Like: Функциональные зоны
   href: string;
-  connectionInfo: ConnectionInfo;
 }
 
 export interface ConnectionInfo {

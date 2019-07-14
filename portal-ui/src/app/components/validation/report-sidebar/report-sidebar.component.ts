@@ -101,7 +101,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.isValidationInited = true;
 
     this.validationService
-        .validateLayers(crgLayers)
+        .initValidation(crgLayers)
         .subscribe((response: ValidationWsMsg) => {
           if (!response) {
             this.isValidationInited = false;
@@ -157,13 +157,15 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.validationService
-        .getLayerStatistic(layers)
+        .getShortInfo(layers)
         .subscribe((infoResponse: ValidationInfoResponse) => {
           this.isValidationInited = false;
 
           if (!infoResponse) {
             this.logger.warn('Cant get layer info', infoResponse);
           } else {
+            console.log('***', infoResponse);
+
             infoResponse.briefly.forEach((brieflyInfo: ValidationBrieflyInfo) => {
               if (brieflyInfo.status === 'ERROR') {
                 this.logger.warn('Error for feature: ', brieflyInfo);

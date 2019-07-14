@@ -133,7 +133,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
       if (this.data.mode === EditFeatureMode.single) {
         this.transformFeatureService
-            .updateFeature(this.data.feature.id, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties)
+            .updateFeature(this.data.feature.id, projectModel.crgProject.workspaceName, this.xsdFeature.tableName, newProperties)
             .subscribe(response => {
               this.isSaveInProgress = false;
               if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
@@ -151,7 +151,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               }
             });
       } else {
-        this.batchUpdateFeatures(this.data.featuresId, projectModel.crgProject.geoserverName, this.xsdFeature.tableName, newProperties);
+        this.batchUpdateFeatures(this.data.featuresId, projectModel.crgProject.workspaceName, this.xsdFeature.tableName, newProperties);
       }
     }
   }

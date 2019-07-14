@@ -10,9 +10,12 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportFeature;
 import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
+import ru.mycrg.gis.dto.DetailsModel;
 import ru.mycrg.gis.dto.ProjectModel;
+import ru.mycrg.gis.dto.SubProcessModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.*;
@@ -26,17 +29,17 @@ public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final MqSender mqSender;
+    private final IMqEvents mqEvents;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
-    public ImportService(MqSender mqSender,
+    public ImportService(MqSender mqEvents,
                          ProjectService projectService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
-        this.mqSender = mqSender;
+        this.mqEvents = mqEvents;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -65,7 +68,7 @@ public class ImportService extends BaseProcessService {
             importMqRequest.addImportFeature(importFeature);
         });
 
-        mqSender.initImport(importMqRequest);
+        mqEvents.initImport(importMqRequest);
 
         return process;
     }

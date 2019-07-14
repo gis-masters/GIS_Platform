@@ -88,7 +88,7 @@ export class ProjectsService {
     const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + projectId + '/import';
     const payload = {
       wsUiId: this.wsService.getId(),
-      targetSchema: workImport.projectModel.crgProject.geoserverName,
+      targetSchema: workImport.projectModel.crgProject.workspaceName,
       importTasks: workImport.tasks
     };
 
@@ -134,7 +134,7 @@ export class ProjectsService {
     layers.forEach((layer: NameHrefProjection) => {
       const projectName = layer.name.split(':')[0];
       if (projectName) {
-        if (project.geoserverName === projectName) {
+        if (project.workspaceName === projectName) {
           counter++;
         }
       } else {
@@ -148,7 +148,7 @@ export class ProjectsService {
 
 export interface CrgProject {
   id: string;
-  geoserverName: string;
+  workspaceName: string;
   internalName: string;
   databaseName?: string;
   storeName?: string;

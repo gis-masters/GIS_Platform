@@ -178,14 +178,6 @@ public class OrganizationService {
                 .orElseThrow(() -> new CrgNotFoundException("Не найден процесс: " + processId));
     }
 
-    public Project getProjectById(Long orgId, Long projectId) {
-        return findById(orgId)
-                .getProjects().stream()
-                .filter(project -> project.getId() == projectId)
-                .findFirst()
-                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
-    }
-
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {
         return new Organization(dto.getName(), dto.getPhone());
     }

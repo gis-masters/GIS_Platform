@@ -1,10 +1,10 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
+import {CrgLayer} from '../geoserver/layers.service';
 import {ServerPropertiesService} from '../server-properties.service';
-import {WsService} from '../ws.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +19,11 @@ export class ExportService {
   }
 
   exportGml(crgLayers: CrgLayer[], docSchema: string): Observable<ExportGmlResponse> {
-    const resources: ConnectionInfo[] = crgLayers.map((crgLayer: CrgLayer) => crgLayer.connectionInfo);
+    const layerNames: string[] = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
     const payload: ExportGmlRequest = {
       wsUiId: this.wsService.getId(),
       docSchema: docSchema,
-      resources: resources
+      layers: layerNames
     };
 
     return this.http
@@ -44,5 +44,5 @@ export interface ExportGmlResponse {
 export interface ExportGmlRequest {
   wsUiId: string;
   docSchema: string;
-  resources: ConnectionInfo[];
+  layers: string[];
 }

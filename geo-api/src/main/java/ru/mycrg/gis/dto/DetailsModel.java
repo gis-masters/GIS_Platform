@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service;
+package ru.mycrg.gis.dto;
 
 import java.util.ArrayList;
 import java.util.List;

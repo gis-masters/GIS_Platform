@@ -82,8 +82,11 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          if (this.isActive && !!this.crgLayer.connectionInfo) {
-            return this.validationService.getValidationResults(this.crgLayer.connectionInfo, this.paginator, this.sort);
+          if (this.isActive) {
+            return this.validationService
+                       .getValidationResults(this.crgLayer.name,
+                                             this.paginator.pageIndex, this.paginator.pageSize,
+                                             this.sort.active, this.sort.direction);
           } else {
             return of(null);
           }
@@ -93,12 +96,12 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   getValidation() {
     this.validationService
-        .getValidationResults_(this.crgLayer.connectionInfo, 0, this.defaultPageSize, '', 'asc')
+        .getValidationResults(this.crgLayer.name, 0, this.defaultPageSize, '', 'asc')
         .subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
   }
 
   getClassIdAlias(element) {
-    return this.ruleService.getClassIdAlias(this.crgLayer.connectionInfo.tableName, element);
+    return this.ruleService.getClassIdAlias(this.crgLayer.name, element);
   }
 
   showObject(event, objectId: string) {
