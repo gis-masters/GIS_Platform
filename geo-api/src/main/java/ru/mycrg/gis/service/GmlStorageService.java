@@ -17,10 +17,10 @@ public class GmlStorageService {
 
     private static Logger log = LoggerFactory.getLogger(GmlStorageService.class);
 
-    private final Path gmlStoragePath;
+    private final Path exportStoragePath;
 
     public GmlStorageService(CrgProperties properties) {
-        this.gmlStoragePath = Paths.get(properties.getGmlStoragePath())
+        this.exportStoragePath = Paths.get(properties.getExportStoragePath())
                 .toAbsolutePath()
                 .normalize();
     }
@@ -33,7 +33,7 @@ public class GmlStorageService {
      */
     public Resource load(String fileName) {
         try {
-            Path filePath = gmlStoragePath.resolve(fileName).normalize();
+            Path filePath = exportStoragePath.resolve(fileName).normalize();
             log.debug("Try load file: {}", filePath);
 
             Resource resource = new UrlResource(filePath.toUri());

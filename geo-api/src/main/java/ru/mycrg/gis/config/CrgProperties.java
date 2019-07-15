@@ -8,19 +8,19 @@ import java.util.Optional;
 @ConfigurationProperties(prefix = "crg-options")
 public class CrgProperties {
 
-    private String gmlStoragePath;
+    private String exportStoragePath;
 
     public CrgProperties() {}
 
-    public void setGmlStoragePath(String gmlStoragePath) {
-        this.gmlStoragePath = gmlStoragePath;
+    public void setExportStoragePath(String exportStoragePath) {
+        this.exportStoragePath = exportStoragePath;
     }
 
     @NotNull
-    public String getGmlStoragePath() {
+    public String getExportStoragePath() {
         return Optional
-                .ofNullable(gmlStoragePath)
-                .orElseThrow(() -> new IllegalStateException("Not set gmlStoragePath"));
+                .ofNullable(exportStoragePath)
+                .orElseThrow(() -> new IllegalStateException("Not set exportStoragePath"));
     }
 
 }

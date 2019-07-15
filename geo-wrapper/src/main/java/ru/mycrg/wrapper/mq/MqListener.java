@@ -14,10 +14,12 @@ import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.ImportService;
+import ru.mycrg.wrapper.service.export.GDALService;
+import ru.mycrg.wrapper.service.export.IExporter;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.OrganizationService;
 import ru.mycrg.wrapper.service.geoserver.ProjectService;
-import ru.mycrg.wrapper.service.gml.GmlGenerator;
+import ru.mycrg.wrapper.service.export.GmlGenerator;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
@@ -35,16 +37,18 @@ public class MqListener {
     private final AuthService authService;
     private final ValidationService validationService;
     private final ImportService importService;
-    private final GmlGenerator gmlGenerator;
+    private final IExporter gmlGenerator;
+    private final IExporter gdalService;
 
     @Autowired
     public MqListener(IMqEvents mqEvents, OrganizationService organizationService, AuthService authService,
-                      GmlGenerator gmlGenerator, ProjectService projectService,
+                      GmlGenerator gmlGenerator, ProjectService projectService, GDALService gdalService,
                       ValidationService validationService, ImportService importService) {
         this.mqEvents = mqEvents;
         this.organizationService = organizationService;
         this.authService = authService;
         this.gmlGenerator = gmlGenerator;
+        this.gdalService = gdalService;
         this.importService = importService;
         this.validationService = validationService;
         this.projectService = projectService;
@@ -104,13 +108,19 @@ public class MqListener {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
-            Map<String, String> paths = gmlGenerator.generate(request);
+            Map<String, String> paths;
+            if (request.getFormat() != null) {
+                paths = gdalService.generate(request);
+            } else {
+                paths = gmlGenerator.generate(request);
+            }
 
             mqEvents.gmlResponse(new MqExportResponse(request, paths, ProcessStatus.DONE, 100));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла. {}", e.getMessage());
-            mqEvents.gmlResponse(
-                    new MqExportResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage()));
+            MqExportResponse gmlMqResponse = new MqExportResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage());
+
+            mqEvents.gmlResponse(gmlMqResponse);
         }
     }
 
@@ -141,7 +151,7 @@ public class MqListener {
                 mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException | SQLException e) {
-            log.error("Неудалось создать проект: ", e);
+            log.error("Не удалось создать проект: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }
     }
@@ -157,7 +167,7 @@ public class MqListener {
                 mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.DONE));
             }
         } catch (IOException | RuntimeException e) {
-            log.error("Неудалось создать проект: ", e);
+            log.error("Не удалось создать проект: ", e);
             mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }
     }
@@ -174,12 +184,12 @@ public class MqListener {
                 } catch (IOException | RuntimeException e) {
                     // TODO: Здесь мы должны понимать что именно не удалось выполнить не геосервере и принять меры.
 
-                    log.error("Неудалось создать организацию на геосервере: ", e);
+                    log.error("Не удалось создать организацию на геосервере: ", e);
                     mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
                 }
             }
         } catch (IOException e) {
-            log.error("-- Неудалось создать организацию на геосервере: ", e);
+            log.error("-- Не удалось создать организацию на геосервере: ", e);
 
             mqEvents.orgEventResponse(new OrgMqResponse(request, ProcessStatus.ERROR));
         }

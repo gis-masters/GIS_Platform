@@ -15,6 +15,7 @@ import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.*;
+import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
@@ -49,19 +50,21 @@ public class ExportService extends BaseProcessService {
     public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
         ProjectModel project = projectService.getProject(orgId, projectId, principal);
 
-        log.debug("Try export {} layers", request.getLayers().size());
-
         Process process = create(principal.getName(),
                 String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
                 ProcessType.EXPORT, request);
 
         MqExportProcessRequest mqRequest = new MqExportProcessRequest(process.getId());
-        mqRequest.setDocSchema(request.getFormat());
+        mqRequest.setFormat(request.getFormat());
+        mqRequest.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            // TODO
-            // EntityType ruleByClassName = ruleService.getRuleByName(layerName);
-            // mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
+            // TODO: Нет смысла добавлять к запросу в очередь ресурс если по layerName не найдено описание фичи
+            // Нужно сразу выставить в процессе эти фичи как ошибочные
+            // Во всех операциях (импорт, валидация) можно внедрить тоже самое
+
+            EntityType ruleByClassName = ruleService.getRuleByName(layerName);
+            mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
             mqRequest.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
@@ -96,7 +99,12 @@ public class ExportService extends BaseProcessService {
                 log.warn("Not supported process status. {}", process);
         }
 
-        String wsUiId = process.getExtra().get("wsUiId").toString();
+        String wsUiId = "";
+        JsonNode extra = process.getExtra();
+        if (extra != null && extra.get("wsUiId") != null) {
+            wsUiId = extra.get("wsUiId").toString();
+        }
+
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 

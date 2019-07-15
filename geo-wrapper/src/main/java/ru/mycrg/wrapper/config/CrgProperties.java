@@ -14,17 +14,14 @@ public class CrgProperties {
     private String geoserverUser;
     private String geoserverPassword;
 
-    private String gmlStoragePath;
+    private String exportStoragePath;
     private String userServiceName;
-
-    // TODO: Непонятно зачем это свойство дублирует основной jdbc url.
-    private String postgisHost;
 
     public CrgProperties() {
     }
 
     @NotNull
-    public String getGeoserverHost() {
+    public String getGeoserverHostWithPort() {
         return Optional
                 .ofNullable(geoserverHost)
                 .orElseThrow(() -> new IllegalStateException("Not set getGeoserverHost"));
@@ -32,17 +29,6 @@ public class CrgProperties {
 
     public void setGeoserverHost(String geoserverHost) {
         this.geoserverHost = geoserverHost;
-    }
-
-    @NotNull
-    public String getPostgisHost() {
-        return Optional
-                .ofNullable(postgisHost)
-                .orElseThrow(() -> new IllegalStateException("Not set postgisHost"));
-    }
-
-    public void setPostgisHost(String postgisHost) {
-        this.postgisHost = postgisHost;
     }
 
     @NotNull
@@ -67,15 +53,15 @@ public class CrgProperties {
         this.geoserverPassword = geoserverPassword;
     }
 
-    public void setGmlStoragePath(String gmlStoragePath) {
-        this.gmlStoragePath = gmlStoragePath;
+    public void setExportStoragePath(String exportStoragePath) {
+        this.exportStoragePath = exportStoragePath;
     }
 
     @NotNull
-    public String getGmlStoragePath() {
+    public String getExportStoragePath() {
         return Optional
-                .ofNullable(gmlStoragePath)
-                .orElseThrow(() -> new IllegalStateException("Not set gmlStoragePath"));
+                .ofNullable(exportStoragePath)
+                .orElseThrow(() -> new IllegalStateException("Not set exportStoragePath"));
     }
 
     public void setUserServiceName(String userServiceName) {

@@ -9,6 +9,7 @@ import java.util.UUID;
 public class MqExportProcessRequest extends BaseMqProcessRequest {
 
     private String docSchema = "Doc.20301010000";
+    private String format;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
@@ -48,5 +49,13 @@ public class MqExportProcessRequest extends BaseMqProcessRequest {
 
     public void setFgistpRules(List<EntityTypeDto> fgistpRules) {
         this.fgistpRules = fgistpRules;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 }

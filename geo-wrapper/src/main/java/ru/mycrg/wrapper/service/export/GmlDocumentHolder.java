@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.gml;
+package ru.mycrg.wrapper.service.export;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

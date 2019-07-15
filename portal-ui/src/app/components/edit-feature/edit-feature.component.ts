@@ -147,7 +147,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
                 });
               } else {
                 this.logger.warn('UpdateFeature response: ', response);
-                this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+                this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
               }
             });
       } else {
@@ -268,7 +268,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               });
             } else {
               this.logger.warn('UpdateFeature response: ', response);
-              this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
             }
           });
     }

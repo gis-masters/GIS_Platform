@@ -34,4 +34,4 @@ server:
   port: 8088
 
 crg-options:
-  gmlStoragePath: /opt/gml/
+  exportStoragePath: /opt/export/

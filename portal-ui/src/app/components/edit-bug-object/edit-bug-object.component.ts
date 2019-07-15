@@ -90,7 +90,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
               this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
             } else {
               this.logger.warn('UpdateFeature response: ', response);
-              this.snackBar.open('Неудалось сохранить', 'X', {duration: 6000});
+              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
             }
           });
     }

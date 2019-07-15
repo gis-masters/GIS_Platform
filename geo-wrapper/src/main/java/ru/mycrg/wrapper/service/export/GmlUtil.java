@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.gml;
+package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;

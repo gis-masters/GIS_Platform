@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.*;
-import static ru.mycrg.wrapper.service.gml.GmlUtil.calculatePercent;
-import static ru.mycrg.wrapper.service.gml.GmlUtil.getRuleByTableName;
+import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
+import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
 
 @Service
 public class ValidationService {

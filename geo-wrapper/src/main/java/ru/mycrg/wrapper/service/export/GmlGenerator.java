@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.gml;
+package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Geometry;
@@ -15,21 +15,27 @@ import org.w3c.dom.Element;
 import ru.mycrg.common.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
+import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.mq.IMqEvents;
 import ru.mycrg.wrapper.service.FileService;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.util.*;
 
+import static java.io.File.separator;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
-import static ru.mycrg.wrapper.service.gml.GmlUtil.*;
+import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 
 @Service
-public class GmlGenerator {
+public class GmlGenerator implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
@@ -59,8 +65,7 @@ public class GmlGenerator {
      * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public Map<String, String> generate(MqExportProcessRequest gmlMqRequest) throws ParserConfigurationException,
-            TransformerException {
+    public Map<String, String> generate(MqExportProcessRequest gmlMqRequest) throws ExportException {
         idCounter = 1;
         log.debug("Start gml generation");
 
@@ -68,7 +73,7 @@ public class GmlGenerator {
         GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
-        String pathToGml = fileService.save(documentHolder.getGmlDocument(), randomFileName + ".gml");
+        String pathToGml = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
         // String pathToLog = fileService.save(documentHolder.getLogDocument(), randomFileName + ".log");
 
         paths.put("gml", pathToGml);
@@ -85,19 +90,23 @@ public class GmlGenerator {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(MqExportProcessRequest request) throws ParserConfigurationException {
-        GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
+    private GmlDocumentHolder createDomDocuments(MqExportProcessRequest request) throws ExportException {
+        try {
+            GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
-        mqEvents.gmlResponse(new MqExportResponse(request, PENDING, "Инициализация...", 1));
-        log.debug("Handle {} sources", request.getResourceProjections().size());
+            mqEvents.gmlResponse(new MqExportResponse(request, PENDING, "Инициализация...", 1));
+            log.debug("Handle {} sources", request.getResourceProjections().size());
 
-        processedRows = 0;
-        totalRows = calculateTotalRows(request);
-        request
-                .getResourceProjections()
-                .forEach(resource -> handleResource(request, docHolder, resource));
+            processedRows = 0;
+            totalRows = calculateTotalRows(request);
+            request
+                    .getResourceProjections()
+                    .forEach(resource -> handleResource(request, docHolder, resource));
 
-        return docHolder;
+            return docHolder;
+        } catch (ParserConfigurationException e) {
+            throw new ExportException("Ошибка экспорта", e);
+        }
     }
 
     private long calculateTotalRows(MqExportProcessRequest request) {
@@ -335,4 +344,29 @@ public class GmlGenerator {
 
         return "ID" + idCounter;
     }
+
+    /**
+     * Сохраняем xml document.
+     *
+     * @param document Сгенерированный xml
+     * @param fileName Название файла
+     * @return Путь к сохраненному файлу
+     */
+    private String saveXml(Document document, String fileName) throws ExportException {
+        log.debug("Save {} to file", fileName);
+
+        try {
+            DOMSource source = new DOMSource(document);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            StreamResult result = new StreamResult(fileService.getExprotStoragePath() + separator + fileName);
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            throw new ExportException("Ошибка формирования GML", e);
+        }
+
+        return fileService.getPathToFile(fileName);
+    }
+
 }

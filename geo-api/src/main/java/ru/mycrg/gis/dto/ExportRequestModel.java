@@ -5,10 +5,10 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExportRequestModel {
+public class ExportRequestModel extends BaseRequest {
 
-    @NotBlank(message = "Забыли указать формат експорта")
     private String format;
+    private String docSchema;
 
     @NotEmpty
     private List<String> layers = new ArrayList<>();
@@ -29,5 +29,13 @@ public class ExportRequestModel {
 
     public void setLayers(List<String> layers) {
         this.layers = layers;
+    }
+
+    public String getDocSchema() {
+        return docSchema;
+    }
+
+    public void setDocSchema(String docSchema) {
+        this.docSchema = docSchema;
     }
 }

@@ -55,12 +55,15 @@ public abstract class GeoServerBaseService {
         return properties.getGeoserverPassword();
     }
 
-    protected String postgisHost() {
-        return properties.getPostgisHost();
+    protected String postgisHostWithPort() {
+        return environment
+                .getRequiredProperty("spring.datasource.url")
+                .split("//")[1]
+                .split("/")[0];
     }
 
     protected String geoserverHost() {
-        return properties.getGeoserverHost();
+        return properties.getGeoserverHostWithPort();
     }
 
     @NotNull

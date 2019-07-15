@@ -21,6 +21,5 @@ crg-options:
   geoserver-host: 127.0.0.1:8100
   geoserver-user: admin@mail.ru
   geoserver-password: geoserver
-  postgis-host: localhost:5434
-  gmlStoragePath: /opt/gml/
+  exportStoragePath: /opt/export/
   userServiceName: default

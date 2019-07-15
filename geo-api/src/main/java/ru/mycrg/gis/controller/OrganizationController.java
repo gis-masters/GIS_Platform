@@ -75,9 +75,9 @@ public class OrganizationController {
         try {
             newOrganization = organizationService.create(createDto);
         } catch (Exception e) {
-            log.error("Неудалось создать организацию: ", e);
+            log.error("Не удалось создать организацию: ", e);
 
-            throw new CrgFailedException("Неудалось создать организацию: " + createDto.getName());
+            throw new CrgFailedException("Не удалось создать организацию: " + createDto.getName());
         }
 
         URI location = ServletUriComponentsBuilder

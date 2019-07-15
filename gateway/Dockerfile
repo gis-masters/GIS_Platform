@@ -1,4 +1,4 @@
-FROM openjdk:10
+FROM openjdk:8-alpine
 MAINTAINER Fanatic Fiz <fanaticfiz@fanaticfiz.com>
 
 COPY ./target/gateway.jar gateway.jar
