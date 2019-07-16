@@ -21,11 +21,11 @@ export class LayerListItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.wmsService
-        .getLegend(this.layer.complexName)
-        .subscribe(data => {
-          this.createImageFromBlob(data);
-        });
+    // this.wmsService
+    //     .getLegend(this.layer.complexName)
+    //     .subscribe(data => {
+    //       this.createImageFromBlob(data);
+    //     });
   }
 
   private createImageFromBlob(image: Blob) {
