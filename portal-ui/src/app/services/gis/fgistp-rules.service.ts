@@ -72,8 +72,6 @@ export class FgistpRulesService {
   }
 
   getClassIdAlias(layerName: string, element: any) {
-    console.log('getClassIdAlias for: ', layerName);
-
     let result = layerName;
     const featureByName = this.getFeatureByName(layerName);
     if (featureByName) {

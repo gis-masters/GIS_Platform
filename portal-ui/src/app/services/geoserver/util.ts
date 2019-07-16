@@ -49,7 +49,7 @@ export class Util {
 
     // area BETWEEN n AND n+1
     if (filterEvent.property.valueType === 'DOUBLE') {
-      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + (Number(filterEvent.value) + 1);
+      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + this.upLastDigit(filterEvent.value[0]);
     }
 
     if (filterEvent.property.valueType === 'INT') {
@@ -63,4 +63,16 @@ export class Util {
 
     return '';
   }
+
+  private static upLastDigit(numberUsString: string) {
+    if (numberUsString.slice(-1) === '0') {
+      return numberUsString.replace(/.$/, '1');
+    } else {
+      const n = Number(numberUsString);
+      const k = (n % 1 ? Math.pow(10, numberUsString.split('.')[1].length) : 1);
+
+      return ((n * k) + 1) / k;
+    }
+  }
+
 }
