@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationInfo;
 import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.config.CrgProperties;
 import ru.mycrg.gis.dto.ProjectModel;
+import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.common.enums.ProcessStatus.DONE;
+import static ru.mycrg.common.enums.ProcessStatus.ERROR;
 
 @Service
 public class ViolationService {
@@ -38,7 +41,7 @@ public class ViolationService {
         this.projectService = projectService;
     }
 
-    public List<ObjectValidationResult> getResult(Long orgId, Long projectId, Principal principal, String layerName, int nPage, int nSize) {
+    public List<ObjectValidationResult> getViolations(Long orgId, Long projectId, Principal principal, String layerName, int nPage, int nSize) {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
@@ -57,6 +60,39 @@ public class ViolationService {
         }
 
         return validationMqResponse.getResults();
+    }
+
+    public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, Principal principal,
+                                             ValidationRequestDto request) {
+        List<ValidationInfo> result = new ArrayList<>();
+
+        if (ruleService.isCacheEmpty()) {
+            ruleService.updateRules();
+        }
+
+        ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(getDatasource(projectModel.getDatabaseName()));
+        request.getLayers().forEach(layerName -> {
+            ValidationInfo validationInfo = new ValidationInfo();
+            try {
+                Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
+
+                validationInfo.setTotalViolations(totalViolations);
+                validationInfo.setFeatureName(layerName);
+                validationInfo.setStatus(DONE);
+
+                result.add(validationInfo);
+            } catch (Exception e) {
+                validationInfo.setStatus(ERROR);
+                result.add(validationInfo);
+
+                log.error("Ошибка выборки со слоя: {}", layerName);
+                throw new CrgFailedException(e.getMessage());
+            }
+        });
+
+        return result;
     }
 
     /**
