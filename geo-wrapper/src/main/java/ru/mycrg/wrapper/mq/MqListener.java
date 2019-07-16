@@ -15,16 +15,15 @@ import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dto.PostgreEvent;
 import ru.mycrg.wrapper.service.ImportService;
 import ru.mycrg.wrapper.service.export.GDALService;
+import ru.mycrg.wrapper.service.export.GmlGenerator;
 import ru.mycrg.wrapper.service.export.IExporter;
 import ru.mycrg.wrapper.service.geoserver.AuthService;
 import ru.mycrg.wrapper.service.geoserver.OrganizationService;
 import ru.mycrg.wrapper.service.geoserver.ProjectService;
-import ru.mycrg.wrapper.service.export.GmlGenerator;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 
 @Service
 public class MqListener {
@@ -108,14 +107,14 @@ public class MqListener {
         log.info("Получено сообщение, gmlInit: {}", request.getId());
 
         try {
-            Map<String, String> paths;
+            String path;
             if (request.getFormat() != null) {
-                paths = gdalService.generate(request);
+                path = gdalService.generate(request);
             } else {
-                paths = gmlGenerator.generate(request);
+                path = gmlGenerator.generate(request);
             }
 
-            mqEvents.gmlResponse(new MqExportResponse(request, paths, ProcessStatus.DONE, 100));
+            mqEvents.gmlResponse(new MqExportResponse(request, path, ProcessStatus.DONE, 100));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла. {}", e.getMessage());
             MqExportResponse gmlMqResponse = new MqExportResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage());

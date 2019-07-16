@@ -1,5 +1,6 @@
 package ru.mycrg.gis.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +59,13 @@ public abstract class BaseProcessService implements Processable {
         }
     }
 
-    protected void complete(Process process) {
+    protected void complete(Process process, Object data) {
         process.setStatus(ProcessStatus.DONE);
+
+        if (data != null) {
+            JsonNode jsonNode = MapperUtil.convertToJsonNode(data);
+            process.setDetails(jsonNode);
+        }
 
         processRepository.save(process);
 
@@ -67,8 +73,13 @@ public abstract class BaseProcessService implements Processable {
         log.info("Successfully complete process: {} / {}", process.getId(), process.getTitle());
     }
 
-    protected void error(Process process) {
+    protected void error(Process process, String errMsg) {
         process.setStatus(ProcessStatus.ERROR);
+
+        if (errMsg != null) {
+            JsonNode jsonNode = MapperUtil.convertToJsonNode(errMsg);
+            process.setDetails(jsonNode);
+        }
 
         processRepository.save(process);
 
@@ -82,8 +93,4 @@ public abstract class BaseProcessService implements Processable {
                 .findFirst();
     }
 
-    private void updateProcessInCache(Process oldProcess, Process newProcess) {
-        oldProcess.setStatus(newProcess.getStatus());
-        oldProcess.setExtra(newProcess.getExtra());
-    }
 }

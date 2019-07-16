@@ -9,9 +9,14 @@ import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -146,6 +151,18 @@ public class ValidatorTest {
         ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
 
         assertEquals(1, objectValidationResult.getObjectViolations().size());
+    }
+
+    @Test
+    public void testFiz() {
+        Path fileName = null;
+        try {
+            fileName = Files.createDirectories(Paths.get("/opt/export/" + UUID.randomUUID())).getFileName();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals("314", fileName);
     }
 
 }

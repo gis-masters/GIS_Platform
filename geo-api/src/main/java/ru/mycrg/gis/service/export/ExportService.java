@@ -8,6 +8,7 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.MqExportResponse;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -59,11 +60,12 @@ public class ExportService extends BaseProcessService {
         mqRequest.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            // TODO: Нет смысла добавлять к запросу в очередь ресурс если по layerName не найдено описание фичи
-            // Нужно сразу выставить в процессе эти фичи как ошибочные
+            EntityType ruleByClassName = ruleService.getRuleByName(layerName);
+
+            // TODO: Может не плеваться 404 если один из слоев ненайден а просто не добавлять его.
+            // Можно сразу выставить в процессе эту фичу как ошибочную
             // Во всех операциях (импорт, валидация) можно внедрить тоже самое
 
-            EntityType ruleByClassName = ruleService.getRuleByName(layerName);
             mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
             mqRequest.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
@@ -86,15 +88,9 @@ public class ExportService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case SUB_ERROR:
-            case SUB_DONE:
-                addSubStep(process, mqResponse);
-                break;
-            case ERROR:
-                error(process);
-                break;
-            case DONE:
-                complete(process);
-                break;
+            case SUB_DONE:  addSubStep(process, mqResponse);                break;
+            case ERROR:     error(process, response.getError());            break;
+            case DONE:      complete(process, mqResponse.getPathToFile());  break;
             default:
                 log.warn("Not supported process status. {}", process);
         }

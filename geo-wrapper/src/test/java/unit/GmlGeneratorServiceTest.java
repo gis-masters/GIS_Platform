@@ -27,7 +27,7 @@ public class GmlGeneratorServiceTest {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    public void shouldGenerateGml() throws ParserConfigurationException, TransformerException {
+    public void shouldGenerateGml() {
         MockEnvironment env = new MockEnvironment();
         env.setProperty("spring.datasource.url", "jdbc:postgresql://127.0.0.1:5434/postgres");
         env.setProperty("spring.datasource.username", "fiz");

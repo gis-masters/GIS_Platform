@@ -143,9 +143,9 @@ public class ValidationService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);   break;
-            case ERROR:     error(process);     break;
-            case DONE:      complete(process);  break;
+            case SUB_DONE:  addSubStep(process, mqResponse);     break;
+            case ERROR:     error(process, response.getError()); break;
+            case DONE:      complete(process, null);        break;
             default:
                 log.warn("Not supported process status. {}", process);
         }

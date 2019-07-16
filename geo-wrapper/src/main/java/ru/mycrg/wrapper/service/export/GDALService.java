@@ -8,15 +8,15 @@ import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
-import ru.mycrg.wrapper.service.FileService;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class GDALService implements IExporter {
@@ -25,25 +25,28 @@ public class GDALService implements IExporter {
 
     private final Environment environment;
     private final CrgProperties crgProperties;
-    private final FileService fileService;
 
-    public GDALService(FileService fileService, CrgProperties crgProperties, Environment environment) {
-        this.fileService = fileService;
+    public GDALService(CrgProperties crgProperties, Environment environment) {
         this.crgProperties = crgProperties;
         this.environment = environment;
     }
 
     @Override
-    public Map<String, String> generate(MqExportProcessRequest request) throws ExportException {
+    public String generate(MqExportProcessRequest request) throws ExportException {
+        String pathToZip;
+
         if (request.getFormat().equals("ESRI Shapefile")) {
             List<ResourceProjection> resourceProjections = request.getResourceProjections();
             if (resourceProjections.size() > 1) {
                 log.warn("Not implemented multiple export. Export only first feature.");
 
-                return tryExport(resourceProjections.get(0), request.getFormat());
+                // TODO: При имплементации импорта множества слоев необходимо генерить один большой зип.
+                pathToZip = exportToShape(resourceProjections.get(0));
             } else {
-                return tryExport(resourceProjections.get(0), request.getFormat());
+                pathToZip = exportToShape(resourceProjections.get(0));
             }
+
+            return pathToZip;
         } else {
             log.warn("Not supported format: {}", request.getFormat());
 
@@ -51,11 +54,17 @@ public class GDALService implements IExporter {
         }
     }
 
-    private Map<String, String> tryExport(ResourceProjection resource, String format) {
+    /**
+     * Экспорт в шейп.
+     *
+     * @param resource Ресурс для экспорта
+     * @return Path к архиву
+     */
+    private String exportToShape(ResourceProjection resource) {
         try {
-            String storagePath = crgProperties.getExportStoragePath();
-            String fileName = resource.getTableName() + ".shp";
-            String localhost = getPortGisHost();
+            String rootPath = crgProperties.getExportStoragePath();
+            String randomDirName = UUID.randomUUID().toString();
+            String host = getPortGisHost();
             String port = getPortGisPort();
             String userName = environment.getProperty("spring.datasource.username");
             String password = environment.getProperty("spring.datasource.password");
@@ -63,27 +72,37 @@ public class GDALService implements IExporter {
             String schemaName = resource.getSchemaName();
             String tableNAme = resource.getTableName();
 
-            String command = "ogr2ogr -f \"" + format + "\" " + fileName + " PG:\"host=" + localhost + " " +
-                    "port=" + port + " user=" + userName + " password=" + password + " dbname=" + dbName + "\" -sql " +
-                    "\"SELECT * from " + schemaName + "." + tableNAme + "\" --config SHAPE_ENCODING UTF-8 -progress";
+            // mkdir SOME_DIR; cd SOME_DIR;
+            // ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434 user=fiz password=314 dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING UTF-8;
+            // cd ..;
+            // zip -r agriculture.zip SOME_DIR/;
+            // rm -rf SOME_DIR
+            String allInOneCommand_test = "mkdir " + randomDirName + "; cd " + randomDirName + "; " +
+                    "ogr2ogr -f \"ESRi Shapefile\" " + resource.getTableName() + ".shp PG:\"host=" + host + " port=" + port + " " +
+                    "user=" + userName + " password=" + password + " dbname=" + dbName + "\" -sql \"SELECT * from " + schemaName + "." + tableNAme + "\" --config SHAPE_ENCODING UTF-8; " +
+                    "cd ..; zip -r " + resource.getTableName() + ".zip " + randomDirName + "; rm -rf " + randomDirName;
 
             ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.directory(new File(storagePath));
-            processBuilder.command("sh", "-c", command);
-
+            processBuilder.directory(new File(rootPath));
+            processBuilder.command("sh", "-c", allInOneCommand_test);
             Process process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                log.debug("export console output: {}", line);
             }
 
             int exitCode = process.waitFor();
             assert exitCode == 0;
 
-            return Collections.emptyMap();
+            String pathToResultZip = rootPath + resource.getTableName() + ".zip";
+            if (Files.exists(Paths.get(pathToResultZip))) {
+                return pathToResultZip;
+            } else {
+                log.info("Path to result ZIP file: {}", pathToResultZip);
+                throw new ExportException("Не удалось выполнить консольную команду");
+            }
         } catch (IOException | InterruptedException e) {
             throw new ExportException(e.getMessage(), e);
         }

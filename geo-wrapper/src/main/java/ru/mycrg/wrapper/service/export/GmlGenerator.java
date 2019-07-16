@@ -65,22 +65,18 @@ public class GmlGenerator implements IExporter {
      * @param gmlMqRequest Источник данных
      * @return Ссылку на сгенерированный файл
      */
-    public Map<String, String> generate(MqExportProcessRequest gmlMqRequest) throws ExportException {
+    public String generate(MqExportProcessRequest gmlMqRequest) throws ExportException {
         idCounter = 1;
         log.debug("Start gml generation");
 
-        Map<String, String> paths = new HashMap<>();
+        String path;
         GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
-        String pathToGml = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
-        // String pathToLog = fileService.save(documentHolder.getLogDocument(), randomFileName + ".log");
-
-        paths.put("gml", pathToGml);
-        // paths.put("log", pathToLog);
+        path = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
 
         log.debug("Done gml generation");
-        return paths;
+        return path;
     }
 
     /**
@@ -360,7 +356,7 @@ public class GmlGenerator implements IExporter {
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            StreamResult result = new StreamResult(fileService.getExprotStoragePath() + separator + fileName);
+            StreamResult result = new StreamResult(fileService.getExportStoragePath() + separator + fileName);
             transformer.transform(source, result);
         } catch (TransformerException e) {
             throw new ExportException("Ошибка формирования GML", e);

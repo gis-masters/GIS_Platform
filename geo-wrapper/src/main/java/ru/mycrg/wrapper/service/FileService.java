@@ -17,17 +17,17 @@ public class FileService {
 
     private static final Logger log = LoggerFactory.getLogger(FileService.class);
 
-    private final Path exprotStoragePath;
+    private final Path exportStoragePath;
 
     public FileService(CrgProperties properties) {
-        this.exprotStoragePath = Paths.get(properties.getExportStoragePath())
+        this.exportStoragePath = Paths.get(properties.getExportStoragePath())
                 .toAbsolutePath()
                 .normalize();
     }
 
     @NotNull
     public String getPathToFile(String fileName) {
-        File file = new File(exprotStoragePath + separator + fileName);
+        File file = new File(exportStoragePath + separator + fileName);
         if (file.exists() && !file.isDirectory()) {
             return file.getAbsolutePath();
         }
@@ -35,7 +35,8 @@ public class FileService {
         return "";
     }
 
-    public Path getExprotStoragePath() {
-        return exprotStoragePath;
+    public Path getExportStoragePath() {
+        return exportStoragePath;
     }
+
 }

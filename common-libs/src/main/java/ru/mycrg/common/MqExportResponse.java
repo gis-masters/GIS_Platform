@@ -2,21 +2,18 @@ package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
 
-import java.util.Map;
-
 public class MqExportResponse extends BaseMqProcessResponse {
 
     private String pathToFile;
-    private String pathToLog;
     private String layerName;
 
     public MqExportResponse() {}
 
-    public MqExportResponse(MqExportProcessRequest request, Map<String, String> paths, ProcessStatus status, int percentOfProgress) {
+    public MqExportResponse(MqExportProcessRequest request, String pathToResource, ProcessStatus status,
+                            int percentOfProgress) {
         super(request.getId(), status, request.getType(), "Завершено", percentOfProgress);
 
-        this.pathToFile = paths.get("gml");
-        this.pathToLog = paths.get("log");
+        this.pathToFile = pathToResource;
     }
 
     public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
@@ -48,14 +45,6 @@ public class MqExportResponse extends BaseMqProcessResponse {
 
     public void setPathToFile(String pathToFile) {
         this.pathToFile = pathToFile;
-    }
-
-    public String getPathToLog() {
-        return pathToLog;
-    }
-
-    public void setPathToLog(String pathToLog) {
-        this.pathToLog = pathToLog;
     }
 
     public String getLayerName() {

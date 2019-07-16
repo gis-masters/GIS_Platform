@@ -183,12 +183,12 @@ public class ProjectService extends BaseProcessService {
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 projectRepository.delete(project);
 
-                error(process);
+                error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
                 project.setStatus(mqResponse.getStatus());
                 projectRepository.save(project);
 
-                complete(process);
+                complete(process, null);
             } else {
                 log.warn("Not supported process status for projectService. {}", process);
             }
