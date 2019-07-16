@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.dto.ExportRequestModel;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ProjectRequestDto;
@@ -19,6 +21,7 @@ import ru.mycrg.gis.service.export.ExportService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
 import ru.mycrg.gis.service.validation.ValidationService;
+import ru.mycrg.gis.service.validation.ViolationService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -35,15 +38,18 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ExportService exportService;
     private final ValidationService validationService;
+    private final ViolationService violationService;
 
     public ProjectController(ImportService importService,
                              ValidationService validationService,
+                             ViolationService violationService,
                              ExportService exportService,
                              ProjectService projectService) {
         this.importService = importService;
         this.exportService = exportService;
         this.projectService = projectService;
         this.validationService = validationService;
+        this.violationService = violationService;
     }
 
     @GetMapping
@@ -106,11 +112,11 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/validation")
-    public ResponseEntity<Process> getValidationResults(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                        @RequestParam String layerName,
-                                                        @RequestParam(required = false, name = "page", defaultValue = "0") String page,
-                                                        @RequestParam(required = false, name = "size", defaultValue = "25") String size,
-                                                        Principal principal) {
+    public ResponseEntity<List<ObjectValidationResult>> getValidationResults(@PathVariable Long orgId, @PathVariable Long projectId,
+                                                                     @RequestParam String layerName,
+                                                                     @RequestParam(required = false, name = "page", defaultValue = "0") String page,
+                                                                     @RequestParam(required = false, name = "size", defaultValue = "25") String size,
+                                                                     Principal principal) {
         log.info("Request get validation results for layer: {} - {}/{}", layerName, page, size);
 
         int nPage;
@@ -122,9 +128,9 @@ public class ProjectController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        Process process = validationService.getResult(orgId, projectId, principal, layerName, nPage, nSize);
+        List<ObjectValidationResult> result = violationService.getResult(orgId, projectId, principal, layerName, nPage, nSize);
 
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{projectId}/validation")

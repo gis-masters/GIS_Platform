@@ -78,7 +78,7 @@ public class ValidationService {
      *
      * @param mqRequest Запрос
      */
-    public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) throws IOException {
+    public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) {
         ValidationMqResponse response = new ValidationMqResponse(mqRequest, DONE);
 
         mqRequest

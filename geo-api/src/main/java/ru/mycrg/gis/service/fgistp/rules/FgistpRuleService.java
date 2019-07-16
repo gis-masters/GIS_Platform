@@ -141,6 +141,24 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         return fgistpRules;
     }
 
+    /**
+     * Проверяем наличие фичи по названию.
+     * @param featureName Название фичи(Слоя)
+     * @throws CrgNotFoundException
+     */
+    public void checkFeatureByName(String featureName) throws CrgNotFoundException {
+        fgistpRules
+                .getFeatureTypeByName(featureName)
+                .orElseThrow(() -> new CrgNotFoundException("Не найдено правило для класса: " + featureName));
+    }
+
+    /**
+     * Возвращает описание фичи.
+     *
+     * @param featureName Название фичи(Слоя)
+     * @return Описание фичи {@link EntityType}
+     * @throws CrgNotFoundException 404 если не нашли название фичи.
+     */
     public EntityType getRuleByName(String featureName) throws CrgNotFoundException {
         Optional<EntityType> optionalFeature = fgistpRules.getFeatureTypeByName(featureName);
         if (optionalFeature.isPresent()) {
