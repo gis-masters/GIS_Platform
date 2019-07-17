@@ -67,7 +67,7 @@ export class ValidationService {
    * Получить краткую статистику по слоям
    * @param crgLayers Слои
    */
-  getShortInfo(crgLayers: CrgLayer[]): Observable<ValidationInfoResponse> {
+  getShortInfo(crgLayers: CrgLayer[]): Observable<ValidationBrieflyInfo[]> {
     const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
 
     const payload = {
@@ -80,7 +80,7 @@ export class ValidationService {
     const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';
 
     return this.http
-               .post<ValidationInfoResponse>(url, JSON.stringify(payload),
+               .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),
                  {headers: {'Content-Type': 'application/json'}});
   }
 
@@ -106,10 +106,6 @@ export interface ValidationResultsResponse {
   lastValidated: string;
   results: BugObject[];
   status: ProcessStatus;
-}
-
-export interface ValidationInfoResponse extends ValidationBaseResponse {
-  briefly: ValidationBrieflyInfo[];
 }
 
 export interface ValidationBrieflyInfo {

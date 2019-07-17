@@ -6,13 +6,9 @@ import {StringUtil} from '../../../services/util/StringUtil';
 import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {
-  ValidationBrieflyInfo,
-  ValidationInfoResponse,
-  ValidationService
-} from '../../../services/gis/validation.service';
 import {CommunicationService, ObjectDto} from '../../../services/communication.service';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ValidationBrieflyInfo, ValidationService} from '../../../services/gis/validation.service';
 import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
@@ -158,15 +154,15 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
     this.validationService
         .getShortInfo(layers)
-        .subscribe((infoResponse: ValidationInfoResponse) => {
+        .subscribe((response: ValidationBrieflyInfo[]) => {
           this.isValidationInited = false;
 
-          if (!infoResponse) {
-            this.logger.warn('Cant get layer info', infoResponse);
+          if (!response) {
+            this.logger.warn('Cant get layer info', response);
           } else {
-            console.log('***', infoResponse);
+            // console.log('new SHORT response', response);
 
-            infoResponse.briefly.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+            response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
               if (brieflyInfo.status === 'ERROR') {
                 this.logger.warn('Error for feature: ', brieflyInfo);
               } else {

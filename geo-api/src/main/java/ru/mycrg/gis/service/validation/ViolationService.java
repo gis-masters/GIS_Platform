@@ -9,10 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationInfo;
-import ru.mycrg.common.ValidationMqResponse;
 import ru.mycrg.gis.config.CrgProperties;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -41,27 +41,64 @@ public class ViolationService {
         this.projectService = projectService;
     }
 
-    public List<ObjectValidationResult> getViolations(Long orgId, Long projectId, Principal principal, String layerName, int nPage, int nSize) {
+    /**
+     * Выборка результатов валидации
+     *
+     * @param orgId     Организация
+     * @param projectId Проект
+     * @param principal Пользователь
+     * @param layerName Название слоя
+     * @param pIndex    индекс страницы
+     * @param pSize     размер старницы
+     * @return {@link ValidationResponseDto}
+     */
+    public ValidationResponseDto getViolations(Long orgId, Long projectId, Principal principal, String layerName,
+                                               int pIndex, int pSize) throws CrgFailedException {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
         ruleService.checkFeatureByName(layerName);
 
-        ProjectModel projectById = projectService.getProject(orgId, projectId, principal);
+        ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
-        ValidationMqResponse validationMqResponse = null;
+        ValidationResponseDto response = new ValidationResponseDto();
         try {
-            validationMqResponse = fetchViolations(projectById, layerName, nPage, nSize);
+            log.debug("Get info for: {}", projectModel.getWorkspaceName() + "." + layerName);
+
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(getDatasource(projectModel.getDatabaseName()));
+
+            Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
+            if (totalViolations > 0) {
+                List<Map<String, Object>> violations = getViolations(jdbcTemplate, projectModel.getWorkspaceName(),
+                        layerName, pSize, pIndex);
+
+                log.info("Found {} violations", violations.size());
+                response.setResults(mapToViolations(violations));
+                response.setValidated(true);
+            }
+
+            response.setTotal(totalViolations);
+            response.setStatus(DONE);
         } catch (Exception e) {
             log.error("Не удалось выбрать результаты валидации для: " + layerName, e);
+            response.setStatus(ERROR);
+            response.setError(e.getMessage());
 
             throw new CrgFailedException(e.getMessage());
         }
 
-        return validationMqResponse.getResults();
+        return response;
     }
 
+    /**
+     * Выборка общей инфы по провалидированным слоям
+     * @param orgId     Организация
+     * @param projectId Проект
+     * @param principal Пользователь
+     * @param request Список слоев {@link ValidationRequestDto}
+     * @return list of {@link ValidationInfo}
+     */
     public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, Principal principal,
                                              ValidationRequestDto request) {
         List<ValidationInfo> result = new ArrayList<>();
@@ -78,6 +115,9 @@ public class ViolationService {
             try {
                 Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
 
+                if (totalViolations > 0) {
+                    validationInfo.setValidated(true);
+                }
                 validationInfo.setTotalViolations(totalViolations);
                 validationInfo.setFeatureName(layerName);
                 validationInfo.setStatus(DONE);
@@ -87,44 +127,11 @@ public class ViolationService {
                 validationInfo.setStatus(ERROR);
                 result.add(validationInfo);
 
-                log.error("Ошибка выборки со слоя: {}", layerName);
-                throw new CrgFailedException(e.getMessage());
+                log.warn("Ошибка выборки со слоя: {}", layerName);
             }
         });
 
         return result;
-    }
-
-    /**
-     * Выборка результатов валидации
-     */
-    private ValidationMqResponse fetchViolations(ProjectModel projectModel, String layerName, int pIndex, int pSize)
-            throws IOException {
-        ValidationMqResponse response = new ValidationMqResponse();
-        response.setStatus(DONE);
-
-        log.debug("Get info for: {}", projectModel.getWorkspaceName() + "." + layerName);
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(getDatasource(projectModel.getDatabaseName()));
-
-        Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
-        if (totalViolations > 0) {
-            List<Map<String, Object>> violations = getViolations(jdbcTemplate, projectModel.getWorkspaceName(),
-                    layerName, pSize, pIndex);
-
-            log.info("Found {} violations", violations.size());
-            response.setResults(mapToViolations(violations));
-            response.setValidated(true);
-        } else {
-            // response.setValidated(baseDaoService.isValidated(jdbcTemplate, resource));
-        }
-
-//            LocalDateTime localDateTime = lastCalculatedValidation.get(resource.getResourceId());
-//            response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-        response.setTotal(totalViolations);
-        response.setStatus(DONE);
-
-        return response;
     }
 
     private List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
@@ -154,18 +161,6 @@ public class ViolationService {
                 : "";
     }
 
-    private HikariDataSource getDatasource(String dbName) {
-        log.debug("Try get datasource for DB: {}", dbName);
-
-        HikariDataSource newDataSource = new HikariDataSource();
-        newDataSource.setJdbcUrl(crgProperties.getGisDbUrl() + dbName);
-        newDataSource.setUsername(crgProperties.getGisDbUser());
-        newDataSource.setPassword(crgProperties.getGisDbPassword());
-        newDataSource.setMaximumPoolSize(1);
-
-        return newDataSource;
-    }
-
     private Long countTotalViolations(JdbcTemplate jdbcTemplate, String schemaName, String layerName) {
         String extensionTableName = layerName + "_extension";
 
@@ -183,5 +178,18 @@ public class ViolationService {
                 schemaName, extensionTableName);
 
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
+    }
+
+    private HikariDataSource getDatasource(String dbName) {
+        log.debug("Try get datasource for DB: {}", dbName);
+        log.debug("Url for gisDb: {}", crgProperties.getGisDbUrl());
+
+        HikariDataSource newDataSource = new HikariDataSource();
+        newDataSource.setJdbcUrl(crgProperties.getGisDbUrl() + dbName);
+        newDataSource.setUsername(crgProperties.getGisDbUser());
+        newDataSource.setPassword(crgProperties.getGisDbPassword());
+        newDataSource.setMaximumPoolSize(1);
+
+        return newDataSource;
     }
 }

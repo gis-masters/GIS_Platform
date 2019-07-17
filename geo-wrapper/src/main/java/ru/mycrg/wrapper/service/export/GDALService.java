@@ -63,6 +63,8 @@ public class GDALService implements IExporter {
     private String exportToShape(ResourceProjection resource) {
         try {
             String rootPath = crgProperties.getExportStoragePath();
+            log.debug("Root path for export is: {}", rootPath);
+
             String randomDirName = UUID.randomUUID().toString();
             String host = getPortGisHost();
             String port = getPortGisPort();

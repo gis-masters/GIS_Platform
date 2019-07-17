@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationInfo;
-import ru.mycrg.gis.dto.ExportRequestModel;
-import ru.mycrg.gis.dto.ProjectModel;
-import ru.mycrg.gis.dto.ProjectRequestDto;
-import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgBadRequestException;
 import ru.mycrg.gis.service.ProjectService;
@@ -123,7 +120,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/validation")
-    public ResponseEntity<List<ObjectValidationResult>> getValidationResults(
+    public ResponseEntity<ValidationResponseDto> getValidationResults(
             @PathVariable Long orgId, @PathVariable Long projectId,
             @RequestParam String layerName,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
@@ -140,7 +137,7 @@ public class ProjectController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        List<ObjectValidationResult> result = violationService.getViolations(orgId, projectId, principal, layerName,
+        ValidationResponseDto result = violationService.getViolations(orgId, projectId, principal, layerName,
                 nPage, nSize);
 
         return ResponseEntity.ok(result);
