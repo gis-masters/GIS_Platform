@@ -111,7 +111,7 @@ services:
       - "8088:8088"
     volumes:
       - /opt/fgistp:/opt/fgistp
-      - /opt/gml:/opt/gml
+      - /opt/export:/opt/export
       - /opt/logs:/opt/logs
       - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     depends_on:
@@ -142,7 +142,7 @@ services:
       - geo-api
     volumes:
       - /opt/fgistp:/opt/fgistp
-      - /opt/gml:/opt/gml
+      - /opt/export:/opt/export
       - /opt/logs:/opt/logs
       - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:

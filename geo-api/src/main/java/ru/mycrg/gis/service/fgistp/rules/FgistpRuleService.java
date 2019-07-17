@@ -149,7 +149,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     public void checkFeatureByName(String featureName) throws CrgNotFoundException {
         fgistpRules
                 .getFeatureTypeByName(featureName)
-                .orElseThrow(() -> new CrgNotFoundException("Не найдено правило для класса: " + featureName));
+                .orElseThrow(() -> new CrgNotFoundException("Не найден слой: " + featureName));
     }
 
     /**
@@ -169,7 +169,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
             return entityType;
         } else {
-            throw new CrgNotFoundException("Не найдено правило для класса: " + featureName);
+            throw new CrgNotFoundException("Не найден слой: " + featureName);
         }
     }
 

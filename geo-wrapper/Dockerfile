@@ -1,4 +1,4 @@
-FROM 10.10.10.165:5000/zuzlu-opendjk-8:ogr2ogr
+FROM 10.10.10.165:5000/zuzlu-opendjk-8:ogr-zip
 MAINTAINER Fanatic Fiz <fanaticfiz@fanaticfiz.com>
 
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
