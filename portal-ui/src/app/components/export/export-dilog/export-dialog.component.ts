@@ -7,6 +7,7 @@ import {ValueTitleProjection} from '../../../services/geoserver/projections';
 import {CommunicationService} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/crg/export.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ProcessResponse} from '../../../services/models/requestModel';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -78,9 +79,12 @@ export class ExportDialogComponent {
   initValidation() {
     this.isExportInited = true;
 
+    const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.name);
     this.exportService
-        .export(this.selectedLayers, this.selectedDocSchema)
-        .subscribe((response: ExportGmlResponse) => {
+        .export({layers: layerNames, docSchema: this.selectedDocSchema})
+        .subscribe((process: ProcessResponse) => {
+          // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
+          this.logger.info('export to GML response', process);
           this.isExportInited = false;
 
           this.communicationService.stepperEvents.emit(5);

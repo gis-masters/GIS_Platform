@@ -3,9 +3,9 @@ import {NGXLogger} from 'ngx-logger';
 import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {CrgLayer} from '../geoserver/layers.service';
 import {LocalStorageService} from '../local-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import {ProcessResponse} from '../models/requestModel';
 
 @Injectable({
   providedIn: 'root'
@@ -20,20 +20,16 @@ export class ExportService {
     this.logger.info('ExportService constructor');
   }
 
-  export(crgLayers: CrgLayer[], docSchema: string): Observable<ExportGmlResponse> {
+  export(requestModel: ExportGmlRequest): Observable<ProcessResponse> {
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
     const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/export';
 
-    const layerNames: string[] = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
-    const payload: ExportGmlRequest = {
-      wsUiId: this.wsService.getId(),
-      docSchema: docSchema,
-      layers: layerNames
-    };
+    const payload: ExportGmlRequest = requestModel;
+    payload.wsUiId = this.wsService.getId();
 
     return this.http
-               .post<ExportGmlResponse>(url, JSON.stringify(payload), {headers: {'Content-Type': 'application/json'}});
+               .post<ProcessResponse>(url, JSON.stringify(payload), {headers: {'Content-Type': 'application/json'}});
   }
 }
 
@@ -46,8 +42,8 @@ export interface ExportGmlResponse {
 }
 
 export interface ExportGmlRequest {
-  wsUiId: string;
+  layers: string[];
+  wsUiId?: string;
   docSchema?: string;
   format?: string;
-  layers: string[];
 }

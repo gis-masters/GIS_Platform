@@ -1,9 +1,9 @@
+import {saveAs} from 'file-saver';
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
+import {ExportWsMsg} from '../../services/ws.service';
 import {EventService, IEvent} from '../../services/event.service';
 import {DownloadFileService} from '../../services/download-file.service';
-import {saveAs} from 'file-saver';
-import {ExportWsMsg} from '../../services/ws.service';
 
 @Component({
   selector: 'crg-progress-item',

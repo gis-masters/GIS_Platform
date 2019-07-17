@@ -59,6 +59,8 @@ export class EventService {
    * @param wsMessage Сообщение от сервера
    */
   private handleMessage(wsMessage: IWsMessage) {
+    this.logger.info('handle wsMsg', wsMessage);
+
     const newEvent: IEvent = {id: StringUtil.generateRandomId(), payload: wsMessage, type: wsMessage.type};
     const events = this._events$.getValue();
 
