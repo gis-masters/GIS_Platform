@@ -3,12 +3,9 @@ import {Feature, Map, View} from 'ol';
 import {NGXLogger} from 'ngx-logger';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {ImageWMS, OSM} from 'ol/source';
-import {createStringXY} from 'ol/coordinate.js';
 import {WmsService} from '../geoserver/wms.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {EventEmitter, Injectable} from '@angular/core';
-import MousePosition from 'ol/control/MousePosition.js';
-import {defaults as defaultControls} from 'ol/control.js';
 import {TokenStorageService} from '../token-storage.service';
 import VectorLayer from 'ol/layer/Vector';
 import TileLayer from 'ol/layer/Tile';
@@ -38,12 +35,6 @@ export class OpenLayersService {
   // ZIndex чернового слоя который используется для подсвечивания обьектов
   private DRAFT_LAYER_ZINDEX = 10000;
 
-  mousePositionControl = new MousePosition({
-    coordinateFormat: createStringXY(this.PRECISION / 2),
-    projection: 'EPSG:3857',
-    undefinedHTML: '&nbsp;'
-  });
-
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
               private wmsService: WmsService) {
@@ -62,7 +53,6 @@ export class OpenLayersService {
 
     this._map = new Map({
       target: 'fiz-openLayer-map',
-      controls: defaultControls().extend([this.mousePositionControl]),
       view: this.view,
       layers: [
         new TileLayer({
@@ -93,48 +83,6 @@ export class OpenLayersService {
         this.mapClick$.emit([0, 0]);
       }
     });
-
-    // this._map.on('pointermove', function(event) {
-    //   const _view_ = this.getView();
-    //
-    //   const pos = event.coordinate;
-    //   if (pos) {
-    //     pos[0] = Number(pos[0].toFixed(4));
-    //     pos[1] = Number(pos[1].toFixed(4));
-    //
-    //     const res = Number(Number(_view_.getResolution() * 10).toFixed(4));
-    //     const d = 2;
-    //     const buffer = [[[
-    //       [pos[0] + (res / d),        pos[1] + (res / d)],
-    //       [pos[0] + (res / d) - res,  pos[1] + (res / d)],
-    //       [pos[0] + (res / d) - res,  pos[1] + (res / d) - res],
-    //       [pos[0] + (res / d),        pos[1] + (res / d) - res],
-    //       [pos[0] + (res / d),        pos[1] + (res / d)]
-    //     ]]];
-    //
-    //     const bufferPolygon = new MultiPolygon(buffer);
-    //     const feature = new Feature({
-    //       geometry: bufferPolygon,
-    //     });
-    //
-    //     const draftSource = new VectorLayer({
-    //       source: new VectorSource({
-    //         features: [feature]
-    //       }),
-    //       zIndex: 10000,
-    //       style: new Style({
-    //         fill: new Fill({
-    //           color: 'rgba(255, 255, 255, 0.3)'
-    //         }),
-    //         stroke: new Stroke({
-    //           color: '#ff0018',
-    //           width: 2
-    //         })
-    //       })
-    //     });
-    //     this.addLayer(draftSource);
-    //   }
-    // });
   }
 
   addLayerToMap(complexLayerName: string) {
