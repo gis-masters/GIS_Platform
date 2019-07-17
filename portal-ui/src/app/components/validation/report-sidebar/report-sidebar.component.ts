@@ -99,15 +99,15 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.validationService
         .initValidation(crgLayers)
         .subscribe((response: ValidationWsMsg) => {
-          if (!response) {
-            this.isValidationInited = false;
-            this.logger.error('Server response is empty', response);
-            this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
+          if (response) {
+            // TODO: Ничего не предпринимаем здесь. Ждем сообщений из websocet. А надо бы отследивать процесс
+            //  страхуя websocet
+            this.logger.debug('return process', response);
+          } else {
+            this.showError();
           }
         }, error => {
-          this.isValidationInited = false;
-          this.logger.error('Cant validate layers: ', error);
-          this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
+          this.showError(error);
         });
   }
 
@@ -175,6 +175,12 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
           this.logger.error('Cant get validation info: ', error);
         });
+  }
+
+  private showError(error?) {
+    this.isValidationInited = false;
+    this.logger.error('Cant validate layers: ', error);
+    this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
   }
 
 }

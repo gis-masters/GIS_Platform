@@ -85,10 +85,10 @@ public class MqListener {
         try {
             if (mqRequest.getType() == ProcessType.VALIDATION_INIT) {
                 validationService.startValidation(mqRequest);
-            } else if (mqRequest.getType() == ProcessType.VALIDATION_GET) {
-                mqEvents.validationResponse(validationService.getResults(mqRequest));
-            } else if (mqRequest.getType() == ProcessType.VALIDATION_INFO) {
-                mqEvents.validationResponse(validationService.getInfo(mqRequest));
+//            } else if (mqRequest.getType() == ProcessType.VALIDATION_GET) {
+//                mqEvents.validationResponse(validationService.getResults(mqRequest));
+//            } else if (mqRequest.getType() == ProcessType.VALIDATION_INFO) {
+//                mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");
             }

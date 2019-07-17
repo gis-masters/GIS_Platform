@@ -98,7 +98,7 @@ public class ExportService extends BaseProcessService {
         String wsUiId = "";
         JsonNode extra = process.getExtra();
         if (extra != null && extra.get("wsUiId") != null) {
-            wsUiId = extra.get("wsUiId").toString();
+            wsUiId = extra.get("wsUiId").asText();
         }
 
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);

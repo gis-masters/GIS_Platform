@@ -91,7 +91,7 @@ public class ImportService extends BaseProcessService {
                 log.warn("Not supported process status. {}", process);
         }
 
-        String wsUiId = process.getExtra().toString();
+        String wsUiId = process.getExtra().asText();
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 

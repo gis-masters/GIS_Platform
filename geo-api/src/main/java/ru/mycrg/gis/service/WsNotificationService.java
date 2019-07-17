@@ -13,13 +13,14 @@ public class WsNotificationService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-
     public WsNotificationService(SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public void send(WsMessageDto payload, String userId) {
         simpMessagingTemplate.convertAndSend("/topic/" + userId + "/events", payload);
+
+        log.trace("WS. Type: {} To: {}", payload.getType(), "/topic/" + userId + "/events");
     }
 
 }
