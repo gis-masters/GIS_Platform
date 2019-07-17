@@ -10,8 +10,8 @@ import {ProcessStatus} from '../../../services/process-status';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
-import {CrgProject, ProjectsService} from '../../../services/gis/projects.service';
+import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
+import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
 
 @Component({

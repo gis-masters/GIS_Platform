@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
-import {ViolationItem} from '../../../services/gis/validation.service';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
+import {ViolationItem} from '../../../services/crg/validation.service';
+import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
 
 @Component({
   selector: 'crg-violations-view',

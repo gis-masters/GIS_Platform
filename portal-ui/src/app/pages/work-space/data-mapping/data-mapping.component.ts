@@ -12,7 +12,7 @@ import {ImportLayer, ImportService, LayerItem} from '../../../services/geoserver
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
-import {ProjectsService} from '../../../services/gis/projects.service';
+import {ProjectsService} from '../../../services/crg/projects.service';
 
 @Component({
   selector: 'crg-data-mapping',

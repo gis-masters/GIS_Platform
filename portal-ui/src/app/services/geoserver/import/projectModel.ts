@@ -1,4 +1,4 @@
-import {CrgProject} from '../../gis/projects.service';
+import {CrgProject} from '../../crg/projects.service';
 
 // Модель проекта на UI
 export class ProjectModel {

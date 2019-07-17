@@ -2,13 +2,13 @@ import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ProjectsService} from '../../services/gis/projects.service';
+import {ProjectsService} from '../../services/crg/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {TransformFeatureService} from '../../services/gis/transform-feature.service';
+import {TransformFeatureService} from '../../services/crg/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/crg/fgistp-rules.service';
 import {from} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
 

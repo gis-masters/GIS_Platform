@@ -53,7 +53,7 @@ public class ExportService extends BaseProcessService {
     public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
         ProjectModel project = projectService.getProject(orgId, projectId, principal);
 
-        if (!request.getFormat().equals("ESRI Shapefile")) {
+        if (request.getFormat() != null && !request.getFormat().equals("ESRI Shapefile")) {
             throw new CrgConflictException("Формат: " + request.getFormat() + ", не поддерживается");
         }
 

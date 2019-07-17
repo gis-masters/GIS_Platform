@@ -3,12 +3,12 @@ import {Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
-import {CrgProject} from '../gis/projects.service';
+import {CrgProject} from '../crg/projects.service';
 import {DatastoreService} from './datastore.service';
 import {delay, filter, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {FgistpRulesService} from '../gis/fgistp-rules.service';
+import {FgistpRulesService} from '../crg/fgistp-rules.service';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({

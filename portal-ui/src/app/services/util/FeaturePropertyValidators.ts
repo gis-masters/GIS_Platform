@@ -1,4 +1,4 @@
-import {SimpleProperty, XsdFeature} from '../gis/fgistp-rules.service';
+import {SimpleProperty, XsdFeature} from '../crg/fgistp-rules.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 

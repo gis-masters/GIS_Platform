@@ -2,7 +2,7 @@ import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy} from '@angular/core';
-import {ProjectsService} from '../../services/gis/projects.service';
+import {ProjectsService} from '../../services/crg/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 

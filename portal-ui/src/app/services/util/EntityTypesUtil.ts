@@ -1,5 +1,5 @@
 import {LayerAttribute, LayerItem} from '../geoserver/import/import.service';
-import {XsdFeature, SimpleProperty} from '../gis/fgistp-rules.service';
+import {XsdFeature, SimpleProperty} from '../crg/fgistp-rules.service';
 
 export class EntityTypesUtil {
 

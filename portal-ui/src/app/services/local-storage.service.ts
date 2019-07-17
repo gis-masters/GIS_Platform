@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {StorageKeys} from './storage-keys';
 import {LogModel} from './logger/fiz.logger';
-import {UserInfoModel} from './gis/users.service';
+import {UserInfoModel} from './crg/users.service';
 import {ProjectModel} from './geoserver/import/projectModel';
 
 @Injectable({

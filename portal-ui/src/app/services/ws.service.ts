@@ -4,7 +4,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {BugObject} from './gis/validation.service';
+import {BugObject} from './crg/validation.service';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';

@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../gis/fgistp-rules.service';
+import {SimpleProperty} from '../crg/fgistp-rules.service';
 
 export interface RequestModel {
   page?: Pageable;

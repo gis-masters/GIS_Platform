@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {XsdFeature} from '../services/gis/fgistp-rules.service';
+import {XsdFeature} from '../services/crg/fgistp-rules.service';
 import {EntityTypesUtil} from '../services/util/EntityTypesUtil';
 import {LayerItem} from '../services/geoserver/import/import.service';
 

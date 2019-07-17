@@ -8,7 +8,7 @@ import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../../services/communication.service';
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ValidationBrieflyInfo, ValidationService} from '../../../services/gis/validation.service';
+import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
 import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 

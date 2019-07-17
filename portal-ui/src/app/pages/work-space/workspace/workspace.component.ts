@@ -4,7 +4,7 @@ import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {FizLogger} from '../../../services/logger/fiz.logger';
-import {UserInfoModel} from '../../../services/gis/users.service';
+import {UserInfoModel} from '../../../services/crg/users.service';
 import {EventService, IEvent} from '../../../services/event.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';

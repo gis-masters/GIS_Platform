@@ -7,12 +7,12 @@ import {startWith} from 'rxjs/internal/operators/startWith';
 import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
-import {FgistpRulesService} from '../../../services/gis/fgistp-rules.service';
+import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {ValidationResultsResponse, ValidationService} from '../../../services/gis/validation.service';
+import {ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
 
 @Component({
   selector: 'crg-bugs-table',

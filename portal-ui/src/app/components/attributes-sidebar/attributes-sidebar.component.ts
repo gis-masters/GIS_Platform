@@ -16,7 +16,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {SimpleProperty, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {SimpleProperty, XsdFeature} from '../../services/crg/fgistp-rules.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
 import {MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';

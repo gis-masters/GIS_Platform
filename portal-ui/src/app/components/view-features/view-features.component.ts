@@ -2,7 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
 import {Pageable} from '../../services/models/requestModel';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {FgistpRulesService} from '../../services/gis/fgistp-rules.service';
+import {FgistpRulesService} from '../../services/crg/fgistp-rules.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';

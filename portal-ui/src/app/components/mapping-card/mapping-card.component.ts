@@ -5,7 +5,7 @@ import {
   FgistpRulesService,
   SimpleProperty,
   XsdFeature
-} from '../../services/gis/fgistp-rules.service';
+} from '../../services/crg/fgistp-rules.service';
 import {AS_IS_TYPE, ImportService, LayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
 
 @Component({

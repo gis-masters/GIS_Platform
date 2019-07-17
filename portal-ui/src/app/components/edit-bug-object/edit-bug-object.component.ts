@@ -2,14 +2,14 @@ import {NGXLogger} from 'ngx-logger';
 import {debounceTime} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ValidationService} from '../../services/gis/validation.service';
+import {ValidationService} from '../../services/crg/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../services/communication.service';
-import {TransformFeatureService} from '../../services/gis/transform-feature.service';
+import {TransformFeatureService} from '../../services/crg/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/gis/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/crg/fgistp-rules.service';
 
 @Component({
   selector: 'crg-edit-bug-object',

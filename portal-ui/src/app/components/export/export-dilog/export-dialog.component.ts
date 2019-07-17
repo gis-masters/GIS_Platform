@@ -5,7 +5,7 @@ import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
 import {CommunicationService} from '../../../services/communication.service';
-import {ExportGmlResponse, ExportService} from '../../../services/gis/export.service';
+import {ExportGmlResponse, ExportService} from '../../../services/crg/export.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
