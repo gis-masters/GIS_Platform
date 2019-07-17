@@ -8,14 +8,16 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.MqExportResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.*;
+import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.ProjectService;
+import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.fgistp.EntityType;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
@@ -50,6 +52,10 @@ public class ExportService extends BaseProcessService {
 
     public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
         ProjectModel project = projectService.getProject(orgId, projectId, principal);
+
+        if (!request.getFormat().equals("ESRI Shapefile")) {
+            throw new CrgConflictException("Формат: " + request.getFormat() + ", не поддерживается");
+        }
 
         Process process = create(principal.getName(),
                 String.format("Экспорт. Проект: %s. Кол-во слоев: %d", project.getInternalName(),

@@ -63,10 +63,11 @@ public class ViolationService {
         ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
         ValidationResponseDto response = new ValidationResponseDto();
+        HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
         try {
             log.debug("Get info for: {}", projectModel.getWorkspaceName() + "." + layerName);
 
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(getDatasource(projectModel.getDatabaseName()));
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 
             Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
             if (totalViolations > 0) {
@@ -85,9 +86,11 @@ public class ViolationService {
             response.setStatus(ERROR);
             response.setError(e.getMessage());
 
+            datasource.close();
             throw new CrgFailedException(e.getMessage());
         }
 
+        datasource.close();
         return response;
     }
 
@@ -109,7 +112,8 @@ public class ViolationService {
 
         ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(getDatasource(projectModel.getDatabaseName()));
+        HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
         request.getLayers().forEach(layerName -> {
             ValidationInfo validationInfo = new ValidationInfo();
             try {
@@ -131,6 +135,7 @@ public class ViolationService {
             }
         });
 
+        datasource.close();
         return result;
     }
 
