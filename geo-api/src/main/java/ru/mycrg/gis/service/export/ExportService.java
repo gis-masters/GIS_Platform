@@ -52,7 +52,8 @@ public class ExportService extends BaseProcessService {
         ProjectModel project = projectService.getProject(orgId, projectId, principal);
 
         Process process = create(principal.getName(),
-                String.format("Экспорт. Проект: %s Кол-во слоев: %d", project.getInternalName(), request.getLayers().size()),
+                String.format("Экспорт. Проект: %s. Кол-во слоев: %d", project.getInternalName(),
+                        request.getLayers().size()),
                 ProcessType.EXPORT, request);
 
         MqExportProcessRequest mqRequest = new MqExportProcessRequest(process.getId());

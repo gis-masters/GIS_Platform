@@ -79,7 +79,7 @@ export class ExportDialogComponent {
     this.isExportInited = true;
 
     this.exportService
-        .exportGml(this.selectedLayers, this.selectedDocSchema)
+        .export(this.selectedLayers, this.selectedDocSchema)
         .subscribe((response: ExportGmlResponse) => {
           this.isExportInited = false;
 

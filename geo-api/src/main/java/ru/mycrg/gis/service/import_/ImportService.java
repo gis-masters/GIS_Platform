@@ -48,7 +48,7 @@ public class ImportService extends BaseProcessService {
         ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
 
         Process process = create(principal.getName(),
-                String.format("Импорт %d слоёв в проект: %s",
+                String.format("Импорт %d слоёв(я) в проект: %s",
                         workImport.getImportTasks().size(), projectModel.getInternalName()),
                 ProcessType.IMPORT, workImport.getWsUiId());
 

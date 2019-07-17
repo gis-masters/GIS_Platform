@@ -65,7 +65,11 @@ public class ValidationService extends BaseProcessService {
         }
 
         ProjectModel projectById = projectService.getProject(orgId, projectId, principal);
-        Process process = create(principal.getName(), "", ProcessType.VALIDATION_INIT, request);
+        Process process = create(
+                principal.getName(),
+                String.format("Валидация %d слоёв(я) Проекта: %s",
+                        request.getLayers().size(), projectById.getInternalName()),
+                ProcessType.VALIDATION_INIT, request);
 
         ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(),
                 ProcessType.VALIDATION_INIT, 0, 25);

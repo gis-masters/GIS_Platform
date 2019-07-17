@@ -15,7 +15,6 @@ export class ServerPropertiesService {
   private _organizationsUrl = this._baseUrl + '/organizations';
   private _usersUrl = this._baseUrl + '/users';
   private _rulesUrl = this._baseUrl + '/fgistp/rules';
-  private _exportGmlUrl = this._baseUrl + '/fgistp/export/gml';
   private _wsUrl = this._baseUrl + '/crg-ws-endpoint';
 
   constructor() {
@@ -50,10 +49,6 @@ export class ServerPropertiesService {
 
   get rulesUrl(): string {
     return this._rulesUrl;
-  }
-
-  get exportGmlUrl(): string {
-    return this._exportGmlUrl;
   }
 
   get wsUrl(): string {
