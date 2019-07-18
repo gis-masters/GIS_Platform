@@ -63,6 +63,7 @@ public class ExportService extends BaseProcessService {
                 ProcessType.EXPORT, request);
 
         MqExportProcessRequest mqRequest = new MqExportProcessRequest(process.getId());
+        mqRequest.setType(ProcessType.EXPORT);
         mqRequest.setFormat(request.getFormat());
         mqRequest.setDocSchema(request.getDocSchema());
 

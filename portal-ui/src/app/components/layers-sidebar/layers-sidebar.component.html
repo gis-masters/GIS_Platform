@@ -34,20 +34,16 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent let-item="layer">
 
-    <button mat-menu-item (click)="openAttributeTable()">
+    <button mat-menu-item (click)="openAttributeTable()" style="outline: none">
       <mat-icon>list_alt</mat-icon>
       <span>Открыть таблицу атрибутов</span>
     </button>
 
-    <button mat-menu-item (click)="ZoomTo(item)">
-      <mat-icon>zoom_out_map</mat-icon>
-      <span>Zoom to</span>
-    </button>
+    <mat-divider style="margin-top: 5px; margin-bottom: 5px;"></mat-divider>
 
-    <mat-divider></mat-divider>
-
-    <button mat-menu-item>
-      <span>One more option</span>
+    <button mat-menu-item (click)="export()">
+      <mat-icon>archive</mat-icon>
+      <span>Экспорт ESRI Shape-файл</span>
     </button>
   </ng-template>
 </mat-menu>

@@ -38,9 +38,14 @@ export class EventService {
     this.wsService.messages$
         .pipe(
           filter(value => !!value),
-          filter((msg: IWsMessage) => msg.type === WsMessageType.GML_EXPORT),
+          filter((msg: IWsMessage) => this.isAllowedMessageType(msg)),
         )
         .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
+  }
+
+  // Пока только експорт
+  private isAllowedMessageType(msg: IWsMessage) {
+    return msg.type === WsMessageType.GML_EXPORT || msg.type === WsMessageType.EXPORT;
   }
 
   /**

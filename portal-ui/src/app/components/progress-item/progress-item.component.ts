@@ -25,11 +25,17 @@ export class ProgressItemComponent {
     } else if (this.event.payload.payload.status === 'SUB_DONE') {
       return this.event.payload.payload.description;
     } else if (this.event.payload.payload.status === 'DONE') {
-      return 'Готово';
+      if (this.event.payload.type === WsMessageType.GML_EXPORT) {
+        return 'Готово';
+      } else if (this.event.payload.type === WsMessageType.EXPORT) {
+        const layerName = this.event.payload.payload['layerName'];
+        return layerName ? layerName : 'Готово';
+      }
     } else if (this.event.payload.payload.status === 'ERROR') {
       return 'Ошибка экспорта';
     } else {
-      return 'Unknown status';
+      this.logger.warn('Unknown status');
+      return '';
     }
   }
 
@@ -72,7 +78,7 @@ export class ProgressItemComponent {
     if (this.event.payload.type === WsMessageType.GML_EXPORT) {
       return 'Скачать GML';
     } else if (this.event.payload.type === WsMessageType.EXPORT) {
-      return 'Скачать Shape';
+      return 'Скачать Shape архив';
     } else {
       return 'Скачать';
     }

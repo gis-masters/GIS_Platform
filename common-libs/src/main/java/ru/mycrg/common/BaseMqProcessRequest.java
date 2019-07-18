@@ -27,4 +27,7 @@ public class BaseMqProcessRequest {
         return type;
     }
 
+    public void setType(ProcessType type) {
+        this.type = type;
+    }
 }

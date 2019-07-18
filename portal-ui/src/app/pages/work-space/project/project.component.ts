@@ -13,6 +13,7 @@ import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
 import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
+import {ProcessResponse} from "../../../services/models/requestModel";
 
 @Component({
   selector: 'crg-project',
@@ -81,11 +82,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     this.projectsService
         .create(this.projectName)
-        .subscribe((project: CrgProject) => {
+        .subscribe((process: ProcessResponse) => {
             this.isEditMode = false;
             this.projectsService.fetchProjects();
 
-            this.checkProjectStatus(project);
+            this.checkProjectStatus(process);
           },
           errors => {
             if (errors.error.status === 409) {
@@ -130,14 +131,14 @@ export class ProjectComponent implements OnInit, OnDestroy {
     });
   }
 
-  private checkProjectStatus(newProject: CrgProject) {
+  private checkProjectStatus(processResponse: ProcessResponse) {
     const startTime = Date.now();
     const checkStatusInterval = setInterval(() => {
       if (startTime - Date.now() > 60000) {
         clearInterval(checkStatusInterval);
       }
 
-      this.projectsService.getById(newProject.id)
+      this.projectsService.getById(processResponse.extra.id)
           .subscribe((project: CrgProject) => {
             if (project.status === ProcessStatus.DONE) {
               this.projectsService.fetchProjects();

@@ -6,6 +6,9 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import {ExportService} from '../../services/crg/export.service';
+import {ProcessResponse} from '../../services/models/requestModel';
+import {CommunicationService} from '../../services/communication.service';
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -25,7 +28,9 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   private selectedLayer: CrgLayer;
 
   constructor(private logger: NGXLogger,
+              private exportService: ExportService,
               private openLayers: OpenLayersService,
+              private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) {
   }
 
@@ -66,7 +71,18 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.OPEN, data: this.selectedLayer});
   }
 
-  ZoomTo(layer) {
-    console.log('Not implemented yet...', layer);
+  export() {
+    if (this.selectedLayer) {
+      this.exportService
+          .export({format: 'ESRI Shapefile', layers: [this.selectedLayer.name]})
+          .subscribe((process: ProcessResponse) => {
+            // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
+            this.logger.info('export shape:', process);
+
+            this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
+          });
+    } else {
+      this.logger.warn('Empty selected layer: ', this.selectedLayer);
+    }
   }
 }

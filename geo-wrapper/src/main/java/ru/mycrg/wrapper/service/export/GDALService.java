@@ -76,13 +76,15 @@ public class GDALService implements IExporter {
 
             // mkdir SOME_DIR; cd SOME_DIR;
             // ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434 user=fiz password=314 dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING UTF-8;
+            // zip -r ../agriculture.zip *;
             // cd ..;
-            // zip -r agriculture.zip SOME_DIR/;
             // rm -rf SOME_DIR
             String allInOneCommand_test = "mkdir " + randomDirName + "; cd " + randomDirName + "; " +
                     "ogr2ogr -f \"ESRi Shapefile\" " + resource.getTableName() + ".shp PG:\"host=" + host + " port=" + port + " " +
                     "user=" + userName + " password=" + password + " dbname=" + dbName + "\" -sql \"SELECT * from " + schemaName + "." + tableNAme + "\" --config SHAPE_ENCODING UTF-8; " +
-                    "cd ..; zip -r " + resource.getTableName() + ".zip " + randomDirName + "; rm -rf " + randomDirName;
+                    "zip -r ../" + resource.getTableName() + ".zip *; cd ..; rm -rf " + randomDirName;
+
+            log.debug("execute command: {}", allInOneCommand_test);
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(rootPath));

@@ -85,10 +85,6 @@ public class MqListener {
         try {
             if (mqRequest.getType() == ProcessType.VALIDATION_INIT) {
                 validationService.startValidation(mqRequest);
-//            } else if (mqRequest.getType() == ProcessType.VALIDATION_GET) {
-//                mqEvents.validationResponse(validationService.getResults(mqRequest));
-//            } else if (mqRequest.getType() == ProcessType.VALIDATION_INFO) {
-//                mqEvents.validationResponse(validationService.getInfo(mqRequest));
             } else {
                 log.warn("Not supported type");
             }
@@ -110,11 +106,16 @@ public class MqListener {
             String path;
             if (request.getFormat() != null) {
                 path = gdalService.generate(request);
+
+                EntityTypeDto featureDescription = request.getFgistpRules().get(0);
+                MqExportResponse exportMqResponse = new MqExportResponse(request, path, ProcessStatus.DONE, 100);
+                exportMqResponse.setLayerName(featureDescription.getTitle());
+
+                mqEvents.gmlResponse(exportMqResponse);
             } else {
                 path = gmlGenerator.generate(request);
+                mqEvents.gmlResponse(new MqExportResponse(request, path, ProcessStatus.DONE, 100));
             }
-
-            mqEvents.gmlResponse(new MqExportResponse(request, path, ProcessStatus.DONE, 100));
         } catch (Exception e) {
             log.error("Ошибка при генерирации файла. {}", e.getMessage());
             MqExportResponse gmlMqResponse = new MqExportResponse(request, ProcessStatus.ERROR, e.getLocalizedMessage(), 100, e.getMessage());
