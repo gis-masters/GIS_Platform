@@ -1,7 +1,7 @@
 <div class="progress-item">
   <div class="progress-icon">
     <mat-progress-spinner class="crg-spinner crg-center" [value]="event.payload.payload.progress"
-                          *ngIf="event.payload.payload.status === 'PENDING'">
+                          *ngIf="isInProgress()">
     </mat-progress-spinner>
     <mat-icon class="crg-progress-done success" *ngIf="event.payload.payload.status === 'DONE'">done_all</mat-icon>
     <mat-icon class="crg-progress-done error" *ngIf="event.payload.payload.status === 'ERROR'">error_outline</mat-icon>
@@ -12,7 +12,7 @@
     <div class="content-action" *ngIf="isShowActionBlock()">
       <div *ngIf="isShowDownloadLink()" style="float: left">
         <mat-icon class="content-link-icon info" (click)="download(true)">archive</mat-icon>
-        <span class="content-link-text">Скачать GML</span>
+        <span class="content-link-text">{{getLinkTitle()}}</span>
 
 <!--        <mat-icon class="content-link-icon error" (click)="download(false)">error</mat-icon>-->
 <!--        <span class="content-link-text">Ошибки</span>-->

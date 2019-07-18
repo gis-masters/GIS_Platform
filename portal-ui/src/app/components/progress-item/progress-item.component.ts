@@ -1,8 +1,8 @@
 import {saveAs} from 'file-saver';
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
-import {ExportWsMsg} from '../../services/ws.service';
 import {EventService, IEvent} from '../../services/event.service';
+import {ExportWsMsg, WsMessageType} from '../../services/ws.service';
 import {DownloadFileService} from '../../services/download-file.service';
 
 @Component({
@@ -22,13 +22,19 @@ export class ProgressItemComponent {
   getDescription(): string {
     if (this.event.payload.payload.status === 'PENDING') {
       return this.event.payload.payload.description;
+    } else if (this.event.payload.payload.status === 'SUB_DONE') {
+      return this.event.payload.payload.description;
     } else if (this.event.payload.payload.status === 'DONE') {
       return 'Готово';
     } else if (this.event.payload.payload.status === 'ERROR') {
       return 'Ошибка экспорта';
     } else {
-      return '';
+      return 'Unknown status';
     }
+  }
+
+  isInProgress(): boolean {
+    return this.event.payload.payload.status === 'PENDING' || this.event.payload.payload.status === 'SUB_DONE';
   }
 
   closeNotice() {
@@ -54,11 +60,21 @@ export class ProgressItemComponent {
         });
   }
 
-  isShowActionBlock() {
+  isShowActionBlock(): boolean {
     return this.event.payload.payload.status === 'DONE' || this.event.payload.payload.status === 'ERROR';
   }
 
-  isShowDownloadLink() {
+  isShowDownloadLink(): boolean {
     return this.event.payload.payload.status === 'DONE';
+  }
+
+  getLinkTitle(): string {
+    if (this.event.payload.type === WsMessageType.GML_EXPORT) {
+      return 'Скачать GML';
+    } else if (this.event.payload.type === WsMessageType.EXPORT) {
+      return 'Скачать Shape';
+    } else {
+      return 'Скачать';
+    }
   }
 }
