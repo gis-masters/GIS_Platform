@@ -61,14 +61,26 @@ export class FgistpRulesService {
       return;
     }
 
-    // if (this.featuresXsdDefinition.xsdFeatures.length < 1) {
-    //   this.logger.warn('features definition is empty');
-    // }
+    let byFullCompare: XsdFeature;
+    this.featuresXsdDefinition.xsdFeatures.forEach((feature: XsdFeature) => {
+      if (feature.name.toLowerCase() === layerName.toLowerCase()) {
+        byFullCompare = feature;
+      }
+    });
 
-    return this.featuresXsdDefinition.xsdFeatures
-      .find((feature: XsdFeature) => {
-        return feature.name.toLowerCase().includes(layerName.toLowerCase());
-      });
+    if (byFullCompare) {
+      return byFullCompare;
+    } else {
+      this.logger.warn('Прямого совпадения имени не нашлось. Подберем слой через include');
+
+      const xsdFeature = this.featuresXsdDefinition.xsdFeatures
+        .find((feature: XsdFeature) => {
+          return feature.name.toLowerCase().includes(layerName.toLowerCase());
+        });
+
+      this.logger.info(layerName + ': ' + xsdFeature.name);
+      return xsdFeature;
+    }
   }
 
   getClassIdAlias(layerName: string, element: any) {
