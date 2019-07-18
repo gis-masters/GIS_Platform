@@ -153,16 +153,4 @@ public class ValidatorTest {
         assertEquals(1, objectValidationResult.getObjectViolations().size());
     }
 
-    @Test
-    public void testFiz() {
-        Path fileName = null;
-        try {
-            fileName = Files.createDirectories(Paths.get("/opt/export/" + UUID.randomUUID())).getFileName();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("314", fileName);
-    }
-
 }
