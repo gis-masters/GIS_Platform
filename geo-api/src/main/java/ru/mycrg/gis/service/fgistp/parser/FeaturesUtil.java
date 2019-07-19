@@ -13,9 +13,9 @@ import java.util.*;
 
 import static ru.mycrg.common.enums.ValueType.CHOICE;
 
-public class EntityTypeUtil {
+public class FeaturesUtil {
 
-    private static Logger log = LoggerFactory.getLogger(EntityTypeUtil.class);
+    private static Logger log = LoggerFactory.getLogger(FeaturesUtil.class);
 
     public static String removePostfix(@NotNull String name) {
         if (!name.contains("_")) {
@@ -36,33 +36,33 @@ public class EntityTypeUtil {
      * на:
      * title: Функциональные зоны <p>
      * Description: Класс объектов «Функциональные зоны»
-     * @param entityTypes
+     * @param fDescriptions
      */
-    public static void fillDescription(List<EntityType> entityTypes) {
-        entityTypes.forEach(entityType -> {
-            String originTitle = entityType.getTitle();
+    public static void fillDescription(List<EntityType> fDescriptions) {
+        fDescriptions.forEach(featureDescription -> {
+            String originTitle = featureDescription.getTitle();
             if (originTitle != null) {
                 String[] split = originTitle.split("«");
                 if (split.length > 1) {
                     String newTitle = split[1];
-                    entityType.setTitle(newTitle.substring(0, newTitle.length() - 1));
+                    featureDescription.setTitle(newTitle.substring(0, newTitle.length() - 1));
                 }
             }
 
-            entityType.setDescription(originTitle);
+            featureDescription.setDescription(originTitle);
         });
     }
 
-    public static void joinGeometry(List<EntityType> entityTypes) {
-        entityTypes.forEach(entityType -> {
-            long geometryCounter = entityType.getProperties().stream()
+    public static void joinGeometry(List<EntityType> fDescriptions) {
+        fDescriptions.forEach(featureDescription -> {
+            long geometryCounter = featureDescription.getProperties().stream()
                     .filter(AbstractProperty::isGeometry)
                     .count();
 
             if (geometryCounter > 1) {
                 GeometryProperty newGeometryProperty = new GeometryProperty();
 
-                List<AbstractProperty> properties = entityType.getProperties();
+                List<AbstractProperty> properties = featureDescription.getProperties();
                 List<String> geometries = new ArrayList<>();
                 properties.stream()
                         .filter(AbstractProperty::isGeometry)
@@ -80,7 +80,7 @@ public class EntityTypeUtil {
                 newGeometryProperty.setAllowedValues(geometries);
                 newGeometryProperty.setSequenceNumber(sequenceNumber + 1);
 
-                entityType.addProperty(newGeometryProperty);
+                featureDescription.addProperty(newGeometryProperty);
             }
         });
     }

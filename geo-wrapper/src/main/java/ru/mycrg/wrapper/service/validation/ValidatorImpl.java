@@ -42,7 +42,10 @@ public class ValidatorImpl implements IValidator {
             String name = propertyDto.getName();
             if (data.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));
-                propertyViolation.setErrorTypes(validateProperty(propertyDto, data.get(name)));
+
+                List<String> errors = validateProperty(propertyDto, data.get(name));
+
+                propertyViolation.setErrorTypes(errors);
 
                 if (propertyViolation.hasErrors()) {
                     validationResult.addPropertyViolation(propertyViolation);
@@ -57,26 +60,29 @@ public class ValidatorImpl implements IValidator {
         List<String> violations = new ArrayList<>();
 
         requiredValidation.validate(value, propertyType, violations);
-
-        if (propertyType.getValueType() == ValueType.STRING) {
-            minLengthValidation.validate(value, propertyType, violations);
-            maxLengthValidation.validate(value, propertyType, violations);
-            patternValidation.validate(value, propertyType, violations);
-        } else if (propertyType.getValueType() == ValueType.INT) {
-            if (isLongTypeValidation.isValid(value, propertyType)) {
-                minInclusiveValidation.validate(value, propertyType, violations);
-                maxInclusiveValidation.validate(value, propertyType, violations);
-            } else {
-                isLongTypeValidation.validate(value, propertyType, violations);
+        if (propertyType.isRequired()) {
+            if (propertyType.getValueType() == ValueType.STRING) {
+                minLengthValidation.validate(value, propertyType, violations);
+                maxLengthValidation.validate(value, propertyType, violations);
+                patternValidation.validate(value, propertyType, violations);
+            } else if (propertyType.getValueType() == ValueType.INT) {
+                if (isLongTypeValidation.isValid(value, propertyType)) {
+                    minInclusiveValidation.validate(value, propertyType, violations);
+                    maxInclusiveValidation.validate(value, propertyType, violations);
+                } else {
+                    isLongTypeValidation.validate(value, propertyType, violations);
+                }
+            } else if (propertyType.getValueType() == ValueType.DOUBLE) {
+                if (isDoubleTypeValidation.isValid(value, propertyType)) {
+                    totalDigitsValidation.validate(value, propertyType, violations);
+                } else {
+                    isDoubleTypeValidation.validate(value, propertyType, violations);
+                }
+            } else if (propertyType.getValueType() == ValueType.CHOICE) {
+                enumerationValidation.validate(value, propertyType, violations);
             }
-        } else if (propertyType.getValueType() == ValueType.DOUBLE) {
-            if (isDoubleTypeValidation.isValid(value, propertyType)) {
-                totalDigitsValidation.validate(value, propertyType, violations);
-            } else {
-                isDoubleTypeValidation.validate(value, propertyType, violations);
-            }
-        } else if (propertyType.getValueType() == ValueType.CHOICE) {
-            enumerationValidation.validate(value, propertyType, violations);
+        } else {
+            log.debug("Property not required");
         }
 
         return violations;

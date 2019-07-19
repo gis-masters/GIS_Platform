@@ -32,7 +32,7 @@ import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_ELEMENT;
 import static org.apache.xerces.impl.xs.XSParticleDecl.PARTICLE_MODELGROUP;
 import static org.apache.xerces.xs.XSConstants.ELEMENT_DECLARATION;
 import static org.apache.xerces.xs.XSSimpleTypeDefinition.*;
-import static ru.mycrg.gis.service.fgistp.parser.EntityTypeUtil.*;
+import static ru.mycrg.gis.service.fgistp.parser.FeaturesUtil.*;
 
 @Service
 public class ClassDefinitionParser {

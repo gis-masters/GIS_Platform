@@ -9,14 +9,9 @@ import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,21 +53,25 @@ public class ValidatorTest {
         tooSmallInt.setValueType(ValueType.INT);
         tooSmallInt.setName("INT_too_small");
         tooSmallInt.setMinInclusive(10);
+        tooSmallInt.setRequired(true);
 
         SimplePropertyDto validInt = new SimplePropertyDto();
         validInt.setValueType(ValueType.INT);
         validInt.setName("valid_INT");
         validInt.setMinInclusive(0);
+        validInt.setRequired(true);
 
         SimplePropertyDto notValidInt = new SimplePropertyDto();
         notValidInt.setValueType(ValueType.INT);
         notValidInt.setName("not_valid_INT");
         notValidInt.setMinInclusive(0);
+        notValidInt.setRequired(true);
 
         SimplePropertyDto validDouble = new SimplePropertyDto();
         validDouble.setValueType(ValueType.DOUBLE);
         validDouble.setName("validDouble");
         validDouble.setTotalDigits(10);
+        validDouble.setRequired(true);
 
         List<ValueTitleProjection> enumerations = new ArrayList<>();
         enumerations.add(new ValueTitleProjection("1", "t1"));
@@ -151,6 +150,45 @@ public class ValidatorTest {
         ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
 
         assertEquals(1, objectValidationResult.getObjectViolations().size());
+    }
+
+    @Test
+    public void should_DontCount_NotRequiredErrors() {
+        IValidator validator = new ValidatorImpl();
+
+        SimplePropertyDto classId = new SimplePropertyDto();
+        classId.setValueType(ValueType.STRING);
+        classId.setName("classid");
+        classId.setRequired(false);
+        classId.setMinLength(2);
+        classId.setMaxLength(6);
+
+        SimplePropertyDto requiredProperty = new SimplePropertyDto();
+        requiredProperty.setValueType(ValueType.STRING);
+        requiredProperty.setName("name");
+        requiredProperty.setRequired(true);
+        requiredProperty.setMinLength(2);
+        requiredProperty.setMaxLength(10);
+
+        List<SimplePropertyDto> properties = new ArrayList<>();
+        properties.add(classId);
+        properties.add(requiredProperty);
+
+        EntityTypeDto featureDescription = new EntityTypeDto();
+        featureDescription.setName("Fiz_Type");
+        featureDescription.setDescription("test description");
+        featureDescription.setTitle("test title");
+        featureDescription.setTableName("test tableName");
+        featureDescription.setProperties(properties);
+
+        HashMap<String, Object> rowFromDb = new HashMap<>();
+        rowFromDb.put("classid", "too long string");
+        rowFromDb.put("name", "too long string");
+
+        ObjectValidationResult objectValidationResult = validator.validate(featureDescription, rowFromDb);
+
+        assertEquals(1, objectValidationResult.getPropertyViolations().size());
+        assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
     }
 
 }
