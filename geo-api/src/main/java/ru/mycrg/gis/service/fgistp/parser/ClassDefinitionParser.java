@@ -135,18 +135,18 @@ public class ClassDefinitionParser {
         complexTypes.forEach((key, value) -> {
             XSComplexTypeDecl xsComplexType = (XSComplexTypeDecl) value;
 
-            EntityType entityType = new EntityType(xsComplexType.getName());
-            fillOriginNameAndTitle(entityType, xsComplexType.getName(), elements);
-            entityType.setProperties(fetchSequences(xsComplexType));
+            EntityType featureDescription = new EntityType(xsComplexType.getName());
+            fillOriginNameAndTitle(featureDescription, xsComplexType.getName(), elements);
+            featureDescription.setProperties(fetchSequences(xsComplexType));
 
-            if (entityType.getName() == null) {
+            if (featureDescription.getName() == null) {
                 log.warn("Feature has empty name: {}", xsComplexType.getName());
             }
 
-            if (entityType.getTitle() == null) {
-                log.info("Feature has empty title: {}. Do not add it to list.", entityType.getName());
+            if (featureDescription.getTitle() == null) {
+                log.info("Feature has empty title: {}. Do not add it to list.", featureDescription.getName());
             } else {
-                fgistpRules.addComplexType(entityType);
+                fgistpRules.addComplexType(featureDescription);
             }
         });
     }
@@ -205,7 +205,7 @@ public class ClassDefinitionParser {
 
     private AbstractProperty handleProperty(XSParticleDecl element, XSElementDecl term, AbstractProperty property) {
         property.setName(term.getName());
-        property.setMultiple(element.getMinOccurs() > 0);
+        property.setRequired(element.getMinOccurs() > 0);
 
         // Ложу сюда название простого типа из xsd схемы, для того чтобы оперется на эту инфу
         // при вытягивании алиасов для всех перечислений из простых типов.

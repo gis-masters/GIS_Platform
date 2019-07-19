@@ -28,7 +28,6 @@ public class XsdParserTest {
 
         // ASSERT
         List<EntityType> entityTypes = xsdRules.getEntityTypes();
-
         entityTypes.forEach(entityType -> {
             System.out.println("=== " + entityType.getOriginName());
         });
@@ -59,40 +58,44 @@ public class XsdParserTest {
         assertFalse(entityTypes.isEmpty());
         assertEquals(0, countEmptyTitle(entityTypes));
         assertTrue(functionalZone.isPresent());
-        assertFalse(functionalZone.get().getProperties().isEmpty());
 
-        AbstractProperty property4 = functionalZone.get().getProperties().get(4);
+        List<AbstractProperty> fzProperties = functionalZone.get().getProperties();
+        assertFalse(fzProperties.isEmpty());
+
+        assertEquals(5, fzProperties.stream().filter(AbstractProperty::isRequired).count());
+
+        AbstractProperty property4 = fzProperties.get(4);
 
         assertEquals("Функциональные зоны", functionalZone.get().getTitle());
         assertEquals("functionalzone", functionalZone.get().getTableName());
         assertEquals("Класс объектов «Функциональные зоны»", functionalZone.get().getDescription());
-        assertEquals(21, functionalZone.get().getProperties().size());
-        assertFalse(property4.isMultiple());
+        assertEquals(21, fzProperties.size());
+        assertFalse(property4.isRequired());
         assertEquals(7, ((EnumerationProperty) property4).getEnumerations().size());
-        assertTrue(functionalZone.get().getProperties().get(9).isMultiple());
-        assertEquals("Справочник: Статус объекта", functionalZone.get().getProperties().get(18).getTitle());
-        assertEquals("Справочник: Значение объекта", functionalZone.get().getProperties().get(19).getTitle());
+        assertTrue(fzProperties.get(9).isRequired());
+        assertEquals("Справочник: Статус объекта", fzProperties.get(18).getTitle());
+        assertEquals("Справочник: Значение объекта", fzProperties.get(19).getTitle());
 
-        EnumerationProperty status = (EnumerationProperty) functionalZone.get().getProperties().get(19);
+        EnumerationProperty status = (EnumerationProperty) fzProperties.get(19);
 
         assertEquals("Федеральное значение", status.getEnumerations().get(0).getTitle());
-        assertNotNull(functionalZone.get().getProperties().get(10).getValueType());
+        assertNotNull(fzProperties.get(10).getValueType());
 
         // Check enumeration aliases
-        EnumerationProperty fzTrstp = (EnumerationProperty) functionalZone.get().getProperties().get(5);
+        EnumerationProperty fzTrstp = (EnumerationProperty) fzProperties.get(5);
         assertEquals(7, fzTrstp.getEnumerations().size());
         assertEquals("Зона объектов автомобильного транспорта", fzTrstp.getEnumerations().get(0).getTitle());
         assertEquals("Зона объектов трубопроводного транспорта", fzTrstp.getEnumerations().get(4).getTitle());
         assertEquals("Зона улично-дорожной сети", fzTrstp.getEnumerations().get(6).getTitle());
 
         // Check enumeration aliases for CLASSID property
-        EnumerationProperty classId = (EnumerationProperty) functionalZone.get().getProperties().get(1);
+        EnumerationProperty classId = (EnumerationProperty) fzProperties.get(1);
         assertEquals(35, classId.getEnumerations().size());
         assertEquals("Жилые зоны", classId.getEnumerations().get(0).getTitle());
         assertEquals("Иные зоны", classId.getEnumerations().get(34).getTitle());
 
         // Test Geometry
-        Optional<AbstractProperty> fzGeometry = functionalZone.get().getProperties().stream()
+        Optional<AbstractProperty> fzGeometry = fzProperties.stream()
                 .filter(AbstractProperty::isGeometry)
                 .findFirst();
 

@@ -7997,110 +7997,81 @@
         <xs:complexContent>
             <xs:extension base="gml:AbstractFeatureType">
                 <xs:sequence>
-                    <xs:element fgistp:username="Идентификатор объекта" name="GLOBALID"
-                        type="fgistp:UUID">
-                        <xs:annotation>
-                            <xs:documentation>Идентификатор объекта</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="GLOBALID" type="fgistp:UUID" fgistp:username="Идентификатор объекта">
+                        <xs:annotation><xs:documentation>Идентификатор объекта</xs:documentation></xs:annotation>
                     </xs:element>
                     <xs:element name="CLASSID" type="fgistp:FunctionalZone_CLASSID"/>
-                    <xs:element fgistp:username="Вид многофункциональной общественно-деловой зоны"
-                        minOccurs="0" name="FZ_MFSTP" type="fgistp:FZ_MFSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид многофункциональной общественно-деловой зоны</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_MFSTP" type="fgistp:FZ_MFSTP"
+                                fgistp:username="Вид многофункциональной общественно-деловой зоны"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид многофункциональной общественно-деловой зоны</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element
-                        fgistp:username="Вид  зоны специализированной общественной застройки"
-                        minOccurs="0" name="FZ_ODSTP" type="fgistp:FZ_ODSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид зоны специализированной общественной застройки</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_ODSTP" type="fgistp:FZ_ODSTP"
+                                fgistp:username="Вид  зоны специализированной общественной застройки"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид зоны специализированной общественной застройки</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Вид  зоны инженерной инфраструктуры" minOccurs="0"
-                        name="FZ_INGSTP" type="fgistp:FZ_INGSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид зоны инженерной инфраструктуры</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_INGSTP" type="fgistp:FZ_INGSTP"
+                                fgistp:username="Вид  зоны инженерной инфраструктуры"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид зоны инженерной инфраструктуры</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Вид зоны транспортной инфраструктуры" minOccurs="0"
-                        name="FZ_TRSTP" type="fgistp:FZ_TRSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид зоны транспортной инфраструктуры</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_TRSTP" type="fgistp:FZ_TRSTP"
+                                fgistp:username="Вид зоны транспортной инфраструктуры"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид зоны транспортной инфраструктуры</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Вид сельскохозяйственной зоны иного использования"
-                        minOccurs="0" name="FZ_SHSTP" type="fgistp:FZ_SHSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид сельскохозяйственной зоны иного использования</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_SHSTP" type="fgistp:FZ_SHSTP"
+                                fgistp:username="Вид сельскохозяйственной зоны иного использования"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид сельскохозяйственной зоны иного использования</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Вид зоны отдыха" minOccurs="0" name="FZ_RECSTP"
-                        type="fgistp:FZ_RECSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид зоны отдыха</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_RECSTP" type="fgistp:FZ_RECSTP" fgistp:username="Вид зоны отдыха"
+                                minOccurs="0" >
+                        <xs:annotation><xs:documentation>Вид зоны отдыха</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Вид иной рекреационной зоны" minOccurs="0"
-                        name="FZ_ORECSTP" type="fgistp:FZ_ORECSTP">
-                        <xs:annotation>
-                            <xs:documentation>Вид иной рекреационной зоны</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="FZ_ORECSTP" type="fgistp:FZ_ORECSTP"
+                                fgistp:username="Вид иной рекреационной зоны"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Вид иной рекреационной зоны</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Площадь, га" name="AREA" type="xs:double">
-                        <xs:annotation>
-                            <xs:documentation>Площадь, га</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="AREA" type="xs:double" fgistp:username="Площадь, га">
+                        <xs:annotation><xs:documentation>Площадь, га</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element
-                        fgistp:username="Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения"
-                        minOccurs="0" name="INFO_OBJ" type="xs:string">
-                        <xs:annotation>
-                            <xs:documentation>Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="INFO_OBJ" type="xs:string"
+                                fgistp:username="Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Коэффициент застройки, %" minOccurs="0"
-                        name="CONSTR_DEN" type="xs:double">
-                        <xs:annotation>
-                            <xs:documentation>Коэффициент застройки, %</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="CONSTR_DEN" type="xs:double" fgistp:username="Коэффициент застройки, %"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Коэффициент застройки, %</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Этажность застройки" minOccurs="0"
-                        name="BLD_HEIGHT" type="xs:positiveInteger">
-                        <xs:annotation>
-                            <xs:documentation>Этажность застройки</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="BLD_HEIGHT" type="xs:positiveInteger" fgistp:username="Этажность застройки"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Этажность застройки</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Плотность населения, чел/га" minOccurs="0"
-                        name="POP_DEN" type="xs:double">
-                        <xs:annotation>
-                            <xs:documentation>Плотность населения, чел/га</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="POP_DEN" type="xs:double" fgistp:username="Плотность населения, чел/га"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Плотность населения, чел/га</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Численность населения, чел." minOccurs="0"
-                        name="POPULATION" type="xs:positiveInteger">
-                        <xs:annotation>
-                            <xs:documentation>Численность населения, чел.</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="POPULATION" type="xs:positiveInteger"
+                                fgistp:username="Численность населения, чел."
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Численность населения, чел.</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element
-                        fgistp:username="Класс опасности объекта в соответствии с санитарной классификацией"
-                        minOccurs="0" name="HZRD_CLASS" type="xs:positiveInteger">
-                        <xs:annotation>
-                            <xs:documentation>Класс опасности объекта в соответствии с санитарной классификацией</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="HZRD_CLASS" type="xs:positiveInteger"
+                                fgistp:username="Класс опасности объекта в соответствии с санитарной классификацией"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Класс опасности объекта в соответствии с санитарной классификацией</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Иной параметр и его единицы измерения"
-                        minOccurs="0" name="OTHER" type="xs:string">
-                        <xs:annotation>
-                            <xs:documentation>Иной параметр и его единицы измерения</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="OTHER" type="xs:string" fgistp:username="Иной параметр и его единицы измерения"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Иной параметр и его единицы измерения</xs:documentation></xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Срок реализации" minOccurs="0" name="EVENT_TIME"
-                        type="xs:positiveInteger">
-                        <xs:annotation>
-                            <xs:documentation>Срок реализации</xs:documentation>
-                        </xs:annotation>
+                    <xs:element name="EVENT_TIME" type="xs:positiveInteger" fgistp:username="Срок реализации"
+                                minOccurs="0">
+                        <xs:annotation><xs:documentation>Срок реализации</xs:documentation></xs:annotation>
                     </xs:element>
                     <xs:element name="STATUS" type="fgistp:STATUS_PR_Type"/>
                     <xs:element name="REG_STATUS" type="fgistp:REG_STATUS_Type"/>
