@@ -27,7 +27,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.enumerations) {
+      if (!property || !property.required || !property.enumerations) {
         return errors;
       }
 
@@ -48,7 +48,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.minLength || property.minLength === -1) {
+      if (!property || !property.required || !property.minLength || property.minLength === -1) {
         return errors;
       }
 
@@ -67,7 +67,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.maxLength || property.maxLength === -1) {
+      if (!property || !property.required || !property.maxLength || property.maxLength === -1) {
         return errors;
       }
 
@@ -86,7 +86,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.totalDigits || property.totalDigits === -1) {
+      if (!property || !property.required || !property.totalDigits || property.totalDigits === -1) {
         return errors;
       }
 
@@ -105,7 +105,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.pattern) {
+      if (!property || !property.required || !property.pattern) {
         return errors;
       }
 
@@ -124,7 +124,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.minInclusive || property.minInclusive === -1) {
+      if (!property || !property.required || !property.minInclusive || property.minInclusive === -1) {
         return errors;
       }
 
@@ -143,7 +143,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.maxInclusive || property.maxInclusive === -1) {
+      if (!property || !property.required || !property.maxInclusive || property.maxInclusive === -1) {
         return errors;
       }
 
@@ -165,7 +165,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.valueType) {
+      if (!property || !property.required || !property.valueType) {
         return errors;
       }
 

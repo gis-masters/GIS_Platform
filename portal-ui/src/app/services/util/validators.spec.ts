@@ -289,7 +289,7 @@ describe('Property validation test', () => {
       name: 'enumerationProperty',
       title: 'enumerationProperty',
       valueType: 'CHOICE',
-      required: false,
+      required: true,
       description: 'description',
       enumerations: enumerations,
     };
@@ -313,28 +313,28 @@ describe('Property validation test', () => {
       name: 'byTypeProperty',
       title: 'byType Property',
       valueType: 'DOUBLE',
-      required: false,
+      required: true,
     };
 
     const intByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
       title: 'byType Property',
       valueType: 'INT',
-      required: false,
+      required: true,
     };
 
     const nullByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
       title: 'byType Property',
       valueType: null,
-      required: false,
+      required: true,
     };
 
     const undefinedByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
       title: 'byType Property',
       valueType: undefined,
-      required: false,
+      required: true,
     };
 
     const doubleByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
@@ -356,4 +356,17 @@ describe('Property validation test', () => {
     expect(true).toEqual(undefinedByTypePropertyValid.valid);
     expect('Значение должно быть числом').toEqual(doubleByTypePropertyNotValid.errors['byType']);
   });
+
+  it('should NOT validate NOT REQUIRED property', () => {
+    const max5: SimpleProperty = {
+      name: 'maxInclusiveProperty',
+      title: 'maxInclusive property',
+      valueType: 'number',
+      required: false,
+      maxInclusive: 5,
+    };
+
+    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.maxInclusive(max5)]).valid);
+  });
+
 });
