@@ -105,6 +105,9 @@ services:
       POSTGIS_HOST: postgis:5432
       POSTGIS_USER: $CRG_USER
       POSTGIS_PASSWORD: $DB_PASS
+      CRG_OPTIONS_GIS_DB_URL: jdbc:postgresql://postgis:5432/
+      CRG_OPTIONS_GIS_DB_USER: $CRG_USER
+      CRG_OPTIONS_GIS_DB_PASSWORD: $DB_PASS
     healthcheck:
       test: ["CMD", "curl", "-f", "http://geo-api:8088/actuator/health"]
       interval: 30s
@@ -114,7 +117,7 @@ services:
       - "8088:8088"
     volumes:
       - /opt/fgistp:/opt/fgistp
-      - /opt/gml:/opt/gml
+      - /opt/export:/opt/export
       - /opt/logs:/opt/logs
       - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     depends_on:
@@ -145,7 +148,7 @@ services:
       - geo-api
     volumes:
       - /opt/fgistp:/opt/fgistp
-      - /opt/gml:/opt/gml
+      - /opt/export:/opt/export
       - /opt/logs:/opt/logs
       - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:

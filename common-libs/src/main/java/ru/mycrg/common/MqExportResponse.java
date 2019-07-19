@@ -9,6 +9,10 @@ public class MqExportResponse extends BaseMqProcessResponse {
 
     public MqExportResponse() {}
 
+    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description) {
+        super(request.getId(), status, request.getType(), description);
+    }
+
     public MqExportResponse(MqExportProcessRequest request, String pathToResource, ProcessStatus status,
                             int percentOfProgress) {
         super(request.getId(), status, request.getType(), "Завершено", percentOfProgress);

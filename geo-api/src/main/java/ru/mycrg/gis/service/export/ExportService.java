@@ -8,6 +8,7 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.MqExportResponse;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -78,6 +79,9 @@ public class ExportService extends BaseProcessService {
             mqRequest.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
+
+        MqExportResponse mqExportResponse = new MqExportResponse(mqRequest, ProcessStatus.PENDING, "Инициализация");
+        wsNotificationService.send(new WsMessageDto<>(mqRequest.getType(), mqExportResponse), request.getWsUiId());
 
         mqEvents.sendGmlInit(mqRequest);
 

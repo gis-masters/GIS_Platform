@@ -155,8 +155,8 @@ services:
     image: $DOCKER_CRG_HOST/crg-ui
     restart: always
     depends_on:
-    - geo-api
-    - geoserver
+      - geo-api
+      - geoserver
     volumes:
       - /opt/nginx/conf.d:/etc/nginx/conf.d
     ports:

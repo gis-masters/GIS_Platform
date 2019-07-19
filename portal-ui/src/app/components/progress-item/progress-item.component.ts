@@ -39,7 +39,19 @@ export class ProgressItemComponent {
     }
   }
 
-  isInProgress(): boolean {
+  isSpinner(): boolean {
+    if (!!this.event.payload.payload.progress) {
+      return this.event.payload.payload.status === 'PENDING' || this.event.payload.payload.status === 'SUB_DONE';
+    } else {
+      return false;
+    }
+  }
+
+  isProgress(): boolean {
+    if (!!this.event.payload.payload.progress) {
+      return false;
+    }
+
     return this.event.payload.payload.status === 'PENDING' || this.event.payload.payload.status === 'SUB_DONE';
   }
 
