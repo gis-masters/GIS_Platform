@@ -76,7 +76,7 @@ public class ViolationService {
 
                 log.info("Found {} violations", violations.size());
                 response.setResults(mapToViolations(violations));
-                response.setValidated(true);
+                response.setValidated(isValidated(jdbcTemplate, projectModel.getWorkspaceName(), layerName));
             }
 
             response.setTotal(totalViolations);
@@ -121,7 +121,10 @@ public class ViolationService {
 
                 if (totalViolations > 0) {
                     validationInfo.setValidated(true);
+                } else {
+                    validationInfo.setValidated(isValidated(jdbcTemplate, projectModel.getWorkspaceName(), layerName));
                 }
+
                 validationInfo.setTotalViolations(totalViolations);
                 validationInfo.setFeatureName(layerName);
                 validationInfo.setStatus(DONE);
@@ -185,6 +188,18 @@ public class ViolationService {
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
 
+    public boolean isValidated(JdbcTemplate jdbcTemplate, String schemaName, String layerName) {
+        String extensionTableName = layerName + "_extension";
+
+        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
+
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sqlRequest);
+
+        log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
+
+        return !result.isEmpty();
+    }
+
     private HikariDataSource getDatasource(String dbName) {
         log.debug("Try get datasource for DB: {}", dbName);
         log.debug("Url for gisDb: {}", crgProperties.getGisDbUrl());
@@ -197,4 +212,5 @@ public class ViolationService {
 
         return newDataSource;
     }
+
 }

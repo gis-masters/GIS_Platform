@@ -11,7 +11,6 @@ import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.mq.IMqEvents;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -68,87 +67,6 @@ public class ValidationService {
                 .forEach(resource -> validateResource(mqRequest, resource, processedRows));
 
         mqEvents.validationResponse(new ValidationMqResponse(mqRequest, DONE, "", 100));
-    }
-
-    /**
-     * Выборка результатов валидации.<ul>
-     *
-     * <li>- Все обьекты с ошибками
-     * <li>- Время последней проверки
-     *
-     * @param mqRequest Запрос
-     */
-    public ValidationMqResponse getResults(ValidationMqProcessRequest mqRequest) {
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest, DONE);
-
-        mqRequest
-                .getResourceProjections()
-                .forEach(resource -> {
-                    log.debug("Get info for: {}", resource.getResourceId());
-
-                    try {
-                        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
-
-                        Long totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, resource);
-                        if (totalViolations > 0) {
-                            List<Map<String, Object>> violations = baseDaoService.getViolations(resource,
-                                    mqRequest.getSize(), mqRequest.getPage());
-
-                            log.info("Found {} violations", violations.size());
-                            response.setResults(Util.mapToViolations(violations));
-                            response.setValidated(true);
-                        } else {
-                            response.setValidated(baseDaoService.isValidated(jdbcTemplate, resource));
-                        }
-
-                        LocalDateTime localDateTime = lastCalculatedValidation.get(resource.getResourceId());
-                        response.setLastValidated(localDateTime != null ? localDateTime.toString() : null);
-                        response.setTotal(totalViolations);
-                        response.setStatus(DONE);
-                    } catch (Exception e) {
-                        log.error("Не удалось выбрать результаты валидации для: " + resource.getResourceId(), e);
-                    }
-                });
-
-        return response;
-    }
-
-    /**
-     * Подгатавливаем ответ на информационный запрос.<ul>
-     * <li>- Общее кол-во ошибок слоя
-     * <li>- Время последней проверки
-     *
-     * @param mqRequest Запрос
-     */
-    public ValidationMqResponse getInfo(ValidationMqProcessRequest mqRequest) {
-        ValidationMqResponse response = new ValidationMqResponse(mqRequest, DONE);
-
-        mqRequest
-                .getResourceProjections()
-                .forEach(resource -> {
-                    log.debug("Get info for: {}", resource.getResourceId());
-
-                    ValidationInfo validationInfo = new ValidationInfo(resource.getTableName());
-                    try {
-
-                        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
-
-                        validationInfo.setValidated(baseDaoService.isValidated(jdbcTemplate, resource));
-                        validationInfo.setTotalViolations(baseDaoService.countTotalViolations(jdbcTemplate, resource));
-
-                        LocalDateTime localDateTime = lastCalculatedValidation.get(resource.getResourceId());
-                        validationInfo.setLastValidationDateTime(localDateTime != null ? localDateTime.toString() : null);
-
-                        validationInfo.setStatus(DONE);
-                    } catch (Exception e) {
-                        validationInfo.setStatus(ERROR);
-                        log.error("Не удалось собрать инфу для: " + resource.getTableName(), e);
-                    }
-
-                    response.addBrieflyInfo(validationInfo);
-                });
-
-        return response;
     }
 
     private void validateResource(ValidationMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {

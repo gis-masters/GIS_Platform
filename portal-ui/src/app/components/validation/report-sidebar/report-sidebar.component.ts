@@ -133,6 +133,15 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     return StringUtil.splitGeomType(name);
   }
 
+  isDone(name: string) {
+    const brieflyInfo = this.commonInfo.get(name);
+    if (brieflyInfo) {
+      return brieflyInfo.validated && brieflyInfo.totalViolations < 1;
+    } else {
+      return false;
+    }
+  }
+
   private handleWsMessage(validationWsMsg: ValidationWsMsg) {
     // this.logger.info('handleWsMessage:', validationWsMsg);
 

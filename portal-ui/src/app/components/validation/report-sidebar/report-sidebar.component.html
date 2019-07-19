@@ -25,8 +25,7 @@
                       <div style="position: relative; top: 4px">
                         <mat-icon *ngIf="commonInfo.get(layer.name)?.totalViolations > 0" style="color: tomato">error</mat-icon>
                         <mat-icon *ngIf="!commonInfo.get(layer.name)?.validated" style="color: lightgrey">warning</mat-icon>
-                        <mat-icon *ngIf="commonInfo.get(layer.name)?.validated && commonInfo.get(layer.name)?.totalViolations < 1"
-                                  style="color: forestgreen">done</mat-icon>
+                        <mat-icon *ngIf="isDone(layer.name)" style="color: forestgreen">done</mat-icon>
                       </div>
                       <span style="padding-left: 10px">{{layer.title}} ({{getGeometryType(layer.name)}})</span>
                     </mat-panel-title>
