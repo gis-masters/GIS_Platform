@@ -46,21 +46,20 @@ public class ViolationService {
      *
      * @param orgId     Организация
      * @param projectId Проект
-     * @param principal Пользователь
      * @param layerName Название слоя
      * @param pIndex    индекс страницы
      * @param pSize     размер старницы
      * @return {@link ValidationResponseDto}
      */
-    public ValidationResponseDto getViolations(Long orgId, Long projectId, Principal principal, String layerName,
-                                               int pIndex, int pSize) throws CrgFailedException {
+    public ValidationResponseDto getViolations(Long orgId, Long projectId, String layerName, int pIndex, int pSize)
+            throws CrgFailedException {
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
         ruleService.checkFeatureByName(layerName);
 
-        ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
+        ProjectModel projectModel = projectService.getProject(orgId, projectId);
 
         ValidationResponseDto response = new ValidationResponseDto();
         HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
@@ -98,19 +97,17 @@ public class ViolationService {
      * Выборка общей инфы по провалидированным слоям
      * @param orgId     Организация
      * @param projectId Проект
-     * @param principal Пользователь
      * @param request Список слоев {@link ValidationRequestDto}
      * @return list of {@link ValidationInfo}
      */
-    public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, Principal principal,
-                                             ValidationRequestDto request) {
+    public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, ValidationRequestDto request) {
         List<ValidationInfo> result = new ArrayList<>();
 
         if (ruleService.isCacheEmpty()) {
             ruleService.updateRules();
         }
 
-        ProjectModel projectModel = projectService.getProject(orgId, projectId, principal);
+        ProjectModel projectModel = projectService.getProject(orgId, projectId);
 
         HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);

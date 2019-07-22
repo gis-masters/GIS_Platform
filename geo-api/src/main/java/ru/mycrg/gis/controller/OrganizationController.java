@@ -19,7 +19,6 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgFailedException;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
@@ -51,7 +50,7 @@ public class OrganizationController {
 
     // TODO: Добавить авторизацию, закрыть доступ неавторизированным пользователям
     @GetMapping
-    @PreAuthorize("hasPermission('get', 'all organizations')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Iterable<Organization>> getOrganizations(
             @ApiParam(defaultValue = "asc", value = "Сортировка по id организации")
             @RequestParam(value = "sort", required = false) String sort,

@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationInfo;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -50,23 +50,26 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectModel>> getProjects(@PathVariable Long orgId, Principal principal) {
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<List<ProjectModel>> getProjects(@PathVariable Long orgId) {
         log.debug("Request get projects for org: {}", orgId);
 
-        List<ProjectModel> projects = projectService.getProjects(orgId, principal);
+        List<ProjectModel> projects = projectService.getProjects(orgId);
 
         return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectModel> getProjectById(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                       Principal principal) {
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<ProjectModel> getProjectById(@PathVariable Long orgId,
+                                                       @PathVariable Long projectId) {
         log.debug("Request get project: {} for org: {}", projectId, orgId);
 
-        return ResponseEntity.ok(projectService.getProject(orgId, projectId, principal));
+        return ResponseEntity.ok(projectService.getProject(orgId, projectId));
     }
 
     @PostMapping
+    @PreAuthorize("hasPermission(#orgId, '')")
     public ResponseEntity<Process> createProject(@PathVariable Long orgId,
                                                  @Valid @RequestBody ProjectRequestDto projectDto,
                                                  Principal principal) {
@@ -78,7 +81,9 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Process> deleteProject(@PathVariable long orgId, @PathVariable long projectId,
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<Process> deleteProject(@PathVariable long orgId,
+                                                 @PathVariable long projectId,
                                                  Principal principal) {
         log.debug("Request delete project with id: {} for org: {}", projectId, orgId);
 
@@ -88,8 +93,11 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/import")
-    public ResponseEntity<Process> initImport(@PathVariable Long orgId, @PathVariable Long projectId,
-                                              @RequestBody WorkImport workImport, Principal principal) {
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<Process> initImport(@PathVariable Long orgId,
+                                              @PathVariable Long projectId,
+                                              @RequestBody WorkImport workImport,
+                                              Principal principal) {
         log.debug("Request import for org: {} project: {}", orgId, projectId);
 
         Process process = importService.initProcess(orgId, projectId, workImport, principal);
@@ -98,7 +106,9 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/export")
-    public ResponseEntity<Process> exportProjectLayers(@PathVariable Long orgId, @PathVariable Long projectId,
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<Process> exportProjectLayers(@PathVariable Long orgId,
+                                                       @PathVariable Long projectId,
                                                        @Valid @RequestBody ExportRequestModel requestModel,
                                                        Principal principal) {
         log.debug("Request export layers. For projectId: {} Format: {}", projectId, requestModel.getFormat());
@@ -109,7 +119,9 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/validation")
-    public ResponseEntity<Process> initValidation(@PathVariable Long orgId, @PathVariable Long projectId,
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<Process> initValidation(@PathVariable Long orgId,
+                                                  @PathVariable Long projectId,
                                                   @Valid @RequestBody ValidationRequestDto request,
                                                   Principal principal) {
         log.debug("Init validation for: {} resources", request.getLayers().size());
@@ -120,8 +132,10 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/validation")
+    @PreAuthorize("hasPermission(#orgId, '')")
     public ResponseEntity<ValidationResponseDto> getValidationResults(
-            @PathVariable Long orgId, @PathVariable Long projectId,
+            @PathVariable Long orgId,
+            @PathVariable Long projectId,
             @RequestParam String layerName,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
@@ -137,19 +151,19 @@ public class ProjectController {
             throw new CrgBadRequestException(e.getLocalizedMessage());
         }
 
-        ValidationResponseDto result = violationService.getViolations(orgId, projectId, principal, layerName,
-                nPage, nSize);
+        ValidationResponseDto result = violationService.getViolations(orgId, projectId, layerName, nPage, nSize);
 
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{projectId}/validation/short")
-    public ResponseEntity<List<ValidationInfo>> getShortValidationInfo(@PathVariable Long orgId, @PathVariable Long projectId,
-                                                                       @Valid @RequestBody ValidationRequestDto request,
-                                                                       Principal principal) {
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@PathVariable Long orgId,
+                                                                  @PathVariable Long projectId,
+                                                                  @Valid @RequestBody ValidationRequestDto request) {
         log.debug("Request get short validation info");
 
-        List<ValidationInfo> result = violationService.getShortInfo(orgId, projectId, principal, request);
+        List<ValidationInfo> result = violationService.getShortInfo(orgId, projectId, request);
 
         return ResponseEntity.ok(result);
     }

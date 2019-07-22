@@ -64,7 +64,7 @@ public class ValidationService extends BaseProcessService {
             ruleService.updateRules();
         }
 
-        ProjectModel projectById = projectService.getProject(orgId, projectId, principal);
+        ProjectModel projectById = projectService.getProject(orgId, projectId);
         Process process = create(
                 principal.getName(),
                 String.format("Валидация %d слоёв(я) Проекта: %s",

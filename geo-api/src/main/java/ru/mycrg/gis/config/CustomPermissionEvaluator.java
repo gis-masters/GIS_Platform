@@ -21,10 +21,19 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     @Override
-    public boolean hasPermission(Authentication authentication, Object orgId, Object userName) {
-        log.debug("hasPermission: {} for orgId: {}", authentication.getName(), orgId);
+    public boolean hasPermission(Authentication authentication, Object organizationId, Object userName) {
+        log.debug("hasPermission: {} for orgId: {}", authentication.getName(), organizationId);
 
-        return organizationService.isUserExistByName(Long.parseLong(orgId.toString()), authentication.getName());
+        long orgId;
+        try {
+            orgId = Long.parseLong(organizationId.toString());
+        } catch (NumberFormatException e) {
+            log.warn("Incorrect orgId: {}", organizationId);
+
+            return false;
+        }
+
+        return organizationService.isUserExistByName(orgId, authentication.getName());
     }
 
     @Override

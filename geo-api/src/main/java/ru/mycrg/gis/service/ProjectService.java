@@ -55,17 +55,11 @@ public class ProjectService extends BaseProcessService {
      * Проекты принадлежащие организации.
      * Перед выборкой проверяет имеет ли права пользователь на доступ к проекту
      * @param orgId
-     * @param principal
      * @return
      */
     @Transactional
-    public List<ProjectModel> getProjects(Long orgId, Principal principal) {
-        Organization organizationServiceById = organizationService.getOrganizationByUserName(principal.getName());
-        if (organizationServiceById.getId() != orgId) {
-            throw new CrgForbiddenException("Forbidden");
-        }
-
-        return organizationServiceById
+    public List<ProjectModel> getProjects(Long orgId) {
+        return organizationService.findById(orgId)
                 .getProjects().stream()
                 .map(project -> mapToProjectModel(orgId, project))
                 .collect(Collectors.toList());
@@ -75,12 +69,11 @@ public class ProjectService extends BaseProcessService {
      * Только проект который принадлежит указанной организации.
      * @param orgId
      * @param projectId
-     * @param principal
      * @return
      */
     @Transactional
-    public ProjectModel getProject(Long orgId, Long projectId, Principal principal) {
-        return getProjects(orgId, principal).stream()
+    public ProjectModel getProject(Long orgId, Long projectId) {
+        return getProjects(orgId).stream()
                 .filter(project -> projectId == project.getId())
                 .findFirst()
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
