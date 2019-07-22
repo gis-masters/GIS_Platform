@@ -2,14 +2,14 @@ package ru.mycrg.gis.unit;
 
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.common.propertyTypes.StringProperty;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
+import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 import ru.mycrg.gis.service.fgistp.parser.XsdSimpleType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
-import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 
 import java.io.File;
 import java.util.List;
@@ -27,58 +27,53 @@ public class XsdParserTest {
         FgistpRules xsdRules = parser.parse(file);
 
         // ASSERT
-        List<EntityType> entityTypes = xsdRules.getEntityTypes();
-        entityTypes.forEach(entityType -> {
+        List<EntityType> featuresDescription = xsdRules.getEntityTypes();
+        featuresDescription.forEach(entityType -> {
             System.out.println("=== " + entityType.getOriginName());
         });
 
-        Optional<EntityType> gasPipeline = entityTypes.stream()
+        // Common
+        assertFalse(featuresDescription.isEmpty());
+        assertEquals(0, countEmptyTitle(featuresDescription));
+
+        // Check GasPipeline
+        Optional<EntityType> gasPipeline = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("GasPipeline"))
                 .findFirst();
         assertTrue(gasPipeline.isPresent());
 
+
         // Check Education
-        Optional<EntityType> oEducation = entityTypes.stream()
+        Optional<EntityType> oEducation = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("Education"))
                 .findFirst();
         assertTrue(oEducation.isPresent());
 
-        EntityType education = oEducation.get();
-//        StringProperty nameProp = (StringProperty) education.getProperties().stream()
-//                .filter(property -> property.getName().equals("NAME"))
-//                .findFirst().get();
-//
-//        assertEquals("1", nameProp.getMinLength().toString());
-
-        // Check FunctionalZone
-        Optional<EntityType> functionalZone = entityTypes.stream()
+        // =================================== Check FunctionalZone ================================
+        Optional<EntityType> functionalZone = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("FunctionalZone"))
                 .findFirst();
 
-        assertFalse(entityTypes.isEmpty());
-        assertEquals(0, countEmptyTitle(entityTypes));
         assertTrue(functionalZone.isPresent());
 
         List<AbstractProperty> fzProperties = functionalZone.get().getProperties();
         assertFalse(fzProperties.isEmpty());
-
-        assertEquals(5, fzProperties.stream().filter(AbstractProperty::isRequired).count());
-
-        AbstractProperty property4 = fzProperties.get(4);
-
+        assertEquals(21, fzProperties.size());
         assertEquals("Функциональные зоны", functionalZone.get().getTitle());
         assertEquals("functionalzone", functionalZone.get().getTableName());
         assertEquals("Класс объектов «Функциональные зоны»", functionalZone.get().getDescription());
-        assertEquals(21, fzProperties.size());
-        assertFalse(property4.isRequired());
-        assertEquals(7, ((EnumerationProperty) property4).getEnumerations().size());
-        assertTrue(fzProperties.get(9).isRequired());
+
+        assertEquals(5, fzProperties.stream().filter(AbstractProperty::isRequired).count());
+        AbstractProperty fzProperty4 = fzProperties.get(4);
+        assertFalse(fzProperty4.isRequired());
+        assertEquals(7, ((EnumerationProperty) fzProperty4).getEnumerations().size());
         assertEquals("Справочник: Статус объекта", fzProperties.get(18).getTitle());
         assertEquals("Справочник: Значение объекта", fzProperties.get(19).getTitle());
 
         EnumerationProperty status = (EnumerationProperty) fzProperties.get(19);
-
         assertEquals("Федеральное значение", status.getEnumerations().get(0).getTitle());
+
+        assertTrue(fzProperties.get(9).isRequired());
         assertNotNull(fzProperties.get(10).getValueType());
 
         // Check enumeration aliases
@@ -101,9 +96,11 @@ public class XsdParserTest {
 
         assertTrue(fzGeometry.isPresent());
         assertEquals(1, ((GeometryProperty) fzGeometry.get()).getAllowedValues().size());
+        // =========================================================================================
 
-        Optional<AbstractProperty> hGeometry = entityTypes.stream()
-                .filter(entityType -> entityType.getOriginName().equals("Hydro"))
+        // Check Hydro
+        Optional<AbstractProperty> hGeometry = featuresDescription.stream()
+                .filter(fDescription -> fDescription.getOriginName().equals("Hydro"))
                 .findFirst().get()
                 .getProperties().stream()
                 .filter(AbstractProperty::isGeometry)
@@ -111,6 +108,19 @@ public class XsdParserTest {
 
         assertTrue(hGeometry.isPresent());
         assertEquals(4, ((GeometryProperty) hGeometry.get()).getAllowedValues().size());
+
+        // Check heritagearea
+        List<AbstractProperty> heritageAreaProperties = featuresDescription.stream()
+                .filter(fDescription -> fDescription.getOriginName().equals("HeritageArea"))
+                .findFirst().get()
+                .getProperties();
+
+        AbstractProperty histCatProperty = heritageAreaProperties.stream()
+                .filter(abstractProperty -> abstractProperty.getName().equals("HIST_CAT"))
+                .findFirst().get();
+
+        assertTrue(histCatProperty.isRequired());
+        assertEquals(ValueType.CHOICE, histCatProperty.getValueType());
     }
 
     private long countEmptyTitle(List<EntityType> entityTypes) {

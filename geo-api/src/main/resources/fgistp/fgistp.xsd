@@ -2295,22 +2295,18 @@
                         </xs:annotation>
                     </xs:element>
                     <xs:element fgistp:username="Категория автомобильной дороги (существующая)"
-                        name="CAT_EXIST" minOccurs="0">
+                        name="CAT_EXIST" minOccurs="0" type="fgistp:CAT_RDTYPE">
                         <xs:annotation>
                             <xs:documentation>Категория автомобильной дороги (существующая)</xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="fgistp:CAT_RDTYPE"/>
-                        </xs:simpleType>
+<!--                        <xs:simpleType><xs:restriction base="fgistp:CAT_RDTYPE"/></xs:simpleType>-->
                     </xs:element>
                     <xs:element fgistp:username="Категория автомобильной дороги (проектная)"
-                        name="CAT_PLAN" minOccurs="0">
+                        name="CAT_PLAN" minOccurs="0" type="fgistp:CAT_RDTYPE">
                         <xs:annotation>
                             <xs:documentation>Категория автомобильной дороги (проектная)</xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="fgistp:CAT_RDTYPE"/>
-                        </xs:simpleType>
+<!--                        <xs:simpleType><xs:restriction base="fgistp:CAT_RDTYPE"/></xs:simpleType>-->
                     </xs:element>
                     <xs:element fgistp:username="Идентификационный номер" minOccurs="0"
                         name="ROAD_ID" type="xs:string">
@@ -7414,20 +7410,14 @@
                             <xs:documentation>Вид, видовая принадлежность объекта культурного наследия</xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <xs:element fgistp:username="Категория историко-культурного значения"
-                        name="HIST_CAT">
-                        <xs:annotation>
-                            <xs:documentation>Категория историко-культурного значения</xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="fgistp:HIST_CAT"/>
-                        </xs:simpleType>
+                    <xs:element name="HIST_CAT" type="fgistp:HIST_CAT"
+                                fgistp:username="Категория историко-культурного значения">
+                        <xs:annotation><xs:documentation>Категория историко-культурного значения</xs:documentation></xs:annotation>
+<!--                        <xs:simpleType><xs:restriction base="fgistp:HIST_CAT"/></xs:simpleType>-->
                     </xs:element>
                     <xs:element name="HIST_OUT" type="fgistp:HIST_OUT"
-                        fgistp:username="Объекты выдающейся культурной ценности" minOccurs="0">
-                        <xs:annotation>
-                            <xs:documentation>Объекты выдающейся культурной ценности</xs:documentation>
-                        </xs:annotation>
+                                fgistp:username="Объекты выдающейся культурной ценности" minOccurs="0">
+                        <xs:annotation><xs:documentation>Объекты выдающейся культурной ценности</xs:documentation></xs:annotation>
                     </xs:element>
                     <xs:element fgistp:username="Источник данных" minOccurs="0" name="SOURCE"
                         type="xs:string">
@@ -12423,10 +12413,8 @@
             <xs:enumeration value="1" fgistp:username="Федеральное значение"/>
             <xs:enumeration value="2" fgistp:username="Региональное значение"/>
             <xs:enumeration value="3" fgistp:username="Местное значение"/>
-            <xs:enumeration value="4"
-                fgistp:username="Без категории - выявленный объект культурного наследия"/>
-            <xs:enumeration value="5"
-                fgistp:username="Без категории - объект, обладающий признаками объекта культурного наследия"
+            <xs:enumeration value="4" fgistp:username="Без категории - выявленный объект культурного наследия"/>
+            <xs:enumeration value="5" fgistp:username="Без категории - объект, обладающий признаками объекта культурного наследия"
             />
         </xs:restriction>
     </xs:simpleType>
@@ -12437,8 +12425,7 @@
             <xs:documentation>Справочник: Объекты выдающейся культурной ценности</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:positiveInteger">
-            <xs:enumeration value="1"
-                fgistp:username="Особо ценный объект культурного наследия народов Российской Федерации"/>
+            <xs:enumeration value="1" fgistp:username="Особо ценный объект культурного наследия народов Российской Федерации"/>
             <xs:enumeration value="2" fgistp:username="Объект всемирного наследия ЮНЕСКО"/>
         </xs:restriction>
     </xs:simpleType>
@@ -12535,8 +12522,7 @@
             <xs:enumeration value="3" fgistp:username="Биологическая авария"/>
             <xs:enumeration value="4" fgistp:username="Гидродинамическая авария"/>
             <xs:enumeration value="5" fgistp:username="Пожар, взрыв"/>
-            <xs:enumeration value="6"
-                fgistp:username="Авария электроэнергетической системы, системы связи"/>
+            <xs:enumeration value="6" fgistp:username="Авария электроэнергетической системы, системы связи"/>
             <xs:enumeration value="7" fgistp:username="Авария коммунальной системы жизнеобеспечения"/>
             <xs:enumeration value="8" fgistp:username="Транспортная авария"/>
             <xs:enumeration value="9" fgistp:username="Авария на магистральном трубопроводе"/>
@@ -12582,8 +12568,7 @@
         <xs:restriction base="xs:positiveInteger">
             <xs:enumeration value="1" fgistp:username="Черные металлы"/>
             <xs:enumeration value="2" fgistp:username="Цветные металлы"/>
-            <xs:enumeration value="3"
-                fgistp:username="Редкие металлы, рассеянные и редкоземельные элементы"/>
+            <xs:enumeration value="3" fgistp:username="Редкие металлы, рассеянные и редкоземельные элементы"/>
             <xs:enumeration value="4" fgistp:username="Благородные металлы"/>
             <xs:enumeration value="5" fgistp:username="Радиоактивные металлы"/>
             <xs:enumeration value="6"
@@ -12630,14 +12615,11 @@
         </xs:annotation>
         <xs:restriction base="xs:positiveInteger">
             <xs:enumeration value="1" fgistp:username="Зона общегородского центра"/>
-            <xs:enumeration value="2"
-                fgistp:username="Зона делового, общественного и коммерческого назначения"/>
+            <xs:enumeration value="2" fgistp:username="Зона делового, общественного и коммерческого назначения"/>
             <xs:enumeration value="3" fgistp:username="Зона объектов торговли"/>
             <xs:enumeration value="4" fgistp:username="Зона объектов общественного питания"/>
-            <xs:enumeration value="5"
-                fgistp:username="Зона объектов коммунально-бытового назначения"/>
-            <xs:enumeration value="6"
-                fgistp:username="Зона обслуживания объектов, необходимых для осуществления производственной и предпринимательской деятельности"
+            <xs:enumeration value="5" fgistp:username="Зона объектов коммунально-бытового назначения"/>
+            <xs:enumeration value="6" fgistp:username="Зона обслуживания объектов, необходимых для осуществления производственной и предпринимательской деятельности"
             />
         </xs:restriction>
     </xs:simpleType>
@@ -12651,19 +12633,15 @@
             <xs:enumeration value="1" fgistp:username="Зона дошкольных образовательных организаций"/>
             <xs:enumeration value="2" fgistp:username="Зона общеобразовательных организаций"/>
             <xs:enumeration value="3" fgistp:username="Зона организаций дополнительного образования"/>
-            <xs:enumeration value="4"
-                fgistp:username="Зона объектов, реализующих программы профессионального и высшего образования"/>
-            <xs:enumeration value="5"
-                fgistp:username="Зона специальных учебно-воспитательных учреждений для обучающихся с девиантным (общественно опасным) поведением"/>
+            <xs:enumeration value="4" fgistp:username="Зона объектов, реализующих программы профессионального и высшего образования"/>
+            <xs:enumeration value="5" fgistp:username="Зона специальных учебно-воспитательных учреждений для обучающихся с девиантным (общественно опасным) поведением"/>
             <xs:enumeration value="6" fgistp:username="Зона научных организаций"/>
             <xs:enumeration value="7" fgistp:username="Зона объектов культуры и искусства"/>
             <xs:enumeration value="8" fgistp:username="Зона объектов здравоохранения"/>
             <xs:enumeration value="9" fgistp:username="Зона объектов социального назначения"/>
-            <xs:enumeration value="10"
-                fgistp:username="Зона объектов физической культуры и массового спорта"/>
+            <xs:enumeration value="10" fgistp:username="Зона объектов физической культуры и массового спорта"/>
             <xs:enumeration value="11" fgistp:username="Зона культовых зданий и сооружений"/>
-            <xs:enumeration value="12"
-                fgistp:username="Зона специализированной общественной застройки иных видов"/>
+            <xs:enumeration value="12" fgistp:username="Зона специализированной общественной застройки иных видов"/>
         </xs:restriction>
     </xs:simpleType>
 
