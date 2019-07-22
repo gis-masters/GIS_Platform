@@ -5,6 +5,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -237,7 +238,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler(CrgForbiddenException.class)
+    @ExceptionHandler(value = {CrgForbiddenException.class, AccessDeniedException.class})
     public ResponseEntity<Object> forbidden(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
 

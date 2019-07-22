@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqResponse;
@@ -45,6 +46,10 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
         this.processRepository = processRepository;
+    }
+
+    public boolean isUserExistByName(long orgId, String userName) {
+        return getOrganizationByUserName(userName).getId() == orgId;
     }
 
     public Iterable<Organization> findAll() {

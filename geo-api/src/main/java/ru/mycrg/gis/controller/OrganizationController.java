@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.OrgMqProcessRequest;
@@ -50,6 +51,7 @@ public class OrganizationController {
 
     // TODO: Добавить авторизацию, закрыть доступ неавторизированным пользователям
     @GetMapping
+    @PreAuthorize("hasPermission('get', 'all organizations')")
     public ResponseEntity<Iterable<Organization>> getOrganizations(
             @ApiParam(defaultValue = "asc", value = "Сортировка по id организации")
             @RequestParam(value = "sort", required = false) String sort,
@@ -98,6 +100,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, '')")
     public ResponseEntity<Organization> getById(@PathVariable long id) {
         log.debug("Get organization by id: {}", id);
 
@@ -105,6 +108,7 @@ public class OrganizationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, '')")
     public HttpStatus deleteOrganization(@PathVariable long id) {
         log.debug("Delete organization by id: {}", id);
 
@@ -114,6 +118,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, '')")
     public ResponseEntity<Organization> updateOrganization(@Valid @RequestBody OrganizationUpdateDto organizationDto,
                                                            @PathVariable long id) {
         log.debug("Update organization");
@@ -124,6 +129,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/tasks/{taskId}")
+    @PreAuthorize("hasPermission(#id, '')")
     public ResponseEntity<Process> getOrganizationTasks(@PathVariable long id, @PathVariable long taskId,
                                                         Principal principal) {
         log.debug("Get organization task: {}", taskId);
