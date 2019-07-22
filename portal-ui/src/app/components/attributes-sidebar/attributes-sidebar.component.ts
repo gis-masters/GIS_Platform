@@ -1,5 +1,5 @@
-import {debounceTime} from 'rxjs/operators';
-import {BehaviorSubject} from 'rxjs';
+import {debounceTime, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
@@ -57,8 +57,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     viewMode: ViewMode.alias
   };
 
-  // TODO: отписаться
   private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
@@ -70,13 +70,15 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   ngAfterViewInit(): void {
     this.requestModel$
         .pipe(
-          debounceTime(50)
+          debounceTime(50),
+          takeUntil(this.unsubscribe$)
         )
         .subscribe((requestModel: RequestModel) => {
           this.loadFeatures(requestModel);
         });
 
     this.communicationService.featuresUpdate$
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((editFeatureData: EditFeatureData) => {
           // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
           const lastRequest = this.requestModel$.getValue();
@@ -94,6 +96,12 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       this.openLayersService.clearDraft();
       this.loadFeatures({page: {pageSize: 25, offset: 0}});
     }
+  }
+
+  ngOnDestroy(): void {
+    this.openLayersService.clearDraft();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadFeatures(requestModel?: RequestModel) {
@@ -173,10 +181,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   closeMe() {
     this.openLayersService.clearDraft();
     this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
-  }
-
-  ngOnDestroy(): void {
-    this.openLayersService.clearDraft();
   }
 
   onFilterChange(filterEvent: FilterEvent) {

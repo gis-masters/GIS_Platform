@@ -65,6 +65,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.commonProgress = 0;
     const isActiveChange = changes['isActive'];
     const layersChange = changes['layers'];
     if (isActiveChange && isActiveChange.currentValue) {
