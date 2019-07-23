@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {CrgLayer} from '../../services/geoserver/layers.service';
@@ -234,7 +235,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       }
 
       const currentRequestModel = this.requestModel$.getValue();
-      const clonedRequestModel: RequestModel = JSON.parse(JSON.stringify(currentRequestModel));
+      const clonedRequestModel: RequestModel = _.cloneDeep(currentRequestModel);
+
       clonedRequestModel.page = undefined;
 
       this.loading = true;
