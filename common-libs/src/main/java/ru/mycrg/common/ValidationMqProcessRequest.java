@@ -1,12 +1,9 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessType;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class ValidationMqProcessRequest extends BaseMqProcessRequest {
+public class ValidationMqProcessRequest {
 
     private int page = 0;
     private int size = 25;
@@ -15,9 +12,7 @@ public class ValidationMqProcessRequest extends BaseMqProcessRequest {
 
     public ValidationMqProcessRequest() {}
 
-    public ValidationMqProcessRequest(long id, ProcessType type, int page, int size) {
-        super(id, type);
-
+    public ValidationMqProcessRequest(int page, int size) {
         this.page = page;
         this.size = size;
     }

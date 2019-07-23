@@ -9,7 +9,7 @@ import ru.mycrg.common.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.mq.IMqEvents;
+import ru.mycrg.wrapper.queue.MqSender;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,7 +23,7 @@ public class ValidationService {
 
     private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final IValidator validator;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
@@ -42,9 +42,9 @@ public class ValidationService {
     private String CLASS_ID = "classid";
 
     @Autowired
-    public ValidationService(IValidator validator, IMqEvents mqEvents, BaseDaoService baseDaoService,
+    public ValidationService(IValidator validator, MqSender mqSender, BaseDaoService baseDaoService,
                              DatasourceFactory datasourceFactory) {
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.validator = validator;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
@@ -60,13 +60,13 @@ public class ValidationService {
 
         totalRows = (int) calculateTotalRows(mqRequest.getResourceProjections());
 
-        mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING, "Инициализация...", 0));
+        mqSender.send(new ValidationMqResponse(mqRequest, PENDING, "Инициализация...", 0));
 
         mqRequest
                 .getResourceProjections()
                 .forEach(resource -> validateResource(mqRequest, resource, processedRows));
 
-        mqEvents.validationResponse(new ValidationMqResponse(mqRequest, DONE, "", 100));
+        mqSender.send(new ValidationMqResponse(mqRequest, DONE, "", 100));
     }
 
     private void validateResource(ValidationMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
@@ -97,7 +97,7 @@ public class ValidationService {
                     break;
                 }
 
-                mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING,
+                mqSender.send(new ValidationMqResponse(mqRequest, PENDING,
                         "Обработка: " + feature.getTitle(),
                         calculatePercent(processedRows, totalRows)));
 
@@ -121,7 +121,7 @@ public class ValidationService {
                 if (nextViolations != null) {
                     log.debug("Save validation results. Total: {}", totalViolations);
 
-                    mqEvents.validationResponse(new ValidationMqResponse(mqRequest, PENDING,
+                    mqSender.send(new ValidationMqResponse(mqRequest, PENDING,
                             "Сохранение: " + feature.getTitle(),
                             calculatePercent(processedRows, totalRows)));
 
@@ -131,14 +131,14 @@ public class ValidationService {
                 }
             }
 
-            mqEvents.validationResponse(
+            mqSender.send(
                     new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_DONE, "Готово",-1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
             ValidationMqResponse response = new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_ERROR, "Ошибка", -1);
             response.setError(e.getMessage());
 
-            mqEvents.validationResponse(response);
+            mqSender.send(response);
         }
     }
 

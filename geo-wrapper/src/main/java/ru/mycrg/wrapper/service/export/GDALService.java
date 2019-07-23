@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.wrapper.config.CrgProperties;
@@ -32,7 +33,9 @@ public class GDALService implements IExporter {
     }
 
     @Override
-    public String generate(MqExportProcessRequest request) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
+        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
+
         String pathToZip;
 
         if (request.getFormat().equals("ESRI Shapefile")) {

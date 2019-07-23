@@ -1,35 +1,17 @@
 package ru.mycrg.common.import_;
 
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.enums.ProcessStatus;
 
-public class ImportMqResponse extends BaseMqProcessResponse {
+public class ImportMqResponse {
 
     private String targetLayer;
     private String sourceLayer;
 
     public ImportMqResponse() {}
 
-    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String description, String error) {
-        super(request.getId(), status, request.getType(), description, error);
-    }
-
-    public ImportMqResponse(ImportMqRequest request, ProcessStatus status, String description, int progress) {
-        super(request.getId(), status, request.getType(), description, progress);
-    }
-
-    public ImportMqResponse(ImportFeature importFeature, ImportMqRequest request, ProcessStatus status,
-                            String description) {
-        super(request.getId(), status, request.getType(), description);
-
-        this.targetLayer = importFeature.getTargetResource().getTableName();
-        this.sourceLayer = importFeature.getSourceResource().getTableName();
-    }
-
-    public ImportMqResponse(ImportFeature importFeature, ImportMqRequest request, ProcessStatus status,
-                            String description, String error) {
-        super(request.getId(), status, request.getType(), description, error);
-
+    public ImportMqResponse(ImportFeature importFeature) {
         this.targetLayer = importFeature.getTargetResource().getTableName();
         this.sourceLayer = importFeature.getSourceResource().getTableName();
     }

@@ -1,12 +1,9 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessType;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class MqExportProcessRequest extends BaseMqProcessRequest {
+public class MqExportProcessRequest {
 
     private String docSchema = "Doc.20301010000";
     private String format;
@@ -14,10 +11,6 @@ public class MqExportProcessRequest extends BaseMqProcessRequest {
     private List<EntityTypeDto> fgistpRules = new ArrayList<>();
 
     public MqExportProcessRequest() {}
-
-    public MqExportProcessRequest(Long id) {
-        super(id, ProcessType.GML_EXPORT);
-    }
 
     public String getDocSchema() {
         return docSchema;

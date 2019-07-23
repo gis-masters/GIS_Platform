@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
@@ -16,9 +17,8 @@ import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.CrgConflictException;
-import ru.mycrg.gis.exceptions.CrgForbiddenException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.queue.IMqEvents;
+import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
@@ -36,17 +36,17 @@ public class ProjectService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final ProjectRepository projectRepository;
     private final OrganizationService organizationService;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProcessRepository processRepository,
-                          IMqEvents mqEvents,
+                          MqSender mqSender,
                           OrganizationService organizationService) {
         super(processRepository);
 
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.projectRepository = projectRepository;
         this.organizationService = organizationService;
     }
@@ -112,10 +112,9 @@ public class ProjectService extends BaseProcessService {
                     savedProject);
 
             // Отсылаем евент
-            OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
-                    savedProject.getGeoserverName(), ProcessType.CREATE_PROJECT);
+            OrgMqProcessRequest payload = new OrgMqProcessRequest(orgId, savedProject.getGeoserverName());
 
-            mqEvents.sendOrgEvent(mqRequest);
+            mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.CREATE_PROJECT, payload));
 
             return process;
         }
@@ -136,11 +135,10 @@ public class ProjectService extends BaseProcessService {
                 String.format("Удаление проекта: %s", project.getInternalName()),
                 ProcessType.DELETE_PROJECT);
 
-        OrgMqProcessRequest mqRequest = new OrgMqProcessRequest(process.getId(), orgId,
-                project.getGeoserverName(), ProcessType.DELETE_PROJECT);
+        OrgMqProcessRequest payload = new OrgMqProcessRequest(orgId, project.getGeoserverName());
 
         // Отсылаем евент
-        mqEvents.sendOrgEvent(mqRequest);
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.DELETE_PROJECT, payload));
 
         return process;
     }

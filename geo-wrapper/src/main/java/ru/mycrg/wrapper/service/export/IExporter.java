@@ -1,9 +1,9 @@
 package ru.mycrg.wrapper.service.export;
 
-import ru.mycrg.common.MqExportProcessRequest;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.wrapper.exceptions.ExportException;
 
 public interface IExporter {
 
-    String generate(MqExportProcessRequest request) throws ExportException;
+    String generate(BaseMqProcessRequest request) throws ExportException;
 }

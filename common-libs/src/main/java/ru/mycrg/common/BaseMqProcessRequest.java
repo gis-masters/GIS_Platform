@@ -6,6 +6,7 @@ public class BaseMqProcessRequest {
 
     private Long id;
     private ProcessType type;
+    private Object payload;
 
     public BaseMqProcessRequest() {
     }
@@ -19,6 +20,12 @@ public class BaseMqProcessRequest {
         this.type = type;
     }
 
+    public BaseMqProcessRequest(Long id, ProcessType type, Object payload) {
+        this.id = id;
+        this.type = type;
+        this.payload = payload;
+    }
+
     public Long getId() {
         return id;
     }
@@ -29,5 +36,13 @@ public class BaseMqProcessRequest {
 
     public void setType(ProcessType type) {
         this.type = type;
+    }
+
+    public Object getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 }

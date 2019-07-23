@@ -1,23 +1,20 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessStatus;
-
-import java.io.Serializable;
-
-public class OrgMqResponse extends BaseMqProcessResponse implements Serializable {
+public class OrgMqResponse {
 
     private Long orgId;
 
     public OrgMqResponse() {}
 
-    public OrgMqResponse(OrgMqProcessRequest request, ProcessStatus status) {
-        super(request.getId(), status, request.getType());
-
-        this.orgId = request.getOrgId();
+    public OrgMqResponse(long orgId) {
+        this.orgId = orgId;
     }
 
     public Long getOrgId() {
         return orgId;
     }
 
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
 }

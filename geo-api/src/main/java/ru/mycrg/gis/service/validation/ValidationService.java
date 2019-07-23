@@ -5,14 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.ValidationMqProcessRequest;
-import ru.mycrg.common.ValidationMqResponse;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
@@ -32,20 +28,20 @@ public class ValidationService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final FgistpRuleService ruleService;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
-    public ValidationService(MqSender mqEvents,
+    public ValidationService(MqSender mqSender,
                              FgistpRuleService ruleService,
                              ProjectService projectService,
                              ProcessRepository processRepository,
                              WsNotificationService wsNotificationService) {
         super(processRepository);
 
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.ruleService = ruleService;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
@@ -69,19 +65,18 @@ public class ValidationService extends BaseProcessService {
                 principal.getName(),
                 String.format("Валидация %d слоёв(я) Проекта: %s",
                         request.getLayers().size(), projectById.getInternalName()),
-                ProcessType.VALIDATION_INIT, request);
+                ProcessType.VALIDATION, request);
 
-        ValidationMqProcessRequest mqRequest = new ValidationMqProcessRequest(process.getId(),
-                ProcessType.VALIDATION_INIT, 0, 25);
+        ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
 
         request.getLayers().forEach(layerName -> {
             EntityType entityType = ruleService.getRuleByName(layerName);
-            mqRequest.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
-            mqRequest.addResourceProjections(
+            payload.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
+            payload.addResourceProjections(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getWorkspaceName(), layerName));
         });
 
-        mqEvents.sendValidationRequest(mqRequest);
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.VALIDATION, payload));
 
         return process;
     }
@@ -105,7 +100,7 @@ public class ValidationService extends BaseProcessService {
         }
 
         String wsUiId = process.getExtra().get("wsUiId").asText();
-    if (ProcessType.VALIDATION_INIT.equals(mqResponse.getType())) {
+    if (ProcessType.VALIDATION.equals(mqResponse.getType())) {
             wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
         }
     }

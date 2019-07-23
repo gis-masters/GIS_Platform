@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
@@ -15,7 +16,6 @@ import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.SubProcessModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.*;
@@ -29,17 +29,17 @@ public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
-    public ImportService(MqSender mqEvents,
+    public ImportService(MqSender mqSender,
                          ProjectService projectService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -52,7 +52,7 @@ public class ImportService extends BaseProcessService {
                         workImport.getImportTasks().size(), projectModel.getInternalName()),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
-        ImportMqRequest importMqRequest = new ImportMqRequest(process.getId(), ProcessType.IMPORT);
+        ImportMqRequest payload = new ImportMqRequest();
         workImport.getImportTasks().forEach(importTask -> {
             ImportFeature importFeature = new ImportFeature(
                     new ResourceProjection(
@@ -65,10 +65,10 @@ public class ImportService extends BaseProcessService {
                             importTask.getWorkTableName()),
                     importTask.getMapping());
 
-            importMqRequest.addImportFeature(importFeature);
+            payload.addImportFeature(importFeature);
         });
 
-        mqEvents.initImport(importMqRequest);
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.IMPORT, payload));
 
         return process;
     }

@@ -16,7 +16,7 @@ import ru.mycrg.common.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
-import ru.mycrg.wrapper.mq.IMqEvents;
+import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.FileService;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,7 +27,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.io.File.separator;
 import static ru.mycrg.common.enums.ProcessStatus.*;
@@ -44,16 +47,16 @@ public class GmlGenerator implements IExporter {
     private long totalRows = 0;
     private long processedRows = 0;
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final FileService fileService;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public GmlGenerator(FileService fileService,
-                        IMqEvents mqEvents,
+                        MqSender mqSender,
                         DatasourceFactory datasourceFactory,
                         BaseDaoService baseDaoService) {
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.fileService = fileService;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
@@ -62,15 +65,15 @@ public class GmlGenerator implements IExporter {
     /**
      * Генерируем GML.
      *
-     * @param gmlMqRequest Источник данных
+     * @param mqRequest Запрос с данными
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(MqExportProcessRequest gmlMqRequest) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
         idCounter = 1;
         log.debug("Start gml generation");
 
         String path;
-        GmlDocumentHolder documentHolder = createDomDocuments(gmlMqRequest);
+        GmlDocumentHolder documentHolder = createDomDocuments(mqRequest);
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
         path = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
@@ -82,22 +85,28 @@ public class GmlGenerator implements IExporter {
     /**
      * Сгенерируем dom модели основного файла с данными и лога с ошибками, предварительно проведя валидацию.
      *
-     * @param request Запрос
+     * @param mqRequest Запрос
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(MqExportProcessRequest request) throws ExportException {
+    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
+        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
         try {
             GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
-            mqEvents.gmlResponse(new MqExportResponse(request, PENDING, "Инициализация...", 1));
+            BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest);
+            mqResponse.setDescription("Инициализация");
+            mqResponse.setProgress(2);
+            mqResponse.setStatus(PENDING);
+
+            mqSender.send(mqResponse);
             log.debug("Handle {} sources", request.getResourceProjections().size());
 
             processedRows = 0;
             totalRows = calculateTotalRows(request);
             request
                     .getResourceProjections()
-                    .forEach(resource -> handleResource(request, docHolder, resource));
+                    .forEach(resource -> handleResource(mqRequest, docHolder, resource));
 
             return docHolder;
         } catch (ParserConfigurationException e) {
@@ -112,7 +121,9 @@ public class GmlGenerator implements IExporter {
                 .sum();
     }
 
-    private void handleResource(MqExportProcessRequest request, GmlDocumentHolder docHolder, ResourceProjection resource) {
+    private void handleResource(BaseMqProcessRequest mqRequest, GmlDocumentHolder docHolder, ResourceProjection resource) {
+        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
+
         log.debug("Handle source: {}", resource.toString());
 
         try {
@@ -153,20 +164,26 @@ public class GmlGenerator implements IExporter {
                 });
 
                 processedRows += batch.size();
-                mqEvents.gmlResponse(
-                        new MqExportResponse(feature.getTitle(), request, SUB_DONE,
-                                "Обработка " + feature.getTitle(),
-                                GmlUtil.calculatePercent(processedRows, totalRows)));
+
+                BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
+                mqResponse.setProgress(calculatePercent(processedRows, totalRows));
+                mqResponse.setDescription("Обработка " + feature.getTitle());
+                mqResponse.setStatus(SUB_DONE);
+
+                mqSender.send(mqResponse);
 
                 offset++;
             }
         } catch (Exception e) {
             log.error("Ошибка при обработке ресурса: " + resource.toString(), e.getMessage());
 
-            mqEvents.gmlResponse(
-                    new MqExportResponse(resource.getTableName(), request, SUB_ERROR,
-                            "Не удалось обработать слой: " + resource.getTableName(),
-                            GmlUtil.calculatePercent(processedRows, totalRows), e.getMessage()));
+            BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
+            mqResponse.setProgress(calculatePercent(processedRows, totalRows));
+            mqResponse.setDescription("Не удалось обработать слой: " + resource.getTableName());
+            mqResponse.setStatus(SUB_ERROR);
+            mqResponse.setError(e.getMessage());
+
+            mqSender.send(mqResponse);
         }
     }
 

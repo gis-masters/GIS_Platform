@@ -1,11 +1,9 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationMqResponse extends BaseMqProcessResponse {
+public class ValidationMqResponse {
 
     private String layerName;
     private Long total = 0L;
@@ -18,24 +16,8 @@ public class ValidationMqResponse extends BaseMqProcessResponse {
 
     public ValidationMqResponse() {}
 
-    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status) {
-        super(request.getId(), status, request.getType());
-    }
 
-    public ValidationMqResponse(String layerName, ValidationMqProcessRequest request, ProcessStatus status) {
-        super(request.getId(), status, request.getType());
-
-        this.layerName = layerName;
-    }
-
-    public ValidationMqResponse(ValidationMqProcessRequest request, ProcessStatus status, String msg, int progress) {
-        super(request.getId(), status, request.getType(), msg, progress);
-    }
-
-    public ValidationMqResponse(String layerName, ValidationMqProcessRequest request, ProcessStatus status, String msg,
-                                int progress) {
-        super(request.getId(), status, request.getType(), msg, progress);
-
+    public ValidationMqResponse(String layerName) {
         this.layerName = layerName;
     }
 

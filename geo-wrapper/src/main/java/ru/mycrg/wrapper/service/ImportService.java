@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportFeature;
@@ -11,7 +12,7 @@ import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.mq.IMqEvents;
+import ru.mycrg.wrapper.queue.MqSender;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -24,7 +25,7 @@ public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
@@ -32,25 +33,28 @@ public class ImportService {
     private int processedRows = 0;
 
     public ImportService(BaseDaoService baseDaoService,
-                         IMqEvents mqEvents,
+                         MqSender mqSender,
                          DatasourceFactory datasourceFactory) {
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void doImport(ImportMqRequest mqRequest) {
+    public void doImport(BaseMqProcessRequest mqRequest) {
+        ImportMqRequest payload = (ImportMqRequest) mqRequest.getPayload();
+
         log.debug("Start import");
 
-        totalRows = (int) calculateTotalRows(mqRequest.getImportFeatures());
+        totalRows = (int) calculateTotalRows(payload.getImportFeatures());
 
-        mqEvents.importResponse(new ImportMqResponse(mqRequest, PENDING, "Инициализация...", 0));
+        mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация", 0));
 
-        mqRequest
+        payload
                 .getImportFeatures()
                 .forEach(feature -> importFeature(mqRequest, feature, processedRows));
 
-        mqEvents.importResponse(new ImportMqResponse(mqRequest, DONE, "Импорт завершен", 100));
+
+        mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "Импорт завершен", 100));
     }
 
     /**
@@ -59,7 +63,7 @@ public class ImportService {
      * - Сам импорт
      * - Проверка и при необходимости генерация GLOBALID
      */
-    private void importFeature(ImportMqRequest mqRequest, ImportFeature feature, int processedRows) {
+    private void importFeature(BaseMqProcessRequest mqRequest, ImportFeature feature, int processedRows) {
         log.debug("Start import from: {} to: {}", feature.printSource(), feature.printTarget());
 
         String targetTable = feature.getTargetResource().getTableName();
@@ -106,14 +110,13 @@ public class ImportService {
                 }
             }
 
-            mqEvents.importResponse(new ImportMqResponse(feature, mqRequest, SUB_DONE, "Success"));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_DONE, "Success", 0));
         } catch (Exception e) {
             String msg = String.format("Не удалось импортировать из: %s в: %s",
                     feature.printSource(), feature.printTarget());
 
             log.error(msg, e);
-            mqEvents.importResponse(
-                    new ImportMqResponse(feature, mqRequest, SUB_ERROR, "Error", msg));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_ERROR, "Error", msg));
         }
     }
 

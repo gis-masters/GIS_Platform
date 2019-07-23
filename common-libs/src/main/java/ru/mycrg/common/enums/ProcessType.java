@@ -4,7 +4,7 @@ package ru.mycrg.common.enums;
  * Править в соответствии c: portal-ui/src/app/services/ws.service.ts
  */
 public enum ProcessType {
-    VALIDATION_INIT,
+    VALIDATION,
 
     GML_EXPORT,
     EXPORT,

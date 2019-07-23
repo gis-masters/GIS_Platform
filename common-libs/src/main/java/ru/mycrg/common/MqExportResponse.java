@@ -1,46 +1,19 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessStatus;
+public class MqExportResponse {
 
-public class MqExportResponse extends BaseMqProcessResponse {
-
-    private String pathToFile;
     private String layerName;
+    private String pathToFile;
 
     public MqExportResponse() {}
 
-    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description) {
-        super(request.getId(), status, request.getType(), description);
-    }
-
-    public MqExportResponse(MqExportProcessRequest request, String pathToResource, ProcessStatus status,
-                            int percentOfProgress) {
-        super(request.getId(), status, request.getType(), "Завершено", percentOfProgress);
-
-        this.pathToFile = pathToResource;
-    }
-
-    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description, int percentOfProgress) {
-        super(request.getId(), status, request.getType(), description, percentOfProgress);
-    }
-
-    public MqExportResponse(String layerName, MqExportProcessRequest request, ProcessStatus status, String description,
-                            int percentOfProgress) {
-        super(request.getId(), status, request.getType(), description, percentOfProgress);
-
+    public MqExportResponse(String layerName) {
         this.layerName = layerName;
     }
 
-    public MqExportResponse(MqExportProcessRequest request, ProcessStatus status, String description,
-                            int percentOfProgress, String error) {
-        super(request.getId(), status, request.getType(), description, error, percentOfProgress);
-    }
-
-    public MqExportResponse(String layerName, MqExportProcessRequest request, ProcessStatus status, String description,
-                            int percentOfProgress, String error) {
-        super(request.getId(), status, request.getType(), description, error, percentOfProgress);
-
+    public MqExportResponse(String pathToFile, String layerName) {
         this.layerName = layerName;
+        this.pathToFile = pathToFile;
     }
 
     public String getPathToFile() {
@@ -58,4 +31,5 @@ public class MqExportResponse extends BaseMqProcessResponse {
     public void setLayerName(String layerName) {
         this.layerName = layerName;
     }
+
 }

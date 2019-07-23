@@ -4,16 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.MqExportProcessRequest;
-import ru.mycrg.common.MqExportResponse;
-import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgConflictException;
-import ru.mycrg.gis.queue.IMqEvents;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
@@ -33,19 +29,19 @@ public class ExportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ExportService.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final FgistpRuleService ruleService;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
-    public ExportService(MqSender mqEvents,
+    public ExportService(MqSender mqSender,
                          FgistpRuleService ruleService,
                          ProcessRepository processRepository,
                          ProjectService projectService,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.ruleService = ruleService;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
@@ -63,10 +59,9 @@ public class ExportService extends BaseProcessService {
                         request.getLayers().size()),
                 ProcessType.EXPORT, request);
 
-        MqExportProcessRequest mqRequest = new MqExportProcessRequest(process.getId());
-        mqRequest.setType(ProcessType.EXPORT);
-        mqRequest.setFormat(request.getFormat());
-        mqRequest.setDocSchema(request.getDocSchema());
+        MqExportProcessRequest payload = new MqExportProcessRequest();
+        payload.setFormat(request.getFormat());
+        payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
             EntityType ruleByClassName = ruleService.getRuleByName(layerName);
@@ -75,15 +70,15 @@ public class ExportService extends BaseProcessService {
             // Можно сразу выставить в процессе эту фичу как ошибочную
             // Во всех операциях (импорт, валидация) можно внедрить тоже самое
 
-            mqRequest.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
-            mqRequest.addResource(
+            payload.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
+            payload.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
 
-        MqExportResponse mqExportResponse = new MqExportResponse(mqRequest, ProcessStatus.PENDING, "Инициализация");
-        wsNotificationService.send(new WsMessageDto<>(mqRequest.getType(), mqExportResponse), request.getWsUiId());
+        MqExportResponse mqExportResponse = new MqExportResponse(payload, ProcessStatus.PENDING, "Инициализация");
+        wsNotificationService.send(new WsMessageDto<>(ProcessType.EXPORT, mqExportResponse), request.getWsUiId());
 
-        mqEvents.sendGmlInit(mqRequest);
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.EXPORT, payload));
 
         return process;
     }

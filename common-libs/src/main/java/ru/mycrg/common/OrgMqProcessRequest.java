@@ -1,11 +1,6 @@
 package ru.mycrg.common;
 
-import ru.mycrg.common.enums.ProcessType;
-
-import java.io.Serializable;
-import java.util.UUID;
-
-public class OrgMqProcessRequest extends BaseMqProcessRequest implements Serializable {
+public class OrgMqProcessRequest {
 
     private Long orgId;
     private String rawPassword;
@@ -17,18 +12,14 @@ public class OrgMqProcessRequest extends BaseMqProcessRequest implements Seriali
 
     public OrgMqProcessRequest() {}
 
-    public OrgMqProcessRequest(Long id, long orgId, String email, String password, ProcessType type) {
-        super(id, type);
-
+    public OrgMqProcessRequest(long orgId, String email, String password) {
         this.orgId = orgId;
         this.email = email;
         this.userName = email;
         this.rawPassword = password;
     }
 
-    public OrgMqProcessRequest(Long id, long orgId, String geoserverName, ProcessType type) {
-        super(id, type);
-
+    public OrgMqProcessRequest(long orgId, String geoserverName) {
         this.orgId = orgId;
         this.projectName = geoserverName;
     }
@@ -88,7 +79,6 @@ public class OrgMqProcessRequest extends BaseMqProcessRequest implements Seriali
                 ", comment='" + comment + '\'' +
                 ", email='" + email + '\'' +
                 ", userName='" + userName + '\'' +
-                ", type='" + getType() + '\'' +
                 '}';
     }
 }

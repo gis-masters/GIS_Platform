@@ -1,56 +1,52 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.ProcessType;
+import ru.mycrg.common.import_.ImportMqResponse;
 
-public class BaseMqProcessResponse {
+public class BaseMqProcessResponse extends BaseMqProcessRequest {
 
-    private Long id;
     private int progress = -1;
     private String description;
     private String error;
     private ProcessStatus status;
-    private ProcessType type;
 
     public BaseMqProcessResponse() {}
 
-    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type) {
-        this.id = id;
-        this.status = status;
-        this.type = type;
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest) {
+        super(mqRequest.getId(), mqRequest.getType());
     }
 
-    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description) {
-        this.id = id;
-        this.status = status;
-        this.type = type;
-        this.description = description;
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload) {
+        super(mqRequest.getId(), mqRequest.getType(), payload);
     }
 
-    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, String error) {
-        this.id = id;
-        this.status = status;
-        this.type = type;
-        this.description = description;
-        this.error = error;
-    }
-
-    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, String error,
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, ProcessStatus status, String description,
                                  int progress) {
-        this.id = id;
+        super(mqRequest.getId(), mqRequest.getType());
+
         this.status = status;
-        this.type = type;
         this.description = description;
-        this.error = error;
         this.progress = progress;
     }
 
-    public BaseMqProcessResponse(Long id, ProcessStatus status, ProcessType type, String description, int progress) {
-        this.id = id;
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object paylod, ProcessStatus status,
+                                 String description,
+                                 int progress) {
+        super(mqRequest.getId(), mqRequest.getType(), paylod);
+
         this.status = status;
-        this.type = type;
         this.description = description;
         this.progress = progress;
+    }
+
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object paylod, ProcessStatus status,
+                                 String description,
+                                 String error) {
+        super(mqRequest.getId(), mqRequest.getType(), paylod);
+
+        this.status = status;
+        this.description = description;
+        this.error = error;
     }
 
     public boolean isDone() {
@@ -67,14 +63,6 @@ public class BaseMqProcessResponse {
 
     public boolean isNull() {
         return status == null;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public ProcessStatus getStatus() {
@@ -101,14 +89,6 @@ public class BaseMqProcessResponse {
         this.description = description;
     }
 
-    public ProcessType getType() {
-        return type;
-    }
-
-    public void setType(ProcessType type) {
-        this.type = type;
-    }
-
     public String getError() {
         return error;
     }
@@ -117,14 +97,4 @@ public class BaseMqProcessResponse {
         this.error = error;
     }
 
-    @Override
-    public String toString() {
-        return "BaseMqProcessResponse{" +
-                "id=" + id +
-                ", progress=" + progress +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", type=" + type +
-                '}';
-    }
 }

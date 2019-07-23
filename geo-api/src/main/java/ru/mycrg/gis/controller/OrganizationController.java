@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
@@ -19,7 +20,7 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.User;
 import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgFailedException;
-import ru.mycrg.gis.queue.IMqEvents;
+import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
@@ -36,14 +37,14 @@ public class OrganizationController {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
-    private final IMqEvents mqEvents;
+    private final MqSender mqSender;
     private final UserRepository userRepository;
     private final OrganizationService organizationService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService, IMqEvents mqEvents,
+    public OrganizationController(OrganizationService organizationService, MqSender mqSender,
                                   UserRepository userRepository) {
-        this.mqEvents = mqEvents;
+        this.mqSender = mqSender;
         this.userRepository = userRepository;
         this.organizationService = organizationService;
     }
@@ -90,10 +91,12 @@ public class OrganizationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        mqEvents.sendOrgEvent(new OrgMqProcessRequest(newOrganization.getId(), newOrganization.getId(),
+        OrgMqProcessRequest payload = new OrgMqProcessRequest(newOrganization.getId(), newOrganization.getId(),
                 createDto.getEmail(),
                 createDto.getPassword(),
-                ProcessType.CREATE_ORG));
+                ProcessType.CREATE_ORG);
+
+        mqSender.send(new BaseMqProcessRequest(0L, ProcessType.CREATE_ORG, payload));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
     }
