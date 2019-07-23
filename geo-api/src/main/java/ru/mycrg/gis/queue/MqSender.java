@@ -23,10 +23,10 @@ public class MqSender {
 
     public void send(BaseMqProcessRequest mqRequest) {
         switch (mqRequest.getType()) {
-            case CREATE_ORG:    send(FANOUT_ORG_INIT, KEY_ORG_INIT, mqRequest);
-            case IMPORT:        send(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, mqRequest);
-            case VALIDATION:    send(FANOUT_VALIDATION_START, KEY_VALIDATION_START, mqRequest);
-            case EXPORT:        send(FANOUT_GML_INIT, KEY_GML_INIT, mqRequest);
+            case CREATE_ORG:    send(FANOUT_ORG_INIT, KEY_ORG_INIT, mqRequest); break;
+            case IMPORT:        send(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, mqRequest);   break;
+            case VALIDATION:    send(FANOUT_VALIDATION_START, KEY_VALIDATION_START, mqRequest); break;
+            case EXPORT:        send(FANOUT_GML_INIT, KEY_GML_INIT, mqRequest); break;
             default:
                 log.warn("Unsupported mqRequest type");
         }

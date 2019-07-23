@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -23,6 +22,7 @@ import java.io.IOException;
 import java.security.Principal;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.common.enums.ProcessStatus.PENDING;
 
 @Service
 public class ExportService extends BaseProcessService {
@@ -75,8 +75,12 @@ public class ExportService extends BaseProcessService {
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
 
-        MqExportResponse mqExportResponse = new MqExportResponse(payload, ProcessStatus.PENDING, "Инициализация");
-        wsNotificationService.send(new WsMessageDto<>(ProcessType.EXPORT, mqExportResponse), request.getWsUiId());
+        BaseMqProcessResponse processResponse = new BaseMqProcessResponse();
+        processResponse.setDescription("Инициализация");
+        processResponse.setStatus(PENDING);
+        processResponse.setPayload(payload);
+
+        wsNotificationService.send(new WsMessageDto<>(ProcessType.EXPORT, processResponse), request.getWsUiId());
 
         mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.EXPORT, payload));
 
@@ -84,8 +88,8 @@ public class ExportService extends BaseProcessService {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        MqExportResponse mqResponse = (MqExportResponse) response;
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        MqExportResponse responsePayload = (MqExportResponse) mqResponse.getPayload();
 
         if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
@@ -96,8 +100,8 @@ public class ExportService extends BaseProcessService {
             case PENDING:
             case SUB_ERROR:
             case SUB_DONE:  addSubStep(process, mqResponse);                break;
-            case ERROR:     error(process, response.getError());            break;
-            case DONE:      complete(process, mqResponse.getPathToFile());  break;
+            case ERROR:     error(process, mqResponse.getError());            break;
+            case DONE:      complete(process, responsePayload.getPathToFile());  break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -111,7 +115,8 @@ public class ExportService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, MqExportResponse response) {
+    private void addSubStep(Process process, BaseMqProcessResponse response) {
+        MqExportResponse responsePayload = (MqExportResponse) response.getPayload();
         process.setStatus(response.getStatus());
 
         try {
@@ -122,7 +127,7 @@ public class ExportService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(response.getLayerName(),
+            SubProcessModel subProcess = new SubProcessModel(responsePayload.getLayerName(),
                     response.getDescription(), response.getError());
 
             details.addSubProcess(subProcess);

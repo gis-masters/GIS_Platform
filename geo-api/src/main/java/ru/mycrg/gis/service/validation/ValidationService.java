@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.security.Principal;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.common.enums.ProcessStatus.*;
 
 @Service
 public class ValidationService extends BaseProcessService {
@@ -82,8 +83,7 @@ public class ValidationService extends BaseProcessService {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        ValidationMqResponse mqResponse = (ValidationMqResponse) response;
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
         if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
         }
@@ -92,9 +92,9 @@ public class ValidationService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);     break;
-            case ERROR:     error(process, response.getError()); break;
-            case DONE:      complete(process, null);        break;
+            case SUB_DONE:  addSubStep(process, mqResponse);   break;
+            case ERROR:     error(process, mqResponse.getError());  break;
+            case DONE:      complete(process, null);           break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -105,7 +105,7 @@ public class ValidationService extends BaseProcessService {
         }
     }
 
-    private void addSubStep(Process process, ValidationMqResponse response) {
+    private void addSubStep(Process process, BaseMqProcessResponse response) {
         process.setStatus(response.getStatus());
 
         try {
@@ -116,7 +116,7 @@ public class ValidationService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(response.getLayerName(),
+            SubProcessModel subProcess = new SubProcessModel(response.getPayload().toString(),
                     response.getDescription(), response.getError());
 
             details.addSubProcess(subProcess);

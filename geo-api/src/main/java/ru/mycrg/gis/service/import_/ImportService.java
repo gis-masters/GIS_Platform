@@ -24,6 +24,8 @@ import ru.mycrg.gis.service.fgistp.MapperUtil;
 import java.io.IOException;
 import java.security.Principal;
 
+import static ru.mycrg.common.enums.ProcessStatus.*;
+
 @Service
 public class ImportService extends BaseProcessService {
 
@@ -74,8 +76,7 @@ public class ImportService extends BaseProcessService {
     }
 
     @Override
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        ImportMqResponse mqResponse = (ImportMqResponse) response;
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
         if (mqResponse.getId() == null) {
             log.warn("Return invalid mqResponse");
         }
@@ -85,7 +86,7 @@ public class ImportService extends BaseProcessService {
             case PENDING:
             case SUB_ERROR:
             case SUB_DONE:  addSubStep(process, mqResponse);     break;
-            case ERROR:     error(process, response.getError()); break;
+            case ERROR:     error(process, mqResponse.getError()); break;
             case DONE:      complete(process, null);        break;
             default:
                 log.warn("Not supported process status. {}", process);
@@ -95,7 +96,8 @@ public class ImportService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, ImportMqResponse response) {
+    private void addSubStep(Process process, BaseMqProcessResponse response) {
+        ImportMqResponse responsePayload = (ImportMqResponse) response.getPayload();
         process.setStatus(response.getStatus());
 
         try {
@@ -106,7 +108,7 @@ public class ImportService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(response.getDirection(),
+            SubProcessModel subProcess = new SubProcessModel(responsePayload.getDirection(),
                     response.getDescription(), response.getError());
 
             details.addSubProcess(subProcess);

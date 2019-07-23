@@ -1,9 +1,5 @@
 package ru.mycrg.common.import_;
 
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.enums.ProcessStatus;
-
 public class ImportMqResponse {
 
     private String targetLayer;

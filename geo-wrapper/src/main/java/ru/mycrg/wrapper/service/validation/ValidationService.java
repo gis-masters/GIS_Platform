@@ -55,25 +55,27 @@ public class ValidationService {
      *
      * @param mqRequest Запрос
      */
-    public void startValidation(ValidationMqProcessRequest mqRequest) {
+    public void startValidation(BaseMqProcessRequest mqRequest) {
+        ValidationMqProcessRequest request = (ValidationMqProcessRequest) mqRequest.getPayload();
         log.debug("Start validation");
 
-        totalRows = (int) calculateTotalRows(mqRequest.getResourceProjections());
+        totalRows = (int) calculateTotalRows(request.getResourceProjections());
 
-        mqSender.send(new ValidationMqResponse(mqRequest, PENDING, "Инициализация...", 0));
+        mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация...", 0));
 
-        mqRequest
+        request
                 .getResourceProjections()
                 .forEach(resource -> validateResource(mqRequest, resource, processedRows));
 
-        mqSender.send(new ValidationMqResponse(mqRequest, DONE, "", 100));
+        mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "", 100));
     }
 
-    private void validateResource(ValidationMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
+    private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
+        ValidationMqProcessRequest request = (ValidationMqProcessRequest) mqRequest.getPayload();
         log.debug("Validate resource: {}", resource.getResourceId());
 
         try {
-            EntityTypeDto feature = getRuleByTableName(mqRequest.getFeatures(), resource.getTableName());
+            EntityTypeDto feature = getRuleByTableName(request.getFeatures(), resource.getTableName());
 
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
@@ -97,7 +99,7 @@ public class ValidationService {
                     break;
                 }
 
-                mqSender.send(new ValidationMqResponse(mqRequest, PENDING,
+                mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
                         "Обработка: " + feature.getTitle(),
                         calculatePercent(processedRows, totalRows)));
 
@@ -121,7 +123,7 @@ public class ValidationService {
                 if (nextViolations != null) {
                     log.debug("Save validation results. Total: {}", totalViolations);
 
-                    mqSender.send(new ValidationMqResponse(mqRequest, PENDING,
+                    mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
                             "Сохранение: " + feature.getTitle(),
                             calculatePercent(processedRows, totalRows)));
 
@@ -131,14 +133,11 @@ public class ValidationService {
                 }
             }
 
-            mqSender.send(
-                    new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_DONE, "Готово",-1));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), SUB_DONE, "Готово", -1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
-            ValidationMqResponse response = new ValidationMqResponse(resource.getTableName(), mqRequest, SUB_ERROR, "Ошибка", -1);
-            response.setError(e.getMessage());
 
-            mqSender.send(response);
+            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), SUB_ERROR, "Ошибка", e.getMessage()));
         }
     }
 

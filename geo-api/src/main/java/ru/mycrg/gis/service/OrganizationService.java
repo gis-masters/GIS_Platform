@@ -4,19 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.OrgMqResponse;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.entity.User;
+import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.exceptions.CustomRestExceptionHandler;
+import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.repository.UserRepository;
@@ -31,21 +34,24 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class OrganizationService {
+public class OrganizationService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
+    private final MqSender mqSender;
     private final UserRepository userRepository;
-    private final ProcessRepository processRepository;
     private final OrganizationRepository organizationRepository;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
                                UserRepository userRepository,
+                               MqSender mqSender,
                                ProcessRepository processRepository) {
+        super(processRepository);
+
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
-        this.processRepository = processRepository;
+        this.mqSender = mqSender;
     }
 
     public boolean isUserExistByName(long orgId, String userName) {
@@ -78,21 +84,37 @@ public class OrganizationService {
      * <p>
      * Вместе с организацией создается первоначальный пользователь (супер админ).
      *
-     * @param organizationCreateDto {@link OrganizationCreateDto}
+     * @param createDto {@link OrganizationCreateDto}
      * @return {@link Organization}
      */
-    public Organization create(@Valid OrganizationCreateDto organizationCreateDto) {
+    public Organization createOrg(@Valid OrganizationCreateDto createDto) {
+        Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
+        if (userByEmail.isPresent()) {
+            throw new CrgConflictException("Данный email уже занят");
+        }
+
         Organization newOrganization;
 
-        User newUser = userRepository.save(mapDtoToUser(organizationCreateDto));
+        User newUser = userRepository.save(mapDtoToUser(createDto));
 
-        newOrganization = mapDtoToOrganization(organizationCreateDto);
+        newOrganization = mapDtoToOrganization(createDto);
         newOrganization.addUser(newUser);
 
         organizationRepository.save(newOrganization);
         // We use email as login
-        newUser.setUsername(organizationCreateDto.getEmail());
+        newUser.setUsername(createDto.getEmail());
         newUser.addAuthority("GEOSERVER_ADMIN");
+
+        Process process = create(
+                "",
+                String.format("Создание организации: %s", createDto.getName()),
+                ProcessType.CREATE_ORG);
+
+        OrgMqProcessRequest payload = new OrgMqProcessRequest(newOrganization.getId(),
+                createDto.getEmail(),
+                createDto.getPassword());
+
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.CREATE_ORG, payload));
 
         return newOrganization;
     }
@@ -147,12 +169,13 @@ public class OrganizationService {
         organizationRepository.deleteById(id);
     }
 
-    public void handleMqResponse(OrgMqResponse response) {
-        log.debug("Mq response. Organization: {}", response.getOrgId());
+    public void handleMqResponse(BaseMqProcessResponse response) {
+        Long orgId = Long.parseLong(response.getPayload().toString());
+        log.debug("Mq response. Organization: {}", orgId);
 
         Organization organization = organizationRepository
-                .findById(response.getOrgId())
-                .orElseThrow(() -> new EntityNotFoundException("Not found organization by id: " + response.getOrgId()));
+                .findById(orgId)
+                .orElseThrow(() -> new EntityNotFoundException("Not found organization by id: " + orgId));
 
         if (ProcessStatus.DONE.equals(response.getStatus())) {
             organization.setStatus(ProcessStatus.DONE);
@@ -164,7 +187,7 @@ public class OrganizationService {
 
             log.info("Organization with user successfully created");
         } else {
-            log.error("Error creation organization: {}", response.getOrgId());
+            log.error("Error creation organization: {}", orgId);
 
             // Удаляем орг. и пользователя который был создан как админ для неё.
             User orgAdmin = organization.getUsers().get(0);
@@ -173,14 +196,8 @@ public class OrganizationService {
         }
     }
 
-    /**
-     * Процессы определенной организации
-     */
-    public Process getProcessById(Long orgId, String userName, long processId) {
-        // TODO Проверять доступ пользователя к организации, не отдавать процессы других организаций
-        return processRepository
-                .findById(processId)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден процесс: " + processId));
+    public Process getProcessById(long processId) {
+        return getProcessById(processId);
     }
 
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {

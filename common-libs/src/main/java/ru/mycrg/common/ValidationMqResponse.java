@@ -16,7 +16,6 @@ public class ValidationMqResponse {
 
     public ValidationMqResponse() {}
 
-
     public ValidationMqResponse(String layerName) {
         this.layerName = layerName;
     }

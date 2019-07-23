@@ -10,24 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.entity.User;
-import ru.mycrg.gis.exceptions.CrgConflictException;
-import ru.mycrg.gis.exceptions.CrgFailedException;
-import ru.mycrg.gis.queue.MqSender;
-import ru.mycrg.gis.repository.UserRepository;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
-import java.util.Optional;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -37,15 +28,10 @@ public class OrganizationController {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
-    private final MqSender mqSender;
-    private final UserRepository userRepository;
     private final OrganizationService organizationService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService, MqSender mqSender,
-                                  UserRepository userRepository) {
-        this.mqSender = mqSender;
-        this.userRepository = userRepository;
+    public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
 
@@ -68,19 +54,7 @@ public class OrganizationController {
     public ResponseEntity createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {
         log.debug("Request create organization: {}", createDto.getName());
 
-        Optional<User> userByEmail = userRepository.findUserByEmail(createDto.getEmail());
-        if (userByEmail.isPresent()) {
-            throw new CrgConflictException("Данный email уже занят");
-        }
-
-        Organization newOrganization;
-        try {
-            newOrganization = organizationService.create(createDto);
-        } catch (Exception e) {
-            log.error("Не удалось создать организацию: ", e);
-
-            throw new CrgFailedException("Не удалось создать организацию: " + createDto.getName());
-        }
+        Organization newOrganization = organizationService.createOrg(createDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -90,13 +64,6 @@ public class OrganizationController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
-
-        OrgMqProcessRequest payload = new OrgMqProcessRequest(newOrganization.getId(), newOrganization.getId(),
-                createDto.getEmail(),
-                createDto.getPassword(),
-                ProcessType.CREATE_ORG);
-
-        mqSender.send(new BaseMqProcessRequest(0L, ProcessType.CREATE_ORG, payload));
 
         return new ResponseEntity(headers, HttpStatus.ACCEPTED);
     }
@@ -136,7 +103,7 @@ public class OrganizationController {
                                                         Principal principal) {
         log.debug("Get organization task: {}", taskId);
 
-        return ResponseEntity.ok(organizationService.getProcessById(id, principal.getName(), taskId));
+        return ResponseEntity.ok(organizationService.getProcessById(taskId));
     }
 
 }
