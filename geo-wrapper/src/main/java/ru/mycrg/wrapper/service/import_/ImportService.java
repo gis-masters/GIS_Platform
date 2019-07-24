@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service;
+package ru.mycrg.wrapper.service.import_;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

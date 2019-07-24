@@ -34,6 +34,7 @@ public class MqProperties {
     public static final String QUEUE_GML_INIT = "gml.init";
     public static final String KEY_GML_INIT = "key.gml.init";
 
+    // TODO: GML сейчас это частный случай экспорта
     public static final String FANOUT_GML_RESPONSE = "fanout.gml.response";
     public static final String QUEUE_GML_RESPONSE = "gml.response";
     public static final String KEY_GML_RESPONSE = "key.gml.response";

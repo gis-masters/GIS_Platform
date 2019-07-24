@@ -1,22 +1,21 @@
-package ru.mycrg.wrapper.service.geoserver;
+package ru.mycrg.wrapper.geoserver_client.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
-import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
-import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
+import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
+import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
+import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static ru.mycrg.common.CrgConstants.*;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.WRITE;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.WRITE;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
 
 @Service
 public class ProjectService {
@@ -25,16 +24,15 @@ public class ProjectService {
 
     private final WorkspacesService workspacesService;
     private final RulesService rulesService;
-    private final BaseDaoService baseDaoService;
     private final StorageService storageService;
 
     @Autowired
     public ProjectService(WorkspacesService workspacesService,
-                          RulesService rulesService, StorageService storageService, BaseDaoService baseDaoService) {
+                          RulesService rulesService,
+                          StorageService storageService) {
         this.workspacesService = workspacesService;
         this.rulesService = rulesService;
         this.storageService = storageService;
-        this.baseDaoService = baseDaoService;
     }
 
     /**
@@ -54,9 +52,6 @@ public class ProjectService {
         rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
         // Задаю правило WRITE потому как не давало менять фичу через wfs
         rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
-
-        // В БД создаем схему и инициализируем в ней шаблонную структуру
-        baseDaoService.initP10Template(databaseName, projectName);
     }
 
     public void deleteProject(OrgMqProcessRequest request) {

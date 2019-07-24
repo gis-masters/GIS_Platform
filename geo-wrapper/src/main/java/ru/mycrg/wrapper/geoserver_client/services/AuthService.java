@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.geoserver;
+package ru.mycrg.wrapper.geoserver_client.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;

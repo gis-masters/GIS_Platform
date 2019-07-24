@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.geoserver.rule;
+package ru.mycrg.wrapper.geoserver_client.rule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.Request;
@@ -9,14 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.service.geoserver.GeoServerBaseService;
+import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.JSON_MEDIA_TYPE;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerConstants.XML_MEDIA_TYPE;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerConstants.JSON_MEDIA_TYPE;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerConstants.XML_MEDIA_TYPE;
 
 @Service
 public class RulesService extends GeoServerBaseService {

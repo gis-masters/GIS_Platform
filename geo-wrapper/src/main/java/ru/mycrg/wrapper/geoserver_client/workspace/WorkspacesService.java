@@ -1,10 +1,10 @@
-package ru.mycrg.wrapper.service.geoserver.workspace;
+package ru.mycrg.wrapper.geoserver_client.workspace;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.service.geoserver.GeoServerBaseService;
-import ru.mycrg.wrapper.service.geoserver.GeoServerConstants;
+import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
+import ru.mycrg.wrapper.geoserver_client.GeoServerConstants;
 
 import java.io.IOException;
 

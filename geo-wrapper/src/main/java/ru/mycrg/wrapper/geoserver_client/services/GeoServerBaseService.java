@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.geoserver;
+package ru.mycrg.wrapper.geoserver_client.services;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;

@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.geoserver;
+package ru.mycrg.wrapper.geoserver_client;
 
 public class GeoServerUtil {
 

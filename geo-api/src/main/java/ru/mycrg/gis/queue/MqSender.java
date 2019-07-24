@@ -28,7 +28,7 @@ public class MqSender {
             case VALIDATION:    send(FANOUT_VALIDATION_START, KEY_VALIDATION_START, mqRequest); break;
             case EXPORT:        send(FANOUT_GML_INIT, KEY_GML_INIT, mqRequest); break;
             default:
-                log.warn("Unsupported mqRequest type");
+                log.warn("Unsupported mqRequest type: {}", mqRequest.getType());
         }
     }
 

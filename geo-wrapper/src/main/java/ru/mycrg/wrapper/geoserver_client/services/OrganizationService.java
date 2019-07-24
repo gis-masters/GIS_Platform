@@ -1,21 +1,21 @@
-package ru.mycrg.wrapper.service.geoserver;
+package ru.mycrg.wrapper.geoserver_client.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
-import ru.mycrg.wrapper.service.geoserver.storage.StorageService;
-import ru.mycrg.wrapper.service.geoserver.user_role.UsersAndRolesService;
-import ru.mycrg.wrapper.service.geoserver.workspace.WorkspacesService;
+import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
+import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
+import ru.mycrg.wrapper.geoserver_client.user_role.UsersAndRolesService;
+import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
 
 import java.io.IOException;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.CrgConstants.DEFAULT_ROLE_NAME;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerPermissions.ADMIN;
-import static ru.mycrg.wrapper.service.geoserver.GeoServerUtil.buildRule;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
 
 /**
  * При создании БД для организации, использую ИД организации для генерации названия БД.
@@ -32,17 +32,17 @@ public class OrganizationService {
     private final WorkspacesService workspacesService;
     private final UsersAndRolesService usersAndRolesService;
     private final RulesService rulesService;
-    private final BaseDaoService baseDaoService;
     private final StorageService storageService;
 
     @Autowired
-    public OrganizationService(WorkspacesService workspacesService, UsersAndRolesService usersAndRolesService,
-                               RulesService rulesService, StorageService storageService, BaseDaoService baseDaoService) {
+    public OrganizationService(WorkspacesService workspacesService,
+                               UsersAndRolesService usersAndRolesService,
+                               RulesService rulesService,
+                               StorageService storageService) {
         this.workspacesService = workspacesService;
         this.usersAndRolesService = usersAndRolesService;
         this.rulesService = rulesService;
         this.storageService = storageService;
-        this.baseDaoService = baseDaoService;
     }
 
     /**
@@ -57,7 +57,7 @@ public class OrganizationService {
         log.debug("Create organization on geoserver: {}", dto.getOrgId());
 
         String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
-        String dbName = "database_" + dto.getOrgId();
+        String dbName = DEFAULT_DB_NAME + dto.getOrgId();
         String scratchWorkspaceName = "scratch_" + dbName;
 
         // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
@@ -72,9 +72,6 @@ public class OrganizationService {
         rulesService.addRestRule(roleName);
 
         usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
-
-        // В БД
-        baseDaoService.createDb(dbName);
     }
 
 }

@@ -2,9 +2,9 @@ package unit;
 
 import org.junit.Test;
 import junit.framework.TestCase;
-import ru.mycrg.wrapper.service.geoserver.GeoServerUtil;
-import ru.mycrg.wrapper.service.geoserver.rule.RulesService;
-import ru.mycrg.wrapper.service.geoserver.GeoServerPermissions;
+import ru.mycrg.wrapper.geoserver_client.GeoServerUtil;
+import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
+import ru.mycrg.wrapper.geoserver_client.GeoServerPermissions;
 
 import java.util.HashMap;
 import java.util.Map;
