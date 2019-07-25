@@ -22,7 +22,7 @@
 
         <div *ngIf="true" class="error-text">{{errorMsg}}</div>
 
-        <div class="project-item-footer">
+        <div class="project-item-footer" style="background-color: lightslategray!important;">
           <button mat-button class="float-left" (click)="cancel($event)">Отмена</button>
           <button mat-button class="float-right" [disabled]="!projectName"
                   (click)="createNew($event)">Сохранить</button>
@@ -36,16 +36,15 @@
     <div *ngIf="isProjectsLoaded">
       <mat-grid-tile *ngFor="let pItem of projects" class="project-item"
                      (mouseover)="hoverBy(pItem)" (mouseleave)="stopHover()">
-        <div *ngIf="pItem.status.valueOf() === done.valueOf()">
-          <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName"
-                    (click)="openDeleteDialog(pItem)">delete</mat-icon>
+        <div *ngIf="pItem.status.valueOf() === done.valueOf()" class="inner-div"></div>
 
-          <div class="project-name" style="-webkit-box-orient: vertical;">{{pItem.internalName}}</div>
-          <div class="project-info">Слоев загружено: {{pItem.layersCount}}</div>
+        <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName"
+                  (click)="openDeleteDialog(pItem)">delete</mat-icon>
+        <div class="project-name">{{pItem.internalName}}</div>
+        <div class="project-info">Слоев загружено: {{pItem.layersCount}}</div>
 
-          <div class="project-item-footer" (click)="openProject(pItem)">
-            <span style="vertical-align: -webkit-baseline-middle">Открыть</span>
-          </div>
+        <div class="project-item-footer" (click)="openProject(pItem)">
+          <span style="vertical-align: -webkit-baseline-middle">Открыть</span>
         </div>
 
         <mat-spinner *ngIf="pItem.status === pending"></mat-spinner>
