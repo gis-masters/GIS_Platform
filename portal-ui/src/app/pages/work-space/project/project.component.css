@@ -65,6 +65,8 @@
 }
 
 .project-item-footer {
+  display: flex;
+  justify-content: space-between;
   background-color: #ffffff70;
   position: absolute;
   left: 0;
@@ -72,7 +74,6 @@
   width: 100%;
   height: 20%;
 
-  text-align: -webkit-center;
   font-weight: 500;
   color: white;
 

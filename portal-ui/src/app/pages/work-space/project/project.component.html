@@ -23,9 +23,8 @@
         <div *ngIf="true" class="error-text">{{errorMsg}}</div>
 
         <div class="project-item-footer" style="background-color: lightslategray!important;">
-          <button mat-button class="float-left" (click)="cancel($event)">Отмена</button>
-          <button mat-button class="float-right" [disabled]="!projectName"
-                  (click)="createNew($event)">Сохранить</button>
+          <button mat-button (click)="cancel($event)">Отмена</button>
+          <button mat-button (click)="createNew($event)" [disabled]="!projectName" >Сохранить</button>
         </div>
       </div>
     </mat-grid-tile>
@@ -34,17 +33,21 @@
       <mat-spinner></mat-spinner>
     </mat-grid-tile>
     <div *ngIf="isProjectsLoaded">
-      <mat-grid-tile *ngFor="let pItem of projects" class="project-item"
+      <mat-grid-tile *ngFor="let pItem of projects"
+                     [ngClass]="pItem.status !== pending ? 'project-item' : 'new-project-item'"
                      (mouseover)="hoverBy(pItem)" (mouseleave)="stopHover()">
         <div *ngIf="pItem.status.valueOf() === done.valueOf()" class="inner-div"></div>
 
-        <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName"
+        <mat-icon class="project-remove-icon" *ngIf="activeProject === pItem.internalName && pItem.status !== pending"
                   (click)="openDeleteDialog(pItem)">delete</mat-icon>
-        <div class="project-name">{{pItem.internalName}}</div>
-        <div class="project-info">Слоев загружено: {{pItem.layersCount}}</div>
+        <div class="project-name"
+             *ngIf="pItem.status !== pending">{{pItem.internalName}}</div>
+        <div class="project-info"
+             *ngIf="pItem.status !== pending">Слоев загружено: {{pItem.layersCount}}</div>
 
-        <div class="project-item-footer" (click)="openProject(pItem)">
-          <span style="vertical-align: -webkit-baseline-middle">Открыть</span>
+        <div class="project-item-footer" (click)="openProject(pItem)"
+             *ngIf="pItem.status !== pending">
+          <span style="margin: auto">Открыть</span>
         </div>
 
         <mat-spinner *ngIf="pItem.status === pending"></mat-spinner>
