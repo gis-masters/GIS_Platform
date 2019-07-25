@@ -11,7 +11,7 @@
     <div class="cut-text">{{getDescription()}}</div>
     <div class="content-action" *ngIf="isShowActionBlock()">
       <div *ngIf="isShowDownloadLink()" style="float: left">
-        <mat-icon class="content-link-icon info" (click)="download(true)">archive</mat-icon>
+        <mat-icon class="content-link-icon info" (click)="download()">archive</mat-icon>
         <span class="content-link-text">{{getLinkTitle()}}</span>
 
 <!--        <mat-icon class="content-link-icon error" (click)="download(false)">error</mat-icon>-->

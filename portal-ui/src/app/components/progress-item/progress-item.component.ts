@@ -2,7 +2,7 @@ import {saveAs} from 'file-saver';
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
-import {ExportWsMsg, WsMessageType} from '../../services/ws.service';
+import {WsMessageType} from '../../services/ws.service';
 import {DownloadFileService} from '../../services/download-file.service';
 
 @Component({
@@ -25,9 +25,7 @@ export class ProgressItemComponent {
     } else if (this.event.payload.payload.status === 'SUB_DONE') {
       return this.event.payload.payload.description;
     } else if (this.event.payload.payload.status === 'DONE') {
-      if (this.event.payload.type === WsMessageType.GML_EXPORT) {
-        return 'Готово';
-      } else if (this.event.payload.type === WsMessageType.EXPORT) {
+      if (this.event.payload.type === WsMessageType.EXPORT) {
         const layerName = this.event.payload.payload['layerName'];
         return layerName ? layerName : 'Готово';
       }
@@ -59,17 +57,11 @@ export class ProgressItemComponent {
     this.eventService.delete(this.event.id);
   }
 
-  download(mode) {
-    let fileName;
+  download() {
     const wsMessage = this.event.payload;
-    const exportWsMsg = wsMessage.payload as ExportWsMsg;
+    const exportWsMsg = wsMessage.payload as any;
 
-    if (mode) {
-      fileName = exportWsMsg.pathToFile.split('/')[3];
-    } else {
-      fileName = exportWsMsg.pathToLog.split('/')[3];
-    }
-
+    const fileName = exportWsMsg.payload.split('/')[3];
     this.fileService.download(fileName)
         .subscribe(data => {
           const blob = new Blob([data], {type: 'text/xml'});
@@ -87,12 +79,12 @@ export class ProgressItemComponent {
   }
 
   getLinkTitle(): string {
-    if (this.event.payload.type === WsMessageType.GML_EXPORT) {
-      return 'Скачать GML';
-    } else if (this.event.payload.type === WsMessageType.EXPORT) {
-      return 'Скачать Shape архив';
-    } else {
+    // if (this.event.payload.type === WsMessageType.GML_EXPORT) {
+    //   return 'Скачать GML';
+    // } else if (this.event.payload.type === WsMessageType.EXPORT) {
+    //   return 'Скачать Shape архив';
+    // } else {
       return 'Скачать';
-    }
+    // }
   }
 }

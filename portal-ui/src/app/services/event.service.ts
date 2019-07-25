@@ -45,7 +45,7 @@ export class EventService {
 
   // Пока только експорт
   private isAllowedMessageType(msg: IWsMessage) {
-    return msg.type === WsMessageType.GML_EXPORT || msg.type === WsMessageType.EXPORT;
+    return msg.type === WsMessageType.EXPORT;
   }
 
   /**

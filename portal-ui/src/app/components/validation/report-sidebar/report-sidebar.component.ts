@@ -58,7 +58,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.wsService.messages$
         .pipe(
           filter(value => !!value),
-          filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION_INIT),
+          filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION),
           takeUntil(this.unsubscribe$)
         )
         .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));

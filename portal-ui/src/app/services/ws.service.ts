@@ -99,15 +99,11 @@ export interface ValidationWsMsg {
 
 // Править в соответствии с: ru/mycrg/common/enums/ProcessType.java
 export enum WsMessageType {
-  VALIDATION_INIT = 'VALIDATION_INIT',
-
-  GML_EXPORT = 'GML_EXPORT',
-  EXPORT = 'EXPORT',
-
-  IMPORT = 'IMPORT',
-
   CREATE_ORG = 'CREATE_ORG',
   CREATE_PROJECT = 'CREATE_PROJECT',
-  DELETE_ORG = 'DELETE_ORG',
   DELETE_PROJECT = 'DELETE_PROJECT',
+
+  IMPORT = 'IMPORT',
+  VALIDATION = 'VALIDATION',
+  EXPORT = 'EXPORT'
 }
