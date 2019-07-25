@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.common.crypt.AES;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
@@ -29,7 +29,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static ru.mycrg.common.enums.ProcessStatus.*;
+import static ru.mycrg.common.enums.ProcessStatus.DONE;
 
 /**
  * CRUD сервис для работы с Организациями.
@@ -114,7 +114,7 @@ public class OrganizationService extends BaseProcessService {
 
         OrgMqProcessRequest payload = new OrgMqProcessRequest(newOrganization.getId(),
                 createDto.getEmail(),
-                createDto.getPassword());
+                AES.encrypt(createDto.getPassword(), createDto.getEmail()));
 
         mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.CREATE_ORG, payload));
 

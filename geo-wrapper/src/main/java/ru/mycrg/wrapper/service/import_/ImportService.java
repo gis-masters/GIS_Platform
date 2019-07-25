@@ -13,6 +13,8 @@ import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.BaseRequestHandler;
+import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -21,7 +23,7 @@ import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 
 @Service
-public class ImportService {
+public class ImportService extends BaseRequestHandler implements IRequestHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
@@ -40,21 +42,25 @@ public class ImportService {
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void doImport(BaseMqProcessRequest mqRequest) {
-        ImportMqRequest payload = (ImportMqRequest) mqRequest.getPayload();
-
+    @Override
+    public void handle(BaseMqProcessRequest mqRequest) {
         log.debug("Start import");
 
-        totalRows = (int) calculateTotalRows(payload.getImportFeatures());
+        try {
+            ImportMqRequest payload = mapper.convertValue(mqRequest.getPayload(), ImportMqRequest.class);
 
-        mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация", 0));
+            totalRows = (int) calculateTotalRows(payload.getImportFeatures());
 
-        payload
-                .getImportFeatures()
-                .forEach(feature -> importFeature(mqRequest, feature, processedRows));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация", 0));
 
+            payload.getImportFeatures()
+                   .forEach(feature -> importFeature(mqRequest, feature, processedRows));
 
-        mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "Импорт завершен", 100));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "Импорт завершен", 100));
+        } catch (Exception e) {
+            log.error("Ошибка при импорте: {}", e.getMessage());
+            mqSender.send(new BaseMqProcessResponse(mqRequest, ERROR, e.getMessage()));
+        }
     }
 
     /**
@@ -133,6 +139,7 @@ public class ImportService {
     /**
      * Импорт плагин геосервера кодирует в ISO_8859_1. Поэтому есть необходимость разкодировать обратно
      * Попутно есть желание проставить globalid всем обьектам у которых его нет
+     *
      * @param batch Пачка строк из БД
      * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.

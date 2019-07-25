@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
+import ru.mycrg.common.crypt.AES;
 import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
 import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
@@ -73,7 +74,8 @@ public class OrganizationService implements IOrganization {
             // Задаем правила доступа к рабочей области "scratch"
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
 
-            usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
+            String rawPassword = AES.decrypt(dto.getRawPassword(), dto.getEmail());
+            usersAndRolesService.createUser(dto.getEmail(), rawPassword);
             usersAndRolesService.createRole(roleName);
             rulesService.addRestRule(roleName);
 

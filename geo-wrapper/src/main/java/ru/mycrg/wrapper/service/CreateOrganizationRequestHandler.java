@@ -19,15 +19,13 @@ import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
  * Сервис обрабатывающий событие создания организации.
  */
 @Service
-public class CreateOrganizationRequestHandler implements IRequestHandler {
+public class CreateOrganizationRequestHandler extends BaseRequestHandler implements IRequestHandler {
 
     private final Logger log = LoggerFactory.getLogger(CreateOrganizationRequestHandler.class);
 
     private final IOrganization geoserverClient;
     private final BaseDaoService baseDaoService;
     private final MqSender mqSender;
-
-    private ObjectMapper mapper = new ObjectMapper();
 
     public CreateOrganizationRequestHandler(IOrganization geoserverClient,
                                             BaseDaoService baseDaoService,

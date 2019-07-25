@@ -22,14 +22,17 @@ public class ProjectService implements IProject {
     private final WorkspacesService workspacesService;
     private final RulesService rulesService;
     private final StorageService storageService;
+    private final AuthService authService;
 
     @Autowired
     public ProjectService(WorkspacesService workspacesService,
                           RulesService rulesService,
+                          AuthService authService,
                           StorageService storageService) {
         this.workspacesService = workspacesService;
         this.rulesService = rulesService;
         this.storageService = storageService;
+        this.authService = authService;
     }
 
     /**
@@ -39,6 +42,8 @@ public class ProjectService implements IProject {
     @Override
     public void createProject(String projectName, Long orgId) throws GeoserverClientException {
         try {
+            authService.authorize();
+
             String databaseName = DEFAULT_DB_NAME + orgId;
             String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
