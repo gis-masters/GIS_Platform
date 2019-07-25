@@ -6,15 +6,16 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.config.MqProperties;
+import ru.mycrg.wrapper.service.requests_handler.EventDispatcher;
 
 @Service
 public class MqListener {
 
     private static final Logger log = LoggerFactory.getLogger(MqListener.class);
 
-    private final IEventDispatcher eventDispatcher;
+    private final EventDispatcher eventDispatcher;
 
-    public MqListener(IEventDispatcher eventDispatcher) {
+    public MqListener(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
     }
 
@@ -24,7 +25,7 @@ public class MqListener {
             MqProperties.QUEUE_VALIDATION_START,
             MqProperties.QUEUE_GML_INIT
     })
-    public void catchEvent(final BaseMqProcessRequest mqRequest) {
+    public void catchEvents(final BaseMqProcessRequest mqRequest) {
         log.info("catchEvent: {}", mqRequest.getId());
 
         eventDispatcher.handleEvent(mqRequest);

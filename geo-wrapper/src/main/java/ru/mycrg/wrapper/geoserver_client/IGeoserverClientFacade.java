@@ -1,14 +1,17 @@
 package ru.mycrg.wrapper.geoserver_client;
 
-import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.OrgMqProcessRequest;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Optional;
 
 public interface IGeoserverClientFacade {
 
-    void createOrganization(BaseMqProcessRequest mqRequest) throws IOException, RuntimeException;
+    Optional authorize() throws IOException;
 
-    void createProject(BaseMqProcessRequest mqRequest) throws IOException, RuntimeException, SQLException;
-    void deleteProject(BaseMqProcessRequest mqRequest);
+    void createOrganization(OrgMqProcessRequest mqRequest) throws IOException, RuntimeException;
+
+    void createProject(String projectName, Long orgId) throws IOException, RuntimeException;
+
+    void deleteProject(String projectName);
 }

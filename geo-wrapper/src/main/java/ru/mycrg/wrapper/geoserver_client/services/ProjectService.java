@@ -4,13 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
 import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
 import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static ru.mycrg.common.CrgConstants.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
@@ -39,9 +37,8 @@ public class ProjectService {
      * Создание проекта.
      * Создание хранилища (postgis) на геосервере.
      */
-    public void createProject(OrgMqProcessRequest dto) throws IOException, RuntimeException, SQLException {
-        String projectName = dto.getProjectName();
-        String databaseName = DEFAULT_DB_NAME + dto.getOrgId();
+    public void createProject(String projectName, Long orgId) throws IOException, RuntimeException {
+        String databaseName = DEFAULT_DB_NAME + orgId;
         String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
         // На геосервере создаем рабочую область и хранилище.
@@ -49,12 +46,12 @@ public class ProjectService {
         storageService.createStorage(databaseName, projectName, projectName, storeName);
 
         // Задаем правила доступа к рабочей области проекта
-        rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
+        rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + orgId);
         // Задаю правило WRITE потому как не давало менять фичу через wfs
-        rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
+        rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + orgId);
     }
 
-    public void deleteProject(OrgMqProcessRequest request) {
-        log.info("Try delete project: {}", request.getProjectName());
+    public void deleteProject(String projectName) {
+        log.info("Try delete project: {}", projectName);
     }
 }

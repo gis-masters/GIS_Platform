@@ -1,35 +1,60 @@
-package ru.mycrg.wrapper.queue;
+package ru.mycrg.wrapper.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.wrapper.service.SomeService;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.OrgMqProcessRequest;
+import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.geoserver_client.IGeoserverClientFacade;
+import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+
+/**
+ * Сервис обрабатывающий события касательно проектов.
+ */
 @Service
-public class EventDispatcherImpl implements IEventDispatcher {
+public class CreateProjectRequestHandler implements IRequestHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(MqListener.class);
+    private final Logger log = LoggerFactory.getLogger(CreateProjectRequestHandler.class);
 
-    private final SomeService someService;
+    private final IGeoserverClientFacade geoserverClient;
+    private final BaseDaoService baseDaoService;
+    private final MqSender mqSender;
 
-    public EventDispatcherImpl(SomeService someService) {
-        this.someService = someService;
+    private ObjectMapper mapper = new ObjectMapper();
+
+    public CreateProjectRequestHandler(IGeoserverClientFacade geoserverClient,
+                                       BaseDaoService baseDaoService,
+                                       MqSender mqSender) {
+        this.geoserverClient = geoserverClient;
+        this.baseDaoService = baseDaoService;
+        this.mqSender = mqSender;
     }
 
     @Override
-    public void handleEvent(BaseMqProcessRequest mqRequest) {
+    public void handle(BaseMqProcessRequest mqRequest) {
+        try {
+            OrgMqProcessRequest payload = (OrgMqProcessRequest) mqRequest.getPayload();
+            geoserverClient.createProject(payload.getProjectName(), payload.getOrgId());
 
-        switch (mqRequest.getType()) {
-            case CREATE_ORG:        someService.createOrganization(mqRequest);  break;
-            case CREATE_PROJECT:    someService.createProject(mqRequest);       break;
-            default:
-                log.warn("Unsupported mqRequest type: {}", mqRequest.getType());
+            baseDaoService.initP10Template(DEFAULT_DB_NAME + "some", "somePName");
+
+            mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.DONE));
+        } catch (Exception e) {
+            log.error("Не удалось создать организацию на геосервере: ", e);
+
+            mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.ERROR, e.getMessage()));
         }
     }
 
+}
 
-//    @RabbitListener(queues = MqProperties.QUEUE_ORG_INIT)
 //    public void handleOrganizationEvent(final OrgMqProcessRequest mqRequest) {
 //        log.info("handleOrganizationEvent. Получено сообщение {}", mqRequest.toString());
 //
@@ -148,8 +173,9 @@ public class EventDispatcherImpl implements IEventDispatcher {
 //        }
 //    }
 
-//    private void createOrg(BaseMqProcessRequest mqRequest) {
-//        OrgMqProcessRequest request = (OrgMqProcessRequest) mqRequest.getPayload();
+
+//    private void createOrg(BaseMqProcessRequest dto) {
+//        OrgMqProcessRequest request = (OrgMqProcessRequest) dto;
 //
 //        try {
 //            if (authService.authorize().isPresent()) {
@@ -171,5 +197,3 @@ public class EventDispatcherImpl implements IEventDispatcher {
 //        }
 //    }
 
-
-}

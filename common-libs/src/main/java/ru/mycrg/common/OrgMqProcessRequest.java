@@ -72,13 +72,4 @@ public class OrgMqProcessRequest {
         this.projectName = projectName;
     }
 
-    @Override
-    public String toString() {
-        return "OrgMqProcessRequest{" +
-                "orgId=" + orgId +
-                ", comment='" + comment + '\'' +
-                ", email='" + email + '\'' +
-                ", userName='" + userName + '\'' +
-                '}';
-    }
 }

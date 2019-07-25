@@ -135,10 +135,8 @@ public class ProjectService extends BaseProcessService {
                 String.format("Удаление проекта: %s", project.getInternalName()),
                 ProcessType.DELETE_PROJECT);
 
-        OrgMqProcessRequest payload = new OrgMqProcessRequest(orgId, project.getGeoserverName());
-
         // Отсылаем евент
-        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.DELETE_PROJECT, payload));
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.DELETE_PROJECT, project.getGeoserverName()));
 
         return process;
     }
