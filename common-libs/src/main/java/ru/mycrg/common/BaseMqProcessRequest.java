@@ -39,7 +39,11 @@ public class BaseMqProcessRequest {
     }
 
     public Object getPayload() {
-        return payload;
+        if (payload == null) {
+            return "";
+        } else {
+            return payload;
+        }
     }
 
     public void setPayload(Object payload) {

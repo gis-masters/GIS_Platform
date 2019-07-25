@@ -17,6 +17,7 @@ import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.FileService;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,7 +39,7 @@ import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 
 @Service
-public class GmlGenerator implements IExporter {
+public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
@@ -90,8 +91,9 @@ public class GmlGenerator implements IExporter {
      */
     @NotNull
     private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
-        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
         try {
+            MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
+
             GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
             BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest);
@@ -122,7 +124,7 @@ public class GmlGenerator implements IExporter {
     }
 
     private void handleResource(BaseMqProcessRequest mqRequest, GmlDocumentHolder docHolder, ResourceProjection resource) {
-        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
+        MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
         log.debug("Handle source: {}", resource.toString());
 

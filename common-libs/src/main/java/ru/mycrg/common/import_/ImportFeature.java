@@ -3,7 +3,6 @@ package ru.mycrg.common.import_;
 import ru.mycrg.common.ResourceProjection;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ImportFeature {
 

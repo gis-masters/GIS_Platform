@@ -9,6 +9,7 @@ import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
+import ru.mycrg.wrapper.service.BaseRequestHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GDALService implements IExporter {
+public class GDALService extends BaseRequestHandler implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GDALService.class);
 
@@ -34,12 +35,12 @@ public class GDALService implements IExporter {
 
     @Override
     public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
-        MqExportProcessRequest request = (MqExportProcessRequest) mqRequest.getPayload();
+        MqExportProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
         String pathToZip;
 
-        if (request.getFormat().equals("ESRI Shapefile")) {
-            List<ResourceProjection> resourceProjections = request.getResourceProjections();
+        if (payload.getFormat().equals("ESRI Shapefile")) {
+            List<ResourceProjection> resourceProjections = payload.getResourceProjections();
             if (resourceProjections.size() > 1) {
                 log.warn("Not implemented multiple export. Export only first feature.");
 
@@ -51,9 +52,9 @@ public class GDALService implements IExporter {
 
             return pathToZip;
         } else {
-            log.warn("Not supported format: {}", request.getFormat());
+            log.warn("Not supported format: {}", payload.getFormat());
 
-            throw new ExportException("Not supported format: " + request.getFormat());
+            throw new ExportException("Not supported format: " + payload.getFormat());
         }
     }
 

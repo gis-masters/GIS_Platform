@@ -96,9 +96,9 @@ public class ImportService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, BaseMqProcessResponse response) {
-        ImportMqResponse responsePayload = (ImportMqResponse) response.getPayload();
-        process.setStatus(response.getStatus());
+    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
+        ImportMqResponse responsePayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
+        process.setStatus(mqResponse.getStatus());
 
         try {
             String content = "{}";
@@ -109,7 +109,7 @@ public class ImportService extends BaseProcessService {
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
             SubProcessModel subProcess = new SubProcessModel(responsePayload.getDirection(),
-                    response.getDescription(), response.getError());
+                    mqResponse.getDescription(), mqResponse.getError());
 
             details.addSubProcess(subProcess);
 

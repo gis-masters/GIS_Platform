@@ -1,7 +1,6 @@
 package ru.mycrg.common;
 
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.import_.ImportMqResponse;
 
 public class BaseMqProcessResponse extends BaseMqProcessRequest {
 

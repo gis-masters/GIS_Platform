@@ -1,5 +1,7 @@
 package ru.mycrg.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ResourceProjection {
 
     private String dbName;
@@ -14,6 +16,7 @@ public class ResourceProjection {
         this.tableName = tableName;
     }
 
+    @JsonIgnore
     public String getResourceId() {
         return String.join(".", dbName, schemaName, tableName);
     }

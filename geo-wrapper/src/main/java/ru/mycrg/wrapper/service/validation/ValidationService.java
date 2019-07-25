@@ -10,6 +10,8 @@ import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.BaseRequestHandler;
+import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -19,7 +21,7 @@ import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
 import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
 
 @Service
-public class ValidationService {
+public class ValidationService extends BaseRequestHandler implements IRequestHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
 
@@ -42,7 +44,8 @@ public class ValidationService {
     private String CLASS_ID = "classid";
 
     @Autowired
-    public ValidationService(IValidator validator, MqSender mqSender, BaseDaoService baseDaoService,
+    public ValidationService(IValidator validator, MqSender mqSender,
+                             BaseDaoService baseDaoService,
                              DatasourceFactory datasourceFactory) {
         this.mqSender = mqSender;
         this.validator = validator;
@@ -50,32 +53,33 @@ public class ValidationService {
         this.datasourceFactory = datasourceFactory;
     }
 
-    /**
-     * Валидация слоя.
-     *
-     * @param mqRequest Запрос
-     */
-    public void startValidation(BaseMqProcessRequest mqRequest) {
-        ValidationMqProcessRequest request = (ValidationMqProcessRequest) mqRequest.getPayload();
+    @Override
+    public void handle(BaseMqProcessRequest mqRequest) {
         log.debug("Start validation");
 
-        totalRows = (int) calculateTotalRows(request.getResourceProjections());
+        try {
+            ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
 
-        mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация...", 0));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация...", 0));
 
-        request
-                .getResourceProjections()
-                .forEach(resource -> validateResource(mqRequest, resource, processedRows));
+            totalRows = (int) calculateTotalRows(payload.getResourceProjections());
+            payload.getResourceProjections()
+                   .forEach(resource -> validateResource(mqRequest, resource, processedRows));
 
-        mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "", 100));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "", 100));
+        } catch (Exception e) {
+            log.error("Не удалось выполнить валидацию.", e);
+
+            mqSender.send(new BaseMqProcessResponse(mqRequest, ERROR, e.getMessage()));
+        }
     }
 
     private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
-        ValidationMqProcessRequest request = (ValidationMqProcessRequest) mqRequest.getPayload();
         log.debug("Validate resource: {}", resource.getResourceId());
 
+        ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
         try {
-            EntityTypeDto feature = getRuleByTableName(request.getFeatures(), resource.getTableName());
+            EntityTypeDto feature = getRuleByTableName(payload.getFeatures(), resource.getTableName());
 
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 

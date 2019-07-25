@@ -43,7 +43,7 @@ public class EventDispatcher {
             getHandler(mqResponse.getType())
                     .handleMqResponse(mqResponse);
         } catch (Exception e) {
-            log.error("Not processable event type");
+            log.error("Error handle response: {}", e.getMessage());
         }
     }
 

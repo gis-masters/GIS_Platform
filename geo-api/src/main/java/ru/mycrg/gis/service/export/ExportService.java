@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.MqExportProcessRequest;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -89,7 +92,7 @@ public class ExportService extends BaseProcessService {
 
     @Override
     public void handleMqResponse(BaseMqProcessResponse mqResponse) {
-        MqExportResponse responsePayload = (MqExportResponse) mqResponse.getPayload();
+        String pathToFile = mqResponse.getPayload().toString();
 
         if (mqResponse.getId() == null) {
             log.warn("Return invalid response");
@@ -99,9 +102,9 @@ public class ExportService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);                break;
-            case ERROR:     error(process, mqResponse.getError());            break;
-            case DONE:      complete(process, responsePayload.getPathToFile());  break;
+            case SUB_DONE:  addSubStep(process, mqResponse);        break;
+            case ERROR:     error(process, mqResponse.getError());  break;
+            case DONE:      complete(process, pathToFile);          break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -115,9 +118,9 @@ public class ExportService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, BaseMqProcessResponse response) {
-        MqExportResponse responsePayload = (MqExportResponse) response.getPayload();
-        process.setStatus(response.getStatus());
+    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
+        String tableName = mqResponse.getPayload().toString();
+        process.setStatus(mqResponse.getStatus());
 
         try {
             String content = "{}";
@@ -127,8 +130,8 @@ public class ExportService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(responsePayload.getLayerName(),
-                    response.getDescription(), response.getError());
+            SubProcessModel subProcess = new SubProcessModel(tableName, mqResponse.getDescription(),
+                    mqResponse.getError());
 
             details.addSubProcess(subProcess);
 
