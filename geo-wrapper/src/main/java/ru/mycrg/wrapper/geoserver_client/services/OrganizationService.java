@@ -5,12 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
+import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
 import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
 import ru.mycrg.wrapper.geoserver_client.user_role.UsersAndRolesService;
 import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
-
-import java.io.IOException;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.CrgConstants.DEFAULT_ROLE_NAME;
@@ -25,7 +24,7 @@ import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
  * именования рабочей области на геосервере.
  */
 @Service
-public class OrganizationService {
+public class OrganizationService implements IOrganization {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
@@ -33,15 +32,18 @@ public class OrganizationService {
     private final UsersAndRolesService usersAndRolesService;
     private final RulesService rulesService;
     private final StorageService storageService;
+    private final AuthService authService;
 
     @Autowired
     public OrganizationService(WorkspacesService workspacesService,
                                UsersAndRolesService usersAndRolesService,
                                RulesService rulesService,
+                               AuthService authService,
                                StorageService storageService) {
         this.workspacesService = workspacesService;
         this.usersAndRolesService = usersAndRolesService;
         this.rulesService = rulesService;
+        this.authService = authService;
         this.storageService = storageService;
     }
 
@@ -53,25 +55,32 @@ public class OrganizationService {
      * - ассоциируем роль с пользователем
      * - создаем БД
      */
-    public void createOrganization(OrgMqProcessRequest dto) throws IOException, RuntimeException {
+    @Override
+    public void createOrganization(OrgMqProcessRequest dto) throws GeoserverClientException {
         log.debug("Create organization on geoserver: {}", dto.getOrgId());
 
-        String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
-        String dbName = DEFAULT_DB_NAME + dto.getOrgId();
-        String scratchWorkspaceName = "scratch_" + dbName;
+        try {
+            authService.authorize();
 
-        // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
-        workspacesService.createWorkspace(scratchWorkspaceName);
-        storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + "_store");
+            String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
+            String dbName = DEFAULT_DB_NAME + dto.getOrgId();
+            String scratchWorkspaceName = "scratch_" + dbName;
 
-        // Задаем правила доступа к рабочей области "scratch"
-        rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
+            // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
+            workspacesService.createWorkspace(scratchWorkspaceName);
+            storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + "_store");
 
-        usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
-        usersAndRolesService.createRole(roleName);
-        rulesService.addRestRule(roleName);
+            // Задаем правила доступа к рабочей области "scratch"
+            rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
 
-        usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
+            usersAndRolesService.createUser(dto.getEmail(), dto.getRawPassword());
+            usersAndRolesService.createRole(roleName);
+            rulesService.addRestRule(roleName);
+
+            usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
+        } catch (Exception e) {
+            throw new GeoserverClientException(e.getMessage(), e);
+        }
     }
 
 }

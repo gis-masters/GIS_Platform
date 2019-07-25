@@ -5,15 +5,13 @@ import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
 import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 
-import java.io.IOException;
-
 import static ru.mycrg.wrapper.geoserver_client.GeoServerConstants.JSON_MEDIA_TYPE;
 
 @Service
 public class StorageService extends GeoServerBaseService {
 
     public void createStorage(final String databaseName, final String schemaName,
-                              final String workspaceName, final String dataStoreName) throws IOException {
+                              final String workspaceName, final String dataStoreName) throws Exception {
         log.debug("create storage: {}", dataStoreName);
 
         String host = postgisHostWithPort().split(":")[0];

@@ -1,6 +1,5 @@
 package ru.mycrg.wrapper.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,7 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.geoserver_client.IGeoserverClientFacade;
+import ru.mycrg.wrapper.geoserver_client.services.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
@@ -23,13 +22,11 @@ public class CreateProjectRequestHandler implements IRequestHandler {
 
     private final Logger log = LoggerFactory.getLogger(CreateProjectRequestHandler.class);
 
-    private final IGeoserverClientFacade geoserverClient;
+    private final IProject geoserverClient;
     private final BaseDaoService baseDaoService;
     private final MqSender mqSender;
 
-    private ObjectMapper mapper = new ObjectMapper();
-
-    public CreateProjectRequestHandler(IGeoserverClientFacade geoserverClient,
+    public CreateProjectRequestHandler(IProject geoserverClient,
                                        BaseDaoService baseDaoService,
                                        MqSender mqSender) {
         this.geoserverClient = geoserverClient;
@@ -45,7 +42,7 @@ public class CreateProjectRequestHandler implements IRequestHandler {
 
             baseDaoService.initP10Template(DEFAULT_DB_NAME + "some", "somePName");
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.DONE));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Не удалось создать организацию на геосервере: ", e);
 

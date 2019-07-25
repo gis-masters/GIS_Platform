@@ -15,7 +15,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     private static final Logger log = LoggerFactory.getLogger(UsersAndRolesService.class);
 
-    public void createRole(String role) throws IOException {
+    public void createRole(String role) throws Exception {
         log.debug("create role: {}", role);
 
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "");
@@ -29,7 +29,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         doRequest(request, "createRole");
     }
 
-    public void createUser(String user, String password) throws IOException {
+    public void createUser(String user, String password) throws Exception {
         log.debug("create user: {}", user);
 
         RequestBody body = RequestBody.create(GeoServerConstants.XML_ATOM_MEDIA_TYPE,
@@ -53,7 +53,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
-    public void associateUserWithRole(String userName, String role) throws IOException {
+    public void associateUserWithRole(String userName, String role) throws Exception {
         log.debug("Try associate User: {} With role: {}", userName, role);
 
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "");

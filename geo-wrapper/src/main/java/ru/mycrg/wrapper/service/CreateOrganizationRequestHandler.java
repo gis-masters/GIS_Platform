@@ -9,27 +9,27 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.geoserver_client.IGeoserverClientFacade;
+import ru.mycrg.wrapper.geoserver_client.services.IOrganization;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 
 /**
- * Сервис обрабатывающий события касательно организации. <br>
+ * Сервис обрабатывающий событие создания организации.
  */
 @Service
 public class CreateOrganizationRequestHandler implements IRequestHandler {
 
     private final Logger log = LoggerFactory.getLogger(CreateOrganizationRequestHandler.class);
 
-    private final IGeoserverClientFacade geoserverClient;
+    private final IOrganization geoserverClient;
     private final BaseDaoService baseDaoService;
     private final MqSender mqSender;
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    public CreateOrganizationRequestHandler(IGeoserverClientFacade geoserverClient,
+    public CreateOrganizationRequestHandler(IOrganization geoserverClient,
                                             BaseDaoService baseDaoService,
                                             MqSender mqSender) {
         this.geoserverClient = geoserverClient;
@@ -46,7 +46,7 @@ public class CreateOrganizationRequestHandler implements IRequestHandler {
 
             baseDaoService.createDb(DEFAULT_DB_NAME + payload.getOrgId());
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.DONE));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Не удалось создать организацию на геосервере: ", e);
 

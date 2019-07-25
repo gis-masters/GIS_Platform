@@ -11,7 +11,6 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class RulesService extends GeoServerBaseService {
      * @param rule Правило доступа к ресурсу
      * @param role Роль
      */
-    public void addLayersRule(String rule, String role) throws IOException {
+    public void addLayersRule(String rule, String role) throws Exception {
         log.debug("addLayersRule: Rule: {} Role: {}", rule, role);
 
         Request getLayersRoles = new Request.Builder()
@@ -67,7 +66,7 @@ public class RulesService extends GeoServerBaseService {
      *
      * @param role Наименование роли
      */
-    public void addRestRule(String role) throws IOException {
+    public void addRestRule(String role) throws Exception {
         log.info("addRestRule for Role: {}", role);
 
         Request getRestRoles = new Request.Builder()
@@ -117,7 +116,7 @@ public class RulesService extends GeoServerBaseService {
         return oldRules;
     }
 
-    private void createRule(String rule, String role) throws IOException {
+    private void createRule(String rule, String role) throws Exception {
         RequestBody body = RequestBody.create(XML_MEDIA_TYPE,
                 "<rules>\n" +
                         "   <rule resource=\"" + rule + "\">" + role + "</rule>\n" +
@@ -132,7 +131,7 @@ public class RulesService extends GeoServerBaseService {
         doRequest(request, "addLayersRule");
     }
 
-    private void updateRestRoles(Map<String, String> newRules) throws IOException {
+    private void updateRestRoles(Map<String, String> newRules) throws Exception {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())
@@ -142,7 +141,7 @@ public class RulesService extends GeoServerBaseService {
         doRequest(setRestRoles, "updateRestRoles");
     }
 
-    private void updateLayersRoles(Map<String, String> newRules) throws IOException {
+    private void updateLayersRoles(Map<String, String> newRules) throws Exception {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())

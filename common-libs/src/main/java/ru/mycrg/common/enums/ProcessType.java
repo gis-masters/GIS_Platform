@@ -6,7 +6,6 @@ package ru.mycrg.common.enums;
 public enum ProcessType {
     VALIDATION,
 
-    GML_EXPORT,
     EXPORT,
 
     IMPORT,

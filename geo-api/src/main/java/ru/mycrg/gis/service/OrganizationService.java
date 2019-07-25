@@ -29,6 +29,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static ru.mycrg.common.enums.ProcessStatus.*;
+
 /**
  * CRUD сервис для работы с Организациями.
  */
@@ -169,35 +171,46 @@ public class OrganizationService extends BaseProcessService {
         organizationRepository.deleteById(id);
     }
 
-    public void handleMqResponse(BaseMqProcessResponse response) {
-        Long orgId = Long.parseLong(response.getPayload().toString());
-        log.debug("Mq response. Organization: {}", orgId);
+    @Override
+    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
+        if (mqResponse.getId() == null) {
+            log.warn("Return invalid mqResponse: {}", mqResponse.toString());
+        }
+
+        Long orgId = Long.parseLong(mqResponse.getPayload().toString());
+        log.debug("Mq mqResponse. Organization: {}", orgId);
 
         Organization organization = organizationRepository
                 .findById(orgId)
                 .orElseThrow(() -> new EntityNotFoundException("Not found organization by id: " + orgId));
 
-        if (ProcessStatus.DONE.equals(response.getStatus())) {
-            organization.setStatus(ProcessStatus.DONE);
-            organizationRepository.save(organization);
+        Process process = getProcessById(mqResponse.getId());
+        switch (mqResponse.getStatus()) {
+            case ERROR:     {
+                log.error("Error creation organization: {}", orgId);
 
-            User orgAdmin = organization.getUsers().get(0);
-            orgAdmin.setEnabled(true);
-            userRepository.save(orgAdmin);
+                // Удаляем орг. и пользователя который был создан как админ для неё.
+                User orgAdmin = organization.getUsers().get(0);
+                userRepository.delete(orgAdmin);
+                organizationRepository.delete(organization);
 
-            log.info("Organization with user successfully created");
-        } else {
-            log.error("Error creation organization: {}", orgId);
+                error(process, mqResponse.getError());
+            }       break;
+            case DONE:      {
+                organization.setStatus(DONE);
+                organizationRepository.save(organization);
 
-            // Удаляем орг. и пользователя который был создан как админ для неё.
-            User orgAdmin = organization.getUsers().get(0);
-            userRepository.delete(orgAdmin);
-            organizationRepository.delete(organization);
+                User orgAdmin = organization.getUsers().get(0);
+                orgAdmin.setEnabled(true);
+                userRepository.save(orgAdmin);
+
+                log.info("Organization with user successfully created");
+
+                complete(process, mqResponse.getPayload());
+            }  break;
+            default:
+                log.warn("Not supported process status. {}", process.getStatus());
         }
-    }
-
-    public Process getProcessById(long processId) {
-        return getProcessById(processId);
     }
 
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {

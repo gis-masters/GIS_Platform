@@ -3,15 +3,13 @@ package ru.mycrg.wrapper.geoserver_client.workspace;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.wrapper.geoserver_client.GeoServerConstants;
-
-import java.io.IOException;
+import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 
 @Service
 public class WorkspacesService extends GeoServerBaseService {
 
-    public void createWorkspace(String name) throws IOException {
+    public void createWorkspace(String name) throws Exception {
         log.debug("create workspace: {}", name);
 
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "{\"workspace\": {\"name\": \"" + name + "\"}}");
@@ -25,7 +23,7 @@ public class WorkspacesService extends GeoServerBaseService {
         doRequest(request, "createWorkspace");
     }
 
-    public void deleteWorkspace(String name) throws IOException {
+    public void deleteWorkspace(String name) throws Exception {
         log.debug("delete workspace: {}", name);
 
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "{\"workspace\": {\"name\": \"" + name + "\"}}");

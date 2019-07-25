@@ -20,10 +20,17 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
         super(mqRequest.getId(), mqRequest.getType(), payload);
     }
 
+    public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload, ProcessStatus status) {
+        super(mqRequest.getId(), mqRequest.getType(), payload);
+
+        this.status = status;
+    }
+
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, ProcessStatus status, String error) {
         super(mqRequest.getId(), mqRequest.getType());
 
         this.status = status;
+        this.error = error;
     }
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, ProcessStatus status, String description,
@@ -103,4 +110,16 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
         this.error = error;
     }
 
+    @Override
+    public String toString() {
+        return "BaseMqProcessResponse{" +
+                "ID=" + getId() +
+                ", type=" + getType() +
+                ", progress=" + progress +
+                ", description='" + description + '\'' +
+                ", error='" + error + '\'' +
+                ", status=" + status +
+                ", payload=" + getPayload() +
+                '}';
+    }
 }

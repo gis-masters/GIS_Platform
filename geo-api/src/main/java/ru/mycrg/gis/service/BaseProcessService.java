@@ -39,7 +39,7 @@ public abstract class BaseProcessService implements Processable {
         return processRepository.save(new Process(userName, title, type, MapperUtil.convertToJsonNode(extra)));
     }
 
-    protected Process getProcessById(Long id) {
+    public Process getProcessById(Long id) {
         Optional<Process> processFromCache = getProcessFromCache(id);
         if (processFromCache.isPresent()) {
             log.debug("Process {} was get from cache", id);

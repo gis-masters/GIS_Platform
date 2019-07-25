@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import ru.mycrg.common.JWTTokenHolder;
 import ru.mycrg.wrapper.config.CrgProperties;
-import ru.mycrg.wrapper.exceptions.GeoserverException;
+import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public abstract class GeoServerBaseService {
 
     protected OkHttpClient httpClient = new OkHttpClient();
 
-    protected void doRequest(Request request, String msg) throws IOException {
+    protected void doRequest(Request request, String msg) throws GeoserverClientException, IOException {
         Response response = httpClient.newCall(request).execute();
 
         if (!response.isSuccessful()) {
@@ -38,7 +38,7 @@ public abstract class GeoServerBaseService {
 
             log.error("Geoserver error body: {}", response.toString());
 
-            throw new GeoserverException(msg, response.message());
+            throw new GeoserverClientException(msg, response.message());
         } else {
             response.close();
         }
