@@ -49,8 +49,13 @@ export class WfsService {
       outputFormat: 'application/json',
       exceptions: 'application/json',
       typeName: complexName,
+      PROPERTYNAME: this.fillProp(complexName),
       sortBy: Util.generateSortParam(requestModel)
     };
+
+    if (complexName === 'yalta_1:transpsanitarygapzone') {
+
+    }
 
     if (requestModel && requestModel.page) {
       const countRows = (requestModel.page.pageSize) ? requestModel.page.pageSize.toString() : '100';
@@ -70,6 +75,19 @@ export class WfsService {
                .pipe(
                  map((fCollection: WfsFeatureCollection) => this.clearFeatureId(fCollection))
                );
+  }
+
+  // As example for PRODUCT BACKLOG ITEM: 121
+  private fillProp(complexName: string) {
+    if (complexName === 'yalta_1:functionalzone') {
+      return 'classid,fz_mfstp,fz_odstp,fz_ingstp,fz_trstp,fz_shstp,fz_recstp,fz_orecstp,area,info_obj,' +
+        'constr_den,bld_height,pop_den,population,hzrd_class,other,event_time,status,reg_status,globalid,shape,' +
+        'shape_leng,shape_area';
+    } else if (complexName === 'yalta_1:transpsanitarygapzone') {
+      return 'classid,zone_desc,objectname,source,note,status,globalid';
+    } else {
+      return '';
+    }
   }
 
   /**

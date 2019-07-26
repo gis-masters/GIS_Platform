@@ -5,7 +5,7 @@ import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../crg/projects.service';
 import {DatastoreService} from './datastore.service';
-import {delay, filter, map} from 'rxjs/operators';
+import {delay, filter, flatMap, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../crg/fgistp-rules.service';
@@ -38,9 +38,9 @@ export class LayersService {
         map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
         map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
-        delay(1000), // wait rules
+        // flatMap((layers: NameHrefProjection[]) => this.fetchProjectsLayers(projects)),
+        // delay(1000), // wait rules
         map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
-        // flatMap((crgLayers: CrgLayer[]) => this.fetchLayersConnectionInfo(crgLayers)),
       );
   }
 
@@ -57,23 +57,6 @@ export class LayersService {
                  map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
                );
   }
-
-  // fetchLayerConnectionInfo(layer: CrgLayer) {
-  //   return this.getLayer(layer)
-  //              .pipe(
-  //                filter((data: Layer) => !!data),
-  //                flatMap((data: Layer) => this.datastoreService.getByLayerResource(data)),
-  //                map((data: any) => {
-  //                  if (data && data.dataStore) {
-  //                    layer.connectionInfo = GeoUtil.getDbInfo(data.dataStore.connectionParameters, layer.name);
-  //                  } else {
-  //                    this.log.warn('layers', 'Error fetching connection info for layer', layer.name);
-  //                  }
-  //
-  //                  return layer;
-  //                }),
-  //              );
-  // }
 
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
     const params = new HttpParams();
@@ -116,15 +99,6 @@ export class LayersService {
       return projectName === project.workspaceName;
     });
   }
-
-  // private fetchLayersConnectionInfo(crgLayers: CrgLayer[]) {
-  //   const observableTasks = [];
-  //   crgLayers.forEach((layer: CrgLayer) => {
-  //     observableTasks.push(this.fetchLayerConnectionInfo(layer));
-  //   });
-  //
-  //   return forkJoin(observableTasks);
-  // }
 
   private mergeWithRules(layers: NameHrefProjection[]) {
     const crgLayers: CrgLayer[] = [];

@@ -17,7 +17,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {SimpleProperty, XsdFeature} from '../../services/crg/fgistp-rules.service';
+import {FgistpRulesService, SimpleProperty} from '../../services/crg/fgistp-rules.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
 import {MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
@@ -34,7 +34,6 @@ import {CommunicationService} from '../../services/communication.service';
 export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input() layer: CrgLayer;
-  @Input() featureDescription: XsdFeature;
 
   @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
@@ -63,6 +62,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private fgistpRulesService: FgistpRulesService,
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
@@ -175,7 +175,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       return;
     }
 
-    return this.featureDescription.properties
+    return this.fgistpRulesService
+               .getFeatureByName(this.layer.name, 'attributes sidebar').properties
                .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
 

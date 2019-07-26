@@ -45,7 +45,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   gmlDialogData: CrgLayer[];
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private featuresDescription: XsdFeature[];
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
               private layersService: LayersService,
@@ -70,9 +69,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.createMap();
     this.ruleService.getRules()
         .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
-          if (entityTypesDefinition.xsdFeatures) {
-            this.featuresDescription = entityTypesDefinition.xsdFeatures;
-          } else {
+          if (!entityTypesDefinition.xsdFeatures) {
             this.logger.warn('Empty rules? ', entityTypesDefinition);
           }
         });
@@ -174,10 +171,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.mapClick$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
-  }
-
-  getFeature(selectedLayer: CrgLayer) {
-    return this.featuresDescription.find((feature: XsdFeature) => feature.name === selectedLayer.name);
   }
 
   ngOnDestroy(): void {
