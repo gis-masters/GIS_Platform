@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../crg/projects.service';
 import {DatastoreService} from './datastore.service';
-import {delay, filter, flatMap, map} from 'rxjs/operators';
+import {filter, flatMap, map} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../crg/fgistp-rules.service';
@@ -38,9 +38,8 @@ export class LayersService {
         map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
         map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
-        // flatMap((layers: NameHrefProjection[]) => this.fetchProjectsLayers(projects)),
-        // delay(1000), // wait rules
-        map((layers: NameHrefProjection[]) => this.mergeWithRules(layers)),
+        flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
+        map(([layers, layersDescription]) => this.mergeWithRules(layers)),
       );
   }
 
@@ -75,6 +74,35 @@ export class LayersService {
       .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
   }
 
+  private fetchLayersDescription(layers: NameHrefProjection[]): any {
+    if (layers.length === 0) {
+      return of([]);
+    }
+
+    return combineLatest(
+      of(layers),
+      this.ruleService.getRules()
+    );
+  }
+
+  private mergeWithRules(layers: NameHrefProjection[]): CrgLayer[] {
+    const crgLayers: CrgLayer[] = [];
+
+    layers.forEach((layer: NameHrefProjection) => {
+      const layerName = layer.name.split(':')[1];
+      const layerTitle = this.ruleService.getLayerTitle(layerName);
+
+      crgLayers.push({
+        name: layerName,
+        complexName: layer.name,
+        href: layer.href,
+        title: layerTitle
+      });
+    });
+
+    return crgLayers;
+  }
+
   /**
    * Получить полную информацию о слое
    * @param layer Простое предствление слоя
@@ -99,25 +127,6 @@ export class LayersService {
       return projectName === project.workspaceName;
     });
   }
-
-  private mergeWithRules(layers: NameHrefProjection[]) {
-    const crgLayers: CrgLayer[] = [];
-
-    layers.forEach((layer: NameHrefProjection) => {
-      const layerName = layer.name.split(':')[1];
-      const layerTitle = this.ruleService.getLayerTitle(layerName);
-
-      crgLayers.push({
-        name: layerName,
-        complexName: layer.name,
-        href: layer.href,
-        title: layerTitle
-      });
-    });
-
-    return crgLayers;
-  }
-
 }
 
 export interface CrgLayer {

@@ -49,7 +49,7 @@ export class WfsService {
       outputFormat: 'application/json',
       exceptions: 'application/json',
       typeName: complexName,
-      PROPERTYNAME: this.fillProp(complexName),
+      // PROPERTYNAME: this.fillProp(complexName),
       sortBy: Util.generateSortParam(requestModel)
     };
 

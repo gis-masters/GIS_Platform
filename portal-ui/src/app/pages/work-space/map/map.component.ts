@@ -67,12 +67,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.openLayers.createMap();
-    this.ruleService.getRules()
-        .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
-          if (!entityTypesDefinition.xsdFeatures) {
-            this.logger.warn('Empty rules? ', entityTypesDefinition);
-          }
-        });
 
     this.currentProject = this.storageService.getProject().crgProject;
     this.layersService.fetchLayers(this.currentProject)
