@@ -78,14 +78,15 @@ public class ExportService extends BaseProcessService {
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });
 
-        BaseMqProcessResponse processResponse = new BaseMqProcessResponse();
+        BaseMqProcessRequest mqRequest = new BaseMqProcessRequest(process.getId(), ProcessType.EXPORT, payload);
+        mqSender.send(mqRequest);
+
+        BaseMqProcessResponse processResponse = new BaseMqProcessResponse(mqRequest);
         processResponse.setDescription("Инициализация");
         processResponse.setStatus(PENDING);
         processResponse.setPayload(payload);
 
         wsNotificationService.send(new WsMessageDto<>(ProcessType.EXPORT, processResponse), request.getWsUiId());
-
-        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.EXPORT, payload));
 
         return process;
     }
