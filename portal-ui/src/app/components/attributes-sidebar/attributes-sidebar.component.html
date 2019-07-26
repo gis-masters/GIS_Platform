@@ -9,12 +9,13 @@
                 (click)="switchFilter()">filter_list</mat-icon>
 
       <mat-icon class="attr-table-action-icon fiz-border" (click)="editFeatures()">edit</mat-icon>
+      <mat-icon class="attr-table-action-icon fiz-border" (click)="copyObjects()">shuffle</mat-icon>
 
-      <mat-select class="view-mode-selector fiz-border" [(ngModel)]="viewSettings.viewMode"
-                  (selectionChange)="onViewModeChange($event)">
-        <mat-option value="internal">Исходные данные</mat-option>
-        <mat-option value="alias">Псевдонимы</mat-option>
-      </mat-select>
+<!--      <mat-select class="view-mode-selector fiz-border" [(ngModel)]="viewSettings.viewMode"-->
+<!--                  (selectionChange)="onViewModeChange($event)">-->
+<!--        <mat-option value="internal">Исходные данные</mat-option>-->
+<!--        <mat-option value="alias">Псевдонимы</mat-option>-->
+<!--      </mat-select>-->
     </div>
   </div>
 

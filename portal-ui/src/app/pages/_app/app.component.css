@@ -48,3 +48,7 @@
   border: outset;
   border-width: thin;
 }
+
+.without-outline {
+  outline: none
+}

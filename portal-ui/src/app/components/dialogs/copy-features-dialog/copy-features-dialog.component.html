@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{data.layer.title}}</h2>
+
+<mat-dialog-content class="mat-typography">
+  <div *ngFor="let layer of data.objects">
+    <div>{{layer.id}}: {{layer.aliases.classid}}</div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+</mat-dialog-actions>

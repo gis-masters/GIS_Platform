@@ -22,7 +22,7 @@
 
       <div class="float-right">
         <span class="user-name">{{userModel?.userName}}</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
+        <button mat-icon-button [matMenuTriggerFor]="menu" style="outline: none">
           <mat-icon>account_circle</mat-icon>
         </button>
       </div>
@@ -35,7 +35,7 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="logout()">
+  <button mat-menu-item (click)="logout()" style="outline: none">
     Выход
   </button>
 </mat-menu>

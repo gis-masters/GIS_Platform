@@ -19,12 +19,13 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {FgistpRulesService, SimpleProperty} from '../../services/crg/fgistp-rules.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
-import {MatSelectChange, MatSnackBar} from '@angular/material';
+import {MatDialog, MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {CommunicationService} from '../../services/communication.service';
+import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -66,6 +67,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
+              private dialog: MatDialog,
               private openLayersService: OpenLayersService) { }
 
   ngAfterViewInit(): void {
@@ -251,6 +253,29 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         });
     } else {
       this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
+    }
+  }
+
+  copyObjects() {
+    if (!this.attributeTable.allRowsSelected) {
+      // TODO: open dialog window, with layers filtered by geometry
+      // this.attributeTable.selected
+
+      const dData: any = {
+        layer: this.layer,
+        objects: this.attributeTable.selected
+      };
+
+      const dialogRef = this.dialog.open(CopyFeaturesDialogComponent, {
+        data: dData
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
+
+    } else {
+      this.log.warn('attributes', 'not supported');
     }
   }
 
