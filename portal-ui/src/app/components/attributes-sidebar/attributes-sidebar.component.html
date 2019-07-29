@@ -8,8 +8,12 @@
       <mat-icon [ngClass]="enableFilter ? 'crg-filter-icon-active fiz-border' : 'crg-filter-icon fiz-border'"
                 (click)="switchFilter()">filter_list</mat-icon>
 
-      <mat-icon class="attr-table-action-icon fiz-border" (click)="editFeatures()">edit</mat-icon>
-      <mat-icon class="attr-table-action-icon fiz-border" (click)="copyObjects()">shuffle</mat-icon>
+<!--      <mat-icon class="attr-table-action-icon fiz-border" (click)="editFeatures()">edit</mat-icon>-->
+
+      <button mat-icon-button [matMenuTriggerFor]="editMenu" class="attr-table-action-icon fiz-border without-outline"
+              style="height: 24px">
+        <span class="edit-text">Edit</span>
+      </button>
 
 <!--      <mat-select class="view-mode-selector fiz-border" [(ngModel)]="viewSettings.viewMode"-->
 <!--                  (selectionChange)="onViewModeChange($event)">-->
@@ -71,3 +75,22 @@
   </div>
 
 </div>
+
+<mat-menu #editMenu="matMenu">
+
+  <button mat-menu-item class="without-outline" (click)="editFeatures()">
+    <mat-icon>edit</mat-icon>
+    <span>Множественное редактирование</span>
+  </button>
+
+  <button mat-menu-item (click)="copyObjects()">
+    <mat-icon>shuffle</mat-icon>
+    <span>Копирование</span>
+  </button>
+
+  <button mat-menu-item (click)="deleteObjects()">
+    <mat-icon>delete</mat-icon>
+    <span>Удаление</span>
+  </button>
+
+</mat-menu>

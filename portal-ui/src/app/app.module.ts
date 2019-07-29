@@ -38,7 +38,7 @@ import {LayersSidebarComponent} from './components/layers-sidebar/layers-sidebar
 import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/interceptors/jwt-interceptor.service';
 import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
-import {DeleteDialogComponent} from './components/delete-dialog/delete-dialog.component';
+import {DeleteDialogComponent} from './components/dialogs/delete-dialog/delete-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
 import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';

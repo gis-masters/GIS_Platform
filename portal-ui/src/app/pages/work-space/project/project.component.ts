@@ -12,8 +12,10 @@ import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
 import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
 import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
-import {DeleteDialogComponent} from '../../../components/delete-dialog/delete-dialog.component';
-import {ProcessResponse} from "../../../services/models/requestModel";
+import {DeleteDialogComponent, SimpleDialogData} from '../../../components/dialogs/delete-dialog/delete-dialog.component';
+import {ProcessResponse} from '../../../services/models/requestModel';
+import {CopyFeaturesDialogComponent} from '../../../components/dialogs/copy-features-dialog/copy-features-dialog.component';
+import {CrgLayer} from '../../../services/geoserver/layers.service';
 
 @Component({
   selector: 'crg-project',
@@ -119,16 +121,20 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   openDeleteDialog(pItem: CrgProject): void {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      width: '400px'
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.projectsService
-            .delete(pItem.id)
-            .subscribe(response => this.projectsService.fetchProjects());
-      }
-    });
+    const data: SimpleDialogData = {
+      title: 'Вы действительно хотите удалить проект?',
+      approveBtnName: 'Удалить'
+    };
+
+    this.dialog
+        .open(DeleteDialogComponent, {width: '400px', data: data})
+        .afterClosed().subscribe(result => {
+          if (result) {
+            this.projectsService
+              .delete(pItem.id)
+              .subscribe(response => this.projectsService.fetchProjects());
+          }
+        });
   }
 
   private checkProjectStatus(processResponse: ProcessResponse) {

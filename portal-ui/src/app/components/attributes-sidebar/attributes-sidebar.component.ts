@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
@@ -29,6 +29,9 @@ import {
   CopyFeaturesDialogComponent,
   CopyFeaturesDialogData
 } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
+import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
+import {ProjectsService} from '../../services/crg/projects.service';
+import {DeleteDialogComponent, SimpleDialogData} from "../dialogs/delete-dialog/delete-dialog.component";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -66,6 +69,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private transformFeatureService: TransformFeatureService,
+              private projectsService: ProjectsService,
               private layersService: LayersService,
               private fgistpRulesService: FgistpRulesService,
               private communicationService: CommunicationService,
@@ -283,7 +288,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           .open(CopyFeaturesDialogComponent, {data: dialogData})
           .afterClosed().subscribe((selectedLayer: CrgLayer) => {
             if (!!selectedLayer) {
-              console.log('Dialog result: ', selectedLayer.title);
+              console.log('Dialog result: ', selectedLayer);
             } else {
               this.log.warn('attributes table', 'Incorrect response from dialog', selectedLayer);
             }
@@ -291,6 +296,31 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     } else {
       this.log.warn('attributes table', 'not supported');
     }
+  }
+
+  deleteObjects() {
+    if (this.attributeTable.selected.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+
+    const data: SimpleDialogData = {
+      title: 'Удалить выделенные обьекты?',
+      approveBtnName: 'Удалить'
+    };
+
+    this.dialog
+        .open(DeleteDialogComponent, {width: '400px', data: data})
+        .afterClosed().pipe(filter(value => !!value))
+        .subscribe(result => {
+          const projectModel = this.projectsService.getCurrent();
+          this.transformFeatureService
+            .deleteFeatures(this.attributeTable.selected, projectModel.crgProject.workspaceName, this.layer.name)
+            .subscribe(response => {
+              const lastRequest = this.requestModel$.getValue();
+              this.loadFeatures(lastRequest);
+            });
+        });
   }
 
   onViewModeChange(event: MatSelectChange) {

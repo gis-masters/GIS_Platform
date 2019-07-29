@@ -1,16 +1,12 @@
 <h2 mat-dialog-title>Копирование {{data.objects.length}} обьекта(ов)</h2>
 
-<mat-dialog-content class="mat-typography">
-
-  <span class="sub-title">Выбирите слой</span>
-  <mat-radio-group aria-labelledby="example-radio-group-label"
-                   class="example-radio-group"
-                   [(ngModel)]="selectedLayer">
-    <mat-radio-button class="radio-item" *ngFor="let layer of data.layers" [value]="layer">
-      {{layer.title}}
-    </mat-radio-button>
-  </mat-radio-group>
-
+<mat-dialog-content class="dialog-content">
+    <label>Выбирите слой</label>
+    <mat-select class="form-control" [(ngModel)]="selectedLayer">
+      <mat-option *ngFor="let layer of data.layers" [value]="layer">
+        {{layer.title}}
+      </mat-option>
+    </mat-select>
 </mat-dialog-content>
 
 <mat-dialog-actions style="justify-content: space-between">

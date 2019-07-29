@@ -77,6 +77,17 @@ export class WfsService {
                );
   }
 
+  /**
+   * Выборка обьектов слоя по XML фильтру.
+   * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
+   */
+  getFeaturesByXmlFilter(xml: string): Observable<WfsFeatureCollection> {
+    const url = this.serverProp.geoServerUrl + '/wfs';
+
+    return this.http
+               .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
+  }
+
   // As example for PRODUCT BACKLOG ITEM: 121
   private fillProp(complexName: string) {
     if (complexName === 'yalta_1:functionalzone') {
@@ -88,17 +99,6 @@ export class WfsService {
     } else {
       return '';
     }
-  }
-
-  /**
-   * Выборка обьектов слоя по XML фильтру.
-   * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
-   */
-  getFeaturesByXmlFilter(xml: string): Observable<WfsFeatureCollection> {
-    const url = this.serverProp.geoServerUrl + '/wfs';
-
-    return this.http
-               .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
   }
 
   private prepareLink(typeName: string, objectId: string) {

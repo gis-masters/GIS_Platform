@@ -5,7 +5,7 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {TransformFeatureService} from '../../services/crg/transform-feature.service';
+import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/crg/fgistp-rules.service';

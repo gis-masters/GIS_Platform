@@ -85,3 +85,8 @@
 ::ng-deep .mat-select-value {
   padding-left: 5px;
 }
+
+.edit-text {
+  position: relative;
+  top: -9px;
+}
