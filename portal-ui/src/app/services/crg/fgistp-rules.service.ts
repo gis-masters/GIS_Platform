@@ -47,7 +47,7 @@ export class FgistpRulesService {
       return layerName;
     }
 
-    const featureByName = this.getFeatureByName(layerName, 'getLayerTitle');
+    const featureByName = this.getFeatureByName(layerName);
     if (featureByName) {
       return featureByName.title;
     } else {
@@ -55,7 +55,7 @@ export class FgistpRulesService {
     }
   }
 
-  public getFeatureByName(layerName: string, reason: string): XsdFeature {
+  public getFeatureByName(layerName: string, reason?: string): XsdFeature {
     if (!layerName) {
       return;
     }
@@ -84,7 +84,7 @@ export class FgistpRulesService {
 
   getClassIdAlias(layerName: string, element: any) {
     let result = layerName;
-    const featureByName = this.getFeatureByName(layerName, 'getClassIdAlias');
+    const featureByName = this.getFeatureByName(layerName);
     if (featureByName) {
       featureByName.properties
         .forEach((simpleProperty: SimpleProperty) => {
@@ -111,7 +111,7 @@ export class FgistpRulesService {
    */
   getPropertyAlias(layerName: string, propertyName: string) {
     let result;
-    const featureByName = this.getFeatureByName(layerName, 'getPropertyAlias');
+    const featureByName = this.getFeatureByName(layerName);
     if (featureByName) {
       featureByName.properties
         .forEach((simpleProperty: SimpleProperty) => {

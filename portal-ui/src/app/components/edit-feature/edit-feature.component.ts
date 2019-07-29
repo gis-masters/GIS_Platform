@@ -28,7 +28,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   isSaveInProgress = false;
   loadPercent = 0;
 
-  private xsdFeature: XsdFeature;
+  private featureDescription: XsdFeature;
   private BATCH_SIZE = 200;
 
   constructor(private logger: NGXLogger,
@@ -65,15 +65,17 @@ export class EditFeatureComponent implements OnChanges, OnInit {
         this.openLayers.showFeature(currentData.feature);
       }
 
-      this.xsdFeature = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0], 'edit feature');
+      this.featureDescription = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
+
+      console.log('featureDescription: ', this.featureDescription);
 
       Object.keys(currentData.feature.properties)
             .map(key => key)
             .filter(key => key !== 'bbox')
             .forEach(key => {
               const currentValue = currentData.feature.properties[key];
-              const property = this.rulesService.getPropertiesByName(key, this.xsdFeature.properties);
+              const property = this.rulesService.getPropertiesByName(key, this.featureDescription.properties);
               if (property) {
                 this.editFeatureData.push({
                   name: key,
@@ -129,11 +131,11 @@ export class EditFeatureComponent implements OnChanges, OnInit {
         newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
       });
 
-      const projectModel = this.projectsService.getCurrent();
+      const workspaceName = this.projectsService.getCurrent().crgProject.workspaceName;
 
       if (this.data.mode === EditFeatureMode.single) {
         this.transformFeatureService
-            .updateFeature(this.data.feature.id, projectModel.crgProject.workspaceName, this.xsdFeature.tableName, newProperties)
+            .updateFeature(this.data.feature.id, workspaceName, this.featureDescription.tableName, newProperties)
             .subscribe(response => {
               this.isSaveInProgress = false;
               if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
@@ -151,7 +153,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               }
             });
       } else {
-        this.batchUpdateFeatures(this.data.featuresId, projectModel.crgProject.workspaceName, this.xsdFeature.tableName, newProperties);
+        this.batchUpdateFeatures(this.data.featuresId, workspaceName, this.featureDescription.tableName, newProperties);
       }
     }
   }
@@ -276,7 +278,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 }
 
 export interface EditFeatureData {
-  feature: WfsFeature;    // Шаблонная фича
+  feature: WfsFeature;   // Шаблонная фича
   mode: EditFeatureMode;
   featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
   total: number;

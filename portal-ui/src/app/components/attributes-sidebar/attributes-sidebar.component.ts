@@ -191,7 +191,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
 
     return this.fgistpRulesService
-               .getFeatureByName(this.layer.name, 'attributes sidebar').properties
+               .getFeatureByName(this.layer.name).properties
                .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
 

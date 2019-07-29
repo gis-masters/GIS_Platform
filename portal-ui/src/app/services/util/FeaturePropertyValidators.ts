@@ -86,15 +86,19 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.totalDigits || property.totalDigits === -1) {
-        return errors;
-      }
-
       const currentValue = control.value;
+      if (currentValue) {
+        if (!property || !property.totalDigits || property.totalDigits === -1) {
+          return errors;
+        }
 
-      // console.log('totalDigits: ', currentValue);
-      if (currentValue.toString().length > property.totalDigits) {
-        errors['totalDigits'] = 'some value here';
+        if (currentValue.toString().length > property.totalDigits) {
+          errors['totalDigits'] = 'Превышена допустимая длинна числа. Допустимо: ' + property.totalDigits + ' символов';
+        }
+      } else {
+        if (!property || !property.required) {
+          return errors;
+        }
       }
 
       return errors;

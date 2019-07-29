@@ -369,4 +369,45 @@ describe('Property validation test', () => {
     expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.maxInclusive(max5)]).valid);
   });
 
+  it('should validate totalDigits', () => {
+    const notRequiredDoubleProperty: SimpleProperty = {
+      name: 'enumerationProperty',
+      title: 'enumerationProperty',
+      valueType: 'DOUBLE',
+      required: false,
+      description: 'description',
+      totalDigits: -1,
+    };
+
+    const stringPropertyTotal5: SimpleProperty = {
+      name: 'enumerationProperty',
+      title: 'enumerationProperty',
+      valueType: 'STRING',
+      required: false,
+      description: 'description',
+      totalDigits: 5,
+    };
+
+    const requiredStringProperty: SimpleProperty = {
+      name: 'enumerationProperty',
+      title: 'enumerationProperty',
+      valueType: 'STRING',
+      required: true,
+      description: 'description',
+      totalDigits: 4,
+    };
+
+    const totalDigitsPropertyValid = new FormControl(1, [FeaturePropertyValidators.totalDigits(notRequiredDoubleProperty)]);
+    const totalDigitsPropertyNotValid = new FormControl('sdf', [FeaturePropertyValidators.totalDigits(notRequiredDoubleProperty)]);
+    const total5 = new FormControl('sdf', [FeaturePropertyValidators.totalDigits(stringPropertyTotal5)]);
+    const total10 = new FormControl('sdf-0ertgf', [FeaturePropertyValidators.totalDigits(stringPropertyTotal5)]);
+    const requiredAndUndefined = new FormControl(undefined, [FeaturePropertyValidators.totalDigits(requiredStringProperty)]);
+
+    expect(true).toEqual(totalDigitsPropertyValid.valid);
+    expect(true).toEqual(totalDigitsPropertyNotValid.valid);
+    expect(true).toEqual(total5.valid);
+    expect(false).toEqual(total10.valid);
+    expect(false).toEqual(requiredAndUndefined.valid);
+  });
+
 });

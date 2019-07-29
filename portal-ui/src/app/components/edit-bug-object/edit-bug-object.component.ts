@@ -23,7 +23,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
 
   editFeatureForm: FormGroup;
 
-  featureType: XsdFeature;
+  featureDescription: XsdFeature;
   wfsFeature: WfsFeature;
 
   editFeatureData: EditFeatureItem[] = [];
@@ -49,7 +49,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
 
     this.editFeatureForm.valueChanges
         .pipe(debounceTime(100))
-        .subscribe(val => this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureType));
+        .subscribe(val => this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureDescription));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -103,8 +103,11 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
           this.isFeatureTypeLoaded = true;
 
           this.wfsFeature = wfsFeature;
-          this.featureType = this.rulesService.getFeatureByName(objectDto.crgLayer.name, 'edit bug');
-          if (!!this.featureType) {
+          this.featureDescription = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+
+          console.log('this.featureDescription: ', this.featureDescription);
+
+          if (!!this.featureDescription) {
             this.prepareEditForm(this.wfsFeature.properties);
           } else {
             this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
@@ -128,7 +131,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const property = this.rulesService.getPropertiesByName(key, this.featureType.properties);
+      const property = this.rulesService.getPropertiesByName(key, this.featureDescription.properties);
       if (property) {
         // Добавляем валидации
         const formControl = new FormControl(currentValue, {
