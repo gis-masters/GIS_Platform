@@ -1,12 +1,19 @@
-<h2 mat-dialog-title>{{data.layer.title}}</h2>
+<h2 mat-dialog-title>Копирование {{data.objects.length}} обьекта(ов)</h2>
 
 <mat-dialog-content class="mat-typography">
-  <div *ngFor="let layer of data.objects">
-    <div>{{layer.id}}: {{layer.aliases.classid}}</div>
-  </div>
+
+  <span class="sub-title">Выбирите слой</span>
+  <mat-radio-group aria-labelledby="example-radio-group-label"
+                   class="example-radio-group"
+                   [(ngModel)]="selectedLayer">
+    <mat-radio-button class="radio-item" *ngFor="let layer of data.layers" [value]="layer">
+      {{layer.title}}
+    </mat-radio-button>
+  </mat-radio-group>
+
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+<mat-dialog-actions style="justify-content: space-between">
+  <button mat-raised-button mat-dialog-close>Отмена</button>
+  <button mat-raised-button color="primary" cdkFocusInitial [mat-dialog-close]="selectedLayer">Выполнить</button>
 </mat-dialog-actions>

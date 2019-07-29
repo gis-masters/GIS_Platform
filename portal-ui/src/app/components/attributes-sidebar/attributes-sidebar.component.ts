@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {CrgLayer} from '../../services/geoserver/layers.service';
+import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
   AfterViewInit,
@@ -25,7 +25,10 @@ import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {CommunicationService} from '../../services/communication.service';
-import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
+import {
+  CopyFeaturesDialogComponent,
+  CopyFeaturesDialogData
+} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -63,6 +66,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
+              private layersService: LayersService,
               private fgistpRulesService: FgistpRulesService,
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
@@ -258,24 +262,34 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   copyObjects() {
     if (!this.attributeTable.allRowsSelected) {
-      // TODO: open dialog window, with layers filtered by geometry
-      // this.attributeTable.selected
+      if (this.attributeTable.selected.length < 1) {
+        this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+        return;
+      }
 
-      const dData: any = {
-        layer: this.layer,
-        objects: this.attributeTable.selected
+      let layers: CrgLayer[];
+      this.layersService.layers$
+          .subscribe((data: CrgLayer[]) => layers = data);
+
+      // Все слоя кроме текущего
+      _.remove(layers, (layer: CrgLayer) => layer.complexName === this.layer.complexName);
+
+      const dialogData: CopyFeaturesDialogData = {
+        layers: layers,
+        objects: this.attributeTable.selected,
       };
 
-      const dialogRef = this.dialog.open(CopyFeaturesDialogComponent, {
-        data: dData
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-      });
-
+      this.dialog
+          .open(CopyFeaturesDialogComponent, {data: dialogData})
+          .afterClosed().subscribe((selectedLayer: CrgLayer) => {
+            if (!!selectedLayer) {
+              console.log('Dialog result: ', selectedLayer.title);
+            } else {
+              this.log.warn('attributes table', 'Incorrect response from dialog', selectedLayer);
+            }
+          });
     } else {
-      this.log.warn('attributes', 'not supported');
+      this.log.warn('attributes table', 'not supported');
     }
   }
 

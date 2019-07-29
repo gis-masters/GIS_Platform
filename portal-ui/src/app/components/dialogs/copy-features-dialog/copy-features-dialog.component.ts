@@ -1,17 +1,22 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
+import {CrgLayer} from '../../../services/geoserver/layers.service';
+import {WfsFeature} from '../../../services/geoserver/wfs.service';
 
 @Component({
   selector: 'crg-copy-features-dialog',
   templateUrl: './copy-features-dialog.component.html',
   styleUrls: ['./copy-features-dialog.component.css']
 })
-export class CopyFeaturesDialogComponent implements OnInit {
+export class CopyFeaturesDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  selectedLayer: CrgLayer;
 
-  ngOnInit() {
-    console.log('--------', this.data);
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CopyFeaturesDialogData) {}
 
+}
+
+export interface CopyFeaturesDialogData {
+  layers: CrgLayer[];
+  objects: WfsFeature[];
 }

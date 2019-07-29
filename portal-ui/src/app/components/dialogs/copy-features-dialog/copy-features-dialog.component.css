@@ -1,0 +1,15 @@
+.sub-title {
+  font-size: larger;
+  font-weight: 500;
+}
+
+.radio-item {
+  font-size: initial;
+  font-family: inherit;
+}
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}

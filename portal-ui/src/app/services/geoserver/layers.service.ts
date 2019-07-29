@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {CrgProject} from '../crg/projects.service';
 import {DatastoreService} from './datastore.service';
-import {filter, flatMap, map} from 'rxjs/operators';
+import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {FgistpRulesService} from '../crg/fgistp-rules.service';
@@ -18,6 +18,15 @@ export class LayersService {
 
   private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
 
+  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>(undefined);
+  public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
+    .pipe(
+      // компоненты при подписке должны видеть одно последнее значение в потоке
+      publishReplay(1),
+      refCount(),
+      filter(data => !!data)
+    );
+
   constructor(private http: HttpClient,
               private log: FizLogger,
               private baseService: BaseService,
@@ -25,6 +34,8 @@ export class LayersService {
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     this.log.debug('setUp', 'LayersService constructor');
+
+    this.layers$.subscribe();
   }
 
   /**
@@ -40,6 +51,7 @@ export class LayersService {
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
         map(([layers, layersDescription]) => this.mergeWithRules(layers)),
+        tap(this._layers$)
       );
   }
 
