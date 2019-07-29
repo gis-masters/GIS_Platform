@@ -31,7 +31,8 @@ import {
 } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ProjectsService} from '../../services/crg/projects.service';
-import {DeleteDialogComponent, SimpleDialogData} from "../dialogs/delete-dialog/delete-dialog.component";
+import {DeleteDialogComponent, SimpleDialogData} from '../dialogs/delete-dialog/delete-dialog.component';
+import {ProjectModel} from '../../services/geoserver/import/projectModel';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -66,6 +67,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
+  private projectModel: ProjectModel;
 
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
@@ -80,6 +82,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               private openLayersService: OpenLayersService) { }
 
   ngAfterViewInit(): void {
+    this.projectModel = this.projectsService.getCurrent();
+
     this.requestModel$
         .pipe(
           debounceTime(50),
@@ -288,7 +292,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           .open(CopyFeaturesDialogComponent, {data: dialogData})
           .afterClosed().subscribe((selectedLayer: CrgLayer) => {
             if (!!selectedLayer) {
-              console.log('Dialog result: ', selectedLayer);
+              const workspaceName = this.projectModel.crgProject.workspaceName;
+              this.transformFeatureService.insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name)
+                  .subscribe(result => {
+                    console.log('+++++++++++++', result);
+                  });
             } else {
               this.log.warn('attributes table', 'Incorrect response from dialog', selectedLayer);
             }
@@ -313,13 +321,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         .open(DeleteDialogComponent, {width: '400px', data: data})
         .afterClosed().pipe(filter(value => !!value))
         .subscribe(result => {
-          const projectModel = this.projectsService.getCurrent();
+          const workspaceName = this.projectModel.crgProject.workspaceName;
           this.transformFeatureService
-            .deleteFeatures(this.attributeTable.selected, projectModel.crgProject.workspaceName, this.layer.name)
-            .subscribe(response => {
-              const lastRequest = this.requestModel$.getValue();
-              this.loadFeatures(lastRequest);
-            });
+              .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name)
+              .subscribe(response => {
+                const lastRequest = this.requestModel$.getValue();
+                this.loadFeatures(lastRequest);
+              });
         });
   }
 

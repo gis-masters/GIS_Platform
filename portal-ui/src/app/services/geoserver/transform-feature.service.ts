@@ -65,6 +65,33 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
+  insertFeatures(features: WfsFeature[], workspaceName: string, layerName: string) {
+    const options = {
+      featureNS: 'castyl_for_remove',
+      featureType: layerName,
+      featurePrefix: workspaceName,
+      nativeElements: []
+    } as WriteTransactionOptions;
+
+    const featuresToInsert = [];
+    features.forEach(feature => {
+      const opFeatures = new Feature(feature.properties);
+      // opFeatures.setId(feature.id);
+      // opFeatures.set('name', 'first');
+
+      featuresToInsert.push(opFeatures);
+    });
+
+    let payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
+
+    Object.keys(featuresToInsert).forEach(featureId => {
+      payload = payload.replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
+    });
+
+    return this.http
+               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
+  }
+
   deleteFeatures(features: WfsFeature[], workspaceName: string, layerName: string) {
     const options = {
       featureNS: 'castyl_for_remove',
