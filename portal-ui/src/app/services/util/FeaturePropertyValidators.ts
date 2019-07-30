@@ -1,3 +1,4 @@
+import {isInteger} from 'validate.js';
 import {SimpleProperty, FeatureDescription} from '../crg/fgistp-rules.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
@@ -46,7 +47,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.minLength || property.minLength === -1) {
+      if (!property || !property.minLength || property.minLength === -1) {
         return errors;
       }
 
@@ -63,7 +64,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.maxLength || property.maxLength === -1) {
+      if (!property || !property.maxLength || property.maxLength === -1) {
         return errors;
       }
 
@@ -103,12 +104,12 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.pattern) {
+      if (!property || !property.pattern) {
         return errors;
       }
 
       const currentValue = control.value;
-      if (!currentValue.match(property.pattern)) {
+      if (!currentValue || !currentValue.toString().match(property.pattern)) {
         errors['pattern'] = 'Строка не соответствует паттерну';
       }
 
@@ -120,7 +121,7 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.minInclusive || property.minInclusive === -1) {
+      if (!property || !property.minInclusive || property.minInclusive === -1) {
         return errors;
       }
 
@@ -137,12 +138,12 @@ export class FeaturePropertyValidators {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.maxInclusive || property.maxInclusive === -1) {
+      if (!property || !property.maxInclusive || property.maxInclusive === -1) {
         return errors;
       }
 
       const currentValue = control.value;
-      if (!this.isValidInteger(currentValue)) {
+      if (!isInteger(currentValue)) {
         errors['incorrectNumber'] = 'Введите корректное число';
       } else {
         if (Number(currentValue) > Number(property.maxInclusive)) {
@@ -166,6 +167,10 @@ export class FeaturePropertyValidators {
       if (property.valueType.includes('DOUBLE')) {
         if (isNaN(currentValue)) {
           errors['isDoubleType'] = 'Значение должно быть дробным числом';
+        } else {
+          if (Number(currentValue) < 0) {
+            errors['isNegative'] = 'Значение должно быть больше 0';
+          }
         }
       }
 
@@ -183,7 +188,7 @@ export class FeaturePropertyValidators {
 
       const currentValue = control.value;
       if (property.valueType.includes('INT')) {
-        if (currentValue.toString() !== parseInt(currentValue, 10).toString()) {
+        if (!isInteger(currentValue)) {
           errors['isIntType'] = 'Значение должно быть целым числом';
         }
       }
@@ -222,13 +227,4 @@ export class FeaturePropertyValidators {
     return result !== undefined;
   }
 
-  private static isValidInteger(currentValue: any): boolean {
-    const number = Number(currentValue);
-
-    if (!number) {
-      return false;
-    }
-
-    return Number.isInteger(number);
-  }
 }
