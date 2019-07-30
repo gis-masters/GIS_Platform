@@ -8,9 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
 import ru.mycrg.gis.service.fgistp.FeatureDescription;
@@ -19,6 +17,7 @@ import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class FgistpController {
@@ -36,21 +35,21 @@ public class FgistpController {
     }
 
     @GetMapping("/fgistp/rules")
-    public FgistpRules getRules() {
+    public FgistpRules getAllRules() {
         log.debug("Request /fgistp/rules");
 
         if (fgistpRuleService.isCacheEmpty()) {
             return fgistpRuleService.updateRules();
         } else {
-            return fgistpRuleService.getRules();
+            return fgistpRuleService.getAllRules();
         }
     }
 
-    @GetMapping("/fgistp/rules/update")
-    public FgistpRules update() {
-        log.info("Request for update rules");
+    @PostMapping("/fgistp/rules")
+    public List<FeatureDescription> getSomeRules(@RequestBody List<String> featureNames) {
+        log.info("Get {} featureDescriptions", featureNames);
 
-        return fgistpRuleService.updateRules();
+        return fgistpRuleService.getFewRules(featureNames);
     }
 
     @GetMapping("/fgistp/rules/{className}")
@@ -58,6 +57,13 @@ public class FgistpController {
         log.info("Get rule by name: {}", className);
 
         return fgistpRuleService.getRuleByName(className);
+    }
+
+    @GetMapping("/fgistp/rules/update")
+    public FgistpRules update() {
+        log.info("Request for update rules");
+
+        return fgistpRuleService.updateRules();
     }
 
     @GetMapping("/fgistp/export/gml/{fileName:.+}")

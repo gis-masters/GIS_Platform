@@ -7,17 +7,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.repository.XsdRuleRepository;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Обрабатывает и содержит правила ФГИС ТП: <p>
@@ -137,19 +141,15 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         return fgistpRules;
     }
 
-    public FgistpRules getRules() {
+    public FgistpRules getAllRules() {
         return fgistpRules;
     }
 
-    /**
-     * Проверяем наличие фичи по названию.
-     * @param featureName Название фичи(Слоя)
-     * @throws CrgNotFoundException
-     */
-    public void checkFeatureByName(String featureName) throws CrgNotFoundException {
-        fgistpRules
-                .getFeatureTypeByName(featureName)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден слой: " + featureName));
+    public List<FeatureDescription> getFewRules(List<String> featureNames) {
+        return fgistpRules
+                .getFeatureDescriptions().stream()
+                .filter(fDescription -> featureNames.contains(fDescription.getName()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -174,15 +174,14 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     }
 
     /**
-     * Не должно быть повторяющихся имен фич. (Поскольку имя фичи это название таблицы)
+     * Проверяем наличие фичи по названию.
+     * @param featureName Название фичи(Слоя)
+     * @throws CrgNotFoundException
      */
-    private boolean isIdenticalNamesExist(FgistpRules fgistpRules) {
-        long count = fgistpRules.getFeatureDescriptions().stream()
-                .map(FeatureDescription::getName)
-                .distinct()
-                .count();
-
-        return count != fgistpRules.getFeatureDescriptions().size();
+    public void checkFeatureByName(String featureName) throws CrgNotFoundException {
+        fgistpRules
+                .getFeatureTypeByName(featureName)
+                .orElseThrow(() -> new CrgNotFoundException("Не найден слой: " + featureName));
     }
 
     @Override
@@ -193,6 +192,18 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     @Override
     public boolean isCacheEmpty() {
         return fgistpRules.getFeatureDescriptions().isEmpty();
+    }
+
+    /**
+     * Не должно быть повторяющихся имен фич. (Поскольку имя фичи это название таблицы)
+     */
+    private boolean isIdenticalNamesExist(FgistpRules fgistpRules) {
+        long count = fgistpRules.getFeatureDescriptions().stream()
+                .map(FeatureDescription::getName)
+                .distinct()
+                .count();
+
+        return count != fgistpRules.getFeatureDescriptions().size();
     }
 
     /**
@@ -263,5 +274,4 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
                             .forEach(featureDescription -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
                 });
     }
-
 }
