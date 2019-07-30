@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {XsdFeature} from '../services/crg/fgistp-rules.service';
-import {EntityTypesUtil} from '../services/util/EntityTypesUtil';
+import {FeatureDescription} from '../services/crg/fgistp-rules.service';
+import {FeatureDescriptionUtil} from '../services/util/FeatureDescriptionUtil';
 import {LayerItem} from '../services/geoserver/import/import.service';
 
 @Pipe({
@@ -8,13 +8,13 @@ import {LayerItem} from '../services/geoserver/import/import.service';
 })
 export class GeometryPipe implements PipeTransform {
 
-  transform(entityTypes: XsdFeature[], layer?: LayerItem): XsdFeature[] {
-    const layerGeometry = EntityTypesUtil.getLayerGeometry(layer);
-    const filtered = entityTypes.filter((entityType: XsdFeature) => {
-      return EntityTypesUtil.isLayerGeometryCompatible(layerGeometry, entityType);
+  transform(featuresDescription: FeatureDescription[], layer?: LayerItem): FeatureDescription[] {
+    const layerGeometry = FeatureDescriptionUtil.getLayerGeometry(layer);
+    const filtered = featuresDescription.filter((featureDescription: FeatureDescription) => {
+      return FeatureDescriptionUtil.isFeatureGeometryCompatible(layerGeometry, featureDescription);
     });
 
-    // console.log('Было: ' + entityTypes.length + ' Стало: ' + filtered.length);
+    // console.log('Было: ' + featuresDescription.length + ' Стало: ' + filtered.length);
 
     return filtered;
   }

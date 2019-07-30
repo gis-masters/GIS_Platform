@@ -1,4 +1,4 @@
-import {XsdFeature} from './fgistp-rules.service';
+import {FeatureDescription} from './fgistp-rules.service';
 
 describe('fgistp-rules service test', () => {
 

@@ -1,7 +1,7 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
@@ -94,12 +94,12 @@ public class ValidatorTest {
         properties.add(validDouble);
         properties.add(validEnum);
 
-        EntityTypeDto entityType = new EntityTypeDto();
-        entityType.setName("Fiz_Type");
-        entityType.setDescription("test description");
-        entityType.setTitle("test title");
-        entityType.setTableName("test tableName");
-        entityType.setProperties(properties);
+        FeatureDescriptionDto featureDescriptionDto = new FeatureDescriptionDto();
+        featureDescriptionDto.setName("Fiz_Type");
+        featureDescriptionDto.setDescription("test description");
+        featureDescriptionDto.setTitle("test title");
+        featureDescriptionDto.setTableName("test tableName");
+        featureDescriptionDto.setProperties(properties);
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
         rowFromDb.put("CLASSID", null);
@@ -112,7 +112,7 @@ public class ValidatorTest {
         rowFromDb.put("validDouble", 3.1415);
         rowFromDb.put("validEnum", "3");
 
-        ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
+        ObjectValidationResult objectValidationResult = validator.validate(featureDescriptionDto, rowFromDb);
 
         assertEquals(5, objectValidationResult.getPropertyViolations().size());
         assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
@@ -134,20 +134,20 @@ public class ValidatorTest {
         List<SimplePropertyDto> properties = new ArrayList<>();
         properties.add(classId);
 
-        EntityTypeDto entityType = new EntityTypeDto();
-        entityType.setName("Fiz_Type");
-        entityType.setDescription("test description");
-        entityType.setTitle("test title");
-        entityType.setTableName("test tableName");
-        entityType.setProperties(properties);
-        entityType.setCustomRuleFunction("var errors = []; if (obj.classid == 602040315) {if (Number(obj.wear_prcnt) " +
+        FeatureDescriptionDto featureDescriptionDto = new FeatureDescriptionDto();
+        featureDescriptionDto.setName("Fiz_Type");
+        featureDescriptionDto.setDescription("test description");
+        featureDescriptionDto.setTitle("test title");
+        featureDescriptionDto.setTableName("test tableName");
+        featureDescriptionDto.setProperties(properties);
+        featureDescriptionDto.setCustomRuleFunction("var errors = []; if (obj.classid == 602040315) {if (Number(obj.wear_prcnt) " +
                 "> 20) {errors.push('У объектов данного класса % износа должен быть не более 20');}}return errors;");
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
         rowFromDb.put("classid", "602040315");
         rowFromDb.put("wear_prcnt", "30");
 
-        ObjectValidationResult objectValidationResult = validator.validate(entityType, rowFromDb);
+        ObjectValidationResult objectValidationResult = validator.validate(featureDescriptionDto, rowFromDb);
 
         assertEquals(1, objectValidationResult.getObjectViolations().size());
     }
@@ -174,7 +174,7 @@ public class ValidatorTest {
         properties.add(classId);
         properties.add(requiredProperty);
 
-        EntityTypeDto featureDescription = new EntityTypeDto();
+        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
         featureDescription.setName("Fiz_Type");
         featureDescription.setDescription("test description");
         featureDescription.setTitle("test title");

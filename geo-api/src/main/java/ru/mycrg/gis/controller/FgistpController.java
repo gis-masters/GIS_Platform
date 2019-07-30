@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.service.GmlStorageService;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
@@ -54,7 +54,7 @@ public class FgistpController {
     }
 
     @GetMapping("/fgistp/rules/{className}")
-    public EntityType getByName(@PathVariable String className) {
+    public FeatureDescription getByName(@PathVariable String className) {
         log.info("Get rule by name: {}", className);
 
         return fgistpRuleService.getRuleByName(className);

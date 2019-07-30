@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.SimplePropertyDto;
@@ -32,13 +32,13 @@ public class ValidatorImpl implements IValidator {
     private CustomRuleValidation customRuleValidator = new CustomRuleValidation();
 
     @Override
-    public ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data) {
+    public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> data) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        customRuleValidator.validate(entityType, data).values()
+        customRuleValidator.validate(featureDescriptionDto, data).values()
                 .forEach(validationResult::addObjectViolation);
 
-        entityType.getProperties().forEach(propertyDto -> {
+        featureDescriptionDto.getProperties().forEach(propertyDto -> {
             String name = propertyDto.getName();
             if (data.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));

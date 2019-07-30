@@ -5,8 +5,7 @@ import ru.mycrg.common.propertyTypes.AbstractProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-// Inheritance other EntityType
-public class EntityType {
+public class FeatureDescription {
 
     private String name;
     private String title;
@@ -16,20 +15,20 @@ public class EntityType {
     private String customRuleFunction;
     private String originName;
 
-    public EntityType() {}
+    public FeatureDescription() {}
 
-    public EntityType(String name) {
+    public FeatureDescription(String name) {
         this.name = name;
     }
 
-    public EntityType(EntityType entityType) {
-        this.name = entityType.getName();
-        this.title = entityType.getTitle();
-        this.description = entityType.getDescription();
-        this.tableName = entityType.getTableName();
-        this.customRuleFunction = entityType.getCustomRuleFunction();
-        this.properties = entityType.getProperties();
-        this.originName = entityType.getOriginName();
+    public FeatureDescription(FeatureDescription featureDescription) {
+        this.name = featureDescription.getName();
+        this.title = featureDescription.getTitle();
+        this.description = featureDescription.getDescription();
+        this.tableName = featureDescription.getTableName();
+        this.customRuleFunction = featureDescription.getCustomRuleFunction();
+        this.properties = featureDescription.getProperties();
+        this.originName = featureDescription.getOriginName();
     }
 
     public void addProperty(AbstractProperty property) {

@@ -8,14 +8,12 @@ import org.locationtech.jts.io.ParseException;
 import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +37,9 @@ public class GmlGeneratorServiceTest {
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 
-        List<EntityTypeDto> fgistpRules = new ArrayList<>();
+        List<FeatureDescriptionDto> fgistpRules = new ArrayList<>();
         // FZ
-        EntityTypeDto functionalZone = new EntityTypeDto();
+        FeatureDescriptionDto functionalZone = new FeatureDescriptionDto();
         functionalZone.setName("FunctionalZone_Type");
 
         List<SimplePropertyDto> functionalZoneProperties = new ArrayList<>();
@@ -61,7 +59,7 @@ public class GmlGeneratorServiceTest {
         functionalZone.setProperties(functionalZoneProperties);
 
         // Electricline
-        EntityTypeDto electricline = new EntityTypeDto();
+        FeatureDescriptionDto electricline = new FeatureDescriptionDto();
         electricline.setName("ElectricLine_Type");
 
         List<SimplePropertyDto> electriclineProperties = new ArrayList<>();

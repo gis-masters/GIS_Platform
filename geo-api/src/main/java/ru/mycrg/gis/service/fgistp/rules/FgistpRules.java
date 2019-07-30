@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.fgistp.rules;
 
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,24 +8,24 @@ import java.util.Optional;
 
 public class FgistpRules {
 
-    private List<EntityType> entityTypes = new ArrayList<>();
+    private List<FeatureDescription> featureDescriptions = new ArrayList<>();
 
     public FgistpRules() {}
 
-    public FgistpRules(List<EntityType> entityTypes) {
-        this.entityTypes = entityTypes;
+    public FgistpRules(List<FeatureDescription> featureDescriptions) {
+        this.featureDescriptions = featureDescriptions;
     }
 
-    public void addComplexType(EntityType entityType) {
-        entityTypes.add(entityType);
+    public void addComplexType(FeatureDescription featureDescription) {
+        featureDescriptions.add(featureDescription);
     }
 
-    public List<EntityType> getEntityTypes() {
-        return entityTypes;
+    public List<FeatureDescription> getFeatureDescriptions() {
+        return featureDescriptions;
     }
 
-    public void setEntityTypes(List<EntityType> entityTypes) {
-        this.entityTypes = entityTypes;
+    public void setFeatureDescriptions(List<FeatureDescription> featureDescriptions) {
+        this.featureDescriptions = featureDescriptions;
     }
 
     /**
@@ -33,9 +33,9 @@ public class FgistpRules {
      *
      * @param name Название фичи
      */
-    public Optional<EntityType> getFeatureTypeByName(String name) {
+    public Optional<FeatureDescription> getFeatureTypeByName(String name) {
         // Find By Name
-        Optional<EntityType> directComparisonByName = entityTypes.stream()
+        Optional<FeatureDescription> directComparisonByName = featureDescriptions.stream()
                 .filter(featureType -> featureType.getName().toLowerCase().equals(name.toLowerCase()))
                 .findFirst();
 
@@ -44,7 +44,7 @@ public class FgistpRules {
         }
 
         // Find By originName
-        Optional<EntityType> directComparisonByOriginName = entityTypes.stream()
+        Optional<FeatureDescription> directComparisonByOriginName = featureDescriptions.stream()
                 .filter(featureType -> featureType.getOriginName().toLowerCase().equals(name.toLowerCase()))
                 .findFirst();
 
@@ -52,12 +52,12 @@ public class FgistpRules {
             return directComparisonByOriginName;
         }
 
-        return entityTypes.stream()
+        return featureDescriptions.stream()
                 .filter(featureType -> findFeatureAdvance(name, featureType))
                 .findFirst();
     }
 
-    private boolean findFeatureAdvance(String featureName, EntityType featureType) {
+    private boolean findFeatureAdvance(String featureName, FeatureDescription featureType) {
         String targetName = featureType.getName().toLowerCase();
 
         if (targetName.contains(featureName.toLowerCase())) {

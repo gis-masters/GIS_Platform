@@ -8,7 +8,7 @@ public class ValidationMqProcessRequest {
     private int page = 0;
     private int size = 25;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
-    private List<EntityTypeDto> features = new ArrayList<>();
+    private List<FeatureDescriptionDto> features = new ArrayList<>();
 
     public ValidationMqProcessRequest() {}
 
@@ -33,7 +33,7 @@ public class ValidationMqProcessRequest {
         this.size = size;
     }
 
-    public void addFeatureProjections(EntityTypeDto featureProjection) {
+    public void addFeatureProjections(FeatureDescriptionDto featureProjection) {
         this.features.add(featureProjection);
     }
 
@@ -45,11 +45,11 @@ public class ValidationMqProcessRequest {
         this.resourceProjections.add(resourceProjection);
     }
 
-    public List<EntityTypeDto> getFeatures() {
+    public List<FeatureDescriptionDto> getFeatures() {
         return features;
     }
 
-    public void setFeatures(List<EntityTypeDto> features) {
+    public void setFeatures(List<FeatureDescriptionDto> features) {
         this.features = features;
     }
 }

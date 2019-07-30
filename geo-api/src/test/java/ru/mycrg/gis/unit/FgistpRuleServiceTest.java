@@ -8,7 +8,7 @@ import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
@@ -37,7 +37,7 @@ public class FgistpRuleServiceTest {
         String notExistName = "notExistName";
         String epFeatureName = "electric_point";
 
-        EntityType electricPointFeature = new EntityType();
+        FeatureDescription electricPointFeature = new FeatureDescription();
         electricPointFeature.setName(epFeatureName);
         electricPointFeature.setOriginName(epFeatureName);
 
@@ -52,7 +52,7 @@ public class FgistpRuleServiceTest {
     public void shouldFindRuleByFeatureNameAdvance() {
         String featureName = "Hydro_Type";
 
-        EntityType HydroFeature = new EntityType();
+        FeatureDescription HydroFeature = new FeatureDescription();
         HydroFeature.setName(featureName);
         HydroFeature.setOriginName(featureName);
 
@@ -73,7 +73,7 @@ public class FgistpRuleServiceTest {
         StringProperty sProperty = new StringProperty();
         geomProperty.setName("some string prop");
 
-        EntityType naturalRiskZone = new EntityType();
+        FeatureDescription naturalRiskZone = new FeatureDescription();
         naturalRiskZone.setName("NaturalRiskZone_Type");
         naturalRiskZone.setTitle("Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера");
         naturalRiskZone.setDescription("test description");
@@ -87,13 +87,13 @@ public class FgistpRuleServiceTest {
 
         // Common assert
         assertNotNull(resultRules);
-        assertEquals(2, resultRules.getEntityTypes().size());
+        assertEquals(2, resultRules.getFeatureDescriptions().size());
 
         // Check table name
-        EntityType polygonFeature = resultRules.getEntityTypes().get(0);
+        FeatureDescription polygonFeature = resultRules.getFeatureDescriptions().get(0);
         assertEquals("naturalriskzone", polygonFeature.getTableName());
 
-        EntityType pointFeature = resultRules.getEntityTypes().get(1);
+        FeatureDescription pointFeature = resultRules.getFeatureDescriptions().get(1);
         assertEquals("naturalriskzone_point", pointFeature.getTableName());
 
         // Check geom property
@@ -126,7 +126,7 @@ public class FgistpRuleServiceTest {
         StringProperty sProperty = new StringProperty();
         geomProperty.setName("some string prop");
 
-        EntityType electricLine = new EntityType();
+        FeatureDescription electricLine = new FeatureDescription();
         electricLine.setName("ElectricLine_Type");
         electricLine.setTitle("test title");
         electricLine.setDescription("test description");
@@ -140,10 +140,10 @@ public class FgistpRuleServiceTest {
 
         // Common assert
         assertNotNull(resultRules);
-        assertEquals(1, resultRules.getEntityTypes().size());
+        assertEquals(1, resultRules.getFeatureDescriptions().size());
 
         // Check table name
-        EntityType curveFeature = resultRules.getEntityTypes().get(0);
+        FeatureDescription curveFeature = resultRules.getFeatureDescriptions().get(0);
         assertEquals("electricline_line", curveFeature.getTableName());
 
         // Check geom property

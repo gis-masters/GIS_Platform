@@ -1,4 +1,4 @@
-import {SimpleProperty, XsdFeature} from '../crg/fgistp-rules.service';
+import {SimpleProperty, FeatureDescription} from '../crg/fgistp-rules.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
@@ -154,18 +154,18 @@ export class FeaturePropertyValidators {
     };
   }
 
-  static byType(property: SimpleProperty) {
+  static isDoubleType(property: SimpleProperty) {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
-      if (!property || !property.required || !property.valueType) {
+      if (!property || !property.valueType) {
         return errors;
       }
 
       const currentValue = control.value;
-      if (property.valueType.includes('DOUBLE') || property.valueType.includes('INT')) {
+      if (property.valueType.includes('DOUBLE')) {
         if (isNaN(currentValue)) {
-          errors['byType'] = 'Значение должно быть числом';
+          errors['isDoubleType'] = 'Значение должно быть дробным числом';
         }
       }
 
@@ -173,7 +173,26 @@ export class FeaturePropertyValidators {
     };
   }
 
-  static customRules(featureProperties: any, xsdFeature: XsdFeature): string[] {
+  static isIntType(property: SimpleProperty) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const errors = {};
+
+      if (!property || !property.valueType) {
+        return errors;
+      }
+
+      const currentValue = control.value;
+      if (property.valueType.includes('INT')) {
+        if (currentValue.toString() !== parseInt(currentValue, 10).toString()) {
+          errors['isIntType'] = 'Значение должно быть целым числом';
+        }
+      }
+
+      return errors;
+    };
+  }
+
+  static customRules(featureProperties: any, xsdFeature: FeatureDescription): string[] {
     let errors = [];
 
     if (!xsdFeature || !xsdFeature.customRuleFunction) {

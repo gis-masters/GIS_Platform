@@ -1,10 +1,10 @@
 import {LayerAttribute, LayerItem} from '../geoserver/import/import.service';
-import {XsdFeature, SimpleProperty} from '../crg/fgistp-rules.service';
+import {FeatureDescription, SimpleProperty} from '../crg/fgistp-rules.service';
 
-export class EntityTypesUtil {
+export class FeatureDescriptionUtil {
 
-  static getEntityGeometry(entityType: XsdFeature): string[] {
-    const simpleProperty = entityType.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
+  static getFeatureGeometry(featureDescription: FeatureDescription): string[] {
+    const simpleProperty = featureDescription.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
 
     if (simpleProperty) {
       return simpleProperty.allowedValues;
@@ -21,16 +21,16 @@ export class EntityTypesUtil {
 
   // layer = Point, MultiLineString, MultiPolygon
   // entity = Point, LineString, Polygon, Curve
-  static isLayerGeometryCompatible(layerGeometryTypeName: string, entityType: XsdFeature) {
+  static isFeatureGeometryCompatible(layerGeometryTypeName: string, entityType: FeatureDescription) {
     const splited = layerGeometryTypeName.split('.');
     const layerGeometryName = splited[splited.length - 1];
 
     // console.log(' --- ', layerGeometryName);
 
-    const entityGeometry = this.getEntityGeometry(entityType);
+    const entityGeometry = this.getFeatureGeometry(entityType);
 
     const allowedGeometry: string[] = [];
-    EntityTypesUtil.moveByTypes(new Geometry(), allowedGeometry, layerGeometryName);
+    FeatureDescriptionUtil.moveByTypes(new Geometry(), allowedGeometry, layerGeometryName);
 
     // console.log(' ----- ', allowedGeometry);
 

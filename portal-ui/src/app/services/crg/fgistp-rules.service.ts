@@ -27,7 +27,7 @@ export class FgistpRulesService {
                  .pipe(
                    map((respone: any) => {
                      if (respone) {
-                       this.featuresXsdDefinition.xsdFeatures = respone.entityTypes;
+                       this.featuresXsdDefinition.xsdFeatures = respone.featureDescriptions;
 
                      } else {
                        this.logger.warn('getRules response is: ', respone);
@@ -55,13 +55,13 @@ export class FgistpRulesService {
     }
   }
 
-  public getFeatureByName(layerName: string): XsdFeature {
+  public getFeatureByName(layerName: string): FeatureDescription {
     if (!layerName) {
       return;
     }
 
-    let byFullCompare: XsdFeature;
-    this.featuresXsdDefinition.xsdFeatures.forEach((feature: XsdFeature) => {
+    let byFullCompare: FeatureDescription;
+    this.featuresXsdDefinition.xsdFeatures.forEach((feature: FeatureDescription) => {
       if (feature.name.toLowerCase() === layerName.toLowerCase()) {
         byFullCompare = feature;
       }
@@ -73,7 +73,7 @@ export class FgistpRulesService {
       this.logger.warn('Прямого совпадения имени не нашлось. Подберем слой через include');
 
       const xsdFeature = this.featuresXsdDefinition.xsdFeatures
-        .find((feature: XsdFeature) => {
+        .find((feature: FeatureDescription) => {
           return feature.name.toLowerCase().includes(layerName.toLowerCase());
         });
 
@@ -180,10 +180,10 @@ export class FgistpRulesService {
 }
 
 export class FeatureXsdDefinition {
-  xsdFeatures: XsdFeature[] = [];
+  xsdFeatures: FeatureDescription[] = [];
 }
 
-export interface XsdFeature {
+export interface FeatureDescription {
   name: string;
   title: string;
   description: string;

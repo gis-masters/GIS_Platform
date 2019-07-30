@@ -1,7 +1,7 @@
 import {GeoUtil} from './GeoUtil';
-import {EntityTypesUtil} from './EntityTypesUtil';
+import {FeatureDescriptionUtil} from './FeatureDescriptionUtil';
 import {ImportTask} from '../geoserver/import/import.service';
-import {XsdFeature} from '../crg/fgistp-rules.service';
+import {FeatureDescription} from '../crg/fgistp-rules.service';
 
 describe('GeoUtil test', () => {
 
@@ -42,7 +42,7 @@ describe('GeoUtil test', () => {
   });
 
   it('should correct mapping geometry between Layer and EntityType', () => {
-    const entityPoint: XsdFeature = {
+    const entityPoint: FeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -58,7 +58,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    const entityLineString: XsdFeature = {
+    const entityLineString: FeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -74,7 +74,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    const entityPolygon: XsdFeature = {
+    const entityPolygon: FeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -90,7 +90,7 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    const entityMultiGeometry: XsdFeature = {
+    const entityMultiGeometry: FeatureDescription = {
       name: 'SomeName',
       title: '',
       description: '',
@@ -107,12 +107,12 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    expect(true).toEqual(EntityTypesUtil.isLayerGeometryCompatible('Point', entityPoint));
-    expect(false).toEqual(EntityTypesUtil.isLayerGeometryCompatible('-Point-', entityPoint));
-    expect(true).toEqual(EntityTypesUtil.isLayerGeometryCompatible('MultiLineString', entityLineString));
-    expect(false).toEqual(EntityTypesUtil.isLayerGeometryCompatible('Polygon', entityLineString));
-    expect(true).toEqual(EntityTypesUtil.isLayerGeometryCompatible('MultiPolygon', entityPolygon));
-    expect(false).toEqual(EntityTypesUtil.isLayerGeometryCompatible('MultiLineString', entityMultiGeometry));
+    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('Point', entityPoint));
+    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('-Point-', entityPoint));
+    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiLineString', entityLineString));
+    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('Polygon', entityLineString));
+    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiPolygon', entityPolygon));
+    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiLineString', entityMultiGeometry));
   });
 
 });

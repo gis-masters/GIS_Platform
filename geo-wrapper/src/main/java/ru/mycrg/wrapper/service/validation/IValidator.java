@@ -1,12 +1,12 @@
 package ru.mycrg.wrapper.service.validation;
 
 import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 
 import java.util.Map;
 
 public interface IValidator {
 
-    ObjectValidationResult validate(EntityTypeDto entityType, Map<String, Object> data);
+    ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> data);
 
 }

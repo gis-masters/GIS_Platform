@@ -6,7 +6,7 @@ import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 import ru.mycrg.gis.service.fgistp.parser.XsdSimpleType;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
@@ -27,9 +27,9 @@ public class XsdParserTest {
         FgistpRules xsdRules = parser.parse(file);
 
         // ASSERT
-        List<EntityType> featuresDescription = xsdRules.getEntityTypes();
-        featuresDescription.forEach(entityType -> {
-            System.out.println("=== " + entityType.getOriginName());
+        List<FeatureDescription> featuresDescription = xsdRules.getFeatureDescriptions();
+        featuresDescription.forEach(featureDescription -> {
+            System.out.println("=== " + featureDescription.getOriginName());
         });
 
         // Common
@@ -37,20 +37,20 @@ public class XsdParserTest {
         assertEquals(0, countEmptyTitle(featuresDescription));
 
         // Check GasPipeline
-        Optional<EntityType> gasPipeline = featuresDescription.stream()
+        Optional<FeatureDescription> gasPipeline = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("GasPipeline"))
                 .findFirst();
         assertTrue(gasPipeline.isPresent());
 
 
         // Check Education
-        Optional<EntityType> oEducation = featuresDescription.stream()
+        Optional<FeatureDescription> oEducation = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("Education"))
                 .findFirst();
         assertTrue(oEducation.isPresent());
 
         // =================================== Check FunctionalZone ================================
-        Optional<EntityType> functionalZone = featuresDescription.stream()
+        Optional<FeatureDescription> functionalZone = featuresDescription.stream()
                 .filter(fgistpClassType -> fgistpClassType.getOriginName().equals("FunctionalZone"))
                 .findFirst();
 
@@ -123,9 +123,9 @@ public class XsdParserTest {
         assertEquals(ValueType.CHOICE, histCatProperty.getValueType());
     }
 
-    private long countEmptyTitle(List<EntityType> entityTypes) {
-        return entityTypes.stream()
-                .filter(entityType -> entityType.getTitle() == null)
+    private long countEmptyTitle(List<FeatureDescription> featureDescriptions) {
+        return featureDescriptions.stream()
+                .filter(featureDescription -> featureDescription.getTitle() == null)
                 .count();
     }
 

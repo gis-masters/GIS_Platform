@@ -3,7 +3,7 @@ package ru.mycrg.gis.service.fgistp.parser;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
@@ -38,7 +38,7 @@ public class FeaturesUtil {
      * Description: Класс объектов «Функциональные зоны»
      * @param fDescriptions
      */
-    public static void fillDescription(List<EntityType> fDescriptions) {
+    public static void fillDescription(List<FeatureDescription> fDescriptions) {
         fDescriptions.forEach(featureDescription -> {
             String originTitle = featureDescription.getTitle();
             if (originTitle != null) {
@@ -53,7 +53,7 @@ public class FeaturesUtil {
         });
     }
 
-    public static void joinGeometry(List<EntityType> fDescriptions) {
+    public static void joinGeometry(List<FeatureDescription> fDescriptions) {
         fDescriptions.forEach(featureDescription -> {
             long geometryCounter = featureDescription.getProperties().stream()
                     .filter(AbstractProperty::isGeometry)
@@ -86,10 +86,10 @@ public class FeaturesUtil {
     }
 
     public static void addEnumerationAlias(FgistpRules fgistpRules, List<XsdSimpleType> xsdSimpleTypes) {
-        fgistpRules.getEntityTypes()
-                .forEach(entityType -> {
-                    String typeName = entityType.getName();
-                    entityType.getProperties()
+        fgistpRules.getFeatureDescriptions()
+                .forEach(featureDescription -> {
+                    String typeName = featureDescription.getName();
+                    featureDescription.getProperties()
                             .forEach(simpleProperty -> {
                                 // В описание, на предыдущем шаге, я ложил название типа...
                                 String propertyName = simpleProperty.getDescription();

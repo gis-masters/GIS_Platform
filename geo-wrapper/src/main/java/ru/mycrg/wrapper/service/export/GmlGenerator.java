@@ -129,7 +129,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         log.debug("Handle source: {}", resource.toString());
 
         try {
-            EntityTypeDto feature = getRuleByTableName(request.getFgistpRules(), resource.getTableName());
+            FeatureDescriptionDto feature = getRuleByTableName(request.getFgistpRules(), resource.getTableName());
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
             int offset = 0;

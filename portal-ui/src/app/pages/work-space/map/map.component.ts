@@ -13,7 +13,7 @@ import {OpenLayersService} from '../../../services/open-layer/open-layers.servic
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {FeatureXsdDefinition, FgistpRulesService, XsdFeature} from '../../../services/crg/fgistp-rules.service';
+import {FeatureXsdDefinition, FgistpRulesService, FeatureDescription} from '../../../services/crg/fgistp-rules.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {ViewFeaturesData} from '../../../components/view-features/view-features.component';

@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.xml.sax.SAXException;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.common.propertyTypes.*;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
 
@@ -60,8 +60,8 @@ public class ClassDefinitionParser {
             parseComplexTypes(fgistpRules, fgistpGrammar);
 
             addEnumerationAlias(fgistpRules, fetchEnumerationsAliasesFromXsdSimpleTypes(file));
-            fillDescription(fgistpRules.getEntityTypes());
-            joinGeometry(fgistpRules.getEntityTypes());
+            fillDescription(fgistpRules.getFeatureDescriptions());
+            joinGeometry(fgistpRules.getFeatureDescriptions());
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 ParserConfigurationException | IOException | SAXException e) {
             log.error("Error parse file: " + file.getName(), e);
@@ -135,7 +135,7 @@ public class ClassDefinitionParser {
         complexTypes.forEach((key, value) -> {
             XSComplexTypeDecl xsComplexType = (XSComplexTypeDecl) value;
 
-            EntityType featureDescription = new EntityType(xsComplexType.getName());
+            FeatureDescription featureDescription = new FeatureDescription(xsComplexType.getName());
             fillOriginNameAndTitle(featureDescription, xsComplexType.getName(), elements);
             featureDescription.setProperties(fetchSequences(xsComplexType));
 
@@ -321,16 +321,16 @@ public class ClassDefinitionParser {
         }
     }
 
-    private void fillOriginNameAndTitle(EntityType entityType, String typeName, XSNamedMap elements) {
+    private void fillOriginNameAndTitle(FeatureDescription featureDescription, String typeName, XSNamedMap elements) {
         String featureName = removePostfix(typeName);
 
         for (int i = 0; i < elements.getLength(); i++) {
             XSElementDecl xsElementDecl = (XSElementDecl) elements.item(i);
 
             if (featureName.toLowerCase().equals(xsElementDecl.getName().toLowerCase())) {
-                entityType.setOriginName(xsElementDecl.getName());
-                entityType.setTitle(handleAnnotation(xsElementDecl.getAnnotations()));
-                entityType.setTableName(xsElementDecl.getName().toLowerCase());
+                featureDescription.setOriginName(xsElementDecl.getName());
+                featureDescription.setTitle(handleAnnotation(xsElementDecl.getAnnotations()));
+                featureDescription.setTableName(xsElementDecl.getName().toLowerCase());
             }
         }
     }

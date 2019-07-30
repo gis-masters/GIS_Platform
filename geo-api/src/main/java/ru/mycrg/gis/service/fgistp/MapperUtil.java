@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.*;
@@ -22,30 +22,30 @@ public class MapperUtil {
     private static Logger log = LoggerFactory.getLogger(MapperUtil.class);
 
     @NotNull
-    public static XsdRule mapEntityTypeToXsdRule(EntityType entityType) {
+    public static XsdRule mapFeatureDescriptionToXsdRule(FeatureDescription featureDescription) {
         XsdRule xsdRule = new XsdRule();
-        xsdRule.setClassName(entityType.getName());
+        xsdRule.setClassName(featureDescription.getName());
 
         try {
-            JsonNode jsonNode = JacksonUtil.toJsonNode(getJsonString(mapEntityTypeToDto(entityType)));
+            JsonNode jsonNode = JacksonUtil.toJsonNode(getJsonString(mapFeatureDescriptionToDto(featureDescription)));
             xsdRule.setClassRule(jsonNode);
         } catch (Exception e) {
-            log.warn("Failed get json for: {} / With error: {}", entityType.getName(), e.getMessage());
+            log.warn("Failed get json for: {} / With error: {}", featureDescription.getName(), e.getMessage());
         }
 
         return xsdRule;
     }
 
-    public static EntityTypeDto mapEntityTypeToDto(EntityType entityType) {
-        EntityTypeDto dto = new EntityTypeDto();
-        dto.setName(entityType.getName());
-        dto.setOriginName(entityType.getOriginName());
-        dto.setTitle(entityType.getTitle());
-        dto.setDescription(entityType.getDescription());
-        dto.setTableName(entityType.getTableName());
-        dto.setCustomRuleFunction(entityType.getCustomRuleFunction());
+    public static FeatureDescriptionDto mapFeatureDescriptionToDto(FeatureDescription featureDescription) {
+        FeatureDescriptionDto dto = new FeatureDescriptionDto();
+        dto.setName(featureDescription.getName());
+        dto.setOriginName(featureDescription.getOriginName());
+        dto.setTitle(featureDescription.getTitle());
+        dto.setDescription(featureDescription.getDescription());
+        dto.setTableName(featureDescription.getTableName());
+        dto.setCustomRuleFunction(featureDescription.getCustomRuleFunction());
 
-        entityType.getProperties().forEach(abstractProperty -> {
+        featureDescription.getProperties().forEach(abstractProperty -> {
             dto.addProperty(mapPropertyToDto(abstractProperty));
         });
 
@@ -92,19 +92,19 @@ public class MapperUtil {
         return dto;
     }
 
-    public static EntityType mapXsdRuleToEntityType(XsdRule xsdRule) {
+    public static FeatureDescription mapXsdRuleToFeatureDescription(XsdRule xsdRule) {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
             JsonNode classRule = xsdRule.getClassRule();
-            EntityTypeDto entityTypeDto = mapper.readValue(classRule.toString(), EntityTypeDto.class);
+            FeatureDescriptionDto featureDescriptionDto = mapper.readValue(classRule.toString(), FeatureDescriptionDto.class);
 
-            return mapDtoToEntityType(entityTypeDto);
+            return mapDtoToFeatureDescription(featureDescriptionDto);
         } catch (IOException e) {
             log.warn("Failed convert JSON / Error: {}", e.getMessage());
         }
 
-        return new EntityType(xsdRule.getClassName());
+        return new FeatureDescription(xsdRule.getClassName());
     }
 
     public static JsonNode convertToJsonNode(Object object) {
@@ -117,20 +117,20 @@ public class MapperUtil {
         }
     }
 
-    static private EntityType mapDtoToEntityType(EntityTypeDto dto) {
-        EntityType entityType = new EntityType();
+    static private FeatureDescription mapDtoToFeatureDescription(FeatureDescriptionDto dto) {
+        FeatureDescription featureDescription = new FeatureDescription();
 
-        entityType.setName(dto.getName());
-        entityType.setOriginName(dto.getOriginName());
-        entityType.setTitle(dto.getTitle());
-        entityType.setDescription(dto.getDescription());
-        entityType.setTableName(dto.getTableName());
+        featureDescription.setName(dto.getName());
+        featureDescription.setOriginName(dto.getOriginName());
+        featureDescription.setTitle(dto.getTitle());
+        featureDescription.setDescription(dto.getDescription());
+        featureDescription.setTableName(dto.getTableName());
 
         dto.getProperties().forEach(propertyDto -> {
-            mapDtoToProperty(propertyDto).ifPresent(entityType::addProperty);
+            mapDtoToProperty(propertyDto).ifPresent(featureDescription::addProperty);
         });
 
-        return entityType;
+        return featureDescription;
     }
 
     static private Optional<AbstractProperty> mapDtoToProperty(SimplePropertyDto propertyDto) {

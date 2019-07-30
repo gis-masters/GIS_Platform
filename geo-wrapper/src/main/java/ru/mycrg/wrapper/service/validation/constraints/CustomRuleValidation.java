@@ -2,7 +2,7 @@ package ru.mycrg.wrapper.service.validation.constraints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 
 import javax.script.*;
 import java.util.HashMap;
@@ -14,14 +14,14 @@ public class CustomRuleValidation {
 
     public CustomRuleValidation() {}
 
-    public Map<String, String> validate(EntityTypeDto entityType, Map<String, Object> data) {
+    public Map<String, String> validate(FeatureDescriptionDto featureDescription, Map<String, Object> data) {
         final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
         final Compilable compilable = (Compilable) engine;
         final Invocable invocable = (Invocable) engine;
 
         Map<String, String> result = new HashMap<>();
         try {
-            String statement = "function validate(obj) {" + entityType.getCustomRuleFunction() + "}";
+            String statement = "function validate(obj) {" + featureDescription.getCustomRuleFunction() + "}";
             compilable.compile(statement).eval();
 
             result = (Map<String, String>) invocable.invokeFunction("validate", data);

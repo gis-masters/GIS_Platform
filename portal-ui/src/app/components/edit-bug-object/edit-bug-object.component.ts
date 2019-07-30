@@ -9,7 +9,7 @@ import {CommunicationService, ObjectDto} from '../../services/communication.serv
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, XsdFeature} from '../../services/crg/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, FeatureDescription} from '../../services/crg/fgistp-rules.service';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -23,7 +23,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
 
   editFeatureForm: FormGroup;
 
-  featureDescription: XsdFeature;
+  featureDescription: FeatureDescription;
   wfsFeature: WfsFeature;
 
   editFeatureData: EditFeatureItem[] = [];
@@ -144,8 +144,8 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
             FeaturePropertyValidators.pattern(property),
             FeaturePropertyValidators.minInclusive(property),
             FeaturePropertyValidators.maxInclusive(property),
-            FeaturePropertyValidators.byType(property),
-            // allowedValues?: string[];
+            FeaturePropertyValidators.isIntType(property),
+            FeaturePropertyValidators.isDoubleType(property),
           ],
           // updateOn: 'blur'
         });

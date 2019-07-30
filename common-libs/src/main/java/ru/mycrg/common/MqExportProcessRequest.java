@@ -8,7 +8,7 @@ public class MqExportProcessRequest {
     private String docSchema = "Doc.20301010000";
     private String format;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
-    private List<EntityTypeDto> fgistpRules = new ArrayList<>();
+    private List<FeatureDescriptionDto> fgistpRules = new ArrayList<>();
 
     public MqExportProcessRequest() {}
 
@@ -28,11 +28,11 @@ public class MqExportProcessRequest {
         this.resourceProjections.add(projections);
     }
 
-    public List<EntityTypeDto> getFgistpRules() {
+    public List<FeatureDescriptionDto> getFgistpRules() {
         return fgistpRules;
     }
 
-    public void addRule(EntityTypeDto rule) {
+    public void addRule(FeatureDescriptionDto rule) {
         this.fgistpRules.add(rule);
     }
 
@@ -40,7 +40,7 @@ public class MqExportProcessRequest {
         this.resourceProjections = resourceProjections;
     }
 
-    public void setFgistpRules(List<EntityTypeDto> fgistpRules) {
+    public void setFgistpRules(List<FeatureDescriptionDto> fgistpRules) {
         this.fgistpRules = fgistpRules;
     }
 

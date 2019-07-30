@@ -3,7 +3,7 @@ package ru.mycrg.common;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityTypeDto {
+public class FeatureDescriptionDto {
 
     private String name;
     private String title;
@@ -13,7 +13,7 @@ public class EntityTypeDto {
     private String customRuleFunction = "";
     private String originName;
 
-    public EntityTypeDto() {}
+    public FeatureDescriptionDto() {}
 
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);

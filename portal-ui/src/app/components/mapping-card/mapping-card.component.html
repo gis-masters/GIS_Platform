@@ -5,8 +5,8 @@
   <div class="row m-0 py-2">
     <div class="col-4 p-0 align-self-center"><h6>Сопоставте слой</h6></div>
     <mat-form-field class="col-8 p-0">
-      <mat-select placeholder="Целевой слой" [disabled]="entityTypes.length === 0">
-        <mat-option *ngFor="let entityItem of entityTypes | geometry:layer" [value]="entityItem.name"
+      <mat-select placeholder="Целевой слой" [disabled]="featureDescriptions.length === 0">
+        <mat-option *ngFor="let entityItem of featureDescriptions | geometry:layer" [value]="entityItem.name"
                     (click)="entityTypeSelected(entityItem.tableName)">
           <span style="font-size: smaller">({{entityItem.tableName}})</span> {{entityItem.title}}
         </mat-option>

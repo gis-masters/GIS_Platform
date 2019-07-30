@@ -17,7 +17,7 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
@@ -67,13 +67,13 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            EntityType ruleByClassName = ruleService.getRuleByName(layerName);
+            FeatureDescription ruleByClassName = ruleService.getRuleByName(layerName);
 
             // TODO: Может не плеваться 404 если один из слоев ненайден а просто не добавлять его.
             // Можно сразу выставить в процессе эту фичу как ошибочную
             // Во всех операциях (импорт, валидация) можно внедрить тоже самое
 
-            payload.addRule(MapperUtil.mapEntityTypeToDto(ruleByClassName));
+            payload.addRule(MapperUtil.mapFeatureDescriptionToDto(ruleByClassName));
             payload.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });

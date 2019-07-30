@@ -1,12 +1,12 @@
 package ru.mycrg.gis.service.fgistp.rules;
 
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 
 public interface IFgistpRuleHolder {
 
     FgistpRules getRules();
 
-    EntityType getRuleByName(String name);
+    FeatureDescription getRuleByName(String name);
 
     boolean isXsdRulesEmpty();
 

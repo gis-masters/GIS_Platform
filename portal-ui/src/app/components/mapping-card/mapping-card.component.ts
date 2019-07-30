@@ -4,7 +4,7 @@ import {
   FeatureXsdDefinition,
   FgistpRulesService,
   SimpleProperty,
-  XsdFeature
+  FeatureDescription
 } from '../../services/crg/fgistp-rules.service';
 import {AS_IS_TYPE, ImportService, LayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
 
@@ -17,7 +17,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
 
   @Input() layer: LayerItem;
 
-  entityTypes: XsdFeature[] = [];
+  featureDescriptions: FeatureDescription[] = [];
   typeProperties: SimpleProperty[] = [];
 
   constructor(private logger: NGXLogger,
@@ -32,7 +32,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
     this.ruleService.getRules()
         .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
           if (entityTypesDefinition.xsdFeatures) {
-            this.entityTypes = entityTypesDefinition.xsdFeatures;
+            this.featureDescriptions = entityTypesDefinition.xsdFeatures;
           } else {
             this.logger.warn('Empty rules? ', entityTypesDefinition);
           }
@@ -49,7 +49,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
   }
 
   entityTypeSelected(selected: string) {
-    const xsdFeature = this.entityTypes.find((type: XsdFeature) => type.tableName === selected);
+    const xsdFeature = this.featureDescriptions.find((type: FeatureDescription) => type.tableName === selected);
 
     this.importService.importFlow.setTable(this.layer.originalName, xsdFeature.tableName);
     this.typeProperties = [];

@@ -8,7 +8,7 @@ import org.springframework.util.ResourceUtils;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
 import ru.mycrg.gis.repository.XsdRuleRepository;
@@ -85,8 +85,8 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     public FgistpRules splitRulesByGeometry(FgistpRules rules) {
         FgistpRules newRules = new FgistpRules();
 
-        rules.getEntityTypes().forEach(entityType -> {
-            Optional<GeometryProperty> optionalProperty = entityType.getProperties().stream()
+        rules.getFeatureDescriptions().forEach(featureDescription -> {
+            Optional<GeometryProperty> optionalProperty = featureDescription.getProperties().stream()
                     .filter(AbstractProperty::isGeometry)
                     .findFirst()
                     .map(property -> (GeometryProperty) property);
@@ -97,15 +97,15 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
                 geomProperty.getAllowedValues().forEach(geomType -> {
                     switch (geomType) {
                         case "Curve": break; // Do nothing
-                        case "Polygon":     newRules.addComplexType(prepareNewFeature(entityType, "Polygon")); break;
-                        case "Point":       newRules.addComplexType(prepareNewFeature(entityType, "Point")); break;
-                        case "LineString":  newRules.addComplexType(prepareNewFeature(entityType, "LineString")); break;
+                        case "Polygon":     newRules.addComplexType(prepareNewFeature(featureDescription, "Polygon")); break;
+                        case "Point":       newRules.addComplexType(prepareNewFeature(featureDescription, "Point")); break;
+                        case "LineString":  newRules.addComplexType(prepareNewFeature(featureDescription, "LineString")); break;
                         default:
                             log.warn("Unsupported geometry type: {}", geomType);
                     }
                 });
             } else {
-                log.warn("Some feature not contain geometry? {}", entityType.getName());
+                log.warn("Some feature not contain geometry? {}", featureDescription.getName());
             }
         });
 
@@ -120,7 +120,7 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     public FgistpRules updateRules() {
         log.info("Update rules");
 
-        fgistpRules.setEntityTypes(new ArrayList<>());
+        fgistpRules.setFeatureDescriptions(new ArrayList<>());
 
         try {
             if (isXsdRulesEmpty()) {
@@ -156,18 +156,18 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
      * Возвращает описание фичи.
      *
      * @param featureName Название фичи(Слоя)
-     * @return Описание фичи {@link EntityType}
+     * @return Описание фичи {@link FeatureDescription}
      * @throws CrgNotFoundException 404 если не нашли название фичи.
      */
-    public EntityType getRuleByName(String featureName) throws CrgNotFoundException {
-        Optional<EntityType> optionalFeature = fgistpRules.getFeatureTypeByName(featureName);
+    public FeatureDescription getRuleByName(String featureName) throws CrgNotFoundException {
+        Optional<FeatureDescription> optionalFeature = fgistpRules.getFeatureTypeByName(featureName);
         if (optionalFeature.isPresent()) {
-            EntityType entityType = optionalFeature.get();
+            FeatureDescription featureDescription = optionalFeature.get();
             customRuleRepository
-                    .findCustomRuleByClassName(entityType.getName())
-                    .ifPresent(customRule -> entityType.setCustomRuleFunction(customRule.getClassRule()));
+                    .findCustomRuleByClassName(featureDescription.getName())
+                    .ifPresent(customRule -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
 
-            return entityType;
+            return featureDescription;
         } else {
             throw new CrgNotFoundException("Не найден слой: " + featureName);
         }
@@ -177,12 +177,12 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
      * Не должно быть повторяющихся имен фич. (Поскольку имя фичи это название таблицы)
      */
     private boolean isIdenticalNamesExist(FgistpRules fgistpRules) {
-        long count = fgistpRules.getEntityTypes().stream()
-                .map(EntityType::getName)
+        long count = fgistpRules.getFeatureDescriptions().stream()
+                .map(FeatureDescription::getName)
                 .distinct()
                 .count();
 
-        return count != fgistpRules.getEntityTypes().size();
+        return count != fgistpRules.getFeatureDescriptions().size();
     }
 
     @Override
@@ -192,18 +192,18 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
     @Override
     public boolean isCacheEmpty() {
-        return fgistpRules.getEntityTypes().isEmpty();
+        return fgistpRules.getFeatureDescriptions().isEmpty();
     }
 
     /**
      * Новая фича это копия старой с новым именем и названием таблицы, а также с отредактированным свойством
      * геометрии, в котором отсается только одно значение.
      */
-    private EntityType prepareNewFeature(EntityType entityType, String geometryType) {
-        EntityType newFeature = new EntityType(entityType);
+    private FeatureDescription prepareNewFeature(FeatureDescription featureDescription, String geometryType) {
+        FeatureDescription newFeature = new FeatureDescription(featureDescription);
 
         List<AbstractProperty> newProperties = new ArrayList<>();
-        entityType.getProperties().forEach(property -> {
+        featureDescription.getProperties().forEach(property -> {
             if (property.isGeometry()) {
                 GeometryProperty newGeometry = new GeometryProperty((GeometryProperty) property);
                 newGeometry.setAllowedValues(Collections.singletonList(geometryType));
@@ -217,13 +217,13 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
         newFeature.setProperties(newProperties);
 
         if ("Polygon".equals(geometryType)) {
-            newFeature.setTableName(entityType.getTableName());
+            newFeature.setTableName(featureDescription.getTableName());
         } else if ("LineString".equals(geometryType)) {
-            newFeature.setTableName(entityType.getTableName() + "_line");
+            newFeature.setTableName(featureDescription.getTableName() + "_line");
         } else if ("Point".equals(geometryType)) {
-            newFeature.setTableName(entityType.getTableName() + "_point");
+            newFeature.setTableName(featureDescription.getTableName() + "_point");
         } else {
-            newFeature.setTableName(entityType.getTableName());
+            newFeature.setTableName(featureDescription.getTableName());
         }
 
         newFeature.setName(newFeature.getTableName());
@@ -232,18 +232,18 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
     private void persistXsdRules(FgistpRules rules) {
         rules
-                .getEntityTypes()
-                .forEach(classType -> xsdRuleRepository.save(MapperUtil.mapEntityTypeToXsdRule(classType)));
+                .getFeatureDescriptions()
+                .forEach(classType -> xsdRuleRepository.save(MapperUtil.mapFeatureDescriptionToXsdRule(classType)));
     }
 
     private void getRulesFromDb() {
         log.info("Get rules from DB");
 
-        List<EntityType> entityTypes = fgistpRules.getEntityTypes();
+        List<FeatureDescription> featureDescriptions = fgistpRules.getFeatureDescriptions();
 
         xsdRuleRepository
                 .findAll()
-                .forEach(xsdRule -> entityTypes.add(MapperUtil.mapXsdRuleToEntityType(xsdRule)));
+                .forEach(xsdRule -> featureDescriptions.add(MapperUtil.mapXsdRuleToFeatureDescription(xsdRule)));
     }
 
     /**
@@ -257,10 +257,10 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
                 .forEach(customRule -> {
                     String className = customRule.getClassName();
 
-                    fgistpRules.getEntityTypes()
+                    fgistpRules.getFeatureDescriptions()
                             .stream()
-                            .filter(entityType -> className.equals(entityType.getName()))
-                            .forEach(entityType -> entityType.setCustomRuleFunction(customRule.getClassRule()));
+                            .filter(featureDescription -> className.equals(featureDescription.getName()))
+                            .forEach(featureDescription -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
                 });
     }
 

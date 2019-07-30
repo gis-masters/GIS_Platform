@@ -14,7 +14,7 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.fgistp.EntityType;
+import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.MapperUtil;
 import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
 
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.security.Principal;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.common.enums.ProcessStatus.*;
 
 @Service
 public class ValidationService extends BaseProcessService {
@@ -71,8 +70,8 @@ public class ValidationService extends BaseProcessService {
         ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
 
         request.getLayers().forEach(layerName -> {
-            EntityType entityType = ruleService.getRuleByName(layerName);
-            payload.addFeatureProjections(MapperUtil.mapEntityTypeToDto(entityType));
+            FeatureDescription featureDescription = ruleService.getRuleByName(layerName);
+            payload.addFeatureProjections(MapperUtil.mapFeatureDescriptionToDto(featureDescription));
             payload.addResourceProjections(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getWorkspaceName(), layerName));
         });

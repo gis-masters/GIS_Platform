@@ -79,7 +79,7 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
         ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
         try {
-            EntityTypeDto feature = getRuleByTableName(payload.getFeatures(), resource.getTableName());
+            FeatureDescriptionDto feature = getRuleByTableName(payload.getFeatures(), resource.getTableName());
 
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
@@ -145,12 +145,13 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         }
     }
 
-    private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch, EntityTypeDto entityType) {
+    private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch,
+                                                       FeatureDescriptionDto featureDescription) {
         List<ObjectValidationResult> validationResults = new ArrayList<>();
 
         int i = 0;
         while (i < batch.size()) {
-            ObjectValidationResult objectValidationResult = validator.validate(entityType, batch.get(i));
+            ObjectValidationResult objectValidationResult = validator.validate(featureDescription, batch.get(i));
             objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
             objectValidationResult.setClassId(Util.getPropertyByKey(batch.get(i), CLASS_ID));
             objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));

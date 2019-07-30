@@ -8,7 +8,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, SimpleProperty, XsdFeature} from '../../services/crg/fgistp-rules.service';
+import {EditFeatureItem, FgistpRulesService, SimpleProperty, FeatureDescription} from '../../services/crg/fgistp-rules.service';
 import {from} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
 
@@ -28,7 +28,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   isSaveInProgress = false;
   loadPercent = 0;
 
-  private featureDescription: XsdFeature;
+  private featureDescription: FeatureDescription;
   private BATCH_SIZE = 200;
 
   constructor(private logger: NGXLogger,

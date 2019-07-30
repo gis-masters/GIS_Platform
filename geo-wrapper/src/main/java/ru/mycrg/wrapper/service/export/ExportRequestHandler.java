@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.queue.MqSender;
@@ -39,7 +39,7 @@ public class ExportRequestHandler extends BaseRequestHandler implements IRequest
             if (payload.getFormat() != null) {
                 path = gdalService.generate(mqRequest);
 
-                EntityTypeDto featureDescription = payload.getFgistpRules().get(0);
+                FeatureDescriptionDto featureDescription = payload.getFgistpRules().get(0);
 
                 mqSender.send(new BaseMqProcessResponse(mqRequest, path, ProcessStatus.DONE,
                         featureDescription.getTitle(), 100));

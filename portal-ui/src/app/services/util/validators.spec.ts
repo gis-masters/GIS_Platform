@@ -308,43 +308,43 @@ describe('Property validation test', () => {
     expect('Значение: ' + enumerationPropertyNotValid.value + ' не соответствует справочному').toEqual(enumerationPropertyNotValid.errors['wrongChoice']);
   });
 
-  it('should validate byType', () => {
+  it('should validate isDoubleType', () => {
     const doubleByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
-      title: 'byType Property',
+      title: 'isDoubleType Property',
       valueType: 'DOUBLE',
       required: true,
     };
 
     const intByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
-      title: 'byType Property',
+      title: 'isDoubleType Property',
       valueType: 'INT',
       required: true,
     };
 
     const nullByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
-      title: 'byType Property',
+      title: 'isDoubleType Property',
       valueType: null,
       required: true,
     };
 
     const undefinedByTypeProperty: SimpleProperty = {
       name: 'byTypeProperty',
-      title: 'byType Property',
+      title: 'isDoubleType Property',
       valueType: undefined,
       required: true,
     };
 
-    const doubleByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
-    const nullDoubleByTypePropertyValid = new FormControl(null, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
-    const undefinedDoubleByTypePropertyValid = new FormControl(undefined, [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
-    const doubleByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.byType(doubleByTypeProperty)]);
-    const intByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.byType(intByTypeProperty)]);
-    const intByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.byType(intByTypeProperty)]);
-    const nullByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.byType(nullByTypeProperty)]);
-    const undefinedByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.byType(undefinedByTypeProperty)]);
+    const doubleByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.isDoubleType(doubleByTypeProperty)]);
+    const nullDoubleByTypePropertyValid = new FormControl(null, [FeaturePropertyValidators.isDoubleType(doubleByTypeProperty)]);
+    const undefinedDoubleByTypePropertyValid = new FormControl(undefined, [FeaturePropertyValidators.isDoubleType(doubleByTypeProperty)]);
+    const doubleByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.isDoubleType(doubleByTypeProperty)]);
+    const intByTypePropertyValid = new FormControl(1.5, [FeaturePropertyValidators.isDoubleType(intByTypeProperty)]);
+    const intByTypePropertyNotValid = new FormControl('string', [FeaturePropertyValidators.isDoubleType(intByTypeProperty)]);
+    const nullByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.isDoubleType(nullByTypeProperty)]);
+    const undefinedByTypePropertyValid = new FormControl('string', [FeaturePropertyValidators.isDoubleType(undefinedByTypeProperty)]);
 
     expect(true).toEqual(doubleByTypePropertyValid.valid);
     expect(true).toEqual(nullDoubleByTypePropertyValid.valid);
@@ -354,7 +354,7 @@ describe('Property validation test', () => {
     expect(false).toEqual(intByTypePropertyNotValid.valid);
     expect(true).toEqual(nullByTypePropertyValid.valid);
     expect(true).toEqual(undefinedByTypePropertyValid.valid);
-    expect('Значение должно быть числом').toEqual(doubleByTypePropertyNotValid.errors['byType']);
+    expect('Значение должно быть числом').toEqual(doubleByTypePropertyNotValid.errors['isDoubleType']);
   });
 
   it('should NOT validate NOT REQUIRED property', () => {

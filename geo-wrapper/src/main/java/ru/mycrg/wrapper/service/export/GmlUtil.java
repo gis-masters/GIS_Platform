@@ -2,7 +2,7 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
-import ru.mycrg.common.EntityTypeDto;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.exceptions.RuleNotFoundException;
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class GmlUtil {
 
-    public static EntityTypeDto getRuleByTableName(List<EntityTypeDto> entityTypes, String tableName)
+    public static FeatureDescriptionDto getRuleByTableName(List<FeatureDescriptionDto> featuresDescription, String tableName)
             throws RuleNotFoundException {
-        return entityTypes.stream()
-                .filter(entityType -> entityType.getTableName().toLowerCase().equals(tableName.toLowerCase()))
+        return featuresDescription.stream()
+                .filter(fDescription -> fDescription.getTableName().toLowerCase().equals(tableName.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new RuleNotFoundException(tableName));
     }
