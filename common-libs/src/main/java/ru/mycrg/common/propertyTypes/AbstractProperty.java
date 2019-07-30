@@ -20,6 +20,16 @@ public abstract class AbstractProperty {
 
     private int sequenceNumber;
 
+    /**
+     * <p>Определяет способ обработки пробельных символов:</p><br>
+     * 'preserve' - НЕ удалять никакие пробельные символы; <br>
+     * 'replace' - ЗАМЕНИТЬ все пробельные символы (символы табуляции, пробела, конца строки и перевода каретки)
+     *  символами пробела; <br>
+     * 'collapse' - УДАЛИТЬ все пробельные символы (символы табуляции, пробела, конца строки и перевода каретки и
+     *  конечного пробела удаляются, а множественные пробелы заменяются на одинарный символ пробела):
+     */
+    private String whiteSpace;
+
     public AbstractProperty() {}
 
     public AbstractProperty(String name) {
@@ -117,5 +127,13 @@ public abstract class AbstractProperty {
 
     public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public String getWhiteSpace() {
+        return whiteSpace;
+    }
+
+    public void setWhiteSpace(String whiteSpace) {
+        this.whiteSpace = whiteSpace;
     }
 }

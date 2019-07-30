@@ -283,41 +283,64 @@ public class ClassDefinitionParser {
     }
 
     private void setIntegerValues(XSSimpleTypeDecl simpleTypeDecl, IntegerProperty integerProperty) {
-        XSObject facetMinInclusive = simpleTypeDecl.getFacet(FACET_MININCLUSIVE);
-        if (facetMinInclusive != null) {
-            Object facetValue = ((XSFacet) facetMinInclusive).getActualFacetValue();
-            integerProperty.setMinInclusive(Integer.valueOf(facetValue.toString()));
-        }
+        XSObjectList facets = simpleTypeDecl.getFacets();
 
-        XSObject facetMaxInclusive = simpleTypeDecl.getFacet(FACET_MAXINCLUSIVE);
-        if (facetMaxInclusive != null) {
-            Object facetValue = ((XSFacet) facetMaxInclusive).getActualFacetValue();
-            integerProperty.setMaxInclusive(Integer.valueOf(facetValue.toString()));
+        for (int i = 0; i < facets.getLength(); i++) {
+            XSFacet xsFacet = (XSFacet) facets.get(i);
+            short facetKind = xsFacet.getFacetKind();
+            switch (facetKind) {
+                case FACET_WHITESPACE:      integerProperty.setWhiteSpace(xsFacet.getLexicalFacetValue());   break;
+                case FACET_FRACTIONDIGITS:  integerProperty.setFractionDigits(xsFacet.getIntFacetValue());   break;
+                case FACET_TOTALDIGITS:     integerProperty.setTotalDigits(xsFacet.getIntFacetValue());      break;
+                case FACET_MININCLUSIVE:
+                    String minValue = xsFacet.getActualFacetValue().toString();
+                    integerProperty.setMinInclusive(Integer.valueOf(minValue));
+                    break;
+                case FACET_MAXINCLUSIVE:
+                    String maxValue = xsFacet.getActualFacetValue().toString();
+                    integerProperty.setMaxInclusive(Integer.valueOf(maxValue));
+                    break;
+                default:
+                    log.warn("Unsupported facet for integer. Type: {}. typeName: {}", facetKind,
+                            simpleTypeDecl.getTypeName());
+            }
         }
     }
 
     private void setDoubleValues(XSSimpleTypeDecl simpleTypeDecl, DoubleProperty doubleProperty) {
-        XSObject facetTotal = simpleTypeDecl.getFacet(FACET_TOTALDIGITS);
-        if (facetTotal != null) {
-            doubleProperty.setTotalDigits(((XSFacet) facetTotal).getIntFacetValue());
+        XSObjectList facets = simpleTypeDecl.getFacets();
+
+        for (int i = 0; i < facets.getLength(); i++) {
+            XSFacet xsFacet = (XSFacet) facets.get(i);
+            short facetKind = xsFacet.getFacetKind();
+            switch (facetKind) {
+                case FACET_TOTALDIGITS:     doubleProperty.setTotalDigits(xsFacet.getIntFacetValue());      break;
+                case FACET_FRACTIONDIGITS:  doubleProperty.setFractionDigits(xsFacet.getIntFacetValue());   break;
+                case FACET_WHITESPACE:      doubleProperty.setWhiteSpace(xsFacet.getLexicalFacetValue());   break;
+                default:
+                    log.warn("Unsupported facet for double type: {}", facetKind);
+            }
         }
     }
 
     private void setStringValues(XSSimpleTypeDecl simpleTypeDecl, StringProperty stringProperty) {
-        XSObject facetMinLength = simpleTypeDecl.getFacet(FACET_MINLENGTH);
-        if (facetMinLength != null) {
-            stringProperty.setMinLength(((XSFacet) facetMinLength).getIntFacetValue());
-        }
+        XSObjectList facets = simpleTypeDecl.getFacets();
 
-        XSObject facetMaxLength = simpleTypeDecl.getFacet(FACET_MAXLENGTH);
-        if (facetMaxLength != null) {
-            stringProperty.setMaxLength(((XSFacet) facetMaxLength).getIntFacetValue());
-        }
-
-        XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
-        if (facetPattern != null) {
-            String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
-            stringProperty.setPattern(pattern);
+        for (int i = 0; i < facets.getLength(); i++) {
+            XSFacet xsFacet = (XSFacet) facets.get(i);
+            short facetKind = xsFacet.getFacetKind();
+            switch (facetKind) {
+                case FACET_LENGTH:      stringProperty.setLength(xsFacet.getIntFacetValue());           break;
+                case FACET_MINLENGTH:   stringProperty.setMinLength(xsFacet.getIntFacetValue());        break;
+                case FACET_MAXLENGTH:   stringProperty.setMaxLength(xsFacet.getIntFacetValue());        break;
+                case FACET_WHITESPACE:  stringProperty.setWhiteSpace(xsFacet.getLexicalFacetValue());   break;
+                case FACET_PATTERN:
+                    String pattern = ((XSMultiValueFacet) xsFacet).getLexicalFacetValues().item(0);
+                    stringProperty.setPattern(pattern);
+                    break;
+                default:
+                    log.warn("Unsupported facet for string. Type: {}. Type name: {}", facetKind, simpleTypeDecl.getTypeName());
+            }
         }
     }
 

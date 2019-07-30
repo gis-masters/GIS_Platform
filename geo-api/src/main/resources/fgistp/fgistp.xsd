@@ -334,13 +334,13 @@
                     </xs:element>
                     <xs:element
                         fgistp:username="Подтип организации, реализующей программы профессионального и высшего образования"
-                        minOccurs="0" name="EDU_SDTYPE">
+                        minOccurs="0" name="EDU_SDTYPE" type="fgistp:EDU_SDTYPE">
                         <xs:annotation>
                             <xs:documentation>Подтип организации, реализующей программы профессионального и высшего образования</xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="fgistp:EDU_SDTYPE"/>
-                        </xs:simpleType>
+<!--                        <xs:simpleType>-->
+<!--                            <xs:restriction base="fgistp:EDU_SDTYPE"/>-->
+<!--                        </xs:simpleType>-->
                     </xs:element>
                     <xs:element fgistp:username="Подтип научной организации" minOccurs="0"
                         name="SCI_TYPE" type="fgistp:SCI_TYPE">
