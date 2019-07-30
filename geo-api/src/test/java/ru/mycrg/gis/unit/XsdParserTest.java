@@ -6,6 +6,7 @@ import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.EnumerationProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
+import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.service.fgistp.FeatureDescription;
 import ru.mycrg.gis.service.fgistp.parser.ClassDefinitionParser;
 import ru.mycrg.gis.service.fgistp.parser.XsdSimpleType;
@@ -69,6 +70,10 @@ public class XsdParserTest {
         assertEquals(7, ((EnumerationProperty) fzProperty4).getEnumerations().size());
         assertEquals("Справочник: Статус объекта", fzProperties.get(18).getTitle());
         assertEquals("Справочник: Значение объекта", fzProperties.get(19).getTitle());
+
+        StringProperty sProperty = (StringProperty) fzProperties.get(0);
+        assertEquals(ValueType.STRING, sProperty.getValueType());
+        assertNotNull(sProperty.getPattern());
 
         EnumerationProperty status = (EnumerationProperty) fzProperties.get(19);
         assertEquals("Федеральное значение", status.getEnumerations().get(0).getTitle());

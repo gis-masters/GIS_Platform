@@ -305,6 +305,13 @@ public class ClassDefinitionParser {
                             simpleTypeDecl.getTypeName());
             }
         }
+
+        // Паттерна нет среди facets. Обработаю отдельно
+        XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
+        if (facetPattern != null) {
+            String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
+            integerProperty.setPattern(pattern);
+        }
     }
 
     private void setDoubleValues(XSSimpleTypeDecl simpleTypeDecl, DoubleProperty doubleProperty) {
@@ -320,6 +327,13 @@ public class ClassDefinitionParser {
                 default:
                     log.warn("Unsupported facet for double type: {}", facetKind);
             }
+        }
+
+        // Паттерна нет среди facets. Обработаю отдельно
+        XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
+        if (facetPattern != null) {
+            String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
+            doubleProperty.setPattern(pattern);
         }
     }
 
@@ -341,6 +355,13 @@ public class ClassDefinitionParser {
                 default:
                     log.warn("Unsupported facet for string. Type: {}. Type name: {}", facetKind, simpleTypeDecl.getTypeName());
             }
+        }
+
+        // Паттерна нет среди facets. Обработаю отдельно
+        XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
+        if (facetPattern != null) {
+            String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
+            stringProperty.setPattern(pattern);
         }
     }
 

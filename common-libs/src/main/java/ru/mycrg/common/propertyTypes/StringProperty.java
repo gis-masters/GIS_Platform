@@ -19,16 +19,6 @@ public class StringProperty extends AbstractProperty {
      */
     private Integer maxLength = -1;
 
-    /**
-     * Определяет точную последовательность приемлемых символов
-     */
-    private String pattern;
-
-    /**
-     * Описание паттерна
-     */
-    private String patternDescription = "";
-
     public StringProperty() {
         super(ValueType.STRING);
     }
@@ -57,19 +47,4 @@ public class StringProperty extends AbstractProperty {
         this.maxLength = maxLength;
     }
 
-    public String getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public String getPatternDescription() {
-        return patternDescription;
-    }
-
-    public void setPatternDescription(String patternDescription) {
-        this.patternDescription = patternDescription;
-    }
 }

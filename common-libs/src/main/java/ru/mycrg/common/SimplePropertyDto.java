@@ -22,11 +22,14 @@ public class SimplePropertyDto {
     private ValueType valueType;
 
     private boolean required;
+    private Integer length = -1;
     private Integer minLength = -1;
     private Integer maxLength = -1;
     private Integer minInclusive = -1;
     private Integer maxInclusive = -1;
     private Integer totalDigits = -1;
+    private Integer fractionDigits = -1;
+    private String whiteSpace;
     private String pattern;
     private String patternDescription = "";
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
@@ -186,5 +189,29 @@ public class SimplePropertyDto {
 
     public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    public String getWhiteSpace() {
+        return whiteSpace;
+    }
+
+    public void setWhiteSpace(String whiteSpace) {
+        this.whiteSpace = whiteSpace;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
+    public Integer getFractionDigits() {
+        return fractionDigits;
+    }
+
+    public void setFractionDigits(Integer fractionDigits) {
+        this.fractionDigits = fractionDigits;
     }
 }

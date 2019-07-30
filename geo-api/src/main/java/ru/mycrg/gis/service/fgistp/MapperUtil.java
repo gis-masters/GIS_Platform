@@ -64,18 +64,22 @@ public class MapperUtil {
         dto.setChoice(abstractProperty.getChoice());
         dto.setValueType(abstractProperty.getValueType());
         dto.setSequenceNumber(abstractProperty.getSequenceNumber());
+        dto.setWhiteSpace(abstractProperty.getWhiteSpace());
+        dto.setPatternDescription(abstractProperty.getPatternDescription());
+        dto.setPattern(abstractProperty.getPattern());
 
         if (abstractProperty.getValueType() == ValueType.STRING) {
             StringProperty stringProperty = (StringProperty) abstractProperty;
 
+            dto.setLength(stringProperty.getLength());
             dto.setMinLength(stringProperty.getMinLength());
             dto.setMaxLength(stringProperty.getMaxLength());
-            dto.setPattern(stringProperty.getPattern());
-            dto.setPatternDescription(stringProperty.getPatternDescription());
         } else if (abstractProperty.getValueType() == ValueType.INT) {
             IntegerProperty integerProperty = (IntegerProperty) abstractProperty;
             dto.setMaxInclusive(integerProperty.getMaxInclusive());
             dto.setMinInclusive(integerProperty.getMinInclusive());
+            dto.setFractionDigits(integerProperty.getFractionDigits());
+            dto.setTotalDigits(integerProperty.getTotalDigits());
         } else if (abstractProperty.getValueType() == ValueType.GEOMETRY) {
             GeometryProperty geometryProperty = (GeometryProperty) abstractProperty;
             dto.setAllowedValues(geometryProperty.getAllowedValues());
@@ -85,6 +89,7 @@ public class MapperUtil {
         } else if (abstractProperty instanceof DoubleProperty) {
             DoubleProperty doubleProperty = (DoubleProperty) abstractProperty;
             dto.setTotalDigits(doubleProperty.getTotalDigits());
+            dto.setFractionDigits(doubleProperty.getFractionDigits());
         } else {
             log.warn("Not described types");
         }
@@ -139,10 +144,9 @@ public class MapperUtil {
 
             fillCommonField(stringProperty, propertyDto);
 
+            stringProperty.setLength(propertyDto.getLength());
             stringProperty.setMinLength(propertyDto.getMinLength());
             stringProperty.setMaxLength(propertyDto.getMaxLength());
-            stringProperty.setPattern(propertyDto.getPattern());
-            stringProperty.setPatternDescription(propertyDto.getPatternDescription());
 
             return Optional.of(stringProperty);
         } else if (propertyDto.getValueType() == ValueType.INT) {
@@ -152,6 +156,8 @@ public class MapperUtil {
 
             integerProperty.setMaxInclusive(propertyDto.getMaxInclusive());
             integerProperty.setMinInclusive(propertyDto.getMinInclusive());
+            integerProperty.setFractionDigits(propertyDto.getFractionDigits());
+            integerProperty.setTotalDigits(propertyDto.getTotalDigits());
 
             return Optional.of(integerProperty);
         } else if (propertyDto.getValueType() == ValueType.GEOMETRY) {
@@ -176,6 +182,7 @@ public class MapperUtil {
             fillCommonField(doubleProperty, propertyDto);
 
             doubleProperty.setTotalDigits(propertyDto.getTotalDigits());
+            doubleProperty.setFractionDigits(propertyDto.getFractionDigits());
 
             return Optional.of(doubleProperty);
         } else {
@@ -195,6 +202,9 @@ public class MapperUtil {
         target.setMultiple(dto.isMultiple());
         target.setChoice(dto.getChoice());
         target.setSequenceNumber(dto.getSequenceNumber());
+        target.setWhiteSpace(dto.getWhiteSpace());
+        target.setPattern(dto.getPattern());
+        target.setPatternDescription(dto.getPatternDescription());
     }
 
     @Nullable

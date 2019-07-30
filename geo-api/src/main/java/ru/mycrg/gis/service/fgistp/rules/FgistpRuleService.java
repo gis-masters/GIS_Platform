@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import ru.mycrg.common.propertyTypes.AbstractProperty;
-import ru.mycrg.common.propertyTypes.GeometryProperty;
+import ru.mycrg.common.propertyTypes.*;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.repository.CustomRuleRepository;
@@ -42,6 +41,10 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     private final XsdRuleRepository xsdRuleRepository;
     private final CustomRuleRepository customRuleRepository;
 
+    private static final int DEFAULT_TOTAL_DIGITS = 38;
+    private static final int DEFAULT_FRACTION_DIGITS = 8;
+    private static final int DEFAULT_MAX_LENGTH = 254;
+
     @Autowired
     public FgistpRuleService(ClassDefinitionParser parser,
                              CustomRuleRepository customRuleRepository,
@@ -60,6 +63,8 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
 
             FgistpRules rules = parser.parse(file);
             fgistpRules = splitRulesByGeometry(rules);
+
+            fillDefaultsForFeatureProperties(fgistpRules);
 
             if (isIdenticalNamesExist(fgistpRules)) {
                 log.error("Exist identical feature names. Something wrong via generate rules.");
@@ -192,6 +197,63 @@ public class FgistpRuleService implements IFgistpRuleHandler, IFgistpRuleHolder 
     @Override
     public boolean isCacheEmpty() {
         return fgistpRules.getFeatureDescriptions().isEmpty();
+    }
+
+    /**
+     * Дополним описание пропертей у слоев значениями поумолчанию
+     */
+    private void fillDefaultsForFeatureProperties(FgistpRules fgistpRules) {
+        fgistpRules.getFeatureDescriptions().stream()
+                .parallel()
+                .forEach(featureDescription -> {
+                    featureDescription.getProperties().forEach(abstractProperty -> {
+                        switch (abstractProperty.getValueType()) {
+                            case STRING: fillStringProperty(abstractProperty);  break;
+                            case DOUBLE: fillDoubleProperty(abstractProperty);  break;
+                            case INT:    fillIntProperty(abstractProperty);     break;
+                            case CHOICE:
+                            case GEOMETRY: break;
+                            default:
+                                log.warn("Not supported type: {}", abstractProperty.getValueType());
+                        }
+                    });
+                });
+    }
+
+    private void fillIntProperty(AbstractProperty abstractProperty) {
+        IntegerProperty property = (IntegerProperty) abstractProperty;
+
+        if (property.getMaxInclusive() == -1) {
+            property.setMaxInclusive(Integer.MAX_VALUE);
+        }
+
+        if (property.getMinInclusive() == -1) {
+            property.setMinInclusive(Integer.MIN_VALUE);
+        }
+
+        if (property.getFractionDigits() == -1) {
+            property.setFractionDigits(DEFAULT_FRACTION_DIGITS);
+        }
+    }
+
+    private void fillDoubleProperty(AbstractProperty abstractProperty) {
+        DoubleProperty property = (DoubleProperty) abstractProperty;
+
+        if (property.getTotalDigits() == -1) {
+            property.setTotalDigits(DEFAULT_TOTAL_DIGITS);
+        }
+
+        if (property.getFractionDigits() == -1) {
+            property.setFractionDigits(DEFAULT_FRACTION_DIGITS);
+        }
+    }
+
+    private void fillStringProperty(AbstractProperty abstractProperty) {
+        StringProperty property = (StringProperty) abstractProperty;
+
+        if (property.getMaxLength() == -1) {
+            property.setMaxLength(DEFAULT_MAX_LENGTH);
+        }
     }
 
     /**
