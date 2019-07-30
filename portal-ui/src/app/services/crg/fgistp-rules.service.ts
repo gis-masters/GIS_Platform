@@ -55,7 +55,7 @@ export class FgistpRulesService {
     }
   }
 
-  public getFeatureByName(layerName: string, reason?: string): XsdFeature {
+  public getFeatureByName(layerName: string): XsdFeature {
     if (!layerName) {
       return;
     }

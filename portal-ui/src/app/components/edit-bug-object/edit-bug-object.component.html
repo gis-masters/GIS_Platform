@@ -32,7 +32,8 @@
             <div class="input-group">
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
-                <span class="input-group-text error-badge">
+                <span class="input-group-text error-badge"
+                      *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                   <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
                 </span>
               </div>

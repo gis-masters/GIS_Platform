@@ -12,7 +12,7 @@ export class FeaturePropertyValidators {
         return errors;
       }
 
-      const currentValue = control.value;
+      const currentValue = control.value.toString();
 
       // console.log('required: ', currentValue);
       if (!currentValue) {
@@ -32,8 +32,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
-      // console.log('enumeration: ', currentValue);
       if (property.valueType.includes('CHOICE')) {
         if (!this.isEnumIncludeValue(property.enumerations, currentValue)) {
           errors['wrongChoice'] = 'Значение: ' + currentValue + ' не соответствует справочному';
@@ -53,8 +51,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
-      // console.log('minLength: ', currentValue);
       if (currentValue.toString().length < property.minLength) {
         errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + property.minLength + ' символов';
       }
@@ -72,8 +68,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
-      // console.log('maxLength: ', currentValue);
       if (currentValue.toString().length > property.maxLength) {
         errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + property.maxLength + ' символов';
       }
@@ -114,8 +108,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
-      // console.log('pattern: ', currentValue);
       if (!currentValue.match(property.pattern)) {
         errors['pattern'] = 'Строка не соответствует паттерну';
       }
@@ -133,8 +125,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
-      // console.log('minInclusive: ', currentValue);
       if (Number(currentValue) < Number(property.minInclusive)) {
         errors['minInclusive'] = 'Значение: ' + currentValue + ' менее допустимого: ' + property.minInclusive;
       }
@@ -152,7 +142,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
       if (!this.isValidInteger(currentValue)) {
         errors['incorrectNumber'] = 'Введите корректное число';
       } else {
@@ -174,7 +163,6 @@ export class FeaturePropertyValidators {
       }
 
       const currentValue = control.value;
-
       if (property.valueType.includes('DOUBLE') || property.valueType.includes('INT')) {
         if (isNaN(currentValue)) {
           errors['byType'] = 'Значение должно быть числом';

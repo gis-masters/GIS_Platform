@@ -16,6 +16,10 @@ export class ErrorsBadgeComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (!this.errors) {
+      return;
+    }
+
     for (const key of Object.keys(this.errors)) {
       this.htmlTooltip += '\n' + this.errors[key];
     }
