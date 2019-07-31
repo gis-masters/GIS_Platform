@@ -281,10 +281,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           .subscribe((data: CrgLayer[]) => layers = data);
 
       // Все слоя кроме текущего
-      _.remove(layers, (layer: CrgLayer) => layer.complexName === this.layer.complexName);
+      const layersClone = _.clone(layers);
+      _.remove(layersClone, (layer: CrgLayer) => layer.complexName === this.layer.complexName);
 
       const dialogData: CopyFeaturesDialogData = {
-        layers: layers,
+        layers: layersClone,
         objects: this.attributeTable.selected,
       };
 
