@@ -116,14 +116,11 @@ export class FeaturePropertyValidators {
 
   // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
   private static minLength(value: string, property: SimpleProperty, errors: {}): void {
-    console.log('minLength 0', value, property);
     if (!property.minLength || property.minLength === -1) {
       return;
     }
 
-    console.log('minLength 1');
     if (value.toString().length < property.minLength) {
-      console.log('minLength 2');
       errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + property.minLength + ' символов';
     }
   }
