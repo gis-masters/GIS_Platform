@@ -306,7 +306,7 @@ public class ClassDefinitionParser {
             }
         }
 
-        // Паттерна нет среди facets. Обработаю отдельно
+        // facet: 'Паттерн' нет среди facets. Обработаю отдельно
         XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
         if (facetPattern != null) {
             String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
@@ -329,7 +329,7 @@ public class ClassDefinitionParser {
             }
         }
 
-        // Паттерна нет среди facets. Обработаю отдельно
+        // facet: 'Паттерн' нет среди facets. Обработаю отдельно
         XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
         if (facetPattern != null) {
             String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);
@@ -357,7 +357,7 @@ public class ClassDefinitionParser {
             }
         }
 
-        // Паттерна нет среди facets. Обработаю отдельно
+        // facet: 'Паттерн' нет среди facets. Обработаю отдельно
         XSObject facetPattern = simpleTypeDecl.getFacet(FACET_PATTERN);
         if (facetPattern != null) {
             String pattern = ((XSMultiValueFacet) facetPattern).getLexicalFacetValues().item(0);

@@ -136,16 +136,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
         // Добавляем валидации
         const formControl = new FormControl({value: currentValue, disabled: property.name === 'GLOBALID'}, {
           validators: [
-            FeaturePropertyValidators.required(property),
-            FeaturePropertyValidators.minLength(property),
-            FeaturePropertyValidators.maxLength(property),
-            FeaturePropertyValidators.enumeration(property),
-            FeaturePropertyValidators.totalDigits(property),
-            FeaturePropertyValidators.pattern(property),
-            FeaturePropertyValidators.minInclusive(property),
-            FeaturePropertyValidators.maxInclusive(property),
-            FeaturePropertyValidators.isIntType(property),
-            FeaturePropertyValidators.isDoubleType(property),
+            FeaturePropertyValidators.propertyValidator(property),
           ],
           // updateOn: 'blur'
         });

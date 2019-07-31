@@ -205,6 +205,7 @@ export interface SimpleProperty {
   choice?: any;
   valueType?: any;
 
+  length?: number;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
@@ -212,6 +213,7 @@ export interface SimpleProperty {
   minInclusive?: number;
   maxInclusive?: number;
   totalDigits?: number;
+  fractionDigits?: number;
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
 }

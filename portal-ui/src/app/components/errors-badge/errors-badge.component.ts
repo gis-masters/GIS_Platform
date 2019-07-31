@@ -1,12 +1,12 @@
 import {ValidationErrors} from '@angular/forms';
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'crg-errors-badge',
   templateUrl: './errors-badge.component.html',
   styleUrls: ['./errors-badge.component.css']
 })
-export class ErrorsBadgeComponent implements OnInit {
+export class ErrorsBadgeComponent implements OnInit, OnChanges {
 
   @Input() errors: ValidationErrors | null;
 
@@ -16,12 +16,26 @@ export class ErrorsBadgeComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.errors) {
+    this.generateTooltip(this.errors);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const errorsChange = changes['errors'];
+    if (errorsChange && !errorsChange.isFirstChange()) {
+      if (errorsChange.currentValue) {
+        this.generateTooltip(errorsChange.currentValue);
+      }
+    }
+  }
+
+  private generateTooltip(errors: ValidationErrors) {
+    if (!errors) {
       return;
     }
 
-    for (const key of Object.keys(this.errors)) {
-      this.htmlTooltip += '\n' + this.errors[key];
+    this.htmlTooltip = '';
+    for (const key of Object.keys(errors)) {
+      this.htmlTooltip += '\n' + errors[key];
     }
   }
 }
