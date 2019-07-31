@@ -23,8 +23,13 @@
   line-height: 1.1
 }
 
+.multiple-edit-badge {
+  padding: 0 2px 0 2px;
+}
+
 .error-badge {
   padding: 0 2px 0 2px;
+  background-color: tomato;
 }
 
 .multiedit-template {

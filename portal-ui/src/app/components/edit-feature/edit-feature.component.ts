@@ -11,6 +11,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {EditFeatureItem, FgistpRulesService, SimpleProperty, FeatureDescription} from '../../services/crg/fgistp-rules.service';
 import {from} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
+import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
 
 @Component({
   selector: 'crg-edit-feature',
@@ -68,8 +69,6 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       this.featureDescription = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
-      console.log('featureDescription: ', this.featureDescription);
-
       Object.keys(currentData.feature.properties)
             .map(key => key)
             .filter(key => key !== 'bbox')
@@ -84,7 +83,12 @@ export class EditFeatureComponent implements OnChanges, OnInit {
                   isFgistpProperty: true
                 });
 
-                const formControl = new FormControl(currentValue);
+                const formControl = new FormControl({value: currentValue, disabled: property.name === 'GLOBALID'}, {
+                  validators: [
+                    FeaturePropertyValidators.propertyValidator(property),
+                  ],
+                  // updateOn: 'blur'
+                });
 
                 if (this.data.mode === EditFeatureMode.multipleEdit) {
                   formControl.disable();
@@ -92,12 +96,13 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
                 this.editFeatureForm.addControl(key, formControl);
               } else {
+                // TODO: надобы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
                 this.editFeatureData.push({
                   name: key,
                   property: {
                     name: key,
                     title: key,
-                    valueType: 'STRING',
+                    valueType: ValueType.STRING,
                   },
                   value: currentValue,
                   isFgistpProperty: false
@@ -269,6 +274,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
                 properties: newProperties
               });
             } else {
+              this.isSaveInProgress = false;
               this.logger.warn('UpdateFeature response: ', response);
               this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
             }
