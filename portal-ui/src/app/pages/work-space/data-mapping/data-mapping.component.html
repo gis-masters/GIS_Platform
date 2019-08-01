@@ -9,13 +9,13 @@
       <div class="row m-0 h-100">
         <div class="col-3 p-0 crg-card-list scroll">
           <mat-nav-list dense>
-            <mat-list-item *ngFor="let layer of layers"
-                           [ngClass]="layer.isActive ? 'selected-element' : 'crg-list-item'"
-                           (click)="selectLayer(layer)">
-              <a matLine>{{layer.title}}.shp</a>
-              <mat-icon *ngIf="layer.isMapped" style="color: green">done</mat-icon>
-              <mat-icon *ngIf="!layer.isMapped">warning</mat-icon>
-              <div class="selected-element-marker" *ngIf="layer.isActive"></div>
+            <mat-list-item *ngFor="let importLayer of importLayers"
+                           [ngClass]="importLayer.isActive ? 'selected-element' : 'crg-list-item'"
+                           (click)="selectLayer(importLayer)">
+              <a matLine>{{importLayer.title}}.shp</a>
+              <mat-icon *ngIf="importLayer.isMapped" style="color: green">done</mat-icon>
+              <mat-icon *ngIf="!importLayer.isMapped">warning</mat-icon>
+              <div class="selected-element-marker" *ngIf="importLayer.isActive"></div>
             </mat-list-item>
           </mat-nav-list>
         </div>
@@ -23,7 +23,7 @@
           <div class="content-separator"></div>
         </div>
         <div class="col-9 crg-card-list">
-          <crg-mapping-card [layer]="selectedLayer"></crg-mapping-card>
+          <crg-mapping-card [importLayer]="selectedLayer"></crg-mapping-card>
         </div>
       </div>
     </mat-card-content>

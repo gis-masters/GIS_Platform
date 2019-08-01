@@ -8,7 +8,7 @@ import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
 import {TaskImport} from '../../../services/geoserver/import/taskImport';
 import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
-import {ImportLayer, ImportService, LayerItem} from '../../../services/geoserver/import/import.service';
+import {ImportLayer, ImportService, ImportLayerItem} from '../../../services/geoserver/import/import.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
@@ -21,8 +21,8 @@ import {ProjectsService} from '../../../services/crg/projects.service';
 })
 export class DataMappingComponent implements OnInit, OnDestroy {
 
-  layers: LayerItem[] = [];
-  selectedLayer: LayerItem;
+  importLayers: ImportLayerItem[] = [];
+  selectedLayer: ImportLayerItem;
 
   importFlow: ImportFlow;
   isImportFinished = false;
@@ -53,12 +53,12 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.importService
         .getAllImportLayers(true)
-        .subscribe((layers: ImportLayer[]) => {
-          this.layers = layers
+        .subscribe((importLayers: ImportLayer[]) => {
+          this.importLayers = importLayers
               .map((layer: ImportLayer) => {
                 this.importService.importFlow.work_import.addTask(layer.layer.originalName);
 
-                return layer.layer as LayerItem;
+                return layer.layer as ImportLayerItem;
               });
         });
 
@@ -70,7 +70,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         )
         .subscribe((tasks: TaskImport[]) => {
           tasks.forEach((task: TaskImport) => {
-            const layerItem = this.layers.find(layer => layer.originalName === task.layerName);
+            const layerItem = this.importLayers.find(layer => layer.originalName === task.layerName);
             if (layerItem) {
               layerItem.isMapped = task.isPrepared();
             }
@@ -85,8 +85,8 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.importService.importFlow.work_import.clear();
   }
 
-  selectLayer(layer: LayerItem) {
-    this.layers.forEach(value => value.isActive = false);
+  selectLayer(layer: ImportLayerItem) {
+    this.importLayers.forEach(value => value.isActive = false);
 
     layer.isActive = true;
     this.selectedLayer = layer;

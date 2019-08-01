@@ -6,7 +6,7 @@ import {
   SimpleProperty,
   FeatureDescription
 } from '../../services/crg/fgistp-rules.service';
-import {AS_IS_TYPE, ImportService, LayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
+import {AS_IS_TYPE, ImportService, ImportLayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
 
 @Component({
   selector: 'crg-mapping-card',
@@ -15,7 +15,7 @@ import {AS_IS_TYPE, ImportService, LayerItem, NOT_IMPORT} from '../../services/g
 })
 export class MappingCardComponent implements OnInit, OnChanges {
 
-  @Input() layer: LayerItem;
+  @Input() importLayer: ImportLayerItem;
 
   featureDescriptions: FeatureDescription[] = [];
   typeProperties: SimpleProperty[] = [];
@@ -30,11 +30,11 @@ export class MappingCardComponent implements OnInit, OnChanges {
     this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
 
     this.ruleService.getRules()
-        .subscribe((entityTypesDefinition: FeatureXsdDefinition) => {
-          if (entityTypesDefinition.xsdFeatures) {
-            this.featureDescriptions = entityTypesDefinition.xsdFeatures;
+        .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
+          if (featureXsdDefinition.xsdFeatures) {
+            this.featureDescriptions = featureXsdDefinition.xsdFeatures;
           } else {
-            this.logger.warn('Empty rules? ', entityTypesDefinition);
+            this.logger.warn('Empty rules? ', featureXsdDefinition);
           }
         });
   }
@@ -43,7 +43,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
     const simpleChange = changes['layer'];
     if (simpleChange && !simpleChange.isFirstChange()) {
       if (simpleChange.currentValue) {
-        this.layer = simpleChange.currentValue;
+        this.importLayer = simpleChange.currentValue;
       }
     }
   }
@@ -51,7 +51,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
   entityTypeSelected(selected: string) {
     const xsdFeature = this.featureDescriptions.find((type: FeatureDescription) => type.tableName === selected);
 
-    this.importService.importFlow.setTable(this.layer.originalName, xsdFeature.tableName);
+    this.importService.importFlow.setTable(this.importLayer.originalName, xsdFeature.tableName);
     this.typeProperties = [];
     this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});

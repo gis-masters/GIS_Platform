@@ -3,13 +3,9 @@ import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {WfsFeature} from './wfs.service';
 import {HttpClient} from '@angular/common/http';
+import {MapperUtil} from '../open-layer/MapperUtil';
 import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
 import {ServerPropertiesService} from '../server-properties.service';
-import {CrgLayer} from './layers.service';
-import Geometry from 'ol/geom/Geometry';
-import Polygon from 'ol/geom/Polygon';
-import {MultiPolygon} from 'ol/geom';
-import {MapperUtil} from "../open-layer/MapperUtil";
 
 @Injectable({
   providedIn: 'root'

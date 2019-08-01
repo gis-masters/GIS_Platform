@@ -1,41 +1,25 @@
-import {LayerAttribute, LayerItem} from '../geoserver/import/import.service';
-import {FeatureDescription, SimpleProperty} from '../crg/fgistp-rules.service';
+import {ValueType} from './FeaturePropertyValidators';
+import {FeatureDescription} from '../crg/fgistp-rules.service';
+import {ImportLayerItem, LayerAttribute} from '../geoserver/import/import.service';
 
 export class FeatureDescriptionUtil {
 
-  static getFeatureGeometry(featureDescription: FeatureDescription): string[] {
-    const simpleProperty = featureDescription.properties.find((property: SimpleProperty) => property.valueType === 'GEOMETRY');
-
-    if (simpleProperty) {
-      return simpleProperty.allowedValues;
-    } else {
-      return [];
-    }
-  }
-
-  static getLayerGeometry(layer: LayerItem) {
-    return layer.attributes
+  static getLayerGeometry(importLayer: ImportLayerItem) {
+    return importLayer.attributes
                 .find((attr: LayerAttribute) => attr.name === 'the_geom')
                 .binding;
   }
 
   // layer = Point, MultiLineString, MultiPolygon
-  // entity = Point, LineString, Polygon, Curve
-  static isFeatureGeometryCompatible(layerGeometryTypeName: string, entityType: FeatureDescription) {
+  // feature = Point, LineString, Polygon, Curve
+  static isFeatureGeometryCompatible(layerGeometryTypeName: string, featureDescription: FeatureDescription): boolean {
     const splited = layerGeometryTypeName.split('.');
     const layerGeometryName = splited[splited.length - 1];
 
-    // console.log(' --- ', layerGeometryName);
-
-    const entityGeometry = this.getFeatureGeometry(entityType);
-
-    const allowedGeometry: string[] = [];
-    FeatureDescriptionUtil.moveByTypes(new Geometry(), allowedGeometry, layerGeometryName);
-
-    // console.log(' ----- ', allowedGeometry);
-
+    const allowedGeometry: string[] = this.fillAllowedGeometry(new CrgRootGeometry(), layerGeometryName);
+    const featureGeometry = this.getFeatureGeometry(featureDescription);
     let result = false;
-    entityGeometry.forEach(value => {
+    featureGeometry.forEach(value => {
       if (allowedGeometry.includes(value)) {
         result = true;
       }
@@ -44,54 +28,76 @@ export class FeatureDescriptionUtil {
     return result;
   }
 
-  private static moveByTypes(data: Item, allowedGeometry: string[], name: string) {
-    data.items.forEach((item: Item) => {
-      if (item.name === name) {
-        allowedGeometry.push(name);
-        this.collectAll(item, allowedGeometry, name);
+  static getFeatureGeometry(featureDescription: FeatureDescription): string[] {
+    const geometryProperty = featureDescription.properties
+                                               .find(property => property.valueType === ValueType.GEOMETRY);
+
+    if (geometryProperty) {
+      return geometryProperty.allowedValues;
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Метод возвращает список допустимых типов геометрии исходя из переданного названия исходной геометрии.
+   * @param geometryDefinition root
+   * @param geometryName Название геометрии
+   */
+  private static fillAllowedGeometry(geometryDefinition: GeometryItem, geometryName: string): string[] {
+    const allowedGeometry: string[] = [];
+    geometryDefinition.child.forEach((geometryItem: GeometryItem) => {
+      if (geometryItem.name === geometryName) {
+        allowedGeometry.push(geometryName);
+        this.collectAll(geometryItem, allowedGeometry, geometryName);
       } else {
-        this.moveByTypes(item, allowedGeometry, name);
+        allowedGeometry.push(...this.fillAllowedGeometry(geometryItem, geometryName));
       }
     });
+
+    return allowedGeometry;
   }
 
-  private static collectAll(data: Item, allowedGeometry: string[], name: string) {
-    data.items.forEach((item: Item) => {
-      allowedGeometry.push(item.name);
-      this.collectAll(item, allowedGeometry, name);
+  private static collectAll(rootGeometry: GeometryItem, allowedGeometry: string[], name: string) {
+    rootGeometry.child.forEach((geometryItem: GeometryItem) => {
+      allowedGeometry.push(geometryItem.name);
+      this.collectAll(geometryItem, allowedGeometry, name);
     });
   }
 }
 
-export interface Item {
+export interface GeometryItem {
   name: string;
-  items: Item[];
+  child: GeometryItem[];
 }
 
-export class Geometry implements Item {
+/**
+ * Корень дерева геометрий.
+ */
+export class CrgRootGeometry implements GeometryItem {
   name: string;
-  items: Item[] = [
+  child: GeometryItem[] = [
     {
       name: 'Point',
-      items: []
+      child: []
     },
     {
       name: 'Curve',
-      items: [
+      child: [
         {
           name: 'LineString',
-          items: [
+          child: [
             {
               name: 'Point',
-              items: []
+              child: []
             },
             {
               name: 'Line',
-              items: []
+              child: []
             },
             {
               name: 'LinearRing',
-              items: []
+              child: []
             },
           ]
         },
@@ -99,22 +105,22 @@ export class Geometry implements Item {
     },
     {
       name: 'Surface',
-      items: [
+      child: [
         {
           name: 'Polygon',
-          items: [
+          child: [
             {
               name: 'LinearRing',
-              items: []
+              child: []
             }
           ]
         },
         {
           name: 'PolyhedralSurface',
-          items: [
+          child: [
             {
               name: 'Polygon',
-              items: []
+              child: []
             }
           ]
         },
@@ -122,16 +128,16 @@ export class Geometry implements Item {
     },
     {
       name: 'GeometryCollection',
-      items: [
+      child: [
         {
           name: 'MultiSurface',
-          items: [
+          child: [
             {
               name: 'MultiPolygon',
-              items: [
+              child: [
                 {
                   name: 'Polygon',
-                  items: []
+                  child: []
                 }
               ]
             },
@@ -139,13 +145,13 @@ export class Geometry implements Item {
         },
         {
           name: 'MultiCurve',
-          items: [
+          child: [
             {
               name: 'MultiLineString',
-              items: [
+              child: [
                 {
                   name: 'LineString',
-                  items: []
+                  child: []
                 }
               ]
             },
@@ -153,10 +159,10 @@ export class Geometry implements Item {
         },
         {
           name: 'MultiPoint',
-          items: [
+          child: [
             {
               name: 'Point',
-              items: []
+              child: []
             }
           ]
         },

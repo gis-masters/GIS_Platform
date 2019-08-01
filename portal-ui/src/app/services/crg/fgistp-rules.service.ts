@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import {map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
@@ -5,6 +6,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {ServerPropertiesService} from '../server-properties.service';
+import {CrgLayer} from '../geoserver/layers.service';
+import {FeatureDescriptionUtil} from '../util/FeatureDescriptionUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +23,7 @@ export class FgistpRulesService {
 
   getRules(): Observable<FeatureXsdDefinition> {
     if (this.featuresXsdDefinition.xsdFeatures && this.featuresXsdDefinition.xsdFeatures.length) {
+      this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
     } else {
       return this.http
@@ -40,22 +44,11 @@ export class FgistpRulesService {
     }
   }
 
-  public getLayerTitle(layerName: string): string {
-    if (!this.featuresXsdDefinition.xsdFeatures || this.featuresXsdDefinition.xsdFeatures.length < 1) {
-      this.logger.warn('xsd feature definition not ready yet');
-
-      return layerName;
-    }
-
-    const featureByName = this.getFeatureByName(layerName);
-    if (featureByName) {
-      return featureByName.title;
-    } else {
-      return layerName;
-    }
-  }
-
-  public getFeatureByName(layerName: string): FeatureDescription {
+  /**
+   * Возвращает описание фичи.
+   * @param layerName Название слоя
+   */
+  public getFeatureDescriptionByName(layerName: string): FeatureDescription {
     if (!layerName) {
       return;
     }
@@ -82,9 +75,50 @@ export class FgistpRulesService {
     }
   }
 
+  /**
+   * Для базового слоя из переданного списка слоев возвращает подходящие по геометрии. (Кроме самого себя)
+   * @param baseLayer Базовый слой.
+   * @param layers    Исходный список слоев.
+   *
+   * @return The new array of {@link CrgLayer}.
+   */
+  public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
+    const baseFeatureDescription = this.getFeatureDescriptionByName(baseLayer.name);
+    const baseFeatureGeometry: string[] = FeatureDescriptionUtil.getFeatureGeometry(baseFeatureDescription);
+
+    const result: CrgLayer[] = [];
+    baseFeatureGeometry.forEach(fGeometry => {
+      layers.forEach((layer: CrgLayer) => {
+        if (baseLayer.complexName !== layer.complexName) {
+          const fDescription = this.getFeatureDescriptionByName(layer.name);
+          if (FeatureDescriptionUtil.isFeatureGeometryCompatible(fGeometry, fDescription)) {
+            result.push(layer);
+          }
+        }
+      });
+    });
+
+    return result;
+  }
+
+  public getLayerTitle(layerName: string): string {
+    if (!this.featuresXsdDefinition.xsdFeatures || this.featuresXsdDefinition.xsdFeatures.length < 1) {
+      this.logger.warn('xsd feature definition not ready yet');
+
+      return layerName;
+    }
+
+    const fDescription = this.getFeatureDescriptionByName(layerName);
+    if (fDescription) {
+      return fDescription.title;
+    } else {
+      return layerName;
+    }
+  }
+
   getClassIdAlias(layerName: string, element: any) {
     let result = layerName;
-    const featureByName = this.getFeatureByName(layerName);
+    const featureByName = this.getFeatureDescriptionByName(layerName);
     if (featureByName) {
       featureByName.properties
         .forEach((simpleProperty: SimpleProperty) => {
@@ -111,7 +145,7 @@ export class FgistpRulesService {
    */
   getPropertyAlias(layerName: string, propertyName: string) {
     let result;
-    const featureByName = this.getFeatureByName(layerName);
+    const featureByName = this.getFeatureDescriptionByName(layerName);
     if (featureByName) {
       featureByName.properties
         .forEach((simpleProperty: SimpleProperty) => {

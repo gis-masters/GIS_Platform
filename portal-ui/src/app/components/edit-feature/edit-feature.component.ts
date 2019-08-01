@@ -66,7 +66,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
         this.openLayers.showFeature(currentData.feature);
       }
 
-      this.featureDescription = this.rulesService.getFeatureByName(currentData.feature.id.split('.')[0]);
+      this.featureDescription = this.rulesService.getFeatureDescriptionByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
       Object.keys(currentData.feature.properties)

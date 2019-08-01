@@ -45,20 +45,21 @@ export class FeaturePropertyValidators {
         // Если что-то введено, проверим его согласно типу атрибута.
         switch (property.valueType) {
           case ValueType.CHOICE:
-            if (control.dirty) {
-              // Если мы меняли значение селектора, то проверим его стандартным образом
-              this.enumeration(currentValue, property, errors);
-            } else {
-              // Как правило в базе лежит мусор типа '0', поэтому тут значение ввода не пустое(поэтому мы в этом
-              // куске кода) и требуется еще раз проверить на required
-              if (property.required) {
-                // Если поле обязательно - проверим его
-                this.enumeration(currentValue, property, errors);
-              } else {
-                // Если не обязательно, то тут нет ошибки
-                return errors;
-              }
-            }
+            this.enumeration(currentValue, property, errors);
+            // if (control.dirty) {
+            //   // Если мы меняли значение селектора, то проверим его стандартным образом
+            //   this.enumeration(currentValue, property, errors);
+            // } else {
+            //   // Как правило в базе лежит мусор типа '0', поэтому тут значение ввода не пустое(поэтому мы в этом
+            //   // куске кода) и требуется еще раз проверить на required
+            //   if (property.required) {
+            //     // Если поле обязательно - проверим его
+            //     this.enumeration(currentValue, property, errors);
+            //   } else {
+            //     // Если не обязательно, то тут нет ошибки
+            //     return errors;
+            //   }
+            // }
             break;
           case ValueType.STRING:
             this.minLength(currentValue, property, errors);

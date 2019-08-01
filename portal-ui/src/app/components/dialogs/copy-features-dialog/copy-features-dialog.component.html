@@ -1,15 +1,24 @@
 <h2 mat-dialog-title>Копирование {{data.objects.length}} обьекта(ов)</h2>
 
 <mat-dialog-content class="dialog-content">
-    <label>Выбирите слой</label>
-    <mat-select class="form-control" [(ngModel)]="selectedLayer">
-      <mat-option *ngFor="let layer of data.layers" [value]="layer">
-        {{layer.title}}
-      </mat-option>
-    </mat-select>
+    <ng-container *ngIf="data.layers.length > 0; else noLayers">
+      <label>Выбирите слой</label>
+      <mat-select class="form-control" [(ngModel)]="selectedLayer">
+        <mat-option *ngFor="let layer of data.layers" [value]="layer">
+          {{layer.title}}
+        </mat-option>
+      </mat-select>
+    </ng-container>
 </mat-dialog-content>
 
 <mat-dialog-actions style="justify-content: space-between">
   <button mat-raised-button mat-dialog-close>Отмена</button>
-  <button mat-raised-button color="primary" cdkFocusInitial [mat-dialog-close]="selectedLayer">Выполнить</button>
+  <button mat-raised-button color="primary" cdkFocusInitial [mat-dialog-close]="selectedLayer"
+          [disabled]="!selectedLayer">Выполнить</button>
 </mat-dialog-actions>
+
+<ng-template #noLayers>
+  <div class="col-12 text-center">
+    Нет подходящих слоев
+  </div>
+</ng-template>

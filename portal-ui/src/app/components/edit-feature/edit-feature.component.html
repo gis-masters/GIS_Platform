@@ -113,6 +113,11 @@
                   {{enumOption.title}}
                 </option>
               </select>
+              <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                </span>
+              </div>
 
               <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
                 <span class="input-group-text multiple-edit-badge">

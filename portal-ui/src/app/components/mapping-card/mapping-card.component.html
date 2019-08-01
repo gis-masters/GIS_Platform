@@ -1,14 +1,14 @@
-<div *ngIf="!layer">
+<div *ngIf="!importLayer">
   <h6>Выберите слой</h6>
 </div>
-<div *ngIf="!!layer">
+<div *ngIf="!!importLayer">
   <div class="row m-0 py-2">
     <div class="col-4 p-0 align-self-center"><h6>Сопоставте слой</h6></div>
     <mat-form-field class="col-8 p-0">
       <mat-select placeholder="Целевой слой" [disabled]="featureDescriptions.length === 0">
-        <mat-option *ngFor="let entityItem of featureDescriptions | geometry:layer" [value]="entityItem.name"
-                    (click)="entityTypeSelected(entityItem.tableName)">
-          <span style="font-size: smaller">({{entityItem.tableName}})</span> {{entityItem.title}}
+        <mat-option *ngFor="let fDescription of featureDescriptions | geometry:importLayer" [value]="fDescription.name"
+                    (click)="entityTypeSelected(fDescription.tableName)">
+          <span style="font-size: smaller">({{fDescription.tableName}})</span> {{fDescription.title}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -21,9 +21,9 @@
   </div>
 
   <div class="container">
-    <div *ngFor="let layer_attribute of layer.attributes" style="margin-bottom: 5px">
+    <div *ngFor="let layer_attribute of importLayer.attributes" style="margin-bottom: 5px">
       <crg-mapping-pair [layer_attribute]="layer_attribute"
-                        [layerName]="layer.originalName"
+                        [layerName]="importLayer.originalName"
                         [properties]="typeProperties"></crg-mapping-pair>
     </div>
   </div>

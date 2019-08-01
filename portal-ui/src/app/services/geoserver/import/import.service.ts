@@ -183,7 +183,7 @@ export interface TaskItem {
   };
 }
 
-export interface LayerItem {
+export interface ImportLayerItem {
   name: string;
   href: string;
   title: string;
@@ -213,7 +213,7 @@ export interface LayerAttribute {
 }
 
 export interface ImportLayer {
-  layer: LayerItem;
+  layer: ImportLayerItem;
 }
 
 export const AS_IS_TYPE = {

@@ -103,7 +103,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
           this.isFeatureTypeLoaded = true;
 
           this.wfsFeature = wfsFeature;
-          this.featureDescription = this.rulesService.getFeatureByName(objectDto.crgLayer.name);
+          this.featureDescription = this.rulesService.getFeatureDescriptionByName(objectDto.crgLayer.name);
 
           console.log('this.featureDescription: ', this.featureDescription);
 

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {debounceTime, filter, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, map, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
@@ -33,6 +33,7 @@ import {TransformFeatureService} from '../../services/geoserver/transform-featur
 import {ProjectsService} from '../../services/crg/projects.service';
 import {DeleteDialogComponent, SimpleDialogData} from '../dialogs/delete-dialog/delete-dialog.component';
 import {ProjectModel} from '../../services/geoserver/import/projectModel';
+import {FeatureDescriptionUtil} from "../../services/util/FeatureDescriptionUtil";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -74,7 +75,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               private transformFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
-              private fgistpRulesService: FgistpRulesService,
+              private rulesService: FgistpRulesService,
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
@@ -190,8 +191,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       return;
     }
 
-    return this.fgistpRulesService
-               .getFeatureByName(this.layer.name).properties
+    return this.rulesService
+               .getFeatureDescriptionByName(this.layer.name).properties
                .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
   }
 
@@ -276,16 +277,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         return;
       }
 
-      let layers: CrgLayer[];
+      let suitableLayers: CrgLayer[] = [];
       this.layersService.layers$
-          .subscribe((data: CrgLayer[]) => layers = data);
-
-      // Все слоя кроме текущего
-      const layersClone = _.clone(layers);
-      _.remove(layersClone, (layer: CrgLayer) => layer.complexName === this.layer.complexName);
+          .subscribe((layers: CrgLayer[]) => {
+            suitableLayers = this.rulesService.getSuitableByGeometryLayers(this.layer, layers);
+          });
 
       const dialogData: CopyFeaturesDialogData = {
-        layers: layersClone,
+        layers: suitableLayers,
         objects: this.attributeTable.selected,
       };
 
@@ -305,6 +304,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     } else {
       this.log.warn('attributes table', 'not supported');
     }
+  }
+
+  moveObjects() {
+
   }
 
   deleteObjects() {
