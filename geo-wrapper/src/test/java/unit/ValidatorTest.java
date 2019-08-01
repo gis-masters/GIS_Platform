@@ -152,43 +152,43 @@ public class ValidatorTest {
         assertEquals(1, objectValidationResult.getObjectViolations().size());
     }
 
-    @Test
-    public void should_DontCount_NotRequiredErrors() {
-        IValidator validator = new ValidatorImpl();
-
-        SimplePropertyDto classId = new SimplePropertyDto();
-        classId.setValueType(ValueType.STRING);
-        classId.setName("classid");
-        classId.setRequired(false);
-        classId.setMinLength(2);
-        classId.setMaxLength(6);
-
-        SimplePropertyDto requiredProperty = new SimplePropertyDto();
-        requiredProperty.setValueType(ValueType.STRING);
-        requiredProperty.setName("name");
-        requiredProperty.setRequired(true);
-        requiredProperty.setMinLength(2);
-        requiredProperty.setMaxLength(10);
-
-        List<SimplePropertyDto> properties = new ArrayList<>();
-        properties.add(classId);
-        properties.add(requiredProperty);
-
-        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
-        featureDescription.setName("Fiz_Type");
-        featureDescription.setDescription("test description");
-        featureDescription.setTitle("test title");
-        featureDescription.setTableName("test tableName");
-        featureDescription.setProperties(properties);
-
-        HashMap<String, Object> rowFromDb = new HashMap<>();
-        rowFromDb.put("classid", "too long string");
-        rowFromDb.put("name", "too long string");
-
-        ObjectValidationResult objectValidationResult = validator.validate(featureDescription, rowFromDb);
-
-        assertEquals(1, objectValidationResult.getPropertyViolations().size());
-        assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
-    }
+//    @Test
+//    public void should_DontCount_NotRequiredErrors() {
+//        IValidator validator = new ValidatorImpl();
+//
+//        SimplePropertyDto classId = new SimplePropertyDto();
+//        classId.setValueType(ValueType.STRING);
+//        classId.setName("classid");
+//        classId.setRequired(false);
+//        classId.setMinLength(2);
+//        classId.setMaxLength(6);
+//
+//        SimplePropertyDto requiredProperty = new SimplePropertyDto();
+//        requiredProperty.setValueType(ValueType.STRING);
+//        requiredProperty.setName("name");
+//        requiredProperty.setRequired(true);
+//        requiredProperty.setMinLength(2);
+//        requiredProperty.setMaxLength(10);
+//
+//        List<SimplePropertyDto> properties = new ArrayList<>();
+//        properties.add(classId);
+//        properties.add(requiredProperty);
+//
+//        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+//        featureDescription.setName("Fiz_Type");
+//        featureDescription.setDescription("test description");
+//        featureDescription.setTitle("test title");
+//        featureDescription.setTableName("test tableName");
+//        featureDescription.setProperties(properties);
+//
+//        HashMap<String, Object> rowFromDb = new HashMap<>();
+//        rowFromDb.put("classid", "too long string");
+//        rowFromDb.put("name", "too long string");
+//
+//        ObjectValidationResult objectValidationResult = validator.validate(featureDescription, rowFromDb);
+//
+//        assertEquals(1, objectValidationResult.getPropertyViolations().size());
+//        assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
+//    }
 
 }
