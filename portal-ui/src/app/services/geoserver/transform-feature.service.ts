@@ -5,6 +5,11 @@ import {WfsFeature} from './wfs.service';
 import {HttpClient} from '@angular/common/http';
 import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
 import {ServerPropertiesService} from '../server-properties.service';
+import {CrgLayer} from './layers.service';
+import Geometry from 'ol/geom/Geometry';
+import Polygon from 'ol/geom/Polygon';
+import {MultiPolygon} from 'ol/geom';
+import {MapperUtil} from "../open-layer/MapperUtil";
 
 @Injectable({
   providedIn: 'root'
@@ -67,27 +72,22 @@ export class TransformFeatureService {
 
   insertFeatures(features: WfsFeature[], workspaceName: string, layerName: string) {
     const options = {
-      featureNS: 'castyl_for_remove',
+      featureNS: workspaceName,
       featureType: layerName,
-      featurePrefix: workspaceName,
-      nativeElements: []
+      nativeElements: [],
+      gmlOptions: {srsName: 'EPSG:3857'}
     } as WriteTransactionOptions;
 
     const featuresToInsert = [];
-    features.forEach(feature => {
-      const opFeatures = new Feature(feature.properties);
-      // opFeatures.setId(feature.id);
-      // opFeatures.set('name', 'first');
+    features.forEach((feature: WfsFeature) => {
+      const olFeature = new Feature(feature.properties);
 
-      featuresToInsert.push(opFeatures);
+      olFeature.set('shape', MapperUtil.mapFwsGeometryToGeometry(feature.geometry));
+
+      featuresToInsert.push(olFeature);
     });
 
-    let payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
-
-    Object.keys(featuresToInsert).forEach(featureId => {
-      payload = payload.replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
-    });
-
+    const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
     return this.http
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
@@ -102,10 +102,10 @@ export class TransformFeatureService {
 
     const featuresToDelete = [];
     features.forEach(feature => {
-      const opFeatures = new Feature();
-      opFeatures.setId(feature.id);
+      const newFeatures = new Feature();
+      newFeatures.setId(feature.id);
 
-      featuresToDelete.push(opFeatures);
+      featuresToDelete.push(newFeatures);
     });
 
     let payload = this.xs.serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options));

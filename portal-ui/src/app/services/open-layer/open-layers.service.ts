@@ -12,6 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import VectorSource from 'ol/source/Vector';
 import ImageLayer from 'ol/layer/Image';
 import BaseLayer from 'ol/layer/Base';
+import {MapperUtil} from './MapperUtil';
 
 export let BEARER_TOKEN = '';
 
@@ -211,7 +212,7 @@ export class OpenLayersService {
 
   drawPolygon(coordinates) {
     const feature = {
-      geometry: {type: 'MultiPolygon', coordinates: coordinates},
+      geometry: {type: UsedGeometryType.MULTIPOLYGON, coordinates: coordinates},
       type: '',
       id: '',
       geometry_name: '',
@@ -272,11 +273,11 @@ export class OpenLayersService {
     const view = this._map.getView();
     const size = this._map.getSize();
 
-    if (feature.geometry.type === 'Point') {
+    if (feature.geometry.type === UsedGeometryType.POINT) {
       view.centerOn(feature.geometry.coordinates, size, [570, 500]);
-    } else if (feature.geometry.type === 'MultiLineString') {
+    } else if (feature.geometry.type === UsedGeometryType.MULTILINE_STRING) {
       this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
-    } else if (feature.geometry.type === 'MultiPolygon') {
+    } else if (feature.geometry.type === UsedGeometryType.MULTIPOLYGON) {
       this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
     } else {
       console.warn('Not supported geometry type: ', feature.geometry);
@@ -293,30 +294,14 @@ export class OpenLayersService {
     return [];
   }
 
-  paintFeature(feature: WfsFeature) {
-    if (!feature || !feature.geometry) {
-      this.logger.warn('Incorrect feature: ', feature);
-      return;
-    }
-
-    let drawFeature;
-    if (feature.geometry.type === 'Point') {
-      drawFeature = new Feature({
-        geometry: new Point(feature.geometry.coordinates),
-      });
-    } else if (feature.geometry.type === 'MultiLineString') {
-      drawFeature = new Feature({
-        geometry: new MultiLineString(feature.geometry.coordinates),
-      });
-    } else if (feature.geometry.type === 'MultiPolygon') {
-      drawFeature = new Feature({
-        geometry: new MultiPolygon(feature.geometry.coordinates),
-      });
-    } else {
-      console.warn('Not supported geometry type: ', feature.geometry);
-    }
-
-    this.draftSource.addFeature(drawFeature);
+  paintFeature(wfsFeature: WfsFeature) {
+    this.draftSource
+        .addFeature(MapperUtil.mapWfsFeatureToFeature(wfsFeature));
   }
 }
 
+export enum UsedGeometryType {
+  POINT = 'Point',
+  MULTILINE_STRING = 'MultiLineString',
+  MULTIPOLYGON = 'MultiPolygon',
+}
