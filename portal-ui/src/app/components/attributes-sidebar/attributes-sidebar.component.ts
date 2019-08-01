@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {debounceTime, filter, map, takeUntil} from 'rxjs/operators';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
@@ -33,7 +33,6 @@ import {TransformFeatureService} from '../../services/geoserver/transform-featur
 import {ProjectsService} from '../../services/crg/projects.service';
 import {DeleteDialogComponent, SimpleDialogData} from '../dialogs/delete-dialog/delete-dialog.component';
 import {ProjectModel} from '../../services/geoserver/import/projectModel';
-import {FeatureDescriptionUtil} from "../../services/util/FeatureDescriptionUtil";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -271,43 +270,67 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   copyObjects() {
-    if (!this.attributeTable.allRowsSelected) {
-      if (this.attributeTable.selected.length < 1) {
-        this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
-        return;
-      }
-
-      let suitableLayers: CrgLayer[] = [];
-      this.layersService.layers$
-          .subscribe((layers: CrgLayer[]) => {
-            suitableLayers = this.rulesService.getSuitableByGeometryLayers(this.layer, layers);
-          });
-
-      const dialogData: CopyFeaturesDialogData = {
-        layers: suitableLayers,
-        objects: this.attributeTable.selected,
-      };
-
-      this.dialog
-          .open(CopyFeaturesDialogComponent, {data: dialogData})
-          .afterClosed().subscribe((selectedLayer: CrgLayer) => {
-            if (!!selectedLayer) {
-              const workspaceName = this.projectModel.crgProject.workspaceName;
-              this.transformFeatureService.insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name)
-                  .subscribe(result => {
-                    console.log('+++++++++++++', result);
-                  });
-            } else {
-              this.log.warn('attributes table', 'Incorrect response from dialog', selectedLayer);
-            }
-          });
-    } else {
-      this.log.warn('attributes table', 'not supported');
-    }
+    this.prepareSuitableLayers()
+        .pipe(
+          flatMap((suitableLayers: CrgLayer[]) => this.openDialog('Копирование', suitableLayers)),
+          flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer))
+        ).subscribe(result => {
+          console.log('copyObjects result: ', result);
+        });
   }
 
   moveObjects() {
+    this.prepareSuitableLayers()
+        .pipe(
+          flatMap(suitableLayers => this.openDialog('Перемещение', suitableLayers)),
+          flatMap(selectedLayer => this.makeInsert(selectedLayer)),
+          flatMap(insertResult => this.makeDelete()),
+        ).subscribe(deletionResult => {
+          this.loadFeatures(this.requestModel$.getValue());
+        });
+  }
 
+  private openDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
+    return this.dialog
+               .open(CopyFeaturesDialogComponent, {
+                 data: {
+                   title: title,
+                   layers: layers,
+                   objects: this.attributeTable.selected,
+                 }
+               })
+               .afterClosed();
+  }
+
+  private makeInsert(selectedLayer: CrgLayer): Observable<string> {
+    const workspaceName = this.projectModel.crgProject.workspaceName;
+
+    return this.transformFeatureService
+               .insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name);
+  }
+
+  private makeDelete(): Observable<string> {
+    const workspaceName = this.projectModel.crgProject.workspaceName;
+
+    return this.transformFeatureService
+               .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name);
+  }
+
+  private prepareSuitableLayers() {
+    if (this.attributeTable.allRowsSelected) {
+      this.log.warn('attributes table', 'not supported');
+      return;
+    }
+
+    if (this.attributeTable.selected.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+
+    return this.layersService.layers$
+               .pipe(
+                 map((layers: CrgLayer[]) => this.rulesService.getSuitableByGeometryLayers(this.layer, layers))
+               );
   }
 
   deleteObjects() {

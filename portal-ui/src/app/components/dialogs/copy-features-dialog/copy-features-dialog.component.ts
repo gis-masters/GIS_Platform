@@ -19,4 +19,5 @@ export class CopyFeaturesDialogComponent {
 export interface CopyFeaturesDialogData {
   layers: CrgLayer[];
   objects: WfsFeature[];
+  title: string;
 }
