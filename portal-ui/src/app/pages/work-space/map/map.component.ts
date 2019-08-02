@@ -13,7 +13,7 @@ import {OpenLayersService} from '../../../services/open-layer/open-layers.servic
 import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
 import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
 import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {FeatureXsdDefinition, DataSchemaService, FeatureDescription} from '../../../services/crg/data-schema.service';
+import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {ViewFeaturesData} from '../../../components/view-features/view-features.component';
@@ -187,20 +187,22 @@ export class MapComponent implements OnInit, OnDestroy {
       this.openLayers.drawPolygon(buffer.getCoordinates());
 
       this.wfsService.getFeaturesByXmlFilter(xml)
-          .subscribe((featureCollection: WfsFeatureCollection) => {
+          .subscribe((fCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
 
-            if (featureCollection.features && featureCollection.features.length > 0) {
+            if (fCollection.features && fCollection.features.length > 0) {
               this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
                 data: {
-                  features: featureCollection.features,
+                  features: fCollection.features,
                   mode: EditFeatureMode.single
                 } as ViewFeaturesData
               });
 
-              featureCollection.features.forEach(feature => {
+              fCollection.features.forEach(feature => {
                 this.openLayers.paintFeature(feature);
               });
+
+              this.communicationService.selectedFeatures$.emit(fCollection.features);
             } else {
               this.logger.info('No features selected');
             }

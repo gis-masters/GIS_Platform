@@ -58,7 +58,7 @@
     </ngx-datatable>
 
     <ng-template #customSelectAll ngx-datatable-header-template>
-      <input type="checkbox" (change)="handleSelectAll()" [value]="isSelectAll"/>
+      <input type="checkbox" (change)="handleSelectAll()" [value]="isSelectAll" [disabled]="loading"/>
     </ng-template>
 
     <ng-template #cellTemplate let-row="row" let-value="value">

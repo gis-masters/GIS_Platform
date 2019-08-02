@@ -12,10 +12,11 @@ import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
 import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../components/dialogs/confirm-dialog/confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData
+} from '../../../components/dialogs/confirm-dialog/confirm-dialog.component';
 import {ProcessResponse} from '../../../services/models/requestModel';
-import {CopyFeaturesDialogComponent} from '../../../components/dialogs/copy-features-dialog/copy-features-dialog.component';
-import {CrgLayer} from '../../../services/geoserver/layers.service';
 
 @Component({
   selector: 'crg-project',

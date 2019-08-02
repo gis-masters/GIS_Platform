@@ -14,6 +14,7 @@ import ImageLayer from 'ol/layer/Image';
 import BaseLayer from 'ol/layer/Base';
 import {MapperUtil} from './MapperUtil';
 import {UsedGeometryType} from './GeometryType';
+import Feature from 'ol/Feature';
 
 export let BEARER_TOKEN = '';
 

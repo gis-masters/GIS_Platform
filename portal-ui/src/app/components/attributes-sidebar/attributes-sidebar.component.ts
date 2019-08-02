@@ -105,6 +105,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           const lastRequest = this.requestModel$.getValue();
           this.updateTable(lastRequest);
         });
+
+    this.communicationService.selectedFeatures$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((features: WfsFeature[]) => {
+          // this.attributeTable.selected = features;
+        });
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -246,6 +253,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   handleSelectAll() {
+    if (this.features.length === 0) {
+      return;
+    }
+
     this.isSelectAll = !this.isSelectAll;
     if (this.isSelectAll) {
       const currentRequestModel = this.requestModel$.getValue();
@@ -297,7 +308,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer)),
           takeUntil(this.unsubscribe$)
         ).subscribe(result => {
-          console.log('copyObjects result: ', result);
+          if (result.includes('<wfs:totalInserted>' + this.attributeTable.selected.length + '</wfs:totalInserted>')) {
+            this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+          } else {
+            this.snackBar.open('Не удалось скопировать', 'X', {duration: 6000});
+          }
         });
   }
 
@@ -309,8 +324,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           flatMap(selectedLayer => this.makeInsert(selectedLayer)),
           flatMap(() => this.makeDelete()),
           takeUntil(this.unsubscribe$)
-        ).subscribe(() => {
-          this.updateTable(this.requestModel$.getValue());
+        ).subscribe((result) => {
+          if (result.includes('<wfs:totalDeleted>' + this.attributeTable.selected.length + '</wfs:totalDeleted>')) {
+            this.updateTable(this.requestModel$.getValue());
+
+            this.snackBar.open('Обьекты перемещены', 'X', {duration: 3000});
+          } else {
+            this.snackBar.open('Не удалось переместить', 'X', {duration: 6000});
+          }
         });
   }
 
@@ -447,6 +468,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         sortable: false,
         resizeable: false,
         width: 12,
+        maxWidth: 12,
         cellTemplate: this.cellTemplate
       },
       {
@@ -457,6 +479,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         draggable: false,
         resizeable: false,
         width: 22,
+        maxWidth: 22,
         checkboxable: true,
         headerTemplate: this.customSelectAll
       },
@@ -464,7 +487,9 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         name: this.viewSettings.viewMode === ViewMode.internal ? 'ID' : 'Идентификатор',
         prop: 'id',
         sortable: false,
-        resizeable: false, width: 100,
+        resizeable: false,
+        width: 100,
+        maxWidth: 100,
         headerTemplate: this.filterTemplate,
         // summaryTemplate: this.headerFilterTemplate
       }

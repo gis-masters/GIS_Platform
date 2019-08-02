@@ -4,6 +4,7 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 import {EditFeatureData} from '../components/edit-feature/edit-feature.component';
+import {WfsFeature} from './geoserver/wfs.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class CommunicationService {
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() stepperEvents = new EventEmitter<number>();
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
+  @Output() selectedFeatures$ = new EventEmitter<WfsFeature[]>();
 
   constructor() {}
 

@@ -105,8 +105,6 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
           this.wfsFeature = wfsFeature;
           this.featureDescription = this.rulesService.getFeatureDescriptionByName(objectDto.crgLayer.name);
 
-          console.log('this.featureDescription: ', this.featureDescription);
-
           if (!!this.featureDescription) {
             this.prepareEditForm(this.wfsFeature.properties);
           } else {
