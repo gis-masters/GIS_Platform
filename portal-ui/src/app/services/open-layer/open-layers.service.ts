@@ -1,5 +1,5 @@
-import {MultiLineString, MultiPolygon, Point} from 'ol/geom';
-import {Feature, Map, View} from 'ol';
+import {MultiPolygon} from 'ol/geom';
+import {Map, View} from 'ol';
 import {NGXLogger} from 'ngx-logger';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {ImageWMS, OSM} from 'ol/source';
@@ -13,6 +13,7 @@ import VectorSource from 'ol/source/Vector';
 import ImageLayer from 'ol/layer/Image';
 import BaseLayer from 'ol/layer/Base';
 import {MapperUtil} from './MapperUtil';
+import {UsedGeometryType} from './GeometryType';
 
 export let BEARER_TOKEN = '';
 
@@ -298,10 +299,4 @@ export class OpenLayersService {
     this.draftSource
         .addFeature(MapperUtil.mapWfsFeatureToFeature(wfsFeature));
   }
-}
-
-export enum UsedGeometryType {
-  POINT = 'Point',
-  MULTILINE_STRING = 'MultiLineString',
-  MULTIPOLYGON = 'MultiPolygon',
 }

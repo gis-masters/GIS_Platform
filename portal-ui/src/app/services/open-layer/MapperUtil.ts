@@ -1,8 +1,8 @@
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import {WfsFeature, WfsGeometry} from '../geoserver/wfs.service';
-import {UsedGeometryType} from './open-layers.service';
 import {MultiLineString, MultiPolygon, Point} from 'ol/geom';
+import {UsedGeometryType} from './GeometryType';
 
 export class MapperUtil {
 

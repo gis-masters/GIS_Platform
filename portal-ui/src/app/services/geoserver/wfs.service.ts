@@ -8,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {error} from '@angular/compiler/src/util';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Util} from './util';
-import {UsedGeometryType} from "../open-layer/open-layers.service";
+import {UsedGeometryType} from '../open-layer/GeometryType';
 
 @Injectable({
   providedIn: 'root'
