@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SimpleProperty} from './crg/fgistp-rules.service';
+import {SimpleProperty} from './crg/data-schema.service';
 import {LayerAttribute} from './geoserver/import/import.service';
 import {DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison} from './util/CrgComparatorUtil';
 

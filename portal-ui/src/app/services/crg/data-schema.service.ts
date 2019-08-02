@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import {map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
@@ -12,7 +11,7 @@ import {FeatureDescriptionUtil} from '../util/FeatureDescriptionUtil';
 @Injectable({
   providedIn: 'root'
 })
-export class FgistpRulesService {
+export class DataSchemaService {
 
   private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 

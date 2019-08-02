@@ -9,7 +9,7 @@ import {CommunicationService, ObjectDto} from '../../services/communication.serv
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, FgistpRulesService, FeatureDescription} from '../../services/crg/fgistp-rules.service';
+import {EditFeatureItem, DataSchemaService, FeatureDescription} from '../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -40,7 +40,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
               private openLayers: OpenLayersService,
               private validationService: ValidationService,
               private communicationService: CommunicationService,
-              private rulesService: FgistpRulesService,
+              private rulesService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
   }
 

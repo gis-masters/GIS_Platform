@@ -1,6 +1,6 @@
 import {fromEvent, Subject} from 'rxjs';
 import {FilterEvent} from '../../services/models/requestModel';
-import {SimpleProperty} from '../../services/crg/fgistp-rules.service';
+import {SimpleProperty} from '../../services/crg/data-schema.service';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatSelectChange} from '@angular/material';

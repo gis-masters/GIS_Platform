@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {SimpleProperty} from '../../services/crg/fgistp-rules.service';
+import {SimpleProperty} from '../../services/crg/data-schema.service';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImportService, LayerAttribute} from '../../services/geoserver/import/import.service';
 import {PropertiesComparatorService} from '../../services/properties-comparator.service';

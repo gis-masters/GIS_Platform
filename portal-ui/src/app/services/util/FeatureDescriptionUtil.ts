@@ -1,5 +1,5 @@
 import {ValueType} from './FeaturePropertyValidators';
-import {FeatureDescription} from '../crg/fgistp-rules.service';
+import {FeatureDescription} from '../crg/data-schema.service';
 import {ImportLayerItem, LayerAttribute} from '../geoserver/import/import.service';
 
 export class FeatureDescriptionUtil {
@@ -86,20 +86,7 @@ export class CrgRootGeometry implements GeometryItem {
       child: [
         {
           name: 'LineString',
-          child: [
-            {
-              name: 'Point',
-              child: []
-            },
-            {
-              name: 'Line',
-              child: []
-            },
-            {
-              name: 'LinearRing',
-              child: []
-            },
-          ]
+          child: []
         },
       ]
     },

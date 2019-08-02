@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
 import {
@@ -17,7 +17,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {FgistpRulesService, SimpleProperty} from '../../services/crg/fgistp-rules.service';
+import {DataSchemaService, SimpleProperty} from '../../services/crg/data-schema.service';
 import {FizLogger} from '../../services/logger/fiz.logger';
 import {MatDialog, MatSelectChange, MatSnackBar} from '@angular/material';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
@@ -33,6 +33,7 @@ import {TransformFeatureService} from '../../services/geoserver/transform-featur
 import {ProjectsService} from '../../services/crg/projects.service';
 import {DeleteDialogComponent, SimpleDialogData} from '../dialogs/delete-dialog/delete-dialog.component';
 import {ProjectModel} from '../../services/geoserver/import/projectModel';
+import {empty} from "rxjs/internal/Observer";
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -74,7 +75,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               private transformFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
-              private rulesService: FgistpRulesService,
+              private rulesService: DataSchemaService,
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
@@ -272,6 +273,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   copyObjects() {
     this.prepareSuitableLayers()
         .pipe(
+          filter(value => !!value.length),
           flatMap((suitableLayers: CrgLayer[]) => this.openDialog('Копирование', suitableLayers)),
           flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer))
         ).subscribe(result => {
@@ -282,6 +284,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   moveObjects() {
     this.prepareSuitableLayers()
         .pipe(
+          filter(value => !!value.length),
           flatMap(suitableLayers => this.openDialog('Перемещение', suitableLayers)),
           flatMap(selectedLayer => this.makeInsert(selectedLayer)),
           flatMap(insertResult => this.makeDelete()),
@@ -319,12 +322,12 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   private prepareSuitableLayers() {
     if (this.attributeTable.allRowsSelected) {
       this.log.warn('attributes table', 'not supported');
-      return;
+      return of([]);
     }
 
     if (this.attributeTable.selected.length < 1) {
       this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
-      return;
+      return of([]);
     }
 
     return this.layersService.layers$

@@ -2,10 +2,10 @@ import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
   FeatureXsdDefinition,
-  FgistpRulesService,
+  DataSchemaService,
   SimpleProperty,
   FeatureDescription
-} from '../../services/crg/fgistp-rules.service';
+} from '../../services/crg/data-schema.service';
 import {AS_IS_TYPE, ImportService, ImportLayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
   typeProperties: SimpleProperty[] = [];
 
   constructor(private logger: NGXLogger,
-              private ruleService: FgistpRulesService,
+              private ruleService: DataSchemaService,
               private importService: ImportService) {
   }
 

@@ -8,7 +8,7 @@ import {DatastoreService} from './datastore.service';
 import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {FgistpRulesService} from '../crg/fgistp-rules.service';
+import {DataSchemaService} from '../crg/data-schema.service';
 import {ServerPropertiesService} from '../server-properties.service';
 
 @Injectable({
@@ -30,7 +30,7 @@ export class LayersService {
   constructor(private http: HttpClient,
               private log: FizLogger,
               private baseService: BaseService,
-              private ruleService: FgistpRulesService,
+              private ruleService: DataSchemaService,
               private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     this.log.debug('setUp', 'LayersService constructor');

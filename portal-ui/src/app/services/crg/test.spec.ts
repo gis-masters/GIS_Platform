@@ -1,5 +1,3 @@
-import {FeatureDescription} from './fgistp-rules.service';
-
 describe('fgistp-rules service test', () => {
 
   it('should correct find feature by name', () => {

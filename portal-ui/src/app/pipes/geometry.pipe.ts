@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {FeatureDescription} from '../services/crg/fgistp-rules.service';
+import {FeatureDescription} from '../services/crg/data-schema.service';
 import {FeatureDescriptionUtil} from '../services/util/FeatureDescriptionUtil';
 import {ImportLayerItem} from '../services/geoserver/import/import.service';
 

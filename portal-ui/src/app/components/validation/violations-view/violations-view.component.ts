@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
 import {ViolationItem} from '../../../services/crg/validation.service';
-import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
+import {DataSchemaService} from '../../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-violations-view',
@@ -16,7 +16,7 @@ export class ViolationsViewComponent implements OnInit {
   violationItems: ViolationViewItem[] = [];
 
   constructor(private logger: NGXLogger,
-              private ruleService: FgistpRulesService) {}
+              private ruleService: DataSchemaService) {}
 
   ngOnInit() {
     this.data.forEach((value: ViolationItem) => {

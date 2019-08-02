@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/fgistp-rules.service';
+import {SimpleProperty} from '../crg/data-schema.service';
 import {ProcessStatus} from '../process-status';
 import {WsMessageType} from '../ws.service';
 

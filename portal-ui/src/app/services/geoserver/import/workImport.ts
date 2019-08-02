@@ -1,6 +1,6 @@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
-import {SimpleProperty} from '../../crg/fgistp-rules.service';
+import {SimpleProperty} from '../../crg/data-schema.service';
 import {InputStartResponseDto, LayerAttribute} from './import.service';
 import {MappingItem, TaskImport} from './taskImport';
 import {ProjectModel} from './projectModel';

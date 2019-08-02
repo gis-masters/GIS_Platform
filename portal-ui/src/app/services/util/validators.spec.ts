@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/fgistp-rules.service';
+import {SimpleProperty} from '../crg/data-schema.service';
 import {FeaturePropertyValidators, ValueType} from './FeaturePropertyValidators';
 import {FormControl} from '@angular/forms';
 import {ValueTitleProjection} from '../geoserver/projections';

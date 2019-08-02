@@ -2,7 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
 import {Pageable} from '../../services/models/requestModel';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {FgistpRulesService} from '../../services/crg/fgistp-rules.service';
+import {DataSchemaService} from '../../services/crg/data-schema.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
@@ -31,7 +31,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
-              private rulesService: FgistpRulesService,
+              private rulesService: DataSchemaService,
               private openLayers: OpenLayersService) {
   }
 

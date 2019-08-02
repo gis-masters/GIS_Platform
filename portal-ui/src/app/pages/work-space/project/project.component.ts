@@ -10,7 +10,7 @@ import {ProcessStatus} from '../../../services/process-status';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
-import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
+import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
 import {DeleteDialogComponent, SimpleDialogData} from '../../../components/dialogs/delete-dialog/delete-dialog.component';
 import {ProcessResponse} from '../../../services/models/requestModel';
@@ -40,7 +40,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
               private log: FizLogger,
               private storageService: LocalStorageService,
               private projectsService: ProjectsService,
-              private ruleService: FgistpRulesService,
+              private ruleService: DataSchemaService,
               private dialog: MatDialog,
               private communicationService: CommunicationService) {
     this.log.debug('setUp', 'ProjectComponent constructor');

@@ -7,7 +7,7 @@ import {startWith} from 'rxjs/internal/operators/startWith';
 import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
-import {FgistpRulesService} from '../../../services/crg/fgistp-rules.service';
+import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
@@ -54,7 +54,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private ruleService: FgistpRulesService,
+              private ruleService: DataSchemaService,
               private wfsService: WfsService,
               private openLayers: OpenLayersService,
               private validationService: ValidationService) {

@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/fgistp-rules.service';
+import {SimpleProperty} from '../crg/data-schema.service';
 import {CrgComparison} from '../properties-comparator.service';
 import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import/import.service';
 
