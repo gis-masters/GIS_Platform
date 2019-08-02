@@ -38,7 +38,7 @@ import {LayersSidebarComponent} from './components/layers-sidebar/layers-sidebar
 import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/interceptors/jwt-interceptor.service';
 import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
-import {DeleteDialogComponent} from './components/dialogs/delete-dialog/delete-dialog.component';
+import {ConfirmDialogComponent} from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
 import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';
@@ -68,7 +68,7 @@ import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-
     ProgressItemComponent,
     CrgStepperComponent,
     ProjectComponent,
-    DeleteDialogComponent,
+    ConfirmDialogComponent,
     ViewFeaturesComponent,
     EditFeatureComponent,
     AttributesSidebarComponent,
@@ -96,7 +96,7 @@ import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-
     NgxDatatableModule
   ],
   entryComponents: [
-    DeleteDialogComponent,
+    ConfirmDialogComponent,
     CopyFeaturesDialogComponent
   ],
   providers: [

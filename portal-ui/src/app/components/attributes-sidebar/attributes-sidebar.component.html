@@ -48,13 +48,18 @@
 
                    (page)='setPage($event)'
                    (sort)="onSort($event)"
-                   (select)='onSelect($event)'
+                   (select)='showSelectedFeatures()'
                    (activate)="onActivate($event)"
 
+                   [messages]="tableMessages"
                    [virtualization]="false"
                    [scrollbarV]="true"
                    [scrollbarH]="true">
     </ngx-datatable>
+
+    <ng-template #customSelectAll ngx-datatable-header-template>
+      <input type="checkbox" (change)="handleSelectAll()" [value]="isSelectAll"/>
+    </ng-template>
 
     <ng-template #cellTemplate let-row="row" let-value="value">
       <div *ngIf="currentPositionFeature?.id === row.id">

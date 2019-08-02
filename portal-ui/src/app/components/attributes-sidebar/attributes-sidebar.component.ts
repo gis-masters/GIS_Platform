@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import {debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
+import {debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
+import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {
   AfterViewInit,
   Component,
@@ -14,26 +14,22 @@ import {
   ViewChild
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {DataSchemaService, SimpleProperty} from '../../services/crg/data-schema.service';
+import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
+import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {FizLogger} from '../../services/logger/fiz.logger';
-import {MatDialog, MatSelectChange, MatSnackBar} from '@angular/material';
+import {ProjectsService} from '../../services/crg/projects.service';
+import {EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
-import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {CommunicationService} from '../../services/communication.service';
-import {
-  CopyFeaturesDialogComponent,
-  CopyFeaturesDialogData
-} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
-import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {ProjectsService} from '../../services/crg/projects.service';
-import {DeleteDialogComponent, SimpleDialogData} from '../dialogs/delete-dialog/delete-dialog.component';
 import {ProjectModel} from '../../services/geoserver/import/projectModel';
-import {empty} from "rxjs/internal/Observer";
+import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
+import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'crg-attributes-sidebar',
@@ -47,6 +43,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('customSelectAll') customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
 
@@ -65,6 +62,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   viewSettings: AttributeTableViewSettings = {
     viewMode: ViewMode.alias
   };
+
+  tableMessages = {
+    emptyMessage: 'Нет данных для отображения',
+    totalMessage: 'всего',
+    selectedMessage: 'выбрано'
+  };
+  isSelectAll = false;
 
   private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -91,15 +95,15 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           takeUntil(this.unsubscribe$)
         )
         .subscribe((requestModel: RequestModel) => {
-          this.loadFeatures(requestModel);
+          this.updateTable(requestModel);
         });
 
     this.communicationService.featuresUpdate$
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((editFeatureData: EditFeatureData) => {
+        .subscribe(() => {
           // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
           const lastRequest = this.requestModel$.getValue();
-          this.loadFeatures(lastRequest);
+          this.updateTable(lastRequest);
         });
   }
 
@@ -111,7 +115,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
       this.attributeTable.selected = [];
       this.openLayersService.clearDraft();
-      this.loadFeatures({page: {pageSize: 25, offset: 0}});
+      this.updateTable({page: {pageSize: 25, offset: 0}});
     }
   }
 
@@ -121,9 +125,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.unsubscribe$.complete();
   }
 
-  loadFeatures(requestModel?: RequestModel) {
+  updateTable(requestModel?: RequestModel) {
     this.loading = true;
     this.wfsService.getFeatures(this.layer.complexName, requestModel)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((fCollection: WfsFeatureCollection) => {
           if (fCollection) {
             this.loading = false;
@@ -148,7 +153,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         });
   }
 
-  onSelect({selected}) {
+  showSelectedFeatures() {
     // Очищаем предыдущие
     this.openLayersService.clearDraft();
 
@@ -240,42 +245,57 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
   }
 
-  editFeatures() {
-    // При сервер сайд паджинации галочка выделить все - НЕ выделит всё.
-    // Обработаем эту ситуацию: выгребем ВСЕ данные из API по текущему фильтру убрав паджинацию
-    if (this.attributeTable.allRowsSelected) {
-      const requestModel = this.requestModel$.getValue();
-      // Если нажали выделить все и эти все помещаются в одну страницу то доп. запрос не нужен
-      if (this.attributeTable.selected.length < requestModel.page.pageSize) {
-        this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
-        return;
-      }
-
+  handleSelectAll() {
+    this.isSelectAll = !this.isSelectAll;
+    if (this.isSelectAll) {
       const currentRequestModel = this.requestModel$.getValue();
       const clonedRequestModel: RequestModel = _.cloneDeep(currentRequestModel);
-
       clonedRequestModel.page = undefined;
 
       this.loading = true;
       this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
-        .subscribe((fCollection: WfsFeatureCollection) => {
-          if (fCollection) {
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(fCollection => {
+            this.attributeTable.selected = fCollection.features;
             this.loading = false;
 
-            this.sendSelectedFeaturesToEdit(fCollection.features);
-          }
-        });
+            this.showSelectedFeatures();
+          });
     } else {
-      this.sendSelectedFeaturesToEdit(this.attributeTable.selected);
+      this.attributeTable.selected = [];
+      this.openLayersService.clearDraft();
     }
+  }
+
+  editFeatures() {
+    const selectedFeatures = this.attributeTable.selected;
+    if (selectedFeatures.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+
+    // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
+    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(selectedFeatures));
+    clonedFeatures.forEach((feature: WfsFeature) => {
+      feature.id = this.layer.name + '.' + feature.id;
+    });
+
+    // Отсылка в сайдбар
+    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+      data: {
+        features: clonedFeatures,
+        mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
+      } as ViewFeaturesData
+    });
   }
 
   copyObjects() {
     this.prepareSuitableLayers()
         .pipe(
           filter(value => !!value.length),
-          flatMap((suitableLayers: CrgLayer[]) => this.openDialog('Копирование', suitableLayers)),
-          flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer))
+          flatMap((suitableLayers: CrgLayer[]) => this.openEditDialog('Копирование', suitableLayers)),
+          flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer)),
+          takeUntil(this.unsubscribe$)
         ).subscribe(result => {
           console.log('copyObjects result: ', result);
         });
@@ -285,15 +305,41 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     this.prepareSuitableLayers()
         .pipe(
           filter(value => !!value.length),
-          flatMap(suitableLayers => this.openDialog('Перемещение', suitableLayers)),
+          flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           flatMap(selectedLayer => this.makeInsert(selectedLayer)),
-          flatMap(insertResult => this.makeDelete()),
-        ).subscribe(deletionResult => {
-          this.loadFeatures(this.requestModel$.getValue());
+          flatMap(() => this.makeDelete()),
+          takeUntil(this.unsubscribe$)
+        ).subscribe(() => {
+          this.updateTable(this.requestModel$.getValue());
         });
   }
 
-  private openDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
+  deleteObjects() {
+    if (this.attributeTable.selected.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+
+    const data: ConfirmDialogData = {
+      title: 'Удалить выделенные обьекты?',
+      approveBtnName: 'Удалить'
+    };
+
+    this.dialog
+      .open(ConfirmDialogComponent, {width: '400px', data: data})
+      .afterClosed().pipe(filter(value => !!value))
+      .subscribe(() => {
+        const workspaceName = this.projectModel.crgProject.workspaceName;
+        this.transformFeatureService
+          .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name)
+          .subscribe(() => {
+            const lastRequest = this.requestModel$.getValue();
+            this.updateTable(lastRequest);
+          });
+      });
+  }
+
+  private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
     return this.dialog
                .open(CopyFeaturesDialogComponent, {
                  data: {
@@ -320,11 +366,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   private prepareSuitableLayers() {
-    if (this.attributeTable.allRowsSelected) {
-      this.log.warn('attributes table', 'not supported');
-      return of([]);
-    }
-
     if (this.attributeTable.selected.length < 1) {
       this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
       return of([]);
@@ -336,92 +377,67 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
                );
   }
 
-  deleteObjects() {
-    if (this.attributeTable.selected.length < 1) {
-      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
-      return;
-    }
-
-    const data: SimpleDialogData = {
-      title: 'Удалить выделенные обьекты?',
-      approveBtnName: 'Удалить'
-    };
-
-    this.dialog
-        .open(DeleteDialogComponent, {width: '400px', data: data})
-        .afterClosed().pipe(filter(value => !!value))
-        .subscribe(result => {
-          const workspaceName = this.projectModel.crgProject.workspaceName;
-          this.transformFeatureService
-              .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name)
-              .subscribe(response => {
-                const lastRequest = this.requestModel$.getValue();
-                this.loadFeatures(lastRequest);
-              });
-        });
-  }
-
-  onViewModeChange(event: MatSelectChange) {
-    if (this.viewSettings.viewMode === ViewMode.alias) {
-      // Название столбца
-      this.attributeTable.columns.forEach(column => {
-        const property = column.prop.toString();
-        if (property === 'id') {
-          column.name = 'Идентификатор';
-        } else {
-          const simpleProperty = this.getSimpleProperty(property.split('.')[1]);
-          if (simpleProperty) {
-            column.name = simpleProperty.title;
-          }
-        }
-      });
-
-      // Данные
-      const features: WfsFeatureView[] = this.attributeTable.rows;
-      features.forEach((feature: WfsFeatureView) => {
-        feature.updated = Date.now().toString();
-
-        Object.keys(feature.properties).forEach(prop => {
-          const simpleProperty = this.getSimpleProperty(prop);
-          if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
-            const valueTitle = this.getValueTitle(feature.properties[prop], simpleProperty.enumerations);
-            if (valueTitle) {
-              feature.aliases[prop] = valueTitle;
-            } else {
-              feature.aliases[prop] = '';
-            }
-          }
-        });
-      });
-
-      this.features = [...features];
-    } else {
-      // Название столбца
-      this.attributeTable.columns.forEach(column => {
-        const property = column.prop.toString();
-        if (property === 'id') {
-          column.name = 'id';
-        } else {
-          column.name = property.split('.')[1];
-        }
-      });
-
-      // Данные
-      const features: WfsFeatureView[] = this.attributeTable.rows;
-      features.forEach((feature: WfsFeatureView) => {
-        feature.updated = Date.now().toString();
-
-        Object.keys(feature.properties).forEach(prop => {
-          const simpleProperty = this.getSimpleProperty(prop);
-          if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
-            feature.aliases[prop] = feature.properties[prop];
-          }
-        });
-      });
-
-      this.features = [...features];
-    }
-  }
+  // onViewModeChange(event: MatSelectChange) {
+  //   if (this.viewSettings.viewMode === ViewMode.alias) {
+  //     // Название столбца
+  //     this.attributeTable.columns.forEach(column => {
+  //       const property = column.prop.toString();
+  //       if (property === 'id') {
+  //         column.name = 'Идентификатор';
+  //       } else {
+  //         const simpleProperty = this.getSimpleProperty(property.split('.')[1]);
+  //         if (simpleProperty) {
+  //           column.name = simpleProperty.title;
+  //         }
+  //       }
+  //     });
+  //
+  //     // Данные
+  //     const features: WfsFeatureView[] = this.attributeTable.rows;
+  //     features.forEach((feature: WfsFeatureView) => {
+  //       feature.updated = Date.now().toString();
+  //
+  //       Object.keys(feature.properties).forEach(prop => {
+  //         const simpleProperty = this.getSimpleProperty(prop);
+  //         if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+  //           const valueTitle = this.getValueTitle(feature.properties[prop], simpleProperty.enumerations);
+  //           if (valueTitle) {
+  //             feature.aliases[prop] = valueTitle;
+  //           } else {
+  //             feature.aliases[prop] = '';
+  //           }
+  //         }
+  //       });
+  //     });
+  //
+  //     this.features = [...features];
+  //   } else {
+  //     // Название столбца
+  //     this.attributeTable.columns.forEach(column => {
+  //       const property = column.prop.toString();
+  //       if (property === 'id') {
+  //         column.name = 'id';
+  //       } else {
+  //         column.name = property.split('.')[1];
+  //       }
+  //     });
+  //
+  //     // Данные
+  //     const features: WfsFeatureView[] = this.attributeTable.rows;
+  //     features.forEach((feature: WfsFeatureView) => {
+  //       feature.updated = Date.now().toString();
+  //
+  //       Object.keys(feature.properties).forEach(prop => {
+  //         const simpleProperty = this.getSimpleProperty(prop);
+  //         if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+  //           feature.aliases[prop] = feature.properties[prop];
+  //         }
+  //       });
+  //     });
+  //
+  //     this.features = [...features];
+  //   }
+  // }
 
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
@@ -441,8 +457,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         draggable: false,
         resizeable: false,
         width: 22,
-        headerCheckboxable: true,
-        checkboxable: true
+        checkboxable: true,
+        headerTemplate: this.customSelectAll
       },
       {
         name: this.viewSettings.viewMode === ViewMode.internal ? 'ID' : 'Идентификатор',
@@ -533,27 +549,6 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
 
     return result;
-  }
-
-  private sendSelectedFeaturesToEdit(features: WfsFeature[]) {
-    if (features.length < 1) {
-      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
-      return;
-    }
-
-    // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
-    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(features));
-    clonedFeatures.forEach((feature: WfsFeature) => {
-      feature.id = this.layer.name + '.' + feature.id;
-    });
-
-    // Отсылка в сайдбар
-    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
-      data: {
-        features: clonedFeatures,
-        mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
-      } as ViewFeaturesData
-    });
   }
 
 }

@@ -12,7 +12,7 @@ import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
 import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {CrgProject, ProjectsService} from '../../../services/crg/projects.service';
-import {DeleteDialogComponent, SimpleDialogData} from '../../../components/dialogs/delete-dialog/delete-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from '../../../components/dialogs/confirm-dialog/confirm-dialog.component';
 import {ProcessResponse} from '../../../services/models/requestModel';
 import {CopyFeaturesDialogComponent} from '../../../components/dialogs/copy-features-dialog/copy-features-dialog.component';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
@@ -121,13 +121,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   openDeleteDialog(pItem: CrgProject): void {
-    const data: SimpleDialogData = {
+    const data: ConfirmDialogData = {
       title: 'Вы действительно хотите удалить проект?',
       approveBtnName: 'Удалить'
     };
 
     this.dialog
-        .open(DeleteDialogComponent, {width: '400px', data: data})
+        .open(ConfirmDialogComponent, {width: '400px', data: data})
         .afterClosed().subscribe(result => {
           if (result) {
             this.projectsService
