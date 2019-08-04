@@ -303,7 +303,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   copyObjects() {
     this.prepareSuitableLayers()
         .pipe(
-          filter(value => !!value.length),
+          filter(value => this.checkIsLayersExist(value)),
           flatMap((suitableLayers: CrgLayer[]) => this.openEditDialog('Копирование', suitableLayers)),
           flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer)),
           takeUntil(this.unsubscribe$)
@@ -319,7 +319,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   moveObjects() {
     this.prepareSuitableLayers()
         .pipe(
-          filter(value => !!value.length),
+          filter(value => this.checkIsLayersExist(value)),
           flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           flatMap(selectedLayer => this.makeInsert(selectedLayer)),
           flatMap(() => this.makeDelete()),
@@ -576,6 +576,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     return result;
   }
 
+  private checkIsLayersExist(value) {
+    if (!!value.length) {
+      return true;
+    } else {
+      this.snackBar.open('Нет подходящих слоев', 'X', {duration: 6000});
+      return false;
+    }
+  }
 }
 
 export interface WfsFeatureView extends WfsFeature {
