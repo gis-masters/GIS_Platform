@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import {BehaviorSubject, from, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, from, Observable, of, Subject} from 'rxjs';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
-import {concatMap, debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
+import {concatMap, debounceTime, filter, flatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {
   AfterViewInit,
@@ -323,17 +323,9 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         .pipe(
           filter(value => this.checkIsLayersExist(value)),
           flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
-          flatMap(selectedLayer => this.makeInsert(selectedLayer)),
-          flatMap(() => this.makeDelete()),
           takeUntil(this.unsubscribe$)
-        ).subscribe((result) => {
-          if (result.includes('<wfs:totalDeleted>' + this.attributeTable.selected.length + '</wfs:totalDeleted>')) {
-            this.updateTable(this.requestModel$.getValue());
-
-            this.snackBar.open('Обьекты перемещены', 'X', {duration: 3000});
-          } else {
-            this.snackBar.open('Не удалось переместить', 'X', {duration: 6000});
-          }
+        ).subscribe((selectedLayer: CrgLayer) => {
+          this.batchReplaceFeatures(selectedLayer);
         });
   }
 
@@ -376,102 +368,103 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   private batchInsertFeatures(selectedLayer: CrgLayer) {
+    this.loading = true;
     this.showPercent = true;
+    this.loadPercent = 0;
+
     const workspaceName = this.projectModel.crgProject.workspaceName;
     const selectedFeatures = this.attributeTable.selected;
+    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
+    const onePartOf100 = 100 / countOfParts;
 
-    this.loading = true;
-    if (selectedFeatures.length > this.BATCH_SIZE) {
-      const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
-      const onePartOf100 = 100 / countOfParts;
+    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
 
-      const result = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
-
-      let i = 0;
-      from(result)
-        .pipe(
-          concatMap(features => this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)),
-        ).subscribe(value => {
-        i++;
-        const percent = Math.ceil(onePartOf100 * i);
-        if (i >= countOfParts) {
-          this.loadPercent = percent > 100 ? 100 : percent;
-          this.loading = false;
-          this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
-        } else {
-          this.loadPercent = percent > 100 ? 100 : percent;
-        }
-      });
-    } else {
-      this.tFeatureService
-          .insertFeatures(selectedFeatures, workspaceName, selectedLayer.name)
-          .subscribe(response => {
-            this.loadPercent = 100;
-            if (response.includes('<wfs:totalInserted>' + selectedFeatures.length + '</wfs:totalInserted>')) {
-              this.loading = false;
-              this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
-            } else {
-              this.loading = false;
-              this.log.warn('attributes table', 'InsertFeature response: ', response);
-              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
-            }
-          });
-    }
+    let i = 0;
+    from(listToParts)
+      .pipe(
+        concatMap(features => this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)),
+      ).subscribe(value => {
+      i++;
+      const percent = Math.ceil(onePartOf100 * i);
+      if (i >= countOfParts) {
+        this.loadPercent = percent > 100 ? 100 : percent;
+        this.loading = false;
+        this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+      } else {
+        this.loadPercent = percent > 100 ? 100 : percent;
+      }
+    });
   }
 
-  private batchDeleteFeatures() {
+  private batchReplaceFeatures(selectedLayer: CrgLayer) {
+    this.loading = true;
     this.showPercent = true;
+    this.loadPercent = 0;
+
     const workspaceName = this.projectModel.crgProject.workspaceName;
     const selectedFeatures = this.attributeTable.selected;
+    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
+    const onePartOf100 = 100 / countOfParts;
 
-    this.loading = true;
-    if (selectedFeatures.length > this.BATCH_SIZE) {
-      const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
-      const onePartOf100 = 100 / countOfParts;
+    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
 
-      const result = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
-
-      let i = 0;
-      from(result)
-        .pipe(
-          concatMap(features => this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name)),
-        ).subscribe(value => {
+    let i = 0;
+    from(listToParts)
+      .pipe(
+        concatMap(features => {
+          return combineLatest(
+            of(features),
+            this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)
+          );
+        }),
+        concatMap(([features, insertResult]) => {
+          return this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name);
+        }),
+        takeUntil(this.unsubscribe$)
+      ).subscribe((result) => {
         i++;
         const percent = Math.ceil(onePartOf100 * i);
         if (i >= countOfParts) {
           this.loadPercent = percent > 100 ? 100 : percent;
           this.loading = false;
-          this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
+          this.snackBar.open('Обьекты перемещены', 'X', {duration: 3000});
 
           this.updateTable(this.requestModel$.getValue());
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
       });
-    } else {
-      this.tFeatureService
-          .deleteFeatures(selectedFeatures, workspaceName, this.layer.name)
-          .subscribe(response => {
-            this.loadPercent = 100;
-            if (response.includes('<wfs:totalDeleted>' + selectedFeatures.length + '</wfs:totalDeleted>')) {
-              this.loading = false;
-              this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
-
-              this.updateTable(this.requestModel$.getValue());
-            } else {
-              this.loading = false;
-              this.log.warn('attributes table', 'InsertFeature response: ', response);
-              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
-            }
-          });
-    }
   }
 
-  private makeDelete(): Observable<string> {
-    const workspaceName = this.projectModel.crgProject.workspaceName;
+  private batchDeleteFeatures() {
+    this.loading = true;
+    this.showPercent = true;
+    this.loadPercent = 0;
 
-    return this.tFeatureService
-               .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name);
+    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const selectedFeatures = this.attributeTable.selected;
+    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
+    const onePartOf100 = 100 / countOfParts;
+
+    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
+
+    let i = 0;
+    from(listToParts)
+      .pipe(
+        concatMap(features => this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name)),
+      ).subscribe(value => {
+      i++;
+      const percent = Math.ceil(onePartOf100 * i);
+      if (i >= countOfParts) {
+        this.loadPercent = percent > 100 ? 100 : percent;
+        this.loading = false;
+        this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
+
+        this.updateTable(this.requestModel$.getValue());
+      } else {
+        this.loadPercent = percent > 100 ? 100 : percent;
+      }
+    });
   }
 
   private prepareSuitableLayers() {

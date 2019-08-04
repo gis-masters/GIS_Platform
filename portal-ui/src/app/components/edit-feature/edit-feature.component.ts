@@ -191,64 +191,35 @@ export class EditFeatureComponent implements OnChanges, OnInit {
   }
 
   private batchUpdateFeatures(featuresId: string[], geoserverName: string, tableName: string, newProperties: {}) {
-    if (featuresId.length > this.BATCH_SIZE) {
-      const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
-      const onePartOf100 = 100 / countOfParts;
+    const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
+    const onePartOf100 = 100 / countOfParts;
 
-      const result = this.transformFeatureService.splitListToParts(featuresId, countOfParts);
+    const result = this.transformFeatureService.splitListToParts(featuresId, countOfParts);
 
-      let i = 0;
-      from(result)
-        .pipe(
-          concatMap(features => this.transformFeatureService.updateFeatures(features, geoserverName, tableName, newProperties)),
-        ).subscribe(value => {
-          i++;
-          const percent = Math.ceil(onePartOf100 * i);
-          if (i >= countOfParts) {
-            this.loadPercent = percent > 100 ? 100 : percent;
-            this.isSaveInProgress = false;
-            this.closeMe.emit(true);
-            this.snackBar.open('Сохранено', 'X', {duration: 3000});
+    let i = 0;
+    from(result)
+      .pipe(
+        concatMap(features => this.transformFeatureService.updateFeatures(features, geoserverName, tableName, newProperties)),
+      ).subscribe(value => {
+        i++;
+        const percent = Math.ceil(onePartOf100 * i);
+        if (i >= countOfParts) {
+          this.loadPercent = percent > 100 ? 100 : percent;
+          this.isSaveInProgress = false;
+          this.closeMe.emit(true);
+          this.snackBar.open('Сохранено', 'X', {duration: 3000});
 
-            this.communicationService.featuresUpdate$.emit({
-              feature: this.data.feature,
-              featuresId: this.data.featuresId,
-              total: this.data.total,
-              mode: EditFeatureMode.multipleEdit,
-              properties: newProperties
-            });
-          } else {
-            this.loadPercent = percent > 100 ? 100 : percent;
-          }
-        });
-    } else {
-      this.transformFeatureService
-          .updateFeatures(featuresId, geoserverName, tableName, newProperties)
-          .subscribe(response => {
-            this.loadPercent = 100;
-            if (response.includes('<wfs:totalUpdated>' + featuresId.length + '</wfs:totalUpdated>')) {
-              const timeout = setTimeout(() => {
-                this.isSaveInProgress = false;
-                this.closeMe.emit(true);
-                this.snackBar.open('Сохранено', 'X', {duration: 3000});
-
-                clearTimeout(timeout);
-              }, 100);
-
-              this.communicationService.featuresUpdate$.emit({
-                feature: this.data.feature,
-                featuresId: this.data.featuresId,
-                total: this.data.total,
-                mode: EditFeatureMode.multipleEdit,
-                properties: newProperties
-              });
-            } else {
-              this.isSaveInProgress = false;
-              this.logger.warn('UpdateFeature response: ', response);
-              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
-            }
+          this.communicationService.featuresUpdate$.emit({
+            feature: this.data.feature,
+            featuresId: this.data.featuresId,
+            total: this.data.total,
+            mode: EditFeatureMode.multipleEdit,
+            properties: newProperties
           });
-    }
+        } else {
+          this.loadPercent = percent > 100 ? 100 : percent;
+        }
+      });
   }
 }
 
