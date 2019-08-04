@@ -349,17 +349,11 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     };
 
     this.dialog
-      .open(ConfirmDialogComponent, {width: '400px', data: data})
-      .afterClosed().pipe(filter(value => !!value))
-      .subscribe(() => {
-        const workspaceName = this.projectModel.crgProject.workspaceName;
-        this.tFeatureService
-          .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name)
-          .subscribe(() => {
-            const lastRequest = this.requestModel$.getValue();
-            this.updateTable(lastRequest);
-          });
-      });
+        .open(ConfirmDialogComponent, {width: '400px', data: data})
+        .afterClosed().pipe(filter(value => !!value))
+        .subscribe(() => {
+          this.batchDeleteFeatures();
+        });
   }
 
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
@@ -416,6 +410,54 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
             if (response.includes('<wfs:totalInserted>' + selectedFeatures.length + '</wfs:totalInserted>')) {
               this.loading = false;
               this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+            } else {
+              this.loading = false;
+              this.log.warn('attributes table', 'InsertFeature response: ', response);
+              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
+            }
+          });
+    }
+  }
+
+  private batchDeleteFeatures() {
+    this.showPercent = true;
+    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const selectedFeatures = this.attributeTable.selected;
+
+    this.loading = true;
+    if (selectedFeatures.length > this.BATCH_SIZE) {
+      const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
+      const onePartOf100 = 100 / countOfParts;
+
+      const result = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
+
+      let i = 0;
+      from(result)
+        .pipe(
+          concatMap(features => this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name)),
+        ).subscribe(value => {
+        i++;
+        const percent = Math.ceil(onePartOf100 * i);
+        if (i >= countOfParts) {
+          this.loadPercent = percent > 100 ? 100 : percent;
+          this.loading = false;
+          this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
+
+          this.updateTable(this.requestModel$.getValue());
+        } else {
+          this.loadPercent = percent > 100 ? 100 : percent;
+        }
+      });
+    } else {
+      this.tFeatureService
+          .deleteFeatures(selectedFeatures, workspaceName, this.layer.name)
+          .subscribe(response => {
+            this.loadPercent = 100;
+            if (response.includes('<wfs:totalDeleted>' + selectedFeatures.length + '</wfs:totalDeleted>')) {
+              this.loading = false;
+              this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
+
+              this.updateTable(this.requestModel$.getValue());
             } else {
               this.loading = false;
               this.log.warn('attributes table', 'InsertFeature response: ', response);
