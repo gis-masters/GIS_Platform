@@ -139,24 +139,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
       const workspaceName = this.projectsService.getCurrent().crgProject.workspaceName;
 
       if (this.data.mode === EditFeatureMode.single) {
-        this.transformFeatureService
-            .updateFeature(this.data.feature.id, workspaceName, this.featureDescription.tableName, newProperties)
-            .subscribe(response => {
-              this.isSaveInProgress = false;
-              if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
-                this.closeMe.emit(true);
-                this.snackBar.open('Сохранено', 'X', {duration: 3000});
-                this.communicationService.featuresUpdate$.emit({
-                  feature: this.data.feature,
-                  total: 1,
-                  mode: EditFeatureMode.single,
-                  properties: newProperties
-                });
-              } else {
-                this.logger.warn('UpdateFeature response: ', response);
-                this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
-              }
-            });
+        this.batchUpdateFeatures([this.data.feature.id], workspaceName, this.featureDescription.tableName, newProperties);
       } else {
         this.batchUpdateFeatures(this.data.featuresId, workspaceName, this.featureDescription.tableName, newProperties);
       }
@@ -207,26 +190,12 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     return result;
   }
 
-  private splitTo(arr, n): [] {
-    const plen = Math.ceil(arr.length / n);
-
-    return arr.reduce(function (p, c, i, a) {
-      if (i % plen === 0) {
-        p.push([]);
-      }
-
-      p[p.length - 1][i] = c;
-
-      return p;
-    }, []);
-  }
-
   private batchUpdateFeatures(featuresId: string[], geoserverName: string, tableName: string, newProperties: {}) {
     if (featuresId.length > this.BATCH_SIZE) {
       const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
       const onePartOf100 = 100 / countOfParts;
 
-      const result = this.splitTo(featuresId, countOfParts);
+      const result = this.transformFeatureService.splitListToParts(featuresId, countOfParts);
 
       let i = 0;
       from(result)
@@ -257,7 +226,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
           .updateFeatures(featuresId, geoserverName, tableName, newProperties)
           .subscribe(response => {
             this.loadPercent = 100;
-            if (response.includes('<wfs:totalUpdated>' + this.data.total + '</wfs:totalUpdated>')) {
+            if (response.includes('<wfs:totalUpdated>' + featuresId.length + '</wfs:totalUpdated>')) {
               const timeout = setTimeout(() => {
                 this.isSaveInProgress = false;
                 this.closeMe.emit(true);

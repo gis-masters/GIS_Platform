@@ -25,6 +25,7 @@
 
   <div class="crg-attr-content">
     <div *ngIf="loading" class="fiz-loading-shade">
+      <div *ngIf="showPercent" class="inner-text">{{loadPercent}}%</div>
       <mat-spinner></mat-spinner>
     </div>
 

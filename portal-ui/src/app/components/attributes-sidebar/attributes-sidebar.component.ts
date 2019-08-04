@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, from, Observable, of, Subject} from 'rxjs';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
-import {debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
+import {concatMap, debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {
   AfterViewInit,
@@ -70,13 +70,18 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   };
   isSelectAll = false;
 
+  loadPercent = 0;
+  showPercent = true;
+
   private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
   private projectModel: ProjectModel;
 
+  private BATCH_SIZE = 200;
+
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
-              private transformFeatureService: TransformFeatureService,
+              private tFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
               private rulesService: DataSchemaService,
@@ -134,6 +139,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
   updateTable(requestModel?: RequestModel) {
     this.loading = true;
+    this.showPercent = false;
     this.wfsService.getFeatures(this.layer.complexName, requestModel)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((fCollection: WfsFeatureCollection) => {
@@ -264,6 +270,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       clonedRequestModel.page = undefined;
 
       this.loading = true;
+      this.showPercent = false;
       this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(fCollection => {
@@ -305,14 +312,9 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         .pipe(
           filter(value => this.checkIsLayersExist(value)),
           flatMap((suitableLayers: CrgLayer[]) => this.openEditDialog('Копирование', suitableLayers)),
-          flatMap((selectedLayer: CrgLayer) => this.makeInsert(selectedLayer)),
           takeUntil(this.unsubscribe$)
-        ).subscribe(result => {
-          if (result.includes('<wfs:totalInserted>' + this.attributeTable.selected.length + '</wfs:totalInserted>')) {
-            this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
-          } else {
-            this.snackBar.open('Не удалось скопировать', 'X', {duration: 6000});
-          }
+        ).subscribe((selectedLayer: CrgLayer) => {
+          this.batchInsertFeatures(selectedLayer);
         });
   }
 
@@ -351,7 +353,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
       .afterClosed().pipe(filter(value => !!value))
       .subscribe(() => {
         const workspaceName = this.projectModel.crgProject.workspaceName;
-        this.transformFeatureService
+        this.tFeatureService
           .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name)
           .subscribe(() => {
             const lastRequest = this.requestModel$.getValue();
@@ -375,14 +377,58 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   private makeInsert(selectedLayer: CrgLayer): Observable<string> {
     const workspaceName = this.projectModel.crgProject.workspaceName;
 
-    return this.transformFeatureService
+    return this.tFeatureService
                .insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name);
+  }
+
+  private batchInsertFeatures(selectedLayer: CrgLayer) {
+    this.showPercent = true;
+    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const selectedFeatures = this.attributeTable.selected;
+
+    this.loading = true;
+    if (selectedFeatures.length > this.BATCH_SIZE) {
+      const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
+      const onePartOf100 = 100 / countOfParts;
+
+      const result = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
+
+      let i = 0;
+      from(result)
+        .pipe(
+          concatMap(features => this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)),
+        ).subscribe(value => {
+        i++;
+        const percent = Math.ceil(onePartOf100 * i);
+        if (i >= countOfParts) {
+          this.loadPercent = percent > 100 ? 100 : percent;
+          this.loading = false;
+          this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+        } else {
+          this.loadPercent = percent > 100 ? 100 : percent;
+        }
+      });
+    } else {
+      this.tFeatureService
+          .insertFeatures(selectedFeatures, workspaceName, selectedLayer.name)
+          .subscribe(response => {
+            this.loadPercent = 100;
+            if (response.includes('<wfs:totalInserted>' + selectedFeatures.length + '</wfs:totalInserted>')) {
+              this.loading = false;
+              this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+            } else {
+              this.loading = false;
+              this.log.warn('attributes table', 'InsertFeature response: ', response);
+              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
+            }
+          });
+    }
   }
 
   private makeDelete(): Observable<string> {
     const workspaceName = this.projectModel.crgProject.workspaceName;
 
-    return this.transformFeatureService
+    return this.tFeatureService
                .deleteFeatures(this.attributeTable.selected, workspaceName, this.layer.name);
   }
 
