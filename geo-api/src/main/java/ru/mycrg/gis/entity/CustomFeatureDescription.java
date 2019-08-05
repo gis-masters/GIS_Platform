@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "custom_rules")
-public class CustomRule {
+public class CustomFeatureDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class CustomRule {
     @Type(type="text")
     private String classRule;
 
-    public CustomRule() {}
+    public CustomFeatureDescription() {}
 
     public long getId() {
         return id;

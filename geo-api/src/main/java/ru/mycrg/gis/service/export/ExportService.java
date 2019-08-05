@@ -17,9 +17,9 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.fgistp.FeatureDescription;
-import ru.mycrg.gis.service.fgistp.MapperUtil;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
+import ru.mycrg.gis.dto.FeatureDescription;
+import ru.mycrg.gis.service.dataSchema.MapperUtil;
+import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -33,12 +33,12 @@ public class ExportService extends BaseProcessService {
     private static Logger log = LoggerFactory.getLogger(ExportService.class);
 
     private final MqSender mqSender;
-    private final FgistpRuleService ruleService;
+    private final DataSchemaService ruleService;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     public ExportService(MqSender mqSender,
-                         FgistpRuleService ruleService,
+                         DataSchemaService ruleService,
                          ProcessRepository processRepository,
                          ProjectService projectService,
                          WsNotificationService wsNotificationService) {
@@ -67,7 +67,7 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            FeatureDescription ruleByClassName = ruleService.getRuleByName(layerName);
+            FeatureDescription ruleByClassName = ruleService.getDescriptionByName(layerName);
 
             // TODO: Может не плеваться 404 если один из слоев ненайден а просто не добавлять его.
             // Можно сразу выставить в процессе эту фичу как ошибочную

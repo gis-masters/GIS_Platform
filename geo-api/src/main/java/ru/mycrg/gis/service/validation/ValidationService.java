@@ -14,9 +14,9 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.fgistp.FeatureDescription;
-import ru.mycrg.gis.service.fgistp.MapperUtil;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
+import ru.mycrg.gis.dto.FeatureDescription;
+import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -29,20 +29,20 @@ public class ValidationService extends BaseProcessService {
     private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
     private final MqSender mqSender;
-    private final FgistpRuleService ruleService;
+    private final DataSchemaService schemaService;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
-                             FgistpRuleService ruleService,
+                             DataSchemaService schemaService,
                              ProjectService projectService,
                              ProcessRepository processRepository,
                              WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
-        this.ruleService = ruleService;
+        this.schemaService = schemaService;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -56,10 +56,6 @@ public class ValidationService extends BaseProcessService {
      * @param request   Список ресурсов {@link ValidationRequestDto}
      */
     public Process validate(Long orgId, Long projectId, Principal principal, ValidationRequestDto request) {
-        if (ruleService.isCacheEmpty()) {
-            ruleService.updateRules();
-        }
-
         ProjectModel projectById = projectService.getProject(orgId, projectId);
         Process process = create(
                 principal.getName(),
@@ -70,7 +66,7 @@ public class ValidationService extends BaseProcessService {
         ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
 
         request.getLayers().forEach(layerName -> {
-            FeatureDescription featureDescription = ruleService.getRuleByName(layerName);
+            FeatureDescription featureDescription = schemaService.getDescriptionByName(layerName);
             payload.addFeatureProjections(MapperUtil.mapFeatureDescriptionToDto(featureDescription));
             payload.addResourceProjections(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getWorkspaceName(), layerName));

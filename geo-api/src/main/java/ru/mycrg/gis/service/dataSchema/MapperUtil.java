@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.service.dataSchema;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +12,7 @@ import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.*;
+import ru.mycrg.gis.dto.FeatureDescription;
 import ru.mycrg.gis.entity.XsdRule;
 
 import java.io.IOException;

@@ -10,7 +10,7 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.fgistp.MapperUtil;
+import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.util.HashSet;
 import java.util.Optional;

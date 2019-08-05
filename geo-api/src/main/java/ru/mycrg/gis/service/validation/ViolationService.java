@@ -15,10 +15,9 @@ import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.service.ProjectService;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
+import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +30,13 @@ public class ViolationService {
 
     private static Logger log = LoggerFactory.getLogger(ViolationService.class);
 
-    private final FgistpRuleService ruleService;
+    private final DataSchemaService schemaService;
     private final ProjectService projectService;
     private final CrgProperties crgProperties;
 
-    public ViolationService(CrgProperties crgProperties, FgistpRuleService ruleService, ProjectService projectService) {
+    public ViolationService(CrgProperties crgProperties, DataSchemaService schemaService, ProjectService projectService) {
         this.crgProperties = crgProperties;
-        this.ruleService = ruleService;
+        this.schemaService = schemaService;
         this.projectService = projectService;
     }
 
@@ -53,11 +52,7 @@ public class ViolationService {
      */
     public ValidationResponseDto getViolations(Long orgId, Long projectId, String layerName, int pIndex, int pSize)
             throws CrgFailedException {
-        if (ruleService.isCacheEmpty()) {
-            ruleService.updateRules();
-        }
-
-        ruleService.checkFeatureByName(layerName);
+        schemaService.checkFeatureByName(layerName);
 
         ProjectModel projectModel = projectService.getProject(orgId, projectId);
 
@@ -102,10 +97,6 @@ public class ViolationService {
      */
     public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, ValidationRequestDto request) {
         List<ValidationInfo> result = new ArrayList<>();
-
-        if (ruleService.isCacheEmpty()) {
-            ruleService.updateRules();
-        }
 
         ProjectModel projectModel = projectService.getProject(orgId, projectId);
 

@@ -8,9 +8,9 @@ import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
-import ru.mycrg.gis.service.fgistp.FeatureDescription;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRuleService;
-import ru.mycrg.gis.service.fgistp.rules.FgistpRules;
+import ru.mycrg.gis.dto.FeatureDescription;
+import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.gis.dto.DataSchema;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class FgistpRuleServiceTest {
 
     @InjectMocks
-    private FgistpRuleService ruleService;
+    private DataSchemaService ruleService;
 
     @Before
     public void setUp() {
@@ -29,7 +29,7 @@ public class FgistpRuleServiceTest {
 
     @Test(expected = CrgNotFoundException.class)
     public void shouldThrowException() {
-        assertNull(ruleService.getRuleByName("someFeatureName"));
+        assertNull(ruleService.getDescriptionByName("someFeatureName"));
     }
 
     @Test
@@ -41,11 +41,11 @@ public class FgistpRuleServiceTest {
         electricPointFeature.setName(epFeatureName);
         electricPointFeature.setOriginName(epFeatureName);
 
-        FgistpRules fgistpRules = new FgistpRules();
-        fgistpRules.addComplexType(electricPointFeature);
+        DataSchema dataSchema = new DataSchema();
+        dataSchema.addFeatureDescription(electricPointFeature);
 
-        assertTrue(fgistpRules.getFeatureTypeByName(epFeatureName).isPresent());
-        assertFalse(fgistpRules.getFeatureTypeByName(notExistName).isPresent());
+        assertTrue(dataSchema.getFeatureTypeByName(epFeatureName).isPresent());
+        assertFalse(dataSchema.getFeatureTypeByName(notExistName).isPresent());
     }
 
     @Test
@@ -56,13 +56,13 @@ public class FgistpRuleServiceTest {
         HydroFeature.setName(featureName);
         HydroFeature.setOriginName(featureName);
 
-        FgistpRules fgistpRules = new FgistpRules();
-        fgistpRules.addComplexType(HydroFeature);
+        DataSchema dataSchema = new DataSchema();
+        dataSchema.addFeatureDescription(HydroFeature);
 
-        assertFalse(fgistpRules.getFeatureTypeByName("wrongName").isPresent());
-        assertTrue(fgistpRules.getFeatureTypeByName("hydro_point").isPresent());
-        assertTrue(fgistpRules.getFeatureTypeByName("hydro_line").isPresent());
-        assertTrue(fgistpRules.getFeatureTypeByName("hydro").isPresent());
+        assertFalse(dataSchema.getFeatureTypeByName("wrongName").isPresent());
+        assertTrue(dataSchema.getFeatureTypeByName("hydro_point").isPresent());
+        assertTrue(dataSchema.getFeatureTypeByName("hydro_line").isPresent());
+        assertTrue(dataSchema.getFeatureTypeByName("hydro").isPresent());
     }
 
     @Test
@@ -80,10 +80,10 @@ public class FgistpRuleServiceTest {
         naturalRiskZone.setTableName("naturalriskzone");
         naturalRiskZone.setProperties(Arrays.asList(geomProperty, sProperty));
 
-        FgistpRules targetRules = new FgistpRules();
-        targetRules.addComplexType(naturalRiskZone);
+        DataSchema targetRules = new DataSchema();
+        targetRules.addFeatureDescription(naturalRiskZone);
 
-        FgistpRules resultRules = ruleService.splitRulesByGeometry(targetRules);
+        DataSchema resultRules = ruleService.splitRulesByGeometry(targetRules);
 
         // Common assert
         assertNotNull(resultRules);
@@ -133,10 +133,10 @@ public class FgistpRuleServiceTest {
         electricLine.setTableName("electricline");
         electricLine.setProperties(Arrays.asList(geomProperty, sProperty));
 
-        FgistpRules targetRules = new FgistpRules();
-        targetRules.addComplexType(electricLine);
+        DataSchema targetRules = new DataSchema();
+        targetRules.addFeatureDescription(electricLine);
 
-        FgistpRules resultRules = ruleService.splitRulesByGeometry(targetRules);
+        DataSchema resultRules = ruleService.splitRulesByGeometry(targetRules);
 
         // Common assert
         assertNotNull(resultRules);

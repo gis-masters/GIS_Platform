@@ -13,13 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class GmlStorageService {
+public class StorageService {
 
-    private static Logger log = LoggerFactory.getLogger(GmlStorageService.class);
+    private static Logger log = LoggerFactory.getLogger(StorageService.class);
 
     private final Path exportStoragePath;
 
-    public GmlStorageService(CrgProperties properties) {
+    public StorageService(CrgProperties properties) {
         this.exportStoragePath = Paths.get(properties.getExportStoragePath())
                 .toAbsolutePath()
                 .normalize();

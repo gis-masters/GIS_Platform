@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.fgistp;
+package ru.mycrg.gis.dto;
 
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 

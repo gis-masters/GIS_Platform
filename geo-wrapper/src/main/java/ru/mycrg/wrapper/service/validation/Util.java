@@ -4,14 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.common.ObjectValidationResult;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Util {
@@ -31,33 +27,6 @@ public class Util {
         }
 
         return "";
-    }
-
-    public static List<ObjectValidationResult> mapToViolations(List<Map<String, Object>> violations) throws IOException {
-        List<ObjectValidationResult> results = new ArrayList<>();
-
-        int i = 0;
-        while (i < violations.size()) {
-            String violationsAsString = Util.getViolations(violations.get(i), "violations");
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectValidationResult value = mapper.readValue(violationsAsString, ObjectValidationResult.class);
-
-            results.add(value);
-
-            i++;
-        }
-
-        return results;
-    }
-
-    @NotNull
-    public static String getViolations(Map<String, Object> stringObjectMap, String violations_key) {
-        Object o = stringObjectMap.get(violations_key);
-
-        return o != null
-                ? o.toString()
-                : "";
     }
 
     public static JsonNode convertToJson(ObjectValidationResult object) {

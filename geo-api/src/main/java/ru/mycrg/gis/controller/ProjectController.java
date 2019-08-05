@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/organizations/{orgId}/projects")
-public class ProjectController {
+public class ProjectController extends BaseController {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
@@ -166,19 +166,6 @@ public class ProjectController {
         List<ValidationInfo> result = violationService.getShortInfo(orgId, projectId, request);
 
         return ResponseEntity.ok(result);
-    }
-
-    @NotNull
-    private HttpHeaders createHeadersWithLinkToTask(Long orgId, Process process) {
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/organizations/{orgId}/tasks/{processId}")
-                .buildAndExpand(orgId, process.getId())
-                .toUri();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(location);
-
-        return headers;
     }
 
 }

@@ -1,22 +1,20 @@
-package ru.mycrg.gis.service.fgistp.rules;
-
-import ru.mycrg.gis.service.fgistp.FeatureDescription;
+package ru.mycrg.gis.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FgistpRules {
+public class DataSchema {
 
     private List<FeatureDescription> featureDescriptions = new ArrayList<>();
 
-    public FgistpRules() {}
+    public DataSchema() {}
 
-    public FgistpRules(List<FeatureDescription> featureDescriptions) {
+    public DataSchema(List<FeatureDescription> featureDescriptions) {
         this.featureDescriptions = featureDescriptions;
     }
 
-    public void addComplexType(FeatureDescription featureDescription) {
+    public void addFeatureDescription(FeatureDescription featureDescription) {
         featureDescriptions.add(featureDescription);
     }
 

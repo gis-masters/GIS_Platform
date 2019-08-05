@@ -19,12 +19,10 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.*;
-import ru.mycrg.gis.service.fgistp.MapperUtil;
+import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.io.IOException;
 import java.security.Principal;
-
-import static ru.mycrg.common.enums.ProcessStatus.*;
 
 @Service
 public class ImportService extends BaseProcessService {
