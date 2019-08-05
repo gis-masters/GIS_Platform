@@ -20,7 +20,7 @@ export class DataSchemaService {
               private serverProp: ServerPropertiesService) {
   }
 
-  getRules(): Observable<FeatureXsdDefinition> {
+  getFeaturesDefinition(): Observable<FeatureXsdDefinition> {
     if (this.featuresXsdDefinition.xsdFeatures && this.featuresXsdDefinition.xsdFeatures.length) {
       this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
@@ -33,7 +33,7 @@ export class DataSchemaService {
                        this.featuresXsdDefinition.xsdFeatures = respone.featureDescriptions;
 
                      } else {
-                       this.logger.warn('getRules response is: ', respone);
+                       this.logger.warn('getFeaturesDefinition response is: ', respone);
                        this.featuresXsdDefinition = {xsdFeatures: []};
                      }
 
@@ -223,6 +223,7 @@ export interface FeatureDescription {
   properties: SimpleProperty[];
   tableName: string;
   customRuleFunction?: any;
+  matchingCounter?: number;
 }
 
 export interface SimpleProperty {

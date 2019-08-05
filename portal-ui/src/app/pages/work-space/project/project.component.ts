@@ -50,7 +50,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.ruleService.getRules().subscribe();
+    this.ruleService.getFeaturesDefinition().subscribe();
     this.projectsService.fetchProjects();
 
     this.projectsService.projects$

@@ -6,7 +6,8 @@
     <div class="col-4 p-0 align-self-center"><h6>Сопоставте слой</h6></div>
     <mat-form-field class="col-8 p-0">
       <mat-select placeholder="Целевой слой" [disabled]="featureDescriptions.length === 0">
-        <mat-option *ngFor="let fDescription of featureDescriptions | geometry:importLayer" [value]="fDescription.name"
+        <mat-option *ngFor="let fDescription of featureDescriptions | geometry:importLayer | bestMatching:importLayer"
+                    [value]="fDescription.name"
                     (click)="entityTypeSelected(fDescription.tableName)">
           <span style="font-size: smaller">({{fDescription.tableName}})</span> {{fDescription.title}}
         </mat-option>

@@ -93,7 +93,7 @@ export class LayersService {
 
     return combineLatest(
       of(layers),
-      this.ruleService.getRules()
+      this.ruleService.getFeaturesDefinition()
     );
   }
 

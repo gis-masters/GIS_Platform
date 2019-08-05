@@ -29,12 +29,12 @@ export class MappingCardComponent implements OnInit, OnChanges {
     this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
 
-    this.ruleService.getRules()
+    this.ruleService.getFeaturesDefinition()
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
           if (featureXsdDefinition.xsdFeatures) {
             this.featureDescriptions = featureXsdDefinition.xsdFeatures;
           } else {
-            this.logger.warn('Empty rules? ', featureXsdDefinition);
+            this.logger.warn('Empty definition? ', featureXsdDefinition);
           }
         });
   }

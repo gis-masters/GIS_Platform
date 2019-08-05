@@ -43,7 +43,8 @@ import {ViewFeaturesComponent} from './components/view-features/view-features.co
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
 import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';
 import {TableFilterComponent} from './components/table-filter/table-filter.component';
-import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
+import {CopyFeaturesDialogComponent} from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
+import {BestMatchingPipe} from './pipes/best-matching.pipe';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { CopyFeaturesDialogComponent } from './components/dialogs/copy-features-
     AttributesSidebarComponent,
     TableFilterComponent,
     CopyFeaturesDialogComponent,
+    BestMatchingPipe,
   ],
   imports: [
     AppRoutingModule,
