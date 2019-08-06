@@ -22,4 +22,4 @@ crg-options:
   geoserver-user: admin@mail.ru
   geoserver-password: geoserver
   exportStoragePath: /opt/export/
-  userServiceName: default
+  userServiceName: postgres_db_user_service

@@ -108,6 +108,7 @@ services:
       CRG_OPTIONS_GIS_DB_URL: jdbc:postgresql://postgis:5432/
       CRG_OPTIONS_GIS_DB_USER: $CRG_USER
       CRG_OPTIONS_GIS_DB_PASSWORD: $DB_PASS
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://geo-api:8088/actuator/health"]
       interval: 30s
@@ -142,7 +143,8 @@ services:
       CRG_OPTIONS_GEOSERVER_HOST: gateway:8100
       CRG_OPTIONS_GEOSERVER_USER: $GEOSERVER_USER
       CRG_OPTIONS_GEOSERVER_PASSWORD: $GEOSERVER_PASSWORD
-      CRG_OPTIONS_POSTGIS_HOST: postgis:5432
+      CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
     depends_on:
       - rabbitmq
       - geo-api

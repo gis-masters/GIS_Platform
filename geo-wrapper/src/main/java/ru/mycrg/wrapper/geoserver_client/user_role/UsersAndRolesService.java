@@ -42,6 +42,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         String url = String.format("http://%s/geoserver/rest/security/usergroup/service/%s/users",
                 geoserverHost(), userServiceName());
 
+        log.debug("createUserUrl: {}", url);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())
                 .url(url)
