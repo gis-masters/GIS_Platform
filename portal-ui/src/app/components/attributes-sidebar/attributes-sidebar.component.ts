@@ -310,7 +310,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   copyObjects() {
     this.prepareSuitableLayers()
         .pipe(
-          filter(value => this.checkIsLayersExist(value)),
+          filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
           flatMap((suitableLayers: CrgLayer[]) => this.openEditDialog('Копирование', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
@@ -321,7 +321,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   moveObjects() {
     this.prepareSuitableLayers()
         .pipe(
-          filter(value => this.checkIsLayersExist(value)),
+          filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
           flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
@@ -368,6 +368,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   private batchInsertFeatures(selectedLayer: CrgLayer) {
+    if (!selectedLayer) {
+      return;
+    }
+
     this.loading = true;
     this.showPercent = true;
     this.loadPercent = 0;
@@ -397,6 +401,10 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
   }
 
   private batchReplaceFeatures(selectedLayer: CrgLayer) {
+    if (!selectedLayer) {
+      return;
+    }
+
     this.loading = true;
     this.showPercent = true;
     this.loadPercent = 0;
@@ -657,8 +665,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     return result;
   }
 
-  private checkIsLayersExist(value) {
-    if (!!value.length) {
+  private isSuitableLayersExist(suitableLayers) {
+    if (!!suitableLayers.length) {
       return true;
     } else {
       this.snackBar.open('Нет подходящих слоев', 'X', {duration: 6000});
