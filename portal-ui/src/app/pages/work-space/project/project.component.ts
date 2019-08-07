@@ -85,6 +85,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     this.projectsService
         .create(this.projectName)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((process: ProcessResponse) => {
             this.isEditMode = false;
             this.projectsService.fetchProjects();
@@ -131,9 +132,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
         .open(ConfirmDialogComponent, {width: '400px', data: data})
         .afterClosed().subscribe(result => {
           if (result) {
-            this.projectsService
-              .delete(pItem.id)
-              .subscribe(response => this.projectsService.fetchProjects());
+            this.projectsService.delete(pItem.id)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(response => this.projectsService.fetchProjects());
           }
         });
   }
@@ -146,6 +147,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
       }
 
       this.projectsService.getById(processResponse.extra.id)
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe((project: CrgProject) => {
             if (project.status === ProcessStatus.DONE) {
               this.projectsService.fetchProjects();

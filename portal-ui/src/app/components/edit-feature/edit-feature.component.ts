@@ -7,10 +7,10 @@ import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, DataSchemaService, SimpleProperty, FeatureDescription} from '../../services/crg/data-schema.service';
-import {from} from 'rxjs';
-import {concatMap} from 'rxjs/operators';
+import {from, Subject} from 'rxjs';
+import {concatMap, takeUntil} from 'rxjs/operators';
 import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
 
 @Component({
@@ -18,7 +18,7 @@ import {FeaturePropertyValidators, ValueType} from '../../services/util/FeatureP
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent implements OnChanges, OnInit {
+export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
@@ -31,6 +31,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
   private featureDescription: FeatureDescription;
   private BATCH_SIZE = 200;
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private snackBar: MatSnackBar,
@@ -46,6 +47,7 @@ export class EditFeatureComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.sideBarManager.currentState$
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
           const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
           if (attrSidebarState === ActionType.OPEN) {
@@ -118,6 +120,11 @@ export class EditFeatureComponent implements OnChanges, OnInit {
               }
             });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   editFeature() {
@@ -200,7 +207,8 @@ export class EditFeatureComponent implements OnChanges, OnInit {
     from(result)
       .pipe(
         concatMap(features => this.transformFeatureService.updateFeatures(features, geoserverName, tableName, newProperties)),
-      ).subscribe(value => {
+        takeUntil(this.unsubscribe$)
+      ).subscribe(() => {
         i++;
         const percent = Math.ceil(onePartOf100 * i);
         if (i >= countOfParts) {

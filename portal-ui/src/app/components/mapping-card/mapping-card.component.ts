@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {
   FeatureXsdDefinition,
   DataSchemaService,
@@ -7,18 +7,22 @@ import {
   FeatureDescription
 } from '../../services/crg/data-schema.service';
 import {AS_IS_TYPE, ImportService, ImportLayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-mapping-card',
   templateUrl: './mapping-card.component.html',
   styleUrls: ['./mapping-card.component.css']
 })
-export class MappingCardComponent implements OnInit, OnChanges {
+export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() importLayer: ImportLayerItem;
 
   featureDescriptions: FeatureDescription[] = [];
   typeProperties: SimpleProperty[] = [];
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private ruleService: DataSchemaService,
@@ -30,6 +34,7 @@ export class MappingCardComponent implements OnInit, OnChanges {
     this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
 
     this.ruleService.getFeaturesDefinition()
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
           if (featureXsdDefinition.xsdFeatures) {
             this.featureDescriptions = featureXsdDefinition.xsdFeatures;
@@ -46,6 +51,11 @@ export class MappingCardComponent implements OnInit, OnChanges {
         this.importLayer = simpleChange.currentValue;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   entityTypeSelected(selected: string) {

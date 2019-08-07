@@ -1,8 +1,8 @@
-import {Subject} from 'rxjs';
+import {Subject, throwError} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {debounceTime, filter, takeUntil} from 'rxjs/operators';
+import {catchError, debounceTime, filter, flatMap, takeUntil} from 'rxjs/operators';
 import {ImportFlow} from '../../../services/geoserver/import/importFlow';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
@@ -53,6 +53,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.importService
         .getAllImportLayers(true)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((importLayers: ImportLayer[]) => {
           this.importLayers = importLayers
               .map((layer: ImportLayer) => {
@@ -101,17 +102,16 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.projectsService
         .doWorkImport(workImport)
-        .subscribe((response: any) => {
-          this.workspaceService
-              .publishLayers(workImport)
-              .subscribe(value => {
-                this.isWorkImportInited = false;
-                this.isImportFinished = true;
+        .pipe(
+          flatMap(() => this.workspaceService.publishLayers(workImport)),
+          flatMap(() => this.layersService.fetchLayers(workImport.projectModel.crgProject)),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((response) => {
+          this.isWorkImportInited = false;
+          this.isImportFinished = true;
 
-                // this.addStyle(workImport);
-              }, error1 => {
-                this.isWorkImportInited = false;
-              });
+          // this.addStyle(workImport);
         }, errorResponse => {
           this.logger.info('ERROR: ', errorResponse);
 
@@ -119,7 +119,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
   }
 
-  // private addStyle(workImport: WorkImport) {
+// private addStyle(workImport: WorkImport) {
   //   workImport.tasks.forEach((task: TaskImport) =>
   //     this.stylesService
   //         .getByName(task.workTableName)

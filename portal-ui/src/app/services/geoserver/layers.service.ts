@@ -51,7 +51,9 @@ export class LayersService {
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
         map(([layers, layersDescription]) => this.mergeWithRules(layers)),
-        tap(this._layers$)
+        tap((result) => {
+          this._layers$.next(result);
+        })
       );
   }
 

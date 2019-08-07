@@ -1,22 +1,31 @@
 import {saveAs} from 'file-saver';
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
 import {WsMessageType} from '../../services/ws.service';
 import {DownloadFileService} from '../../services/download-file.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-progress-item',
   templateUrl: './progress-item.component.html',
   styleUrls: ['./progress-item.component.css']
 })
-export class ProgressItemComponent {
+export class ProgressItemComponent implements OnDestroy {
 
   @Input() event: IEvent;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private fileService: DownloadFileService,
               private eventService: EventService) {
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   getDescription(): string {
@@ -63,6 +72,7 @@ export class ProgressItemComponent {
 
     const fileName = exportWsMsg.payload.split('/')[3];
     this.fileService.download(fileName)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => {
           const blob = new Blob([data], {type: 'text/xml'});
 

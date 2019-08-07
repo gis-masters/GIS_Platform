@@ -1,8 +1,8 @@
 import {fromEvent, Subject} from 'rxjs';
 import {FilterEvent} from '../../services/models/requestModel';
 import {SimpleProperty} from '../../services/crg/data-schema.service';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {MatSelectChange} from '@angular/material';
 
 @Component({
@@ -10,7 +10,7 @@ import {MatSelectChange} from '@angular/material';
   templateUrl: './table-filter.component.html',
   styleUrls: ['./table-filter.component.css']
 })
-export class TableFilterComponent implements AfterViewInit {
+export class TableFilterComponent implements AfterViewInit, OnDestroy {
 
   @Input() property: SimpleProperty;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
@@ -18,18 +18,19 @@ export class TableFilterComponent implements AfterViewInit {
 
   selectionChangeEvent$: Subject<any> = new Subject<any>();
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor() {
   }
 
   ngAfterViewInit(): void {
-    // console.log('prop:', this.property);
-
     if (this.filterInput) {
       fromEvent(this.filterInput.nativeElement, 'keyup')
         .pipe(
           map((e: any) => e.target.value),
           debounceTime(500),
-          distinctUntilChanged()
+          distinctUntilChanged(),
+          takeUntil(this.unsubscribe$)
         )
         .subscribe(value => {
           if (!!value) {
@@ -39,6 +40,11 @@ export class TableFilterComponent implements AfterViewInit {
           }
         });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   isInputProperties(valueType: string) {

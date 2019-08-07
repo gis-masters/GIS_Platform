@@ -165,9 +165,9 @@ export class FeaturePropertyValidators {
       return;
     }
 
-    // TODO: implement this
-    if (value.toString().length > property.fractionDigits) {
-      errors['totalDigits'] = 'Превышена допустимая длинна числа. Допустимо: ' + property.fractionDigits + ' символов';
+    const decimal = value.toString().replace(',', '.').split('.')[1];
+    if (decimal && decimal.length > property.fractionDigits) {
+      errors['totalDigits'] = 'Превышена допустимая длинна дробной части числа. Допустимо: ' + property.fractionDigits + ' символов';
     }
   }
 

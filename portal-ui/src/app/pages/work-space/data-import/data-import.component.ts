@@ -1,19 +1,19 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
 import {CommunicationService} from '../../../services/communication.service';
 import {ImportService, ImportTasks, InputStartResponseDto} from '../../../services/geoserver/import/import.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-data-import',
   templateUrl: './data-import.component.html',
   styleUrls: ['./data-import.component.css']
 })
-export class DataImportComponent {
-  private WAIT_SERVER_RESPONSE_TIMER = 120000;
-  private CHECK_STATUS_INTERVAL = 500;
+export class DataImportComponent implements OnDestroy {
 
   isImportInited = false;
   isUploadComplete = false;
@@ -24,12 +24,21 @@ export class DataImportComponent {
 
   public hasBaseDropZoneOver = false;
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+  private WAIT_SERVER_RESPONSE_TIMER = 120000;
+  private CHECK_STATUS_INTERVAL = 500;
+
   constructor(private logger: NGXLogger,
               private router: Router,
               private snackBar: MatSnackBar,
               private importService: ImportService,
               private communicationService: CommunicationService) {
     this.communicationService.stepperEvents.emit(2);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   public fileOverBase(e: any): void {
@@ -42,6 +51,7 @@ export class DataImportComponent {
     this.isImportInited = true;
     this.importService
         .initScratchImport()
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           (data: InputStartResponseDto) => this.addTask(data),
           errorResponse => this.handleError('Start import failed', errorResponse)
@@ -70,6 +80,7 @@ export class DataImportComponent {
     this.importService.importFlow.scratch_import = data;
     this.importService
         .addTask(data.import.href, this.uploader.queue[0]._file)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           (tasks: ImportTasks) => this.handleTask(tasks),
           errorResponse => this.handleError('Add task failed', errorResponse)
@@ -79,6 +90,7 @@ export class DataImportComponent {
   private uploadToScratch() {
     this.importService
         .startScratchUpload()
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           successResponse => this.handleUpload(),
           errorResponse => {
@@ -108,6 +120,7 @@ export class DataImportComponent {
     const importStatusChecker = setInterval(() => {
       this.importService
           .checkImportStatus(this.importService.importFlow.scratch_import.import.href)
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe(
             successResponse => {
               if (successResponse.import.state === 'COMPLETE') {

@@ -35,8 +35,10 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
     this.log.debug('setUp', 'WorkspaceComponent constructor');
 
     this.eventService.events$
-        .pipe(filter(value => !!value))
-        .subscribe((events: IEvent[]) => this.notificationCounter = events.length);
+        .pipe(
+          filter(value => !!value),
+          takeUntil(this.unsubscribe$)
+        ).subscribe((events: IEvent[]) => this.notificationCounter = events.length);
 
     this.communicationService.sidebarManager
         .pipe(
@@ -55,15 +57,17 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      const userModel = data['orgInfo'];
-      if (userModel) {
-        this.log.info('organization', 'userModel = ', userModel);
+    this.route.data
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(data => {
+          const userModel = data['orgInfo'];
+          if (userModel) {
+            this.log.info('organization', 'userModel = ', userModel);
 
-        this.userModel = userModel;
-        this.storageService.saveUserModel(userModel);
-      }
-    });
+            this.userModel = userModel;
+            this.storageService.saveUserModel(userModel);
+          }
+        });
   }
 
   ngOnDestroy(): void {

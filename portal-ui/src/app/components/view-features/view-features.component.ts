@@ -5,15 +5,17 @@ import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {DataSchemaService} from '../../services/crg/data-schema.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-view-features',
   templateUrl: './view-features.component.html',
   styleUrls: ['./view-features.component.css']
 })
-export class ViewFeaturesComponent implements OnChanges, OnInit {
+export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() data: ViewFeaturesData;
 
@@ -28,6 +30,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
   pageInfo: Pageable = {
     pageSize: 25,
   };
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
@@ -48,6 +52,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
     }
 
     this.sideBarManager.currentState$
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
           const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
           if (attrSidebarState === ActionType.OPEN) {
@@ -75,6 +80,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit {
         }
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   switchMode() {

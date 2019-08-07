@@ -1,18 +1,20 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {LocalStorageService} from '../../services/local-storage.service';
 import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   isWrongPassword = false;
   isUserDisabled = false;
 
@@ -20,6 +22,8 @@ export class LoginComponent {
     username: [null, [Validators.required, Validators.email]],
     password: [null, Validators.required],
   });
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private fb: FormBuilder,
               private http: HttpClient,
@@ -29,6 +33,11 @@ export class LoginComponent {
               private logger: NGXLogger,
               private router: Router) {
     this.authService.validateAuth();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onSubmit() {
@@ -42,6 +51,7 @@ export class LoginComponent {
       this.isUserDisabled = false;
 
       this.authService.authenticate(credentials)
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe((authModel: AuthModel) => {
             this.logger.info('Authenticate success');
 

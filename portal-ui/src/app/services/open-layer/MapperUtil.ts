@@ -10,8 +10,8 @@ export class MapperUtil {
    * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
    */
   public static mapWfsFeatureToFeature(wfsFeature: WfsFeature): Feature | undefined {
-    if (!wfsFeature || !wfsFeature.geometry) {
-      console.warn('Incorrect wfsFeature', wfsFeature);
+    if (!wfsFeature.geometry) {
+      console.warn('Where is geometry???', wfsFeature);
       return;
     }
 

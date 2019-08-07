@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {debounceTime} from 'rxjs/operators';
+import {debounceTime, takeUntil} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ValidationService} from '../../services/crg/validation.service';
@@ -8,15 +8,16 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../services/communication.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {EditFeatureItem, DataSchemaService, FeatureDescription} from '../../services/crg/data-schema.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-edit-bug-object',
   templateUrl: './edit-bug-object.component.html',
   styleUrls: ['./edit-bug-object.component.css']
 })
-export class EditBugObjectComponent implements OnChanges, OnInit {
+export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() data: ObjectDto[];
   @Output() closeMe = new EventEmitter<boolean>();
@@ -32,6 +33,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
   objectValidationResult: string[];
 
   private object: ObjectDto;
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
@@ -48,7 +50,10 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
     this.editFeatureForm = this.formBuilder.group({});
 
     this.editFeatureForm.valueChanges
-        .pipe(debounceTime(100))
+        .pipe(
+          debounceTime(100),
+          takeUntil(this.unsubscribe$)
+        )
         .subscribe(val => this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureDescription));
   }
 
@@ -66,6 +71,11 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   editFeature() {
     // Сохраняем только те свойства что были затронуты пользователем и валидны
     // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
@@ -81,6 +91,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
       const workspaceName = crgLayer.complexName.split(':')[0];
       this.transformFeatureService
           .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.name, newProperties)
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
               this.closeMe.emit(true);
@@ -99,6 +110,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit {
   private handleObject(objectDto: ObjectDto) {
     this.wfsService
         .getFeatureById(objectDto.crgLayer.complexName, objectDto.id)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((wfsFeature: WfsFeature) => {
           this.isFeatureTypeLoaded = true;
 

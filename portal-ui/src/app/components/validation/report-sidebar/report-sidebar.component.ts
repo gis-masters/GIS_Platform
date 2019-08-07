@@ -99,6 +99,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
     this.validationService
         .initValidation(crgLayers)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((response: ValidationWsMsg) => {
           if (response) {
             // TODO: Ничего не предпринимаем здесь. Ждем сообщений из websocet. А надо бы отследивать процесс
@@ -164,6 +165,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
     this.validationService
         .getShortInfo(layers)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((response: ValidationBrieflyInfo[]) => {
           this.isValidationInited = false;
 

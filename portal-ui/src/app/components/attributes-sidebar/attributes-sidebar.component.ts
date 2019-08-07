@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {BehaviorSubject, combineLatest, from, Observable, of, Subject} from 'rxjs';
 import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
-import {concatMap, debounceTime, filter, flatMap, map, takeUntil, tap} from 'rxjs/operators';
+import {catchError, concatMap, debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {
   AfterViewInit,
@@ -315,6 +315,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
           this.batchInsertFeatures(selectedLayer);
+
+          this.attributeTable.selected = [];
         });
   }
 
@@ -345,6 +347,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         .afterClosed().pipe(filter(value => !!value))
         .subscribe(() => {
           this.batchDeleteFeatures();
+
+          this.attributeTable.selected = [];
         });
   }
 
@@ -387,6 +391,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     from(listToParts)
       .pipe(
         concatMap(features => this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)),
+        catchError(err => this.handleError(err)),
       ).subscribe(value => {
       i++;
       const percent = Math.ceil(onePartOf100 * i);
@@ -428,6 +433,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
         concatMap(([features, insertResult]) => {
           return this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name);
         }),
+        catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
       ).subscribe((result) => {
         i++;
@@ -442,6 +448,13 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
           this.loadPercent = percent > 100 ? 100 : percent;
         }
       });
+  }
+
+  private handleError(reason: string) {
+    this.loading = false;
+    this.snackBar.open('Не удалось переместить', 'X', {duration: 3000});
+
+    return of();
   }
 
   private batchDeleteFeatures() {
@@ -483,7 +496,8 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     return this.layersService.layers$
                .pipe(
-                 map((layers: CrgLayer[]) => this.rulesService.getSuitableByGeometryLayers(this.layer, layers))
+                 map((layers: CrgLayer[]) => this.rulesService.getSuitableByGeometryLayers(this.layer, layers)),
+                 takeUntil(this.unsubscribe$)
                );
   }
 

@@ -75,7 +75,8 @@ export class MapComponent implements OnInit, OnDestroy {
           catchError(err => {
             this.logger.error('layers-sidebar layers error', err);
             return throwError(err);
-          })
+          }),
+          takeUntil(this.unsubscribe$)
         ).subscribe((layers: CrgLayer[]) => {
           layers.forEach((layer, index) => {
             this.openLayers
@@ -86,6 +87,7 @@ export class MapComponent implements OnInit, OnDestroy {
           // Позиционируемся на первом из загруженных слоев
           if (layers.length > 0) {
             this.wfsService.getFeatures(layers[0].complexName)
+                .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((fCollection: WfsFeatureCollection) => {
                   if (fCollection && fCollection.bbox) {
                     this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
@@ -187,6 +189,7 @@ export class MapComponent implements OnInit, OnDestroy {
       this.openLayers.drawPolygon(buffer.getCoordinates());
 
       this.wfsService.getFeaturesByXmlFilter(xml)
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe((fCollection: WfsFeatureCollection) => {
             this.openLayers.clearDraft();
 

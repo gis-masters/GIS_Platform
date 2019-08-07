@@ -1,16 +1,18 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {MatSnackBar} from '@angular/material';
 import {AuthService} from '../../services/auth.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
 
   errorMsg: string;
   registrationForm = this.fb.group({
@@ -25,11 +27,18 @@ export class RegisterComponent {
     validator: this.passwordMatch('password', 'password_')
   });
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(private fb: FormBuilder,
               private router: Router,
               private logger: NGXLogger,
               private snackBar: MatSnackBar,
               private authService: AuthService) {
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   onSubmit() {
@@ -38,7 +47,8 @@ export class RegisterComponent {
     if (this.registrationForm.valid) {
       this.authService
           .registration(this.registrationForm.getRawValue())
-          .subscribe(value => {
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(() => {
             this.registrationForm.getRawValue();
 
             this.snackBar.open('Регистрация прошла успешно', 'X', {duration: 5000});

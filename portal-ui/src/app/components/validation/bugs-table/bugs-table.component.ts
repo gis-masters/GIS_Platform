@@ -1,5 +1,6 @@
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
+import {takeUntil} from 'rxjs/operators';
 import {merge} from 'rxjs/internal/observable/merge';
 import {MatPaginator, MatSort} from '@angular/material';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
@@ -11,8 +12,8 @@ import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
+import {AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -26,7 +27,7 @@ import {ValidationResultsResponse, ValidationService} from '../../../services/cr
     ]),
   ]
 })
-export class BugsTableComponent implements OnChanges, AfterViewInit {
+export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   @Input() isActive: boolean;
   @Input() index: number;
@@ -51,6 +52,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
   defaultPageSize = 25;
 
   expandedElement: any;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
@@ -91,12 +94,19 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
             return of(null);
           }
         }),
+        takeUntil(this.unsubscribe$)
       ).subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   getValidation() {
     this.validationService
         .getValidationResults(this.crgLayer.name, 0, this.defaultPageSize, '', 'asc')
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
   }
 
@@ -109,6 +119,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit {
 
     this.wfsService
         .getFeatureById(this.crgLayer.complexName, objectId)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           (wfsFeature: WfsFeature) => this.openLayers.showFeature(wfsFeature),
           error => this.logger.error(error)

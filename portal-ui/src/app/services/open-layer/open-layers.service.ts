@@ -15,6 +15,7 @@ import BaseLayer from 'ol/layer/Base';
 import {MapperUtil} from './MapperUtil';
 import {UsedGeometryType} from './GeometryType';
 import Feature from 'ol/Feature';
+import GeometryType from "ol/geom/GeometryType";
 
 export let BEARER_TOKEN = '';
 
@@ -256,7 +257,6 @@ export class OpenLayersService {
     const res = Number(Number(this.getResolution() * this.HIT_TOLERANCE).toFixed(this.PRECISION));
 
     // console.log('pos/res', pos, res);
-
     const d = 2;
     const buffer = [[[
       [pos[0] + (res / d),        pos[1] + (res / d)],
@@ -265,39 +265,41 @@ export class OpenLayersService {
       [pos[0] + (res / d),        pos[1] + (res / d) - res],
       [pos[0] + (res / d),        pos[1] + (res / d)]
     ]]];
-
     // console.log('buffer', buffer);
 
     return new MultiPolygon(buffer);
   }
 
-  private positionToFeature(feature: WfsFeature) {
+  private positionToFeature(wfsFeature: WfsFeature) {
+    const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
+    if (!olFeature) {
+      this.logger.warn('Incorrect feature: ', wfsFeature);
+      return;
+    }
+
     const view = this._map.getView();
     const size = this._map.getSize();
 
-    if (feature.geometry.type === UsedGeometryType.POINT) {
-      view.centerOn(feature.geometry.coordinates, size, [570, 500]);
-    } else if (feature.geometry.type === UsedGeometryType.MULTILINE_STRING) {
-      this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
-    } else if (feature.geometry.type === UsedGeometryType.MULTIPOLYGON) {
-      this.fitToBbox(this.getBbox(feature), [50, 650, 50, 50]);
-    } else {
-      console.warn('Not supported geometry type: ', feature.geometry);
+    const geometry = olFeature.getGeometry();
+    switch (geometry.getType()) {
+      case GeometryType.POINT:
+        view.centerOn(geometry.getExtent(), size, [570, 500]);
+        break;
+      case GeometryType.MULTI_LINE_STRING:
+        this.fitToBbox(geometry.getExtent(), [50, 650, 50, 50]);
+        break;
+      case GeometryType.MULTI_POLYGON:
+        this.fitToBbox(geometry.getExtent(), [50, 650, 50, 50]);
+        break;
+      default:
+        this.logger.warn('Unsupported geometry type: ', geometry.getType());
     }
-  }
-
-  private getBbox(feature: WfsFeature): [] {
-    for (const key in feature.properties) {
-      if (key === 'bbox') {
-        return feature.properties[key];
-      }
-    }
-
-    return [];
   }
 
   paintFeature(wfsFeature: WfsFeature) {
-    this.draftSource
-        .addFeature(MapperUtil.mapWfsFeatureToFeature(wfsFeature));
+    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
+    if (olFeature) {
+      this.draftSource.addFeature(olFeature);
+    }
   }
 }

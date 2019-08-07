@@ -1,5 +1,5 @@
 import {NGXLogger} from 'ngx-logger';
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {MatListOption, MatSelectionList} from '@angular/material';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
@@ -8,13 +8,15 @@ import {CommunicationService} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/crg/export.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {ProcessResponse} from '../../../services/models/requestModel';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-export-dialog',
   templateUrl: './export-dialog.component.html',
   styleUrls: ['./export-dialog.component.css']
 })
-export class ExportDialogComponent {
+export class ExportDialogComponent implements OnDestroy {
   @ViewChild(MatSelectionList) list: MatSelectionList;
   @Input() layers: CrgLayer[];
 
@@ -64,6 +66,7 @@ export class ExportDialogComponent {
   ];
 
   private isExportInited = false;
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
@@ -73,7 +76,12 @@ export class ExportDialogComponent {
 
   onChange(selectionList: MatSelectionList) {
     this.selectedLayers = selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => selectedOption.value);
+        .map((selectedOption: MatListOption) => selectedOption.value);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   initValidation() {
@@ -82,6 +90,7 @@ export class ExportDialogComponent {
     const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.name);
     this.exportService
         .export({layers: layerNames, docSchema: this.selectedDocSchema})
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe((process: ProcessResponse) => {
           // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
           this.logger.info('export to GML response', process);

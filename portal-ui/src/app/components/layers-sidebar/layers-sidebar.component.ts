@@ -9,6 +9,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {ExportService} from '../../services/crg/export.service';
 import {ProcessResponse} from '../../services/models/requestModel';
 import {CommunicationService} from '../../services/communication.service';
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -75,6 +76,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     if (this.selectedLayer) {
       this.exportService
           .export({format: 'ESRI Shapefile', layers: [this.selectedLayer.name]})
+          .pipe(takeUntil(this.unsubscribe$))
           .subscribe((process: ProcessResponse) => {
             // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
             this.logger.info('export shape:', process);

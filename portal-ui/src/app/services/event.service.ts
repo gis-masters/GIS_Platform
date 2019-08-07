@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {LocalStorageService} from './local-storage.service';
-import {filter, publishReplay, refCount} from 'rxjs/operators';
+import {filter, publishReplay, refCount, takeUntil} from 'rxjs/operators';
 import {IWsMessage, WsMessageType, WsService} from './ws.service';
 
 /**
