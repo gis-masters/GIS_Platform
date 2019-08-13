@@ -105,6 +105,17 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "optimization": false,
+              "sourceMap": true,
+              "aot": false
             }
           }
         },
@@ -122,6 +133,9 @@
             },
             "test": {
               "browserTarget": "gis-portal:build:test"
+            },
+            "dev": {
+              "browserTarget": "gis-portal:build:dev"
             }
           }
         },

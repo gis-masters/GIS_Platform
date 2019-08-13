@@ -34,7 +34,7 @@ import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dial
 @Component({
   selector: 'crg-attributes-sidebar',
   templateUrl: './attributes-sidebar.component.html',
-  styleUrls: ['./attributes-sidebar.component.css']
+  styleUrls: ['./attributes-sidebar.component.scss']
 })
 export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnDestroy {
 
