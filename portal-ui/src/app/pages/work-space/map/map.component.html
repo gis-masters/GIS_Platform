@@ -8,7 +8,8 @@
 
 <mat-sidenav-container class="example-sidenav-container-fiz">
   <mat-sidenav-content>
-    <crg-layers-sidebar [isActive]="isLayersSidebarActive" [layers]="layers"></crg-layers-sidebar>
+    <crg-layers-sidebar [isActive]="isLayersSidebarActive" [layers]="layers"
+                        (deleteLayer)="deleteLayer($event)"></crg-layers-sidebar>
 
     <!--Карта-->
     <div id="fiz-openLayer-map" class="crg-map"></div>

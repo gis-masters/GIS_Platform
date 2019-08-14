@@ -2,14 +2,16 @@ import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {ExportService} from '../../services/crg/export.service';
 import {ProcessResponse} from '../../services/models/requestModel';
 import {CommunicationService} from '../../services/communication.service';
-import {takeUntil} from "rxjs/operators";
+import {filter, takeUntil} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -20,6 +22,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
 
   @Input() isActive;
   @Input() layers: CrgLayer[];
+  @Output() deleteLayer = new EventEmitter<CrgLayer>();
 
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
@@ -31,6 +34,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   constructor(private logger: NGXLogger,
               private exportService: ExportService,
               private openLayers: OpenLayersService,
+              private dialog: MatDialog,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) {
   }
@@ -82,6 +86,24 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
             this.logger.info('export shape:', process);
 
             this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
+          });
+    } else {
+      this.logger.warn('Empty selected layer: ', this.selectedLayer);
+    }
+  }
+
+  delete() {
+    if (this.selectedLayer) {
+      const dialogData: ConfirmDialogData = {
+        title: 'Удалить слой: ' + this.selectedLayer.title,
+        approveBtnName: 'Удалить'
+      };
+
+      this.dialog
+          .open(ConfirmDialogComponent, {width: '400px', data: dialogData})
+          .afterClosed().pipe(filter(value => !!value))
+          .subscribe(() => {
+            this.deleteLayer.emit(this.selectedLayer);
           });
     } else {
       this.logger.warn('Empty selected layer: ', this.selectedLayer);

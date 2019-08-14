@@ -68,35 +68,7 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.openLayers.createMap();
 
-    this.currentProject = this.storageService.getProject().crgProject;
-    this.layersService.fetchLayers(this.currentProject)
-        .pipe(
-          tap(layers => this.layers = layers),
-          catchError(err => {
-            this.logger.error('layers-sidebar layers error', err);
-            return throwError(err);
-          }),
-          takeUntil(this.unsubscribe$)
-        ).subscribe((layers: CrgLayer[]) => {
-          layers.forEach((layer, index) => {
-            this.openLayers
-                .addLayerToMap(layer.complexName)
-                .setZIndex(layers.length - index);
-          });
-
-          // Позиционируемся на первом из загруженных слоев
-          if (layers.length > 0) {
-            this.wfsService.getFeatures(layers[0].complexName)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe((fCollection: WfsFeatureCollection) => {
-                  if (fCollection && fCollection.bbox) {
-                    this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
-                  } else {
-                    this.logger.info('Cant position to layer', fCollection);
-                  }
-                });
-          }
-        });
+    this.fetchLayers();
 
     this.communicationService.validationDialog
         .pipe(takeUntil(this.unsubscribe$))
@@ -174,6 +146,16 @@ export class MapComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  deleteLayer(layer: CrgLayer) {
+    this.layersService.deleteLayer(layer)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          this.snackBar.open('Удалено', 'X', {duration: 3000});
+
+          this.fetchLayers();
+        });
+  }
+
   /**
    * Отобразить информацию об обьектах, которые пересекают заданные координаты.
    */
@@ -229,5 +211,38 @@ export class MapComponent implements OnInit, OnDestroy {
     return  sidebar.target === SidebarType.BUG_REPORT ||
             sidebar.target === SidebarType.FEATURES ||
             sidebar.target === SidebarType.ATTRIBUTES;
+  }
+
+  private fetchLayers() {
+    this.currentProject = this.storageService.getProject().crgProject;
+    this.layersService.fetchLayers(this.currentProject)
+        .pipe(
+          tap(layers => this.layers = layers),
+          catchError(err => {
+            this.logger.error('layers-sidebar layers error', err);
+            return throwError(err);
+          }),
+          takeUntil(this.unsubscribe$)
+        )
+        .subscribe((layers: CrgLayer[]) => {
+          layers.forEach((layer, index) => {
+            this.openLayers
+              .addLayerToMap(layer.complexName)
+              .setZIndex(layers.length - index);
+          });
+
+          // Позиционируемся на первом из загруженных слоев
+          if (layers.length > 0) {
+            this.wfsService.getFeatures(layers[0].complexName)
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe((fCollection: WfsFeatureCollection) => {
+                if (fCollection && fCollection.bbox) {
+                  this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
+                } else {
+                  this.logger.info('Cant position to layer', fCollection);
+                }
+              });
+          }
+        });
   }
 }

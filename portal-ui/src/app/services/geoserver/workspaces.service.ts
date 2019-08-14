@@ -4,7 +4,6 @@ import {forkJoin, Observable} from 'rxjs';
 import {BaseService} from '../base.service';
 import {TaskImport} from './import/taskImport';
 import {WorkImport} from './import/workImport';
-import {NameHrefProjection} from './projections';
 import {ProjectModel} from './import/projectModel';
 import {HttpClient} from '@angular/common/http';
 import {LocalStorageService} from '../local-storage.service';
@@ -56,33 +55,4 @@ export class WorkspacesService {
     return forkJoin(observableTasks);
   }
 
-  getWorkspaceDataStore(url: string): Observable<GeoDataStore | any> {
-    return this.http.get<GeoDataStore>(url);
-  }
-
-  deleteLayer(workspaceName: string, layerName: string) {
-    return this.http
-               .delete(this.geoserverWorkspaceUrl + '/' + workspaceName + '/layers/' + layerName);
-  }
-}
-
-export interface GeoWorkspace {
-  workspaces: {
-    workspace: NameHrefProjection[]
-  };
-}
-
-export interface GeoDataStore {
-  dataStores: {
-    dataStore: NameHrefProjection[]
-  };
-}
-
-export interface GeoWorkspaceItem {
-  coverageStores: string;
-  dataStores: string;
-  isolated: boolean;
-  name: string;
-  wmsStores: string;
-  wmtsStores: string;
 }

@@ -71,6 +71,10 @@ export class LayersService {
                );
   }
 
+  deleteLayer(layer: CrgLayer) {
+    return this.http.delete(this.layersUrl + '/' + layer.name);
+  }
+
   addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
     const params = new HttpParams();
     params.append('default', 'true');
@@ -101,6 +105,10 @@ export class LayersService {
 
   private mergeWithRules(layers: NameHrefProjection[]): CrgLayer[] {
     const crgLayers: CrgLayer[] = [];
+
+    if (!layers || !layers.length) {
+      return crgLayers;
+    }
 
     layers.forEach((layer: NameHrefProjection) => {
       const layerName = layer.name.split(':')[1];
