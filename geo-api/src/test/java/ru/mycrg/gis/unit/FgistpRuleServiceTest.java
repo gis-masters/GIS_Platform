@@ -3,24 +3,36 @@ package ru.mycrg.gis.unit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.mycrg.common.propertyTypes.AbstractProperty;
 import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.common.propertyTypes.StringProperty;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
 import ru.mycrg.gis.dto.FeatureDescription;
+import ru.mycrg.gis.repository.CustomFeatureDefinitionRepository;
+import ru.mycrg.gis.repository.DataSchemaRepository;
+import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 import ru.mycrg.gis.dto.DataSchema;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class FgistpRuleServiceTest {
 
     @InjectMocks
-    private DataSchemaService ruleService;
+    private DataSchemaService dataSchemaService;
+
+    @Mock
+    private DataSchemaRepository dataSchemaRepository;
+
+    @Mock
+    private CustomFeatureDefinitionRepository customFeatureDefinitionRepository;
 
     @Before
     public void setUp() {
@@ -29,7 +41,10 @@ public class FgistpRuleServiceTest {
 
     @Test(expected = CrgNotFoundException.class)
     public void shouldThrowException() {
-        assertNull(ruleService.getDescriptionByName("someFeatureName"));
+        when(dataSchemaRepository.findAll()).thenReturn(new ArrayList<>());
+        when(customFeatureDefinitionRepository.findAll()).thenReturn(new ArrayList<>());
+
+        assertNull(dataSchemaService.getDescriptionByName("someFeatureName"));
     }
 
     @Test
@@ -83,7 +98,7 @@ public class FgistpRuleServiceTest {
         DataSchema targetRules = new DataSchema();
         targetRules.addFeatureDescription(naturalRiskZone);
 
-        DataSchema resultRules = ruleService.splitRulesByGeometry(targetRules);
+        DataSchema resultRules = dataSchemaService.splitRulesByGeometry(targetRules);
 
         // Common assert
         assertNotNull(resultRules);
@@ -136,7 +151,7 @@ public class FgistpRuleServiceTest {
         DataSchema targetRules = new DataSchema();
         targetRules.addFeatureDescription(electricLine);
 
-        DataSchema resultRules = ruleService.splitRulesByGeometry(targetRules);
+        DataSchema resultRules = dataSchemaService.splitRulesByGeometry(targetRules);
 
         // Common assert
         assertNotNull(resultRules);
