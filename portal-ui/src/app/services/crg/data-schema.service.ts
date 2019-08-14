@@ -25,12 +25,15 @@ export class DataSchemaService {
       this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
     } else {
+      // Пустой список подразумевает выборку всего
+      const payload = [];
+
       return this.http
-                 .get<FeatureXsdDefinition>(this.serverProp.rulesUrl)
+                 .post<FeatureXsdDefinition>(this.serverProp.schemaUrl, payload)
                  .pipe(
                    map((respone: any) => {
                      if (respone) {
-                       this.featuresXsdDefinition.xsdFeatures = respone.featureDescriptions;
+                       this.featuresXsdDefinition.xsdFeatures = respone;
 
                      } else {
                        this.logger.warn('getFeaturesDefinition response is: ', respone);

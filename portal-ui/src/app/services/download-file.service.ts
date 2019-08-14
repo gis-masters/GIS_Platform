@@ -13,6 +13,6 @@ export class DownloadFileService {
 
   download(fileName: string): Observable<any> {
     return this.http
-               .get(this.propertiesService.exportGmlUrl + '/' + fileName, {responseType: 'blob'});
+               .get(this.propertiesService.exportUrl + '/' + fileName, {responseType: 'blob'});
   }
 }

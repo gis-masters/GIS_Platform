@@ -45,10 +45,14 @@ public class DataSchemaService implements IDataSchemaHolder {
             prepareSchema();
         }
 
-        return dataSchema
-                .getFeatureDescriptions().stream()
-                .filter(fDescription -> featureNames.contains(fDescription.getName()))
-                .collect(Collectors.toList());
+        if (featureNames.isEmpty()) {
+            return dataSchema.getFeatureDescriptions();
+        } else {
+            return dataSchema
+                    .getFeatureDescriptions().stream()
+                    .filter(fDescription -> featureNames.contains(fDescription.getName()))
+                    .collect(Collectors.toList());
+        }
     }
 
     /**

@@ -45,25 +45,33 @@ zuul:
       service-id: http://jwt-service:9000/oauth/token
 
     # Our API
-    gis-projects:
-      path: /projects/**
-      url: http://geo-api:8088/projects/
-
-    gis-ws:
-      path: /crg-ws-endpoint/**
-      url: http://geo-api:8088/crg-ws-endpoint/
-
-    gis-rules:
-      path: /fgistp/**
-      url: http://geo-api:8088/fgistp/
+    gis-users:
+      path: /users/**
+      url: http://geo-api:8088/users/
 
     gis-organizations:
       path: /organizations/**
       url: http://geo-api:8088/organizations/
 
-    gis-users:
-      path: /users/**
-      url: http://geo-api:8088/users/
+    gis-projects:
+      path: /projects/**
+      url: http://geo-api:8088/projects/
+
+    gis-schema:
+      path: /schema/**
+      url: http://geo-api:8088/schema/
+
+    gis-export:
+      path: /export/**
+      url: http://geo-api:8088/export/
+
+    gis-import:
+      path: /import/**
+      url: http://geo-api:8088/import/
+
+    gis-ws:
+      path: /crg-ws-endpoint/**
+      url: http://geo-api:8088/crg-ws-endpoint/
 
     # Geoserver
     geoserver:
