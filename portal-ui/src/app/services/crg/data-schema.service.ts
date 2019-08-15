@@ -72,7 +72,7 @@ export class DataSchemaService {
           return feature.name.toLowerCase().includes(layerName.toLowerCase());
         });
 
-      this.logger.info(layerName + ': ' + xsdFeature.name);
+      this.logger.info(layerName + ': ' + xsdFeature);
       return xsdFeature;
     }
   }
