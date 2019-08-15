@@ -1,5 +1,7 @@
+import {fromLonLat} from 'ol/proj';
 import {NGXLogger} from 'ngx-logger';
 import {Subject, throwError} from 'rxjs';
+import Projection from 'ol/proj/Projection';
 import {MatSnackBar} from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {WfsUtil} from '../../../services/open-layer/WfsUtil';
@@ -18,6 +20,8 @@ import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../..
 import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
 import {ViewFeaturesData} from '../../../components/view-features/view-features.component';
 import {EditFeatureMode} from '../../../components/edit-feature/edit-feature.component';
+import {FeatureTypesService} from '../../../services/geoserver/featuretypes.service';
+import {FeatureType} from '@fiz/geoserver-types/feature-types/FeatureType';
 
 @Component({
   selector: 'crg-map',
@@ -52,6 +56,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private log: FizLogger,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
+              private featureTypesService: FeatureTypesService,
               private ruleService: DataSchemaService,
               private storageService: LocalStorageService,
               private sideBarManager: SideBarManager,
@@ -227,21 +232,25 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((layers: CrgLayer[]) => {
           layers.forEach((layer, index) => {
             this.openLayers
-              .addLayerToMap(layer.complexName)
-              .setZIndex(layers.length - index);
+                .addLayerToMap(layer.complexName)
+                .setZIndex(layers.length - index);
           });
 
           // Позиционируемся на первом из загруженных слоев
           if (layers.length > 0) {
-            this.wfsService.getFeatures(layers[0].complexName)
-              .pipe(takeUntil(this.unsubscribe$))
-              .subscribe((fCollection: WfsFeatureCollection) => {
-                if (fCollection && fCollection.bbox) {
-                  this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
-                } else {
-                  this.logger.info('Cant position to layer', fCollection);
-                }
-              });
+            this.featureTypesService.getByName(layers[0], this.currentProject)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((response: FeatureType) => {
+                  if (response) {
+                    const bbox = response.latLonBoundingBox;
+                    const min = fromLonLat([bbox.minx, bbox.miny], new Projection({code: 'EPSG:3857'}));
+                    const max = fromLonLat([bbox.maxx, bbox.maxy], new Projection({code: 'EPSG:3857'}));
+
+                    this.openLayers.fitToBbox([min[0], min[1], max[0], max[1]], [50, 50, 50, 50]);
+                  } else {
+                    this.logger.info('Cant position to layer', response);
+                  }
+                });
           }
         });
   }
