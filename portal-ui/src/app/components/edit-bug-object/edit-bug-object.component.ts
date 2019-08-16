@@ -195,7 +195,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     this.openLayers.clearDraft();
   }
 
-  // Изменяем propertySchema согласно кастомным правилам
+  // Создаем новую схему (на основе propertySchema) согласно кастомным правилам
   private modifyPropertySchemaByCustomRules(featureProperties: {}, propertySchema: PropertySchema): PropertySchema {
     const newPropertySchema = Object.assign({}, propertySchema);
 
