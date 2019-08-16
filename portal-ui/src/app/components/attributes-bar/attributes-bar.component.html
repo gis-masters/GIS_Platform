@@ -1,19 +1,26 @@
-<div class="crg-attr-sidebar">
-  <div class="crg-attr-sidebar-header">
-    <span class="layerTitle">{{layer.title}}</span>
+<div resizable-bar="top" class="attributes-bar">
+  <div class="attributes-bar__header">
 
-    <div class="right-side">
-      <mat-icon class="attr-table-action-icon" (click)="closeMe()">close</mat-icon>
+    <div class="attributes-bar__title">{{layer.title}}</div>
 
-      <mat-icon [ngClass]="enableFilter ? 'crg-filter-icon-active fiz-border' : 'crg-filter-icon fiz-border'"
-                (click)="switchFilter()">filter_list</mat-icon>
+    <div class="attributes-bar__header-right-side">
+      <crg-button
+          class="attributes-bar__head-button"
+          [matMenuTriggerFor]="editMenu">
+        Правка
+      </crg-button>
 
-<!--      <mat-icon class="attr-table-action-icon fiz-border" (click)="editFeatures()">edit</mat-icon>-->
+      <crg-button
+          class="attributes-bar__head-button"
+          [checked]="enableFilter"
+          (click)="switchFilter()"
+          icon="filter_list">
+        Фильтр
+      </crg-button>
 
-      <button mat-icon-button [matMenuTriggerFor]="editMenu" class="attr-table-action-icon fiz-border without-outline"
-              style="height: 24px">
-        <span class="edit-text">Edit</span>
-      </button>
+      <mat-icon class="attributes-bar__close" (click)="closeMe()">
+        close
+      </mat-icon>
 
 <!--      <mat-select class="view-mode-selector fiz-border" [(ngModel)]="viewSettings.viewMode"-->
 <!--                  (selectionChange)="onViewModeChange($event)">-->
@@ -23,13 +30,14 @@
     </div>
   </div>
 
-  <div class="crg-attr-content">
-    <div *ngIf="loading" class="fiz-loading-shade">
-      <div *ngIf="showPercent" class="inner-text">{{loadPercent}}%</div>
-      <mat-spinner></mat-spinner>
-    </div>
+  <div class="attributes-bar__content">
+    <crg-loading *ngIf="loading" [percents]="showPercent ? loadPercent : null"></crg-loading>
 
-    <ngx-datatable [ngClass]="{'bootstrap': enableFilter, 'fiz-bootstrap': !enableFilter}"
+    <ngx-datatable [ngClass]="{
+                      'bootstrap': enableFilter,
+                      'fiz-bootstrap': !enableFilter,
+                      'attributes-bar__datatable': true
+                    }"
                    [rows]="features"
                    [columns]="columns"
                    [columnMode]="'force'"
@@ -84,7 +92,7 @@
 
 <mat-menu #editMenu="matMenu">
 
-  <button mat-menu-item class="without-outline" (click)="editFeatures()">
+  <button mat-menu-item (click)="editFeatures()">
     <mat-icon>edit</mat-icon>
     <span>Множественное редактирование</span>
   </button>

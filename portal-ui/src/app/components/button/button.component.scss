@@ -1,0 +1,29 @@
+.button {
+  height: 24px;
+  color: grey;
+  outline: none;
+  border-radius: 5px;
+  border: outset;
+  border-width: thin;
+  width: auto;
+
+  &__inner {
+    position: relative;
+    top: -9px;
+    padding: 0 5px;
+  }
+
+  &__icon {
+    vertical-align: middle;
+    margin: -5px 0 0 0;
+  }
+
+  &_checked {
+    border: inset;
+    border-width: thin;
+
+    .button__icon {
+      color: #007bff;
+    }
+  }
+}

@@ -1,7 +1,5 @@
 <div class="container-fluid">
-  <div *ngIf="!isFeatureTypeLoaded" class="fiz-loading-shade">
-      <mat-spinner></mat-spinner>
-  </div>
+  <crg-loading *ngIf="!isFeatureTypeLoaded"></crg-loading>
 
   <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
     <div class="col-12" style="padding-left: 5px; padding-right: 5px">

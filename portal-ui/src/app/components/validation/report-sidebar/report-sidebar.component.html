@@ -11,9 +11,7 @@
     <div *ngIf="!isEditMode">
       <div class="container-fluid">
         <div class="row">
-          <div class="fiz-loading-shade" *ngIf="isValidationInited">
-            <mat-progress-spinner [value]="commonProgress"></mat-progress-spinner>
-          </div>
+          <crg-loading *ngIf="isValidationInited" [percents]="commonProgress"></crg-loading>
 
           <div class="h-100" style="width: 100%">
             <ng-container *ngIf="layers; else layersLoading">

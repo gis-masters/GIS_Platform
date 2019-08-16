@@ -12,10 +12,6 @@ bootstrap table theme
   border-bottom: 1px solid #a9a7a7;
 }
 
-.ngx-datatable.bootstrap .datatable-body {
-  height: 325px!important;
-}
-
 .ngx-datatable.bootstrap .datatable-header .datatable-header-cell {
   vertical-align: bottom;
   padding: 0.10rem;

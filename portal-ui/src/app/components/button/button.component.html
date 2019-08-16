@@ -1,0 +1,6 @@
+<button mat-icon-button [ngClass]="{button: true, button_checked: checked}">
+  <span class="button__inner">
+    <mat-icon *ngIf="icon" class="button__icon">{{icon}}</mat-icon>
+    <span class="button__text"><ng-content></ng-content></span>
+  </span>
+</button>

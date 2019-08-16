@@ -1,0 +1,53 @@
+.attributes-bar {
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+
+  height: 446px;
+  width: 100%;
+
+  background-color: white;
+
+  box-shadow: 0 -2px 10px 0 rgba(50, 50, 50, 0.25);
+
+  &__header {
+    padding: 4px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    font-weight: 500;
+    color: grey;
+    font-style: italic;
+    flex-grow: 1;
+  }
+
+  &__header-right-side {
+    height: 24px;
+  }
+
+  &__close {
+    cursor: pointer;
+    color: grey;
+  }
+
+  &__head-button {
+    margin-right: 6px;
+  }
+
+  &__content {
+    height: calc(100% - 28px);
+    border-top: inset;
+    border-width: thin;
+    position: relative;
+  }
+
+  &__datatable {
+    height: 100%;
+  }
+}
+
+::ng-deep .mat-select-value {
+  padding-left: 5px;
+}

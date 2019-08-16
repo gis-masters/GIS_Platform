@@ -41,10 +41,13 @@ import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.componen
 import {ConfirmDialogComponent} from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
-import {AttributesSidebarComponent} from './components/attributes-sidebar/attributes-sidebar.component';
+import {AttributesBarComponent} from './components/attributes-bar/attributes-bar.component';
 import {TableFilterComponent} from './components/table-filter/table-filter.component';
 import {CopyFeaturesDialogComponent} from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
 import {BestMatchingPipe} from './pipes/best-matching.pipe';
+import {ButtonComponent} from './components/button/button.component';
+import {LoadingComponent} from './components/loading/loading.component';
+import {ResizableBarDirective} from './directives/resizableBar.directive';
 
 @NgModule({
   declarations: [
@@ -72,10 +75,13 @@ import {BestMatchingPipe} from './pipes/best-matching.pipe';
     ConfirmDialogComponent,
     ViewFeaturesComponent,
     EditFeatureComponent,
-    AttributesSidebarComponent,
+    AttributesBarComponent,
     TableFilterComponent,
     CopyFeaturesDialogComponent,
     BestMatchingPipe,
+    ButtonComponent,
+    LoadingComponent,
+    ResizableBarDirective
   ],
   imports: [
     AppRoutingModule,

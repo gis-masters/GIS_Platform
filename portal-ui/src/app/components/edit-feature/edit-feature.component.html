@@ -12,10 +12,7 @@
   </div>
 
   <div [ngClass]="isAttributeSidebarOpened? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
-    <div *ngIf="isSaveInProgress" class="fiz-loading-shade">
-      <div class="inner-text">{{loadPercent}}%</div>
-      <mat-spinner></mat-spinner>
-    </div>
+    <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
     <form class="example-form col-md-12" [formGroup]="editFeatureForm">
       <div *ngFor="let editFeatureItem of editFeatureData">
