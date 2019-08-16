@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {WfsUtil} from '../../../services/open-layer/WfsUtil';
 import {FizLogger} from '../../../services/logger/fiz.logger';
-import {catchError, filter, takeUntil, tap} from 'rxjs/operators';
+import {catchError, filter, flatMap, takeUntil, tap} from 'rxjs/operators';
 import {CrgProject} from '../../../services/crg/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
@@ -153,8 +153,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
   deleteLayer(layer: CrgLayer) {
     this.layersService.deleteLayer(layer)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
+        .pipe(
+          flatMap(() => this.featureTypesService.getByName(layer)),
+          flatMap((fType: FeatureType) => this.featureTypesService.delete(fType)),
+          takeUntil(this.unsubscribe$)
+        ).subscribe(() => {
           this.snackBar.open('Удалено', 'X', {duration: 3000});
 
           this.fetchLayers();
@@ -238,7 +241,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
           // Позиционируемся на первом из загруженных слоев
           if (layers.length > 0) {
-            this.featureTypesService.getByName(layers[0], this.currentProject)
+            this.featureTypesService.getByName(layers[0])
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((response: FeatureType) => {
                   if (response) {
