@@ -35,15 +35,15 @@ public class ValidatorImpl implements IValidator {
     public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> data) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        customRuleValidator.validate(featureDescriptionDto, data).values()
-                .forEach(validationResult::addObjectViolation);
+        featureDescriptionDto.getProperties().forEach(propertySchema -> {
+            SimplePropertyDto modifiedPropertySchema = modifyPropertySchemaByCustomRules(data, propertySchema,
+                    featureDescriptionDto);
 
-        featureDescriptionDto.getProperties().forEach(propertyDto -> {
-            String name = propertyDto.getName();
+            String name = modifiedPropertySchema.getName();
             if (data.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));
 
-                List<String> errors = validateProperty(propertyDto, data.get(name));
+                List<String> errors = validateProperty(modifiedPropertySchema, data.get(name));
 
                 propertyViolation.setErrorTypes(errors);
 
@@ -83,6 +83,38 @@ public class ValidatorImpl implements IValidator {
         }
 
         return violations;
+    }
+
+    /**
+     * Создаем новую схему (на основе propertySchema) согласно кастомным правилам.
+     *
+     * @param data                  Конкретный обьект слоя
+     * @param propertySchema        Схема свойства
+     * @param featureDescriptionDto Описание слоя
+     * @return Модифицированную схему свойства SimplePropertyDto если есть доп. правила для этого конкретного обьекта
+     * или тот же обьект propertySchema без изменений.
+     */
+    private SimplePropertyDto modifyPropertySchemaByCustomRules(Map<String, Object> data,
+                                                   SimplePropertyDto propertySchema,
+                                                   FeatureDescriptionDto featureDescriptionDto) {
+        ObjectValidationResult validationResult = new ObjectValidationResult();
+
+        customRuleValidator
+                .validate(featureDescriptionDto, data)
+                .values().forEach(validationResult::addObjectViolation);
+
+        if (!validationResult.getObjectViolations().isEmpty()) {
+            SimplePropertyDto newPropertySchema = new SimplePropertyDto(propertySchema);
+            validationResult.getObjectViolations().forEach(errorPropertyName -> {
+                if (errorPropertyName.equals(propertySchema.getName())) {
+                    newPropertySchema.setRequired(true);
+                }
+            });
+
+            return newPropertySchema;
+        } else {
+            return propertySchema;
+        }
     }
 
 }
