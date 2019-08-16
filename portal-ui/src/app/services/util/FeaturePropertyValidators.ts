@@ -1,11 +1,11 @@
 import {isEmpty} from 'validate.js';
-import {FeatureDescription, SimpleProperty} from '../crg/data-schema.service';
+import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export class FeaturePropertyValidators {
 
-  static customRules(featureProperties: any, xsdFeature: FeatureDescription): string[] {
+  static validateCustomRules(featureObject: {}, xsdFeature: FeatureDescription): string[] {
     let errors = [];
 
     if (!xsdFeature || !xsdFeature.customRuleFunction) {
@@ -15,7 +15,7 @@ export class FeaturePropertyValidators {
     try {
       const evaluateObjectRules = new Function('obj', xsdFeature.customRuleFunction);
 
-      errors = evaluateObjectRules(featureProperties);
+      errors = evaluateObjectRules(featureObject);
     } catch (e) {
       throw Error('Ошибка при анализе доп. правил. ' + e);
     }
@@ -23,19 +23,19 @@ export class FeaturePropertyValidators {
     return errors;
   }
 
-  static propertyValidator(property: SimpleProperty): ValidatorFn {
+  static validate(propertySchema: PropertySchema): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const errors = {};
 
       // Если нет обьекта по которому должна идти проверка, то и проверять нечего.
-      if (!property) {
+      if (!propertySchema) {
         return errors;
       }
 
       const currentValue = control.value;
       if (isEmpty(currentValue)) {
         // Если ввод пуст, посмотрим обязателен ли атрибут
-        if (property.required) {
+        if (propertySchema.required) {
           errors['required'] = 'Поле обязательно к заполнению';
           return errors;
         } else {
@@ -43,18 +43,18 @@ export class FeaturePropertyValidators {
         }
       } else {
         // Если что-то введено, проверим его согласно типу атрибута.
-        switch (property.valueType) {
+        switch (propertySchema.valueType) {
           case ValueType.CHOICE:
-            this.enumeration(currentValue, property, errors);
+            this.enumeration(currentValue, propertySchema, errors);
             // if (control.dirty) {
             //   // Если мы меняли значение селектора, то проверим его стандартным образом
-            //   this.enumeration(currentValue, property, errors);
+            //   this.enumeration(currentValue, propertySchema, errors);
             // } else {
             //   // Как правило в базе лежит мусор типа '0', поэтому тут значение ввода не пустое(поэтому мы в этом
             //   // куске кода) и требуется еще раз проверить на required
-            //   if (property.required) {
+            //   if (propertySchema.required) {
             //     // Если поле обязательно - проверим его
-            //     this.enumeration(currentValue, property, errors);
+            //     this.enumeration(currentValue, propertySchema, errors);
             //   } else {
             //     // Если не обязательно, то тут нет ошибки
             //     return errors;
@@ -62,29 +62,29 @@ export class FeaturePropertyValidators {
             // }
             break;
           case ValueType.STRING:
-            this.minLength(currentValue, property, errors);
-            this.maxLength(currentValue, property, errors);
-            this.facetLength(currentValue, property, errors);
-            this.pattern(currentValue, property, errors);
+            this.minLength(currentValue, propertySchema, errors);
+            this.maxLength(currentValue, propertySchema, errors);
+            this.facetLength(currentValue, propertySchema, errors);
+            this.pattern(currentValue, propertySchema, errors);
 
             break;
           case ValueType.INT:
-            this.minInclusive(currentValue, property, errors);
-            this.maxInclusive(currentValue, property, errors);
-            this.totalDigits(currentValue, property, errors);
-            this.fractionDigits(currentValue, property, errors);
-            this.pattern(currentValue, property, errors);
+            this.minInclusive(currentValue, propertySchema, errors);
+            this.maxInclusive(currentValue, propertySchema, errors);
+            this.totalDigits(currentValue, propertySchema, errors);
+            this.fractionDigits(currentValue, propertySchema, errors);
+            this.pattern(currentValue, propertySchema, errors);
 
             break;
           case ValueType.DOUBLE:
-            this.totalDigits(currentValue, property, errors);
-            this.fractionDigits(currentValue, property, errors);
-            this.pattern(currentValue, property, errors);
+            this.totalDigits(currentValue, propertySchema, errors);
+            this.fractionDigits(currentValue, propertySchema, errors);
+            this.pattern(currentValue, propertySchema, errors);
             this.isPositive(currentValue, errors);
 
             break;
           default:
-            console.log('Unsupported ValueType: ', property.valueType);
+            console.log('Unsupported ValueType: ', propertySchema.valueType);
             return errors;
         }
 
@@ -94,102 +94,102 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет список приемлемых значений
-  private static enumeration(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.enumerations || property.valueType !== ValueType.CHOICE) {
+  private static enumeration(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.enumerations || propertySchema.valueType !== ValueType.CHOICE) {
       return;
     }
 
-    if (!this.isEnumIncludeValue(property.enumerations, value)) {
+    if (!this.isEnumIncludeValue(propertySchema.enumerations, value)) {
       errors['wrongChoice'] = 'Значение: ' + value + ' не соответствует справочному';
     }
   }
 
   // Определяет точное число символов или объектов списка. Должно быть равно или больше нуля
-  private static facetLength(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.length || property.length === -1) {
+  private static facetLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.length || propertySchema.length === -1) {
       return;
     }
 
-    if (value.toString().length !== property.length) {
-      errors['facetLength'] = 'Длинна строка должна быть: ' + property.length + ' символов';
+    if (value.toString().length !== propertySchema.length) {
+      errors['facetLength'] = 'Длинна строка должна быть: ' + propertySchema.length + ' символов';
     }
   }
 
   // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static minLength(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.minLength || property.minLength === -1) {
+  private static minLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.minLength || propertySchema.minLength === -1) {
       return;
     }
 
-    if (value.toString().length < property.minLength) {
-      errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + property.minLength + ' символов';
+    if (value.toString().length < propertySchema.minLength) {
+      errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + propertySchema.minLength + ' символов';
     }
   }
 
   // Определяет максимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static maxLength(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.maxLength || property.maxLength === -1) {
+  private static maxLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.maxLength || propertySchema.maxLength === -1) {
       return;
     }
 
-    if (value.toString().length > property.maxLength) {
-      errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + property.maxLength + ' символов';
+    if (value.toString().length > propertySchema.maxLength) {
+      errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + propertySchema.maxLength + ' символов';
     }
   }
 
   // Определяет точную последовательность приемлемых символов
-  private static pattern(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.pattern) {
+  private static pattern(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.pattern) {
       return;
     }
 
-    if (!value || !value.toString().match(property.pattern)) {
+    if (!value || !value.toString().match(propertySchema.pattern)) {
       errors['pattern'] = 'Строка не соответствует паттерну';
     }
   }
 
   // Определяет точное количество допустимых цифр. Должно быть больше нуля
-  private static totalDigits(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.totalDigits || property.totalDigits === -1) {
+  private static totalDigits(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
       return;
     }
 
-    if (value.toString().length > property.totalDigits) {
-      errors['totalDigits'] = 'Превышена допустимая длинна числа. Допустимо: ' + property.totalDigits + ' символов';
+    if (value.toString().length > propertySchema.totalDigits) {
+      errors['totalDigits'] = 'Превышена допустимая длинна числа. Допустимо: ' + propertySchema.totalDigits + ' символов';
     }
   }
 
   // Определяет максимальное число знаков после десятичной запятой. Должно быть равно или больше нуля
-  private static fractionDigits(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.fractionDigits || property.fractionDigits === -1) {
+  private static fractionDigits(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.fractionDigits || propertySchema.fractionDigits === -1) {
       return;
     }
 
     const decimal = value.toString().replace(',', '.').split('.')[1];
-    if (decimal && decimal.length > property.fractionDigits) {
-      errors['totalDigits'] = 'Превышена допустимая длинна дробной части числа. Допустимо: ' + property.fractionDigits + ' символов';
+    if (decimal && decimal.length > propertySchema.fractionDigits) {
+      errors['totalDigits'] = 'Превышена допустимая длинна дробной части числа. Допустимо: ' + propertySchema.fractionDigits + ' символов';
     }
   }
 
   // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
-  private static minInclusive(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.minInclusive || property.minInclusive === -1) {
+  private static minInclusive(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
       return;
     }
 
-    if (Number(value) < Number(property.minInclusive)) {
-      errors['minInclusive'] = 'Значение: ' + value + ' менее допустимого: ' + property.minInclusive;
+    if (Number(value) < Number(propertySchema.minInclusive)) {
+      errors['minInclusive'] = 'Значение: ' + value + ' менее допустимого: ' + propertySchema.minInclusive;
     }
   }
 
   // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
-  private static maxInclusive(value: string, property: SimpleProperty, errors: {}): void {
-    if (!property.maxInclusive || property.maxInclusive === -1) {
+  private static maxInclusive(value: string, propertySchema: PropertySchema, errors: {}): void {
+    if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {
       return;
     }
 
-    if (Number(value) > Number(property.maxInclusive)) {
-      errors['maxInclusive'] = 'Значение: ' + value + ' более допустимого: ' + property.maxInclusive;
+    if (Number(value) > Number(propertySchema.maxInclusive)) {
+      errors['maxInclusive'] = 'Значение: ' + value + ' более допустимого: ' + propertySchema.maxInclusive;
     }
   }
 

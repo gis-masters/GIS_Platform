@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {SimpleProperty} from '../../services/crg/data-schema.service';
+import {PropertySchema} from '../../services/crg/data-schema.service';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImportService, LayerAttribute} from '../../services/geoserver/import/import.service';
 import {PropertiesComparatorService} from '../../services/properties-comparator.service';
@@ -15,10 +15,10 @@ export class MappingPairComponent implements OnInit, OnChanges {
 
   @Input() layer_attribute: LayerAttribute;
   @Input() layerName: string;
-  @Input() properties: SimpleProperty[];
+  @Input() properties: PropertySchema[];
 
   columnForm: FormGroup;
-  selectedProperty: SimpleProperty;
+  selectedProperty: PropertySchema;
 
   constructor(private logger: NGXLogger,
               private importService: ImportService,
@@ -59,7 +59,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   columnChanged() {
-    this.selectedProperty = this.columnForm.controls['columnFiz'].value as SimpleProperty;
+    this.selectedProperty = this.columnForm.controls['columnFiz'].value as PropertySchema;
 
     this.importService.importFlow.work_import.updateMapping(this.layerName, this.layer_attribute, this.selectedProperty);
   }

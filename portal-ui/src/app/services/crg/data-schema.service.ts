@@ -123,7 +123,7 @@ export class DataSchemaService {
     const featureByName = this.getFeatureDescriptionByName(layerName);
     if (featureByName) {
       featureByName.properties
-        .forEach((simpleProperty: SimpleProperty) => {
+        .forEach((simpleProperty: PropertySchema) => {
           if (simpleProperty.enumerations) {
             simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
               if (element.classId && item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
@@ -150,7 +150,7 @@ export class DataSchemaService {
     const featureByName = this.getFeatureDescriptionByName(layerName);
     if (featureByName) {
       featureByName.properties
-        .forEach((simpleProperty: SimpleProperty) => {
+        .forEach((simpleProperty: PropertySchema) => {
           if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
             result = simpleProperty.title;
           }
@@ -168,11 +168,11 @@ export class DataSchemaService {
    * Ищем свойство, среди тех что есть в XSD схеме.
    *
    * @param key Наименование свойства, полученное из "фичи" геосервера
-   * @param properties Свойства полученные из XSD схемы.
+   * @param propertySchemas Свойства полученные из XSD схемы.
    */
-  getPropertiesByName(key: string, properties: SimpleProperty[]) {
-    return properties.find((simpleProperty: SimpleProperty) => {
-      return simpleProperty.name === key.toUpperCase();
+  getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
+    return propertySchemas.find((propertySchema: PropertySchema) => {
+      return propertySchema.name === key.toUpperCase();
     });
   }
 
@@ -223,13 +223,13 @@ export interface FeatureDescription {
   name: string;
   title: string;
   description: string;
-  properties: SimpleProperty[];
+  properties: PropertySchema[];
   tableName: string;
   customRuleFunction?: any;
   matchingCounter?: number;
 }
 
-export interface SimpleProperty {
+export interface PropertySchema {
   name: string;
   title: string;
   description?: string;
@@ -258,6 +258,6 @@ export interface SimpleProperty {
 export interface EditFeatureItem {
   name: string;
   value: string;
-  property: SimpleProperty;
+  property: PropertySchema;
   isFgistpProperty: boolean;
 }

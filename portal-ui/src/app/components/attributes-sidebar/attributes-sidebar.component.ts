@@ -14,7 +14,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {DataSchemaService, SimpleProperty} from '../../services/crg/data-schema.service';
+import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
@@ -84,7 +84,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
               private tFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
-              private rulesService: DataSchemaService,
+              private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
               private snackBar: MatSnackBar,
               private log: FizLogger,
@@ -204,14 +204,14 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
     }
   }
 
-  getSimpleProperty(name: string): SimpleProperty | undefined {
+  getSimpleProperty(name: string): PropertySchema | undefined {
     if (!name) {
       return;
     }
 
-    return this.rulesService
+    return this.dataSchemaService
                .getFeatureDescriptionByName(this.layer.name).properties
-               .find((property: SimpleProperty) => property.name.toLowerCase() === name.toLowerCase());
+               .find((property: PropertySchema) => property.name.toLowerCase() === name.toLowerCase());
   }
 
   closeMe() {
@@ -496,7 +496,7 @@ export class AttributesSidebarComponent implements AfterViewInit, OnChanges, OnD
 
     return this.layersService.layers$
                .pipe(
-                 map((layers: CrgLayer[]) => this.rulesService.getSuitableByGeometryLayers(this.layer, layers)),
+                 map((layers: CrgLayer[]) => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
                  takeUntil(this.unsubscribe$)
                );
   }

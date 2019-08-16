@@ -3,7 +3,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@an
 import {
   FeatureXsdDefinition,
   DataSchemaService,
-  SimpleProperty,
+  PropertySchema,
   FeatureDescription
 } from '../../services/crg/data-schema.service';
 import {AS_IS_TYPE, ImportService, ImportLayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
@@ -20,7 +20,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() importLayer: ImportLayerItem;
 
   featureDescriptions: FeatureDescription[] = [];
-  typeProperties: SimpleProperty[] = [];
+  typeProperties: PropertySchema[] = [];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -66,7 +66,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
 
-    xsdFeature.properties.forEach((property: SimpleProperty) => {
+    xsdFeature.properties.forEach((property: PropertySchema) => {
       this.typeProperties.push(property);
     });
   }

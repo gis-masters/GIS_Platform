@@ -9,7 +9,12 @@ import {CommunicationService, ObjectDto} from '../../services/communication.serv
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, DataSchemaService, FeatureDescription} from '../../services/crg/data-schema.service';
+import {
+  EditFeatureItem,
+  DataSchemaService,
+  FeatureDescription,
+  PropertySchema
+} from '../../services/crg/data-schema.service';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -30,8 +35,6 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
   editFeatureData: EditFeatureItem[] = [];
   isFeatureTypeLoaded = false;
 
-  objectValidationResult: string[];
-
   private object: ObjectDto;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -42,19 +45,12 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
               private openLayers: OpenLayersService,
               private validationService: ValidationService,
               private communicationService: CommunicationService,
-              private rulesService: DataSchemaService,
+              private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
   }
 
   ngOnInit(): void {
     this.editFeatureForm = this.formBuilder.group({});
-
-    this.editFeatureForm.valueChanges
-        .pipe(
-          debounceTime(100),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe(val => this.objectValidationResult = FeaturePropertyValidators.customRules(val, this.featureDescription));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -115,7 +111,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
           this.isFeatureTypeLoaded = true;
 
           this.wfsFeature = wfsFeature;
-          this.featureDescription = this.rulesService.getFeatureDescriptionByName(objectDto.crgLayer.name);
+          this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(objectDto.crgLayer.name);
 
           if (!!this.featureDescription) {
             this.prepareEditForm(this.wfsFeature.properties);
@@ -141,12 +137,12 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const property = this.rulesService.getPropertiesByName(key, this.featureDescription.properties);
-      if (property) {
-        // Добавляем валидации
-        const formControl = new FormControl({value: currentValue, disabled: property.name === 'GLOBALID'}, {
+      const propertySchema = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+      if (propertySchema) {
+        const modifiedPropertySchema = this.modifyPropertySchemaByCustomRules(featureProperties, propertySchema);
+        const formControl = new FormControl({value: currentValue, disabled: modifiedPropertySchema.name === 'GLOBALID'}, {
           validators: [
-            FeaturePropertyValidators.propertyValidator(property),
+            FeaturePropertyValidators.validate(modifiedPropertySchema),
           ],
           // updateOn: 'blur'
         });
@@ -155,7 +151,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
         this.editFeatureForm.addControl(key, formControl);
         this.editFeatureData.push({
           name: key,
-          property: property,
+          property: modifiedPropertySchema,
           value: currentValue,
           isFgistpProperty: true
         });
@@ -199,4 +195,19 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     this.openLayers.clearDraft();
   }
 
+  // Изменяем propertySchema согласно кастомным правилам
+  private modifyPropertySchemaByCustomRules(featureProperties: {}, propertySchema: PropertySchema): PropertySchema {
+    const newPropertySchema = Object.assign({}, propertySchema);
+
+    const customErrors: string[] = FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription);
+    if (customErrors.length > 0) {
+      customErrors.forEach(propertyName => {
+        if (propertySchema.name.toLowerCase() === propertyName.toLowerCase()) {
+          newPropertySchema.required = true;
+        }
+      });
+    }
+
+    return newPropertySchema;
+  }
 }

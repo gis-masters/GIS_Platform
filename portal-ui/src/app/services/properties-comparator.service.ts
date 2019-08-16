@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SimpleProperty} from './crg/data-schema.service';
+import {PropertySchema} from './crg/data-schema.service';
 import {LayerAttribute} from './geoserver/import/import.service';
 import {DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison} from './util/CrgComparatorUtil';
 
@@ -28,7 +28,7 @@ export class PropertiesComparatorService {
    * @param source - Наименование исходного столбца.
    * @param columns - Рабочий список столбцов.
    */
-  compare(source: LayerAttribute, columns: SimpleProperty[]): SimpleProperty {
+  compare(source: LayerAttribute, columns: PropertySchema[]): PropertySchema {
     return this.initialComparison.compare(source, columns);
   }
 
@@ -45,5 +45,5 @@ export interface CrgComparison {
    */
   setNext(comparison: CrgComparison);
 
-  compare(source: LayerAttribute, columns: SimpleProperty[]): SimpleProperty;
+  compare(source: LayerAttribute, columns: PropertySchema[]): PropertySchema;
 }

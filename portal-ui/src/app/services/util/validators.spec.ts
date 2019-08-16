@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/data-schema.service';
+import {PropertySchema} from '../crg/data-schema.service';
 import {FeaturePropertyValidators, ValueType} from './FeaturePropertyValidators';
 import {FormControl} from '@angular/forms';
 import {ValueTitleProjection} from '../geoserver/projections';
@@ -6,25 +6,25 @@ import {ValueTitleProjection} from '../geoserver/projections';
 describe('Property validation test', () => {
 
   it('should validate required', () => {
-    const requiredProperty: SimpleProperty = {
+    const requiredProperty: PropertySchema = {
       name: 'requiredProperty',
       title: 'Required property',
       valueType: 'CHOICE',
       required: true,
     };
 
-    const notRequiredProperty: SimpleProperty = {
+    const notRequiredProperty: PropertySchema = {
       name: 'requiredProperty',
       title: 'Required property',
       valueType: 'CHOICE',
       required: false,
     };
 
-    const fcValid = new FormControl('someValue', [FeaturePropertyValidators.propertyValidator(requiredProperty)]);
-    const fcNotValid = new FormControl('', [FeaturePropertyValidators.propertyValidator(requiredProperty)]);
-    const fcNotValid2 = new FormControl(undefined, [FeaturePropertyValidators.propertyValidator(requiredProperty)]);
-    const fcNotValid3 = new FormControl(null, [FeaturePropertyValidators.propertyValidator(requiredProperty)]);
-    const fc1 = new FormControl('', [FeaturePropertyValidators.propertyValidator(notRequiredProperty)]);
+    const fcValid = new FormControl('someValue', [FeaturePropertyValidators.validate(requiredProperty)]);
+    const fcNotValid = new FormControl('', [FeaturePropertyValidators.validate(requiredProperty)]);
+    const fcNotValid2 = new FormControl(undefined, [FeaturePropertyValidators.validate(requiredProperty)]);
+    const fcNotValid3 = new FormControl(null, [FeaturePropertyValidators.validate(requiredProperty)]);
+    const fc1 = new FormControl('', [FeaturePropertyValidators.validate(notRequiredProperty)]);
 
     expect(true).toEqual(fcValid.valid);
     expect(false).toEqual(fcNotValid.valid);
@@ -35,7 +35,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate minLength', () => {
-    const minLengthProperty: SimpleProperty = {
+    const minLengthProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -43,7 +43,7 @@ describe('Property validation test', () => {
       minLength: 5,
     };
 
-    const requiredStringProperty: SimpleProperty = {
+    const requiredStringProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -51,7 +51,7 @@ describe('Property validation test', () => {
       minLength: 0,
     };
 
-    const requiredUndefinedProperty: SimpleProperty = {
+    const requiredUndefinedProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -59,7 +59,7 @@ describe('Property validation test', () => {
       minLength: undefined,
     };
 
-    const notMinLengthProperty: SimpleProperty = {
+    const notMinLengthProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -67,16 +67,16 @@ describe('Property validation test', () => {
       minLength: -1,
     };
 
-    const minLengthValid = new FormControl('12345', [FeaturePropertyValidators.propertyValidator(minLengthProperty)]);
-    const minLengthValid1 = new FormControl('123456', [FeaturePropertyValidators.propertyValidator(minLengthProperty)]);
-    const minLengthNotValid = new FormControl('', [FeaturePropertyValidators.propertyValidator(minLengthProperty)]);
-    const minLengthNotValid2 = new FormControl('123', [FeaturePropertyValidators.propertyValidator(minLengthProperty)]);
-    const notEmptyValue = new FormControl('123', [FeaturePropertyValidators.propertyValidator(requiredStringProperty)]);
-    const emptyValue = new FormControl('', [FeaturePropertyValidators.propertyValidator(requiredStringProperty)]);
-    const undefinedMinLengthValid = new FormControl('123', [FeaturePropertyValidators.propertyValidator(requiredUndefinedProperty)]);
-    const emptyValue2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(requiredUndefinedProperty)]);
-    const notMinLengthValid = new FormControl('123', [FeaturePropertyValidators.propertyValidator(notMinLengthProperty)]);
-    const notMinLengthValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(notMinLengthProperty)]);
+    const minLengthValid = new FormControl('12345', [FeaturePropertyValidators.validate(minLengthProperty)]);
+    const minLengthValid1 = new FormControl('123456', [FeaturePropertyValidators.validate(minLengthProperty)]);
+    const minLengthNotValid = new FormControl('', [FeaturePropertyValidators.validate(minLengthProperty)]);
+    const minLengthNotValid2 = new FormControl('123', [FeaturePropertyValidators.validate(minLengthProperty)]);
+    const notEmptyValue = new FormControl('123', [FeaturePropertyValidators.validate(requiredStringProperty)]);
+    const emptyValue = new FormControl('', [FeaturePropertyValidators.validate(requiredStringProperty)]);
+    const undefinedMinLengthValid = new FormControl('123', [FeaturePropertyValidators.validate(requiredUndefinedProperty)]);
+    const emptyValue2 = new FormControl('', [FeaturePropertyValidators.validate(requiredUndefinedProperty)]);
+    const notMinLengthValid = new FormControl('123', [FeaturePropertyValidators.validate(notMinLengthProperty)]);
+    const notMinLengthValid2 = new FormControl('', [FeaturePropertyValidators.validate(notMinLengthProperty)]);
 
     expect(true).toEqual(minLengthValid.valid);
     expect(true).toEqual(minLengthValid1.valid);
@@ -91,7 +91,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate maxLength', () => {
-    const maxLengthProperty: SimpleProperty = {
+    const maxLengthProperty: PropertySchema = {
       name: 'maxLengthProperty',
       title: 'maxLength property',
       valueType: ValueType.STRING,
@@ -99,7 +99,7 @@ describe('Property validation test', () => {
       maxLength: 5,
     };
 
-    const nullMaxLengthProperty: SimpleProperty = {
+    const nullMaxLengthProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -107,7 +107,7 @@ describe('Property validation test', () => {
       minLength: 0,
     };
 
-    const undefinedMaxLengthProperty: SimpleProperty = {
+    const undefinedMaxLengthProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -115,7 +115,7 @@ describe('Property validation test', () => {
       minLength: undefined,
     };
 
-    const notMaxLengthProperty: SimpleProperty = {
+    const notMaxLengthProperty: PropertySchema = {
       name: 'minLengthProperty',
       title: 'minLength property',
       valueType: ValueType.STRING,
@@ -123,16 +123,16 @@ describe('Property validation test', () => {
       minLength: -1,
     };
 
-    const maxLengthValid = new FormControl('12345', [FeaturePropertyValidators.propertyValidator(maxLengthProperty)]);
-    const maxLengthValid2 = new FormControl('123', [FeaturePropertyValidators.propertyValidator(maxLengthProperty)]);
-    const maxLengthValid3 = new FormControl('', [FeaturePropertyValidators.propertyValidator(maxLengthProperty)]);
-    const maxLengthNotValid = new FormControl('123456', [FeaturePropertyValidators.propertyValidator(maxLengthProperty)]);
-    const nullMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.propertyValidator(nullMaxLengthProperty)]);
-    const nullMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(nullMaxLengthProperty)]);
-    const undefinedMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.propertyValidator(undefinedMaxLengthProperty)]);
-    const undefinedMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(undefinedMaxLengthProperty)]);
-    const notMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.propertyValidator(notMaxLengthProperty)]);
-    const notMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(notMaxLengthProperty)]);
+    const maxLengthValid = new FormControl('12345', [FeaturePropertyValidators.validate(maxLengthProperty)]);
+    const maxLengthValid2 = new FormControl('123', [FeaturePropertyValidators.validate(maxLengthProperty)]);
+    const maxLengthValid3 = new FormControl('', [FeaturePropertyValidators.validate(maxLengthProperty)]);
+    const maxLengthNotValid = new FormControl('123456', [FeaturePropertyValidators.validate(maxLengthProperty)]);
+    const nullMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.validate(nullMaxLengthProperty)]);
+    const nullMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.validate(nullMaxLengthProperty)]);
+    const undefinedMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.validate(undefinedMaxLengthProperty)]);
+    const undefinedMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.validate(undefinedMaxLengthProperty)]);
+    const notMaxLengthValid = new FormControl('123', [FeaturePropertyValidators.validate(notMaxLengthProperty)]);
+    const notMaxLengthValid2 = new FormControl('', [FeaturePropertyValidators.validate(notMaxLengthProperty)]);
 
     expect(true).toEqual(maxLengthValid.valid);
     expect(true).toEqual(maxLengthValid2.valid);
@@ -149,7 +149,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate pattern', () => {
-    const patternProperty: SimpleProperty = {
+    const patternProperty: PropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -157,7 +157,7 @@ describe('Property validation test', () => {
       pattern: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$',
     };
 
-    const nullPatternProperty: SimpleProperty = {
+    const nullPatternProperty: PropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -165,7 +165,7 @@ describe('Property validation test', () => {
       pattern: null,
     };
 
-    const undefinedPatternProperty: SimpleProperty = {
+    const undefinedPatternProperty: PropertySchema = {
       name: 'patternProperty',
       title: 'pattern property',
       valueType: ValueType.STRING,
@@ -173,12 +173,12 @@ describe('Property validation test', () => {
       pattern: undefined,
     };
 
-    const patternPropertyValid = new FormControl('Ab12345678', [FeaturePropertyValidators.propertyValidator(patternProperty)]);
-    const patternPropertyNotValid = new FormControl('b12345678', [FeaturePropertyValidators.propertyValidator(patternProperty)]);
-    const patternPropertyNotValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(patternProperty)]);
-    const nullPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.propertyValidator(nullPatternProperty)]);
-    const nullPatternPropertyValid2 = new FormControl('', [FeaturePropertyValidators.propertyValidator(nullPatternProperty)]);
-    const undefinedPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.propertyValidator(undefinedPatternProperty)]);
+    const patternPropertyValid = new FormControl('Ab12345678', [FeaturePropertyValidators.validate(patternProperty)]);
+    const patternPropertyNotValid = new FormControl('b12345678', [FeaturePropertyValidators.validate(patternProperty)]);
+    const patternPropertyNotValid2 = new FormControl('', [FeaturePropertyValidators.validate(patternProperty)]);
+    const nullPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.validate(nullPatternProperty)]);
+    const nullPatternPropertyValid2 = new FormControl('', [FeaturePropertyValidators.validate(nullPatternProperty)]);
+    const undefinedPatternPropertyValid = new FormControl('A', [FeaturePropertyValidators.validate(undefinedPatternProperty)]);
 
     expect(true).toEqual(patternPropertyValid.valid);
     expect(false).toEqual(patternPropertyNotValid.valid);
@@ -190,7 +190,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate minInclusive', () => {
-    const mi5: SimpleProperty = {
+    const mi5: PropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -198,7 +198,7 @@ describe('Property validation test', () => {
       minInclusive: 5,
     };
 
-    const mi0: SimpleProperty = {
+    const mi0: PropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -206,7 +206,7 @@ describe('Property validation test', () => {
       minInclusive: 0,
     };
 
-    const miUndefined: SimpleProperty = {
+    const miUndefined: PropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -214,7 +214,7 @@ describe('Property validation test', () => {
       minInclusive: undefined,
     };
 
-    const miNotSet: SimpleProperty = {
+    const miNotSet: PropertySchema = {
       name: 'minInclusiveProperty',
       title: 'minInclusive property',
       valueType: ValueType.INT,
@@ -222,22 +222,22 @@ describe('Property validation test', () => {
       minInclusive: -1,
     };
 
-    expect(false).toEqual(new FormControl(3, [FeaturePropertyValidators.propertyValidator(mi5)]).valid);
-    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.propertyValidator(mi5)]).valid);
-    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.propertyValidator(mi5)]).valid);
-    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.propertyValidator(mi0)]).valid);
-    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.propertyValidator(miUndefined)]).valid);
-    expect(true).toEqual(new FormControl(1, [FeaturePropertyValidators.propertyValidator(miNotSet)]).valid);
-    expect(true).toEqual(new FormControl(-12, [FeaturePropertyValidators.propertyValidator(miNotSet)]).valid);
+    expect(false).toEqual(new FormControl(3, [FeaturePropertyValidators.validate(mi5)]).valid);
+    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.validate(mi5)]).valid);
+    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.validate(mi5)]).valid);
+    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.validate(mi0)]).valid);
+    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.validate(miUndefined)]).valid);
+    expect(true).toEqual(new FormControl(1, [FeaturePropertyValidators.validate(miNotSet)]).valid);
+    expect(true).toEqual(new FormControl(-12, [FeaturePropertyValidators.validate(miNotSet)]).valid);
 
-    const formControl = new FormControl(3, [FeaturePropertyValidators.propertyValidator(mi5)]);
+    const formControl = new FormControl(3, [FeaturePropertyValidators.validate(mi5)]);
 
     expect('Значение: ' + formControl.value + ' менее допустимого: ' + mi5.minInclusive)
       .toEqual(formControl.errors['minInclusive']);
   });
 
   it('should validate maxInclusive', () => {
-    const max5: SimpleProperty = {
+    const max5: PropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -245,7 +245,7 @@ describe('Property validation test', () => {
       maxInclusive: 5,
     };
 
-    const notSetMax: SimpleProperty = {
+    const notSetMax: PropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -253,7 +253,7 @@ describe('Property validation test', () => {
       maxInclusive: -1,
     };
 
-    const notRequiredMax: SimpleProperty = {
+    const notRequiredMax: PropertySchema = {
       name: 'maxInclusiveProperty',
       title: 'maxInclusive property',
       valueType: ValueType.INT,
@@ -261,13 +261,13 @@ describe('Property validation test', () => {
       maxInclusive: 10,
     };
 
-    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.propertyValidator(notRequiredMax)]).valid);
-    expect(false).toEqual(new FormControl(7, [FeaturePropertyValidators.propertyValidator(max5)]).valid);
-    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.propertyValidator(max5)]).valid);
-    expect(true).toEqual(new FormControl('5', [FeaturePropertyValidators.propertyValidator(max5)]).valid);
-    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.propertyValidator(notSetMax)]).valid);
-    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.propertyValidator(notSetMax)]).valid);
-    expect(true).toEqual(new FormControl(-10, [FeaturePropertyValidators.propertyValidator(notSetMax)]).valid);
+    expect(true).toEqual(new FormControl(7, [FeaturePropertyValidators.validate(notRequiredMax)]).valid);
+    expect(false).toEqual(new FormControl(7, [FeaturePropertyValidators.validate(max5)]).valid);
+    expect(true).toEqual(new FormControl(5, [FeaturePropertyValidators.validate(max5)]).valid);
+    expect(true).toEqual(new FormControl('5', [FeaturePropertyValidators.validate(max5)]).valid);
+    expect(true).toEqual(new FormControl(0, [FeaturePropertyValidators.validate(notSetMax)]).valid);
+    expect(true).toEqual(new FormControl(10, [FeaturePropertyValidators.validate(notSetMax)]).valid);
+    expect(true).toEqual(new FormControl(-10, [FeaturePropertyValidators.validate(notSetMax)]).valid);
   });
 
   it('should validate enumeration', () => {
@@ -282,7 +282,7 @@ describe('Property validation test', () => {
       },
     ];
 
-    const simpleProperty: SimpleProperty = {
+    const simpleProperty: PropertySchema = {
       name: 'enumerationProperty',
       title: 'enumerationProperty',
       valueType: 'CHOICE',
@@ -291,11 +291,11 @@ describe('Property validation test', () => {
       enumerations: enumerations,
     };
 
-    const enumerationPropertyValid = new FormControl(1, [FeaturePropertyValidators.propertyValidator(simpleProperty)]);
-    const enumerationPropertyNotValid = new FormControl(0, [FeaturePropertyValidators.propertyValidator(simpleProperty)]);
-    const enumerationPropertyNotValid2 = new FormControl(3, [FeaturePropertyValidators.propertyValidator(simpleProperty)]);
-    const nullEnumerationPropertyNotValid = new FormControl(null, [FeaturePropertyValidators.propertyValidator(simpleProperty)]);
-    const stringEnumerationPropertyNotValid = new FormControl('asdfas', [FeaturePropertyValidators.propertyValidator(simpleProperty)]);
+    const enumerationPropertyValid = new FormControl(1, [FeaturePropertyValidators.validate(simpleProperty)]);
+    const enumerationPropertyNotValid = new FormControl(0, [FeaturePropertyValidators.validate(simpleProperty)]);
+    const enumerationPropertyNotValid2 = new FormControl(3, [FeaturePropertyValidators.validate(simpleProperty)]);
+    const nullEnumerationPropertyNotValid = new FormControl(null, [FeaturePropertyValidators.validate(simpleProperty)]);
+    const stringEnumerationPropertyNotValid = new FormControl('asdfas', [FeaturePropertyValidators.validate(simpleProperty)]);
 
     expect(true).toEqual(enumerationPropertyValid.valid);
     expect(false).toEqual(enumerationPropertyNotValid.valid);
@@ -307,7 +307,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate totalDigits', () => {
-    const notRequiredDoubleProperty: SimpleProperty = {
+    const notRequiredDoubleProperty: PropertySchema = {
       name: 'DoubleProperty',
       title: 'DoubleProperty',
       valueType: ValueType.DOUBLE,
@@ -316,7 +316,7 @@ describe('Property validation test', () => {
       totalDigits: -1,
     };
 
-    const requiredDoubleProperty: SimpleProperty = {
+    const requiredDoubleProperty: PropertySchema = {
       name: 'stringProperty',
       title: 'stringProperty',
       valueType: ValueType.DOUBLE,
@@ -325,9 +325,9 @@ describe('Property validation test', () => {
       totalDigits: 4,
     };
 
-    const totalDigitsPropertyValid = new FormControl(1, [FeaturePropertyValidators.propertyValidator(notRequiredDoubleProperty)]);
-    const totalDigitsPropertyNotValid = new FormControl(987987, [FeaturePropertyValidators.propertyValidator(requiredDoubleProperty)]);
-    const requiredAndUndefined = new FormControl(undefined, [FeaturePropertyValidators.propertyValidator(requiredDoubleProperty)]);
+    const totalDigitsPropertyValid = new FormControl(1, [FeaturePropertyValidators.validate(notRequiredDoubleProperty)]);
+    const totalDigitsPropertyNotValid = new FormControl(987987, [FeaturePropertyValidators.validate(requiredDoubleProperty)]);
+    const requiredAndUndefined = new FormControl(undefined, [FeaturePropertyValidators.validate(requiredDoubleProperty)]);
 
     expect(true).toEqual(totalDigitsPropertyValid.valid);
     expect(false).toEqual(totalDigitsPropertyNotValid.valid);

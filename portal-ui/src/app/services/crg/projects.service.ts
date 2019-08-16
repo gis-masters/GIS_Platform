@@ -48,8 +48,6 @@ export class ProjectsService {
           flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
         )
         .subscribe((projects: CrgProject[]) => {
-          this.log.info('projects', '_projects$.next: ', projects);
-
           this._projects$.next(projects);
         });
   }

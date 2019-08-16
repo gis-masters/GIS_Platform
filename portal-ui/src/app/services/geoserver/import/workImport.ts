@@ -1,6 +1,6 @@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
-import {SimpleProperty} from '../../crg/data-schema.service';
+import {PropertySchema} from '../../crg/data-schema.service';
 import {InputStartResponseDto, LayerAttribute} from './import.service';
 import {MappingItem, TaskImport} from './taskImport';
 import {ProjectModel} from './projectModel';
@@ -31,7 +31,7 @@ export class WorkImport {
     this.updateWorkImportState();
   }
 
-  addMapping(layerName: string, source: LayerAttribute, targetProperty: SimpleProperty) {
+  addMapping(layerName: string, source: LayerAttribute, targetProperty: PropertySchema) {
     const newMapping = {
       source: source,
       target: {
@@ -44,7 +44,7 @@ export class WorkImport {
         .mapping.push(newMapping);
   }
 
-  updateMapping(layerName: string, source: LayerAttribute, property: SimpleProperty) {
+  updateMapping(layerName: string, source: LayerAttribute, property: PropertySchema) {
     this.getTaskByLayerName(layerName).mapping
         .forEach((mapItem: MappingItem) => {
           if (mapItem.source.name === source.name) {

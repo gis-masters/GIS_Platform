@@ -8,7 +8,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, DataSchemaService, SimpleProperty, FeatureDescription} from '../../services/crg/data-schema.service';
+import {EditFeatureItem, DataSchemaService, PropertySchema, FeatureDescription} from '../../services/crg/data-schema.service';
 import {from, Subject} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
 import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
@@ -40,7 +40,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager,
               private openLayers: OpenLayersService,
-              private rulesService: DataSchemaService,
+              private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
 
   }
@@ -68,7 +68,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
         this.openLayers.showFeature(currentData.feature);
       }
 
-      this.featureDescription = this.rulesService.getFeatureDescriptionByName(currentData.feature.id.split('.')[0]);
+      this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
       Object.keys(currentData.feature.properties)
@@ -76,7 +76,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
             .filter(key => key !== 'bbox')
             .forEach(key => {
               const currentValue = currentData.feature.properties[key];
-              const property = this.rulesService.getPropertiesByName(key, this.featureDescription.properties);
+              const property = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
               if (property) {
                 this.editFeatureData.push({
                   name: key,
@@ -87,7 +87,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
 
                 const formControl = new FormControl({value: currentValue, disabled: property.name === 'GLOBALID'}, {
                   validators: [
-                    FeaturePropertyValidators.propertyValidator(property),
+                    FeaturePropertyValidators.validate(property),
                   ],
                   // updateOn: 'blur'
                 });
@@ -162,7 +162,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  switchControl(property: SimpleProperty) {
+  switchControl(property: PropertySchema) {
     if (this.editFeatureForm.controls[property.name.toLowerCase()].disabled) {
       // formControl.setValue('Оставить как есть');
       this.editFeatureForm.controls[property.name.toLowerCase()].enable();
@@ -171,7 +171,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  isShowTemplate(property: SimpleProperty): boolean {
+  isShowTemplate(property: PropertySchema): boolean {
     return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
   }
 

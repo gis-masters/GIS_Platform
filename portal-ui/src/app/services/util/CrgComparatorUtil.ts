@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/data-schema.service';
+import {PropertySchema} from '../crg/data-schema.service';
 import {CrgComparison} from '../properties-comparator.service';
 import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import/import.service';
 
@@ -9,9 +9,9 @@ import {AS_IS_TYPE, LayerAttribute, NOT_IMPORT} from '../geoserver/import/import
 export class DirectComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     let result = null;
-    properties.forEach((property: SimpleProperty) => {
+    properties.forEach((property: PropertySchema) => {
       if (source.name.toLowerCase() === property.name.toLowerCase()) {
         result = property;
       }
@@ -37,7 +37,7 @@ export class GeometryComparison implements CrgComparison {
   private comparison: CrgComparison;
 
   // TODO: Сопоставление геометрии
-  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     let result = null;
 
     if (source.binding.includes('MultiPolygon') ||
@@ -49,7 +49,7 @@ export class GeometryComparison implements CrgComparison {
       result = {
         name: 'shape',
         title: 'shape'
-      } as SimpleProperty;
+      } as PropertySchema;
     }
 
     if (result) {
@@ -71,7 +71,7 @@ export class GeometryComparison implements CrgComparison {
 export class ObjectIdComparison implements CrgComparison {
   private comparison: CrgComparison;
 
-  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     let result = null;
 
     if (source.name.toLowerCase().includes('objectid')) {
@@ -101,7 +101,7 @@ export class ObjectIdComparison implements CrgComparison {
  */
 export class LastComparison implements CrgComparison {
 
-  compare(source: LayerAttribute, properties: SimpleProperty[]): SimpleProperty {
+  compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     return {
       name: AS_IS_TYPE.name,
       title: AS_IS_TYPE.title

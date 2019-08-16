@@ -16,7 +16,7 @@
             <div></div>
             <div class="feature-id">ID: {{feature.id.split('.')[1]}}</div>
             <div class="feature-alias">
-              {{rulesService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
+              {{dataSchemaService.getClassIdAlias(feature.id.split('.')[0], feature.properties)}}
             </div>
           </div>
         </mat-list-item>

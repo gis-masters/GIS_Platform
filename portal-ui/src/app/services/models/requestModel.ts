@@ -1,4 +1,4 @@
-import {SimpleProperty} from '../crg/data-schema.service';
+import {PropertySchema} from '../crg/data-schema.service';
 import {ProcessStatus} from '../process-status';
 import {WsMessageType} from '../ws.service';
 
@@ -23,7 +23,7 @@ export interface Sortable {
 }
 
 export interface FilterEvent {
-  property?: SimpleProperty;
+  property?: PropertySchema;
   value?: string[];
 }
 

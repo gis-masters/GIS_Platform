@@ -1,6 +1,6 @@
 import {fromEvent, Subject} from 'rxjs';
 import {FilterEvent} from '../../services/models/requestModel';
-import {SimpleProperty} from '../../services/crg/data-schema.service';
+import {PropertySchema} from '../../services/crg/data-schema.service';
 import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {MatSelectChange} from '@angular/material';
@@ -12,7 +12,7 @@ import {MatSelectChange} from '@angular/material';
 })
 export class TableFilterComponent implements AfterViewInit, OnDestroy {
 
-  @Input() property: SimpleProperty;
+  @Input() property: PropertySchema;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
   @ViewChild('filterInput') filterInput: ElementRef;
 

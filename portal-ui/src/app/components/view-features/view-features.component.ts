@@ -35,7 +35,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private sideBarManager: SideBarManager,
-              private rulesService: DataSchemaService,
+              private dataSchemaService: DataSchemaService,
               private openLayers: OpenLayersService) {
   }
 
