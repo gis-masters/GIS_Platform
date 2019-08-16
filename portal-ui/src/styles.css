@@ -1,12 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import '~@swimlane/ngx-datatable/release/index.css';
+
 @import 'bootstrap.css';
+
 @import 'bootstrap2.css';
+
 @import '~@swimlane/ngx-datatable/release/assets/icons.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; overflow: hidden;}
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+
+  margin: 0;
+
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 .mat-menu-item:focus {
   outline: none;

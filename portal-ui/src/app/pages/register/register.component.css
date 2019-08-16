@@ -9,6 +9,7 @@
 
 .mat-radio-button {
   display: block;
+
   margin: 5px 0;
 }
 
@@ -19,6 +20,7 @@
 
 .col {
   flex: 1;
+
   margin-right: 20px;
 }
 
@@ -29,5 +31,6 @@
 .linkLogin {
   display: flex;
   order: 2;
+
   margin: 0 5px 0 auto;
 }

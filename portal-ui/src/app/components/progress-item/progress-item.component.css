@@ -1,36 +1,39 @@
 @import url(../../pages/_app/app.component.css);
 
 .progress-item {
-  margin: 5px;
-  background-color: white;
   height: 60px;
+  margin: 5px;
 
   border-style: solid;
   border-color: darkgrey;
   border-radius: 8px;
+  background-color: white;
 }
 
 .progress-icon {
   float: left;
+
   width: 15%;
-  background-color: lightgray;
-  border-radius: 5px 0 0 5px;
   height: 100%;
+
+  border-radius: 5px 0 0 5px;
+  background-color: lightgray;
 }
 
 .progress-content {
   float: right;
+
   width: 85%;
   height: 100%;
   padding: 5px;
 }
 
 .crg-spinner {
-  zoom: 0.4;
-
   position: relative;
   top: calc(50% - 50px);
   left: calc(50% - 50px);
+
+  zoom: 0.4;
 }
 
 .success {
@@ -46,19 +49,22 @@
 }
 
 .crg-progress-done {
-  font-size: -webkit-xxx-large;
   position: relative;
   top: 5px;
   left: 5px;
+
+  font-size: -webkit-xxx-large;
 }
 
 .info-close-icon {
   position: relative;
   left: 5px;
 
-  cursor: pointer;
-  color: darkgrey;
   float: right;
+
+  cursor: pointer;
+
+  color: darkgrey;
 }
 
 /*.content-text {*/
@@ -67,21 +73,23 @@
 /*  white-space: nowrap;*/
 /*}*/
 
-.content-action {
-}
+
 
 .gml-link {
   padding-right: 10px;
 }
 
 .content-link-icon {
-  font-size: x-large;
   cursor: pointer;
+
+  font-size: x-large;
 }
 
 .content-link-text {
   position: relative;
   top: -5px;
+
   padding-right: 10px;
+
   font-family: monospace;
 }

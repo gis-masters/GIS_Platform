@@ -2,8 +2,8 @@
 
 .validation_accordion {
   width: 100%;
-  padding-left: 5px;
   padding-right: 5px;
+  padding-left: 5px;
 }
 
 .validation_button {
@@ -12,6 +12,7 @@
 
 ::ng-deep .validation_accordion .mat-expansion-panel-header {
   display: grid;
+
   height: 50px;
   padding: 0 10px;
 }
@@ -30,65 +31,71 @@
 /*}*/
 
 .mat-raised-button {
-  min-width: 34px;
   width: 34px;
+  min-width: 34px;
   height: 34px;
-  border-radius: 50%;
   padding: 0;
+
+  border-radius: 50%;
 }
 
 .crg-validation-sidebar {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: calc(100% - 550px);
 
-  height: calc(100% - 55px);
   width: 550px;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  height: calc(100% - 55px);
 
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-validation-sidebar_hidden {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: 100%;
 
-  height: calc(100% - 55px);
   width: 550px;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  height: calc(100% - 55px);
 
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-report-sidebar-header {
-  font-size: larger;
   padding: 20px 20px 5px 20px;
+
+  font-size: larger;
 }
 
 .crg-report-sidebar-content {
   overflow: auto;
+
   max-height: 100%;
 }
 
 .crg-close-icon {
   position: relative;
   top: 8px;
-  cursor: pointer;
-  color: grey;
+
   float: right;
+
+  cursor: pointer;
+
+  color: grey;
 }
 
 .revalidation-b {

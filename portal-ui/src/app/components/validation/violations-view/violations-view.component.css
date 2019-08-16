@@ -3,18 +3,20 @@
 }
 
 .fiz-inner {
-  /*overflow: hidden;*/
-  width: 100%;
   display: grid;
+  /*overflow: hidden;*/
+
+  width: 100%;
+
   grid-column-gap: 10px;
   grid-template-columns: 65% 35%;
 }
 
 .prop-title {
-  font-style: oblique;
-  font-weight: bolder;
   font-family: serif;
   font-size: 14px;
+  font-weight: bolder;
+  font-style: oblique;
 }
 
 .prop-error {

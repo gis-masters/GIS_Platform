@@ -14,13 +14,14 @@
 
 .fiz-edit-item {
   align-items: center;
+
   padding: 4px 6px 4px 6px;
 }
 
 .edit-item-title {
   font-family: monospace;
   /*font-weight: bold;*/
-  line-height: 1.1
+  line-height: 1.1;
 }
 
 .multiple-edit-badge {
@@ -29,19 +30,21 @@
 
 .error-badge {
   padding: 0 2px 0 2px;
+
   background-color: tomato;
 }
 
 .multiedit-template {
-  background-color: #e9ecef;
   position: absolute;
   top: 1px;
   left: 1px;
 
-  border-top-left-radius: 0.15rem;
-  border-bottom-left-radius: 0.15rem;
   width: 88.5%;
   height: 95%;
+
+  border-top-left-radius: 0.15rem;
+  border-bottom-left-radius: 0.15rem;
+  background-color: #e9ecef;
 }
 
 .template-text {

@@ -4,9 +4,10 @@
 }
 
 .recovery-link {
-  color: lightgray;
   position: relative;
   top: 15px;
+
+  color: lightgray;
 }
 
 /* TODO: Общее с register page вынести в одно место */
@@ -16,6 +17,7 @@
 
 .mat-radio-button {
   display: block;
+
   margin: 5px 0;
 }
 
@@ -26,6 +28,7 @@
 
 .col {
   flex: 1;
+
   margin-right: 20px;
 }
 

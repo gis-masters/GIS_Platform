@@ -1,21 +1,24 @@
 .button {
+  width: auto;
   height: 24px;
+
   color: grey;
-  outline: none;
-  border-radius: 5px;
   border: outset;
   border-width: thin;
-  width: auto;
+  border-radius: 5px;
+  outline: none;
 
   &__inner {
     position: relative;
     top: -9px;
+
     padding: 0 5px;
   }
 
   &__icon {
-    vertical-align: middle;
     margin: -5px 0 0 0;
+
+    vertical-align: middle;
   }
 
   &_checked {

@@ -2,6 +2,7 @@
 
 .projects-container {
   overflow: auto;
+
   height: calc(100% - 35px);
 }
 
@@ -12,9 +13,11 @@
 }
 
 .inner-div {
-  height: 100%;
   width: 100%;
+  height: 100%;
+
   transition: all 0.5s ease;
+
   background-image: url('../../../../assets/images/gis5.png');
 }
 
@@ -24,105 +27,130 @@
 
 .layer {
   position: absolute;
+  z-index: 100;
   top: 0;
   left: 0;
+
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
   padding: 20px 23px;
-  font: 14px/1.3 'Source Code Pro', monospace;
-  text-transform: uppercase;
+
   letter-spacing: 1px;
+  text-transform: uppercase;
+
   color: #fff;
   border-radius: 1px 1px 0 0;
-  z-index: 100;
+  background: rgba(0, 0, 0, 0.4);
+
+  font: 14px/1.3 'Source Code Pro', monospace;
 }
 
 .layer-icon {
-  display: none;
   position: absolute;
-  bottom: 20px;
+  z-index: 100;
   right: 20px;
+  bottom: 20px;
+
+  display: none;
+
   width: 50px;
   padding: 4px 9px 7px 9px;
-  text-align: center;
-  background-color: #fff;
-  border-radius: 3px;
-  font: 18px 'Source Code Pro', monospace;
-  color: #111;
-  z-index: 100;
+
   cursor: pointer;
+  text-align: center;
+
+  color: #111;
+  border-radius: 3px;
+  background-color: #fff;
+
+  font: 18px 'Source Code Pro', monospace;
 }
 
 .new-project-item {
-  background: aliceblue;
+  cursor: pointer;
 
   border-width: thin;
   border-style: dotted;
   border-color: lightsteelblue;
   border-radius: 5px;
-
-  cursor: pointer;
+  background: aliceblue;
 }
 
 .project-item-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
   display: flex;
   justify-content: space-between;
-  background-color: #ffffff70;
-  position: absolute;
-  left: 0;
-  bottom: 0;
+
   width: 100%;
   height: 20%;
 
-  font-weight: 500;
-  color: white;
-
   cursor: pointer;
+
+  color: white;
+  background-color: #fff70;
+
+  font-weight: 500;
 }
 
 .fiz-class {
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+
   width: 100%;
   height: 100%;
 }
 
 .project-form {
-  width: 100%;
   float: left;
+
+  width: 100%;
   padding: 10px;
 }
 
 .project-name {
-  color: ghostwhite;
   position: absolute;
-  padding: 0 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
   display: -webkit-box;
-  -webkit-line-clamp: 5;
-  line-height: 20px;
+  overflow: hidden;
+
   max-height: 100px;
-  text-align: center;
   margin-top: -25px;
+  padding: 0 10px;
+
+  text-align: center;
+  text-overflow: ellipsis;
+
+  color: ghostwhite;
+
+  line-height: 20px;
+
+  -webkit-line-clamp: 5;
 }
 
 .project-remove-icon {
   position: absolute;
-  right: 0;
   top: 0;
+  right: 0;
+
   padding-top: 3px;
-  color: ghostwhite;
+
   cursor: pointer;
+
+  color: ghostwhite;
 }
 
 .error-text {
-  color: tomato;
-  padding: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
+
+  padding: 10px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: tomato;
 }
 
 .project-info {

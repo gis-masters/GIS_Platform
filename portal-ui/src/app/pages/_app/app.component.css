@@ -12,12 +12,13 @@
 }
 
 .cut-text {
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.workspace-page_toolbar>h6 {
+.workspace-page_toolbar > h6 {
   z-index: 1;
 }
 
@@ -31,11 +32,11 @@
 }
 
 .fiz-border {
-  border-radius: 5px;
   border: outset;
   border-width: thin;
+  border-radius: 5px;
 }
 
 .without-outline {
-  outline: none
+  outline: none;
 }

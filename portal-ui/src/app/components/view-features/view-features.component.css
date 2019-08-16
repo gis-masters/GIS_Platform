@@ -21,70 +21,75 @@
 }
 
 .crg-view-features-sidebar {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: calc(100% - 550px);
-
   /*height: calc(100% - 55px);*/
+
   width: 550px;
 
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
-
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-view-features-sidebar_hidden {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: 100%;
 
-  height: calc(100% - 55px);
   width: 550px;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  height: calc(100% - 55px);
 
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-sidebar-header {
-  font-size: larger;
   padding: 20px;
+
+  font-size: larger;
 }
 
 .crg-close-icon {
-  cursor: pointer;
-  color: grey;
   float: right;
+
+  cursor: pointer;
+
+  color: grey;
 }
 
 .feature-info {
-  height: 100%;
-  width: 98%;
   position: absolute;
   top: 0;
   left: 5px;
 
   display: grid;
+
+  width: 98%;
+  height: 100%;
+
   grid-column-gap: 3px;
   grid-template-rows: 34% 66%;
   grid-template-columns: 3% 97%;
 }
 
 .feature-alias {
+  font-size: small;
+
   grid-column-start: 2;
   grid-row-start: 2;
-
-  font-size: small;
 }
 
 .feature-id {
@@ -92,13 +97,16 @@
 }
 
 .edit-icon {
-  cursor: pointer;
-  color: grey;
   float: right;
+
   margin-right: 10px;
+
+  cursor: pointer;
+
+  color: grey;
 }
 
 .paginator-style {
-  border-top-style: outset;
   border-top-width: thin;
+  border-top-style: outset;
 }

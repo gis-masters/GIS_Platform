@@ -1,6 +1,8 @@
 .crg-errors-icon {
-  cursor: pointer;
   position: relative;
   top: 3px;
+
+  cursor: pointer;
+
   color: white;
 }

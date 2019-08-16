@@ -3,7 +3,7 @@
 }
 
 /*.example-toolbar {*/
-  /*height: 85px;*/
+/*height: 85px;*/
 /*}*/
 
 .example-is-mobile {
@@ -13,13 +13,14 @@
 }
 
 .example-container {
-  display: flex;
-  flex-direction: column;
   position: absolute;
   top: 0;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .example-spacer {
@@ -29,25 +30,30 @@
 .mat-tab-label-content {
   position: relative;
   top: 8px;
+
   color: white;
 }
 
 .crg-notification {
-  cursor: pointer;
   margin-right: 15px;
+
+  cursor: pointer;
 }
 
 .user-name {
-  cursor: default;
   position: relative;
   top: 4px;
+
+  cursor: default;
+
+  font-size: smaller;
   font-weight: 100;
   font-style: italic;
-  font-size: smaller;
 }
 
 .org-name {
   position: relative;
   top: -10px;
+
   font-size: large;
 }

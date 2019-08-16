@@ -6,22 +6,25 @@
 }
 
 .crg-header {
-  background: rgba(0, 0, 0, .05);
   padding-top: 1.25em;
+
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .crg-card-content {
-  margin: 0;
   height: calc(100% - 58px);
+  margin: 0;
 }
 
 .crg-card-footer {
-  height: 58px;
   position: absolute;
   bottom: 0;
+
   width: 100%;
-  background: rgba(0, 0, 0, .05);
+  height: 58px;
   margin: 0;
+
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .crg-card-footer-b {
@@ -29,31 +32,37 @@
 }
 
 .crg-card-list {
+  overflow: auto;
+
   max-width: 74.6%;
   height: inherit;
-  overflow: auto;
 }
 
 .crg-list-item {
-  font-size: larger!important;
   color: grey;
+
+  font-size: larger!important;
 }
 
 .selected-element {
-  font-size: large!important;
   color: #3f51b5;
+
+  font-size: large!important;
 }
 
 .selected-element-marker {
   position: relative;
   left: 16px;
+
   width: 3px;
   height: 38px;
+
   background-color: #3f51b5;
 }
 
 .content-separator {
   width: 4px;
   height: 100%;
+
   background-color: #f2f2f2;
 }

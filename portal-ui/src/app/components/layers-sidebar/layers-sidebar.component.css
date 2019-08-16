@@ -1,52 +1,55 @@
 @import url(../../pages/_app/app.component.css);
 
 .crg-layers-sidebar {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: 0;
 
-  height: calc(100% - 55px);
   width: 400px;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  height: calc(100% - 55px);
 
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-layers-sidebar_hidden {
-  z-index: 100;
   position: fixed;
+  z-index: 100;
   top: 55px;
   left: -400px;
 
-  height: calc(100% - 55px);
   width: 400px;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  height: calc(100% - 55px);
 
   -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+     -moz-transition-duration: 0.3s;
+       -o-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 }
 
 .crg-sidebar-header {
-  font-size: larger;
   padding: 20px;
+
+  font-size: larger;
 }
 
 .crg-sidebar-content {
   overflow: auto;
+
   max-height: calc(100% - 70px);
 }
 
-.mat-menu-item{
-  line-height: 30px;
+.mat-menu-item {
   height: 30px;
+
+  line-height: 30px;
 }
