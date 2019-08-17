@@ -10,6 +10,8 @@ import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +38,15 @@ public class ValidatorImpl implements IValidator {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
         featureDescriptionDto.getProperties().forEach(propertySchema -> {
-            SimplePropertyDto modifiedPropertySchema = modifyPropertySchemaByCustomRules(data, propertySchema,
-                    featureDescriptionDto);
+            SimplePropertyDto propertySchema2 = propertySchema;
 
-            String name = modifiedPropertySchema.getName();
+            propertySchema2 = modifyPropertySchemaByCustomRules(data, propertySchema, featureDescriptionDto);
+
+            String name = propertySchema2.getName();
             if (data.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));
 
-                List<String> errors = validateProperty(modifiedPropertySchema, data.get(name));
+                List<String> errors = validateProperty(propertySchema2, data.get(name));
 
                 propertyViolation.setErrorTypes(errors);
 
@@ -97,6 +100,8 @@ public class ValidatorImpl implements IValidator {
     private SimplePropertyDto modifyPropertySchemaByCustomRules(Map<String, Object> data,
                                                    SimplePropertyDto propertySchema,
                                                    FeatureDescriptionDto featureDescriptionDto) {
+        LocalTime startMTime = LocalTime.now();
+
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
         customRuleValidator
@@ -111,8 +116,15 @@ public class ValidatorImpl implements IValidator {
                 }
             });
 
+            LocalTime endMTime = LocalTime.now();
+            log.debug("Modify: {} for: {}", propertySchema.getName(), ChronoUnit.MILLIS.between(startMTime, endMTime));
+
             return newPropertySchema;
         } else {
+
+            LocalTime endMTime = LocalTime.now();
+            log.debug("Validate batch: {} for: {}", propertySchema.getName(), ChronoUnit.MILLIS.between(startMTime, endMTime));
+
             return propertySchema;
         }
     }
