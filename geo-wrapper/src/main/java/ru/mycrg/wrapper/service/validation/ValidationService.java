@@ -14,8 +14,11 @@ import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
 import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
@@ -147,10 +150,15 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
     private List<ObjectValidationResult> validateBatch(List<Map<String, Object>> batch,
                                                        FeatureDescriptionDto featureDescription) {
+        LocalTime startTime = LocalTime.now();
+        log.debug("Start validation at: {}", LocalTime.now().toString());
+
         List<ObjectValidationResult> validationResults = new ArrayList<>();
 
         int i = 0;
         while (i < batch.size()) {
+            LocalTime startBTime = LocalTime.now();
+
             ObjectValidationResult objectValidationResult = validator.validate(featureDescription, batch.get(i));
             objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
             objectValidationResult.setClassId(Util.getPropertyByKey(batch.get(i), CLASS_ID));
@@ -159,8 +167,13 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
             validationResults.add(objectValidationResult);
 
             i++;
+
+            LocalTime endBTime = LocalTime.now();
+            log.debug("Validate batch: {} for: {}", i, ChronoUnit.MILLIS.between(startBTime, endBTime));
         }
 
+        LocalTime endTime = LocalTime.now();
+        log.debug("Validate batch time in MILISECONDS = {}", ChronoUnit.MILLIS.between(startTime, endTime));
         return validationResults;
     }
 
