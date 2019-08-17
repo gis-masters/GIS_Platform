@@ -37,10 +37,15 @@ public class ValidatorImpl implements IValidator {
     public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> data) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
+        ObjectValidationResult customValidationResults = new ObjectValidationResult();
+        customRuleValidator
+                .validate(featureDescriptionDto, data)
+                .values().forEach(validationResult::addObjectViolation);
+
         featureDescriptionDto.getProperties().forEach(propertySchema -> {
             SimplePropertyDto propertySchema2 = propertySchema;
 
-            propertySchema2 = modifyPropertySchemaByCustomRules(data, propertySchema, featureDescriptionDto);
+            propertySchema2 = modifyPropertySchemaByCustomRules(customValidationResults, propertySchema);
 
             String name = propertySchema2.getName();
             if (data.containsKey(name)) {
@@ -59,30 +64,30 @@ public class ValidatorImpl implements IValidator {
         return validationResult;
     }
 
-    private List<String> validateProperty(SimplePropertyDto propertyType, Object value) {
+    private List<String> validateProperty(SimplePropertyDto propertySchema, Object value) {
         List<String> violations = new ArrayList<>();
 
-        requiredValidation.validate(value, propertyType, violations);
+        requiredValidation.validate(value, propertySchema, violations);
 
-        if (propertyType.getValueType() == ValueType.STRING) {
-            minLengthValidation.validate(value, propertyType, violations);
-            maxLengthValidation.validate(value, propertyType, violations);
-            patternValidation.validate(value, propertyType, violations);
-        } else if (propertyType.getValueType() == ValueType.INT) {
-            if (isLongTypeValidation.isValid(value, propertyType)) {
-                minInclusiveValidation.validate(value, propertyType, violations);
-                maxInclusiveValidation.validate(value, propertyType, violations);
+        if (propertySchema.getValueType() == ValueType.STRING) {
+            minLengthValidation.validate(value, propertySchema, violations);
+            maxLengthValidation.validate(value, propertySchema, violations);
+            patternValidation.validate(value, propertySchema, violations);
+        } else if (propertySchema.getValueType() == ValueType.INT) {
+            if (isLongTypeValidation.isValid(value, propertySchema)) {
+                minInclusiveValidation.validate(value, propertySchema, violations);
+                maxInclusiveValidation.validate(value, propertySchema, violations);
             } else {
-                isLongTypeValidation.validate(value, propertyType, violations);
+                isLongTypeValidation.validate(value, propertySchema, violations);
             }
-        } else if (propertyType.getValueType() == ValueType.DOUBLE) {
-            if (isDoubleTypeValidation.isValid(value, propertyType)) {
-                totalDigitsValidation.validate(value, propertyType, violations);
+        } else if (propertySchema.getValueType() == ValueType.DOUBLE) {
+            if (isDoubleTypeValidation.isValid(value, propertySchema)) {
+                totalDigitsValidation.validate(value, propertySchema, violations);
             } else {
-                isDoubleTypeValidation.validate(value, propertyType, violations);
+                isDoubleTypeValidation.validate(value, propertySchema, violations);
             }
-        } else if (propertyType.getValueType() == ValueType.CHOICE) {
-            enumerationValidation.validate(value, propertyType, violations);
+        } else if (propertySchema.getValueType() == ValueType.CHOICE) {
+            enumerationValidation.validate(value, propertySchema, violations);
         }
 
         return violations;
@@ -91,26 +96,17 @@ public class ValidatorImpl implements IValidator {
     /**
      * Создаем новую схему (на основе propertySchema) согласно кастомным правилам.
      *
-     * @param data                  Конкретный обьект слоя
-     * @param propertySchema        Схема свойства
-     * @param featureDescriptionDto Описание слоя
+     * @param propertySchema Схема свойства
      * @return Модифицированную схему свойства SimplePropertyDto если есть доп. правила для этого конкретного обьекта
      * или тот же обьект propertySchema без изменений.
      */
-    private SimplePropertyDto modifyPropertySchemaByCustomRules(Map<String, Object> data,
-                                                   SimplePropertyDto propertySchema,
-                                                   FeatureDescriptionDto featureDescriptionDto) {
+    private SimplePropertyDto modifyPropertySchemaByCustomRules(ObjectValidationResult customValidationResults,
+                                                                SimplePropertyDto propertySchema) {
         LocalTime startMTime = LocalTime.now();
 
-        ObjectValidationResult validationResult = new ObjectValidationResult();
-
-        customRuleValidator
-                .validate(featureDescriptionDto, data)
-                .values().forEach(validationResult::addObjectViolation);
-
-        if (!validationResult.getObjectViolations().isEmpty()) {
+        if (!customValidationResults.getObjectViolations().isEmpty()) {
             SimplePropertyDto newPropertySchema = new SimplePropertyDto(propertySchema);
-            validationResult.getObjectViolations().forEach(errorPropertyName -> {
+            customValidationResults.getObjectViolations().forEach(errorPropertyName -> {
                 if (errorPropertyName.equals(propertySchema.getName())) {
                     newPropertySchema.setRequired(true);
                 }
