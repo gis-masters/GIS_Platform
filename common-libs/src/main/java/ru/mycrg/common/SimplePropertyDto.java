@@ -39,31 +39,6 @@ public class SimplePropertyDto {
 
     public SimplePropertyDto() {}
 
-    public SimplePropertyDto(SimplePropertyDto propertySchema) {
-        this.name = propertySchema.getName();
-        this.title = propertySchema.getTitle();
-        this.description = propertySchema.getDescription();
-        this.hidden = propertySchema.isHidden();
-        this.isMultiple = propertySchema.isMultiple;
-        this.updateability = propertySchema.getUpdateability();
-        this.choice = propertySchema.getChoice();
-        this.valueType = propertySchema.getValueType();
-        this.required = propertySchema.isRequired();
-        this.length = propertySchema.getLength();
-        this.minLength = propertySchema.getMinLength();
-        this.maxLength = propertySchema.getMaxLength();
-        this.minInclusive = propertySchema.getMinInclusive();
-        this.maxInclusive = propertySchema.getMaxInclusive();
-        this.totalDigits = propertySchema.getTotalDigits();
-        this.fractionDigits = propertySchema.getFractionDigits();
-        this.whiteSpace = propertySchema.getWhiteSpace();
-        this.pattern = propertySchema.getPattern();
-        this.patternDescription = propertySchema.getPatternDescription();
-        this.enumerations = propertySchema.getEnumerations();
-        this.allowedValues = propertySchema.getAllowedValues();
-        this.sequenceNumber = propertySchema.getSequenceNumber();
-    }
-
     public String getName() {
         return name;
     }
