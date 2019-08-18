@@ -97,47 +97,21 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
             lastCalculatedValidation.put(resource.getResourceId(), LocalDateTime.now());
 
-            Queue<List<ObjectValidationResult>> violationsQueue = new ArrayDeque<>();
-            int offset = 0;
+            List<Map<String, Object>> nextBatch;
+            int batchSize = DaoProperties.batchSize;
             while (true) {
-                List<Map<String, Object>> batch = baseDaoService.fetchBatchOfRowsNeededToValidation(jdbcTemplate,
-                        resource, DaoProperties.batchSize, offset);
-                if (batch.isEmpty()) {
+                nextBatch = baseDaoService.fetchBatchOfRowsNeededToValidation(jdbcTemplate, resource, batchSize);
+                if (nextBatch.isEmpty()) {
                     break;
                 }
+
+                List<ObjectValidationResult> validationResults = validateBatch(nextBatch, feature);
+                baseDaoService.saveValidationResults(jdbcTemplate, resource, validationResults);
 
                 mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
-                        "Обработка: " + feature.getTitle(),
-                        calculatePercent(processedRows, totalRows)));
+                        "Обработано: " + feature.getTitle(), calculatePercent(processedRows, totalRows)));
 
-                violationsQueue.offer(validateBatch(batch, feature));
-
-                processedRows += batch.size();
-                offset++;
-            }
-
-            // Для подсчета общего кол-ва обьектов с ошибками различаем две ситуации когда слой был провалидирован ранее
-            // и когда происходит первая валидация.
-            if (isNotValidatedYet) {
-                totalViolations = countIncorrectObjects(violationsQueue);
-            } else {
-                totalViolations = totalViolations - countCorrectObjects(violationsQueue);
-            }
-
-            // Сохраняем результаты валидации
-            while (true) {
-                List<ObjectValidationResult> nextViolations = violationsQueue.poll();
-                if (nextViolations != null) {
-                    log.debug("Save validation results. Total: {}", totalViolations);
-
-                    mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
-                            "Сохранение: " + feature.getTitle(),
-                            calculatePercent(processedRows, totalRows)));
-
-                    baseDaoService.saveValidationResults(jdbcTemplate, resource, nextViolations);
-                } else {
-                    break;
-                }
+                processedRows += batchSize;
             }
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), SUB_DONE, "Готово", -1));

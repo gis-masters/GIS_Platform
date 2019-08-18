@@ -58,8 +58,7 @@ public class BaseDaoService {
 
     @Transactional
     public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(JdbcTemplate jdbcTemplate,
-                                                                        ResourceProjection resource,
-                                                                        int limit, int offset) {
+                                                                        ResourceProjection resource, int limit) {
         String schema = resource.getSchemaName();
         String table = resource.getTableName();
         String extensionTableName = table + "_extension";
@@ -68,11 +67,11 @@ public class BaseDaoService {
                 "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
                 "WHERE target.XMIN != ext._xmin OR ext.object_id isnull " +
                 "ORDER BY target.objectid " +
-                "LIMIT ? OFFSET ?", schema, table, schema, extensionTableName);
+                "LIMIT ?", schema, table, schema, extensionTableName);
 
-        log.debug("Sql: {}", rowsNeedingValidation);
+        log.debug("Sql (rowsNeedingValidation): {}, {}", rowsNeedingValidation, limit);
 
-        return jdbcTemplate.queryForList(rowsNeedingValidation, limit, limit * offset);
+        return jdbcTemplate.queryForList(rowsNeedingValidation, limit);
     }
 
     @Transactional
@@ -81,7 +80,7 @@ public class BaseDaoService {
         String schema = resource.getSchemaName();
         String extensionTableName = resource.getTableName() + "_extension";
 
-        log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
+        log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations);
 
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +
