@@ -10,8 +10,6 @@ import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,24 +32,25 @@ public class ValidatorImpl implements IValidator {
     private CustomRuleValidation customRuleValidator = new CustomRuleValidation();
 
     @Override
-    public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> data) {
+    public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> fObject) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        ObjectValidationResult customValidationResults = new ObjectValidationResult();
         customRuleValidator
-                .validate(featureDescriptionDto, data)
+                .validate(featureDescriptionDto, fObject)
                 .values().forEach(validationResult::addObjectViolation);
 
         featureDescriptionDto.getProperties().forEach(propertySchema -> {
-            SimplePropertyDto propertySchema2 = propertySchema;
+            // Если есть дополнительные правила, дополним ими схему свойства
+            List<String> objectViolations = validationResult.getObjectViolations();
+            if (!objectViolations.isEmpty()) {
+                modifyPropertySchemaByCustomRules(objectViolations, propertySchema);
+            }
 
-            propertySchema2 = modifyPropertySchemaByCustomRules(customValidationResults, propertySchema);
+            String name = propertySchema.getName();
+            if (fObject.containsKey(name)) {
+                PropertyViolation propertyViolation = new PropertyViolation(name, fObject.get(name));
 
-            String name = propertySchema2.getName();
-            if (data.containsKey(name)) {
-                PropertyViolation propertyViolation = new PropertyViolation(name, data.get(name));
-
-                List<String> errors = validateProperty(propertySchema2, data.get(name));
+                List<String> errors = validateProperty(propertySchema, fObject.get(name));
 
                 propertyViolation.setErrorTypes(errors);
 
@@ -94,35 +93,19 @@ public class ValidatorImpl implements IValidator {
     }
 
     /**
-     * Создаем новую схему (на основе propertySchema) согласно кастомным правилам.
+     * Модифицируем propertySchema согласно кастомным правилам.
+     * Посути, просто проставляем required для тех полей которые вылезли в результате применения кастомных правил.
      *
-     * @param propertySchema Схема свойства
-     * @return Модифицированную схему свойства SimplePropertyDto если есть доп. правила для этого конкретного обьекта
-     * или тот же обьект propertySchema без изменений.
+     * @param objectViolations Список параметров для которых нужно проставить required.
+     * @param propertySchema   Схема свойства
      */
-    private SimplePropertyDto modifyPropertySchemaByCustomRules(ObjectValidationResult customValidationResults,
-                                                                SimplePropertyDto propertySchema) {
-        LocalTime startMTime = LocalTime.now();
-
-        if (!customValidationResults.getObjectViolations().isEmpty()) {
-            SimplePropertyDto newPropertySchema = new SimplePropertyDto(propertySchema);
-            customValidationResults.getObjectViolations().forEach(errorPropertyName -> {
-                if (errorPropertyName.equals(propertySchema.getName())) {
-                    newPropertySchema.setRequired(true);
-                }
-            });
-
-            LocalTime endMTime = LocalTime.now();
-            log.debug("Modify: {} for: {}", propertySchema.getName(), ChronoUnit.MILLIS.between(startMTime, endMTime));
-
-            return newPropertySchema;
-        } else {
-
-            LocalTime endMTime = LocalTime.now();
-            log.debug("Validate batch: {} for: {}", propertySchema.getName(), ChronoUnit.MILLIS.between(startMTime, endMTime));
-
-            return propertySchema;
-        }
+    private void modifyPropertySchemaByCustomRules(List<String> objectViolations,
+                                                   SimplePropertyDto propertySchema) {
+        objectViolations.forEach(errorPropertyName -> {
+            if (errorPropertyName.equals(propertySchema.getName())) {
+                propertySchema.setRequired(true);
+            }
+        });
     }
 
 }
