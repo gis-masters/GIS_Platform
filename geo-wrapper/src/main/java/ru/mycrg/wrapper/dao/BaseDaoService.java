@@ -105,18 +105,6 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public List<Map<String, Object>> getViolations(ResourceProjection resource, int limit, int offset) {
-        String schemaName = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + "_extension";
-
-        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
-                schemaName, extensionTableName);
-
-        return datasourceFactory.getJdbcTemplate(resource.getDbName()).queryForList(sqlRequest, limit,
-                limit * offset);
-    }
-
-    @Transactional
     public Long countTotalViolations(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
         String schemaName = resource.getSchemaName();
         String extensionTableName = resource.getTableName() + "_extension";
@@ -203,18 +191,6 @@ public class BaseDaoService {
         });
     }
 
-    public List<Map<String, Object>> fetchViolationsBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
-                                                          int limit, int offset) {
-        log.debug("fetchViolationsBatch: {}/{}", limit, offset);
-
-        String extensionTableName = target.getTableName() + "_extension";
-
-        String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
-                target.getSchemaName(), extensionTableName);
-
-        return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
-    }
-
     /**
      * Получить партию данных.
      * Геометрия в бинарном формате "crg_b_geometry"
@@ -224,6 +200,7 @@ public class BaseDaoService {
      * @param limit        Размер партии
      * @param offset       Смещение
      */
+    @Transactional
     public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
                                                 int limit, int offset) {
         log.debug("Fetch next. Limit: {} offset: {}", limit, offset);
