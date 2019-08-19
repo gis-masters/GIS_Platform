@@ -13,7 +13,7 @@ import {NgxMaskModule} from 'ngx-mask';
 import {AlertModule} from 'ngx-bootstrap';
 import {FileUploadModule} from 'ng2-file-upload';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
@@ -84,6 +84,7 @@ import {ResizableBarDirective} from './directives/resizableBar.directive';
     ResizableBarDirective
   ],
   imports: [
+    HttpClientModule,
     AppRoutingModule,
     MaterialModule,
     PrimeNgModule,
