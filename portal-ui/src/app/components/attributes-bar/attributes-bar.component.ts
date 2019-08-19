@@ -285,6 +285,26 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
+  editFeatures() {
+    const selectedFeatures = this.attributeTable.selected;
+    if (selectedFeatures.length < 1) {
+      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      return;
+    }
+    // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
+    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(selectedFeatures));
+    clonedFeatures.forEach((feature: WfsFeature) => {
+      feature.id = this.layer.name + '.' + feature.id;
+    });
+    // Отсылка в сайдбар
+    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+      data: {
+        features: clonedFeatures,
+        mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
+      } as ViewFeaturesData
+    });
+  }
+
   copyObjects() {
     this.prepareSuitableLayers()
         .pipe(
