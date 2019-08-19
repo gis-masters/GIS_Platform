@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
-import {ViolationItem} from '../../../services/crg/validation.service';
+import {BugObject, ViolationItem} from '../../../services/crg/validation.service';
 import {DataSchemaService} from '../../../services/crg/data-schema.service';
 
 @Component({
@@ -10,7 +10,7 @@ import {DataSchemaService} from '../../../services/crg/data-schema.service';
 })
 export class ViolationsViewComponent implements OnInit {
 
-  @Input() data: ViolationItem[];
+  @Input() data: BugObject;
   @Input() layerName: string;
 
   violationItems: ViolationViewItem[] = [];
@@ -19,10 +19,17 @@ export class ViolationsViewComponent implements OnInit {
               private ruleService: DataSchemaService) {}
 
   ngOnInit() {
-    this.data.forEach((value: ViolationItem) => {
+    this.data.propertyViolations.forEach((value: ViolationItem) => {
       this.violationItems.push({
         errors: this.ruleService.getErrorsDescription(value.errorTypes),
         propertyName: this.ruleService.getPropertyAlias(this.layerName, value.name)
+      });
+    });
+
+    this.data.objectViolations.forEach((value: string) => {
+      this.violationItems.push({
+        errors: ['Параметр обязателен к заполнению'],
+        propertyName: this.ruleService.getPropertyAlias(this.layerName, value)
       });
     });
   }

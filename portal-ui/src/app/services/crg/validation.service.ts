@@ -1,11 +1,10 @@
 import {Observable} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {MatPaginator, MatSort} from '@angular/material';
 import {ValidationWsMsg, WsService} from '../ws.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
-import {ConnectionInfo, CrgLayer} from '../geoserver/layers.service';
+import {CrgLayer} from '../geoserver/layers.service';
 import {ProcessStatus} from '../process-status';
 import {LocalStorageService} from '../local-storage.service';
 
@@ -84,20 +83,6 @@ export class ValidationService {
                  {headers: {'Content-Type': 'application/json'}});
   }
 
-}
-
-export interface ValidationBaseResponse {
-  id: string;
-  description: string;
-  progress: number;
-  status: ProcessStatus;
-  type: string;
-
-  pending: boolean;
-  done: boolean;
-  empty: boolean;
-  error: boolean;
-  null: boolean;
 }
 
 export interface ValidationResultsResponse {
