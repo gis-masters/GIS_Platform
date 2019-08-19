@@ -3,6 +3,26 @@ import {Injectable} from '@angular/core';
 import {CommunicationService} from './communication.service';
 import {BehaviorSubject} from 'rxjs';
 
+export interface Sidebar {
+  action: ActionType;
+  target: SidebarType;
+  data?: any;
+}
+
+export enum ActionType {
+  OPEN,
+  CLOSE,
+  SWITCH
+}
+
+export enum SidebarType {
+  INFO = 'INFO',            // Информационная панель
+  LAYERS = 'LAYERS',        // Левая панель со слоями
+  FEATURES = 'FEATURES',    // Панель отображения выделенных фич
+  BUG_REPORT = 'BUG_REPORT',  // Панель отображения и редактирования ошибок
+  ATTRIBUTES = 'ATTRIBUTES',  // Панель отображения атрибутов фичи(слоя)
+}
+
 /**
  * Сервис с логикой показа всплывающих окон
  */
@@ -69,24 +89,4 @@ export class SideBarManager {
     this.communicationService.sidebarManager
         .emit({target: target, action: action, data: data});
   }
-}
-
-export interface Sidebar {
-  action: ActionType;
-  target: SidebarType;
-  data?: any;
-}
-
-export enum ActionType {
-  OPEN,
-  CLOSE,
-  SWITCH
-}
-
-export enum SidebarType {
-  INFO = 'INFO',            // Информационная панель
-  LAYERS = 'LAYERS',        // Левая панель со слоями
-  FEATURES = 'FEATURES',    // Панель отображения выделенных фич
-  BUG_REPORT = 'BUG_REPORT',  // Панель отображения и редактирования ошибок
-  ATTRIBUTES = 'ATTRIBUTES',  // Панель отображения атрибутов фичи(слоя)
 }

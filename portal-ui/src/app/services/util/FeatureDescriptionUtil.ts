@@ -1,5 +1,6 @@
 import {ValueType} from './FeaturePropertyValidators';
 import {FeatureDescription} from '../crg/data-schema.service';
+import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
 import {ImportLayerItem, LayerAttribute} from '../geoserver/import/import.service';
 
 export class FeatureDescriptionUtil {
@@ -64,96 +65,4 @@ export class FeatureDescriptionUtil {
       this.collectAll(geometryItem, allowedGeometry, name);
     });
   }
-}
-
-export interface GeometryItem {
-  name: string;
-  child: GeometryItem[];
-}
-
-/**
- * Корень дерева геометрий.
- */
-export class CrgRootGeometry implements GeometryItem {
-  name: string;
-  child: GeometryItem[] = [
-    {
-      name: 'Point',
-      child: []
-    },
-    {
-      name: 'Curve',
-      child: [
-        {
-          name: 'LineString',
-          child: []
-        },
-      ]
-    },
-    {
-      name: 'Surface',
-      child: [
-        {
-          name: 'Polygon',
-          child: [
-            {
-              name: 'LinearRing',
-              child: []
-            }
-          ]
-        },
-        {
-          name: 'PolyhedralSurface',
-          child: [
-            {
-              name: 'Polygon',
-              child: []
-            }
-          ]
-        },
-      ]
-    },
-    {
-      name: 'GeometryCollection',
-      child: [
-        {
-          name: 'MultiSurface',
-          child: [
-            {
-              name: 'MultiPolygon',
-              child: [
-                {
-                  name: 'Polygon',
-                  child: []
-                }
-              ]
-            },
-          ]
-        },
-        {
-          name: 'MultiCurve',
-          child: [
-            {
-              name: 'MultiLineString',
-              child: [
-                {
-                  name: 'LineString',
-                  child: []
-                }
-              ]
-            },
-          ]
-        },
-        {
-          name: 'MultiPoint',
-          child: [
-            {
-              name: 'Point',
-              child: []
-            }
-          ]
-        },
-      ]
-    },
-  ];
 }

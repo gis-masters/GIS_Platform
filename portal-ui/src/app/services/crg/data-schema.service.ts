@@ -8,6 +8,54 @@ import {ServerPropertiesService} from '../server-properties.service';
 import {CrgLayer} from '../geoserver/layers.service';
 import {FeatureDescriptionUtil} from '../util/FeatureDescriptionUtil';
 
+
+export class FeatureXsdDefinition {
+  xsdFeatures: FeatureDescription[] = [];
+}
+
+export interface FeatureDescription {
+  name: string;
+  title: string;
+  description: string;
+  properties: PropertySchema[];
+  tableName: string;
+  customRuleFunction?: any;
+  matchingCounter?: number;
+}
+
+export interface PropertySchema {
+  name: string;
+  title: string;
+  description?: string;
+
+  required?: boolean;
+  hidden?: boolean;
+  isMultiple?: boolean;
+
+  updateability?: any;
+  choice?: any;
+  valueType?: any;
+
+  length?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  patternDescription?: string;
+  minInclusive?: number;
+  maxInclusive?: number;
+  totalDigits?: number;
+  fractionDigits?: number;
+  allowedValues?: string[];
+  enumerations?: ValueTitleProjection[];
+}
+
+export interface EditFeatureItem {
+  name: string;
+  value: string;
+  property: PropertySchema;
+  isFgistpProperty: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -213,51 +261,4 @@ export class DataSchemaService {
     return result;
   }
 
-}
-
-export class FeatureXsdDefinition {
-  xsdFeatures: FeatureDescription[] = [];
-}
-
-export interface FeatureDescription {
-  name: string;
-  title: string;
-  description: string;
-  properties: PropertySchema[];
-  tableName: string;
-  customRuleFunction?: any;
-  matchingCounter?: number;
-}
-
-export interface PropertySchema {
-  name: string;
-  title: string;
-  description?: string;
-
-  required?: boolean;
-  hidden?: boolean;
-  isMultiple?: boolean;
-
-  updateability?: any;
-  choice?: any;
-  valueType?: any;
-
-  length?: number;
-  minLength?: number;
-  maxLength?: number;
-  pattern?: string;
-  patternDescription?: string;
-  minInclusive?: number;
-  maxInclusive?: number;
-  totalDigits?: number;
-  fractionDigits?: number;
-  allowedValues?: string[];
-  enumerations?: ValueTitleProjection[];
-}
-
-export interface EditFeatureItem {
-  name: string;
-  value: string;
-  property: PropertySchema;
-  isFgistpProperty: boolean;
 }

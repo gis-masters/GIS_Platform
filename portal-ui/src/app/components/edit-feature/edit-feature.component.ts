@@ -13,6 +13,19 @@ import {from, Subject} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
 import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
 
+export interface EditFeatureData {
+  feature: WfsFeature;   // Шаблонная фича
+  mode: EditFeatureMode;
+  featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
+  total: number;
+  properties?: {};
+}
+
+export enum EditFeatureMode {
+  multipleEdit = 'multipleEdit',
+  single = 'single'
+}
+
 @Component({
   selector: 'crg-edit-feature',
   templateUrl: './edit-feature.component.html',
@@ -229,17 +242,4 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
         }
       });
   }
-}
-
-export interface EditFeatureData {
-  feature: WfsFeature;   // Шаблонная фича
-  mode: EditFeatureMode;
-  featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
-  total: number;
-  properties?: {};
-}
-
-export enum EditFeatureMode {
-  multipleEdit = 'multipleEdit',
-  single = 'single'
 }

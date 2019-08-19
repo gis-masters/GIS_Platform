@@ -7,6 +7,12 @@ import {MapperUtil} from '../open-layer/MapperUtil';
 import WFS, {WriteTransactionOptions} from 'ol/format/WFS';
 import {ServerPropertiesService} from '../server-properties.service';
 
+export enum TransactionType {
+  INSERT = 'insert',
+  UPDATE = 'update',
+  DELETE = 'delete',
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -143,10 +149,4 @@ export class TransformFeatureService {
 
     return node;
   }
-}
-
-export enum TransactionType {
-  INSERT = 'insert',
-  UPDATE = 'update',
-  DELETE = 'delete',
 }

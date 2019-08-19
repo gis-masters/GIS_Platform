@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 
 export type Direction = 'top' | 'right' | 'bottom' | 'left';
 
@@ -12,7 +12,7 @@ const cursors = {
 @Directive({
   selector: '[resizable-bar]'
 })
-export class ResizableBarDirective {
+export class ResizableBarDirective implements OnInit {
   @Input('resizable-bar') direction: Direction;
 
   initialCursor: string;
@@ -21,7 +21,7 @@ export class ResizableBarDirective {
 
   initialSize: number;
 
-  resizeReady: boolean = false;
+  resizeReady = false;
 
   cursor: string;
 
@@ -39,7 +39,7 @@ export class ResizableBarDirective {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
-  @HostListener('mouseenter', ['$event']) onMouseEnter(e: MouseEvent){
+  @HostListener('mouseenter', ['$event']) onMouseEnter(e: MouseEvent) {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
@@ -73,7 +73,7 @@ export class ResizableBarDirective {
     document.body.style.cursor = '';
   }
 
-  testResizeZone (pos: number):boolean {
+  testResizeZone (pos: number): boolean {
     const dragZoneSize = 3;
 
     let offset: number;
@@ -95,7 +95,7 @@ export class ResizableBarDirective {
   getPosFromE (e: MouseEvent): number {
     let pos: number;
 
-    switch(this.direction) {
+    switch (this.direction) {
       case 'top':
         pos = e.y;
         break;

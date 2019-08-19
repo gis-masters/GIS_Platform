@@ -3,6 +3,15 @@ import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
+// Править в соответствии с ru/mycrg/common/enums/ValueType.java
+export enum ValueType {
+  INT = 'INT',
+  STRING = 'STRING',
+  DOUBLE = 'DOUBLE',
+  CHOICE = 'CHOICE',
+  GEOMETRY = 'GEOMETRY'
+}
+
 export class FeaturePropertyValidators {
 
   static validateCustomRules(featureObject: {}, xsdFeature: FeatureDescription): string[] {
@@ -211,13 +220,4 @@ export class FeaturePropertyValidators {
     return result !== undefined;
   }
 
-}
-
-// Править в соответствии с ru/mycrg/common/enums/ValueType.java
-export enum ValueType {
-  INT = 'INT',
-  STRING = 'STRING',
-  DOUBLE = 'DOUBLE',
-  CHOICE = 'CHOICE',
-  GEOMETRY = 'GEOMETRY'
 }

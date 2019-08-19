@@ -2,6 +2,35 @@ import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {LocalStorageService} from '../local-storage.service';
 
+export interface LogModel {
+  mode: LogMode;
+  logItems: LogItem[];
+  defaultLevel: LogLevel;
+}
+
+export interface LogItem {
+  key: string;
+  types: LogType[];
+
+}
+
+export interface LogType {
+  mod: LogMode;
+  level: LogLevel;
+}
+
+export enum LogLevel {
+  DEBUG = '100',
+  INFO = '200',
+  WARN = '300',
+  ERROR = '400',
+}
+
+export enum LogMode {
+  DEV = 'DEV',
+  PROD = 'PROD',
+}
+
 @Injectable({providedIn: 'root'})
 export class FizLogger {
 
@@ -133,33 +162,4 @@ export class FizLogger {
       default: return 'unknow level';
     }
   }
-}
-
-export interface LogModel {
-  mode: LogMode;
-  logItems: LogItem[];
-  defaultLevel: LogLevel;
-}
-
-export interface LogItem {
-  key: string;
-  types: LogType[];
-
-}
-
-export interface LogType {
-  mod: LogMode;
-  level: LogLevel;
-}
-
-export enum LogLevel {
-  DEBUG = '100',
-  INFO = '200',
-  WARN = '300',
-  ERROR = '400',
-}
-
-export enum LogMode {
-  DEV = 'DEV',
-  PROD = 'PROD',
 }
