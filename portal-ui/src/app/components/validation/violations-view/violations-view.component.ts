@@ -25,13 +25,6 @@ export class ViolationsViewComponent implements OnInit {
         propertyName: this.ruleService.getPropertyAlias(this.layerName, value.name)
       });
     });
-
-    this.data.objectViolations.forEach((value: string) => {
-      this.violationItems.push({
-        errors: ['Параметр обязателен к заполнению'],
-        propertyName: this.ruleService.getPropertyAlias(this.layerName, value)
-      });
-    });
   }
 }
 

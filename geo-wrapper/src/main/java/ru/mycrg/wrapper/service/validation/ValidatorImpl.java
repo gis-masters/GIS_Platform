@@ -102,7 +102,7 @@ public class ValidatorImpl implements IValidator {
     private void modifyPropertySchemaByCustomRules(List<String> objectViolations,
                                                    SimplePropertyDto propertySchema) {
         objectViolations.forEach(errorPropertyName -> {
-            if (errorPropertyName.equals(propertySchema.getName())) {
+            if (errorPropertyName.toLowerCase().equals(propertySchema.getName().toLowerCase())) {
                 propertySchema.setRequired(true);
             }
         });
