@@ -2,7 +2,6 @@ package ru.mycrg.wrapper.service.import_;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
@@ -40,7 +39,7 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
             payload.getImportFeatures()
                    .forEach(feature -> {
                        importService.doImport(feature, mqRequest);
-                       importService.handleTarget(feature, mqRequest);
+                       importService.postHandle(feature, mqRequest);
 
                        mqSender.send(
                                new BaseMqProcessResponse(mqRequest,

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportFeature;
 import ru.mycrg.common.import_.ImportMqResponse;
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static ru.mycrg.common.enums.ProcessStatus.*;
+import static ru.mycrg.common.enums.ProcessStatus.SUB_ERROR;
 
 @Service
 public class ImportService {
@@ -69,8 +70,9 @@ public class ImportService {
     /**
      * Дополнительная обработка данных слоя.
      */
-    void handleTarget(ImportFeature feature, BaseMqProcessRequest mqRequest) {
+    void postHandle(ImportFeature feature, BaseMqProcessRequest mqRequest) {
         try {
+            FeatureDescriptionDto fDescription = feature.getFeatureDescription();
             String sourceDbName = feature.getSourceResource().getDbName();
             String targetTableName = feature.getTargetResource().getTableName();
             String targetSchemaName = feature.getTargetResource().getSchemaName();
@@ -90,7 +92,7 @@ public class ImportService {
                 }
 
                 // Обрабатываем
-                List<Map<String, Object>> touchedParams = handleBatch(batch);
+                List<Map<String, Object>> touchedParams = handleBatch(batch, fDescription);
 
                 // Сохраняем
                 baseDaoService.updateBatch(jdbcTemplate, resourceProjection, touchedParams);
@@ -120,11 +122,12 @@ public class ImportService {
      * Импорт плагин геосервера кодирует в ISO_8859_1. Поэтому есть необходимость разкодировать обратно
      * Попутно есть желание проставить globalid всем обьектам у которых его нет
      *
-     * @param batch Пачка строк из БД
+     * @param batch        Пачка строк из БД
+     * @param fDescription Описание фичи
      * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.
      */
-    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch) {
+    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, FeatureDescriptionDto fDescription) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         batch.forEach(item -> {
@@ -143,9 +146,18 @@ public class ImportService {
                     params.put(key, decoded);
                 }
 
-                // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
+
+                // В атрибутах типа справочник все атрибуты типа int, у которых значение 0 должны быть заменены на null
                 if (value instanceof Integer) {
                     if ((Integer) value == 0) {
+//                        Optional<SimplePropertyDto> propertySchema = fDescription.getProperties().stream()
+//                                .filter(pSchema -> pSchema.getName().toLowerCase().equals(key.toLowerCase()))
+//                                .findFirst();
+//
+//                        if (propertySchema.isPresent() && propertySchema.get().getValueType().equals(ValueType.CHOICE)) {
+//                            params.put(key, DaoProperties.nullMarker);
+//                        }
+
                         params.put(key, DaoProperties.nullMarker);
                     }
                 }

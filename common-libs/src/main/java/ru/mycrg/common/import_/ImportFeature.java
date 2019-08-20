@@ -18,6 +18,7 @@ public class ImportFeature {
                          ResourceProjection sourceResource,
                          ResourceProjection targetResource,
                          List<GeoMapping> mapping) {
+        this.featureDescription = featureDescription;
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;
         this.mapping = mapping;
