@@ -24,3 +24,37 @@ body {
 .mat-menu-item:focus {
   outline: none;
 }
+
+.scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: grey;
+}
+
+.cut-text {
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fiz-toolbar {
+  position: relative;
+  top: 12px;
+}
+
+.cur-p {
+  cursor: pointer;
+}
+
+.fiz-border {
+  border: outset;
+  border-width: thin;
+  border-radius: 5px;
+}
+
+.without-outline {
+  outline: none;
+}

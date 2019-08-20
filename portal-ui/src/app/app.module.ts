@@ -48,6 +48,8 @@ import {BestMatchingPipe} from './pipes/best-matching.pipe';
 import {ButtonComponent} from './components/button/button.component';
 import {LoadingComponent} from './components/loading/loading.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
+import {PageTitleComponent} from './components/page-title/page-title.component';
+import {DataImportComponent} from './components/data-import/data-import.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import {ResizableBarDirective} from './directives/resizableBar.directive';
     BestMatchingPipe,
     ButtonComponent,
     LoadingComponent,
-    ResizableBarDirective
+    ResizableBarDirective,
+    PageTitleComponent,
+    DataImportComponent
   ],
   imports: [
     HttpClientModule,

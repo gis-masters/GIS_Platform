@@ -13,8 +13,7 @@ import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-export-dialog',
-  templateUrl: './export-dialog.component.html',
-  styleUrls: ['./export-dialog.component.css']
+  templateUrl: './export-dialog.component.html'
 })
 export class ExportDialogComponent implements OnDestroy {
   @ViewChild(MatSelectionList) list: MatSelectionList;

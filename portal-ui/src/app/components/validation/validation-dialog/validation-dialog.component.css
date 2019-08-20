@@ -1,5 +1,3 @@
-@import url(../../../pages/_app/app.component.css);
-
 mat-selection-list {
   display: inline-block;
   overflow: auto;

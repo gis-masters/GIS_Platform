@@ -1,0 +1,72 @@
+.data-import {
+  &__row-dz {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+  }
+
+  &__dz {
+    flex-grow: 1;
+
+    padding: 30px;
+
+    border: dotted 3px lightgray;
+  }
+
+  &__dz-caption {
+    text-align: center;
+
+    line-height: 2;
+  }
+
+  &__dz-file-button {
+    margin-top: 5px;
+  }
+
+  &__dz-control-container {
+    position: absolute;
+
+    visibility: hidden;
+    overflow: hidden;
+
+    width: 0;
+    height: 0;
+  }
+
+  &__load-button {
+    align-self: center;
+
+    margin-left: 50px;
+  }
+
+  &__load-button-loader {
+    width: 26px;
+    height: 26px;
+    margin-right: 33px;
+    margin-left: 33px;
+  }
+
+  &__row-notifications {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding-bottom: 20px;
+  }
+
+  &__progress {
+    text-align: right;
+  }
+
+  &__notification {
+    &_error {
+      color: #dc3545;
+    }
+  }
+
+  &__row-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -10,7 +10,7 @@ import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {WorkflowGuardService} from './services/workflow-guard.service';
 import {ProjectComponent} from './pages/work-space/project/project.component';
 import {WorkspaceComponent} from './pages/work-space/workspace/workspace.component';
-import {DataImportComponent} from './pages/work-space/data-import/data-import.component';
+import {DataImportPageComponent} from './pages/work-space/data-import-page/data-import-page.component';
 import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
 
 import {OrganizationInfoResolver} from './services/resolvers/project-resolver.service';
@@ -30,7 +30,7 @@ const routes: Routes = [
     children: [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
       {path: 'projects', component: ProjectComponent},
-      {path: 'data_import', component: DataImportComponent, canActivate: [WorkflowGuardService]},
+      {path: 'data_import', component: DataImportPageComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
       {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
       {path: '**', redirectTo: 'map'},
@@ -57,6 +57,6 @@ export const routingComponents = [
   RegisterComponent,
   RecoveryComponent,
   WorkspaceComponent,
-  DataImportComponent,
+  DataImportPageComponent,
   DataMappingComponent,
 ];

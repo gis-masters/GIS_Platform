@@ -4,8 +4,7 @@ import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'crg-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
 

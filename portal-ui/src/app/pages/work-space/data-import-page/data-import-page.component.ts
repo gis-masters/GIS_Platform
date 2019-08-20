@@ -9,11 +9,10 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'crg-data-import',
-  templateUrl: './data-import.component.html',
-  styleUrls: ['./data-import.component.css']
+  selector: 'crg-data-import-page',
+  templateUrl: './data-import-page.component.html'
 })
-export class DataImportComponent implements OnDestroy {
+export class DataImportPageComponent implements OnDestroy {
 
   isImportInited = false;
   isUploadComplete = false;
