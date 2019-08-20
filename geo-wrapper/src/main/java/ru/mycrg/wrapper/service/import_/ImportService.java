@@ -8,31 +8,26 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportFeature;
-import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.BaseRequestHandler;
-import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.*;
-import static ru.mycrg.wrapper.dao.DaoProperties.batchSize;
 
 @Service
-public class ImportService extends BaseRequestHandler implements IRequestHandler {
+public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
-
-    private int totalRows = 0;
-    private int processedRows = 0;
 
     public ImportService(BaseDaoService baseDaoService,
                          MqSender mqSender,
@@ -42,91 +37,76 @@ public class ImportService extends BaseRequestHandler implements IRequestHandler
         this.datasourceFactory = datasourceFactory;
     }
 
-    @Override
-    public void handle(BaseMqProcessRequest mqRequest) {
-        log.debug("Start import");
-
-        try {
-            ImportMqRequest payload = mapper.convertValue(mqRequest.getPayload(), ImportMqRequest.class);
-
-            totalRows = (int) calculateTotalRows(payload.getImportFeatures());
-
-            mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация", 0));
-
-            payload.getImportFeatures()
-                   .forEach(feature -> importFeature(mqRequest, feature, processedRows));
-
-            mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "Импорт завершен", 100));
-        } catch (Exception e) {
-            log.error("Ошибка при импорте: {}", e.getMessage());
-            mqSender.send(new BaseMqProcessResponse(mqRequest, ERROR, e.getMessage()));
-        }
-    }
-
     /**
      * При импорте выполняется:
      * - Очистка целевой таблицы и таблицы с данными валидации (*_extension)
      * - Сам импорт
      * - Проверка и при необходимости генерация GLOBALID
      */
-    private void importFeature(BaseMqProcessRequest mqRequest, ImportFeature feature, int processedRows) {
+    void doImport(ImportFeature feature, BaseMqProcessRequest mqRequest) {
         log.debug("Start import from: {} to: {}", feature.printSource(), feature.printTarget());
 
-        String targetTable = feature.getTargetResource().getTableName();
         try {
             String sourceDbName = feature.getSourceResource().getDbName();
+            String targetTableName = feature.getTargetResource().getTableName();
+            String targetSchemaName = feature.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
-            String schemaName = feature.getTargetResource().getSchemaName();
+            List<ResourceProjection> targetResource = Collections.singletonList(
+                    new ResourceProjection(sourceDbName, targetSchemaName, targetTableName));
 
-            baseDaoService.truncate(jdbcTemplate,
-                    Collections.singletonList(new ResourceProjection(sourceDbName, schemaName, targetTable)));
-            baseDaoService.doImport(jdbcTemplate, feature);
-
-            // GlobalId and encoding
-            log.debug("start encoding");
-            ResourceProjection resourceProjection = new ResourceProjection(null, schemaName, targetTable);
-
-            Queue<List<Map<String, Object>>> queue = new ArrayDeque<>();
-            int offset = 0;
-            while (true) {
-                List<Map<String, Object>> batch =
-                        baseDaoService.fetchBatch(jdbcTemplate, resourceProjection, batchSize, offset);
-                if (batch.isEmpty()) {
-                    break;
-                }
-
-                List<Map<String, Object>> touchedParams = handleBatch(batch);
-
-                queue.offer(touchedParams);
-
-                offset++;
-            }
-
-            // Вставляю сюда очередь, и обрабатываю сформированные данные позже, потому как чтение происходит быстрее а
-            // запись медленее, и если читать пачку из базы -> сразу обрабатывать -> пытаться записать то половина данных
-            // пропадает. Так как новые данные приходят быстро и перетерают старые.
-            // Кроме того выборка и обработка кусочками дает возможность отсылать оперативную инфу по прогрессу.
-            while (true) {
-                List<Map<String, Object>> nextBatch = queue.poll();
-                if (nextBatch != null) {
-                    baseDaoService.updateBatch(jdbcTemplate, resourceProjection, nextBatch);
-                } else {
-                    break;
-                }
-            }
-
-            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_DONE, "Success", 0));
+            baseDaoService.truncate(jdbcTemplate, targetResource);
+            baseDaoService.copy(jdbcTemplate, feature);
         } catch (Exception e) {
-            String msg = String.format("Не удалось импортировать из: %s в: %s",
-                    feature.printSource(), feature.printTarget());
+            String msg = String.format("Не удалось перенести данные из: %s в: %s", feature.printSource(),
+                    feature.printTarget());
 
             log.error(msg, e);
             mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_ERROR, "Error", msg));
         }
     }
 
-    private long calculateTotalRows(List<ImportFeature> importFeatures) {
+    /**
+     * Дополнительная обработка данных слоя.
+     */
+    void handleTarget(ImportFeature feature, BaseMqProcessRequest mqRequest) {
+        try {
+            String sourceDbName = feature.getSourceResource().getDbName();
+            String targetTableName = feature.getTargetResource().getTableName();
+            String targetSchemaName = feature.getTargetResource().getSchemaName();
+            JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
+
+            // GlobalId and encoding
+            log.debug("start encoding");
+            ResourceProjection resourceProjection = new ResourceProjection(null, targetSchemaName, targetTableName);
+
+            int offset = 0;
+            while (true) {
+                // Выбираем
+                List<Map<String, Object>> batch = baseDaoService.fetchBatch(
+                        jdbcTemplate, resourceProjection, "objectid", DaoProperties.batchSize, offset);
+                if (batch.isEmpty()) {
+                    break;
+                }
+
+                // Обрабатываем
+                List<Map<String, Object>> touchedParams = handleBatch(batch);
+
+                // Сохраняем
+                baseDaoService.updateBatch(jdbcTemplate, resourceProjection, touchedParams);
+
+                offset++;
+            }
+        } catch (Exception e) {
+            String msg = String.format("Не удалось перенести данные из: %s в: %s", feature.printSource(),
+                    feature.printTarget());
+
+            log.error(msg, e);
+            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_ERROR, "Error", msg));
+        }
+    }
+
+    long calculateTotalRows(List<ImportFeature> importFeatures) {
         return importFeatures.stream()
                 .map(importFeature -> {
                     ResourceProjection source = importFeature.getSourceResource();
@@ -156,12 +136,28 @@ public class ImportService extends BaseRequestHandler implements IRequestHandler
                     params.put(key, value);
                 }
 
+                // Декодируем стркоковые атрибуты
                 if (value instanceof String) {
                     String decoded =
                             new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
                     params.put(key, decoded);
                 }
 
+                // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
+                if (value instanceof Integer) {
+                    if ((Integer) value == 0) {
+                        params.put(key, DaoProperties.nullMarker);
+                    }
+                }
+
+                // Все атрибуты типа double, у которых значение 0,00 должны быть заменены на null
+                if (value instanceof BigDecimal) {
+                    if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
+                        params.put(key, DaoProperties.nullMarker);
+                    }
+                }
+
+                // Генерируем globalid если его нет
                 if ("globalid".equals(key)) {
                     String valueAsString = (String) value;
                     if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
@@ -175,5 +171,4 @@ public class ImportService extends BaseRequestHandler implements IRequestHandler
 
         return result;
     }
-
 }

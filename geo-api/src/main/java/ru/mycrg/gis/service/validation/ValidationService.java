@@ -66,8 +66,8 @@ public class ValidationService extends BaseProcessService {
         ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
 
         request.getLayers().forEach(layerName -> {
-            FeatureDescription featureDescription = schemaService.getDescriptionByName(layerName);
-            payload.addFeatureProjections(MapperUtil.mapFeatureDescriptionToDto(featureDescription));
+            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(layerName);
+            payload.addFeatureProjections(featureDescription);
             payload.addResourceProjections(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getWorkspaceName(), layerName));
         });

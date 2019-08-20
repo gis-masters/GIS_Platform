@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.propertyTypes.*;
+import ru.mycrg.common.FeatureDescriptionDto;
+import ru.mycrg.common.propertyTypes.AbstractProperty;
+import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.dto.DataSchema;
 import ru.mycrg.gis.dto.FeatureDescription;
 import ru.mycrg.gis.exceptions.CrgNotFoundException;
@@ -40,17 +42,21 @@ public class DataSchemaService implements IDataSchemaHolder {
         this.customFeatureDefinitionRepository = customFeatureDefinitionRepository;
     }
 
-    public List<FeatureDescription> getFewDescriptions(List<String> featureNames) {
+    public List<FeatureDescriptionDto> getFewDescriptions(List<String> featureNames) {
         if (isCacheEmpty()) {
             prepareSchema();
         }
 
         if (featureNames.isEmpty()) {
-            return dataSchema.getFeatureDescriptions();
+            return dataSchema
+                    .getFeatureDescriptions().stream()
+                    .map(MapperUtil::mapFeatureDescriptionToDto)
+                    .collect(Collectors.toList());
         } else {
             return dataSchema
                     .getFeatureDescriptions().stream()
                     .filter(fDescription -> featureNames.contains(fDescription.getName()))
+                    .map(MapperUtil::mapFeatureDescriptionToDto)
                     .collect(Collectors.toList());
         }
     }
@@ -59,10 +65,10 @@ public class DataSchemaService implements IDataSchemaHolder {
      * Возвращает описание фичи.
      *
      * @param featureName Название фичи(Слоя)
-     * @return Описание фичи {@link FeatureDescription}
+     * @return Описание фичи {@link ru.mycrg.common.FeatureDescriptionDto}
      * @throws CrgNotFoundException 404 если не нашли название фичи.
      */
-    public FeatureDescription getDescriptionByName(String featureName) throws CrgNotFoundException {
+    public FeatureDescriptionDto getDescriptionByName(String featureName) throws CrgNotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
             prepareSchema();
         }
@@ -74,7 +80,7 @@ public class DataSchemaService implements IDataSchemaHolder {
                     .findDefinitionByClassName(featureDescription.getName())
                     .ifPresent(customRule -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
 
-            return featureDescription;
+            return MapperUtil.mapFeatureDescriptionToDto(featureDescription);
         } else {
             throw new CrgNotFoundException("Не найден слой: " + featureName);
         }

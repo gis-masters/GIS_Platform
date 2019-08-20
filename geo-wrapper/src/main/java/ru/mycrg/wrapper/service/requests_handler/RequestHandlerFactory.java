@@ -7,6 +7,7 @@ import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.wrapper.service.CreateOrganizationRequestHandler;
 import ru.mycrg.wrapper.service.CreateProjectRequestHandler;
 import ru.mycrg.wrapper.service.export.ExportRequestHandler;
+import ru.mycrg.wrapper.service.import_.ImportRequestHandler;
 import ru.mycrg.wrapper.service.import_.ImportService;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
@@ -15,7 +16,7 @@ public class RequestHandlerFactory {
 
     private final Logger log = LoggerFactory.getLogger(RequestHandlerFactory.class);
 
-    private final IRequestHandler importService;
+    private final IRequestHandler importRequestHandler;
     private final IRequestHandler validationService;
     private final IRequestHandler exportRequestHandler;
     private final IRequestHandler createProjectRequestHandler;
@@ -25,8 +26,8 @@ public class RequestHandlerFactory {
                                  CreateProjectRequestHandler createProjectRequestHandler,
                                  ValidationService validationService,
                                  ExportRequestHandler exportRequestHandler,
-                                 ImportService importService) {
-        this.importService = importService;
+                                 ImportRequestHandler importRequestHandler) {
+        this.importRequestHandler = importRequestHandler;
         this.validationService = validationService;
         this.exportRequestHandler = exportRequestHandler;
         this.createProjectRequestHandler = createProjectRequestHandler;
@@ -37,7 +38,7 @@ public class RequestHandlerFactory {
         switch (type) {
             case CREATE_ORG:        return createOrganizationRequestHandler;
             case CREATE_PROJECT:    return createProjectRequestHandler;
-            case IMPORT:            return importService;
+            case IMPORT:            return importRequestHandler;
             case VALIDATION:        return validationService;
             case EXPORT:            return exportRequestHandler;
             default:

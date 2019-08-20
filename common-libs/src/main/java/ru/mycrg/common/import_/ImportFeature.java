@@ -1,18 +1,21 @@
 package ru.mycrg.common.import_;
 
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 
 import java.util.List;
 
 public class ImportFeature {
 
+    private FeatureDescriptionDto featureDescription;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
     private List<GeoMapping> mapping;
 
     public ImportFeature() {}
 
-    public ImportFeature(ResourceProjection sourceResource,
+    public ImportFeature(FeatureDescriptionDto featureDescription,
+                         ResourceProjection sourceResource,
                          ResourceProjection targetResource,
                          List<GeoMapping> mapping) {
         this.sourceResource = sourceResource;
@@ -50,5 +53,13 @@ public class ImportFeature {
 
     public String printTarget() {
         return String.join(".", targetResource.getDbName(), targetResource.getSchemaName(), targetResource.getTableName());
+    }
+
+    public FeatureDescriptionDto getFeatureDescription() {
+        return featureDescription;
+    }
+
+    public void setFeatureDescription(FeatureDescriptionDto featureDescription) {
+        this.featureDescription = featureDescription;
     }
 }

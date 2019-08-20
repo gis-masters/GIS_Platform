@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.dto.FeatureDescription;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
 import java.util.List;
@@ -22,14 +22,14 @@ public class DataSchemaController {
     }
 
     @PostMapping("/schema")
-    public List<FeatureDescription> getSchemaForFewFeatures(@RequestBody List<String> featureNames) {
+    public List<FeatureDescriptionDto> getSchemaForFewFeatures(@RequestBody List<String> featureNames) {
         log.info("Get dataSchema for: {}", featureNames);
 
         return dataSchemaService.getFewDescriptions(featureNames);
     }
 
     @GetMapping("/schema/{featureName}")
-    public FeatureDescription getSchemaByFeatureName(@PathVariable String featureName) {
+    public FeatureDescriptionDto getSchemaByFeatureName(@PathVariable String featureName) {
         log.info("Get dataSchema for feature: {}", featureName);
 
         return dataSchemaService.getDescriptionByName(featureName);

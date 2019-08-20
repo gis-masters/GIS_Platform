@@ -134,7 +134,8 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
             int offset = 0;
             while (true) {
-                List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, batchSize, offset);
+                List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, "objectid",
+                        batchSize, offset);
                 if (batch.isEmpty()) {
                     break;
                 }

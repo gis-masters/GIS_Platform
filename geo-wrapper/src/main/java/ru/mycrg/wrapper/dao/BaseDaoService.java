@@ -143,7 +143,6 @@ public class BaseDaoService {
     /**
      * Импорт. <p>
      * Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт,
-     * TODO: под каждую организацию своя помойка
      * в схему которая определена как рабочая, но все это в пределах одной БД. <p>
      * - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
      * - Перенос из исходной таблицы в рабочую
@@ -152,7 +151,7 @@ public class BaseDaoService {
      * @param request      Даные для импорта
      */
     @Transactional
-    public void doImport(JdbcTemplate jdbcTemplate, ImportFeature request) {
+    public void copy(JdbcTemplate jdbcTemplate, ImportFeature request) {
         String targetSchema = request.getTargetResource().getSchemaName();
         String targetTable = request.getTargetResource().getTableName();
 
@@ -193,21 +192,21 @@ public class BaseDaoService {
 
     /**
      * Получить партию данных.
-     * Геометрия в бинарном формате "crg_b_geometry"
+     * Геометрию в бинарном формате сетим в "crg_b_geometry"
      *
      * @param jdbcTemplate Коннекш к БД
-     * @param target       Данные ресурса из которого производится выборка
+     * @param source       Данные ресурса из которого производится выборка
      * @param limit        Размер партии
      * @param offset       Смещение
      */
     @Transactional
-    public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection target,
+    public List<Map<String, Object>> fetchBatch(JdbcTemplate jdbcTemplate, ResourceProjection source, String orderField,
                                                 int limit, int offset) {
-        log.debug("Fetch next. Limit: {} offset: {}", limit, offset);
-
         String sqlRequest = String.format("SELECT ST_AsBinary(shape) as " +
-                        "crg_b_geometry, * FROM %s.%s LIMIT ? OFFSET ?",
-                target.getSchemaName(), target.getTableName());
+                        "crg_b_geometry, * FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
+                source.getSchemaName(), source.getTableName(), orderField);
+
+        log.debug("Fetch sql: {}", sqlRequest);
 
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
@@ -268,7 +267,11 @@ public class BaseDaoService {
 
         item.forEach((key, value) -> {
             if (!"objectid".equals(key)) {
-                sql[0] = sql[0] + key + "='" + value + "', ";
+                if (value.equals(DaoProperties.nullMarker)) {
+                    sql[0] = sql[0] + key + "=NULL, ";
+                } else {
+                    sql[0] = sql[0] + key + "='" + value + "', ";
+                }
             }
         });
 

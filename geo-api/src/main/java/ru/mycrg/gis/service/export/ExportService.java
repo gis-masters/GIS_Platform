@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.MqExportProcessRequest;
-import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -17,7 +14,6 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.dto.FeatureDescription;
 import ru.mycrg.gis.service.dataSchema.MapperUtil;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
@@ -33,19 +29,19 @@ public class ExportService extends BaseProcessService {
     private static Logger log = LoggerFactory.getLogger(ExportService.class);
 
     private final MqSender mqSender;
-    private final DataSchemaService ruleService;
+    private final DataSchemaService schemaService;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     public ExportService(MqSender mqSender,
-                         DataSchemaService ruleService,
+                         DataSchemaService schemaService,
                          ProcessRepository processRepository,
                          ProjectService projectService,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
-        this.ruleService = ruleService;
+        this.schemaService = schemaService;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -67,13 +63,13 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            FeatureDescription ruleByClassName = ruleService.getDescriptionByName(layerName);
+            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(layerName);
 
             // TODO: Может не плеваться 404 если один из слоев ненайден а просто не добавлять его.
             // Можно сразу выставить в процессе эту фичу как ошибочную
             // Во всех операциях (импорт, валидация) можно внедрить тоже самое
 
-            payload.addRule(MapperUtil.mapFeatureDescriptionToDto(ruleByClassName));
+            payload.addRule(featureDescription);
             payload.addResource(
                     new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
         });

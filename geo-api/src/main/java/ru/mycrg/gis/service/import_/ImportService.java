@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportFeature;
@@ -18,7 +19,10 @@ import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.*;
+import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.ProjectService;
+import ru.mycrg.gis.service.WsNotificationService;
+import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.io.IOException;
@@ -29,17 +33,20 @@ public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
+    private final DataSchemaService schemaService;
     private final MqSender mqSender;
     private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
+                         DataSchemaService schemaService,
                          ProjectService projectService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
+        this.schemaService = schemaService;
         this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -48,13 +55,14 @@ public class ImportService extends BaseProcessService {
         ProjectModel projectModel = projectService.getProject(orgId, projectId);
 
         Process process = create(principal.getName(),
-                String.format("Импорт %d слоёв(я) в проект: %s",
+                String.format("Импорт %d слоя(ёв) в проект: %s",
                         workImport.getImportTasks().size(), projectModel.getInternalName()),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
         ImportMqRequest payload = new ImportMqRequest();
         workImport.getImportTasks().forEach(importTask -> {
-            ImportFeature importFeature = new ImportFeature(
+            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(importTask.getWorkTableName());
+            ImportFeature importFeature = new ImportFeature(featureDescription,
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
                             "public", // Источником рабочего импорта является хранилище "scratch - public схема в БД"

@@ -1,15 +1,14 @@
 package ru.mycrg.gis.service.dataSchema;
 
-import ru.mycrg.gis.dto.FeatureDescription;
-import ru.mycrg.gis.dto.DataSchema;
+import ru.mycrg.common.FeatureDescriptionDto;
 
 import java.util.List;
 
 public interface IDataSchemaHolder {
 
-    List<FeatureDescription> getFewDescriptions(List<String> featureNames);
+    List<FeatureDescriptionDto> getFewDescriptions(List<String> featureNames);
 
-    FeatureDescription getDescriptionByName(String name);
+    FeatureDescriptionDto getDescriptionByName(String name);
 
     boolean isCacheEmpty();
 
