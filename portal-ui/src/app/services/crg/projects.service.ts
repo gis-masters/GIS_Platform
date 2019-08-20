@@ -108,7 +108,7 @@ export class ProjectsService {
   }
 
   private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {
-    if (projects.length === 0) {
+    if (!projects || projects.length === 0) {
       return of([]);
     }
 

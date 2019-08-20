@@ -56,10 +56,10 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((importLayers: ImportLayer[]) => {
           this.importLayers = importLayers
-              .map((layer: ImportLayer) => {
-                this.importService.importFlow.work_import.addTask(layer.layer.originalName);
+              .map((importLayer: ImportLayer) => {
+                this.importService.importFlow.work_import.addTask(importLayer.layer.name);
 
-                return layer.layer as ImportLayerItem;
+                return importLayer.layer as ImportLayerItem;
               });
         });
 
