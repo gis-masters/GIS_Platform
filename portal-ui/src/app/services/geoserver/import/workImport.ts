@@ -67,9 +67,9 @@ export class WorkImport {
     this.updateWorkImportState();
   }
 
-  updateTable(layerName: string, tableName: string) {
-    const task = this.getTaskByLayerName(layerName);
-    task.workTableName = tableName;
+  updateFeatureSchema(importLayerName: string, featureSchemaName: string) {
+    const task = this.getTaskByLayerName(importLayerName);
+    task.workTableName = featureSchemaName;
     task.mapping = [];
 
     this.updateWorkImportState();
@@ -85,12 +85,6 @@ export class WorkImport {
   private updateWorkImportState() {
     if (this.projectModel) {
       this.isWorkImportReady = !this.tasks.find((task: TaskImport) => !task.workTableName);
-      // if (this.dataStore) {
-      //
-      // } else {
-      //   console.log('3');
-      //   this.isWorkImportReady = false;
-      // }
     } else {
       this.isWorkImportReady = false;
     }

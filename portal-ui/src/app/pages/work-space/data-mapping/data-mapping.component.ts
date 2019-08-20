@@ -1,14 +1,14 @@
-import {Subject, throwError} from 'rxjs';
+import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {catchError, debounceTime, filter, flatMap, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, flatMap, takeUntil} from 'rxjs/operators';
 import {ImportFlow} from '../../../services/geoserver/import/importFlow';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
 import {TaskImport} from '../../../services/geoserver/import/taskImport';
 import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
-import {ImportLayer, ImportService, ImportLayerItem} from '../../../services/geoserver/import/import.service';
+import {ImportLayer, ImportLayerItem, ImportService} from '../../../services/geoserver/import/import.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
@@ -71,7 +71,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         )
         .subscribe((tasks: TaskImport[]) => {
           tasks.forEach((task: TaskImport) => {
-            const layerItem = this.importLayers.find(layer => layer.originalName === task.layerName);
+            const layerItem = this.importLayers.find(layer => layer.name === task.layerName);
             if (layerItem) {
               layerItem.isMapped = task.isPrepared();
             }

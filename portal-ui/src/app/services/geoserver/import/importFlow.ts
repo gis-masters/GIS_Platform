@@ -26,8 +26,13 @@ export class ImportFlow {
     this.work_import.setProject(projectModel);
   }
 
-  setTable(layerName: string, newTableName: string) {
-    this.work_import.updateTable(layerName, newTableName);
+  /**
+   * Импортированному слою сопоставляется, выбранная пользователем, схема данных.
+   * @param importLayerName Название импортированного слоя.
+   * @param featureSchemaName Название схемы данных
+   */
+  setFeatureSchema(importLayerName: string, featureSchemaName: string) {
+    this.work_import.updateFeatureSchema(importLayerName, featureSchemaName);
   }
 
 }
