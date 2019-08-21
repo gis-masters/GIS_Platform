@@ -20,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ru.mycrg.common.enums.ProcessStatus.SUB_ERROR;
+import static ru.mycrg.wrapper.dao.DaoProperties.GLOBAL_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
 
 @Service
 public class ImportService {
@@ -78,15 +80,15 @@ public class ImportService {
             String targetSchemaName = feature.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
-            // GlobalId and encoding
-            log.debug("start encoding");
+            log.debug("start postHandle");
+
             ResourceProjection resourceProjection = new ResourceProjection(null, targetSchemaName, targetTableName);
 
             int offset = 0;
             while (true) {
                 // Выбираем
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(
-                        jdbcTemplate, resourceProjection, "objectid", DaoProperties.batchSize, offset);
+                        jdbcTemplate, resourceProjection, OBJECT_ID, DaoProperties.BATCH_SIZE, offset);
                 if (batch.isEmpty()) {
                     break;
                 }
@@ -135,21 +137,23 @@ public class ImportService {
 
             item.forEach((key, value) -> {
                 // Добавим чтобы опираться не него при вставке
-                if ("objectid".equals(key)) {
+                if (OBJECT_ID.equals(key)) {
                     params.put(key, value);
-                }
-
-                // Декодируем стркоковые атрибуты
-                if (value instanceof String) {
-                    String decoded =
-                            new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-                    params.put(key, decoded);
-                }
-
-
-                // В атрибутах типа справочник все атрибуты типа int, у которых значение 0 должны быть заменены на null
-                if (value instanceof Integer) {
-                    if ((Integer) value == 0) {
+                } else if (GLOBAL_ID.equals(key)) {
+                    // Генерируем globalid если его нет
+                    String valueAsString = (String) value;
+                    if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
+                        params.put(key, UUID.randomUUID());
+                    }
+                } else {
+                    // Декодируем строковые атрибуты
+                    if (value instanceof String) {
+                        String decoded =
+                                new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                        params.put(key, decoded);
+                    } else if (value instanceof Integer) {
+                        // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
+                        if ((Integer) value == 0) {
 //                        Optional<SimplePropertyDto> propertySchema = fDescription.getProperties().stream()
 //                                .filter(pSchema -> pSchema.getName().toLowerCase().equals(key.toLowerCase()))
 //                                .findFirst();
@@ -158,22 +162,13 @@ public class ImportService {
 //                            params.put(key, DaoProperties.nullMarker);
 //                        }
 
-                        params.put(key, DaoProperties.nullMarker);
-                    }
-                }
-
-                // Все атрибуты типа double, у которых значение 0,00 должны быть заменены на null
-                if (value instanceof BigDecimal) {
-                    if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
-                        params.put(key, DaoProperties.nullMarker);
-                    }
-                }
-
-                // Генерируем globalid если его нет
-                if ("globalid".equals(key)) {
-                    String valueAsString = (String) value;
-                    if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
-                        params.put(key, UUID.randomUUID());
+                            params.put(key, DaoProperties.NULL_MARKER);
+                        }
+                    } else if (value instanceof BigDecimal) {
+                        // Все атрибуты типа double, у которых значение 0,00 должны быть заменены на null
+                        if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
+                            params.put(key, DaoProperties.NULL_MARKER);
+                        }
                     }
                 }
             });

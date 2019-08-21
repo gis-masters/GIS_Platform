@@ -14,12 +14,11 @@ import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
 import static ru.mycrg.common.enums.ProcessStatus.*;
+import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
 import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
 import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
 
@@ -39,12 +38,6 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
     private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
     private long totalViolations;
     private boolean isNotValidatedYet = true;
-
-    /**
-     * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
-     */
-    private String OBJECT_ID = "objectid";
-    private String CLASS_ID = "classid";
 
     @Autowired
     public ValidationService(IValidator validator, MqSender mqSender,
@@ -98,7 +91,7 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
             lastCalculatedValidation.put(resource.getResourceId(), LocalDateTime.now());
 
             List<Map<String, Object>> nextBatch;
-            int batchSize = DaoProperties.batchSize;
+            int batchSize = DaoProperties.BATCH_SIZE;
             while (true) {
                 nextBatch = baseDaoService.fetchBatchOfRowsNeededToValidation(jdbcTemplate, resource, batchSize);
                 if (nextBatch.isEmpty()) {

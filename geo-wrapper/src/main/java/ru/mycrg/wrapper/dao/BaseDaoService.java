@@ -22,6 +22,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+
 @Service
 public class BaseDaoService {
 
@@ -206,7 +208,7 @@ public class BaseDaoService {
                         "crg_b_geometry, * FROM %s.%s ORDER BY %s LIMIT ? OFFSET ?",
                 source.getSchemaName(), source.getTableName(), orderField);
 
-        log.debug("Fetch sql: {}", sqlRequest);
+        log.trace("Fetch sql: {}", sqlRequest);
 
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
@@ -266,8 +268,8 @@ public class BaseDaoService {
         final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
         item.forEach((key, value) -> {
-            if (!"objectid".equals(key)) {
-                if (value.equals(DaoProperties.nullMarker)) {
+            if (!OBJECT_ID.equals(key)) {
+                if (value.equals(DaoProperties.NULL_MARKER)) {
                     sql[0] = sql[0] + key + "=NULL, ";
                 } else {
                     sql[0] = sql[0] + key + "='" + value + "', ";
@@ -275,7 +277,7 @@ public class BaseDaoService {
             }
         });
 
-        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get("objectid");
+        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(OBJECT_ID);
     }
 
     private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
