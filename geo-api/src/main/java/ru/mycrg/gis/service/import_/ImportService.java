@@ -103,20 +103,28 @@ public class ImportService extends BaseProcessService {
     }
 
     private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
-        ImportMqResponse responsePayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
-        process.setStatus(mqResponse.getStatus());
-
         try {
+            log.debug("Add subStep to process: {}", process.getId());
+            process.setStatus(mqResponse.getStatus());
+
+            SubProcessModel subProcess = new SubProcessModel();
+            if (!mqResponse.getPayload().equals("")) {
+                ImportMqResponse responsePayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
+                subProcess = new SubProcessModel(
+                        responsePayload.getSourceLayer() + " -> " + responsePayload.getTargetLayer(),
+                        mqResponse.getDescription(), mqResponse.getError());
+            } else if (mqResponse.getDescription() != null) {
+                subProcess = new SubProcessModel(mqResponse.getDescription(), mqResponse.getError());
+            } else {
+                log.warn("SubProcess for processId: {} not have any description/payload?", process.getId());
+            }
+
             String content = "{}";
             if (process.getDetails() != null) {
                 content = process.getDetails().toString();
             }
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
-
-            SubProcessModel subProcess = new SubProcessModel(responsePayload.getDirection(),
-                    mqResponse.getDescription(), mqResponse.getError());
-
             details.addSubProcess(subProcess);
 
             JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
@@ -125,7 +133,5 @@ public class ImportService extends BaseProcessService {
         } catch (IOException e) {
             log.error("Failed write details to process / Error: {}", e.getMessage());
         }
-
-        log.debug("Add subStep to process: {}", process.getId());
     }
 }

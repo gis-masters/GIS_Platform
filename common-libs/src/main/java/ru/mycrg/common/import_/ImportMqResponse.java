@@ -12,10 +12,6 @@ public class ImportMqResponse {
         this.sourceLayer = importFeature.getSourceResource().getTableName();
     }
 
-    public String getDirection() {
-        return sourceLayer + " -> " + targetLayer;
-    }
-
     public String getTargetLayer() {
         return targetLayer;
     }

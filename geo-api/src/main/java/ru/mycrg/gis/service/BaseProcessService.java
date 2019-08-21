@@ -23,6 +23,9 @@ public abstract class BaseProcessService implements Processable {
 
     private final ProcessRepository processRepository;
 
+    /**
+     * Процесс может обновляется очень часто промежуточными результатами, которые нет смысла сразу гнать в БД.
+     */
     private Set<Process> processesCache = new HashSet<>();
 
     protected ObjectMapper mapper = new ObjectMapper();
@@ -69,7 +72,7 @@ public abstract class BaseProcessService implements Processable {
 
         processRepository.save(process);
 
-        processesCache.remove(process);
+        // processesCache.remove(process);
         log.info("Successfully complete process: {} / {}", process.getId(), process.getTitle());
     }
 

@@ -8,6 +8,11 @@ public class SubProcessModel {
 
     public SubProcessModel() {}
 
+    public SubProcessModel(String description, String error) {
+        this.description = description;
+        this.error = error;
+    }
+
     public SubProcessModel(String layerName, String description, String error) {
         this.layerName = layerName;
         this.description = description;
