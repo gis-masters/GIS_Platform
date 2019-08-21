@@ -4,9 +4,14 @@ import {Component, OnDestroy} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
 import {CommunicationService} from '../../services/communication.service';
-import {ImportService, ImportTasks, InputStartResponseDto} from '../../services/geoserver/import/import.service';
+import {
+  ImportService,
+  ImportTasks,
+  InputStartResponseDto,
+  ImportTaskShort
+} from '../../services/geoserver/import/import.service';
 import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {Subject, interval} from 'rxjs';
 
 @Component({
   selector: 'crg-data-import',
@@ -24,9 +29,20 @@ export class DataImportComponent implements OnDestroy {
 
   public hasBaseDropZoneOver = false;
 
+  private errorCodes: {[key: string]: string} = {
+    NO_CRS: 'Не определена проекция.',
+    NO_BOUNDS: 'NO_BOUNDS',
+    NO_FORMAT: 'NO_FORMAT',
+    BAD_FORMAT: 'BAD_FORMAT',
+    ERROR: 'ERROR',
+    CANCELED: 'CANCELED'
+  };
+
+  private errors: string[] = [];
+
   private unsubscribe$: Subject<void> = new Subject<void>();
   private WAIT_SERVER_RESPONSE_TIMER = 120000;
-  private CHECK_STATUS_INTERVAL = 500;
+  private CHECK_STATUS_INTERVAL = 1000;
 
   constructor(private logger: NGXLogger,
               private router: Router,
@@ -92,7 +108,7 @@ export class DataImportComponent implements OnDestroy {
         .startScratchUpload()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
-          successResponse => this.handleUpload(),
+          () => this.handleUpload(),
           errorResponse => {
             if (errorResponse.error.message === 'Read timed out') {
               this.handleUpload();
@@ -117,36 +133,53 @@ export class DataImportComponent implements OnDestroy {
   }
 
   private handleUpload() {
-    const importStatusChecker = setInterval(() => {
-      this.importService
-          .checkImportStatus(this.importService.importFlow.scratch_import.import.href)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(
-            successResponse => {
-              if (successResponse.import.state === 'COMPLETE') {
-                clearInterval(importStatusChecker);
-                clearTimeout(waitTimer);
+    interval(this.CHECK_STATUS_INTERVAL)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.importService
+            .checkImportStatus(this.importService.importFlow.scratch_import.import.href)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+              successResponse => {
+                if (successResponse.import.state === 'COMPLETE') {
+                  this.unsubscribe$.next();
+                  clearTimeout(waitTimer);
 
-                this.isImportInited = false;
-                this.isUploadComplete = true;
-                this.logger.info('Success uploaded');
-              }
-            },
-          );
-    }, this.CHECK_STATUS_INTERVAL);
+                  this.isImportInited = false;
+                  this.isUploadComplete = true;
+                  this.logger.info('Success uploaded');
+                } else {
+                  const errors = this.getErrorsFromTasks(successResponse.import.tasks);
+
+                  if (errors.length) {
+                    this.handleError('Start import failed', successResponse, errors);
+                  }
+                }
+              },
+            );
+      });
 
     // Прибьем проверку статуса если она зятянулась
     const waitTimer = setTimeout(() => {
-      if (importStatusChecker) {
-        this.handleError('Failed start import');
-        clearInterval(importStatusChecker);
-      }
+      this.handleError('Failed start import');
+      this.unsubscribe$.next();
     }, this.WAIT_SERVER_RESPONSE_TIMER);
   }
 
-  private handleError(msg: string, response?: any) {
+  private getErrorsFromTasks (tasks: ImportTaskShort[]): string[] {
+    return tasks
+              .filter(task => Object.keys(this.errorCodes).includes(task.state))
+              .map(task => this.errorCodes[task.state]);
+  }
+
+  private handleError(msg: string, response?: any, errors?: string[]) {
     this.logger.error(msg, response);
 
+    if (errors) {
+      this.errors = errors;
+    }
+
+    this.unsubscribe$.next();
     this.isImportFailed = true;
     this.isImportInited = false;
   }

@@ -119,7 +119,7 @@ export class ImportService {
 
 export interface InputStartResponseDto {
   import: {
-    id: 4,
+    id: number,
     href: string,
     state: string,
     archive: boolean,

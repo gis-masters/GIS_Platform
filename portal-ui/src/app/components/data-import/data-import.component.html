@@ -12,7 +12,7 @@
         Перетащите zip архив с shape файлами<br>или<br>
 
         <button mat-raised-button
-               (click)="fileInput.click(); uploader.clearQueue();
+               (click)="fileInput.click(); uploader.clearQueue(); errors = [];
                    isUploadComplete = false; isWrongExt = false; isImportFailed = false;"
                class="data-import__dz-file-button">
           Откройте проводник для выбора файла
@@ -50,6 +50,9 @@
 
       <div *ngIf="isImportFailed" class="data-import__notification data-import__notification_error">
         Не удается загрузить архив, проверьте вложенные файлы.
+      </div>
+      <div *ngFor="let error of errors" class="data-import__notification data-import__notification_error">
+        {{ error }}
       </div>
 
     </div>
