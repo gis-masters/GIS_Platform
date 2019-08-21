@@ -44,7 +44,7 @@ public class FgistpRuleServiceTest {
         when(dataSchemaRepository.findAll()).thenReturn(new ArrayList<>());
         when(customFeatureDefinitionRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assertNull(dataSchemaService.getDescriptionByName("someFeatureName"));
+        dataSchemaService.getDescriptionByName("someFeatureName");
     }
 
     @Test
