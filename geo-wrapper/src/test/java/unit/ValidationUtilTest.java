@@ -33,7 +33,7 @@ public class ValidationUtilTest {
 
         JsonNode jsonNode = Util.convertToJson(object);
 
-        assertEquals("{\"objectId\":\"objectId\",\"classId\":\"classId\",\"xMin\":\"xmin\",\"" +
+        assertEquals("{\"objectId\":\"objectid\",\"classId\":\"classid\",\"xMin\":\"xmin\",\"" +
                         "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
                         "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":[\"Some error\"]}",
                 jsonNode.toString());

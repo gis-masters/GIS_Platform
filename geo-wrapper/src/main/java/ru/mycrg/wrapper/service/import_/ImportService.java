@@ -74,7 +74,6 @@ public class ImportService {
      */
     void postHandle(ImportFeature feature, BaseMqProcessRequest mqRequest) {
         try {
-            FeatureDescriptionDto fDescription = feature.getFeatureDescription();
             String sourceDbName = feature.getSourceResource().getDbName();
             String targetTableName = feature.getTargetResource().getTableName();
             String targetSchemaName = feature.getTargetResource().getSchemaName();
@@ -94,7 +93,7 @@ public class ImportService {
                 }
 
                 // Обрабатываем
-                List<Map<String, Object>> touchedParams = handleBatch(batch, fDescription);
+                List<Map<String, Object>> touchedParams = handleBatch(batch);
 
                 // Сохраняем
                 baseDaoService.updateBatch(jdbcTemplate, resourceProjection, touchedParams);
@@ -125,11 +124,10 @@ public class ImportService {
      * Попутно есть желание проставить globalid всем обьектам у которых его нет
      *
      * @param batch        Пачка строк из БД
-     * @param fDescription Описание фичи
      * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.
      */
-    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, FeatureDescriptionDto fDescription) {
+    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         batch.forEach(item -> {
@@ -154,14 +152,6 @@ public class ImportService {
                     } else if (value instanceof Integer) {
                         // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
                         if ((Integer) value == 0) {
-//                        Optional<SimplePropertyDto> propertySchema = fDescription.getProperties().stream()
-//                                .filter(pSchema -> pSchema.getName().toLowerCase().equals(key.toLowerCase()))
-//                                .findFirst();
-//
-//                        if (propertySchema.isPresent() && propertySchema.get().getValueType().equals(ValueType.CHOICE)) {
-//                            params.put(key, DaoProperties.nullMarker);
-//                        }
-
                             params.put(key, DaoProperties.NULL_MARKER);
                         }
                     } else if (value instanceof BigDecimal) {
