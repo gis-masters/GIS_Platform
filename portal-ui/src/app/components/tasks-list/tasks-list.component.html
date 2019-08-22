@@ -1,0 +1,10 @@
+<div class="error-list__content">
+
+  <div *ngFor="let errorTask of tasks">
+    <div class="error-list__row-dz error-list__notification_error">
+      <span>{{ errorTask.layer?.name }}</span>
+      <span>{{ getErrorDescription(errorTask.state) }}</span>
+    </div>
+  </div>
+
+</div>

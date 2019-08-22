@@ -8,6 +8,7 @@ import {BaseService} from '../../base.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LocalStorageService} from '../../local-storage.service';
 import {ServerPropertiesService} from '../../server-properties.service';
+import {NameHrefProjection} from "../projections";
 
 @Injectable({
   providedIn: 'root'
@@ -87,13 +88,24 @@ export class ImportService {
   }
 
   getAllImportLayers(isScratch: boolean): Observable<ImportLayer[]> {
-    // this.logger.info('getAll import layers');
-
     const observableTasks = [];
     this.getTasks(isScratch)
         .forEach((task: TaskItem) => {
           observableTasks.push(this.getImportLayer(task));
         });
+
+    return forkJoin(observableTasks);
+  }
+
+  getFullImportTask(task: ImportTaskShort): Observable<ImportLayer> {
+    return this.http.get<ImportLayer>(task.href);
+  }
+
+  getFullImportTasks(importTasks: ImportTaskShort[]): Observable<ImportTaskFull[]> {
+    const observableTasks = [];
+    importTasks.forEach((importTask: ImportTaskShort) => {
+      observableTasks.push(this.getFullImportTask(importTask));
+    });
 
     return forkJoin(observableTasks);
   }
@@ -150,6 +162,13 @@ export interface ImportTaskShort {
   id: number;
   href: string;
   state: string;
+}
+
+export interface ImportTaskFull {
+  id: number;
+  href: string;
+  state: string;
+  layer: NameHrefProjection;
 }
 
 export interface TaskItem {

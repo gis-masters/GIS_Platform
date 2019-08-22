@@ -6,12 +6,13 @@ import {MatSnackBar} from '@angular/material';
 import {CommunicationService} from '../../services/communication.service';
 import {
   ImportService,
+  ImportTaskFull,
   ImportTasks,
-  InputStartResponseDto,
-  ImportTaskShort
+  ImportTaskShort,
+  InputStartResponseDto
 } from '../../services/geoserver/import/import.service';
-import {takeUntil} from 'rxjs/operators';
-import {Subject, interval} from 'rxjs';
+import {filter, flatMap, takeUntil} from 'rxjs/operators';
+import {interval, of, Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-data-import',
@@ -30,17 +31,10 @@ export class DataImportComponent implements OnDestroy {
   hasBaseDropZoneOver = false;
 
   errors: string[] = [];
+  errorTasks: ImportTaskFull[] = [];
 
   private CHECK_STATUS_INTERVAL = 1000;
   private WAIT_SERVER_RESPONSE_TIMER = 120000;
-  private errorCodes: {[key: string]: string} = {
-    NO_CRS: 'Не определена проекция.',
-    NO_BOUNDS: 'NO_BOUNDS',
-    NO_FORMAT: 'NO_FORMAT',
-    BAD_FORMAT: 'BAD_FORMAT',
-    ERROR: 'ERROR',
-    CANCELED: 'CANCELED'
-  };
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -149,11 +143,7 @@ export class DataImportComponent implements OnDestroy {
                   this.isUploadComplete = true;
                   this.logger.info('Success uploaded');
                 } else {
-                  const errors = this.getErrorsFromTasks(successResponse.import.tasks);
-
-                  if (errors.length) {
-                    this.handleError('Start import failed', successResponse, errors);
-                  }
+                  this.handleErrorsTasks(successResponse.import.tasks);
                 }
               },
             );
@@ -166,10 +156,18 @@ export class DataImportComponent implements OnDestroy {
     }, this.WAIT_SERVER_RESPONSE_TIMER);
   }
 
-  private getErrorsFromTasks (tasks: ImportTaskShort[]): string[] {
-    return tasks
-              .filter(task => Object.keys(this.errorCodes).includes(task.state))
-              .map(task => this.errorCodes[task.state]);
+  private handleErrorsTasks(errorTasks: ImportTaskShort[]) {
+    of(errorTasks)
+      .pipe(
+        flatMap((tasks: ImportTaskShort[]) => this.importService.getFullImportTasks(tasks)),
+        takeUntil(this.unsubscribe$)
+      ).subscribe((response: any[]) => {
+        this.errorTasks = response.map(value => value.task);
+
+        this.isImportFailed = true;
+        this.isImportInited = false;
+        this.unsubscribe$.next();
+      });
   }
 
   private handleError(msg: string, response?: any, errors?: string[]) {
@@ -183,4 +181,5 @@ export class DataImportComponent implements OnDestroy {
     this.isImportFailed = true;
     this.isImportInited = false;
   }
+
 }

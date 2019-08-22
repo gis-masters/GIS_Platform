@@ -50,6 +50,7 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
 import {PageTitleComponent} from './components/page-title/page-title.component';
 import {DataImportComponent} from './components/data-import/data-import.component';
+import {TasksListComponent} from './components/tasks-list/tasks-list.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import {DataImportComponent} from './components/data-import/data-import.componen
     LoadingComponent,
     ResizableBarDirective,
     PageTitleComponent,
-    DataImportComponent
+    DataImportComponent,
+    TasksListComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,79 +1,79 @@
-<div class="data-import">
-  <div class="data-import__row-dz">
+<mat-card>
+  <div class="data-import">
+    <div class="data-import__row-dz">
 
-    <div ng2FileDrop
-        [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-        (fileOver)="fileOverBase($event)"
-        [uploader]="uploader"
-        class="data-import__dz">
+      <div ng2FileDrop
+          [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+          (fileOver)="fileOverBase($event)"
+          [uploader]="uploader"
+          class="data-import__dz">
 
-      <div class="data-import__dz-caption">
+        <div class="data-import__dz-caption">
 
-        Перетащите zip архив с shape файлами<br>или<br>
+          Перетащите zip архив с shape файлами<br>или<br>
 
-        <button mat-raised-button
-               (click)="fileInput.click(); uploader.clearQueue(); errors = [];
-                   isUploadComplete = false; isWrongExt = false; isImportFailed = false;"
-               class="data-import__dz-file-button">
-          Откройте проводник для выбора файла
-        </button>
+          <button mat-raised-button
+                 (click)="fileInput.click(); uploader.clearQueue(); errors = []; errorTasks = [];
+                     isUploadComplete = false; isWrongExt = false; isImportFailed = false;"
+                 class="data-import__dz-file-button">
+            Откройте проводник для выбора файла
+          </button>
 
-        <div class="data-import__dz-control-container">
-          <input type="file" #fileInput ng2FileSelect [uploader]="uploader"/>
+          <div class="data-import__dz-control-container">
+            <input type="file" #fileInput ng2FileSelect [uploader]="uploader"/>
+          </div>
+
         </div>
 
       </div>
 
-    </div>
-
-    <button mat-raised-button class="data-import__load-button"
-            [disabled]="!uploader.queue[0] || checkFile(uploader?.queue[0]?._file.name)"
-            (click)="initScratchImport()">
-      <mat-icon *ngIf="!isImportInited" aria-label="label">cloud_download</mat-icon>
-      <span *ngIf="!isImportInited">&nbsp;Загрузка</span>
-      <img
-          *ngIf="isImportInited"
-          src="../../../../assets/images/loader.gif"
-          alt="loading"
-          class="data-import__load-button-loader">
-    </button>
-
-  </div>
-
-  <div class="data-import__row-notifications">
-
-    <div class="data-import__errors">
-
-      <div *ngIf="isWrongExt" class="data-import__notification data-import__notification_error">
-        Неверный формат файла
-      </div>
-
-      <div *ngIf="isImportFailed" class="data-import__notification data-import__notification_error">
-        Не удается загрузить архив, проверьте вложенные файлы.
-      </div>
-      <div *ngFor="let error of errors" class="data-import__notification data-import__notification_error">
-        {{ error }}
-      </div>
+      <button mat-raised-button class="data-import__load-button"
+              [disabled]="!uploader.queue[0] || checkFile(uploader?.queue[0]?._file.name)"
+              (click)="initScratchImport()">
+        <mat-icon *ngIf="!isImportInited" aria-label="label">cloud_download</mat-icon>
+        <span *ngIf="!isImportInited">&nbsp;Загрузка</span>
+        <img
+            *ngIf="isImportInited"
+            src="../../../../assets/images/loader.gif"
+            alt="loading"
+            class="data-import__load-button-loader">
+      </button>
 
     </div>
 
-    <div *ngIf="uploader?.queue[0]" class="data-import__progress">
-      {{uploader?.queue[0]?._file.name}}
-      &nbsp;......&nbsp;
-      {{uploader.queue[0]?.file?.size/1024/1024 | number:'.2'}} Mb
+    <div class="data-import__row-notifications">
+
+      <div class="data-import__errors">
+
+        <div *ngIf="isWrongExt" class="data-import__notification data-import__notification_error">
+          Неверный формат файла
+        </div>
+
+        <div *ngIf="isImportFailed" class="data-import__notification data-import__notification_error">
+          Не удается загрузить архив, проверьте вложенные файлы.
+        </div>
+
+        <crg-error-tasks-list [tasks]="errorTasks"></crg-error-tasks-list>
+      </div>
+
+      <div *ngIf="uploader?.queue[0]" class="data-import__progress">
+        {{uploader?.queue[0]?._file.name}}
+        &nbsp;......&nbsp;
+        {{uploader.queue[0]?.file?.size/1024/1024 | number:'.2'}} Mb
+      </div>
+
     </div>
 
+    <div class="data-import__row-buttons">
+
+      <button mat-stroked-button routerLink="/workspace/projects">
+          Вернуться к выбору проекта
+      </button>
+
+      <button mat-raised-button class="mat-primary" [disabled]="!isUploadComplete" (click)="next()">
+          Далее
+      </button>
+
+    </div>
   </div>
-
-  <div class="data-import__row-buttons">
-
-    <button mat-stroked-button routerLink="/workspace/projects">
-        Вернуться к выбору проекта
-    </button>
-
-    <button mat-raised-button class="mat-primary" [disabled]="!isUploadComplete" (click)="next()">
-        Далее
-    </button>
-
-  </div>
-</div>
+</mat-card>
