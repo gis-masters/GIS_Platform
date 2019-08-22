@@ -25,10 +25,14 @@ export class DataImportComponent implements OnDestroy {
   isWrongExt = false;
   isImportFailed = false;
 
-  public uploader: FileUploader = new FileUploader({url: ''});
+  uploader: FileUploader = new FileUploader({url: ''});
 
-  public hasBaseDropZoneOver = false;
+  hasBaseDropZoneOver = false;
 
+  errors: string[] = [];
+
+  private CHECK_STATUS_INTERVAL = 1000;
+  private WAIT_SERVER_RESPONSE_TIMER = 120000;
   private errorCodes: {[key: string]: string} = {
     NO_CRS: 'Не определена проекция.',
     NO_BOUNDS: 'NO_BOUNDS',
@@ -38,11 +42,7 @@ export class DataImportComponent implements OnDestroy {
     CANCELED: 'CANCELED'
   };
 
-  private errors: string[] = [];
-
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private WAIT_SERVER_RESPONSE_TIMER = 120000;
-  private CHECK_STATUS_INTERVAL = 1000;
 
   constructor(private logger: NGXLogger,
               private router: Router,

@@ -79,8 +79,6 @@ export class ImportService {
    * Последний шаг, после всех приготовлений, стартуем импорт.
    */
   startScratchUpload() {
-    this.logger.info('Start scratch import: ', this.importFlow.scratch_import.import.id);
-
     return this.http.post(this.importUrl + '/' + this.importFlow.scratch_import.import.id, {});
   }
 
