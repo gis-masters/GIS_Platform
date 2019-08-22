@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {MatSnackBar} from '@angular/material';
 import {CommunicationService} from '../../services/communication.service';
@@ -20,6 +20,7 @@ import {interval, of, Subject} from 'rxjs';
   styleUrls: ['./data-import.component.scss']
 })
 export class DataImportComponent implements OnDestroy {
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   isImportInited = false;
   isUploadComplete = false;
@@ -79,6 +80,26 @@ export class DataImportComponent implements OnDestroy {
       }
     } else {
       return true;
+    }
+  }
+
+  clearFiles () {
+    this.uploader.clearQueue();
+    this.errors = [];
+    this.errorTasks = [];
+    this.isUploadComplete = false;
+    this.isWrongExt = false;
+    this.isImportFailed = false;
+    this.fileInput.nativeElement.value = '';
+  }
+
+  fileSelectedHandler () {
+    if (this.uploader.queue.length) {
+      this.checkFile(this.uploader.queue[0]._file.name);
+
+      if (!this.isWrongExt) {
+        this.initScratchImport();
+      }
     }
   }
 

@@ -50,7 +50,8 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
 import {PageTitleComponent} from './components/page-title/page-title.component';
 import {DataImportComponent} from './components/data-import/data-import.component';
-import {TasksListComponent} from './components/tasks-list/tasks-list.component';
+import {DataImportTasksListComponent} from './components/data-import-tasks-list/data-import-tasks-list.component';
+import {AtleastPipe} from './pipes/atleast.pipe';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import {TasksListComponent} from './components/tasks-list/tasks-list.component';
     ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,
-    TasksListComponent
+    DataImportTasksListComponent,
+    AtleastPipe
   ],
   imports: [
     HttpClientModule,

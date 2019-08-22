@@ -1,0 +1,20 @@
+<div class="data-import-tasks-list">
+  <div class="data-import-tasks-list__title">
+    Подробности:
+  </div>
+
+  <table class="data-import-tasks-list__table">
+    <tr
+        *ngFor="let task of tasks"
+        class="data-import-tasks-list__task"
+        [ngClass]="{'data-import-tasks-list__task_error': isError(task)}">
+      <td class="data-import-tasks-list__task-name">
+        {{ task.layer?.name }}
+      </td>
+      <td class="data-import-tasks-list__task-description">
+        {{ getDescription(task) }}
+      </td>
+    </tr>
+  </table>
+</div>
+

@@ -2,11 +2,11 @@ import {Component, Input} from '@angular/core';
 import {ImportTaskFull} from '../../services/geoserver/import/import.service';
 
 @Component({
-  selector: 'crg-error-tasks-list',
-  templateUrl: './tasks-list.component.html',
-  styleUrls: ['./tasks-list.component.scss']
+  selector: 'crg-data-import-tasks-list',
+  templateUrl: './data-import-tasks-list.component.html',
+  styleUrls: ['./data-import-tasks-list.component.scss']
 })
-export class TasksListComponent {
+export class DataImportTasksListComponent {
 
   @Input() tasks: ImportTaskFull[];
 
@@ -17,12 +17,17 @@ export class TasksListComponent {
     BAD_FORMAT: 'BAD_FORMAT',
     ERROR: 'ERROR',
     CANCELED: 'CANCELED',
-    COMPLETE: 'Ошибок не найдено'
+    COMPLETE: 'Успешно'
   };
 
   constructor() { }
 
-  getErrorDescription(state: string) {
+  isError (task: ImportTaskFull): boolean {
+    return task.state !== 'COMPLETE';
+  }
+
+  getDescription(task: ImportTaskFull): string {
+    const { state } = task;
     if (Object.keys(this.errorCodes).includes(state)) {
       return this.errorCodes[state];
     } else {

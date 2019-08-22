@@ -58,3 +58,7 @@ body {
 .without-outline {
   outline: none;
 }
+
+.mat-icon-button:focus {
+  outline: none;
+}
