@@ -45,9 +45,7 @@ CREATE TABLE fiz.admborder_line (
     source character varying(255),
     status_adm smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
-);
+    shape public.geometry);
 ALTER TABLE fiz.admborder_line OWNER TO fiz;
 
 --
@@ -80,9 +78,7 @@ CREATE TABLE fiz.admemo (
     source character varying(255),
     status_adm smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
-);
+    shape public.geometry);
 ALTER TABLE fiz.admemo OWNER TO fiz;
 
 CREATE TABLE fiz.admemo_extension (
@@ -116,18 +112,13 @@ CREATE TABLE fiz.admenp (
     source character varying(255),
     status_adm smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
 ALTER TABLE fiz.admenp OWNER TO fiz;
 
 --
-
--- Name: admenp_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.admenp_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -135,14 +126,7 @@ CREATE TABLE fiz.admenp_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.admenp_extension OWNER TO fiz;
-
---
-
--- Name: admenp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.admenp_objectid_seq
     AS integer
@@ -151,24 +135,10 @@ CREATE SEQUENCE fiz.admenp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.admenp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8818 (class 0 OID 0)
--- Dependencies: 232
--- Name: admenp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.admenp_objectid_seq OWNED BY fiz.admenp.objectid;
 
-
 --
-
--- Name: admerf; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.admerf (
     objectid integer NOT NULL,
     classid integer,
@@ -176,17 +146,9 @@ CREATE TABLE fiz.admerf (
     population numeric(38,8),
     source character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.admerf OWNER TO fiz;
-
---
-
--- Name: admerf_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.admerf_extension (
     object_id integer NOT NULL,
@@ -195,14 +157,7 @@ CREATE TABLE fiz.admerf_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.admerf_extension OWNER TO fiz;
-
---
-
--- Name: admerf_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.admerf_objectid_seq
     AS integer
@@ -223,8 +178,7 @@ CREATE TABLE fiz.admesrf (
     population numeric(38,8),
     source character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.admesrf OWNER TO fiz;
 
@@ -307,17 +261,9 @@ CREATE TABLE fiz.agriculture (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.agriculture OWNER TO fiz;
-
---
-
--- Name: agriculture_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.agriculture_extension (
     object_id integer NOT NULL,
@@ -326,14 +272,7 @@ CREATE TABLE fiz.agriculture_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.agriculture_extension OWNER TO fiz;
-
---
-
--- Name: agriculture_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.agriculture_objectid_seq
     AS integer
@@ -342,24 +281,10 @@ CREATE SEQUENCE fiz.agriculture_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.agriculture_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8823 (class 0 OID 0)
--- Dependencies: 245
--- Name: agriculture_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.agriculture_objectid_seq OWNED BY fiz.agriculture.objectid;
 
-
 --
-
--- Name: agriculture_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.agriculture_point (
     objectid integer NOT NULL,
     classid integer,
@@ -385,18 +310,11 @@ CREATE TABLE fiz.agriculture_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.agriculture_point OWNER TO fiz;
 
 --
-
--- Name: agriculture_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.agriculture_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -404,14 +322,7 @@ CREATE TABLE fiz.agriculture_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.agriculture_point_extension OWNER TO fiz;
-
---
-
--- Name: agriculture_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.agriculture_point_objectid_seq
     AS integer
@@ -420,24 +331,10 @@ CREATE SEQUENCE fiz.agriculture_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.agriculture_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8824 (class 0 OID 0)
--- Dependencies: 248
--- Name: agriculture_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.agriculture_point_objectid_seq OWNED BY fiz.agriculture_point.objectid;
 
-
 --
-
--- Name: airtransportobj; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.airtransportobj (
     objectid integer NOT NULL,
     classid integer,
@@ -459,17 +356,9 @@ CREATE TABLE fiz.airtransportobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.airtransportobj OWNER TO fiz;
-
---
-
--- Name: airtransportobj_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.airtransportobj_extension (
     object_id integer NOT NULL,
@@ -478,15 +367,9 @@ CREATE TABLE fiz.airtransportobj_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.airtransportobj_extension OWNER TO fiz;
 
 --
-
--- Name: airtransportobj_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.airtransportobj_objectid_seq
     AS integer
     START WITH 1
@@ -519,8 +402,7 @@ CREATE TABLE fiz.airtransportobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.airtransportobj_point OWNER TO fiz;
 
@@ -625,8 +507,7 @@ CREATE TABLE fiz.areabasedevelopment (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.areabasedevelopment OWNER TO fiz;
 
@@ -673,8 +554,7 @@ CREATE TABLE fiz.authorityservice (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.authorityservice OWNER TO fiz;
 
@@ -721,8 +601,7 @@ CREATE TABLE fiz.authorityservice_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.authorityservice_point OWNER TO fiz;
 
@@ -767,8 +646,7 @@ CREATE TABLE fiz.autoservice (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.autoservice OWNER TO fiz;
 
@@ -813,8 +691,7 @@ CREATE TABLE fiz.autoservice_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.autoservice_point OWNER TO fiz;
 
@@ -1090,8 +967,7 @@ CREATE TABLE fiz.cemetery (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.cemetery OWNER TO fiz;
 
@@ -1134,8 +1010,7 @@ CREATE TABLE fiz.cemetery_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.cemetery_point OWNER TO fiz;
 
@@ -1219,8 +1094,7 @@ CREATE TABLE fiz.coastalprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.coastalprotectionzone OWNER TO fiz;
 CREATE TABLE fiz.coastalprotectionzone_extension (
@@ -1349,25 +1223,13 @@ CREATE SEQUENCE fiz.ctm_time_t_objectid_seq
 ALTER TABLE fiz.ctm_time_t_objectid_seq OWNER TO fiz;
 ALTER SEQUENCE fiz.ctm_time_t_objectid_seq OWNED BY fiz.ctm_time_t.objectid;
 
-
 --
-
--- Name: ctm_use_t; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.ctm_use_t (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.ctm_use_t OWNER TO fiz;
-
---
-
--- Name: ctm_use_t_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.ctm_use_t_objectid_seq
     AS integer
@@ -1376,37 +1238,16 @@ CREATE SEQUENCE fiz.ctm_use_t_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.ctm_use_t_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8861 (class 0 OID 0)
--- Dependencies: 332
--- Name: ctm_use_t_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.ctm_use_t_objectid_seq OWNED BY fiz.ctm_use_t.objectid;
 
-
 --
-
--- Name: cu_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.cu_type (
     objectid integer NOT NULL,
     code smallint,
     descroption character varying(255)
 );
-
-
 ALTER TABLE fiz.cu_type OWNER TO fiz;
-
---
-
--- Name: cu_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.cu_type_objectid_seq
     AS integer
@@ -1415,24 +1256,10 @@ CREATE SEQUENCE fiz.cu_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.cu_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8862 (class 0 OID 0)
--- Dependencies: 334
--- Name: cu_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.cu_type_objectid_seq OWNED BY fiz.cu_type.objectid;
 
-
 --
-
--- Name: culture; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.culture (
     objectid integer NOT NULL,
     classid integer,
@@ -1455,17 +1282,9 @@ CREATE TABLE fiz.culture (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.culture OWNER TO fiz;
-
---
-
--- Name: culture_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.culture_extension (
     object_id integer NOT NULL,
@@ -1474,14 +1293,7 @@ CREATE TABLE fiz.culture_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.culture_extension OWNER TO fiz;
-
---
-
--- Name: culture_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.culture_objectid_seq
     AS integer
@@ -1490,24 +1302,10 @@ CREATE SEQUENCE fiz.culture_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.culture_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8863 (class 0 OID 0)
--- Dependencies: 337
--- Name: culture_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.culture_objectid_seq OWNED BY fiz.culture.objectid;
 
-
 --
-
--- Name: culture_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.culture_point (
     objectid integer NOT NULL,
     classid integer,
@@ -1530,17 +1328,9 @@ CREATE TABLE fiz.culture_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.culture_point OWNER TO fiz;
-
---
-
--- Name: culture_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.culture_point_extension (
     object_id integer NOT NULL,
@@ -1549,14 +1339,7 @@ CREATE TABLE fiz.culture_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.culture_point_extension OWNER TO fiz;
-
---
-
--- Name: culture_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.culture_point_objectid_seq
     AS integer
@@ -1565,37 +1348,16 @@ CREATE SEQUENCE fiz.culture_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.culture_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8864 (class 0 OID 0)
--- Dependencies: 340
--- Name: culture_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.culture_point_objectid_seq OWNED BY fiz.culture_point.objectid;
 
-
 --
-
--- Name: current; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.current (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.current OWNER TO fiz;
-
---
-
--- Name: current_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.current_objectid_seq
     AS integer
@@ -1604,24 +1366,10 @@ CREATE SEQUENCE fiz.current_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.current_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8865 (class 0 OID 0)
--- Dependencies: 342
--- Name: current_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.current_objectid_seq OWNED BY fiz.current.objectid;
 
-
 --
-
--- Name: customcontrol; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.customcontrol (
     objectid integer NOT NULL,
     classid integer,
@@ -1640,17 +1388,9 @@ CREATE TABLE fiz.customcontrol (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.customcontrol OWNER TO fiz;
-
---
-
--- Name: customcontrol_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.customcontrol_extension (
     object_id integer NOT NULL,
@@ -1659,14 +1399,7 @@ CREATE TABLE fiz.customcontrol_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.customcontrol_extension OWNER TO fiz;
-
---
-
--- Name: customcontrol_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.customcontrol_objectid_seq
     AS integer
@@ -1697,8 +1430,7 @@ CREATE TABLE fiz.customcontrol_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.customcontrol_point OWNER TO fiz;
 
@@ -1767,8 +1499,7 @@ CREATE TABLE fiz.drinkwaterprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.drinkwaterprotectionzone OWNER TO fiz;
 
@@ -1869,8 +1600,7 @@ CREATE TABLE fiz.education (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.education OWNER TO fiz;
 
@@ -1917,8 +1647,7 @@ CREATE TABLE fiz.education_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.education_point OWNER TO fiz;
 
@@ -1983,8 +1712,7 @@ CREATE TABLE fiz.electricline_line (
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     feature_le integer,
-    shape_leng numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_leng numeric
 );
 ALTER TABLE fiz.electricline_line OWNER TO fiz;
 
@@ -2031,8 +1759,7 @@ CREATE TABLE fiz.electricpowerstation (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.electricpowerstation OWNER TO fiz;
 
@@ -2079,8 +1806,7 @@ CREATE TABLE fiz.electricpowerstation_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.electricpowerstation_point OWNER TO fiz;
 
@@ -2129,8 +1855,7 @@ CREATE TABLE fiz.electrictransformer (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.electrictransformer OWNER TO fiz;
 
@@ -2179,8 +1904,7 @@ CREATE TABLE fiz.electrictransformer_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.electrictransformer_point OWNER TO fiz;
 
@@ -2261,8 +1985,7 @@ CREATE TABLE fiz.emergencyprotectionobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.emergencyprotectionobj OWNER TO fiz;
 
@@ -2307,8 +2030,7 @@ CREATE TABLE fiz.emergencyprotectionobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.emergencyprotectionobj_point OWNER TO fiz;
 
@@ -2347,8 +2069,7 @@ CREATE TABLE fiz.engprotectionobj_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.engprotectionobj_line OWNER TO fiz;
 
@@ -2387,8 +2108,7 @@ CREATE TABLE fiz.engprotectionobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.engprotectionobj_point OWNER TO fiz;
 
@@ -2421,8 +2141,7 @@ CREATE TABLE fiz.engprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.engprotectionzone OWNER TO fiz;
 
@@ -2455,8 +2174,7 @@ CREATE TABLE fiz.engsanitarygapzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.engsanitarygapzone OWNER TO fiz;
 
@@ -2510,8 +2228,7 @@ CREATE TABLE fiz.envdanger (
     source character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.envdanger OWNER TO fiz;
 
@@ -2547,8 +2264,7 @@ CREATE TABLE fiz.envdanger_point (
     source character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.envdanger_point OWNER TO fiz;
 
@@ -2588,8 +2304,7 @@ CREATE TABLE fiz.envmonitoring (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.envmonitoring OWNER TO fiz;
 
@@ -2629,8 +2344,7 @@ CREATE TABLE fiz.envmonitoring_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.envmonitoring_point OWNER TO fiz;
 
@@ -2717,8 +2431,7 @@ CREATE TABLE fiz.fishprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.fishprotectionzone OWNER TO fiz;
 
@@ -2752,8 +2465,7 @@ CREATE TABLE fiz.floodarea (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.floodarea OWNER TO fiz;
 
@@ -2804,8 +2516,7 @@ CREATE TABLE fiz.foreshore (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.foreshore OWNER TO fiz;
 
@@ -2842,8 +2553,7 @@ CREATE TABLE fiz.forest (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.forest OWNER TO fiz;
 
@@ -2951,8 +2661,7 @@ CREATE TABLE fiz.forestpark (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.forestpark OWNER TO fiz;
 
@@ -3083,8 +2792,7 @@ CREATE TABLE fiz.street_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.street_line OWNER to fiz;
 
@@ -3115,8 +2823,7 @@ CREATE TABLE fiz.streetv_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.streetv_line OWNER to fiz;
 
@@ -3149,8 +2856,7 @@ CREATE TABLE fiz.telecomnetworkline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.telecomnetworkline_line OWNER to fiz;
 
@@ -3190,8 +2896,7 @@ CREATE TABLE fiz.functionalzone (
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     shape_leng numeric,
-    shape_area numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_area numeric
 );
 ALTER TABLE fiz.functionalzone OWNER TO fiz;
 
@@ -3233,25 +2938,13 @@ CREATE SEQUENCE fiz.fz_ingstp_objectid_seq
 ALTER TABLE fiz.fz_ingstp_objectid_seq OWNER TO fiz;
 ALTER SEQUENCE fiz.fz_ingstp_objectid_seq OWNED BY fiz.fz_ingstp.objectid;
 
-
 --
-
--- Name: fz_mfstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_mfstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_mfstp OWNER TO fiz;
-
---
-
--- Name: fz_mfstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_mfstp_objectid_seq
     AS integer
@@ -3260,37 +2953,16 @@ CREATE SEQUENCE fiz.fz_mfstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_mfstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8915 (class 0 OID 0)
--- Dependencies: 468
--- Name: fz_mfstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_mfstp_objectid_seq OWNED BY fiz.fz_mfstp.objectid;
 
-
 --
-
--- Name: fz_odstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_odstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_odstp OWNER TO fiz;
-
---
-
--- Name: fz_odstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_odstp_objectid_seq
     AS integer
@@ -3299,37 +2971,16 @@ CREATE SEQUENCE fiz.fz_odstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_odstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8916 (class 0 OID 0)
--- Dependencies: 470
--- Name: fz_odstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_odstp_objectid_seq OWNED BY fiz.fz_odstp.objectid;
 
-
 --
-
--- Name: fz_orecstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_orecstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_orecstp OWNER TO fiz;
-
---
-
--- Name: fz_orecstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_orecstp_objectid_seq
     AS integer
@@ -3338,37 +2989,16 @@ CREATE SEQUENCE fiz.fz_orecstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_orecstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8917 (class 0 OID 0)
--- Dependencies: 472
--- Name: fz_orecstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_orecstp_objectid_seq OWNED BY fiz.fz_orecstp.objectid;
 
-
 --
-
--- Name: fz_recstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_recstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_recstp OWNER TO fiz;
-
---
-
--- Name: fz_recstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_recstp_objectid_seq
     AS integer
@@ -3377,37 +3007,16 @@ CREATE SEQUENCE fiz.fz_recstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_recstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8918 (class 0 OID 0)
--- Dependencies: 474
--- Name: fz_recstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_recstp_objectid_seq OWNED BY fiz.fz_recstp.objectid;
 
-
 --
-
--- Name: fz_shstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_shstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_shstp OWNER TO fiz;
-
---
-
--- Name: fz_shstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_shstp_objectid_seq
     AS integer
@@ -3416,37 +3025,16 @@ CREATE SEQUENCE fiz.fz_shstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_shstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8919 (class 0 OID 0)
--- Dependencies: 476
--- Name: fz_shstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_shstp_objectid_seq OWNED BY fiz.fz_shstp.objectid;
 
-
 --
-
--- Name: fz_trstp; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.fz_trstp (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.fz_trstp OWNER TO fiz;
-
---
-
--- Name: fz_trstp_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.fz_trstp_objectid_seq
     AS integer
@@ -3455,37 +3043,16 @@ CREATE SEQUENCE fiz.fz_trstp_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.fz_trstp_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8920 (class 0 OID 0)
--- Dependencies: 478
--- Name: fz_trstp_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.fz_trstp_objectid_seq OWNED BY fiz.fz_trstp.objectid;
 
-
 --
-
--- Name: gas_st_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.gas_st_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.gas_st_type OWNER TO fiz;
-
---
-
--- Name: gas_st_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.gas_st_type_objectid_seq
     AS integer
@@ -3494,24 +3061,10 @@ CREATE SEQUENCE fiz.gas_st_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.gas_st_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8921 (class 0 OID 0)
--- Dependencies: 480
--- Name: gas_st_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.gas_st_type_objectid_seq OWNED BY fiz.gas_st_type.objectid;
 
-
 --
-
--- Name: gasfacility; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.gasfacility (
     objectid integer NOT NULL,
     classid integer,
@@ -3535,17 +3088,9 @@ CREATE TABLE fiz.gasfacility (
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
     shape_leng numeric,
-    shape_area numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_area numeric
 );
-
-
 ALTER TABLE fiz.gasfacility OWNER TO fiz;
-
---
-
--- Name: gasfacility_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.gasfacility_extension (
     object_id integer NOT NULL,
@@ -3554,14 +3099,7 @@ CREATE TABLE fiz.gasfacility_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.gasfacility_extension OWNER TO fiz;
-
---
-
--- Name: gasfacility_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.gasfacility_objectid_seq
     AS integer
@@ -3570,24 +3108,10 @@ CREATE SEQUENCE fiz.gasfacility_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.gasfacility_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8922 (class 0 OID 0)
--- Dependencies: 483
--- Name: gasfacility_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.gasfacility_objectid_seq OWNED BY fiz.gasfacility.objectid;
 
-
 --
-
--- Name: gasfacility_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.gasfacility_point (
     objectid integer NOT NULL,
     classid integer,
@@ -3609,17 +3133,9 @@ CREATE TABLE fiz.gasfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.gasfacility_point OWNER TO fiz;
-
---
-
--- Name: gasfacility_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.gasfacility_point_extension (
     object_id integer NOT NULL,
@@ -3628,14 +3144,7 @@ CREATE TABLE fiz.gasfacility_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.gasfacility_point_extension OWNER TO fiz;
-
---
-
--- Name: gasfacility_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.gasfacility_point_objectid_seq
     AS integer
@@ -3644,24 +3153,10 @@ CREATE SEQUENCE fiz.gasfacility_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.gasfacility_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8923 (class 0 OID 0)
--- Dependencies: 486
--- Name: gasfacility_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.gasfacility_point_objectid_seq OWNED BY fiz.gasfacility_point.objectid;
 
-
 --
-
--- Name: gaspipeline_line; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.gaspipeline_line (
     objectid integer NOT NULL,
     classid integer,
@@ -3684,17 +3179,9 @@ CREATE TABLE fiz.gaspipeline_line (
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
-    shape_leng numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_leng numeric
 );
-
-
 ALTER TABLE fiz.gaspipeline_line OWNER TO fiz;
-
---
-
--- Name: gaspipeline_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.gaspipeline_line_extension (
     object_id integer NOT NULL,
@@ -3703,14 +3190,7 @@ CREATE TABLE fiz.gaspipeline_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.gaspipeline_line_extension OWNER TO fiz;
-
---
-
--- Name: gaspipeline_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.gaspipeline_objectid_seq
     AS integer
@@ -3719,24 +3199,10 @@ CREATE SEQUENCE fiz.gaspipeline_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.gaspipeline_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8924 (class 0 OID 0)
--- Dependencies: 489
--- Name: gaspipeline_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.gaspipeline_objectid_seq OWNED BY fiz.gaspipeline_line.objectid;
 
-
 --
-
--- Name: greeneryplanting; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.greeneryplanting (
     objectid integer NOT NULL,
     classid integer,
@@ -3750,17 +3216,9 @@ CREATE TABLE fiz.greeneryplanting (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.greeneryplanting OWNER TO fiz;
-
---
-
--- Name: greeneryplanting_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.greeneryplanting_extension (
     object_id integer NOT NULL,
@@ -3769,14 +3227,7 @@ CREATE TABLE fiz.greeneryplanting_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.greeneryplanting_extension OWNER TO fiz;
-
---
-
--- Name: greeneryplanting_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.greeneryplanting_objectid_seq
     AS integer
@@ -3785,37 +3236,16 @@ CREATE SEQUENCE fiz.greeneryplanting_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.greeneryplanting_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8925 (class 0 OID 0)
--- Dependencies: 492
--- Name: greeneryplanting_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.greeneryplanting_objectid_seq OWNED BY fiz.greeneryplanting.objectid;
 
-
 --
-
--- Name: ground_pos; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.ground_pos (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.ground_pos OWNER TO fiz;
-
---
-
--- Name: ground_pos_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.ground_pos_objectid_seq
     AS integer
@@ -3824,38 +3254,16 @@ CREATE SEQUENCE fiz.ground_pos_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.ground_pos_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8926 (class 0 OID 0)
--- Dependencies: 494
--- Name: ground_pos_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.ground_pos_objectid_seq OWNED BY fiz.ground_pos.objectid;
 
-
 --
-
--- Name: gts_class; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.gts_class (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.gts_class OWNER TO fiz;
-
---
-
--- Name: gts_class_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.gts_class_objectid_seq
     AS integer
     START WITH 1
@@ -3863,40 +3271,18 @@ CREATE SEQUENCE fiz.gts_class_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.gts_class_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8927 (class 0 OID 0)
--- Dependencies: 496
--- Name: gts_class_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.gts_class_objectid_seq OWNED BY fiz.gts_class.objectid;
 
-
 --
-
--- Name: hazardarea; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.hazardarea (
     objectid integer NOT NULL,
     classid integer,
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.hazardarea OWNER TO fiz;
-
---
-
--- Name: hazardarea_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.hazardarea_extension (
     object_id integer NOT NULL,
@@ -3905,14 +3291,7 @@ CREATE TABLE fiz.hazardarea_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.hazardarea_extension OWNER TO fiz;
-
---
-
--- Name: hazardarea_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.hazardarea_objectid_seq
     AS integer
@@ -3921,18 +3300,8 @@ CREATE SEQUENCE fiz.hazardarea_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.hazardarea_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 8928 (class 0 OID 0)
--- Dependencies: 499
--- Name: hazardarea_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.hazardarea_objectid_seq OWNED BY fiz.hazardarea.objectid;
-
 
 --
 
@@ -3965,8 +3334,7 @@ CREATE TABLE fiz.health (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -4044,8 +3412,7 @@ CREATE TABLE fiz.health_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.health_point OWNER TO fiz;
 
@@ -4104,8 +3471,7 @@ CREATE TABLE fiz.heritage_point (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.heritage_point OWNER TO fiz;
 
@@ -4144,8 +3510,7 @@ CREATE TABLE fiz.heritagearea (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.heritagearea OWNER TO fiz;
 
@@ -4177,8 +3542,7 @@ CREATE TABLE fiz.heritageprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.heritageprotectionzone OWNER TO fiz;
 
@@ -4246,8 +3610,7 @@ CREATE TABLE fiz.historicsettlement (
     source character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.historicsettlement OWNER TO fiz;
 
@@ -4308,8 +3671,7 @@ CREATE TABLE fiz.hydraulicstructures_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.hydraulicstructures_line OWNER TO fiz;
 
@@ -4352,8 +3714,7 @@ CREATE TABLE fiz.hydraulicstructures_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.hydraulicstructures_point OWNER TO fiz;
 
@@ -4391,8 +3752,7 @@ CREATE TABLE fiz.hydro (
     source character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.hydro OWNER TO fiz;
 
@@ -4419,8 +3779,7 @@ CREATE TABLE fiz.hydro_line (
     source character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.hydro_line OWNER TO fiz;
 
@@ -4469,8 +3828,7 @@ CREATE TABLE fiz.hydro_point (
     source character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.hydro_point OWNER TO fiz;
 
@@ -4614,8 +3972,7 @@ CREATE TABLE fiz.investmentsite (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.investmentsite OWNER TO fiz;
 
@@ -4645,8 +4002,7 @@ CREATE TABLE fiz.investmentzone (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.investmentzone OWNER TO fiz;
 
@@ -4693,8 +4049,7 @@ CREATE TABLE fiz.landuse (
     classid integer,
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.landuse OWNER TO fiz;
 
@@ -4758,8 +4113,7 @@ CREATE TABLE fiz.manufacturing (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.manufacturing OWNER TO fiz;
 
@@ -4805,8 +4159,7 @@ CREATE TABLE fiz.manufacturing_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.manufacturing_point OWNER TO fiz;
 
@@ -4934,8 +4287,7 @@ CREATE TABLE fiz.mineralarea (
     status_otv character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.mineralarea OWNER TO fiz;
 
@@ -4972,8 +4324,7 @@ CREATE TABLE fiz.mineraldep (
     note character varying(255),
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.mineraldep OWNER TO fiz;
 
@@ -5010,8 +4361,7 @@ CREATE TABLE fiz.mineraldep_point (
     note character varying(255),
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.mineraldep_point OWNER TO fiz;
 
@@ -5098,8 +4448,7 @@ CREATE TABLE fiz.naturalriskzone (
     other character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.naturalriskzone OWNER TO fiz;
 
@@ -5132,8 +4481,7 @@ CREATE TABLE fiz.naturalriskzone_point (
     other character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.naturalriskzone_point OWNER TO fiz;
 
@@ -5171,8 +4519,7 @@ CREATE TABLE fiz.natureprotectarea (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.natureprotectarea OWNER TO fiz;
 
@@ -5210,8 +4557,7 @@ CREATE TABLE fiz.natureprotectarea_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.natureprotectarea_point OWNER TO fiz;
 
@@ -5245,8 +4591,7 @@ CREATE TABLE fiz.natureprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.natureprotectionzone OWNER TO fiz;
 
@@ -5337,8 +4682,7 @@ CREATE TABLE fiz.oilfacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.oilfacility OWNER TO fiz;
 
@@ -5384,8 +4728,7 @@ CREATE TABLE fiz.oilfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.oilfacility_point OWNER TO fiz;
 
@@ -5429,8 +4772,7 @@ CREATE TABLE fiz.oilpipeline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.oilpipeline_line OWNER TO fiz;
 
@@ -5510,8 +4852,7 @@ CREATE TABLE fiz.otherobject (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.otherobject OWNER TO fiz;
 
@@ -5555,8 +4896,7 @@ CREATE TABLE fiz.otherobject_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.otherobject_point OWNER TO fiz;
 
@@ -5589,8 +4929,7 @@ CREATE TABLE fiz.otherprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.otherprotectionzone OWNER TO fiz;
 
@@ -5624,8 +4963,7 @@ CREATE TABLE fiz.otherzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.otherzone OWNER TO fiz;
 
@@ -5724,8 +5062,7 @@ CREATE TABLE fiz.pipeline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.pipeline_line OWNER TO fiz;
 
@@ -5854,8 +5191,7 @@ CREATE TABLE fiz.prison (
     reg_status smallint,
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.prison OWNER TO fiz;
 
@@ -5895,8 +5231,7 @@ CREATE TABLE fiz.prison_point (
     reg_status smallint,
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.prison_point OWNER TO fiz;
 
@@ -6002,8 +5337,7 @@ CREATE TABLE fiz.protectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.protectionzone OWNER TO fiz;
 
@@ -6086,8 +5420,7 @@ CREATE TABLE fiz.public (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.public OWNER TO fiz;
 
@@ -6132,8 +5465,7 @@ CREATE TABLE fiz.public_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.public_point OWNER TO fiz;
 
@@ -6172,8 +5504,7 @@ CREATE TABLE fiz.publictransportline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportline_line OWNER TO fiz;
 
@@ -6213,8 +5544,7 @@ CREATE TABLE fiz.publictransportobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportobj OWNER TO fiz;
 
@@ -6254,8 +5584,7 @@ CREATE TABLE fiz.publictransportobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportobj_point OWNER TO fiz;
 
@@ -6295,8 +5624,7 @@ CREATE TABLE fiz.publictransportservice (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportservice OWNER TO fiz;
 
@@ -6337,8 +5665,7 @@ CREATE TABLE fiz.publictransportservice_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportservice_point OWNER TO fiz;
 
@@ -6380,8 +5707,7 @@ CREATE TABLE fiz.publictransportstops (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportstops OWNER TO fiz;
 
@@ -6422,8 +5748,7 @@ CREATE TABLE fiz.publictransportstops_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.publictransportstops_point OWNER TO fiz;
 
@@ -6506,8 +5831,7 @@ CREATE TABLE fiz.railwayfacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.railwayfacility OWNER TO fiz;
 
@@ -6555,8 +5879,7 @@ CREATE TABLE fiz.railwayfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.railwayfacility_point OWNER TO fiz;
 
@@ -6600,8 +5923,7 @@ CREATE TABLE fiz.railwayline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.railwayline_line OWNER TO fiz;
 
@@ -6683,8 +6005,7 @@ CREATE TABLE fiz.recreation (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.recreation OWNER TO fiz;
 
@@ -6732,8 +6053,7 @@ CREATE TABLE fiz.recreation_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.recreation_point OWNER TO fiz;
 
@@ -6843,8 +6163,7 @@ CREATE TABLE fiz.resort (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.resort OWNER TO fiz;
 
@@ -6886,8 +6205,7 @@ CREATE TABLE fiz.resort_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.resort_point OWNER TO fiz;
 
@@ -6924,8 +6242,7 @@ CREATE TABLE fiz.resortarea (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.resortarea OWNER TO fiz;
 
@@ -6962,8 +6279,7 @@ CREATE TABLE fiz.resortarea_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.resortarea_point OWNER TO fiz;
 
@@ -6995,8 +6311,7 @@ CREATE TABLE fiz.resortprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.resortprotectionzone OWNER TO fiz;
 
@@ -7077,8 +6392,7 @@ CREATE TABLE fiz.road_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.road_line OWNER TO fiz;
 
@@ -7347,8 +6661,7 @@ CREATE TABLE fiz.sanitaryprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -7541,8 +6854,7 @@ CREATE TABLE fiz.servicefacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -7618,8 +6930,7 @@ CREATE TABLE fiz.servicefacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -7809,8 +7120,7 @@ CREATE TABLE fiz.sewerfacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -7883,8 +7193,7 @@ CREATE TABLE fiz.sewerfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -7918,24 +7227,10 @@ CREATE SEQUENCE fiz.sewerfacility_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.sewerfacility_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9047 (class 0 OID 0)
--- Dependencies: 797
--- Name: sewerfacility_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.sewerfacility_point_objectid_seq OWNED BY fiz.sewerfacility_point.objectid;
 
-
 --
-
--- Name: sewerpipeline_line; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.sewerpipeline_line (
     objectid integer NOT NULL,
     classid integer,
@@ -7953,17 +7248,9 @@ CREATE TABLE fiz.sewerpipeline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.sewerpipeline_line OWNER TO fiz;
-
---
-
--- Name: sewerpipeline_line_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.sewerpipeline_line_extension (
     object_id integer NOT NULL,
@@ -7972,15 +7259,9 @@ CREATE TABLE fiz.sewerpipeline_line_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.sewerpipeline_line_extension OWNER TO fiz;
 
 --
-
--- Name: sewerpipeline_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
-
 CREATE SEQUENCE fiz.sewerpipeline_objectid_seq
     AS integer
     START WITH 1
@@ -7988,37 +7269,16 @@ CREATE SEQUENCE fiz.sewerpipeline_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.sewerpipeline_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9048 (class 0 OID 0)
--- Dependencies: 800
--- Name: sewerpipeline_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.sewerpipeline_objectid_seq OWNED BY fiz.sewerpipeline_line.objectid;
 
-
 --
-
--- Name: snow_type; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.snow_type (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.snow_type OWNER TO fiz;
-
---
-
--- Name: snow_type_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.snow_type_objectid_seq
     AS integer
@@ -8027,37 +7287,16 @@ CREATE SEQUENCE fiz.snow_type_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.snow_type_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9049 (class 0 OID 0)
--- Dependencies: 802
--- Name: snow_type_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.snow_type_objectid_seq OWNED BY fiz.snow_type.objectid;
 
-
 --
-
--- Name: soc_direct; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.soc_direct (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.soc_direct OWNER TO fiz;
-
---
-
--- Name: soc_direct_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.soc_direct_objectid_seq
     AS integer
@@ -8066,24 +7305,10 @@ CREATE SEQUENCE fiz.soc_direct_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.soc_direct_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9050 (class 0 OID 0)
--- Dependencies: 804
--- Name: soc_direct_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.soc_direct_objectid_seq OWNED BY fiz.soc_direct.objectid;
 
-
 --
-
--- Name: social; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.social (
     objectid integer NOT NULL,
     classid integer,
@@ -8107,17 +7332,9 @@ CREATE TABLE fiz.social (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.social OWNER TO fiz;
-
---
-
--- Name: social_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.social_extension (
     object_id integer NOT NULL,
@@ -8126,14 +7343,7 @@ CREATE TABLE fiz.social_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.social_extension OWNER TO fiz;
-
---
-
--- Name: social_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.social_objectid_seq
     AS integer
@@ -8142,24 +7352,10 @@ CREATE SEQUENCE fiz.social_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.social_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9051 (class 0 OID 0)
--- Dependencies: 807
--- Name: social_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.social_objectid_seq OWNED BY fiz.social.objectid;
 
-
 --
-
--- Name: social_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.social_point (
     objectid integer NOT NULL,
     classid integer,
@@ -8183,18 +7379,11 @@ CREATE TABLE fiz.social_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.social_point OWNER TO fiz;
 
 --
-
--- Name: social_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.social_point_extension (
     object_id integer NOT NULL,
     violations jsonb,
@@ -8202,14 +7391,7 @@ CREATE TABLE fiz.social_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.social_point_extension OWNER TO fiz;
-
---
-
--- Name: social_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.social_point_objectid_seq
     AS integer
@@ -8218,37 +7400,16 @@ CREATE SEQUENCE fiz.social_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.social_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9052 (class 0 OID 0)
--- Dependencies: 810
--- Name: social_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.social_point_objectid_seq OWNED BY fiz.social_point.objectid;
 
-
 --
-
--- Name: sp_stype; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.sp_stype (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.sp_stype OWNER TO fiz;
-
---
-
--- Name: sp_stype_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.sp_stype_objectid_seq
     AS integer
@@ -8257,24 +7418,10 @@ CREATE SEQUENCE fiz.sp_stype_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.sp_stype_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9053 (class 0 OID 0)
--- Dependencies: 812
--- Name: sp_stype_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.sp_stype_objectid_seq OWNED BY fiz.sp_stype.objectid;
 
-
 --
-
--- Name: specialeconomicarea; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.specialeconomicarea (
     objectid integer NOT NULL,
     classid integer,
@@ -8293,17 +7440,9 @@ CREATE TABLE fiz.specialeconomicarea (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.specialeconomicarea OWNER TO fiz;
-
---
-
--- Name: specialeconomicarea_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.specialeconomicarea_extension (
     object_id integer NOT NULL,
@@ -8312,14 +7451,7 @@ CREATE TABLE fiz.specialeconomicarea_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.specialeconomicarea_extension OWNER TO fiz;
-
---
-
--- Name: specialeconomicarea_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.specialeconomicarea_objectid_seq
     AS integer
@@ -8328,37 +7460,16 @@ CREATE SEQUENCE fiz.specialeconomicarea_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.specialeconomicarea_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9054 (class 0 OID 0)
--- Dependencies: 815
--- Name: specialeconomicarea_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.specialeconomicarea_objectid_seq OWNED BY fiz.specialeconomicarea.objectid;
 
-
 --
-
--- Name: specific; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.specific (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.specific OWNER TO fiz;
-
---
-
--- Name: specific_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.specific_objectid_seq
     AS integer
@@ -8367,24 +7478,10 @@ CREATE SEQUENCE fiz.specific_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.specific_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9055 (class 0 OID 0)
--- Dependencies: 817
--- Name: specific_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.specific_objectid_seq OWNED BY fiz.specific.objectid;
 
-
 --
-
--- Name: sport; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.sport (
     objectid integer NOT NULL,
     classid integer,
@@ -8405,17 +7502,9 @@ CREATE TABLE fiz.sport (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.sport OWNER TO fiz;
-
---
-
--- Name: sport_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.sport_extension (
     object_id integer NOT NULL,
@@ -8424,14 +7513,7 @@ CREATE TABLE fiz.sport_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.sport_extension OWNER TO fiz;
-
---
-
--- Name: sport_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.sport_objectid_seq
     AS integer
@@ -8440,24 +7522,10 @@ CREATE SEQUENCE fiz.sport_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.sport_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9056 (class 0 OID 0)
--- Dependencies: 820
--- Name: sport_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.sport_objectid_seq OWNED BY fiz.sport.objectid;
 
-
 --
-
--- Name: sport_point; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.sport_point (
     objectid integer NOT NULL,
     classid integer,
@@ -8478,17 +7546,9 @@ CREATE TABLE fiz.sport_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
-
-
 ALTER TABLE fiz.sport_point OWNER TO fiz;
-
---
-
--- Name: sport_point_extension; Type: TABLE; Schema: fiz; Owner: fiz
---
 
 CREATE TABLE fiz.sport_point_extension (
     object_id integer NOT NULL,
@@ -8497,14 +7557,7 @@ CREATE TABLE fiz.sport_point_extension (
     valid boolean,
     class_id integer
 );
-
-
 ALTER TABLE fiz.sport_point_extension OWNER TO fiz;
-
---
-
--- Name: sport_point_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.sport_point_objectid_seq
     AS integer
@@ -8513,37 +7566,16 @@ CREATE SEQUENCE fiz.sport_point_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.sport_point_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9057 (class 0 OID 0)
--- Dependencies: 823
--- Name: sport_point_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.sport_point_objectid_seq OWNED BY fiz.sport_point.objectid;
 
-
 --
-
--- Name: spz_event; Type: TABLE; Schema: fiz; Owner: fiz
---
-
 CREATE TABLE fiz.spz_event (
     objectid integer NOT NULL,
     code smallint,
     description character varying(255)
 );
-
-
 ALTER TABLE fiz.spz_event OWNER TO fiz;
-
---
-
--- Name: spz_event_objectid_seq; Type: SEQUENCE; Schema: fiz; Owner: fiz
---
 
 CREATE SEQUENCE fiz.spz_event_objectid_seq
     AS integer
@@ -8552,16 +7584,7 @@ CREATE SEQUENCE fiz.spz_event_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
 ALTER TABLE fiz.spz_event_objectid_seq OWNER TO fiz;
-
---
--- TOC entry 9058 (class 0 OID 0)
--- Dependencies: 825
--- Name: spz_event_objectid_seq; Type: SEQUENCE OWNED BY; Schema: fiz; Owner: fiz
---
-
 ALTER SEQUENCE fiz.spz_event_objectid_seq OWNED BY fiz.spz_event.objectid;
 
 --
@@ -8975,8 +7998,7 @@ CREATE TABLE fiz.technoriskarea (
     other character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9038,8 +8060,7 @@ CREATE TABLE fiz.technoriskarea_point (
     other character varying(255),
     note character varying(255),
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9112,8 +8133,7 @@ CREATE TABLE fiz.telecomfacility (
     status smallint,
     reg_status smallint NOT NULL,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9186,8 +8206,7 @@ CREATE TABLE fiz.telecomfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9278,8 +8297,7 @@ CREATE TABLE fiz.thermalfacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9354,8 +8372,7 @@ CREATE TABLE fiz.thermalfacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9427,8 +8444,7 @@ CREATE TABLE fiz.thermalpipeline_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9647,8 +8663,7 @@ CREATE TABLE fiz.traditionalarea (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9715,8 +8730,7 @@ CREATE TABLE fiz.transplogisticobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9783,8 +8797,7 @@ CREATE TABLE fiz.transplogisticobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9854,8 +8867,7 @@ CREATE TABLE fiz.transportobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9900,8 +8912,7 @@ CREATE TABLE fiz.transportobj_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -9996,8 +9007,7 @@ CREATE TABLE fiz.transportobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -10053,8 +9063,7 @@ CREATE TABLE fiz.transpprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.transpprotectionzone OWNER TO fiz;
 
@@ -10088,8 +9097,7 @@ CREATE TABLE fiz.transpsanitarygapzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.transpsanitarygapzone OWNER TO fiz;
 
@@ -10440,8 +9448,7 @@ CREATE TABLE fiz.wastefacility (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -10516,8 +9523,7 @@ CREATE TABLE fiz.wastefacility_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 
 
@@ -10606,8 +9612,7 @@ CREATE TABLE fiz.waterfacility (
     shape public.geometry,
     water_styp integer,
     shape_leng numeric,
-    shape_area numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_area numeric
 );
 ALTER TABLE fiz.waterfacility OWNER TO fiz;
 
@@ -10656,8 +9661,7 @@ CREATE TABLE fiz.waterfacility_point (
     shape public.geometry,
     water_styp integer,
     shape_leng numeric,
-    shape_area numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_area numeric
 );
 ALTER TABLE fiz.waterfacility_point OWNER TO fiz;
 
@@ -10699,8 +9703,7 @@ CREATE TABLE fiz.waterpipeline_line (
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
     shape public.geometry,
-    shape_leng numeric,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape_leng numeric
 );
 ALTER TABLE fiz.waterpipeline_line OWNER TO fiz;
 
@@ -10731,8 +9734,7 @@ CREATE TABLE fiz.waterprotectionzone (
     note character varying(255),
     status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.waterprotectionzone OWNER TO fiz;
 
@@ -10778,8 +9780,7 @@ CREATE TABLE fiz.watertransportobj (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.watertransportobj OWNER TO fiz;
 
@@ -10825,8 +9826,7 @@ CREATE TABLE fiz.watertransportobj_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.watertransportobj_point OWNER TO fiz;
 
@@ -10866,8 +9866,7 @@ CREATE TABLE fiz.waterways_line (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.waterways_line OWNER TO fiz;
 
@@ -10906,8 +9905,7 @@ CREATE TABLE fiz.wildlifeprotection (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.wildlifeprotection OWNER TO fiz;
 
@@ -10947,8 +9945,7 @@ CREATE TABLE fiz.wildlifeprotection_point (
     status smallint,
     reg_status smallint,
     globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying,
-    shape public.geometry,
-    CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406))
+    shape public.geometry
 );
 ALTER TABLE fiz.wildlifeprotection_point OWNER TO fiz;
 
