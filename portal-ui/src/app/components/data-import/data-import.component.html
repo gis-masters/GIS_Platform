@@ -3,8 +3,8 @@
     <div ng2FileDrop
         [ngClass]="{'data-import__dz_file-over': hasBaseDropZoneOver}"
         (fileOver)="fileOverBase($event)"
-        
-        (onFileDrop)="fileSelectedHandler($event)"
+
+        (onFileDrop)="fileSelectedHandler()"
         [uploader]="uploader"
         class="data-import__dz">
 
@@ -16,7 +16,7 @@
           Откройте проводник для выбора файла
         </button>
         <div class="data-import__dz-control-container">
-          <input type="file" #fileInput ng2FileSelect [uploader]="uploader" (onFileSelected)="fileSelectedHandler($event)" />
+          <input type="file" #fileInput ng2FileSelect [uploader]="uploader" (onFileSelected)="fileSelectedHandler()" />
         </div>
       </div>
     </div>
