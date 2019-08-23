@@ -1,8 +1,18 @@
 .data-import-tasks-list {
   padding-top: 10px;
 
+  &__title {
+    font-size: x-large;
+    padding-bottom: 5px;
+  }
+
   &__task {
+    display: flex;
+    justify-content: space-between;
+
     &_error {
+      display: flex;
+      justify-content: space-between;
       color: var(--danger);
     }
   }
@@ -10,4 +20,14 @@
   &__task-name {
     padding-right: 20px;
   }
+
+  &__table {
+    overflow: auto;
+    max-height: 400px;
+  }
+
+  &__task-description {
+    padding-right: 10px;
+  }
+
 }

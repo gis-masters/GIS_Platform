@@ -22,10 +22,6 @@ export class DataImportTasksListComponent {
 
   constructor() { }
 
-  isError (task: ImportTaskFull): boolean {
-    return task.state !== 'COMPLETE';
-  }
-
   getDescription(task: ImportTaskFull): string {
     const { state } = task;
     if (Object.keys(this.errorCodes).includes(state)) {
