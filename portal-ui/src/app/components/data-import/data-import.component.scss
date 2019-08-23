@@ -1,8 +1,15 @@
 .data-import {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
   &__dz-container {
     position: relative;
 
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   &__dz {
@@ -107,11 +114,36 @@
     top: 5px;
   }
 
-  &__load-button-loader {
-    width: 26px;
-    height: 26px;
-    margin-right: 33px;
-    margin-left: 33px;
+  &__notice {
+    margin-bottom: 20px;
+
+    color: var(--gray);
+
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  &__notice-list {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__notice-list-item {
+    display: block;
+
+    margin: 0;
+    padding: 0 0 0 5px;
+
+    list-style: none;
+
+    &::before {
+      display: inline-block;
+
+      margin-right: 4px;
+
+      content: '—';
+      vertical-align: top;
+    }
   }
 
   &__notifications {
@@ -120,13 +152,19 @@
 
   &__notification {
     &_error {
-      font-size: x-large;
       color: var(--danger);
     }
 
     &_success {
       color: var(--success);
     }
+  }
+
+  &__tasks-list {
+    overflow: auto;
+    flex-shrink: 1;
+
+    margin-bottom: 30px;
   }
 
   &__row-buttons {

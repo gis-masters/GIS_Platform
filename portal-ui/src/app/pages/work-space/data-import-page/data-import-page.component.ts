@@ -8,7 +8,8 @@ import {ImportService} from '../../../services/geoserver/import/import.service';
 
 @Component({
   selector: 'crg-data-import-page',
-  templateUrl: './data-import-page.component.html'
+  templateUrl: './data-import-page.component.html',
+  styleUrls: ['./data-import-page.component.scss']
 })
 export class DataImportPageComponent implements OnDestroy {
 
@@ -30,5 +31,4 @@ export class DataImportPageComponent implements OnDestroy {
   next() {
     this.router.navigateByUrl('/workspace/data_mapping');
   }
-
 }

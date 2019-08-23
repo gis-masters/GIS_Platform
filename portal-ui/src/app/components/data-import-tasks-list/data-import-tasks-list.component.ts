@@ -10,24 +10,41 @@ export class DataImportTasksListComponent {
 
   @Input() tasks: ImportTaskFull[];
 
-  private errorCodes: {[key: string]: string} = {
-    NO_CRS: 'Не определена проекция.',
+  private statusesList: {[key: string]: string} = {
+    PENDING: 'PENDING',
+    READY: 'Готово',
+    RUNNING: 'RUNNING',
+    NO_CRS: 'Не определена проекция',
     NO_BOUNDS: 'NO_BOUNDS',
     NO_FORMAT: 'NO_FORMAT',
     BAD_FORMAT: 'BAD_FORMAT',
     ERROR: 'ERROR',
     CANCELED: 'CANCELED',
-    COMPLETE: 'Успешно'
+    COMPLETE: 'Завершен'
   };
+
+  private errorCodes = [
+    'PENDING',
+    'NO_CRS',
+    'NO_BOUNDS',
+    'NO_FORMAT',
+    'BAD_FORMAT',
+    'ERROR',
+    'CANCELED'
+  ];
 
   constructor() { }
 
+  isError (task: ImportTaskFull): boolean {
+    return this.errorCodes.includes(task.state);
+  }
+
   getDescription(task: ImportTaskFull): string {
     const { state } = task;
-    if (Object.keys(this.errorCodes).includes(state)) {
-      return this.errorCodes[state];
+    if (Object.keys(this.statusesList).includes(state)) {
+      return this.statusesList[state];
     } else {
-      return 'Неопределенная ошибка';
+      return 'Неопределенный статус';
     }
   }
 

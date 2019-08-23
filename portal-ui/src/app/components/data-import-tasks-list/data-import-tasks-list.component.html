@@ -1,20 +1,15 @@
 <div class="data-import-tasks-list">
-  <div class="data-import-tasks-list__title">
-    Подробности:
-  </div>
-
-  <div class="data-import-tasks-list__table">
-    <div *ngFor="let task of tasks"
-         [ngClass]="task.state !== 'COMPLETE' ? 'data-import-tasks-list__task_error' : 'data-import-tasks-list__task'">
-
-      <div class="data-import-tasks-list__task-name">
+  <table class="data-import-tasks-list__table">
+    <tr
+        *ngFor="let task of tasks"
+        class="data-import-tasks-list__task"
+        [ngClass]="{'data-import-tasks-list__task_error': isError(task)}">
+      <td class="data-import-tasks-list__task-name">
         {{ task.layer?.name }}
-      </div>
-      <div class="data-import-tasks-list__task-description">
+      </td>
+      <td class="data-import-tasks-list__task-description">
         {{ getDescription(task) }}
-      </div>
-
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 </div>
-

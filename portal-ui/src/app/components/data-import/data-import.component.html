@@ -38,22 +38,37 @@
     </div>
   </div>
 
+  <div class="data-import__notice">
+    Допустимы данные в системах координат:
+    <ul class="data-import__notice-list">
+      <li class="data-import__notice-list-item">
+        СК-42 в проекции Гаусса-Крюгера;
+      </li>
+      <li class="data-import__notice-list-item">
+        WGS84 -геодезическая система координат на эллипсоиде WGS843;
+      </li>
+      <li class="data-import__notice-list-item">
+        WGS84 Web Mercator.
+      </li>
+    </ul>
+  </div>
+
   <div class="data-import__notifications">
-      <div *ngIf="isWrongExt" class="data-import__notification data-import__notification_error">
-        Неверный формат файла
-      </div>
+    <div *ngIf="isWrongExt" class="data-import__notification data-import__notification_error">
+      Неверный формат файла
+    </div>
 
-      <div *ngIf="isImportFailed" class="data-import__notification data-import__notification_error">
-        Не удается загрузить архив, проверьте вложенные файлы.
-      </div>
-
-      <crg-data-import-tasks-list *ngIf="errorTasks && errorTasks.length" [tasks]="errorTasks">
-      </crg-data-import-tasks-list>
+    <div *ngIf="isImportFailed" class="data-import__notification data-import__notification_error">
+      Не удается загрузить архив, проверьте вложенные файлы.
+    </div>
 
     <div *ngIf="isUploadComplete" class="data-import__notification data-import__notification_success">
       Файл успешно загружен. Нажмите "Далее" для продолжения."
     </div>
   </div>
+
+  <crg-data-import-tasks-list *ngIf="errorTasks && errorTasks.length" [tasks]="errorTasks" class="data-import__tasks-list">
+  </crg-data-import-tasks-list>
 
   <div class="data-import__row-buttons">
     <button mat-stroked-button routerLink="/workspace/projects">
