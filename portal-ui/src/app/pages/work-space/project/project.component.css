@@ -87,7 +87,8 @@
   cursor: pointer;
 
   color: white;
-  background-color: #fff70;
+  background-color: rgba(255, 255, 255, 0.6);
+
 
   font-weight: 500;
 }
