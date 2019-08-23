@@ -14,7 +14,6 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.dto.FeatureDescription;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
@@ -86,8 +85,8 @@ public class ValidationService extends BaseProcessService {
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getStatus()) {
             case PENDING:
-            case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);   break;
+            case TASK_ERROR:
+            case TASK_DONE:  addSubStep(process, mqResponse);   break;
             case ERROR:     error(process, mqResponse.getError());  break;
             case DONE:      complete(process, null);           break;
             default:
@@ -111,10 +110,10 @@ public class ValidationService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(response.getPayload().toString(),
+            TaskModel subProcess = new TaskModel(response.getPayload().toString(),
                     response.getDescription(), response.getError());
 
-            details.addSubProcess(subProcess);
+            details.addTask(subProcess);
 
             JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
 

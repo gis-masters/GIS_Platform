@@ -1,15 +1,18 @@
 package ru.mycrg.wrapper.service.import_;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.import_.ImportMqRequest;
+import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
+
+import java.util.List;
 
 import static ru.mycrg.common.enums.ProcessStatus.*;
 
@@ -28,29 +31,36 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
     @Override
     public void handle(BaseMqProcessRequest mqRequest) {
-        log.debug("Start import");
-
         try {
-            ImportMqRequest payload = mapper.convertValue(mqRequest.getPayload(), ImportMqRequest.class);
+            log.debug("Start import: {}", mqRequest.getId());
 
-            // totalRows = (int) importService.calculateTotalRows(payload.getImportFeatures());
-            mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация", 0));
-
-            payload.getImportFeatures()
-                   .forEach(feature -> {
-                       importService.doImport(feature, mqRequest);
-                       importService.postHandle(feature, mqRequest);
-
-                       mqSender.send(
-                               new BaseMqProcessResponse(mqRequest,
-                               new ImportMqResponse(feature), SUB_DONE, "Success", 0));
-                   });
+            getTasks(mqRequest)
+                    .forEach(task -> handleTask(task, mqRequest));
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "Импорт завершен", 100));
         } catch (Exception e) {
             log.error("Ошибка при импорте: {}", e.getMessage());
             mqSender.send(new BaseMqProcessResponse(mqRequest, ERROR, e.getMessage()));
         }
+    }
 
+    private void handleTask(ImportMqTask mqTask, BaseMqProcessRequest mqRequest) {
+        try {
+            importService.doImport(mqTask);
+            importService.postHandle(mqTask);
+
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest,
+                            new ImportMqResponse(mqTask), TASK_DONE, "Success", 0));
+        } catch (Exception e) {
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest,
+                            new ImportMqResponse(mqTask), TASK_ERROR, "Error", e.getMessage()));
+        }
+
+    }
+
+    private List<ImportMqTask> getTasks(BaseMqProcessRequest mqRequest) {
+        return mapper.convertValue(mqRequest.getPayload(), new TypeReference<List<ImportMqTask>>() {});
     }
 }

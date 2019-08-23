@@ -9,12 +9,11 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
-import ru.mycrg.common.import_.ImportFeature;
-import ru.mycrg.common.import_.ImportMqRequest;
 import ru.mycrg.common.import_.ImportMqResponse;
+import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.gis.dto.DetailsModel;
 import ru.mycrg.gis.dto.ProjectModel;
-import ru.mycrg.gis.dto.SubProcessModel;
+import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
@@ -27,6 +26,8 @@ import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ImportService extends BaseProcessService {
@@ -59,24 +60,24 @@ public class ImportService extends BaseProcessService {
                         workImport.getImportTasks().size(), projectModel.getInternalName()),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
-        ImportMqRequest payload = new ImportMqRequest();
-        workImport.getImportTasks().forEach(importTask -> {
-            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(importTask.getWorkTableName());
-            ImportFeature importFeature = new ImportFeature(featureDescription,
+        List<ImportMqTask> importMqRequest = new ArrayList<>();
+        workImport.getImportTasks().forEach(uiTask -> {
+            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(uiTask.getWorkTableName());
+            ImportMqTask importMqTask = new ImportMqTask(featureDescription,
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
                             "public", // Источником рабочего импорта является хранилище "scratch - public схема в БД"
-                            importTask.getLayerName()),
+                            uiTask.getLayerName()),
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
                             projectModel.getWorkspaceName(),
-                            importTask.getWorkTableName()),
-                    importTask.getMapping());
+                            uiTask.getWorkTableName()),
+                    uiTask.getMapping());
 
-            payload.addImportFeature(importFeature);
+            importMqRequest.add(importMqTask);
         });
 
-        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.IMPORT, payload));
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.IMPORT, importMqRequest));
 
         return process;
     }
@@ -89,11 +90,10 @@ public class ImportService extends BaseProcessService {
 
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getStatus()) {
-            case PENDING:
-            case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);     break;
-            case ERROR:     error(process, mqResponse.getError()); break;
-            case DONE:      complete(process, null);        break;
+            case TASK_ERROR:
+            case TASK_DONE: handleTask(process, mqResponse);        break;
+            case ERROR:     error(process, mqResponse.getError());  break;
+            case DONE:      complete(process, null);           break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -102,21 +102,19 @@ public class ImportService extends BaseProcessService {
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
+    private void handleTask(Process process, BaseMqProcessResponse mqResponse) {
         try {
-            log.debug("Add subStep to process: {}", process.getId());
+            log.debug("Add task to process: {}", process.getId());
             process.setStatus(mqResponse.getStatus());
 
-            SubProcessModel subProcess = new SubProcessModel();
+            TaskModel task = new TaskModel();
             if (!mqResponse.getPayload().equals("")) {
-                ImportMqResponse responsePayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
-                subProcess = new SubProcessModel(
-                        responsePayload.getSourceLayer() + " -> " + responsePayload.getTargetLayer(),
-                        mqResponse.getDescription(), mqResponse.getError());
+                ImportMqResponse rPayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
+                task = new TaskModel(rPayload.getTargetLayer(), mqResponse.getDescription(), mqResponse.getError());
             } else if (mqResponse.getDescription() != null) {
-                subProcess = new SubProcessModel(mqResponse.getDescription(), mqResponse.getError());
+                task = new TaskModel(mqResponse.getDescription(), mqResponse.getError());
             } else {
-                log.warn("SubProcess for processId: {} not have any description/payload?", process.getId());
+                log.warn("Task for processId: {} not have any description/payload?", process.getId());
             }
 
             String content = "{}";
@@ -125,7 +123,7 @@ public class ImportService extends BaseProcessService {
             }
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
-            details.addSubProcess(subProcess);
+            details.addTask(task);
 
             JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
 
@@ -134,4 +132,5 @@ public class ImportService extends BaseProcessService {
             log.error("Failed write details to process / Error: {}", e.getMessage());
         }
     }
+
 }

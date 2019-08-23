@@ -5,19 +5,19 @@ import ru.mycrg.common.ResourceProjection;
 
 import java.util.List;
 
-public class ImportFeature {
+public class ImportMqTask {
 
     private FeatureDescriptionDto featureDescription;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
     private List<GeoMapping> mapping;
 
-    public ImportFeature() {}
+    public ImportMqTask() {}
 
-    public ImportFeature(FeatureDescriptionDto featureDescription,
-                         ResourceProjection sourceResource,
-                         ResourceProjection targetResource,
-                         List<GeoMapping> mapping) {
+    public ImportMqTask(FeatureDescriptionDto featureDescription,
+                        ResourceProjection sourceResource,
+                        ResourceProjection targetResource,
+                        List<GeoMapping> mapping) {
         this.featureDescription = featureDescription;
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;

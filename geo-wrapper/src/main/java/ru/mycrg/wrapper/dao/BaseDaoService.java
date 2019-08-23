@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.*;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
-import ru.mycrg.common.import_.ImportFeature;
+import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.sql.SQLException;
@@ -153,7 +153,7 @@ public class BaseDaoService {
      * @param request      Даные для импорта
      */
     @Transactional
-    public void copy(JdbcTemplate jdbcTemplate, ImportFeature request) {
+    public void copy(JdbcTemplate jdbcTemplate, ImportMqTask request) {
         String targetSchema = request.getTargetResource().getSchemaName();
         String targetTable = request.getTargetResource().getTableName();
 
@@ -318,7 +318,7 @@ public class BaseDaoService {
         return "varchar";
     }
 
-    private String prepareInsertRequest(ImportFeature request) {
+    private String prepareInsertRequest(ImportMqTask request) {
         String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
                 request.getTargetResource().getTableName();
         String data = handleInsertMappingColumns(request.getMapping());

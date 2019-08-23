@@ -1,19 +1,19 @@
 package ru.mycrg.gis.dto;
 
-public class SubProcessModel {
+public class TaskModel {
 
     private String layerName;
     private String description;
     private String error;
 
-    public SubProcessModel() {}
+    public TaskModel() {}
 
-    public SubProcessModel(String description, String error) {
+    public TaskModel(String description, String error) {
         this.description = description;
         this.error = error;
     }
 
-    public SubProcessModel(String layerName, String description, String error) {
+    public TaskModel(String layerName, String description, String error) {
         this.layerName = layerName;
         this.description = description;
         this.error = error;

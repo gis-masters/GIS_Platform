@@ -98,8 +98,8 @@ public class ExportService extends BaseProcessService {
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getStatus()) {
             case PENDING:
-            case SUB_ERROR:
-            case SUB_DONE:  addSubStep(process, mqResponse);        break;
+            case TASK_ERROR:
+            case TASK_DONE:  addSubStep(process, mqResponse);        break;
             case ERROR:     error(process, mqResponse.getError());  break;
             case DONE:      complete(process, pathToFile);          break;
             default:
@@ -127,10 +127,10 @@ public class ExportService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            SubProcessModel subProcess = new SubProcessModel(tableName, mqResponse.getDescription(),
+            TaskModel subProcess = new TaskModel(tableName, mqResponse.getDescription(),
                     mqResponse.getError());
 
-            details.addSubProcess(subProcess);
+            details.addTask(subProcess);
 
             JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
 

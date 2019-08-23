@@ -5,15 +5,15 @@ import java.util.List;
 
 public class DetailsModel {
 
-    private List<SubProcessModel> subProcesses = new ArrayList<>();
+    private List<TaskModel> tasks = new ArrayList<>();
 
     public DetailsModel() {}
 
-    public List<SubProcessModel> getSubProcesses() {
-        return subProcesses;
+    public List<TaskModel> getTasks() {
+        return tasks;
     }
 
-    public void addSubProcess(SubProcessModel subProcess) {
-        this.subProcesses.add(subProcess);
+    public void addTask(TaskModel subProcess) {
+        this.tasks.add(subProcess);
     }
 }

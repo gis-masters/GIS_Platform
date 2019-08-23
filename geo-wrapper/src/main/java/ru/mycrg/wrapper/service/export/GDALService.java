@@ -8,7 +8,7 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.MqExportProcessRequest;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.wrapper.config.CrgProperties;
-import ru.mycrg.wrapper.exceptions.ExportException;
+import ru.mycrg.wrapper.exceptions.CrgExportException;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 
 import java.io.BufferedReader;
@@ -34,7 +34,7 @@ public class GDALService extends BaseRequestHandler implements IExporter {
     }
 
     @Override
-    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) throws CrgExportException {
         MqExportProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
         String pathToZip;
@@ -54,7 +54,7 @@ public class GDALService extends BaseRequestHandler implements IExporter {
         } else {
             log.warn("Not supported format: {}", payload.getFormat());
 
-            throw new ExportException("Not supported format: " + payload.getFormat());
+            throw new CrgExportException("Not supported format: " + payload.getFormat());
         }
     }
 
@@ -109,10 +109,10 @@ public class GDALService extends BaseRequestHandler implements IExporter {
                 return pathToResultZip;
             } else {
                 log.info("Path to result ZIP file: {}", pathToResultZip);
-                throw new ExportException("Не удалось выполнить консольную команду");
+                throw new CrgExportException("Не удалось выполнить консольную команду");
             }
         } catch (IOException | InterruptedException e) {
-            throw new ExportException(e.getMessage(), e);
+            throw new CrgExportException(e.getMessage(), e);
         }
     }
 

@@ -107,11 +107,11 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
                 processedRows += batchSize;
             }
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), SUB_DONE, "Готово", -1));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_DONE, "Готово", -1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), SUB_ERROR, "Ошибка", e.getMessage()));
+            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка", e.getMessage()));
         }
     }
 

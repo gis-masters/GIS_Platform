@@ -7,9 +7,9 @@ public class ImportMqResponse {
 
     public ImportMqResponse() {}
 
-    public ImportMqResponse(ImportFeature importFeature) {
-        this.targetLayer = importFeature.getTargetResource().getTableName();
-        this.sourceLayer = importFeature.getSourceResource().getTableName();
+    public ImportMqResponse(ImportMqTask importMqTask) {
+        this.targetLayer = importMqTask.getTargetResource().getTableName();
+        this.sourceLayer = importMqTask.getSourceResource().getTableName();
     }
 
     public String getTargetLayer() {

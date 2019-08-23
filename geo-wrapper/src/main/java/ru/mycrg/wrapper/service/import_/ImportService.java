@@ -4,22 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportFeature;
-import ru.mycrg.common.import_.ImportMqResponse;
+import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
+import ru.mycrg.wrapper.exceptions.CrgImportException;
 import ru.mycrg.wrapper.queue.MqSender;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static ru.mycrg.common.enums.ProcessStatus.SUB_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.GLOBAL_ID;
 import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
 
@@ -28,14 +26,12 @@ public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public ImportService(BaseDaoService baseDaoService,
                          MqSender mqSender,
                          DatasourceFactory datasourceFactory) {
-        this.mqSender = mqSender;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
@@ -46,37 +42,38 @@ public class ImportService {
      * - Сам импорт
      * - Проверка и при необходимости генерация GLOBALID
      */
-    void doImport(ImportFeature feature, BaseMqProcessRequest mqRequest) {
-        log.debug("Start import from: {} to: {}", feature.printSource(), feature.printTarget());
+    @Transactional
+    void doImport(ImportMqTask importTask) throws CrgImportException {
+        log.debug("Start import from: {} to: {}", importTask.printSource(), importTask.printTarget());
 
         try {
-            String sourceDbName = feature.getSourceResource().getDbName();
-            String targetTableName = feature.getTargetResource().getTableName();
-            String targetSchemaName = feature.getTargetResource().getSchemaName();
+            String sourceDbName = importTask.getSourceResource().getDbName();
+            String targetTableName = importTask.getTargetResource().getTableName();
+            String targetSchemaName = importTask.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
             List<ResourceProjection> targetResource = Collections.singletonList(
                     new ResourceProjection(sourceDbName, targetSchemaName, targetTableName));
 
             baseDaoService.truncate(jdbcTemplate, targetResource);
-            baseDaoService.copy(jdbcTemplate, feature);
+            baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {
-            String msg = String.format("Не удалось перенести данные из: %s в: %s", feature.printSource(),
-                    feature.printTarget());
+            String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
+                    importTask.printTarget());
 
             log.error(msg, e);
-            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_ERROR, "Error", msg));
+            throw new CrgImportException(msg, e);
         }
     }
 
     /**
      * Дополнительная обработка данных слоя.
      */
-    void postHandle(ImportFeature feature, BaseMqProcessRequest mqRequest) {
+    void postHandle(ImportMqTask importTask) throws CrgImportException {
         try {
-            String sourceDbName = feature.getSourceResource().getDbName();
-            String targetTableName = feature.getTargetResource().getTableName();
-            String targetSchemaName = feature.getTargetResource().getSchemaName();
+            String sourceDbName = importTask.getSourceResource().getDbName();
+            String targetTableName = importTask.getTargetResource().getTableName();
+            String targetSchemaName = importTask.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
             log.debug("start postHandle");
@@ -101,16 +98,16 @@ public class ImportService {
                 offset++;
             }
         } catch (Exception e) {
-            String msg = String.format("Не удалось перенести данные из: %s в: %s", feature.printSource(),
-                    feature.printTarget());
+            String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
+                    importTask.printTarget());
 
             log.error(msg, e);
-            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(feature), SUB_ERROR, "Error", msg));
+            throw new CrgImportException(msg, e);
         }
     }
 
-    long calculateTotalRows(List<ImportFeature> importFeatures) {
-        return importFeatures.stream()
+    long calculateTotalRows(List<ImportMqTask> importMqTasks) {
+        return importMqTasks.stream()
                 .map(importFeature -> {
                     ResourceProjection source = importFeature.getSourceResource();
                     return new ResourceProjection(source.getDbName(), source.getSchemaName(), source.getTableName());

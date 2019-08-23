@@ -7,10 +7,14 @@ export class GeoUtil {
    * Приведем в нормальный вид ответ от API геосервера.
    * @param importTask Обьект с тасками полученный от геосервера
    */
-  static tasksHandler(importTask: ImportTask): ImportTasks {
+  static tasksHandler(importTask?: ImportTask): ImportTasks {
     const result = {
       tasks: []
     };
+
+    if (!importTask) {
+      return result;
+    }
 
     if (importTask.task) {
       result.tasks.push(importTask.task);

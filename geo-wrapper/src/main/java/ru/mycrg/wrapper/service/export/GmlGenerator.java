@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import ru.mycrg.common.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.exceptions.ExportException;
+import ru.mycrg.wrapper.exceptions.CrgExportException;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.FileService;
@@ -70,7 +70,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @param mqRequest Запрос с данными
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) throws CrgExportException {
         idCounter = 1;
         log.debug("Start gml generation");
 
@@ -91,7 +91,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
+    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws CrgExportException {
         try {
             MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
@@ -113,7 +113,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
             return docHolder;
         } catch (ParserConfigurationException e) {
-            throw new ExportException("Ошибка экспорта", e);
+            throw new CrgExportException("Ошибка экспорта", e);
         }
     }
 
@@ -172,7 +172,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                 BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
                 mqResponse.setProgress(calculatePercent(processedRows, totalRows));
                 mqResponse.setDescription("Обработка " + feature.getTitle());
-                mqResponse.setStatus(SUB_DONE);
+                mqResponse.setStatus(TASK_DONE);
 
                 mqSender.send(mqResponse);
 
@@ -184,7 +184,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
             BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
             mqResponse.setProgress(calculatePercent(processedRows, totalRows));
             mqResponse.setDescription("Не удалось обработать слой: " + resource.getTableName());
-            mqResponse.setStatus(SUB_ERROR);
+            mqResponse.setStatus(TASK_ERROR);
             mqResponse.setError(e.getMessage());
 
             mqSender.send(mqResponse);
@@ -369,7 +369,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @param fileName Название файла
      * @return Путь к сохраненному файлу
      */
-    private String saveXml(Document document, String fileName) throws ExportException {
+    private String saveXml(Document document, String fileName) throws CrgExportException {
         log.debug("Save {} to file", fileName);
 
         try {
@@ -380,7 +380,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
             StreamResult result = new StreamResult(fileService.getExportStoragePath() + separator + fileName);
             transformer.transform(source, result);
         } catch (TransformerException e) {
-            throw new ExportException("Ошибка формирования GML", e);
+            throw new CrgExportException("Ошибка формирования GML", e);
         }
 
         return fileService.getPathToFile(fileName);
