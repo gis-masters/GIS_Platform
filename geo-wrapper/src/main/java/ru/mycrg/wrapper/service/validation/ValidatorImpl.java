@@ -8,6 +8,7 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class ValidatorImpl implements IValidator {
 
     private static Logger log = LoggerFactory.getLogger(ValidatorImpl.class);
 
+    private final CrgScriptEngine scriptEngine;
+
     private RequiredValidation requiredValidation = new RequiredValidation();
     private MinLengthValidation minLengthValidation = new MinLengthValidation();
     private MaxLengthValidation maxLengthValidation = new MaxLengthValidation();
@@ -29,14 +32,17 @@ public class ValidatorImpl implements IValidator {
     private IsLongTypeValidation isLongTypeValidation = new IsLongTypeValidation();
     private IsDoubleTypeValidation isDoubleTypeValidation = new IsDoubleTypeValidation();
     private EnumerationValidation enumerationValidation = new EnumerationValidation();
-    private CustomRuleValidation customRuleValidator = new CustomRuleValidation();
+
+    public ValidatorImpl(CrgScriptEngine scriptEngine) {
+        this.scriptEngine = scriptEngine;
+    }
 
     @Override
     public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> fObject) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        customRuleValidator
-                .validate(featureDescriptionDto, fObject)
+        scriptEngine
+                .invokeFunction(fObject, featureDescriptionDto.getCustomRuleFunction())
                 .values().forEach(validationResult::addObjectViolation);
 
         featureDescriptionDto.getProperties().forEach(propertySchema -> {

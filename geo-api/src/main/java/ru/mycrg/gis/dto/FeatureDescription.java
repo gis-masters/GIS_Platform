@@ -13,6 +13,7 @@ public class FeatureDescription {
     private String tableName;
     private List<AbstractProperty> properties = new ArrayList<>();
     private String customRuleFunction;
+    private String calcFiledFunction;
     private String originName;
 
     public FeatureDescription() {}
@@ -29,6 +30,7 @@ public class FeatureDescription {
         this.customRuleFunction = featureDescription.getCustomRuleFunction();
         this.properties = featureDescription.getProperties();
         this.originName = featureDescription.getOriginName();
+        this.calcFiledFunction = featureDescription.getCalcFiledFunction();
     }
 
     public void addProperty(AbstractProperty property) {
@@ -89,5 +91,13 @@ public class FeatureDescription {
 
     public void setOriginName(String originName) {
         this.originName = originName;
+    }
+
+    public String getCalcFiledFunction() {
+        return calcFiledFunction;
+    }
+
+    public void setCalcFiledFunction(String calcFiledFunction) {
+        this.calcFiledFunction = calcFiledFunction;
     }
 }

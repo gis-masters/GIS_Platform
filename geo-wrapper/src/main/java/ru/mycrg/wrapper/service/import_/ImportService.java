@@ -5,34 +5,35 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.CrgImportException;
-import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static ru.mycrg.wrapper.dao.DaoProperties.GLOBAL_ID;
-import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
 public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
+    private final CrgScriptEngine scriptEngine;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public ImportService(BaseDaoService baseDaoService,
-                         MqSender mqSender,
+                         CrgScriptEngine scriptEngine,
                          DatasourceFactory datasourceFactory) {
         this.baseDaoService = baseDaoService;
+        this.scriptEngine = scriptEngine;
         this.datasourceFactory = datasourceFactory;
     }
 
@@ -56,6 +57,7 @@ public class ImportService {
                     new ResourceProjection(sourceDbName, targetSchemaName, targetTableName));
 
             baseDaoService.truncate(jdbcTemplate, targetResource);
+            baseDaoService.alterTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
@@ -74,26 +76,27 @@ public class ImportService {
             String sourceDbName = importTask.getSourceResource().getDbName();
             String targetTableName = importTask.getTargetResource().getTableName();
             String targetSchemaName = importTask.getTargetResource().getSchemaName();
+            FeatureDescriptionDto fDescription = importTask.getFeatureDescription();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
             log.debug("start postHandle");
 
-            ResourceProjection resourceProjection = new ResourceProjection(null, targetSchemaName, targetTableName);
+            ResourceProjection resProjection = new ResourceProjection(null, targetSchemaName, targetTableName);
 
             int offset = 0;
             while (true) {
                 // Выбираем
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(
-                        jdbcTemplate, resourceProjection, OBJECT_ID, DaoProperties.BATCH_SIZE, offset);
+                        jdbcTemplate, resProjection, OBJECT_ID, DaoProperties.BATCH_SIZE, offset);
                 if (batch.isEmpty()) {
                     break;
                 }
 
                 // Обрабатываем
-                List<Map<String, Object>> touchedParams = handleBatch(batch);
+                List<Map<String, Object>> touchedParams = handleBatch(batch, fDescription);
 
                 // Сохраняем
-                baseDaoService.updateBatch(jdbcTemplate, resourceProjection, touchedParams);
+                baseDaoService.updateBatch(jdbcTemplate, resProjection, touchedParams);
 
                 offset++;
             }
@@ -121,10 +124,11 @@ public class ImportService {
      * Попутно есть желание проставить globalid всем обьектам у которых его нет
      *
      * @param batch        Пачка строк из БД
+     * @param fDescription Описание фичи
      * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.
      */
-    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch) {
+    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, FeatureDescriptionDto fDescription) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         batch.forEach(item -> {
@@ -140,6 +144,11 @@ public class ImportService {
                     if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
                         params.put(key, UUID.randomUUID());
                     }
+                } else if (RULE_ID.equals(key) && fDescription.getCalcFiledFunction() != null) {
+                    // вычисляем ruleid
+                    Map<String, String> data = scriptEngine.invokeFunction(item, fDescription.getCalcFiledFunction());
+
+                    params.put(key, data.get(RULE_ID));
                 } else {
                     // Декодируем строковые атрибуты
                     if (value instanceof String) {

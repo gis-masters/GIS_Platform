@@ -26,6 +26,10 @@ public class CustomFeatureDescription {
     @Type(type="text")
     private String classRule;
 
+    @Column
+    @Type(type="text")
+    private String calculatedFields;
+
     public CustomFeatureDescription() {}
 
     public long getId() {
@@ -66,5 +70,13 @@ public class CustomFeatureDescription {
 
     public void setClassRule(String classRule) {
         this.classRule = classRule;
+    }
+
+    public String getCalculatedFields() {
+        return calculatedFields;
+    }
+
+    public void setCalculatedFields(String calculatedFields) {
+        this.calculatedFields = calculatedFields;
     }
 }

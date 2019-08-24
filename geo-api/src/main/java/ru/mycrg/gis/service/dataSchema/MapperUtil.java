@@ -12,8 +12,7 @@ import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.*;
-import ru.mycrg.gis.dto.FeatureDescription;
-import ru.mycrg.gis.entity.XsdRule;
+import ru.mycrg.gis.entity.FeatureDescription;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,9 +21,11 @@ public class MapperUtil {
 
     private static Logger log = LoggerFactory.getLogger(MapperUtil.class);
 
+    private static ObjectMapper mapper = new ObjectMapper();
+
     @NotNull
-    public static XsdRule mapFeatureDescriptionToXsdRule(FeatureDescription featureDescription) {
-        XsdRule xsdRule = new XsdRule();
+    public static FeatureDescription mapFeatureDescriptionToXsdRule(ru.mycrg.gis.dto.FeatureDescription featureDescription) {
+        FeatureDescription xsdRule = new FeatureDescription();
         xsdRule.setClassName(featureDescription.getName());
 
         try {
@@ -37,7 +38,7 @@ public class MapperUtil {
         return xsdRule;
     }
 
-    public static FeatureDescriptionDto mapFeatureDescriptionToDto(FeatureDescription featureDescription) {
+    public static FeatureDescriptionDto mapFeatureDescriptionToDto(ru.mycrg.gis.dto.FeatureDescription featureDescription) {
         FeatureDescriptionDto dto = new FeatureDescriptionDto();
         dto.setName(featureDescription.getName());
         dto.setOriginName(featureDescription.getOriginName());
@@ -45,6 +46,7 @@ public class MapperUtil {
         dto.setDescription(featureDescription.getDescription());
         dto.setTableName(featureDescription.getTableName());
         dto.setCustomRuleFunction(featureDescription.getCustomRuleFunction());
+        dto.setCalcFiledFunction(featureDescription.getCalcFiledFunction());
 
         featureDescription.getProperties().forEach(abstractProperty -> {
             dto.addProperty(mapPropertyToDto(abstractProperty));
@@ -98,11 +100,9 @@ public class MapperUtil {
         return dto;
     }
 
-    public static FeatureDescription mapXsdRuleToFeatureDescription(XsdRule xsdRule) {
-        ObjectMapper mapper = new ObjectMapper();
-
+    public static ru.mycrg.gis.dto.FeatureDescription mapXsdRuleToFeatureDescription(FeatureDescription featureDescription) {
         try {
-            JsonNode classRule = xsdRule.getClassRule();
+            JsonNode classRule = featureDescription.getClassRule();
             FeatureDescriptionDto featureDescriptionDto = mapper.readValue(classRule.toString(), FeatureDescriptionDto.class);
 
             return mapDtoToFeatureDescription(featureDescriptionDto);
@@ -110,7 +110,7 @@ public class MapperUtil {
             log.warn("Failed convert JSON / Error: {}", e.getMessage());
         }
 
-        return new FeatureDescription(xsdRule.getClassName());
+        return new ru.mycrg.gis.dto.FeatureDescription(featureDescription.getClassName());
     }
 
     public static JsonNode convertToJsonNode(Object object) {
@@ -123,8 +123,8 @@ public class MapperUtil {
         }
     }
 
-    static private FeatureDescription mapDtoToFeatureDescription(FeatureDescriptionDto dto) {
-        FeatureDescription featureDescription = new FeatureDescription();
+    static private ru.mycrg.gis.dto.FeatureDescription mapDtoToFeatureDescription(FeatureDescriptionDto dto) {
+        ru.mycrg.gis.dto.FeatureDescription featureDescription = new ru.mycrg.gis.dto.FeatureDescription();
 
         featureDescription.setName(dto.getName());
         featureDescription.setOriginName(dto.getOriginName());

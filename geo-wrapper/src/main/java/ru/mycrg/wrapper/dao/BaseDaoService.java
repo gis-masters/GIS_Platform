@@ -15,14 +15,17 @@ import ru.mycrg.common.*;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.common.import_.LayerInfo;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
 
 @Service
 public class BaseDaoService {
@@ -93,9 +96,9 @@ public class BaseDaoService {
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
                         (ps, violation) -> {
-                            int objectId = Integer.valueOf(violation.getObjectId());
-                            int classId = Integer.valueOf(violation.getClassId());
-                            int xMin = Integer.valueOf(violation.getxMin());
+                            int objectId = Integer.parseInt(violation.getObjectId());
+                            int classId = Integer.parseInt(violation.getClassId());
+                            int xMin = Integer.parseInt(violation.getxMin());
                             JsonNode json = Util.convertToJson(violation);
 
                             ps.setInt(1, objectId);
@@ -146,28 +149,64 @@ public class BaseDaoService {
      * Импорт. <p>
      * Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт,
      * в схему которая определена как рабочая, но все это в пределах одной БД. <p>
-     * - Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
-     * - Перенос из исходной таблицы в рабочую
      *
      * @param jdbcTemplate Коннекшн к БД
      * @param request      Даные для импорта
      */
     @Transactional
     public void copy(JdbcTemplate jdbcTemplate, ImportMqTask request) {
+        String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
+                request.getTargetResource().getTableName();
+        String data = handleInsertMappingColumns(request.getMapping());
+        String from = " FROM " + request.getSourceResource().getSchemaName() + "." + '\"' +
+                request.getSourceResource().getTableName() + '\"';
+
+        String insertRequest = insertTo + data + from;
+
+        log.debug("SQL import request: {}", insertRequest);
+
+        jdbcTemplate.execute(insertRequest);
+    }
+
+    /**
+     * Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
+     * добавление наших служебных колонок типа: ruleId
+     * @param jdbcTemplate Коннекшн к БД
+     * @param request      Даные для импорта
+     */
+    @Transactional
+    public void alterTable(JdbcTemplate jdbcTemplate, ImportMqTask request) {
         String targetSchema = request.getTargetResource().getSchemaName();
         String targetTable = request.getTargetResource().getTableName();
 
-        // Prepare table
-        if (isNeedPrepareTable(request.getMapping())) {
-            String alterRequest = prepareAlterRequest(request.getMapping(), targetSchema, targetTable);
+        List<GeoMapping> mapping = request.getMapping();
+
+        LayerInfo source = new LayerInfo(RULE_ID, "java.lang.String");
+        ColumnProjection target = new ColumnProjection(AS_IS, AS_IS);
+        GeoMapping geoMapping = new GeoMapping(source, target);
+        addRuleIdMapping(mapping, geoMapping);
+
+        if (isNeedPrepareTable(mapping)) {
+            String alterRequest = prepareAlterRequest(mapping, targetSchema, targetTable);
+
             log.debug("SQL alter request: {}", alterRequest);
+
             jdbcTemplate.execute(alterRequest);
+        } else {
+            log.debug("Nothing to prepare for: {}", request.getTargetResource().toString());
         }
 
-        // Import
-        String insertRequest = prepareInsertRequest(request);
-        log.debug("SQL import request: {}", insertRequest);
-        jdbcTemplate.execute(insertRequest);
+        mapping.remove(geoMapping);
+    }
+
+    private void addRuleIdMapping(List<GeoMapping> mapping, GeoMapping geoMapping) {
+        Optional<GeoMapping> ruleIdMapping = mapping.stream()
+                .filter(item -> RULE_ID.equals(item.getSource().getName().toLowerCase()))
+                .findFirst();
+
+        if (!ruleIdMapping.isPresent()) {
+            mapping.add(geoMapping);
+        }
     }
 
     /**
@@ -316,16 +355,6 @@ public class BaseDaoService {
         }
 
         return "varchar";
-    }
-
-    private String prepareInsertRequest(ImportMqTask request) {
-        String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
-                request.getTargetResource().getTableName();
-        String data = handleInsertMappingColumns(request.getMapping());
-        String from = " FROM " + request.getSourceResource().getSchemaName() + "." + '\"' +
-                request.getSourceResource().getTableName() + '\"';
-
-        return insertTo + data + from;
     }
 
     private String handleInsertMappingColumns(List<GeoMapping> mapping) {

@@ -148,7 +148,7 @@ public class DataSchemaService implements IDataSchemaHolder {
 
     /**
      * Новая фича это копия старой с новым именем и названием таблицы, а также с отредактированным свойством
-     * геометрии, в котором отсается только одно значение.
+     * геометрии, в котором остается только одно значение.
      */
     private FeatureDescription prepareNewFeature(FeatureDescription featureDescription, String geometryType) {
         FeatureDescription newFeature = new FeatureDescription(featureDescription);
@@ -195,7 +195,10 @@ public class DataSchemaService implements IDataSchemaHolder {
                     dataSchema.getFeatureDescriptions()
                               .stream()
                               .filter(featureDescription -> className.equals(featureDescription.getName()))
-                              .forEach(featureDescription -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
+                              .forEach(featureDescription -> {
+                                  featureDescription.setCustomRuleFunction(customRule.getClassRule());
+                                  featureDescription.setCalcFiledFunction(customRule.getCalculatedFields());
+                              });
                 });
     }
 
@@ -205,7 +208,7 @@ public class DataSchemaService implements IDataSchemaHolder {
         if (isCacheEmpty()) {
             dataSchemaRepository
                     .findAll()
-                    .forEach(xsdRule -> dataSchema.addFeatureDescription(MapperUtil.mapXsdRuleToFeatureDescription(xsdRule)));
+                    .forEach(schema -> dataSchema.addFeatureDescription(MapperUtil.mapXsdRuleToFeatureDescription(schema)));
 
             imposeCustomRules(dataSchema);
         }

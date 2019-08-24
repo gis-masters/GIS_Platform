@@ -13,7 +13,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class XsdRule {
+public class FeatureDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class XsdRule {
     @Column(columnDefinition = "json")
     private JsonNode classRule;
 
-    public XsdRule() {}
+    public FeatureDescription() {}
 
     public long getId() {
         return id;

@@ -6,6 +6,7 @@ import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.SimplePropertyDto;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.ValueTitleProjection;
+import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
 
@@ -19,7 +20,7 @@ public class ValidatorTest {
 
     @Test
     public void validateStringPropertyTest() {
-        IValidator validator = new ValidatorImpl();
+        IValidator validator = new ValidatorImpl(new CrgScriptEngine());
 
         SimplePropertyDto classId = new SimplePropertyDto();
         classId.setValueType(ValueType.STRING);
@@ -122,7 +123,7 @@ public class ValidatorTest {
 
     @Test
     public void validateCustomRules() {
-        IValidator validator = new ValidatorImpl();
+        IValidator validator = new ValidatorImpl(new CrgScriptEngine());
 
         SimplePropertyDto classId = new SimplePropertyDto();
         classId.setValueType(ValueType.STRING);

@@ -14,8 +14,10 @@ import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
 import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
@@ -72,6 +74,7 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
     private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
         log.debug("Validate resource: {}", resource.getResourceId());
+        LocalTime startTime = LocalTime.now();
 
         ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
         try {
@@ -106,6 +109,10 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
                 processedRows += batchSize;
             }
+
+            LocalTime endTime = LocalTime.now();
+            log.debug("Validation time for resource: {} is: {} seconds",
+                    resource.getResourceId(), SECONDS.between(startTime, endTime));
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_DONE, "Готово", -1));
         } catch (Exception e) {

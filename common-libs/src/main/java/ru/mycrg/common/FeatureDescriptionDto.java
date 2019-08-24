@@ -11,6 +11,7 @@ public class FeatureDescriptionDto {
     private String tableName;
     private List<SimplePropertyDto> properties = new ArrayList<>();
     private String customRuleFunction = "";
+    private String calcFiledFunction = "";
     private String originName;
 
     public FeatureDescriptionDto() {}
@@ -73,5 +74,13 @@ public class FeatureDescriptionDto {
 
     public void setOriginName(String originName) {
         this.originName = originName;
+    }
+
+    public String getCalcFiledFunction() {
+        return calcFiledFunction;
+    }
+
+    public void setCalcFiledFunction(String calcFiledFunction) {
+        this.calcFiledFunction = calcFiledFunction;
     }
 }
