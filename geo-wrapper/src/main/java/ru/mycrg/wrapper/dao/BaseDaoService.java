@@ -80,6 +80,17 @@ public class BaseDaoService {
         datasourceFactory.removeDatasourceByDbName(dbName);
     }
 
+    /**
+     * Создание схемы
+     */
+    public void createSchema(String dbName, String schemaName) {
+        log.debug("Создание схемы {} Для БД: {}", schemaName, dbName);
+
+        datasourceFactory
+                .getJdbcTemplate(dbName)
+                .execute("CREATE SCHEMA " + schemaName);
+    }
+
     @Transactional
     public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(JdbcTemplate jdbcTemplate,
                                                                         ResourceProjection resource, int limit) {
@@ -190,6 +201,7 @@ public class BaseDaoService {
     /**
      * Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
      * добавление наших служебных колонок типа: ruleId
+     *
      * @param jdbcTemplate Коннекшн к БД
      * @param request      Даные для импорта
      */
@@ -248,6 +260,37 @@ public class BaseDaoService {
                 log.warn("Cant truncate table: {} Error: {}", extensionTable, e.getLocalizedMessage());
             }
         });
+    }
+
+    /**
+     * Удалить таблицу.
+     *
+     * @param jdbcTemplate Коннекшн к БД
+     * @param target       Описание ресурса
+     */
+    @Transactional
+    public void delete(JdbcTemplate jdbcTemplate, ResourceProjection target) {
+        log.debug("Try delete: {}", target.toString());
+
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.%s",
+                target.getSchemaName(), target.getTableName()));
+
+        String extensionTable = target.getTableName() + "_extension";
+
+        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), extensionTable));
+    }
+
+    /**
+     * Создаем таблицу исходя из схемы фичи.
+     *
+     * @param jdbcTemplate       Коннекшн к БД
+     * @param targetResource     Описание ресурса
+     * @param featureDescription Описание фичи
+     */
+    public void createTable(JdbcTemplate jdbcTemplate,
+                            ResourceProjection targetResource,
+                            FeatureDescriptionDto featureDescription) {
+
     }
 
     /**

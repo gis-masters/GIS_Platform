@@ -53,10 +53,10 @@ public class ImportService {
             String targetSchemaName = importTask.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
-            List<ResourceProjection> targetResource = Collections.singletonList(
-                    new ResourceProjection(sourceDbName, targetSchemaName, targetTableName));
+            ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
-            baseDaoService.truncate(jdbcTemplate, targetResource);
+            baseDaoService.delete(jdbcTemplate, targetResource);
+            baseDaoService.createTable(jdbcTemplate, targetResource, importTask.getFeatureDescription());
             baseDaoService.alterTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {

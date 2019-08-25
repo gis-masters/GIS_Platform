@@ -40,7 +40,7 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
             OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
             geoserverClient.createProject(payload.getProjectName(), payload.getOrgId());
 
-            baseDaoService.initP10Template(DEFAULT_DB_NAME + payload.getOrgId(), payload.getProjectName());
+            baseDaoService.createSchema(DEFAULT_DB_NAME + payload.getOrgId(), payload.getProjectName());
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
