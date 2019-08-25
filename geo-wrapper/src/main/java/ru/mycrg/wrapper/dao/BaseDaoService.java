@@ -18,6 +18,7 @@ import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.common.import_.LayerInfo;
 import ru.mycrg.wrapper.service.validation.Util;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
@@ -45,7 +46,14 @@ public class BaseDaoService {
         this.resourceLoader = resourceLoader;
     }
 
-    public void createDb(final String dbName) throws RuntimeException {
+    /**
+     * Создаем БД с расширением PostGis и схемой данных ФГИСТП 10 приказ (по-умолчанию) <br>
+     * (CREATE DATABASE cannot run inside a transaction block)
+     *
+     * @param dbName Название БД
+     * @throws RuntimeException
+     */
+    public void createDb(final String dbName) throws RuntimeException, SQLException {
         log.debug("Try create db: {}", dbName);
 
         JdbcTemplate jdbcTemplate = datasourceFactory.getInitialJdbcTemplate();
@@ -55,10 +63,21 @@ public class BaseDaoService {
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
         // Подсоединяемся к только что созданной БД и создаем расширние postgis
-        datasourceFactory.getJdbcTemplate(dbName).execute("CREATE EXTENSION postgis;");
-        datasourceFactory.removeDatasourceByDbName(dbName);
+        Connection newDbConnection = datasourceFactory.getDatasource(dbName).getConnection();
+        JdbcTemplate newDbJdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
 
-        log.debug("Successfully created");
+        newDbJdbcTemplate.execute("CREATE EXTENSION postgis;");
+
+        Resource schemaFile = resourceLoader.getResource("classpath:db/schemaP10.sql");
+        Resource dataFile = resourceLoader.getResource("classpath:db/schemaP10Data.sql");
+
+        // Create schema
+        ScriptUtils.executeSqlScript(newDbConnection, schemaFile);
+
+        // Insert data
+        ScriptUtils.executeSqlScript(newDbConnection, dataFile);
+
+        datasourceFactory.removeDatasourceByDbName(dbName);
     }
 
     @Transactional

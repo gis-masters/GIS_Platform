@@ -60,9 +60,6 @@ public class DatasourceFactory {
         return new JdbcTemplate(getDatasource(dbName));
     }
 
-    // jdbc:postgresql://postgis:5432/postgres
-    // jdbc:postgresql://127.0.0.1:5434/postgres
-    // jdbc:postgresql://any-other-service-name:5434/postgres
     public void removeDatasourceByDbName(String name) {
         log.debug("Remove datasource for DB: {}", name);
 
@@ -77,6 +74,9 @@ public class DatasourceFactory {
         }
     }
 
+    // jdbc:postgresql://postgis:5432/postgres
+    // jdbc:postgresql://127.0.0.1:5434/postgres
+    // jdbc:postgresql://any-other-service-name:5434/postgres
     private String getConnectionUrl(String dbName) {
         String result;
 

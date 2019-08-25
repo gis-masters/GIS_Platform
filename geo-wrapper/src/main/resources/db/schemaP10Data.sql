@@ -8,6 +8,7 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
+
 --
 INSERT INTO schema_fgistp_10.ab_stype (objectid, code, description) VALUES (1, 1, 'Государственный орган законодательной, исполнительной власти Российской Федерации, его территориальный орган');
 INSERT INTO schema_fgistp_10.ab_stype (objectid, code, description) VALUES (2, 2, 'Государственный орган законодательной, исполнительной власти субъекта Российской Федерации');
@@ -185,10 +186,10 @@ INSERT INTO schema_fgistp_10.comm_type (objectid, code, description) VALUES (3, 
 INSERT INTO schema_fgistp_10.comm_type (objectid, code, description) VALUES (4, 4, 'Комбинированная линия связи');
 INSERT INTO schema_fgistp_10.comm_type (objectid, code, description) VALUES (5, 5, 'Тропосферная линия связи');
 
-INSERT INTO schema_fgistp_10.comm_сtype (objectid, code, description) VALUES (1, 1, 'Подземный');
-INSERT INTO schema_fgistp_10.comm_сtype (objectid, code, description) VALUES (2, 2, 'Подводный');
-INSERT INTO schema_fgistp_10.comm_сtype (objectid, code, description) VALUES (3, 3, 'Подвесной (на опорах)');
-INSERT INTO schema_fgistp_10.comm_сtype (objectid, code, description) VALUES (4, 4, 'Комбинированный');
+INSERT INTO schema_fgistp_10.comm_ctype (code, description) VALUES (1, 'Подземный');
+INSERT INTO schema_fgistp_10.comm_ctype (code, description) VALUES (2, 'Подводный');
+INSERT INTO schema_fgistp_10.comm_ctype (code, description) VALUES (3, 'Подвесной (на опорах)');
+INSERT INTO schema_fgistp_10.comm_ctype (code, description) VALUES (4, 'Комбинированный');
 
 INSERT INTO schema_fgistp_10.cr_stype (objectid, code, descroption) VALUES (1, 1, 'Дома и дворцы бракосочетаний, отделы записи актов гражданского состояния');
 INSERT INTO schema_fgistp_10.cr_stype (objectid, code, descroption) VALUES (2, 2, 'Бюро похоронного обслуживания, дом траурных обрядов');
@@ -1162,7 +1163,6 @@ SELECT pg_catalog.setval('schema_fgistp_10.cep_class_objectid_seq', 4, true);
 SELECT pg_catalog.setval('schema_fgistp_10.chi_stype_objectid_seq', 6, true);
 SELECT pg_catalog.setval('schema_fgistp_10.clb_type_objectid_seq', 5, true);
 SELECT pg_catalog.setval('schema_fgistp_10.comm_type_objectid_seq', 5, true);
-SELECT pg_catalog.setval('schema_fgistp_10.comm_сtype_objectid_seq', 4, true);
 SELECT pg_catalog.setval('schema_fgistp_10.cr_stype_objectid_seq', 3, true);
 SELECT pg_catalog.setval('schema_fgistp_10.crossp_t_objectid_seq', 2, true);
 SELECT pg_catalog.setval('schema_fgistp_10.crossr_t_objectid_seq', 2, true);
