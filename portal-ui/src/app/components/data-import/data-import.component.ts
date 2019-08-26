@@ -11,7 +11,7 @@ import {
   ImportTaskShort,
   InputStartResponseDto
 } from '../../services/geoserver/import/import.service';
-import {filter, flatMap, takeUntil} from 'rxjs/operators';
+import {flatMap, takeUntil} from 'rxjs/operators';
 import {interval, of, Subject} from 'rxjs';
 
 @Component({
@@ -164,7 +164,10 @@ export class DataImportComponent implements OnDestroy {
                   this.isUploadComplete = true;
                   this.logger.info('Success uploaded');
                 } else {
-                  this.handleErrorsTasks(successResponse.import.tasks);
+                  const { tasks } = successResponse.import;
+                  if (tasks.some(task => this.importService.isTaskError(task))) {
+                    this.handleErrorsTasks(successResponse.import.tasks);
+                  }
                 }
               },
             );

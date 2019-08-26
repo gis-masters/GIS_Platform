@@ -14,6 +14,27 @@ import {NameHrefProjection} from "../projections";
   providedIn: 'root'
 })
 export class ImportService {
+  taskStatusesList: {[key: string]: string} = {
+    PENDING: 'PENDING',
+    READY: 'Готово',
+    RUNNING: 'RUNNING',
+    NO_CRS: 'Не определена проекция',
+    NO_BOUNDS: 'NO_BOUNDS',
+    NO_FORMAT: 'NO_FORMAT',
+    BAD_FORMAT: 'BAD_FORMAT',
+    ERROR: 'ERROR',
+    CANCELED: 'CANCELED',
+    COMPLETE: 'Завершен'
+  };
+
+  taskErrorCodes = [
+    'NO_CRS',
+    'NO_BOUNDS',
+    'NO_FORMAT',
+    'BAD_FORMAT',
+    'ERROR',
+    'CANCELED'
+  ];
 
   importFlow = new ImportFlow();
 
@@ -28,6 +49,10 @@ export class ImportService {
               private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('ImportService start');
+  }
+
+  isTaskError (task: ImportTaskFull | ImportTaskShort) {
+    return this.taskErrorCodes.includes(task.state);
   }
 
   /**
