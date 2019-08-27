@@ -192,7 +192,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   private showError(error?) {
     this.isValidationInited = false;
     this.logger.error('Cant validate layers: ', error);
-    this.snackBar.open('Ошибка валидации', 'X', {duration: 10000});
+    this.snackBar.open('Ошибка проверки данных', 'X', {duration: 10000});
   }
 
 }
