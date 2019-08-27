@@ -18,4 +18,8 @@ public class DaoProperties {
 
     public static String EXTENSION_POSTFIX = "_extension";
 
+    public static String AS_IS = "AsIs";
+
+    public static String NOT_IMPORT = "NotImport";
+
 }

@@ -32,9 +32,6 @@ public class BaseDaoService {
     ResourceLoader resourceLoader;
     DatasourceFactory datasourceFactory;
 
-    private static final String AS_IS = "AsIs";
-    private static final String NOT_IMPORT = "NotImport";
-
     @Autowired
     public BaseDaoService(DatasourceFactory datasourceFactory,
                           ResourceLoader resourceLoader) {
@@ -169,7 +166,7 @@ public class BaseDaoService {
 //        addRuleIdMapping(mapping, geoMapping);
 
         if (isNeedPrepareTable(mapping)) {
-            String alterRequest = prepareAlterRequest(mapping, targetSchema, targetTable);
+            String alterRequest = SqlGenerator.prepareAlterRequest(mapping, targetSchema, targetTable);
 
             log.debug("SQL alter request: {}", alterRequest);
 
@@ -233,6 +230,7 @@ public class BaseDaoService {
 
     /**
      * Создаем таблицу исходя из схемы фичи.
+     * Создает также таблицу "*_extension"
      */
     public void createTable(JdbcTemplate jdbcTemplate,
                             ImportMqTask importTask) {
@@ -253,35 +251,7 @@ public class BaseDaoService {
                 "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
                 "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
 
-        String createTable = "CREATE TABLE " + target + " (" +
-                "objectid integer NOT NULL, " +
-                "classid integer, " +
-
-                // random atributes
-                "fz_mfstp smallint, " +
-                "fz_odstp smallint, " +
-                "fz_ingstp smallint, " +
-                "fz_trstp smallint, " +
-                "fz_shstp smallint, " +
-                "fz_recstp smallint, " +
-                "fz_orecstp smallint, " +
-                "area numeric(38,8), " +
-                "info_obj character varying(255), " +
-                "constr_den numeric(38,8), " +
-                "bld_height integer, " +
-                "pop_den numeric(38,8), " +
-                "population integer, " +
-                "hzrd_class integer, " +
-                "other character varying(255), " +
-                "event_time integer, " +
-                "status smallint, " +
-                "reg_status smallint, " +
-
-                "globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, " +
-                "shape public.geometry," +
-                "ruleid character varying(20)" +
-                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " + srsCode + ")));" +
-                "ALTER TABLE ONLY " + target + " ADD CONSTRAINT " + targetTable + "_pkey PRIMARY KEY (objectid);";
+        String createTable = SqlGenerator.prepareCreateTableRequest(importTask);
 
         log.debug("SQL create table request: {}", createTable);
 
@@ -326,7 +296,7 @@ public class BaseDaoService {
     // TODO: Use batchUpdate (example in saveValidationResults) should be much faster
     public void updateBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
         nextBatch.forEach(item -> {
-            String sqlUpdate = generateUpdateRequest(target, item);
+            String sqlUpdate = SqlGenerator.prepareUpdateRequest(target, item);
 
             log.trace("update SQL: {}", sqlUpdate);
 
@@ -375,60 +345,6 @@ public class BaseDaoService {
         datasourceFactory.removeDatasourceByDbName(dbName);
     }
 
-    private String generateUpdateRequest(ResourceProjection target, Map<String, Object> item) {
-        final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
-
-        item.forEach((key, value) -> {
-            if (!OBJECT_ID.equals(key)) {
-                if (value.equals(DaoProperties.NULL_MARKER)) {
-                    sql[0] = sql[0] + key + "=NULL, ";
-                } else {
-                    sql[0] = sql[0] + key + "='" + value + "', ";
-                }
-            }
-        });
-
-        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(OBJECT_ID);
-    }
-
-    private String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
-//        ALTER TABLE fiz.functionalzone ADD COLUMN IF NOT EXISTS fiz6 INTEGER,
-//                                       ADD COLUMN IF NOT EXISTS fiz5 INTEGER,
-//                                       ADD COLUMN IF NOT EXISTS fiz4 INTEGER;
-        String alter = "ALTER TABLE " + targetSchema + "." + targetTable + " ";
-        StringBuilder columns = new StringBuilder();
-
-        for (GeoMapping geoMapping : mapping) {
-            ColumnProjection target = geoMapping.getTarget();
-            if (target.getType().equals(AS_IS)) {
-                columns
-                        .append("ADD COLUMN IF NOT EXISTS ")
-                        .append(geoMapping.getSource().getName())
-                        .append(" ")
-                        .append(defineColumnType(geoMapping.getSource().getBinding()))
-                        .append(", ");
-            }
-        }
-
-        columns = new StringBuilder(columns.substring(0, columns.length() - 2));
-
-        return alter + columns;
-    }
-
-    private String defineColumnType(String binding) {
-        // TODO
-
-        if (binding.contains("Double")) {
-            return "numeric";
-        }
-
-        if (binding.contains("Integer")) {
-            return "integer";
-        }
-
-        return "varchar";
-    }
-
     private String handleInsertMappingColumns(List<GeoMapping> mapping) {
         String pre = " (";
         String post = ") ";
@@ -437,7 +353,7 @@ public class BaseDaoService {
         StringBuilder sourceColumns = new StringBuilder("SELECT ");
         for (GeoMapping geoMapping : mapping) {
             ColumnProjection target = geoMapping.getTarget();
-            if (target.getType().equals("serial") || target.getType().equals(NOT_IMPORT)) {
+            if (target.getType().equals("serial") || target.getType().equals(DaoProperties.NOT_IMPORT)) {
                 continue;
             }
 
