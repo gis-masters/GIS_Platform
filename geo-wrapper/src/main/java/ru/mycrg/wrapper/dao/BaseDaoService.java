@@ -25,16 +25,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
-import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
 public class BaseDaoService {
 
     private static final Logger log = LoggerFactory.getLogger(BaseDaoService.class);
+    private static final String FIZ = "fiz";
+    private static final String FUNCTIONALZONE = "functionalzone";
 
-    private ResourceLoader resourceLoader;
-    private DatasourceFactory datasourceFactory;
+    ResourceLoader resourceLoader;
+    DatasourceFactory datasourceFactory;
 
     private static final String AS_IS = "AsIs";
     private static final String NOT_IMPORT = "NotImport";
@@ -46,57 +47,12 @@ public class BaseDaoService {
         this.resourceLoader = resourceLoader;
     }
 
-    /**
-     * Создаем БД с расширением PostGis и схемой данных ФГИСТП 10 приказ (по-умолчанию) <br>
-     * (CREATE DATABASE cannot run inside a transaction block)
-     *
-     * @param dbName Название БД
-     * @throws RuntimeException
-     */
-    public void createDb(final String dbName) throws RuntimeException, SQLException {
-        log.debug("Try create db: {}", dbName);
-
-        JdbcTemplate jdbcTemplate = datasourceFactory.getInitialJdbcTemplate();
-        jdbcTemplate.execute(MessageFormat.format("CREATE DATABASE {0} " +
-                "WITH OWNER=fiz ENCODING='UTF8' " +
-                "TABLESPACE=pg_default CONNECTION LIMIT=-1 TEMPLATE template0;", dbName));
-        jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
-
-        // Подсоединяемся к только что созданной БД и создаем расширние postgis
-        Connection newDbConnection = datasourceFactory.getDatasource(dbName).getConnection();
-        JdbcTemplate newDbJdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
-
-        newDbJdbcTemplate.execute("CREATE EXTENSION postgis;");
-
-        Resource schemaFile = resourceLoader.getResource("classpath:db/schemaP10.sql");
-        Resource dataFile = resourceLoader.getResource("classpath:db/schemaP10Data.sql");
-
-        // Create schema
-        ScriptUtils.executeSqlScript(newDbConnection, schemaFile);
-
-        // Insert data
-        ScriptUtils.executeSqlScript(newDbConnection, dataFile);
-
-        datasourceFactory.removeDatasourceByDbName(dbName);
-    }
-
-    /**
-     * Создание схемы
-     */
-    public void createSchema(String dbName, String schemaName) {
-        log.debug("Создание схемы {} Для БД: {}", schemaName, dbName);
-
-        datasourceFactory
-                .getJdbcTemplate(dbName)
-                .execute("CREATE SCHEMA " + schemaName);
-    }
-
     @Transactional
     public List<Map<String, Object>> fetchBatchOfRowsNeededToValidation(JdbcTemplate jdbcTemplate,
                                                                         ResourceProjection resource, int limit) {
         String schema = resource.getSchemaName();
         String table = resource.getTableName();
-        String extensionTableName = table + "_extension";
+        String extensionTableName = table + EXTENSION_POSTFIX;
 
         String rowsNeedingValidation = String.format("select target.*, target.xmin, ext.* from %s.%s as target " +
                 "LEFT JOIN %s.%s AS ext ON target.objectid = ext.object_id " +
@@ -113,7 +69,7 @@ public class BaseDaoService {
     public void saveValidationResults(JdbcTemplate jdbcTemplate, ResourceProjection resource,
                                       List<ObjectValidationResult> violations) throws NumberFormatException {
         String schema = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + "_extension";
+        String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
 
         log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations);
 
@@ -142,7 +98,7 @@ public class BaseDaoService {
     @Transactional
     public Long countTotalViolations(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
         String schemaName = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + "_extension";
+        String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
                 schemaName, extensionTableName);
@@ -164,7 +120,7 @@ public class BaseDaoService {
     @Transactional
     public boolean isValidated(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
         String schemaName = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + "_extension";
+        String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
 
         String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
 
@@ -212,10 +168,10 @@ public class BaseDaoService {
 
         List<GeoMapping> mapping = request.getMapping();
 
-        LayerInfo source = new LayerInfo(RULE_ID, "java.lang.String");
-        ColumnProjection target = new ColumnProjection(AS_IS, AS_IS);
-        GeoMapping geoMapping = new GeoMapping(source, target);
-        addRuleIdMapping(mapping, geoMapping);
+//        LayerInfo source = new LayerInfo(RULE_ID, "java.lang.String");
+//        ColumnProjection target = new ColumnProjection(AS_IS, AS_IS);
+//        GeoMapping geoMapping = new GeoMapping(source, target);
+//        addRuleIdMapping(mapping, geoMapping);
 
         if (isNeedPrepareTable(mapping)) {
             String alterRequest = prepareAlterRequest(mapping, targetSchema, targetTable);
@@ -227,7 +183,7 @@ public class BaseDaoService {
             log.debug("Nothing to prepare for: {}", request.getTargetResource().toString());
         }
 
-        mapping.remove(geoMapping);
+//        mapping.remove(geoMapping);
     }
 
     private void addRuleIdMapping(List<GeoMapping> mapping, GeoMapping geoMapping) {
@@ -253,7 +209,7 @@ public class BaseDaoService {
 
             jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), target.getTableName()));
 
-            String extensionTable = target.getTableName() + "_extension";
+            String extensionTable = target.getTableName() + EXTENSION_POSTFIX;
             try {
                 jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), extensionTable));
             } catch (Exception e) {
@@ -263,7 +219,8 @@ public class BaseDaoService {
     }
 
     /**
-     * Удалить таблицу.
+     * Удалить таблицу. <br>
+     * Удаляется также *_extension таблица
      *
      * @param jdbcTemplate Коннекшн к БД
      * @param target       Описание ресурса
@@ -275,22 +232,78 @@ public class BaseDaoService {
         jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.%s",
                 target.getSchemaName(), target.getTableName()));
 
-        String extensionTable = target.getTableName() + "_extension";
-
-        jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), extensionTable));
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.%s",
+                target.getSchemaName(), target.getTableName() + EXTENSION_POSTFIX));
     }
 
     /**
      * Создаем таблицу исходя из схемы фичи.
-     *
-     * @param jdbcTemplate       Коннекшн к БД
-     * @param targetResource     Описание ресурса
-     * @param featureDescription Описание фичи
      */
     public void createTable(JdbcTemplate jdbcTemplate,
-                            ResourceProjection targetResource,
-                            FeatureDescriptionDto featureDescription) {
+                            ImportMqTask importTask) {
+        FeatureDescriptionDto fDescription = importTask.getFeatureDescription();
+        String targetSchema = importTask.getTargetResource().getSchemaName();
+        String targetTable = importTask.getTargetResource().getTableName();
+        String extensionTable = importTask.getTargetResource().getTableName() + EXTENSION_POSTFIX;
 
+        String target = targetSchema + "." + targetTable;
+
+        String createExtensionTable = "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
+                "   object_id integer NOT NULL, " +
+                "   violations jsonb, " +
+                "   _xmin integer, " +
+                "   valid boolean, " +
+                "   class_id integer);" +
+                "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
+                "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
+
+        String createTable = "CREATE TABLE " + target + " (" +
+                "objectid integer NOT NULL, " +
+                "classid integer, " +
+
+                // random atributes
+                "fz_mfstp smallint, " +
+                "fz_odstp smallint, " +
+                "fz_ingstp smallint, " +
+                "fz_trstp smallint, " +
+                "fz_shstp smallint, " +
+                "fz_recstp smallint, " +
+                "fz_orecstp smallint, " +
+                "area numeric(38,8), " +
+                "info_obj character varying(255), " +
+                "constr_den numeric(38,8), " +
+                "bld_height integer, " +
+                "pop_den numeric(38,8), " +
+                "population integer, " +
+                "hzrd_class integer, " +
+                "other character varying(255), " +
+                "event_time integer, " +
+                "status smallint, " +
+                "reg_status smallint, " +
+
+                "globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, " +
+                "shape public.geometry," +
+                "ruleid character varying(20) );" +
+//                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406)));" +
+                "ALTER TABLE ONLY " + target + " ADD CONSTRAINT " + targetTable + "_pkey PRIMARY KEY (objectid);";
+
+        log.debug("SQL create table request: {}", createTable);
+
+        String createSequence = "CREATE SEQUENCE " + target + "_objectid_seq" +
+                "    AS integer " +
+                "    START WITH 1 " +
+                "    INCREMENT BY 1 " +
+                "    NO MINVALUE " +
+                "    NO MAXVALUE " +
+                "    CACHE 1; ";
+
+        jdbcTemplate.execute(createTable);
+        jdbcTemplate.execute(createExtensionTable);
+        jdbcTemplate.execute(createSequence);
+        jdbcTemplate.execute("ALTER SEQUENCE " + target + "_objectid_seq OWNED BY " + target + ".objectid; ");
+        jdbcTemplate.execute(
+                "ALTER TABLE ONLY " + target + " ALTER COLUMN objectid " +
+                "SET DEFAULT nextval('" + targetSchema + "." + targetTable + "_objectid_seq'::regclass);");
     }
 
     /**
@@ -314,6 +327,7 @@ public class BaseDaoService {
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
 
+    // TODO: Use batchUpdate (example in saveValidationResults) should be much faster
     public void updateBatch(JdbcTemplate jdbcTemplate, ResourceProjection target, List<Map<String, Object>> nextBatch) {
         nextBatch.forEach(item -> {
             String sqlUpdate = generateUpdateRequest(target, item);
@@ -360,7 +374,7 @@ public class BaseDaoService {
         ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
 
         // Rename schema
-        jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
+        jdbcTemplate.execute("ALTER SCHEMA " + FIZ + " RENAME TO " + schemaName);
 
         datasourceFactory.removeDatasourceByDbName(dbName);
     }

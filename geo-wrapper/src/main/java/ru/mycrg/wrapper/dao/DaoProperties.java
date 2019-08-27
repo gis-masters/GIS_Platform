@@ -9,8 +9,13 @@ public class DaoProperties {
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
      */
     public static String OBJECT_ID = "objectid";
+
     public static String CLASS_ID = "classid";
+
     public static String GLOBAL_ID = "globalid";
+
     public static String RULE_ID = "ruleid";
+
+    public static String EXTENSION_POSTFIX = "_extension";
 
 }

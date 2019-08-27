@@ -2871,6 +2871,16 @@ ALTER TABLE fiz.telecomnetworkline_line_objectid_seq OWNER TO fiz;
 ALTER SEQUENCE fiz.telecomnetworkline_line_objectid_seq OWNED BY fiz.telecomnetworkline_line.objectid;
 
 
+
+
+
+
+
+
+
+
+
+
 --
 CREATE TABLE fiz.functionalzone (
     objectid integer NOT NULL,
@@ -2898,16 +2908,7 @@ CREATE TABLE fiz.functionalzone (
     shape_leng numeric,
     shape_area numeric
 );
-ALTER TABLE fiz.functionalzone OWNER TO fiz;
-
-CREATE TABLE fiz.functionalzone_extension (
-    object_id integer NOT NULL,
-    violations jsonb,
-    _xmin integer,
-    valid boolean,
-    class_id integer
-);
-ALTER TABLE fiz.functionalzone_extension OWNER TO fiz;
+ALTER TABLE ONLY fiz.functionalzone ADD CONSTRAINT functionalzone_pkey PRIMARY KEY (objectid);
 
 CREATE SEQUENCE fiz.functionalzone_objectid_seq
     AS integer
@@ -2916,8 +2917,26 @@ CREATE SEQUENCE fiz.functionalzone_objectid_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE fiz.functionalzone_objectid_seq OWNER TO fiz;
 ALTER SEQUENCE fiz.functionalzone_objectid_seq OWNED BY fiz.functionalzone.objectid;
+ALTER TABLE ONLY fiz.functionalzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.functionalzone_objectid_seq'::regclass);
+
+
+CREATE TABLE fiz.functionalzone_extension (
+    object_id integer NOT NULL,
+    violations jsonb,
+    _xmin integer,
+    valid boolean,
+    class_id integer
+);
+ALTER TABLE ONLY fiz.functionalzone_extension ADD CONSTRAINT functionalzone_extension_pkey PRIMARY KEY (object_id);
+
+
+
+
+
+
+
+
 
 
 --
@@ -10114,7 +10133,6 @@ ALTER TABLE ONLY fiz.fp_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fp_t
 ALTER TABLE ONLY fiz.fs_objects ALTER COLUMN objectid SET DEFAULT nextval('fiz.fs_objects_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fses_stype ALTER COLUMN objectid SET DEFAULT nextval('fiz.fses_stype_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.fuel_type ALTER COLUMN objectid SET DEFAULT nextval('fiz.fuel_type_objectid_seq'::regclass);
-ALTER TABLE ONLY fiz.functionalzone ALTER COLUMN objectid SET DEFAULT nextval('fiz.functionalzone_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.street_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.street_line_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.streetv_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.streetv_line_objectid_seq'::regclass);
 ALTER TABLE ONLY fiz.telecomnetworkline_line ALTER COLUMN objectid SET DEFAULT nextval('fiz.telecomnetworkline_line_objectid_seq'::regclass);
@@ -10486,8 +10504,6 @@ ALTER TABLE ONLY fiz.fp_type ADD CONSTRAINT fp_type_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.fs_objects ADD CONSTRAINT fs_objects_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.fses_stype ADD CONSTRAINT fses_stype_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.fuel_type ADD CONSTRAINT fuel_type_pkey PRIMARY KEY (objectid);
-ALTER TABLE ONLY fiz.functionalzone_extension ADD CONSTRAINT functionalzone_extension_pkey PRIMARY KEY (object_id);
-ALTER TABLE ONLY fiz.functionalzone ADD CONSTRAINT functionalzone_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.street_line ADD CONSTRAINT street_line_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.streetv_line ADD CONSTRAINT streetv_line_pkey PRIMARY KEY (objectid);
 ALTER TABLE ONLY fiz.telecomnetworkline_line ADD CONSTRAINT telecomnetworkline_line_pkey PRIMARY KEY (objectid);

@@ -56,7 +56,7 @@ public class ImportService {
             ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
             baseDaoService.delete(jdbcTemplate, targetResource);
-            baseDaoService.createTable(jdbcTemplate, targetResource, importTask.getFeatureDescription());
+            baseDaoService.createTable(jdbcTemplate, importTask);
             baseDaoService.alterTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {

@@ -7,7 +7,8 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.CrgSchemaService;
+import ru.mycrg.wrapper.dao.ICrgSchema;
 import ru.mycrg.wrapper.geoserver_client.services.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
@@ -23,14 +24,14 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
     private final Logger log = LoggerFactory.getLogger(CreateProjectRequestHandler.class);
 
     private final IProject geoserverClient;
-    private final BaseDaoService baseDaoService;
+    private final ICrgSchema schemaService;
     private final MqSender mqSender;
 
     public CreateProjectRequestHandler(IProject geoserverClient,
-                                       BaseDaoService baseDaoService,
+                                       CrgSchemaService schemaService,
                                        MqSender mqSender) {
         this.geoserverClient = geoserverClient;
-        this.baseDaoService = baseDaoService;
+        this.schemaService = schemaService;
         this.mqSender = mqSender;
     }
 
@@ -40,7 +41,7 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
             OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
             geoserverClient.createProject(payload.getProjectName(), payload.getOrgId());
 
-            baseDaoService.createSchema(DEFAULT_DB_NAME + payload.getOrgId(), payload.getProjectName());
+            schemaService.create(DEFAULT_DB_NAME + payload.getOrgId(), payload.getProjectName());
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
