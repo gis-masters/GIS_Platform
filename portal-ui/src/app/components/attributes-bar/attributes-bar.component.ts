@@ -197,6 +197,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   switchFilter() {
     this.enableFilter = !this.enableFilter;
+
     if (!this.enableFilter) {
       const oldRequest = this.requestModel$.getValue();
       oldRequest.page.offset = 0;
@@ -204,6 +205,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
       this.requestModel$.next(oldRequest);
     }
+
+    // костыль для того, чтобы заставить datatable пересчитать свои размеры
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100)
   }
 
   getSimpleProperty(name: string): PropertySchema | undefined {
