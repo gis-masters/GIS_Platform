@@ -15,12 +15,9 @@ import ru.mycrg.common.*;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqTask;
-import ru.mycrg.common.import_.LayerInfo;
 import ru.mycrg.wrapper.service.validation.Util;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +28,6 @@ import static ru.mycrg.wrapper.dao.DaoProperties.*;
 public class BaseDaoService {
 
     private static final Logger log = LoggerFactory.getLogger(BaseDaoService.class);
-    private static final String FIZ = "fiz";
-    private static final String FUNCTIONALZONE = "functionalzone";
 
     ResourceLoader resourceLoader;
     DatasourceFactory datasourceFactory;
@@ -245,6 +240,7 @@ public class BaseDaoService {
         String targetSchema = importTask.getTargetResource().getSchemaName();
         String targetTable = importTask.getTargetResource().getTableName();
         String extensionTable = importTask.getTargetResource().getTableName() + EXTENSION_POSTFIX;
+        String sridCode = "28406";
 
         String target = targetSchema + "." + targetTable;
 
@@ -283,8 +279,8 @@ public class BaseDaoService {
 
                 "globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, " +
                 "shape public.geometry," +
-                "ruleid character varying(20) );" +
-//                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406)));" +
+                "ruleid character varying(20)" +
+                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " + sridCode + ")));" +
                 "ALTER TABLE ONLY " + target + " ADD CONSTRAINT " + targetTable + "_pkey PRIMARY KEY (objectid);";
 
         log.debug("SQL create table request: {}", createTable);
@@ -374,7 +370,7 @@ public class BaseDaoService {
         ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
 
         // Rename schema
-        jdbcTemplate.execute("ALTER SCHEMA " + FIZ + " RENAME TO " + schemaName);
+        jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
 
         datasourceFactory.removeDatasourceByDbName(dbName);
     }

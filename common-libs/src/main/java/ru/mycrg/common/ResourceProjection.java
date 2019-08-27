@@ -7,6 +7,7 @@ public class ResourceProjection {
     private String dbName;
     private String schemaName;
     private String tableName;
+    private String sridCode;
 
     public ResourceProjection() {}
 
@@ -43,6 +44,14 @@ public class ResourceProjection {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getSridCode() {
+        return sridCode;
+    }
+
+    public void setSridCode(String sridCode) {
+        this.sridCode = sridCode;
     }
 
     @Override
