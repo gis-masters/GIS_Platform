@@ -174,6 +174,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     if (this.attributeTable.selected.length > 0) {
       this.attributeTable.selected.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
     }
+
+    window.dispatchEvent(new Event('resize'));
   }
 
   setPage(pageInfo: Pageable) {
