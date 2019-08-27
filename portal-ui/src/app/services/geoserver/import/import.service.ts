@@ -8,7 +8,7 @@ import {BaseService} from '../../base.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LocalStorageService} from '../../local-storage.service';
 import {ServerPropertiesService} from '../../server-properties.service';
-import {NameHrefProjection} from "../projections";
+import {NameHrefProjection} from '../projections';
 
 @Injectable({
   providedIn: 'root'

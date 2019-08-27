@@ -72,7 +72,9 @@ public class ImportService extends BaseProcessService {
                             projectModel.getDatabaseName(),
                             projectModel.getWorkspaceName(),
                             uiTask.getWorkTableName()),
-                    uiTask.getMapping());
+                    uiTask.getMapping(),
+                    uiTask.getSrs()
+            );
 
             importMqRequest.add(importMqTask);
         });

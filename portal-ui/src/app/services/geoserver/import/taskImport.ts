@@ -1,5 +1,6 @@
 import {LayerAttribute} from './import.service';
 
+// Править в соответствии с моделью ru/mycrg/gis/service/import_/ImportTask.java
 export class TaskImport {
   // Наименование слоя из исходных данных
   layerName: string;
@@ -10,7 +11,10 @@ export class TaskImport {
   // Список обьектов маппинга. (Что во что должно смапится)
   mapping: MappingItem[] = [];
 
-  constructor(layerName: string) {
+  srs: number;
+
+  constructor(layerName: string, srs: string) {
+    this.srs = Number(srs.split(':')[1]);
     this.layerName = layerName;
   }
 

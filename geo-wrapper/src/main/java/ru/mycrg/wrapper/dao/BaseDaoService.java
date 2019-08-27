@@ -240,7 +240,7 @@ public class BaseDaoService {
         String targetSchema = importTask.getTargetResource().getSchemaName();
         String targetTable = importTask.getTargetResource().getTableName();
         String extensionTable = importTask.getTargetResource().getTableName() + EXTENSION_POSTFIX;
-        String sridCode = "28406";
+        Integer srsCode = importTask.getSrs();
 
         String target = targetSchema + "." + targetTable;
 
@@ -280,7 +280,7 @@ public class BaseDaoService {
                 "globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, " +
                 "shape public.geometry," +
                 "ruleid character varying(20)" +
-                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " + sridCode + ")));" +
+                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " + srsCode + ")));" +
                 "ALTER TABLE ONLY " + target + " ADD CONSTRAINT " + targetTable + "_pkey PRIMARY KEY (objectid);";
 
         log.debug("SQL create table request: {}", createTable);

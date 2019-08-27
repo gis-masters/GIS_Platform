@@ -11,17 +11,20 @@ public class ImportMqTask {
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
     private List<GeoMapping> mapping;
+    private Integer srs;
 
     public ImportMqTask() {}
 
     public ImportMqTask(FeatureDescriptionDto featureDescription,
                         ResourceProjection sourceResource,
                         ResourceProjection targetResource,
-                        List<GeoMapping> mapping) {
+                        List<GeoMapping> mapping,
+                        Integer srs) {
         this.featureDescription = featureDescription;
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;
         this.mapping = mapping;
+        this.srs = srs;
     }
 
     public ResourceProjection getSourceResource() {
@@ -64,4 +67,11 @@ public class ImportMqTask {
         this.featureDescription = featureDescription;
     }
 
+    public Integer getSrs() {
+        return srs;
+    }
+
+    public void setSrs(Integer srs) {
+        this.srs = srs;
+    }
 }

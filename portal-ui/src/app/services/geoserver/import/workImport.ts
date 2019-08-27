@@ -25,8 +25,8 @@ export class WorkImport {
   tasks: TaskImport[] = [];
   isWorkImportReady = false;
 
-  addTask(layerName: string) {
-    this.tasks.push(new TaskImport(layerName));
+  addTask(layerName: string, srs: string) {
+    this.tasks.push(new TaskImport(layerName, srs));
 
     this.updateWorkImportState();
   }

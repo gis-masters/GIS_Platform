@@ -13,16 +13,18 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 
 @Service
-public class CrgDatabaseService extends BaseDaoService implements ICrgDatabase {
+public class CrgDatabaseService implements ICrgDatabase {
 
     private static final Logger log = LoggerFactory.getLogger(CrgDatabaseService.class);
 
-    public CrgDatabaseService(DatasourceFactory datasourceFactory, ResourceLoader resourceLoader) {
-        super(datasourceFactory, resourceLoader);
+    private final DatasourceFactory datasourceFactory;
+
+    public CrgDatabaseService(DatasourceFactory datasourceFactory) {
+        this.datasourceFactory = datasourceFactory;
     }
 
     /**
-     * Создаем БД с расширением PostGis и схемой данных ФГИСТП 10 приказ (по-умолчанию) <br>
+     * Создаем БД с расширением PostGis <br>
      * (CREATE DATABASE cannot run inside a transaction block)
      *
      * @param dbName Название БД
@@ -39,19 +41,9 @@ public class CrgDatabaseService extends BaseDaoService implements ICrgDatabase {
         jdbcTemplate.execute(MessageFormat.format("GRANT ALL ON DATABASE {0} TO fiz;", dbName));
 
         // Подсоединяемся к только что созданной БД и создаем расширние postgis
-        Connection newDbConnection = datasourceFactory.getDatasource(dbName).getConnection();
         JdbcTemplate newDbJdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
 
         newDbJdbcTemplate.execute("CREATE EXTENSION postgis;");
-
-        Resource schemaFile = resourceLoader.getResource("classpath:db/schemaP10.sql");
-        Resource dataFile = resourceLoader.getResource("classpath:db/schemaP10Data.sql");
-
-        // Create schema
-        ScriptUtils.executeSqlScript(newDbConnection, schemaFile);
-
-        // Insert data
-        ScriptUtils.executeSqlScript(newDbConnection, dataFile);
 
         datasourceFactory.removeDatasourceByDbName(dbName);
     }
