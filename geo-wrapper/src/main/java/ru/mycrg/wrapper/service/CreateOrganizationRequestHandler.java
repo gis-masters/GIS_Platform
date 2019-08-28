@@ -7,10 +7,9 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.CrgDatabaseService;
 import ru.mycrg.wrapper.dao.ICrgDatabase;
-import ru.mycrg.wrapper.geoserver_client.services.IOrganization;
+import ru.mycrg.wrapper.geoserver_client.services.organization.IOrganization;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
@@ -24,14 +23,14 @@ public class CreateOrganizationRequestHandler extends BaseRequestHandler impleme
 
     private final Logger log = LoggerFactory.getLogger(CreateOrganizationRequestHandler.class);
 
-    private final IOrganization geoserverClient;
+    private final IOrganization organizationService;
     private final ICrgDatabase crgDatabase;
     private final MqSender mqSender;
 
-    public CreateOrganizationRequestHandler(IOrganization geoserverClient,
+    public CreateOrganizationRequestHandler(IOrganization organizationService,
                                             CrgDatabaseService crgDatabase,
                                             MqSender mqSender) {
-        this.geoserverClient = geoserverClient;
+        this.organizationService = organizationService;
         this.crgDatabase = crgDatabase;
         this.mqSender = mqSender;
     }
@@ -41,7 +40,7 @@ public class CreateOrganizationRequestHandler extends BaseRequestHandler impleme
         try {
             OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
 
-            geoserverClient.createOrganization(payload);
+            organizationService.create(payload);
 
             crgDatabase.createDb(DEFAULT_DB_NAME + payload.getOrgId());
 

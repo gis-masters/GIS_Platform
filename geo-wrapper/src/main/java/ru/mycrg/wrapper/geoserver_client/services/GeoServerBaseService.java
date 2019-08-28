@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import ru.mycrg.common.JWTTokenHolder;
 import ru.mycrg.wrapper.config.CrgProperties;
-import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
+import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 
 import java.io.IOException;
 
@@ -30,17 +30,24 @@ public abstract class GeoServerBaseService {
 
     protected OkHttpClient httpClient = new OkHttpClient();
 
-    protected void doRequest(Request request, String msg) throws GeoserverClientException, IOException {
-        Response response = httpClient.newCall(request).execute();
+    protected void doRequest(Request request, String msg) throws GeoserverClientException {
+        Response response = null;
+        try {
+            response = httpClient.newCall(request).execute();
 
-        if (!response.isSuccessful()) {
-            response.close();
+            if (!response.isSuccessful()) {
+                response.close();
 
-            log.error("Geoserver error body: {}", response.toString());
+                log.error("Geoserver error body: {}", response.toString());
 
-            throw new GeoserverClientException(msg, response.message());
-        } else {
-            response.close();
+                throw new GeoserverClientException(msg, response.message());
+            } else {
+                response.close();
+            }
+        } catch (Exception e) {
+            log.error("Geoserver error body: {}", e.getMessage());
+
+            throw new GeoserverClientException(msg, e.getMessage());
         }
     }
 
@@ -93,5 +100,13 @@ public abstract class GeoServerBaseService {
         } else {
             return jwtTokenHolder.getAccess_token();
         }
+    }
+
+    @NotNull
+    protected StringBuilder getRootRestUrl() {
+        return new StringBuilder()
+                .append("http://")
+                .append(geoserverHost())
+                .append("/geoserver/rest");
     }
 }

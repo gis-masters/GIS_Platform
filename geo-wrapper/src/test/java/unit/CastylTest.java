@@ -1,7 +1,7 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.wrapper.geoserver_client.user_role.UsersAndRolesService;
+import ru.mycrg.wrapper.geoserver_client.services.user_role.UsersAndRolesService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

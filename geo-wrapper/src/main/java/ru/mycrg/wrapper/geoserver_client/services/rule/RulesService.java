@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.geoserver_client.rule;
+package ru.mycrg.wrapper.geoserver_client.services.rule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.Request;

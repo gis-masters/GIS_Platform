@@ -8,12 +8,14 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.common.import_.ImportMqResponse;
+import ru.mycrg.wrapper.geoserver_client.services.feature_types.IFeatureTypes;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.util.List;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 
 @Service
@@ -21,10 +23,13 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
     private static final Logger log = LoggerFactory.getLogger(ImportRequestHandler.class);
 
+    private final IFeatureTypes featureTypesService;
     private final MqSender mqSender;
     private final ImportService importService;
 
-    public ImportRequestHandler(ImportService importService, MqSender mqSender) {
+    public ImportRequestHandler(ImportService importService, MqSender mqSender,
+                                IFeatureTypes featureTypesService) {
+        this.featureTypesService = featureTypesService;
         this.importService = importService;
         this.mqSender = mqSender;
     }
@@ -48,6 +53,12 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
         try {
             importService.doImport(mqTask);
             importService.postHandle(mqTask);
+
+            featureTypesService.create(
+                    mqTask.getTargetResource().getSchemaName(),
+                    mqTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
+                    mqTask.getFeatureDescription().getName(),
+                    mqTask.getUserToken());
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,

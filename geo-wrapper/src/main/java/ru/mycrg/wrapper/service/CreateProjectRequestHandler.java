@@ -9,7 +9,7 @@ import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.CrgSchemaService;
 import ru.mycrg.wrapper.dao.ICrgSchema;
-import ru.mycrg.wrapper.geoserver_client.services.IProject;
+import ru.mycrg.wrapper.geoserver_client.services.projects.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 

@@ -1,13 +1,14 @@
-package ru.mycrg.wrapper.geoserver_client.services;
+package ru.mycrg.wrapper.geoserver_client.services.projects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
-import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
-import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
-import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
+import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.wrapper.geoserver_client.services.rule.RulesService;
+import ru.mycrg.wrapper.geoserver_client.services.AuthService;
+import ru.mycrg.wrapper.geoserver_client.services.storage.StorageService;
+import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 
 import static ru.mycrg.common.CrgConstants.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;

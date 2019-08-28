@@ -103,7 +103,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.projectsService
         .doWorkImport(workImport)
         .pipe(
-          flatMap(() => this.workspaceService.publishLayers(workImport)),
+          // flatMap(() => this.workspaceService.publishLayers(workImport)),
           flatMap(() => this.layersService.fetchLayers(workImport.projectModel.crgProject)),
           takeUntil(this.unsubscribe$)
         )

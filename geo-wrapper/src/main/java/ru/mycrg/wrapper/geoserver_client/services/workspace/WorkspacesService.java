@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.geoserver_client.workspace;
+package ru.mycrg.wrapper.geoserver_client.services.workspace;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;

@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.geoserver_client;
+package ru.mycrg.wrapper.geoserver_client.exceptions;
 
 public class GeoserverClientException extends Exception {
 	private static final long serialVersionUID = -1152044292122335379L;

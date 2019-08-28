@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.geoserver_client.services;
+package ru.mycrg.wrapper.geoserver_client.services.organization;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,11 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.crypt.AES;
-import ru.mycrg.wrapper.geoserver_client.GeoserverClientException;
-import ru.mycrg.wrapper.geoserver_client.rule.RulesService;
-import ru.mycrg.wrapper.geoserver_client.storage.StorageService;
-import ru.mycrg.wrapper.geoserver_client.user_role.UsersAndRolesService;
-import ru.mycrg.wrapper.geoserver_client.workspace.WorkspacesService;
+import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.wrapper.geoserver_client.services.rule.RulesService;
+import ru.mycrg.wrapper.geoserver_client.services.AuthService;
+import ru.mycrg.wrapper.geoserver_client.services.storage.StorageService;
+import ru.mycrg.wrapper.geoserver_client.services.user_role.UsersAndRolesService;
+import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.CrgConstants.DEFAULT_ROLE_NAME;
@@ -50,14 +51,14 @@ public class OrganizationService implements IOrganization {
 
     /**
      * Создание организации.
+     * На геосревере нет понятия организация. Мы же под организацией понимаем заведение на геосервере новой
+     * учетки пользователя, который сможет создавать свои проекты - workspaces.
      * - создаем рабочую область и хранилище для временного импорта
      * - задаем роль и правило доступа к хранилищу "помойке" - scratch_workspace
-     * - создаем пользователя на геосервере
      * - ассоциируем роль с пользователем
-     * - создаем БД
      */
     @Override
-    public void createOrganization(OrgMqProcessRequest dto) throws GeoserverClientException {
+    public void create(OrgMqProcessRequest dto) throws GeoserverClientException {
         log.debug("Create organization on geoserver: {}", dto.getOrgId());
 
         try {
