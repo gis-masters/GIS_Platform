@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {HttpClient} from '@angular/common/http';
-import {ProcessStatus} from '../process-status';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
@@ -12,6 +11,7 @@ import {LocalStorageService} from '../local-storage.service';
 import {ProjectModel} from '../geoserver/import/projectModel';
 import {ServerPropertiesService} from '../server-properties.service';
 import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
+import {CrgProcess, ProcessStatus} from './crg-models';
 
 @Injectable({
   providedIn: 'root'
@@ -90,7 +90,7 @@ export class ProjectsService {
       importTasks: workImport.tasks
     };
 
-    return this.http.post(url, payload);
+    return this.http.post<CrgProcess>(url, payload);
   }
 
   clearCache() {

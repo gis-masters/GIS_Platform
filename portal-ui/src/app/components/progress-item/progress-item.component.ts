@@ -2,10 +2,10 @@ import {saveAs} from 'file-saver';
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnDestroy} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
-import {WsMessageType} from '../../services/ws.service';
 import {DownloadFileService} from '../../services/download-file.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {ProcessType} from '../../services/crg/crg-models';
 
 @Component({
   selector: 'crg-progress-item',
@@ -34,7 +34,7 @@ export class ProgressItemComponent implements OnDestroy {
     } else if (this.event.payload.payload.status === 'SUB_DONE') {
       return this.event.payload.payload.description;
     } else if (this.event.payload.payload.status === 'DONE') {
-      if (this.event.payload.type === WsMessageType.EXPORT) {
+      if (this.event.payload.type === ProcessType.EXPORT) {
         const layerName = this.event.payload.payload['layerName'];
         return layerName ? layerName : 'Готово';
       }

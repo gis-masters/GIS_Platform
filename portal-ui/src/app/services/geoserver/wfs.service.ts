@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {RequestModel} from '../models/requestModel';
+import {CrgModels} from '../crg/crg-models';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {filter, map} from 'rxjs/operators';
@@ -39,7 +39,7 @@ export class WfsService {
                );
   }
 
-  getFeatures(complexName: string, requestModel?: RequestModel): Observable<WfsFeatureCollection> {
+  getFeatures(complexName: string, requestModel?: CrgModels): Observable<WfsFeatureCollection> {
     const url = this.serverProp.geoServerUrl + '/wfs';
 
     const params = {

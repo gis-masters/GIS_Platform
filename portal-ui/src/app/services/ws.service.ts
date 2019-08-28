@@ -8,6 +8,7 @@ import {BugObject} from './crg/validation.service';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';
+import {ProcessType} from './crg/crg-models';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +69,7 @@ export class WsService {
 }
 
 export interface IWsMessage {
-  type: WsMessageType;
+  type: ProcessType;
   payload: ExportWsMsg | ValidationWsMsg;
 }
 
@@ -88,22 +89,11 @@ export interface ValidationWsMsg {
   status: string;
   progress: number;
   total: number;
-  type?: WsMessageType;
+  type?: ProcessType;
   validated: boolean;
   lastValidated: string;
   pending?: boolean;
   error?: boolean;
   done?: boolean;
   empty?: boolean;
-}
-
-// Править в соответствии с: ru/mycrg/common/enums/ProcessType.java
-export enum WsMessageType {
-  CREATE_ORG = 'CREATE_ORG',
-  CREATE_PROJECT = 'CREATE_PROJECT',
-  DELETE_PROJECT = 'DELETE_PROJECT',
-
-  IMPORT = 'IMPORT',
-  VALIDATION = 'VALIDATION',
-  EXPORT = 'EXPORT'
 }

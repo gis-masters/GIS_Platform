@@ -5,7 +5,8 @@ import {StringUtil} from './util/StringUtil';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {LocalStorageService} from './local-storage.service';
 import {filter, publishReplay, refCount, takeUntil} from 'rxjs/operators';
-import {IWsMessage, WsMessageType, WsService} from './ws.service';
+import {IWsMessage, WsService} from './ws.service';
+import {ProcessType} from './crg/crg-models';
 
 /**
  * Сервис обработки и хранения событий.
@@ -45,7 +46,7 @@ export class EventService {
 
   // Пока только експорт
   private isAllowedMessageType(msg: IWsMessage) {
-    return msg.type === WsMessageType.EXPORT;
+    return msg.type === ProcessType.EXPORT;
   }
 
   /**
@@ -106,6 +107,6 @@ export class EventService {
 // Пока события будут завязаны на IWsMessage
 export interface IEvent {
   id: string;
-  type: WsMessageType;
+  type: ProcessType;
   payload: IWsMessage;
 }

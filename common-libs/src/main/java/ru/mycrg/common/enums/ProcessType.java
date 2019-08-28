@@ -1,7 +1,7 @@
 package ru.mycrg.common.enums;
 
 /**
- * Править в соответствии c: portal-ui/src/app/services/ws.service.ts
+ * Править в соответствии c: portal-ui/src/app/services/crg/crg-models.ts
  */
 public enum ProcessType {
     CREATE_ORG,

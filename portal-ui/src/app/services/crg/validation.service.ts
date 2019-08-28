@@ -5,8 +5,8 @@ import {ValidationWsMsg, WsService} from '../ws.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {CrgLayer} from '../geoserver/layers.service';
-import {ProcessStatus} from '../process-status';
 import {LocalStorageService} from '../local-storage.service';
+import {ProcessStatus} from './crg-models';
 
 @Injectable({
   providedIn: 'root'

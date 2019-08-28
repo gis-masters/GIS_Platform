@@ -111,9 +111,9 @@ public class ImportService extends BaseProcessService {
             TaskModel task = new TaskModel();
             if (!mqResponse.getPayload().equals("")) {
                 ImportMqResponse rPayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
-                task = new TaskModel(rPayload.getTargetLayer(), mqResponse.getDescription(), mqResponse.getError());
+                task = new TaskModel(rPayload.getTargetLayer(), mqResponse.getStatus(), mqResponse.getError());
             } else if (mqResponse.getDescription() != null) {
-                task = new TaskModel(mqResponse.getDescription(), mqResponse.getError());
+                task = new TaskModel(mqResponse.getStatus(), mqResponse.getError());
             } else {
                 log.warn("Task for processId: {} not have any description/payload?", process.getId());
             }

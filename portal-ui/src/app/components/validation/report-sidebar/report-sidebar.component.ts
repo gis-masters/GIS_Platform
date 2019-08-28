@@ -3,14 +3,14 @@ import {NGXLogger} from 'ngx-logger';
 import {MatSnackBar} from '@angular/material';
 import {filter, takeUntil} from 'rxjs/operators';
 import {StringUtil} from '../../../services/util/StringUtil';
-import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../../services/communication.service';
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
-import {IWsMessage, ValidationWsMsg, WsMessageType, WsService} from '../../../services/ws.service';
+import {IWsMessage, ValidationWsMsg, WsService} from '../../../services/ws.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ProcessStatus, ProcessType} from '../../../services/crg/crg-models';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -58,7 +58,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.wsService.messages$
         .pipe(
           filter(value => !!value),
-          filter((msg: IWsMessage) => msg.type === WsMessageType.VALIDATION),
+          filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
           takeUntil(this.unsubscribe$)
         )
         .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
@@ -149,7 +149,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
     if (validationWsMsg.status === ProcessStatus.PENDING) {
       this.commonProgress = validationWsMsg.progress;
-    } else if (validationWsMsg.status === ProcessStatus.SUB_DONE) {
+    } else if (validationWsMsg.status === ProcessStatus.TASK_DONE) {
       // есть инфа о названии слоя
       this.commonInfo.set(validationWsMsg.description, null);
     } else if (validationWsMsg.status === ProcessStatus.DONE) {

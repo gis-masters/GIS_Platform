@@ -49,6 +49,8 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
         }
     }
 
+    // TODO: заюзать паттерн САГА для обеспечения согласованности данных между сервисами
+    // TODO: подчищать черновой импорт, как в БД так и на геосервере
     private void handleTask(ImportMqTask mqTask, BaseMqProcessRequest mqRequest) {
         try {
             importService.doImport(mqTask);

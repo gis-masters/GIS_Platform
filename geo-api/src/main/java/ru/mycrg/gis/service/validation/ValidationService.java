@@ -111,7 +111,7 @@ public class ValidationService extends BaseProcessService {
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
             TaskModel subProcess = new TaskModel(response.getPayload().toString(),
-                    response.getDescription(), response.getError());
+                    response.getStatus(), response.getError());
 
             details.addTask(subProcess);
 

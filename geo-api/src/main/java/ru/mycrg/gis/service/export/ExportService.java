@@ -127,7 +127,7 @@ public class ExportService extends BaseProcessService {
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
-            TaskModel subProcess = new TaskModel(tableName, mqResponse.getDescription(),
+            TaskModel subProcess = new TaskModel(tableName, mqResponse.getStatus(),
                     mqResponse.getError());
 
             details.addTask(subProcess);

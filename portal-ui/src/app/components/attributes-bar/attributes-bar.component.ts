@@ -16,7 +16,7 @@ import {
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {FilterEvent, Pageable, RequestModel, Sortable} from '../../services/models/requestModel';
+import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/crg-models';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {FizLogger} from '../../services/logger/fiz.logger';
@@ -73,7 +73,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   loadPercent = 0;
   showPercent = true;
 
-  private requestModel$: BehaviorSubject<RequestModel> = new BehaviorSubject<RequestModel>({});
+  private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
   private projectModel: ProjectModel;
 
@@ -99,7 +99,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           debounceTime(50),
           takeUntil(this.unsubscribe$)
         )
-        .subscribe((requestModel: RequestModel) => {
+        .subscribe((requestModel: CrgModels) => {
           this.updateTable(requestModel);
         });
 
@@ -137,7 +137,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.unsubscribe$.complete();
   }
 
-  updateTable(requestModel?: RequestModel) {
+  updateTable(requestModel?: CrgModels) {
     this.loading = true;
     this.showPercent = false;
     this.wfsService.getFeatures(this.layer.complexName, requestModel)
@@ -274,7 +274,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.isSelectAll = !this.isSelectAll;
     if (this.isSelectAll) {
       const currentRequestModel = this.requestModel$.getValue();
-      const clonedRequestModel: RequestModel = _.cloneDeep(currentRequestModel);
+      const clonedRequestModel: CrgModels = _.cloneDeep(currentRequestModel);
       clonedRequestModel.page = undefined;
 
       this.loading = true;

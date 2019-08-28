@@ -1,5 +1,6 @@
 package ru.mycrg.common.enums;
 
+//
 public enum ProcessStatus {
     PENDING,    // В процессе
 

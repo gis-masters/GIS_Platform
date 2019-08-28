@@ -1,8 +1,8 @@
-import {FilterEvent, RequestModel} from '../models/requestModel';
+import {FilterEvent, CrgModels} from '../crg/crg-models';
 
 export class Util {
 
-  static generateSortParam(requestModel: RequestModel): string {
+  static generateSortParam(requestModel: CrgModels): string {
     if (!requestModel || !requestModel.sort || !requestModel.sort.column) {
       return '';
     }
@@ -17,7 +17,7 @@ export class Util {
     return (columnName) ? columnName + order : '';
   }
 
-  static generateFilter(requestModel: RequestModel): string | undefined {
+  static generateFilter(requestModel: CrgModels): string | undefined {
     if (!requestModel) {
       return undefined;
     }

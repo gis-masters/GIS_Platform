@@ -1,21 +1,24 @@
 package ru.mycrg.gis.dto;
 
+import ru.mycrg.common.enums.ProcessStatus;
+
 public class TaskModel {
 
     private String layerName;
     private String description;
+    private ProcessStatus status;
     private String error;
 
     public TaskModel() {}
 
-    public TaskModel(String description, String error) {
-        this.description = description;
+    public TaskModel(ProcessStatus status, String error) {
+        this.status = status;
         this.error = error;
     }
 
-    public TaskModel(String layerName, String description, String error) {
+    public TaskModel(String layerName, ProcessStatus status, String error) {
         this.layerName = layerName;
-        this.description = description;
+        this.status = status;
         this.error = error;
     }
 
@@ -43,4 +46,11 @@ public class TaskModel {
         this.error = error;
     }
 
+    public ProcessStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProcessStatus status) {
+        this.status = status;
+    }
 }

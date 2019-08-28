@@ -6,7 +6,6 @@ import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StorageKeys} from '../../../services/storage-keys';
 import {FizLogger} from '../../../services/logger/fiz.logger';
-import {ProcessStatus} from '../../../services/process-status';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {CommunicationService} from '../../../services/communication.service';
@@ -16,7 +15,7 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogData
 } from '../../../components/dialogs/confirm-dialog/confirm-dialog.component';
-import {ProcessResponse} from '../../../services/models/requestModel';
+import {CrgProcess, ProcessStatus} from '../../../services/crg/crg-models';
 
 @Component({
   selector: 'crg-project',
@@ -86,7 +85,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.projectsService
         .create(this.projectName)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((process: ProcessResponse) => {
+        .subscribe((process: CrgProcess) => {
             this.isEditMode = false;
             this.projectsService.fetchProjects();
 
@@ -139,7 +138,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         });
   }
 
-  private checkProjectStatus(processResponse: ProcessResponse) {
+  private checkProjectStatus(processResponse: CrgProcess) {
     const startTime = Date.now();
     const checkStatusInterval = setInterval(() => {
       if (startTime - Date.now() > 60000) {

@@ -13,6 +13,7 @@ import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {ProjectsService} from '../../../services/crg/projects.service';
+import {CrgProcess} from '../../../services/crg/crg-models';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -102,16 +103,12 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.projectsService
         .doWorkImport(workImport)
-        .pipe(
-          // flatMap(() => this.workspaceService.publishLayers(workImport)),
-          flatMap(() => this.layersService.fetchLayers(workImport.projectModel.crgProject)),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((response) => {
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((crgProcess: CrgProcess) => {
+          console.log('--------------', crgProcess);
+
           this.isWorkImportInited = false;
           this.isImportFinished = true;
-
-          // this.addStyle(workImport);
         }, errorResponse => {
           this.logger.info('ERROR: ', errorResponse);
 

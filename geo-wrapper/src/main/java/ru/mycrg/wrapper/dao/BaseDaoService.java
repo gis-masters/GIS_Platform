@@ -63,7 +63,7 @@ public class BaseDaoService {
         String schema = resource.getSchemaName();
         String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
 
-        log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations);
+        log.debug("Save validation results for: {}.{} Count: {}", schema, extensionTableName, violations.size());
 
         String upsert = String.format("INSERT INTO %s.%s(object_id, violations, _xmin, valid, class_id) " +
                 "VALUES (?, to_json(?::json), ?, ?, ?) " +

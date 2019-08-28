@@ -5,7 +5,6 @@ import {merge} from 'rxjs/internal/observable/merge';
 import {MatPaginator, MatSort} from '@angular/material';
 import {switchMap} from 'rxjs/internal/operators/switchMap';
 import {startWith} from 'rxjs/internal/operators/startWith';
-import {ProcessStatus} from '../../../services/process-status';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {DataSchemaService} from '../../../services/crg/data-schema.service';
@@ -14,6 +13,7 @@ import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
 import {ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
 import {AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
+import {ProcessStatus} from '../../../services/crg/crg-models';
 
 @Component({
   selector: 'crg-bugs-table',
