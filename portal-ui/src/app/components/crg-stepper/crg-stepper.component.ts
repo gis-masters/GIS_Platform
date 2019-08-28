@@ -22,6 +22,8 @@ export class CrgStepperComponent implements OnDestroy {
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private projectService: ProjectsService) {
+    this.activeStep = communicationService.activeStep;
+
     communicationService.stepperEvents
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(step => this.activeStep = step);
@@ -32,7 +34,7 @@ export class CrgStepperComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  doAction(selectedStep) {
+  doAction(selectedStep: number) {
     if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
       if (selectedStep === 1) {
         this.projectService.changeProject();

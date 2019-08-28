@@ -1,43 +1,10 @@
 <div class="example-container">
 
-  <mat-toolbar color="primary" style="position: absolute; min-height: 55px;">
-    <mat-toolbar-row style="height: 55px;">
-      <!--<img src="../../../../assets/images/logo.svg" alt="logo" height="50" width="115">-->
-
-      <div>
-        <span class="org-name">{{userModel?.orgName}}</span>
-      </div>
-
-      <div style="padding-left: 400px">
-        <crg-crg-stepper></crg-crg-stepper>
-      </div>
-
-      <span class="example-spacer"></span>
-
-      <mat-icon class="crg-notification" (click)="notification()"
-                *ngIf="notificationCounter == 0">notifications</mat-icon>
-      <mat-icon class="crg-notification" matBadge="{{notificationCounter}}" matBadgeColor="warn"
-                *ngIf="notificationCounter > 0"
-                (click)="notification()">notifications</mat-icon>
-
-      <div class="float-right">
-        <span class="user-name">{{userModel?.userName}}</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu" style="outline: none">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-      </div>
-    </mat-toolbar-row>
-  </mat-toolbar>
+  <crg-workspace-header></crg-workspace-header>
 
   <div class="fiz-container">
     <router-outlet></router-outlet>
   </div>
 </div>
-
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="logout()" style="outline: none">
-    Выход
-  </button>
-</mat-menu>
 
 <crg-info-sidebar [isActive]="isInfoSidebarActive"></crg-info-sidebar>

@@ -37,7 +37,6 @@ import {InfoSidebarComponent} from './components/info-sidebar/info-sidebar.compo
 import {LayersSidebarComponent} from './components/layers-sidebar/layers-sidebar.component';
 import {ProgressItemComponent} from './components/progress-item/progress-item.component';
 import {JwtInterceptorService} from './services/interceptors/jwt-interceptor.service';
-import {CrgStepperComponent} from './components/crg-stepper/crg-stepper.component';
 import {ConfirmDialogComponent} from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import {ViewFeaturesComponent} from './components/view-features/view-features.component';
 import {EditFeatureComponent} from './components/edit-feature/edit-feature.component';
@@ -52,6 +51,7 @@ import {PageTitleComponent} from './components/page-title/page-title.component';
 import {DataImportComponent} from './components/data-import/data-import.component';
 import {DataImportTasksListComponent} from './components/data-import-tasks-list/data-import-tasks-list.component';
 import {AtleastPipe} from './pipes/atleast.pipe';
+import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +74,6 @@ import {AtleastPipe} from './pipes/atleast.pipe';
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
-    CrgStepperComponent,
     ProjectComponent,
     ConfirmDialogComponent,
     ViewFeaturesComponent,
@@ -89,7 +88,8 @@ import {AtleastPipe} from './pipes/atleast.pipe';
     PageTitleComponent,
     DataImportComponent,
     DataImportTasksListComponent,
-    AtleastPipe
+    AtleastPipe,
+    WorkspaceHeaderComponent
   ],
   imports: [
     HttpClientModule,

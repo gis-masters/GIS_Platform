@@ -18,6 +18,22 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
+
+            "optimization": true,
+            "outputHashing": "all",
+            "sourceMap": false,
+            "extractLicenses": true,
+            "buildOptimizer": true,
+            "vendorChunk": true,
+            "aot": true,
+            "extractCss": true,
+            "namedChunks": false,
+
+            "lazyModules": [
+              "src/app/components/workspace-header/workspace-header@conv.module",
+              "src/app/components/workspace-header/workspace-header@simf.module"
+            ],
+
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -34,88 +50,63 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
+            "convProduction": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convProd.ts"
+              }]
             },
-            "test": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.test.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "5mb",
-                  "maximumError": "5mb"
-                }
-              ]
+            "convTest": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convTest.ts"
+              }]
             },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "5mb",
-                  "maximumError": "5mb"
-                }
-              ]
+            "convStaging": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convStaging.ts"
+              }]
             },
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ],
+            "convDev": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convDev.ts"
+              }],
               "optimization": false,
               "sourceMap": true,
-              "aot": false
+              "aot": false,
+              "buildOptimizer": false,
+              "extractCss": false
+            },
+            "simfProduction": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convProd.ts"
+              }]
+            },
+            "simfTest": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convTest.ts"
+              }]
+            },
+            "simfStaging": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.convStaging.ts"
+              }]
+            },
+            "simfDev": {
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.simfDev.ts"
+              }],
+              "optimization": false,
+              "sourceMap": true,
+              "aot": false,
+              "buildOptimizer": false,
+              "extractCss": false
             }
           }
         },
@@ -125,17 +116,29 @@
             "browserTarget": "gis-portal:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "gis-portal:build:production"
+            "convProduction": {
+              "browserTarget": "gis-portal:build:convProduction"
             },
-            "staging": {
-              "browserTarget": "gis-portal:build:staging"
+            "convStaging": {
+              "browserTarget": "gis-portal:build:convStaging"
             },
-            "test": {
-              "browserTarget": "gis-portal:build:test"
+            "convTest": {
+              "browserTarget": "gis-portal:build:convTest"
             },
-            "dev": {
-              "browserTarget": "gis-portal:build:dev"
+            "convDev": {
+              "browserTarget": "gis-portal:build:convDev"
+            },
+            "simfProduction": {
+              "browserTarget": "gis-portal:build:simfProduction"
+            },
+            "simfStaging": {
+              "browserTarget": "gis-portal:build:simfStaging"
+            },
+            "simfTest": {
+              "browserTarget": "gis-portal:build:simfTest"
+            },
+            "simfDev": {
+              "browserTarget": "gis-portal:build:simfDev"
             }
           }
         },

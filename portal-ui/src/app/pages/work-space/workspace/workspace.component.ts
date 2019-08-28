@@ -18,27 +18,18 @@ import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../service
 })
 export class WorkspaceComponent implements OnDestroy, OnInit {
 
-  notificationCounter = 0;
   isInfoSidebarActive = false;
-  userModel: UserInfoModel;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+  constructor(changeDetectorRef: ChangeDetectorRef,
+              media: MediaMatcher,
               private authService: AuthService,
               private route: ActivatedRoute,
-              private eventService: EventService,
-              private sideBarManager: SideBarManager,
               private storageService: LocalStorageService,
               private communicationService: CommunicationService,
               private log: FizLogger) {
     this.log.debug('setUp', 'WorkspaceComponent constructor');
-
-    this.eventService.events$
-        .pipe(
-          filter(value => !!value),
-          takeUntil(this.unsubscribe$)
-        ).subscribe((events: IEvent[]) => this.notificationCounter = events.length);
 
     this.communicationService.sidebarManager
         .pipe(
@@ -64,7 +55,6 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
           if (userModel) {
             this.log.info('organization', 'userModel = ', userModel);
 
-            this.userModel = userModel;
             this.storageService.saveUserModel(userModel);
           }
         });
@@ -77,10 +67,6 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
 
   logout() {
     this.authService.logout();
-  }
-
-  notification() {
-    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
   }
 
 }

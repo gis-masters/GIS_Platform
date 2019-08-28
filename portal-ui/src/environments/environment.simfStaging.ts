@@ -1,10 +1,13 @@
 import {APP_VERSION} from './var';
 
-export const environment = {
+import { Environment } from './types';
+
+export const environment: Environment = {
+  platform: 'simf',
   production: false,
   version: APP_VERSION,
   server: {
-    'host': '10.10.10.58',
+    'host': '10.10.10.172',
     'port': 8100
   },
   scratchWorkspaceName: 'scratch_workspace'

@@ -10,6 +10,7 @@ import {WfsFeature} from './geoserver/wfs.service';
   providedIn: 'root'
 })
 export class CommunicationService {
+  activeStep: number = 0;
 
   @Output() sidebarManager = new EventEmitter<Sidebar>();
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
@@ -20,7 +21,9 @@ export class CommunicationService {
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
   @Output() selectedFeatures$ = new EventEmitter<WfsFeature[]>();
 
-  constructor() {}
+  constructor() {
+    this.stepperEvents.subscribe((step: number) => this.activeStep = step);
+  }
 
 }
 

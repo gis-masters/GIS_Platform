@@ -4,7 +4,10 @@
 
 import {APP_VERSION} from './var';
 
-export const environment = {
+import { Environment } from './types';
+
+export const environment: Environment = {
+  platform: 'conv',
   production: false,
   version: APP_VERSION,
   server: {
