@@ -19,6 +19,7 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.CrgAuthHelper;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
@@ -64,16 +65,14 @@ public class ImportService extends BaseProcessService {
         workImport.getImportTasks().forEach(uiTask -> {
             FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(uiTask.getWorkTableName());
             ImportMqTask importMqTask = new ImportMqTask(featureDescription,
-                    new ResourceProjection(
-                            projectModel.getDatabaseName(),
-                            "public", // Источником рабочего импорта является хранилище "scratch - public схема в БД"
-                            uiTask.getLayerName()),
+                    new ResourceProjection(projectModel.getDatabaseName(), "public", uiTask.getLayerName()),
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
                             projectModel.getWorkspaceName(),
                             uiTask.getWorkTableName()),
                     uiTask.getMapping(),
-                    uiTask.getSrs()
+                    uiTask.getSrs(),
+                    CrgAuthHelper.getToken(principal)
             );
 
             importMqRequest.add(importMqTask);
