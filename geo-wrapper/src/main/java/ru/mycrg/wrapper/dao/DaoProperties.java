@@ -8,7 +8,7 @@ public class DaoProperties {
     /**
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
      */
-    public static String OBJECT_ID = "objectid";
+    public static String PRIMARY_KEY = "objectid";
 
     public static String CLASS_ID = "classid";
 

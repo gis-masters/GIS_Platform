@@ -57,7 +57,7 @@ public class ImportService {
 
             baseDaoService.delete(jdbcTemplate, targetResource);
             baseDaoService.createTable(jdbcTemplate, importTask);
-            baseDaoService.alterTable(jdbcTemplate, importTask);
+//            baseDaoService.alterTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
@@ -87,7 +87,7 @@ public class ImportService {
             while (true) {
                 // Выбираем
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(
-                        jdbcTemplate, resProjection, OBJECT_ID, DaoProperties.BATCH_SIZE, offset);
+                        jdbcTemplate, resProjection, PRIMARY_KEY, DaoProperties.BATCH_SIZE, offset);
                 if (batch.isEmpty()) {
                     break;
                 }
@@ -136,7 +136,7 @@ public class ImportService {
 
             item.forEach((key, value) -> {
                 // Добавим чтобы опираться не него при вставке
-                if (OBJECT_ID.equals(key)) {
+                if (PRIMARY_KEY.equals(key)) {
                     params.put(key, value);
                 } else if (GLOBAL_ID.equals(key)) {
                     // Генерируем globalid если его нет

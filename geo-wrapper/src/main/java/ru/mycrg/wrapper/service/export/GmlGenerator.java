@@ -36,7 +36,7 @@ import java.util.UUID;
 import static java.io.File.separator;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.BATCH_SIZE;
-import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 
 @Service
@@ -135,7 +135,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
             int offset = 0;
             while (true) {
-                List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, OBJECT_ID,
+                List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, PRIMARY_KEY,
                         BATCH_SIZE, offset);
                 if (batch.isEmpty()) {
                     break;

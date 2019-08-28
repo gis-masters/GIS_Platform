@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
-import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 
 public class ValidationUtilTest {
 
@@ -26,7 +26,7 @@ public class ValidationUtilTest {
 
         ObjectValidationResult object = new ObjectValidationResult();
         object.setClassId(CLASS_ID);
-        object.setObjectId(OBJECT_ID);
+        object.setObjectId(PRIMARY_KEY);
         object.setxMin("xmin");
         object.addPropertyViolation(propertyViolation);
         object.addObjectViolation("Some error");

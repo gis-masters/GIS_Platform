@@ -232,36 +232,17 @@ public class BaseDaoService {
      * Создаем таблицу исходя из схемы фичи.
      * Создает также таблицу "*_extension"
      */
-    public void createTable(JdbcTemplate jdbcTemplate,
-                            ImportMqTask importTask) {
-        FeatureDescriptionDto fDescription = importTask.getFeatureDescription();
+    public void createTable(JdbcTemplate jdbcTemplate, ImportMqTask importTask) {
         String targetSchema = importTask.getTargetResource().getSchemaName();
         String targetTable = importTask.getTargetResource().getTableName();
         String extensionTable = importTask.getTargetResource().getTableName() + EXTENSION_POSTFIX;
-        Integer srsCode = importTask.getSrs();
-
         String target = targetSchema + "." + targetTable;
 
-        String createExtensionTable = "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
-                "   object_id integer NOT NULL, " +
-                "   violations jsonb, " +
-                "   _xmin integer, " +
-                "   valid boolean, " +
-                "   class_id integer);" +
-                "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
-                "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
-
+        String createExtensionTable = SqlGenerator.getExtensionTableRequest(targetSchema, extensionTable);
         String createTable = SqlGenerator.prepareCreateTableRequest(importTask);
+        String createSequence = SqlGenerator.getSequenceRequest(target);
 
         log.debug("SQL create table request: {}", createTable);
-
-        String createSequence = "CREATE SEQUENCE " + target + "_objectid_seq" +
-                "    AS integer " +
-                "    START WITH 1 " +
-                "    INCREMENT BY 1 " +
-                "    NO MINVALUE " +
-                "    NO MAXVALUE " +
-                "    CACHE 1; ";
 
         jdbcTemplate.execute(createTable);
         jdbcTemplate.execute(createExtensionTable);
@@ -269,7 +250,7 @@ public class BaseDaoService {
         jdbcTemplate.execute("ALTER SEQUENCE " + target + "_objectid_seq OWNED BY " + target + ".objectid; ");
         jdbcTemplate.execute(
                 "ALTER TABLE ONLY " + target + " ALTER COLUMN objectid " +
-                "SET DEFAULT nextval('" + targetSchema + "." + targetTable + "_objectid_seq'::regclass);");
+                        "SET DEFAULT nextval('" + targetSchema + "." + targetTable + "_objectid_seq'::regclass);");
     }
 
     /**

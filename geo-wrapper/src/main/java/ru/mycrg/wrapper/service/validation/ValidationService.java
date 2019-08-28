@@ -20,7 +20,7 @@ import java.util.*;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static ru.mycrg.common.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
-import static ru.mycrg.wrapper.dao.DaoProperties.OBJECT_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
 import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
 
@@ -129,7 +129,7 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         int i = 0;
         while (i < batch.size()) {
             ObjectValidationResult objectValidationResult = validator.validate(featureDescription, batch.get(i));
-            objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), OBJECT_ID));
+            objectValidationResult.setObjectId(Util.getPropertyByKey(batch.get(i), PRIMARY_KEY));
             objectValidationResult.setClassId(Util.getPropertyByKey(batch.get(i), CLASS_ID));
             objectValidationResult.setxMin(Util.getPropertyByKey(batch.get(i), "xmin"));
 

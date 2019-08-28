@@ -36,7 +36,7 @@ public class MqSender {
     }
 
     private void send(String fanout, String key, BaseMqProcessResponse payload) {
-        log.debug("Send mqEvent with id: {} ", payload.getId());
+        log.debug("Send {} mqEvent with id: {} ", payload.getStatus(), payload.getId());
 
         rabbitTemplate.convertAndSend(fanout, key, payload);
     }

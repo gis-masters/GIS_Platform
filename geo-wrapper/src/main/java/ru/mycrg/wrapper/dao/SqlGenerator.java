@@ -1,6 +1,5 @@
 package ru.mycrg.wrapper.dao;
 
-import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
@@ -8,6 +7,8 @@ import ru.mycrg.common.import_.ImportMqTask;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
@@ -17,7 +18,7 @@ public class SqlGenerator {
         final String[] sql = {String.format("UPDATE %s.%s SET ", target.getSchemaName(), target.getTableName())};
 
         item.forEach((key, value) -> {
-            if (!OBJECT_ID.equals(key)) {
+            if (!PRIMARY_KEY.equals(key)) {
                 if (value.equals(DaoProperties.NULL_MARKER)) {
                     sql[0] = sql[0] + key + "=NULL, ";
                 } else {
@@ -26,7 +27,7 @@ public class SqlGenerator {
             }
         });
 
-        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(OBJECT_ID);
+        return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(PRIMARY_KEY);
     }
 
     public static String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
@@ -54,47 +55,117 @@ public class SqlGenerator {
     }
 
     public static String prepareCreateTableRequest(ImportMqTask importTask) {
-        FeatureDescriptionDto fDescription = importTask.getFeatureDescription();
         String targetSchema = importTask.getTargetResource().getSchemaName();
         String targetTable = importTask.getTargetResource().getTableName();
         Integer srsCode = importTask.getSrs();
         String target = targetSchema + "." + targetTable;
 
-        String createTableSql = "CREATE TABLE " + target + " (";
-        String attributesPart = "";
+        StringBuilder createTableSql = new StringBuilder();
+        createTableSql
+                .append("CREATE TABLE ")
+                .append(target)
+                .append(" (")
+                .append(PRIMARY_KEY)
+                .append(" integer NOT NULL, ");
 
+        // Сначала добавим атрибуты которые есть в схеме
+        AtomicBoolean isGeometryExist = new AtomicBoolean(false);
+        importTask.getFeatureDescription().getProperties().forEach(propertySchema -> {
+            String name = propertySchema.getName().toLowerCase();
+            if (GLOBAL_ID.equals(name)) {
+                createTableSql
+                        .append("globalid character varying(38) " +
+                                "DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, ");
+            } else {
+                switch (propertySchema.getValueType()) {
+                    case INT:
+                        createTableSql
+                                .append(name)
+                                .append(" integer, ");
+                        break;
+                    case STRING:
+                        Integer maxLength = propertySchema.getMaxLength();
+                        if (maxLength == -1) {
+                            maxLength = 255;
+                        }
 
-//        "objectid integer NOT NULL, " +
-//        "classid integer, " +
-//
-//        // random atributes
-//        "fz_mfstp smallint, " +
-//        "fz_odstp smallint, " +
-//        "fz_ingstp smallint, " +
-//        "fz_trstp smallint, " +
-//        "fz_shstp smallint, " +
-//        "fz_recstp smallint, " +
-//        "fz_orecstp smallint, " +
-//        "area numeric(38,8), " +
-//        "info_obj character varying(255), " +
-//        "constr_den numeric(38,8), " +
-//        "bld_height integer, " +
-//        "pop_den numeric(38,8), " +
-//        "population integer, " +
-//        "hzrd_class integer, " +
-//        "other character varying(255), " +
-//        "event_time integer, " +
-//        "status smallint, " +
-//        "reg_status smallint, " +
-//
-//        "globalid character varying(38) DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, "
+                        createTableSql
+                                .append(name)
+                                .append(" character varying(")
+                                .append(maxLength)
+                                .append("), ");
+                        break;
+                    case DOUBLE:
+                        createTableSql
+                                .append(name)
+                                .append(" numeric(38,8), ");
+                        break;
+                    case CHOICE:
+                        createTableSql
+                                .append(name)
+                                .append(" smallint, ");
+                        break;
+                    case GEOMETRY:
+                        isGeometryExist.set(true);
+                    default:
+                }
+            }
+        });
 
-        String endPart = "shape public.geometry," +
-                "ruleid character varying(20)" +
-                "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = " + srsCode + ")));" +
-                "ALTER TABLE ONLY " + target + " ADD CONSTRAINT " + targetTable + "_pkey PRIMARY KEY (objectid);";
+        // Затем AS_IS атрибуты
+        if (importTask.getMapping() != null) {
+            importTask
+                    .getMapping().stream()
+                    .filter(geoMapping -> AS_IS.equals(geoMapping.getTarget().getName()))
+                    .collect(Collectors.toList())
+                    .forEach(geoMapping -> {
+                        createTableSql
+                                .append(geoMapping.getSource().getName())
+                                .append(" ")
+                                .append(defineColumnType(geoMapping.getSource().getBinding()))
+                                .append(", ");
+                    });
+        }
 
-        return createTableSql;
+        if (isGeometryExist.get()) {
+            createTableSql
+                    .append("shape public.geometry, ")
+                    .append("CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = ")
+                    .append(srsCode)
+                    .append("))); ");
+        } else {
+            createTableSql.delete(createTableSql.length() - 2, createTableSql.length());
+            createTableSql
+                    .append("); ")
+                    .append("ALTER TABLE ONLY ")
+                    .append(target)
+                    .append(" ADD CONSTRAINT ")
+                    .append(targetTable)
+                    .append("_pkey PRIMARY KEY (objectid);");
+        }
+
+        return createTableSql.toString();
+    }
+
+    public static String getExtensionTableRequest(String targetSchema, String extensionTable) {
+        return "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
+                "   object_id integer NOT NULL, " +
+                "   violations jsonb, " +
+                "   _xmin integer, " +
+                "   valid boolean, " +
+                "   class_id integer);" +
+                "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
+                "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
+    }
+
+    public static String getSequenceRequest(String target) {
+        return "CREATE SEQUENCE " + target + "_objectid_seq" +
+                "    AS integer " +
+                "    START WITH 1 " +
+                "    INCREMENT BY 1 " +
+                "    NO MINVALUE " +
+                "    NO MAXVALUE " +
+                "    CACHE 1; ";
     }
 
     private static String defineColumnType(String binding) {
