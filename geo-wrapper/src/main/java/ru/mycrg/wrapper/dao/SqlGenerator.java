@@ -103,7 +103,7 @@ public class SqlGenerator {
                     case CHOICE:
                         createTableSql
                                 .append(name)
-                                .append(" smallint, ");
+                                .append(" integer, ");
                         break;
                     case GEOMETRY:
                         isGeometryExist.set(true);
