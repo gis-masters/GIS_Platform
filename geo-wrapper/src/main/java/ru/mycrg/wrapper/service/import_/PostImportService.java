@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ImportMqTask;
@@ -21,56 +20,34 @@ import java.util.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
-public class ImportService {
+public class PostImportService implements CrgImporter {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportService.class);
+    private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
+
+    private CrgImporter nextImporter;
+    private CrgImporter previousImporter;
 
     private final CrgScriptEngine scriptEngine;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
-    public ImportService(BaseDaoService baseDaoService,
-                         CrgScriptEngine scriptEngine,
-                         DatasourceFactory datasourceFactory) {
+    public PostImportService(BaseDaoService baseDaoService,
+                             CrgScriptEngine scriptEngine,
+                             DatasourceFactory datasourceFactory) {
         this.baseDaoService = baseDaoService;
         this.scriptEngine = scriptEngine;
         this.datasourceFactory = datasourceFactory;
     }
 
-    /**
-     * При импорте выполняется:
-     * - Очистка целевой таблицы и таблицы с данными валидации (*_extension)
-     * - Сам импорт
-     * - Проверка и при необходимости генерация GLOBALID
-     */
-    @Transactional
-    void doImport(ImportMqTask importTask) throws CrgImportException {
-        log.debug("Start import from: {} to: {}", importTask.printSource(), importTask.printTarget());
-
-        try {
-            String sourceDbName = importTask.getSourceResource().getDbName();
-            String targetTableName = importTask.getTargetResource().getTableName();
-            String targetSchemaName = importTask.getTargetResource().getSchemaName();
-            JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
-
-            ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
-
-            baseDaoService.delete(jdbcTemplate, targetResource);
-            baseDaoService.createTable(jdbcTemplate, importTask);
-            baseDaoService.copy(jdbcTemplate, importTask);
-        } catch (Exception e) {
-            String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
-                    importTask.printTarget());
-
-            log.error(msg, e);
-            throw new CrgImportException(msg, e);
-        }
+    @Override
+    public void setHandlers(CrgImporter nextImporter, CrgImporter previousImporter) {
+        this.nextImporter = nextImporter;
+        this.previousImporter = previousImporter;
     }
 
-    /**
-     * Дополнительная обработка данных слоя.
-     */
-    void postHandle(ImportMqTask importTask) throws CrgImportException {
+    public void doImport(ImportMqTask importTask) throws CrgImportException {
+        log.debug("Start additional handles");
+
         try {
             String sourceDbName = importTask.getSourceResource().getDbName();
             String targetTableName = importTask.getTargetResource().getTableName();
@@ -99,23 +76,20 @@ public class ImportService {
 
                 offset++;
             }
+
+            nextImporter.doImport(importTask);
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
                     importTask.printTarget());
-
             log.error(msg, e);
-            throw new CrgImportException(msg, e);
+
+            previousImporter.rollback(importTask);
         }
     }
 
-    long calculateTotalRows(List<ImportMqTask> importMqTasks) {
-        return importMqTasks.stream()
-                .map(importFeature -> {
-                    ResourceProjection source = importFeature.getSourceResource();
-                    return new ResourceProjection(source.getDbName(), source.getSchemaName(), source.getTableName());
-                })
-                .mapToLong(baseDaoService::countTotalRows)
-                .sum();
+    @Override
+    public void rollback(ImportMqTask importTask) {
+        previousImporter.rollback(importTask);
     }
 
     /**

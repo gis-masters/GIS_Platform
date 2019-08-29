@@ -8,7 +8,6 @@ import ru.mycrg.wrapper.service.CreateOrganizationRequestHandler;
 import ru.mycrg.wrapper.service.CreateProjectRequestHandler;
 import ru.mycrg.wrapper.service.export.ExportRequestHandler;
 import ru.mycrg.wrapper.service.import_.ImportRequestHandler;
-import ru.mycrg.wrapper.service.import_.ImportService;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 @Service
