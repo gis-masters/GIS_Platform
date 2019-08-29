@@ -41,27 +41,6 @@ describe('GeoUtil test', () => {
     expect('https://192.168.100.100:8100/any').toEqual(GeoUtil.replaceUrl(url4, {host: '192.168.100.100', port: 8100}));
   });
 
-  it('caulculated fields function example', () => {
-    const data = {
-      classid: 1111,
-      status: 2,
-      reg_status: 4
-    };
-
-    // Function example
-    function someFiz(obj: any) {
-      const results: any = {};
-
-      results.ruleid = obj.classid + '' + obj.status + '' + obj.reg_status;
-
-      return results;
-    }
-
-    const expected = someFiz(data);
-
-    expect('111124').toEqual(expected.ruleid);
-  });
-
   it('should correct mapping geometry between Layer and EntityType', () => {
     const entityPoint: FeatureDescription = {
       name: 'SomeName',
