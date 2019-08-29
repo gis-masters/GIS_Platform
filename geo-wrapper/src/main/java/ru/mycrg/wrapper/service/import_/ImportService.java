@@ -57,7 +57,6 @@ public class ImportService {
 
             baseDaoService.delete(jdbcTemplate, targetResource);
             baseDaoService.createTable(jdbcTemplate, importTask);
-//            baseDaoService.alterTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),

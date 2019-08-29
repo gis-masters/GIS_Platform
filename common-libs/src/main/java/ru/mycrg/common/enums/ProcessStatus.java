@@ -1,6 +1,6 @@
 package ru.mycrg.common.enums;
 
-//
+// Править в соответствии с: portal-ui/src/app/services/crg/crg-models.ts
 public enum ProcessStatus {
     PENDING,    // В процессе
 

@@ -1,28 +1,25 @@
 package ru.mycrg.wrapper.dao;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.*;
+import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.import_.ColumnProjection;
 import ru.mycrg.common.import_.GeoMapping;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.service.validation.Util;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import static ru.mycrg.wrapper.dao.DaoProperties.*;
+import static ru.mycrg.wrapper.dao.DaoProperties.AS_IS;
+import static ru.mycrg.wrapper.dao.DaoProperties.EXTENSION_POSTFIX;
 
 @Service
 public class BaseDaoService {
@@ -147,48 +144,6 @@ public class BaseDaoService {
     }
 
     /**
-     * Добавление в рабочую таблицу колонок которые имеют тип импорта "AsIs" <p>
-     * добавление наших служебных колонок типа: ruleId
-     *
-     * @param jdbcTemplate Коннекшн к БД
-     * @param request      Даные для импорта
-     */
-    @Transactional
-    public void alterTable(JdbcTemplate jdbcTemplate, ImportMqTask request) {
-        String targetSchema = request.getTargetResource().getSchemaName();
-        String targetTable = request.getTargetResource().getTableName();
-
-        List<GeoMapping> mapping = request.getMapping();
-
-//        LayerInfo source = new LayerInfo(RULE_ID, "java.lang.String");
-//        ColumnProjection target = new ColumnProjection(AS_IS, AS_IS);
-//        GeoMapping geoMapping = new GeoMapping(source, target);
-//        addRuleIdMapping(mapping, geoMapping);
-
-        if (isNeedPrepareTable(mapping)) {
-            String alterRequest = SqlGenerator.prepareAlterRequest(mapping, targetSchema, targetTable);
-
-            log.debug("SQL alter request: {}", alterRequest);
-
-            jdbcTemplate.execute(alterRequest);
-        } else {
-            log.debug("Nothing to prepare for: {}", request.getTargetResource().toString());
-        }
-
-//        mapping.remove(geoMapping);
-    }
-
-    private void addRuleIdMapping(List<GeoMapping> mapping, GeoMapping geoMapping) {
-        Optional<GeoMapping> ruleIdMapping = mapping.stream()
-                .filter(item -> RULE_ID.equals(item.getSource().getName().toLowerCase()))
-                .findFirst();
-
-        if (!ruleIdMapping.isPresent()) {
-            mapping.add(geoMapping);
-        }
-    }
-
-    /**
      * Подразумевает очистку таблиц впаре с таблицей "_extension"
      *
      * @param jdbcTemplate Коннекшн к БД
@@ -285,47 +240,6 @@ public class BaseDaoService {
         });
     }
 
-    /**
-     * Инициализация шаблонной структуры 10 приказа. <p>
-     * <p>
-     * В указанной БД создается указанная схема, если схема существует и наполнена таблицами ничего сделано не будет.
-     * <p>
-     * Шаблон разворачивается следубщим образом, есть sql скрипты сгенереные из БД, но в них указана дефолтная схема
-     * "fiz", которая переименовывается в нужное название уже после.
-     *
-     * @param dbName     Имя БД
-     * @param schemaName Имя схемы
-     */
-    public void initP10Template(String dbName, String schemaName) throws SQLException {
-        log.debug("Инициализация шаблонной БД Для: {}", dbName + "." + schemaName);
-
-        HikariDataSource datasource = datasourceFactory.getDatasource(dbName);
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
-
-        String checkTablesSql = "select count(*) from information_schema.tables where table_schema = '"
-                + schemaName + "' AND table_type = 'BASE TABLE'";
-        int tableCounter = jdbcTemplate.queryForObject(checkTablesSql, Integer.class);
-        if (tableCounter > 400) {
-            log.debug("Инициализация не требуется");
-            return;
-        }
-
-        Resource schemaFile = resourceLoader.getResource("classpath:db/p10Template.sql");
-        Resource dataFile = resourceLoader.getResource("classpath:db/data.sql");
-
-        // Create schema
-        ScriptUtils.executeSqlScript(datasource.getConnection(), schemaFile);
-
-        // Insert data
-        ScriptUtils.executeSqlScript(datasource.getConnection(), dataFile);
-
-        // Rename schema
-        jdbcTemplate.execute("ALTER SCHEMA fiz RENAME TO " + schemaName);
-
-        datasourceFactory.removeDatasourceByDbName(dbName);
-    }
-
     private String handleInsertMappingColumns(List<GeoMapping> mapping) {
         String pre = " (";
         String post = ") ";
@@ -355,11 +269,6 @@ public class BaseDaoService {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
-    }
-
-    private boolean isNeedPrepareTable(List<GeoMapping> mapping) {
-        return mapping.stream()
-                .anyMatch(geoMapping -> AS_IS.equals(geoMapping.getTarget().getType()));
     }
 
 }
