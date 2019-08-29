@@ -5,37 +5,45 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.exceptions.CrgImportException;
+import ru.mycrg.wrapper.queue.MqSender;
+
+import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 
 /**
  * Класс "делает" первый шаг в процессе импорта.
  * В случае неудачи откатывает свои изменения и генерит ошибку.
  */
 @Service
-public class InitialImportService implements CrgImporter {
+public class InitialImportService implements CrgImportChain {
 
     private static final Logger log = LoggerFactory.getLogger(InitialImportService.class);
 
-    private CrgImporter nextImporter;
-    private CrgImporter previousImporter;
+    private CrgImportChain nextImporter;
+    private CrgImportChain previousImporter;
 
+    private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public InitialImportService(BaseDaoService baseDaoService,
+                                MqSender mqSender,
                                 DatasourceFactory datasourceFactory) {
+        this.mqSender = mqSender;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
 
     @Override
-    public void setHandlers(CrgImporter nextImporter, CrgImporter previousImporter) {
-        this.nextImporter = nextImporter;
-        this.previousImporter = previousImporter;
+    public void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler) {
+        this.nextImporter = nextHandler;
+        this.previousImporter = previousHandler;
     }
 
     /**
@@ -45,7 +53,7 @@ public class InitialImportService implements CrgImporter {
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
     @Transactional
-    public void doImport(ImportMqTask importTask) {
+    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
         log.debug("Start first stage of import. From: {} to: {}", importTask.printSource(), importTask.printTarget());
 
         try {
@@ -60,19 +68,31 @@ public class InitialImportService implements CrgImporter {
             baseDaoService.createTable(jdbcTemplate, importTask);
             baseDaoService.copy(jdbcTemplate, importTask);
 
-            nextImporter.doImport(importTask);
+            nextImporter.handle(mqRequest, importTask);
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
                     importTask.printTarget());
 
             log.error(msg, e);
-            throw new CrgImportException(msg, e);
+
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest,
+                            new ImportMqResponse(importTask), TASK_ERROR, "Error", e.getMessage()));
         }
     }
 
     @Override
     public void rollback(ImportMqTask importTask) {
-        log.warn("I must do rollback 1");
+        log.warn("Do rollback of import feature: {}", importTask.getFeatureDescription().getName());
+
+        String sourceDbName = importTask.getSourceResource().getDbName();
+        String targetTableName = importTask.getTargetResource().getTableName();
+        String targetSchemaName = importTask.getTargetResource().getSchemaName();
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
+
+        ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
+
+        baseDaoService.delete(jdbcTemplate, targetResource);
     }
 
 }

@@ -4,48 +4,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.CrgImportException;
+import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
-public class PostImportService implements CrgImporter {
+public class PostImportService implements CrgImportChain {
 
     private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
 
-    private CrgImporter nextImporter;
-    private CrgImporter previousImporter;
+    private CrgImportChain nextImporter;
+    private CrgImportChain previousImporter;
 
+    private final MqSender mqSender;
     private final CrgScriptEngine scriptEngine;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public PostImportService(BaseDaoService baseDaoService,
                              CrgScriptEngine scriptEngine,
+                             MqSender mqSender,
                              DatasourceFactory datasourceFactory) {
-        this.baseDaoService = baseDaoService;
+        this.mqSender = mqSender;
         this.scriptEngine = scriptEngine;
+        this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
 
     @Override
-    public void setHandlers(CrgImporter nextImporter, CrgImporter previousImporter) {
-        this.nextImporter = nextImporter;
-        this.previousImporter = previousImporter;
+    public void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler) {
+        this.nextImporter = nextHandler;
+        this.previousImporter = previousHandler;
     }
 
-    public void doImport(ImportMqTask importTask) throws CrgImportException {
+    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) throws CrgImportException {
         log.debug("Start additional handles");
 
         try {
@@ -77,11 +85,14 @@ public class PostImportService implements CrgImporter {
                 offset++;
             }
 
-            nextImporter.doImport(importTask);
+            nextImporter.handle(mqRequest, importTask);
         } catch (Exception e) {
-            String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
-                    importTask.printTarget());
+            String msg = "Не удалось выполнить доп. обработку ресурса: " + importTask.printTarget();
             log.error(msg, e);
+
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest,
+                            new ImportMqResponse(importTask), TASK_ERROR, "", msg));
 
             previousImporter.rollback(importTask);
         }
