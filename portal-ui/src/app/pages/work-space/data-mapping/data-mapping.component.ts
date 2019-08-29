@@ -1,8 +1,8 @@
-import {Subject} from 'rxjs';
+import {interval, Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {debounceTime, filter, flatMap, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {ImportFlow} from '../../../services/geoserver/import/importFlow';
 import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
@@ -13,7 +13,8 @@ import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {ProjectsService} from '../../../services/crg/projects.service';
-import {CrgProcess} from '../../../services/crg/crg-models';
+import {CrgProcess, ProcessStatus} from '../../../services/crg/crg-models';
+import {OrganizationService} from '../../../services/crg/organization.service';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -29,12 +30,16 @@ export class DataMappingComponent implements OnInit, OnDestroy {
   isImportFinished = false;
   isWorkImportInited = false;
 
+  private CHECK_STATUS_INTERVAL = 1000;
+  private WAIT_SERVER_RESPONSE_TIMER = 120000;
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private workspacesService: WorkspacesService,
               private importService: ImportService,
               private workspaceService: WorkspacesService,
               private projectsService: ProjectsService,
+              private organizationService: OrganizationService,
               private stylesService: StylesService,
               private layersService: LayersService,
               private storageService: LocalStorageService,
@@ -105,10 +110,37 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         .doWorkImport(workImport)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((crgProcess: CrgProcess) => {
-          console.log('--------------', crgProcess);
 
-          this.isWorkImportInited = false;
-          this.isImportFinished = true;
+          interval(this.CHECK_STATUS_INTERVAL)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              this.organizationService
+                  .getProcessById(crgProcess.id)
+                  .pipe(takeUntil(this.unsubscribe$))
+                  .subscribe((response: CrgProcess) => {
+                    if (response.status === ProcessStatus.DONE) {
+                      this.layersService.fetchLayers(workImport.projectModel.crgProject);
+
+                      this.isWorkImportInited = false;
+                      this.isImportFinished = true;
+
+                      this.unsubscribe$.next();
+                    } else if (response.status === ProcessStatus.ERROR) {
+                      this.isWorkImportInited = false;
+                      this.isImportFinished = false;
+
+                      this.unsubscribe$.next();
+                    }
+                  });
+            });
+
+          // Прибьем проверку статуса если она зятянулась
+          const waitTimer = setTimeout(() => {
+            this.isWorkImportInited = false;
+            this.isImportFinished = false;
+
+            this.unsubscribe$.next();
+          }, this.WAIT_SERVER_RESPONSE_TIMER);
         }, errorResponse => {
           this.logger.info('ERROR: ', errorResponse);
 

@@ -103,7 +103,7 @@ public class OrganizationController {
                                                         Principal principal) {
         log.debug("Get organization task: {}", taskId);
 
-        return ResponseEntity.ok(organizationService.getProcessById(taskId));
+        return ResponseEntity.ok(organizationService.getProcess(taskId));
     }
 
 }

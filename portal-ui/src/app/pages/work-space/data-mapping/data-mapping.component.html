@@ -36,9 +36,9 @@
               *ngIf="isImportFinished">
         &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
       </button>
-      <button mat-stroked-button class="float-right crg-card-footer-b" [disabled]="!importFlow.work_import.isWorkImportReady"
-              (click)="startWorkImport()"
-              *ngIf="!isImportFinished">
+      <button mat-stroked-button class="float-right crg-card-footer-b" *ngIf="!isImportFinished"
+              [disabled]="!importFlow.work_import.isWorkImportReady"
+              (click)="startWorkImport()">
         <span *ngIf="!isWorkImportInited">Импортировать</span>
 
         <img src="../../../../assets/images/loader.gif" alt="logo"

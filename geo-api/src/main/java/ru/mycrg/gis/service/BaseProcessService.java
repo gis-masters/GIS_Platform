@@ -42,6 +42,13 @@ public abstract class BaseProcessService implements Processable {
         return processRepository.save(new Process(userName, title, type, MapperUtil.convertToJsonNode(extra)));
     }
 
+    public Process getProcess(long taskId) {
+        return processRepository
+                .findById(taskId)
+                .orElseThrow(() -> new CrgFailedException("Not found process by id: " + taskId));
+    }
+
+
     public Process getProcessById(Long id) {
         Optional<Process> processFromCache = getProcessFromCache(id);
         if (processFromCache.isPresent()) {
@@ -57,7 +64,7 @@ public abstract class BaseProcessService implements Processable {
 
                 return optionalProcess.get();
             } else {
-                throw new CrgFailedException("Not found import process by id: " + id);
+                throw new CrgFailedException("Not found process by id: " + id);
             }
         }
     }
