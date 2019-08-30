@@ -43,4 +43,4 @@ export class WorkspaceHeaderComponent implements AfterViewInit, OnDestroy {
       this.moduleRef.destroy();
     }
   }
-};
+}

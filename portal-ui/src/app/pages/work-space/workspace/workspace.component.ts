@@ -4,12 +4,10 @@ import {filter, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {AuthService} from '../../../services/auth.service';
 import {FizLogger} from '../../../services/logger/fiz.logger';
-import {UserInfoModel} from '../../../services/crg/users.service';
-import {EventService, IEvent} from '../../../services/event.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
+import {ActionType, Sidebar, SidebarType} from '../../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-workspace',

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
@@ -19,8 +19,8 @@ export class WorkspaceHeaderComponent implements OnDestroy, OnInit {
   notificationCounter = 0;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
-  
-  constructor (private route: ActivatedRoute,
+
+  constructor(private route: ActivatedRoute,
               private authService: AuthService,
               private eventService: EventService,
               private sideBarManager: SideBarManager,
@@ -59,4 +59,4 @@ export class WorkspaceHeaderComponent implements OnDestroy, OnInit {
   notification() {
     this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
   }
-};
+}

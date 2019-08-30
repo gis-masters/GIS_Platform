@@ -82,19 +82,19 @@
             "simfProduction": {
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convProd.ts"
+                "with": "src/environments/environment.simfProd.ts"
               }]
             },
             "simfTest": {
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convTest.ts"
+                "with": "src/environments/environment.simfTest.ts"
               }]
             },
             "simfStaging": {
               "fileReplacements": [{
                 "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convStaging.ts"
+                "with": "src/environments/environment.simfStaging.ts"
               }]
             },
             "simfDev": {
