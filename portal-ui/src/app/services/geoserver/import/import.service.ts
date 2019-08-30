@@ -4,7 +4,6 @@ import {ImportFlow} from './importFlow';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
 import {GeoUtil} from '../../util/GeoUtil';
-import {BaseService} from '../../base.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LocalStorageService} from '../../local-storage.service';
 import {ServerPropertiesService} from '../../server-properties.service';
@@ -36,6 +35,12 @@ export class ImportService {
     'CANCELED'
   ];
 
+  taskPendingCodes = [
+    'PENDING',
+    'READY',
+    'RUNNING'
+  ];
+
   importFlow = new ImportFlow();
 
   private importUrl = this.serverProp.geoServerUrl + '/rest/imports';
@@ -45,10 +50,13 @@ export class ImportService {
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
-              private baseService: BaseService,
               private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     logger.info('ImportService start');
+  }
+
+  isTaskPending (task: ImportTaskFull | ImportTaskShort) {
+    return this.taskPendingCodes.includes(task.state);
   }
 
   isTaskError (task: ImportTaskFull | ImportTaskShort) {
@@ -122,17 +130,12 @@ export class ImportService {
     return forkJoin(observableTasks);
   }
 
-  getFullImportTask(task: ImportTaskShort): Observable<ImportLayer> {
-    return this.http.get<ImportLayer>(task.href);
+  getFullImportTask(task: ImportTaskShort): Observable<{task: ImportTaskFull}> {
+    return this.http.get<{task: ImportTaskFull}>(task.href);
   }
 
-  getFullImportTasks(importTasks: ImportTaskShort[]): Observable<ImportTaskFull[]> {
-    const observableTasks = [];
-    importTasks.forEach((importTask: ImportTaskShort) => {
-      observableTasks.push(this.getFullImportTask(importTask));
-    });
-
-    return forkJoin(observableTasks);
+  getImportTaskProgress(task: ImportTaskFull): Observable<ImportTaskProgress> {
+    return this.http.get<ImportTaskProgress>(task.progress);
   }
 
   checkImportStatus(url: string) {
@@ -194,6 +197,14 @@ export interface ImportTaskFull {
   href: string;
   state: string;
   layer: NameHrefProjection;
+  progress: string;
+}
+
+export interface ImportTaskProgress {
+  progress?: string;
+  total?: string;
+  state: string;
+  message?: string;
 }
 
 export interface TaskItem {

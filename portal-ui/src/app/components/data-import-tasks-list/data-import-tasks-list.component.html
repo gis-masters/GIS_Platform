@@ -1,14 +1,19 @@
 <div class="data-import-tasks-list">
   <table class="data-import-tasks-list__table">
     <tr
-        *ngFor="let task of tasks"
+        *ngFor="let task of extendedTasks"
         class="data-import-tasks-list__task"
         [ngClass]="{'data-import-tasks-list__task_error': isError(task)}">
       <td class="data-import-tasks-list__task-name">
         {{ task.layer?.name }}
       </td>
-      <td class="data-import-tasks-list__task-description">
+      <td class="data-import-tasks-list__task-status">
         {{ getDescription(task) }}
+      </td>
+      <td class="data-import-tasks-list__task-progress">
+        {{ task.progressValue?.progress }}
+        {{ task.progressValue?.total ? '/' : '' }}
+        {{ task.progressValue?.total }}
       </td>
     </tr>
   </table>

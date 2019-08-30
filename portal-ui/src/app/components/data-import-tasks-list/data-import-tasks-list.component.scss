@@ -16,4 +16,13 @@
   &__task-name {
     padding: 4px 20px 4px 10px;
   }
+
+  &__task-status {
+    padding: 4px 0;
+  }
+
+  &__task-progress {
+    padding: 4px 10px 4px 20px;
+    text-align: right;
+  }
 }

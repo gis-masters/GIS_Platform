@@ -1,12 +1,11 @@
+import * as _ from 'lodash';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
-import {MatSnackBar} from '@angular/material';
 import {CommunicationService} from '../../services/communication.service';
 import {
   ImportService,
-  ImportTaskFull,
   ImportTasks,
   ImportTaskShort,
   InputStartResponseDto
@@ -32,16 +31,15 @@ export class DataImportComponent implements OnDestroy {
   hasBaseDropZoneOver = false;
 
   errors: string[] = [];
-  errorTasks: ImportTaskFull[] = [];
+  tasks: ImportTaskShort[] = [];
 
   private CHECK_STATUS_INTERVAL = 1000;
-  private WAIT_SERVER_RESPONSE_TIMER = 120000;
+  private WAIT_SERVER_RESPONSE_TIMER = 1200000;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private router: Router,
-              private snackBar: MatSnackBar,
               private importService: ImportService,
               private communicationService: CommunicationService) {
     this.communicationService.stepperEvents.emit(2);
@@ -86,7 +84,7 @@ export class DataImportComponent implements OnDestroy {
   clearFiles () {
     this.uploader.clearQueue();
     this.errors = [];
-    this.errorTasks = [];
+    this.tasks = [];
     this.isUploadComplete = false;
     this.isWrongExt = false;
     this.isImportFailed = false;
@@ -156,17 +154,21 @@ export class DataImportComponent implements OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
               successResponse => {
+                const { tasks } = successResponse.import;
+
+                if (!_.isEqual(tasks, this.tasks)) {
+                  this.tasks = tasks;
+                }
+
                 if (successResponse.import.state === 'COMPLETE') {
                   this.unsubscribe$.next();
                   clearTimeout(waitTimer);
-
                   this.isImportInited = false;
                   this.isUploadComplete = true;
                   this.logger.info('Success uploaded');
                 } else {
-                  const { tasks } = successResponse.import;
                   if (tasks.some(task => this.importService.isTaskError(task))) {
-                    this.handleErrorsTasks(successResponse.import.tasks);
+                    this.handleErrorsTasks();
                   }
                 }
               },
@@ -180,18 +182,10 @@ export class DataImportComponent implements OnDestroy {
     }, this.WAIT_SERVER_RESPONSE_TIMER);
   }
 
-  private handleErrorsTasks(errorTasks: ImportTaskShort[]) {
-    of(errorTasks)
-      .pipe(
-        flatMap((tasks: ImportTaskShort[]) => this.importService.getFullImportTasks(tasks)),
-        takeUntil(this.unsubscribe$)
-      ).subscribe((response: any[]) => {
-        this.errorTasks = response.map(value => value.task);
-
-        this.isImportFailed = true;
-        this.isImportInited = false;
-        this.unsubscribe$.next();
-      });
+  private handleErrorsTasks() {
+    this.isImportFailed = true;
+    this.isImportInited = false;
+    this.unsubscribe$.next();
   }
 
   private handleError(msg: string, response?: any, errors?: string[]) {
