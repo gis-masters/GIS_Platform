@@ -23,15 +23,15 @@
             "outputHashing": "all",
             "sourceMap": false,
             "extractLicenses": true,
-            "buildOptimizer": true,
+            "buildOptimizer": false,
             "vendorChunk": true,
-            "aot": true,
+            "aot": false,
             "extractCss": true,
             "namedChunks": false,
 
             "lazyModules": [
-              "src/app/components/workspace-header/workspace-header@conv.module",
-              "src/app/components/workspace-header/workspace-header@simf.module"
+              "./src/app/components/workspace-header/workspace-header@conv.module",
+              "./src/app/components/workspace-header/workspace-header@simf.module"
             ],
 
             "assets": [
