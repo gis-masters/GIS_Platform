@@ -130,6 +130,11 @@ public class SqlGenerator {
         if (isGeometryExist.get()) {
             createTableSql
                     .append("shape public.geometry, ")
+                    .append("CONSTRAINT ")
+                    .append(targetTable)
+                    .append("_pkey PRIMARY KEY (")
+                    .append(PRIMARY_KEY)
+                    .append("), ")
                     .append("CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = ")
                     .append(srsCode)
                     .append("))); ");

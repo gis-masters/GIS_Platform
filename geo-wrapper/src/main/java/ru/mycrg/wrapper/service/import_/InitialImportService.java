@@ -8,13 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.common.import_.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
 
+import java.util.List;
+
 import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
+import static ru.mycrg.wrapper.dao.DaoProperties.AS_IS;
+import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
 
 /**
  * Класс "делает" первый шаг в процессе импорта.
@@ -64,8 +67,21 @@ public class InitialImportService implements CrgImportChain {
 
             ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
+            List<GeoMapping> mapping = importTask.getMapping();
+            GeoMapping ruleIdMapping = new GeoMapping(
+                    new LayerInfo(RULE_ID, "String"),
+                    new ColumnProjection(AS_IS, AS_IS)
+            );
+
+            if (ruleIdNotExist(mapping)) {
+                mapping.add(ruleIdMapping);
+            }
+
             baseDaoService.delete(jdbcTemplate, targetResource);
             baseDaoService.createTable(jdbcTemplate, importTask);
+
+            mapping.remove(ruleIdMapping);
+
             baseDaoService.copy(jdbcTemplate, importTask);
 
             nextImporter.handle(mqRequest, importTask);
@@ -93,6 +109,12 @@ public class InitialImportService implements CrgImportChain {
         ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
         baseDaoService.delete(jdbcTemplate, targetResource);
+    }
+
+    private boolean ruleIdNotExist(List<GeoMapping> mapping) {
+        return mapping
+                .stream()
+                .noneMatch(geoMapping -> RULE_ID.equals(geoMapping.getSource().getName().toLowerCase()));
     }
 
 }
