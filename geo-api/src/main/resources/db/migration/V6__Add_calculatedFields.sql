@@ -10,16 +10,128 @@ INSERT INTO public.custom_rules(class_name, calculated_fields)
                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-  VALUES ('natureprotectarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+  VALUES ('street_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                         'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('streetv_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                          'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('road_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                       'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('pipeline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                           'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('public_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                          'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('recreation_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('sport_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                         'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('authorityservice_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                    'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('railwayfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('emergencyprotectionobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('sewerfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('watertransportobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('cemetery_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('health_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('telecomfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('thermalfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('publictransportobj', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('publictransportobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('autoservice_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('mineraldep_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('airtransportobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('education_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('naturalriskzone_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('natureprotectarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('natureprotectarea_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                     'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
   VALUES ('technoriskarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+                            'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-  VALUES ('wastefacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('technoriskarea_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('prison_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                          'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('social_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                          'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('wastefacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('waterfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
   VALUES ('coastalprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
@@ -30,20 +142,36 @@ VALUES ('otherobject', 'var results = {}; var k = 3; if(obj.reg_status < k) {k =
                        'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('publictransportline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('otherobject_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('publictransport_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                        'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('resortarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('resortarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                        'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('resortarea_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('forestpark', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                       'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('culture_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                           'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('agriculture', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                       'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('agriculture_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('waterways', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
@@ -54,7 +182,15 @@ VALUES ('wildlifeprotection', 'var results = {}; var k = 3; if(obj.reg_status < 
                      'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('wildlifeprotection_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                    'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('heritagearea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('heritage_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -62,8 +198,20 @@ VALUES ('electricpowerstation', 'var results = {}; var k = 3; if(obj.reg_status 
                         'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('electricpowerstation_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                        'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('publictransportservice', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('publictransportservice_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                        'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('publictransportstops_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                      'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('historicsettlement', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
@@ -82,11 +230,19 @@ VALUES ('transplogisticobj', 'var results = {}; var k = 3; if(obj.reg_status < k
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('transplogisticobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                     'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('sanitaryprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('hydraulicstructures', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('hydraulicstructures_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('hydraulicstructures_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -94,7 +250,7 @@ VALUES ('drinkwaterprotectionzone', 'var results = {}; var k = 3; if(obj.reg_sta
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('gaspipeline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('gaspipeline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -106,12 +262,16 @@ VALUES ('resortprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status 
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('thermalpipeline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('thermalpipeline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('gasfacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('gasfacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                         'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('gasfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('mineralarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
@@ -119,23 +279,39 @@ VALUES ('mineralarea', 'var results = {}; var k = 3; if(obj.reg_status < k) {k =
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('engsanitarygapzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('publictransportobj', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('transportobj_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('envmonitoring', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('transportobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('envmonitoring', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                           'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('envmonitoring_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('resort', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('resort_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                          'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('servicefacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+                           'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('servicefacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('heritageprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
@@ -150,6 +326,10 @@ VALUES ('envdanger', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = o
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('envdanger_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                             'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('otherprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
@@ -158,7 +338,7 @@ VALUES ('protectionzone', 'var results = {}; var k = 3; if(obj.reg_status < k) {
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('admborder', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('admborder_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -174,7 +354,19 @@ VALUES ('customcontrol', 'var results = {}; var k = 3; if(obj.reg_status < k) {k
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('customcontrol_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('hydro', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('hydro_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('hydro_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -182,7 +374,7 @@ VALUES ('transpprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status 
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('railwayline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('railwayline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -202,11 +394,11 @@ VALUES ('natureprotectionzone', 'var results = {}; var k = 3; if(obj.reg_status 
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('sewerpipeline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('sewerpipeline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('electricline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+VALUES ('electricline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
@@ -230,29 +422,45 @@ VALUES ('specialeconomicarea', 'var results = {}; var k = 3; if(obj.reg_status <
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('electrictransformer', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+  VALUES ('electrictransformer', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('electrictransformer_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                       'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+VALUES ('telecomnetworkline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('telecomnetworkline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('engprotectionobj_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('engprotectionobj', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('engprotectionobj_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                    'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('manufacturing', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('manufacturing', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                           'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('manufacturing_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                                 'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
 VALUES ('admemo', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
                                   'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('oilpipeline', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('oilpipeline_line', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                              'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
 
 INSERT INTO public.custom_rules(class_name, calculated_fields)
-VALUES ('oilfacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
-                                  'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+  VALUES ('oilfacility', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                         'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
+
+INSERT INTO public.custom_rules(class_name, calculated_fields)
+  VALUES ('oilfacility_point', 'var results = {}; var k = 3; if(obj.reg_status < k) {k = obj.reg_status} ' ||
+                               'results.ruleid = '''' + obj.classid + k + obj.status; return results;');
