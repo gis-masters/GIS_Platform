@@ -236,7 +236,11 @@ public class BaseDaoService {
 
             log.trace("update SQL: {}", sqlUpdate);
 
-            jdbcTemplate.update(sqlUpdate);
+            try {
+                jdbcTemplate.update(sqlUpdate);
+            } catch (Exception e) {
+                log.warn("Не удалось обновить строку: {}", item.values());
+            }
         });
     }
 

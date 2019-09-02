@@ -83,6 +83,8 @@ public class PostImportService implements CrgImportChain {
                 baseDaoService.updateBatch(jdbcTemplate, resProjection, touchedParams);
 
                 offset++;
+
+                log.debug("Update next batch: {}", offset);
             }
 
             nextImporter.handle(mqRequest, importTask);
@@ -138,6 +140,11 @@ public class PostImportService implements CrgImportChain {
                     if (value instanceof String) {
                         String decoded =
                                 new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+
+                        if (decoded.contains("'")) {
+                            decoded = decoded.replace("'", "''");
+                        }
+
                         params.put(key, decoded);
                     } else if (value instanceof Integer) {
                         // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
