@@ -4,6 +4,10 @@
   right: 0;
   left: 0;
 
+  display: flex;
+  align-content: space-between;
+  align-items: center;
+
   height: 55px;
   padding: 4px 16px;
 
@@ -11,4 +15,11 @@
   background: #3f51b5;
 
   font-weight: 500;
+
+  &__title {
+    align-self: flex-start;
+    flex-grow: 1;
+
+    font-size: 18px;
+  }
 }

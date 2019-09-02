@@ -1,17 +1,6 @@
 @import 'workspace-header@common.component.scss';
 
 .workspace-header {
-  display: flex;
-  align-content: space-between;
-  align-items: center;
-
-  &__org-name {
-    align-self: flex-start;
-    flex-grow: 1;
-
-    font-size: 18px;
-  }
-
   &__notification {
     margin-right: 20px;
 

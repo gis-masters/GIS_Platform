@@ -9,22 +9,25 @@ import {LocalStorageService} from '../../services/local-storage.service';
 import {EventService, IEvent} from '../../services/event.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
+import { WorkspaceHeader } from './workspace-header@common.component';
+
 @Component({
   selector: 'crg-workspace-header',
   templateUrl: './workspace-header@conv.component.html',
   styleUrls: ['./workspace-header@conv.component.scss']
 })
-export class WorkspaceHeaderComponent implements OnDestroy, OnInit {
+export class WorkspaceHeaderComponent extends WorkspaceHeader implements OnDestroy, OnInit {
   userModel: UserInfoModel;
   notificationCounter = 0;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private route: ActivatedRoute,
-              private authService: AuthService,
+              protected authService: AuthService,
               private eventService: EventService,
               private sideBarManager: SideBarManager,
               private storageService: LocalStorageService) {
+    super(authService);
     this.eventService
         .events$
         .pipe(
@@ -39,8 +42,6 @@ export class WorkspaceHeaderComponent implements OnDestroy, OnInit {
         .subscribe(data => {
           const userModel = data['orgInfo'];
           if (userModel) {
-
-
             this.userModel = userModel;
             this.storageService.saveUserModel(userModel);
           }
@@ -50,10 +51,6 @@ export class WorkspaceHeaderComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  logout() {
-    this.authService.logout();
   }
 
   notification() {
