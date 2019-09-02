@@ -13,10 +13,10 @@ import {
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'crg-header',
+  selector: 'crg-home',
   template: '<div #here></div>'
 })
-export class HeaderComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements AfterViewInit, OnDestroy {
   moduleRef: NgModuleRef<NgModule>;
 
   @ViewChild('here', { read: ViewContainerRef })
@@ -25,8 +25,8 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   constructor(private compiler: Compiler, private injector: Injector) {}
 
   ngAfterViewInit(): void {
-    import(`./header@${environment.platform}.module`)
-      .then(m => m.HeaderModule)
+    import(`./home@${environment.platform}.module`)
+      .then(m => m.HomeModule)
       .then(lazyModule => {
         this.compiler.compileModuleAsync(lazyModule).then(ngModuleFactory => {
           this.moduleRef = ngModuleFactory.create(this.injector);

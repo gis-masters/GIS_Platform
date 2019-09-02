@@ -15,6 +15,8 @@ import {FileUploadModule} from 'ng2-file-upload';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
+import {LoginFormModule} from './components/login-form/login-form.module';
+
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 
@@ -52,6 +54,7 @@ import {DataImportComponent} from './components/data-import/data-import.componen
 import {DataImportTasksListComponent} from './components/data-import-tasks-list/data-import-tasks-list.component';
 import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
+import {HomeComponent} from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +92,8 @@ import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-
     DataImportComponent,
     DataImportTasksListComponent,
     AtleastPipe,
-    WorkspaceHeaderComponent
+    WorkspaceHeaderComponent,
+    HomeComponent
   ],
   imports: [
     HttpClientModule,
@@ -110,7 +114,9 @@ import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-
       serverLogLevel: NgxLoggerLevel.WARN
     }),
     NgxMaskModule.forRoot(),
-    NgxDatatableModule
+    NgxDatatableModule,
+
+    LoginFormModule
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -121,6 +127,5 @@ import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-
   ],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }

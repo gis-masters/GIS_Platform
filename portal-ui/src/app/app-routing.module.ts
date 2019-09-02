@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {LoginComponent} from './pages/login/login.component';
+import {LoginPageComponent} from './pages/login/login-page.component';
 import {AboutComponent} from './pages/about/about.component';
 import {AuthGuardService} from './services/auth-guard.service';
 import {MapComponent} from './pages/work-space/map/map.component';
-import {LandingComponent} from './pages/landing/landing.component';
+import {HomePageComponent} from './pages/home/home-page.component';
 import {RegisterComponent} from './pages/register/register.component';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {WorkflowGuardService} from './services/workflow-guard.service';
@@ -16,8 +16,8 @@ import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping
 import {OrganizationInfoResolver} from './services/resolvers/project-resolver.service';
 
 const routes: Routes = [
-  {path: '', component: LandingComponent},
-  {path: 'login', component: LoginComponent},
+  {path: '', component: HomePageComponent},
+  {path: 'login', component: LoginPageComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'recovery', component: RecoveryComponent},
   {path: 'about', component: AboutComponent},
@@ -51,9 +51,9 @@ export class AppRoutingModule {
 
 export const routingComponents = [
   MapComponent,
-  LoginComponent,
+  LoginPageComponent,
   AboutComponent,
-  LandingComponent,
+  HomePageComponent,
   RegisterComponent,
   RecoveryComponent,
   WorkspaceComponent,

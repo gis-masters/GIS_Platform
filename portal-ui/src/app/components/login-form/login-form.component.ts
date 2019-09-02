@@ -1,20 +1,19 @@
-import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
 import {Component, OnDestroy} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {FormBuilder, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
-import {LocalStorageService} from '../../services/local-storage.service';
-import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
-import {takeUntil} from 'rxjs/operators';
+import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+
+import {AuthService} from '../../services/auth.service';
+
+import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
 
 @Component({
-  selector: 'crg-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'crg-login-form',
+  templateUrl: './login-form.component.html',
+  styleUrls: ['./login-form.component.scss']
 })
-export class LoginComponent implements OnDestroy {
+export class LoginFormComponent implements OnDestroy {
   isWrongPassword = false;
   isUserDisabled = false;
 
@@ -26,11 +25,8 @@ export class LoginComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private fb: FormBuilder,
-              private http: HttpClient,
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
-              private storageService: LocalStorageService,
-              private logger: NGXLogger,
               private router: Router) {
     this.authService.validateAuth();
   }
@@ -53,8 +49,6 @@ export class LoginComponent implements OnDestroy {
       this.authService.authenticate(credentials)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((authModel: AuthModel) => {
-            this.logger.info('Authenticate success');
-
             this.authService.authenticated = true;
             this.tokenStorage.saveAuthModel(authModel);
             this.tokenStorage.saveAccessToken(authModel.access_token);
@@ -62,21 +56,17 @@ export class LoginComponent implements OnDestroy {
 
             this.router.navigateByUrl('/workspace/projects');
           }, response => {
-            this.logger.error('error: ', response);
-
             this.authService.authenticated = false;
 
             if (response.error && response.error.error_description === 'User is disabled') {
               this.isUserDisabled = true;
             } else if (response.error.error_description === 'Bad credentials') {
               this.isWrongPassword = true;
-            } else {
-              this.logger.error('Other error type: ', response.error);
             }
           });
     } else {
       alert('Not valid form!');
     }
   }
-
 }
+

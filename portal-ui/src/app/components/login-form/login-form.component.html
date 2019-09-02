@@ -1,0 +1,38 @@
+<form class="login-form"
+      [formGroup]="loginForm"
+      novalidate
+      (ngSubmit)="onSubmit()">
+  
+  <mat-form-field class="login-form__field">
+    <input matInput placeholder="E-mail" formControlName="username">
+    <mat-error *ngIf="loginForm.controls['username'].hasError('required')">
+      Обязательное для заполнения поле
+    </mat-error>
+    <mat-error *ngIf="loginForm.controls['username'].hasError('email')">
+      Пожалуйста введите корректный e-mail в формате name@domain
+    </mat-error>
+  </mat-form-field>
+  
+  <mat-form-field class="login-form__field">
+    <input type="password" matInput placeholder="Пароль" formControlName="password">
+    <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
+      Обязательное для заполнения поле
+    </mat-error>
+  </mat-form-field>
+
+  <div *ngIf="isWrongPassword" class="login-form__error">
+    Неверное имя пользователя или пароль
+  </div>
+  <div *ngIf="isUserDisabled" class="login-form__error">
+    Запрос на создание принят и обрабатывается. Попробуйте позже.
+  </div>
+
+  <div class="login-form__actions">
+    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+      Войти
+    </button>
+    <a class="login-form__recovery-link" routerLink="/recovery">
+      Забыли пароль?
+    </a>
+  </div>
+</form>
