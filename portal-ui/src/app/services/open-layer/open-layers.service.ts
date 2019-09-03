@@ -16,11 +16,13 @@ import {MapperUtil} from './MapperUtil';
 import {UsedGeometryType} from './GeometryType';
 import Feature from 'ol/Feature';
 import GeometryType from 'ol/geom/GeometryType';
-import ImageArcGISRest from "ol/source/ImageArcGISRest";
-import {AttributionLike} from "ol/source/Source";
-import {LoadFunction} from "ol/Image";
-import {ProjectionLike} from "ol/proj";
-import TileArcGISRest from "ol/source/TileArcGISRest";
+import ImageArcGISRest from 'ol/source/ImageArcGISRest';
+import {AttributionLike} from 'ol/source/Source';
+import {LoadFunction} from 'ol/Image';
+import {ProjectionLike} from 'ol/proj';
+import TileArcGISRest from 'ol/source/TileArcGISRest';
+import XYZ from 'ol/source/XYZ';
+import OverviewMap from 'ol/control/OverviewMap';
 
 export let BEARER_TOKEN = '';
 
@@ -44,6 +46,8 @@ export class OpenLayersService {
   // ZIndex чернового слоя который используется для подсвечивания обьектов
   private DRAFT_LAYER_ZINDEX = 10000;
 
+  private defaultTileSource = new OSM();
+
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
               private wmsService: WmsService) {
@@ -65,10 +69,13 @@ export class OpenLayersService {
       view: this.view,
       layers: [
         new TileLayer({
-          source: new OSM()
+          // source: new OSM()
           // source: new TileArcGISRest({
           //   urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
           // })
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+          })
         }),
         new VectorLayer({
           source: this.draftSource,
