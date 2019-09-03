@@ -16,6 +16,11 @@ import {MapperUtil} from './MapperUtil';
 import {UsedGeometryType} from './GeometryType';
 import Feature from 'ol/Feature';
 import GeometryType from 'ol/geom/GeometryType';
+import ImageArcGISRest from "ol/source/ImageArcGISRest";
+import {AttributionLike} from "ol/source/Source";
+import {LoadFunction} from "ol/Image";
+import {ProjectionLike} from "ol/proj";
+import TileArcGISRest from "ol/source/TileArcGISRest";
 
 export let BEARER_TOKEN = '';
 
@@ -61,6 +66,9 @@ export class OpenLayersService {
       layers: [
         new TileLayer({
           source: new OSM()
+          // source: new TileArcGISRest({
+          //   urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
+          // })
         }),
         new VectorLayer({
           source: this.draftSource,
@@ -98,7 +106,8 @@ export class OpenLayersService {
         ratio: 1,
         serverType: 'geoserver',
         crossOrigin: 'anonymous',
-      })
+      }),
+      opacity: 1
     });
 
     imageLayer.setVisible(false);

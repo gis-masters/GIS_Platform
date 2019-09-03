@@ -5,7 +5,7 @@
       <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
                           (selectionChange)="handleSelection(fizLayers)">
         <ng-container *ngIf="layers; else layersLoading">
-          <mat-list-option class="example-box" style="height: 64px"
+          <mat-list-option class="example-box" style="height: 80px"
                            *ngFor="let layer of layers" cdkDrag [value]="layer"
                            (contextmenu)="onContextMenu($event, layer)">
             <div style="position: fixed"
