@@ -50,7 +50,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
 
     this.layers.forEach((layer, index) => {
-      this.openLayers.set_ZIndex(layer.name, this.layers.length - index);
+      this.openLayers.set_ZIndex(layer.complexName, this.layers.length - index);
     });
   }
 
@@ -58,7 +58,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
     let nameOfSelectedLayers: string[];
     nameOfSelectedLayers = selectionList.selectedOptions.selected
       .map((selectedOption: MatListOption) => selectedOption.value)
-      .map((layer: CrgLayer) => layer.name);
+      .map((layer: CrgLayer) => layer.complexName);
 
     this.openLayers.changeLayersVisibility(nameOfSelectedLayers);
   }

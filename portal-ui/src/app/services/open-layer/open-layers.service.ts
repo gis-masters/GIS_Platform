@@ -1,6 +1,7 @@
 import {Map, View} from 'ol';
 import XYZ from 'ol/source/XYZ';
 import Feature from 'ol/Feature';
+import LayerType from 'ol/LayerType';
 import {MultiPolygon} from 'ol/geom';
 import {NGXLogger} from 'ngx-logger';
 import TileLayer from 'ol/layer/Tile';
@@ -28,6 +29,11 @@ export interface TileSource {
   thumbnail: string;
 }
 
+// WMS request parameters. At least a LAYERS param is required.
+export interface CrgWmsParams {
+  LAYERS: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,7 +41,11 @@ export class OpenLayersService {
 
   mapClick$ = new EventEmitter<number[]>();
 
-  tileSources: TileSource[] = [
+  private currentTileSource: XYZ = new TileArcGISRest({
+    urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
+  });
+
+  private tileSources: TileSource[] = [
     {
       name: 'OSM',
       title: 'Open street map',
@@ -53,9 +63,7 @@ export class OpenLayersService {
     {
       name: 'SimfReg',
       title: 'Наша какаша',
-      source: new TileArcGISRest({
-        urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
-      }),
+      source: this.currentTileSource,
       thumbnail: 'ourThumbnail.png'
     },
   ];
@@ -75,9 +83,10 @@ export class OpenLayersService {
   // ZIndex чернового слоя который используется для подсвечивания обьектов
   private DRAFT_LAYER_ZINDEX = 10000;
 
-  // Default view params
+  // Default view options
   private defaultZoomValue = 9;
   private defaultViewPoint = [3844444, 5644444];
+  private defaultOpacity = 0.7;
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
@@ -132,16 +141,20 @@ export class OpenLayersService {
   }
 
   addLayerToMap(complexLayerName: string) {
+    const params: CrgWmsParams = {
+      LAYERS: complexLayerName
+    };
+
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
         url: this.wmsService.baseUrl,
-        params: {'LAYERS': complexLayerName},
-        imageLoadFunction: this.fizImageLoadFunction,
+        params: params,
+        imageLoadFunction: this.crgImageLoadFunction,
         ratio: 1,
         serverType: 'geoserver',
         crossOrigin: 'anonymous',
       }),
-      opacity: 1
+      opacity: this.defaultOpacity
     });
 
     imageLayer.setVisible(false);
@@ -152,36 +165,61 @@ export class OpenLayersService {
   }
 
   /**
+   * Установить прозрачность слоя.
+   *
+   * @param complexLayerName Название слоя в формате 'workspace:layerName'
+   * @param opacity   The opacity of the layer, allowed values range from 0 to 1.
+   */
+  setLayerOpacity(complexLayerName: string, opacity?: number) {
+    const layerByName = this.getLayerByName(complexLayerName);
+    if (layerByName) {
+      layerByName.setOpacity(opacity);
+    }
+  }
+
+  /**
+   * @param complexLayerName Название слоя в формате 'workspace:layerName'
+   */
+  getLayerOpacity(complexLayerName: string) {
+    const layerByName = this.getLayerByName(complexLayerName);
+    if (layerByName) {
+      layerByName.getOpacity();
+    }
+  }
+
+  /**
    * Принимает список включенных слоев.
    * Проходит по всем слоям на карте проставляет true для всех переданных слоев и false для всех остальных.
    *
-   * @param layerNames - Навания включенных слоев.
+   * @param complexLayerNames - Навания включенных слоев.
    */
-  changeLayersVisibility(layerNames: any[]) {
-    this._map.getLayers().forEach((vrLayer: any) => {
-      const source = vrLayer.getSource();
+  changeLayersVisibility(complexLayerNames: string[]) {
+    this.getImageLayers().forEach((bLayer: BaseLayer) => {
+      const source: ImageWMS = bLayer.get('source');
 
-      if (source && source.params_ && source.params_['LAYERS']) {
-        const layerName = source.params_['LAYERS'];
+      if (source && source.getParams()) {
+        const layerName = source.getParams().LAYERS;
         let isExist = false;
-        layerNames.forEach(value => {
-          if (layerName.includes(value)) {
+        complexLayerNames.forEach(complexLayerName => {
+          if (layerName === complexLayerName) {
             isExist = true;
           }
         });
 
         if (isExist) {
-          vrLayer.setVisible(true);
+          bLayer.setVisible(true);
         } else {
-          vrLayer.setVisible(false);
+          bLayer.setVisible(false);
         }
       }
     });
   }
 
-  public set_ZIndex(layerName: string, index: number) {
-    this.getLayerByName(layerName)
-        .setZIndex(index);
+  public set_ZIndex(complexLayerName: string, index: number) {
+    const layerByName = this.getLayerByName(complexLayerName);
+    if (layerByName) {
+      layerByName.setZIndex(index);
+    }
   }
 
   /**
@@ -192,50 +230,22 @@ export class OpenLayersService {
   }
 
   /**
-   * Все слоя типа 'IMAGE'
+   * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  public imageLayers() {
-    const result = [];
-    this._map.getLayers().forEach((vrLayer) => {
-      if (vrLayer.getType() === 'IMAGE') {
-        result.push(vrLayer);
-      }
-    });
-
-    return result;
-  }
-
-  fizImageLoadFunction(tile, src) {
-    const client = new XMLHttpRequest();
-
-    client.open('GET', src);
-    client.responseType = 'arraybuffer';
-    client.setRequestHeader('Authorization', 'Bearer ' + BEARER_TOKEN);
-
-    client.onload = function () {
-      const arrayBufferView = new Uint8Array(this.response);
-      const blob = new Blob([arrayBufferView], { type: 'image/png' });
-      const urlCreator = window.URL || (window as any).webkitURL;
-
-      tile.getImage().src = urlCreator.createObjectURL(blob);
-    };
-
-    client.send();
-  }
-
-  public getLayerByName(layerName: string) {
+  public getLayerByName(complexLayerName: string): BaseLayer | undefined {
     let layer;
-    this.imageLayers().forEach((vrLayer) => {
-      const source = vrLayer.getSource();
-      if (source && source.params_ && source.params_['LAYERS'].includes(layerName)) {
-        layer = vrLayer;
+
+    this.getImageLayers().forEach((bLayer: BaseLayer) => {
+      const source: ImageWMS = bLayer.get('source');
+      if (source && source.getParams().LAYERS === complexLayerName) {
+        layer = bLayer;
       }
     });
 
     if (layer) {
       return layer;
     } else {
-      this.logger.warn('Not found layer: ', layerName);
+      this.logger.warn('Not found layer: ', complexLayerName);
 
       return undefined;
     }
@@ -278,15 +288,8 @@ export class OpenLayersService {
    * Возвращает видимые слоя. (Без подложки: TILE)
    */
   getVisibleLayers(): BaseLayer[] {
-    const result = [];
-    this._map.getLayers()
-        .forEach(vrLayer => {
-          if (vrLayer.getVisible() && vrLayer.getType() !== 'TILE') {
-            result.push(vrLayer);
-          }
-        });
-
-    return result;
+    return this.getImageLayers()
+               .filter((bLayer: BaseLayer) => bLayer.getVisible());
   }
 
   getResolution() {
@@ -326,7 +329,16 @@ export class OpenLayersService {
    * @param tileName Название положки.
    */
   setTileSource(tileName?: string) {
-    this.tileLayer.setSource(this.getTileSource(tileName));
+    this.currentTileSource = this.getTileSource(tileName);
+    this.tileLayer.setSource(this.currentTileSource);
+  }
+
+  getCurrentTileSource() {
+    return this.currentTileSource;
+  }
+
+  getTileSources() {
+    return this.tileSources;
   }
 
   private positionToFeature(wfsFeature: WfsFeature) {
@@ -369,4 +381,32 @@ export class OpenLayersService {
       return this.tileSources[0].source;
     }
   }
+
+  private crgImageLoadFunction(tile, src) {
+    const client = new XMLHttpRequest();
+
+    client.open('GET', src);
+    client.responseType = 'arraybuffer';
+    client.setRequestHeader('Authorization', 'Bearer ' + BEARER_TOKEN);
+
+    client.onload = function () {
+      const arrayBufferView = new Uint8Array(this.response);
+      const blob = new Blob([arrayBufferView], { type: 'image/png' });
+      const urlCreator = window.URL || (window as any).webkitURL;
+
+      tile.getImage().src = urlCreator.createObjectURL(blob);
+    };
+
+    client.send();
+  }
+
+  /**
+   * Все слоя типа 'IMAGE'
+   */
+  private getImageLayers(): BaseLayer[] {
+    return this._map
+               .getLayers().getArray()
+               .filter((bLayer: BaseLayer) => bLayer.getType() === LayerType.IMAGE);
+  }
+
 }

@@ -60,10 +60,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private openLayers: OpenLayersService) {
-    this.log.debug('mapComponent', 'debug test');
-    this.log.info('mapComponent', 'info test');
-    this.log.warn('mapComponent', 'warn test');
-    this.log.error('mapComponent', 'error test');
+    this.log.debug('mapComponent', 'MapComponent start');
 
     this.communicationService.stepperEvents.emit(3);
   }
@@ -207,10 +204,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   private getComplexNamesOfVisibleLayers(): string[] {
     return this.openLayers
-      .getVisibleLayers()
-      .map(vrLayer => WfsUtil.getComplexLayerName(vrLayer))
-      .filter(value => !!value);
-
+               .getVisibleLayers()
+               .map(vrLayer => WfsUtil.getComplexLayerName(vrLayer))
+               .filter(value => !!value);
   }
 
   private isMapSidebar(sidebar: Sidebar) {
