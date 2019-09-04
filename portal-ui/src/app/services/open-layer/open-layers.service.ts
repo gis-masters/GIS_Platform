@@ -1,30 +1,32 @@
-import {MultiPolygon} from 'ol/geom';
 import {Map, View} from 'ol';
+import XYZ from 'ol/source/XYZ';
+import Feature from 'ol/Feature';
+import {MultiPolygon} from 'ol/geom';
 import {NGXLogger} from 'ngx-logger';
-import {Fill, Stroke, Style} from 'ol/style.js';
+import TileLayer from 'ol/layer/Tile';
+import BaseLayer from 'ol/layer/Base';
 import {ImageWMS, OSM} from 'ol/source';
+import ImageLayer from 'ol/layer/Image';
+import {MapperUtil} from './MapperUtil';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import {Fill, Stroke, Style} from 'ol/style.js';
 import {WmsService} from '../geoserver/wms.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {EventEmitter, Injectable} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
-import VectorLayer from 'ol/layer/Vector';
-import TileLayer from 'ol/layer/Tile';
-import VectorSource from 'ol/source/Vector';
-import ImageLayer from 'ol/layer/Image';
-import BaseLayer from 'ol/layer/Base';
-import {MapperUtil} from './MapperUtil';
 import {UsedGeometryType} from './GeometryType';
-import Feature from 'ol/Feature';
 import GeometryType from 'ol/geom/GeometryType';
-import ImageArcGISRest from 'ol/source/ImageArcGISRest';
-import {AttributionLike} from 'ol/source/Source';
-import {LoadFunction} from 'ol/Image';
-import {ProjectionLike} from 'ol/proj';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
-import XYZ from 'ol/source/XYZ';
-import OverviewMap from 'ol/control/OverviewMap';
 
 export let BEARER_TOKEN = '';
+
+export interface TileSource {
+  name: string;
+  title: string;
+  source: XYZ;
+  thumbnail: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +35,35 @@ export class OpenLayersService {
 
   mapClick$ = new EventEmitter<number[]>();
 
+  tileSources: TileSource[] = [
+    {
+      name: 'OSM',
+      title: 'Open street map',
+      source: new OSM(),
+      thumbnail: 'osmThumbnail.png'
+    },
+    {
+      name: 'ESRI',
+      title: 'ESRI',
+      source: new XYZ({
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+      }),
+      thumbnail: 'esriThumbnail.png'
+    },
+    {
+      name: 'SimfReg',
+      title: 'Наша какаша',
+      source: new TileArcGISRest({
+        urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
+      }),
+      thumbnail: 'ourThumbnail.png'
+    },
+  ];
+
   private _map: Map;
   private view: View;
+  private tileLayer: TileLayer;
+
   private draftSource: VectorSource;
 
   // Кол-во десятичных в координатах
@@ -46,7 +75,9 @@ export class OpenLayersService {
   // ZIndex чернового слоя который используется для подсвечивания обьектов
   private DRAFT_LAYER_ZINDEX = 10000;
 
-  private defaultTileSource = new OSM();
+  // Default view params
+  private defaultZoomValue = 9;
+  private defaultViewPoint = [3844444, 5644444];
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
@@ -60,23 +91,19 @@ export class OpenLayersService {
     });
 
     this.view = new View({
-      center: [3803333, 5542377],
-      zoom: 13
+      center: this.defaultViewPoint,
+      zoom: this.defaultZoomValue
+    });
+
+    this.tileLayer = new TileLayer({
+      source: this.getTileSource('SimfReg')
     });
 
     this._map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
       layers: [
-        new TileLayer({
-          // source: new OSM()
-          // source: new TileArcGISRest({
-          //   urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
-          // })
-          source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-          })
-        }),
+        this.tileLayer,
         new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
@@ -286,6 +313,22 @@ export class OpenLayersService {
     return new MultiPolygon(buffer);
   }
 
+  paintFeature(wfsFeature: WfsFeature) {
+    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
+    if (olFeature) {
+      this.draftSource.addFeature(olFeature);
+    }
+  }
+
+  /**
+   * Задать слой подложку.
+   * Перечень доступынх подложек: tileSources
+   * @param tileName Название положки.
+   */
+  setTileSource(tileName?: string) {
+    this.tileLayer.setSource(this.getTileSource(tileName));
+  }
+
   private positionToFeature(wfsFeature: WfsFeature) {
     const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
     if (!olFeature) {
@@ -312,10 +355,18 @@ export class OpenLayersService {
     }
   }
 
-  paintFeature(wfsFeature: WfsFeature) {
-    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
-    if (olFeature) {
-      this.draftSource.addFeature(olFeature);
+  private getTileSource(tileName?: string) {
+    if (tileName) {
+      const foundSource = this.tileSources.find((tSource: TileSource) => tSource.name === tileName);
+      if (foundSource) {
+        return foundSource.source;
+      } else {
+        this.logger.warn('Not found tileSource by name: ', tileName);
+
+        return this.tileSources[0].source;
+      }
+    } else {
+      return this.tileSources[0].source;
     }
   }
 }
