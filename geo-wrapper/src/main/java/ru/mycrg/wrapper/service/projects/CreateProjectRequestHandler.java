@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service;
+package ru.mycrg.wrapper.service.projects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,13 +7,9 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.CrgSchemaService;
-import ru.mycrg.wrapper.dao.ICrgSchema;
-import ru.mycrg.wrapper.geoserver_client.services.projects.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
-
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 
 /**
  * Сервис обрабатывающий события касательно проектов.
@@ -23,25 +19,30 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
 
     private final Logger log = LoggerFactory.getLogger(CreateProjectRequestHandler.class);
 
-    private final IProject geoserverClient;
-    private final ICrgSchema schemaService;
     private final MqSender mqSender;
+    private final CrgProjectChain geoserverClientWrapper;
+    private final CrgProjectChain daoWrapper;
 
-    public CreateProjectRequestHandler(IProject geoserverClient,
-                                       CrgSchemaService schemaService,
+    public CreateProjectRequestHandler(GeoserverClientWrapper geoserverClientWrapper,
+                                       DaoWrapper daoWrapper,
                                        MqSender mqSender) {
-        this.geoserverClient = geoserverClient;
-        this.schemaService = schemaService;
+        this.geoserverClientWrapper = geoserverClientWrapper;
+        this.daoWrapper = daoWrapper;
         this.mqSender = mqSender;
+
+        // Задаем цепочку отбработчиков
+        this.geoserverClientWrapper.setHandlers(this.daoWrapper, null);
+        this.daoWrapper.setHandlers(null, this.geoserverClientWrapper);
     }
 
     @Override
     public void handle(BaseMqProcessRequest mqRequest) {
         try {
-            OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
-            geoserverClient.createProject(payload.getProjectName(), payload.getOrgId());
+            log.debug("Start create project process: {}", mqRequest.getId());
 
-            schemaService.create(DEFAULT_DB_NAME + payload.getOrgId(), payload.getProjectName());
+            OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
+
+            geoserverClientWrapper.handle(mqRequest, payload);
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.geoserver_client.services.projects;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,8 @@ public class ProjectService implements IProject {
     @Override
     public void createProject(String projectName, Long orgId) throws GeoserverClientException {
         try {
+            log.debug("Try create project: {}", projectName);
+
             authService.authorize();
 
             String databaseName = DEFAULT_DB_NAME + orgId;
@@ -61,8 +64,22 @@ public class ProjectService implements IProject {
         }
     }
 
+    /**
+     * При удалении проекта на геосервере удаляем проект, в режиме "recurse": delete workspace contents.
+     *
+     * @param projectName Нзвание проекта
+     * @throws GeoserverClientException
+     */
     @Override
-    public void deleteProject(String projectName) {
-        log.info("Try delete project: {}", projectName);
+    public void deleteProject(@NotNull String projectName) throws GeoserverClientException {
+        try {
+            log.info("Try delete project: {}", projectName);
+
+            authService.authorize();
+
+            workspacesService.deleteWorkspace(projectName);
+        } catch (Exception e) {
+            throw new GeoserverClientException(e.getMessage(), e);
+        }
     }
 }

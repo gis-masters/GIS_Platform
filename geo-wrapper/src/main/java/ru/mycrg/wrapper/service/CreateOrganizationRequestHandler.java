@@ -7,8 +7,8 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.dao.CrgDatabaseService;
-import ru.mycrg.wrapper.dao.ICrgDatabase;
+import ru.mycrg.wrapper.dao.CrgDaoDatabaseService;
+import ru.mycrg.wrapper.dao.ICrgDaoDatabase;
 import ru.mycrg.wrapper.geoserver_client.services.organization.IOrganization;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
@@ -24,11 +24,11 @@ public class CreateOrganizationRequestHandler extends BaseRequestHandler impleme
     private final Logger log = LoggerFactory.getLogger(CreateOrganizationRequestHandler.class);
 
     private final IOrganization organizationService;
-    private final ICrgDatabase crgDatabase;
+    private final ICrgDaoDatabase crgDatabase;
     private final MqSender mqSender;
 
     public CreateOrganizationRequestHandler(IOrganization organizationService,
-                                            CrgDatabaseService crgDatabase,
+                                            CrgDaoDatabaseService crgDatabase,
                                             MqSender mqSender) {
         this.organizationService = organizationService;
         this.crgDatabase = crgDatabase;
