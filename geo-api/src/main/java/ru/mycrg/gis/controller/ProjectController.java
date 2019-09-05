@@ -1,14 +1,11 @@
 package ru.mycrg.gis.controller;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.common.ValidationInfo;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
@@ -21,7 +18,6 @@ import ru.mycrg.gis.service.validation.ValidationService;
 import ru.mycrg.gis.service.validation.ViolationService;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
