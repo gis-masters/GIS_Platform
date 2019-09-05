@@ -33,6 +33,7 @@ public class RequestHandlerFactory {
         this.createOrganizationRequestHandler = createOrganizationRequestHandler;
     }
 
+    // TODO: implement DELETE_PROJECT
     IRequestHandler getHandler(ProcessType type) throws Exception {
         switch (type) {
             case CREATE_ORG:        return createOrganizationRequestHandler;

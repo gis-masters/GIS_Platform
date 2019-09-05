@@ -142,6 +142,7 @@ public class ProjectService extends BaseProcessService {
     }
 
     @Override
+    @Transactional
     public void handleMqResponse(@NotNull BaseMqProcessResponse mqResponse) {
         if (mqResponse.getId() == null) {
             log.warn("Return invalid mqResponse: {}", mqResponse);
@@ -170,7 +171,8 @@ public class ProjectService extends BaseProcessService {
             Project project = projectOptional.get();
 
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-                projectRepository.delete(project);
+                project.getOrganization()
+                       .removeProject(project);
 
                 error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {

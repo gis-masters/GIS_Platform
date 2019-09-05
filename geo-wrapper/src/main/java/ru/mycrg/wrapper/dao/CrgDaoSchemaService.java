@@ -26,7 +26,11 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
                     .getJdbcTemplate(dbName)
                     .execute("CREATE SCHEMA " + schemaName + "; ALTER SCHEMA " + schemaName + " OWNER TO fiz;");
         } catch (Exception e) {
-            throw new CrgDaoException("Не удалось создать схему: " + schemaName, e.getCause());
+            String msg = "Не удалось создать схему: " + schemaName;
+
+            log.error(msg, e);
+
+            throw new CrgDaoException(msg, e.getCause());
         }
     }
 

@@ -55,7 +55,7 @@ public class AuthService extends GeoServerBaseService {
             ObjectMapper mapper = new ObjectMapper();
             jwtTokenHolder = mapper.readValue(response.body().string(), JWTTokenHolder.class);
 
-            log.debug("Success");
+            log.debug("Success authenticated");
             response.close();
             return Optional.of(true);
         }

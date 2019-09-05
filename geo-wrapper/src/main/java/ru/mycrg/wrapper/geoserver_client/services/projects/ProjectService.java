@@ -44,7 +44,7 @@ public class ProjectService implements IProject {
     @Override
     public void createProject(String projectName, Long orgId) throws GeoserverClientException {
         try {
-            log.debug("Try create project: {}", projectName);
+            log.debug("Try create project {} on geoserver", projectName);
 
             authService.authorize();
 

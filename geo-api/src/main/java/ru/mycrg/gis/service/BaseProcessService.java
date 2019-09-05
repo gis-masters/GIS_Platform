@@ -94,7 +94,7 @@ public abstract class BaseProcessService implements Processable {
         processRepository.save(process);
 
         processesCache.remove(process);
-        log.info("Процесс {} / {} завершился неудачей", process.getId(), process.getTitle());
+        log.info("Процесс {}: '{}' завершился неудачей", process.getId(), process.getTitle());
     }
 
     private Optional<Process> getProcessFromCache(Long id) {

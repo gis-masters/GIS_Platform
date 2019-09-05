@@ -43,8 +43,12 @@ public class DaoWrapper implements CrgProjectChain {
             log.debug("Start last stage. {}", request.getProjectName());
 
             daoSchemaService.create(DEFAULT_DB_NAME + request.getOrgId(), request.getProjectName());
+
+            mqSender.send(new BaseMqProcessResponse(mqRequest, request.getOrgId(), ProcessStatus.DONE));
         } catch (CrgDaoException e) {
             mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.ERROR, e.getMessage()));
+
+            previousHandler.rollback(request);
         }
     }
 

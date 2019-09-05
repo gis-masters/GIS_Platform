@@ -43,8 +43,6 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
             OrgMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), OrgMqProcessRequest.class);
 
             geoserverClientWrapper.handle(mqRequest, payload);
-
-            mqSender.send(new BaseMqProcessResponse(mqRequest, payload.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Не удалось создать проект на геосервере: ", e);
 
