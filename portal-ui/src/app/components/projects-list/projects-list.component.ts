@@ -1,52 +1,46 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  NgModuleRef,
+  NgModule,
+  ViewChild,
+  ViewContainerRef,
+  Compiler,
+  Injector
+} from '@angular/core';
 
-import {Project, ProjectsService} from '../../services/crg/projects.service';
-import {ProcessStatus} from '../../services/crg/models';
-import {DataSchemaService} from '../../services/crg/data-schema.service';
-import {CommunicationService} from '../../services/communication.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'crg-projects-list',
-  templateUrl: './projects-list.component.html',
-  styleUrls: ['./projects-list.component.scss']
+  template: '<div #here></div>'
 })
-export class ProjectsListComponent implements OnInit, OnDestroy {
-  projects: Project[] = [];
-  areProjectsLoaded: boolean = false;
+export class ProjectsListComponent implements AfterViewInit, OnDestroy {
+  moduleRef: NgModuleRef<NgModule>;
 
-  pending = ProcessStatus.PENDING;
-  done = ProcessStatus.DONE;
+  @ViewChild('here', { read: ViewContainerRef })
+  here: ViewContainerRef;
 
-  private unsubscribe$: Subject<void> = new Subject<void>();
+  constructor(private compiler: Compiler, private injector: Injector) {}
 
-  constructor (private ruleService: DataSchemaService,
-                private projectsService: ProjectsService,
-                private communicationService: CommunicationService) {
-    this.communicationService.stepperEvents.emit(1);
-  }
-
-  ngOnInit() {
-    this.ruleService.getFeaturesDefinition().subscribe();
-    this.projectsService.fetchProjects();
-
-    this.projectsService.projects$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((projects: Project[]) => {
-
-          if (environment.platform === 'simf') {
-            this.projectsService.openProject(projects[0]);
-          }
-
-          this.areProjectsLoaded = true;
-          this.projects = projects;
+  ngAfterViewInit(): void {
+    import(`./projects-list@${environment.platform}.module`)
+      .then(m => m.ProjectsListModule)
+      .then(lazyModule => {
+        this.compiler.compileModuleAsync(lazyModule).then(ngModuleFactory => {
+          this.moduleRef = ngModuleFactory.create(this.injector);
+          const compFactory = this.moduleRef.componentFactoryResolver.resolveComponentFactory(
+            lazyModule.rootEntry
+          );
+          this.here.createComponent(compFactory);
         });
+      });
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    if (this.moduleRef) {
+      this.moduleRef.destroy();
+    }
   }
 }

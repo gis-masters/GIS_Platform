@@ -16,6 +16,7 @@ import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {LoginFormModule} from './components/login-form/login-form.module';
+import {LoadingModule} from './components/loading/loading.module';
 
 import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
@@ -24,10 +25,6 @@ import {AppComponent} from './pages/_app/app.component';
 import {ProjectsListPageComponent} from './pages/work-space/projects-list/projects-list-page.component';
 
 import {ProjectsListComponent} from './components/projects-list/projects-list.component';
-import {ProjectCardComponent} from './components/project-card/project-card.component';
-import {ProjectCardTypeAddComponent} from './components/project-card/_type/project-card_type_add.component';
-import {ProjectCardTypeLoadingComponent} from './components/project-card/_type/project-card_type_loading.component';
-import {ProjectCardTypeReadyComponent} from './components/project-card/_type/project-card_type_ready.component';
 import {HeaderComponent} from './components/header/header.component';
 import {EditBugObjectComponent} from './components/edit-bug-object/edit-bug-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
@@ -52,7 +49,6 @@ import {TableFilterComponent} from './components/table-filter/table-filter.compo
 import {CopyFeaturesDialogComponent} from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
 import {BestMatchingPipe} from './pipes/best-matching.pipe';
 import {ButtonComponent} from './components/button/button.component';
-import {LoadingComponent} from './components/loading/loading.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
 import {PageTitleComponent} from './components/page-title/page-title.component';
 import {DataImportComponent} from './components/data-import/data-import.component';
@@ -84,10 +80,6 @@ import {HomeComponent} from './components/home/home.component';
     ProgressItemComponent,
     ProjectsListPageComponent,
     ProjectsListComponent,
-    ProjectCardComponent,
-    ProjectCardTypeAddComponent,
-    ProjectCardTypeLoadingComponent,
-    ProjectCardTypeReadyComponent,
     ConfirmDialogComponent,
     ViewFeaturesComponent,
     EditFeatureComponent,
@@ -96,7 +88,6 @@ import {HomeComponent} from './components/home/home.component';
     CopyFeaturesDialogComponent,
     BestMatchingPipe,
     ButtonComponent,
-    LoadingComponent,
     ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,
@@ -126,7 +117,8 @@ import {HomeComponent} from './components/home/home.component';
     NgxMaskModule.forRoot(),
     NgxDatatableModule,
 
-    LoginFormModule
+    LoginFormModule,
+    LoadingModule
   ],
   entryComponents: [
     ConfirmDialogComponent,
