@@ -6,7 +6,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {CrgLayer} from '../geoserver/layers.service';
 import {LocalStorageService} from '../local-storage.service';
-import {ProcessStatus} from './crg-models';
+import {ProcessStatus} from './models';
 
 @Injectable({
   providedIn: 'root'

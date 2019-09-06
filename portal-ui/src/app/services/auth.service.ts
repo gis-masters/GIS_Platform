@@ -43,15 +43,9 @@ export class AuthService {
     return this.http.post(this.serverProperties.authServerUrl, params.toString(), options);
   }
 
-  validateAuth() {
-    if (this.router.isActive('/login', false)) {
-      if (this._authenticated) {
-        this.router.navigateByUrl('/workspace');
-      }
-    } else {
-      if (!this._authenticated) {
-        this.router.navigate(['/']);
-      }
+  validateAuth(redirectTo: string) {
+    if (this._authenticated) {
+      this.router.navigateByUrl(redirectTo);
     }
   }
 

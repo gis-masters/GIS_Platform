@@ -1,10 +1,10 @@
-import {CrgProject} from '../../crg/projects.service';
+import {Project} from '../../crg/projects.service';
 
 // Модель проекта на UI
 export class ProjectModel {
-  crgProject: CrgProject;
+  crgProject: Project;
 
-  constructor(project: CrgProject) {
+  constructor(project: Project) {
     this.crgProject = project;
   }
 

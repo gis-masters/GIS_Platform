@@ -3,7 +3,7 @@ import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
-import {CrgProject} from '../crg/projects.service';
+import {Project} from '../crg/projects.service';
 import {DatastoreService} from './datastore.service';
 import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -41,7 +41,7 @@ export class LayersService {
   /**
    * Собираем все о слоях.
    */
-  fetchLayers(project: CrgProject): Observable<CrgLayer[]> {
+  fetchLayers(project: Project): Observable<CrgLayer[]> {
     return this.http
       .get<GeoLayer>(this.layersUrl)
       .pipe(
@@ -142,7 +142,7 @@ export class LayersService {
     return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
   }
 
-  private filterProjectLayers(project: CrgProject, layers: NameHrefProjection[]) {
+  private filterProjectLayers(project: Project, layers: NameHrefProjection[]) {
     return layers.filter((layer: CrgLayer) => {
       const projectName = layer.name.split(':')[0];
 

@@ -1,0 +1,74 @@
+:host {
+  display: contents;
+}
+
+.project-card {
+  transition: background-size 0.3s;
+
+  background-image: url(project-card_type_ready.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+
+  &:hover {
+    background-size: 110% 110%;
+
+    .project-card__delete {
+      opacity: 1;
+    }
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__delete {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+
+    cursor: pointer;
+    transition: opacity 0.3s;
+
+    opacity: 0;
+    color: ghostwhite;
+  }
+
+  &__name {
+    text-align: center;
+
+    color: ghostwhite;
+
+    font-size: 16px;
+  }
+
+  &__info {
+    position: absolute;
+    right: 0;
+    bottom: -15px;
+    left: 0;
+
+    font-family: monospace;
+    font-size: 11px;
+  }
+
+  &__footer {
+    display: block;
+
+    height: 30px;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+
+    background: rgba(255,255,255,0.6);
+
+    font-weight: 500;
+    line-height: 28px;
+
+    &:hover {
+      background: rgba(255,255,255,0.7);
+    }
+  }
+}

@@ -1,0 +1,14 @@
+  <crg-project-card_type_add
+      *ngIf="type === 'add'">
+  </crg-project-card_type_add>
+
+  <crg-project-card_type_loading
+      *ngIf="type === 'loading'"
+      class="project-card__inner">
+  </crg-project-card_type_loading>
+
+  <crg-project-card_type_ready
+      *ngIf="type === 'ready'"
+      class="project-card__inner"
+      [project]="project">
+  </crg-project-card_type_ready>

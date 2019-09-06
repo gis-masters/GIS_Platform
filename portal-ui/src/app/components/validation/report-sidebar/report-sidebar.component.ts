@@ -10,7 +10,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@an
 import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
 import {IWsMessage, ValidationWsMsg, WsService} from '../../../services/ws.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {ProcessStatus, ProcessType} from '../../../services/crg/crg-models';
+import {ProcessStatus, ProcessType} from '../../../services/crg/models';
 
 @Component({
   selector: 'crg-report-sidebar',

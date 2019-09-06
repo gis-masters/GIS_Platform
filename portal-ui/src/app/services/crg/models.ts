@@ -25,17 +25,17 @@ export interface FilterEvent {
   value?: string[];
 }
 
-export interface CrgProcess {
+export interface Process {
   id: number;
   userName: string;
   title: string;
   status: ProcessStatus;
   type: ProcessType;
   extra: any;
-  details: CrgProcessTasks[];
+  details: ProcessTasks[];
 }
 
-export interface CrgProcessTasks {
+export interface ProcessTasks {
   layerName: string;
   status: ProcessStatus;
   error: string;

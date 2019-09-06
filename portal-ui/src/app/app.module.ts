@@ -21,8 +21,13 @@ import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 
 import {AppComponent} from './pages/_app/app.component';
-import {ProjectComponent} from './pages/work-space/project/project.component';
+import {ProjectsListPageComponent} from './pages/work-space/projects-list/projects-list-page.component';
 
+import {ProjectsListComponent} from './components/projects-list/projects-list.component';
+import {ProjectCardComponent} from './components/project-card/project-card.component';
+import {ProjectCardTypeAddComponent} from './components/project-card/_type/project-card_type_add.component';
+import {ProjectCardTypeLoadingComponent} from './components/project-card/_type/project-card_type_loading.component';
+import {ProjectCardTypeReadyComponent} from './components/project-card/_type/project-card_type_ready.component';
 import {HeaderComponent} from './components/header/header.component';
 import {EditBugObjectComponent} from './components/edit-bug-object/edit-bug-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
@@ -77,7 +82,12 @@ import {HomeComponent} from './components/home/home.component';
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
-    ProjectComponent,
+    ProjectsListPageComponent,
+    ProjectsListComponent,
+    ProjectCardComponent,
+    ProjectCardTypeAddComponent,
+    ProjectCardTypeLoadingComponent,
+    ProjectCardTypeReadyComponent,
     ConfirmDialogComponent,
     ViewFeaturesComponent,
     EditFeatureComponent,

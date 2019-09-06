@@ -16,7 +16,7 @@ import {
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/crg-models';
+import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/models';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {FizLogger} from '../../services/logger/fiz.logger';

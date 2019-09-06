@@ -4,7 +4,7 @@ import {NGXLogger} from 'ngx-logger';
 import {BaseService} from '../base.service';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Observable} from 'rxjs';
-import {CrgProcess} from './crg-models';
+import {Process} from './models';
 import {LocalStorageService} from '../local-storage.service';
 
 @Injectable({
@@ -19,10 +19,10 @@ export class OrganizationService {
               private serverProp: ServerPropertiesService) {
   }
 
-  getProcessById(taskId: number): Observable<CrgProcess> {
+  getProcessById(taskId: number): Observable<Process> {
     const orgId = this.storageService.getOrgId();
 
     return this.http
-               .get<CrgProcess>(this.serverProp.organizationsUrl + '/' + orgId + '/tasks/' + taskId);
+               .get<Process>(this.serverProp.organizationsUrl + '/' + orgId + '/tasks/' + taskId);
   }
 }

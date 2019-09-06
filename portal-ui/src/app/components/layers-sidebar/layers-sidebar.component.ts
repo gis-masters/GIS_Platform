@@ -7,7 +7,7 @@ import {MatListOption, MatMenuTrigger, MatSelectionList} from '@angular/material
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {ExportService} from '../../services/crg/export.service';
-import {CrgProcess} from '../../services/crg/crg-models';
+import {Process} from '../../services/crg/models';
 import {CommunicationService} from '../../services/communication.service';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
@@ -81,7 +81,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
       this.exportService
           .export({format: 'ESRI Shapefile', layers: [this.selectedLayer.name]})
           .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((process: CrgProcess) => {
+          .subscribe((process: Process) => {
             // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
             this.logger.info('export shape:', process);
 

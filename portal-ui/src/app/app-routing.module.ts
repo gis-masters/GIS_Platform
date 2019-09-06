@@ -8,7 +8,7 @@ import {HomePageComponent} from './pages/home/home-page.component';
 import {RegisterComponent} from './pages/register/register.component';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {WorkflowGuardService} from './services/workflow-guard.service';
-import {ProjectComponent} from './pages/work-space/project/project.component';
+import {ProjectsListPageComponent} from './pages/work-space/projects-list/projects-list-page.component';
 import {WorkspaceComponent} from './pages/work-space/workspace/workspace.component';
 import {DataImportPageComponent} from './pages/work-space/data-import-page/data-import-page.component';
 import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
@@ -29,7 +29,7 @@ const routes: Routes = [
     },
     children: [
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
-      {path: 'projects', component: ProjectComponent},
+      {path: 'projects', component: ProjectsListPageComponent},
       {path: 'data_import', component: DataImportPageComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
       {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
@@ -59,4 +59,5 @@ export const routingComponents = [
   WorkspaceComponent,
   DataImportPageComponent,
   DataMappingComponent,
+  ProjectsListPageComponent
 ];

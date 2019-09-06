@@ -1,1 +1,10 @@
 @import 'header@common.component.scss';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  &__button {
+    margin: 2px 10px;
+  }
+}

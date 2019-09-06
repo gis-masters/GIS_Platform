@@ -1,11 +1,10 @@
 import {Observable} from 'rxjs';
-import {CrgModels} from '../crg/crg-models';
+import {CrgModels} from '../crg/models';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {filter, map} from 'rxjs/operators';
 import {BaseService} from '../base.service';
 import {HttpClient} from '@angular/common/http';
-import {error} from '@angular/compiler/src/util';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Util} from './util';
 import {UsedGeometryType} from '../open-layer/GeometryType';
@@ -33,7 +32,7 @@ export class WfsService {
                    if (featureCollection.features.length > 0) {
                      return featureCollection.features[0];
                    } else {
-                     return error('Not found feature by ID: ' + objectId);
+                     throw new Error('Not found feature by ID: ' + objectId);
                    }
                  })
                );

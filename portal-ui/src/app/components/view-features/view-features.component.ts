@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {MatPaginator} from '@angular/material';
-import {Pageable} from '../../services/crg/crg-models';
+import {Pageable} from '../../services/crg/models';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {DataSchemaService} from '../../services/crg/data-schema.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';

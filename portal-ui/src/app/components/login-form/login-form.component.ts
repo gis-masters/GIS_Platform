@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
@@ -13,7 +13,10 @@ import {AuthModel, TokenStorageService} from '../../services/token-storage.servi
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent implements OnDestroy {
+export class LoginFormComponent implements OnInit, OnDestroy {
+  @Input() redirectTo: string;
+  @Input() noRecovery: boolean;
+
   isWrongPassword = false;
   isUserDisabled = false;
 
@@ -27,8 +30,10 @@ export class LoginFormComponent implements OnDestroy {
   constructor(private fb: FormBuilder,
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
-              private router: Router) {
-    this.authService.validateAuth();
+              private router: Router) { }
+
+  ngOnInit(): void {
+    this.authService.validateAuth(this.redirectTo);
   }
 
   ngOnDestroy(): void {

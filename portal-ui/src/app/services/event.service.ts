@@ -6,7 +6,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {LocalStorageService} from './local-storage.service';
 import {filter, publishReplay, refCount} from 'rxjs/operators';
 import {IWsMessage, WsService} from './ws.service';
-import {ProcessType} from './crg/crg-models';
+import {ProcessType} from './crg/models';
 
 /**
  * Сервис обработки и хранения событий.

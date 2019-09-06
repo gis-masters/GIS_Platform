@@ -13,7 +13,7 @@ import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {ProjectsService} from '../../../services/crg/projects.service';
-import {CrgProcess, ProcessStatus} from '../../../services/crg/crg-models';
+import {Process, ProcessStatus} from '../../../services/crg/models';
 import {OrganizationService} from '../../../services/crg/organization.service';
 
 @Component({
@@ -109,7 +109,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
     this.projectsService
         .doWorkImport(workImport)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((crgProcess: CrgProcess) => {
+        .subscribe((crgProcess: Process) => {
 
           interval(this.CHECK_STATUS_INTERVAL)
             .pipe(takeUntil(this.unsubscribe$))
@@ -117,7 +117,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               this.organizationService
                   .getProcessById(crgProcess.id)
                   .pipe(takeUntil(this.unsubscribe$))
-                  .subscribe((response: CrgProcess) => {
+                  .subscribe((response: Process) => {
                     if (response.status === ProcessStatus.DONE) {
                       this.layersService.fetchLayers(workImport.projectModel.crgProject);
 

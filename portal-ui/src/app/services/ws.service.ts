@@ -8,7 +8,7 @@ import {BugObject} from './crg/validation.service';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {TokenStorageService} from './token-storage.service';
 import {ServerPropertiesService} from './server-properties.service';
-import {ProcessType} from './crg/crg-models';
+import {ProcessType} from './crg/models';
 
 @Injectable({
   providedIn: 'root'

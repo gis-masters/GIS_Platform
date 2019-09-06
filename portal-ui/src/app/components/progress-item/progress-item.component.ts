@@ -5,7 +5,7 @@ import {EventService, IEvent} from '../../services/event.service';
 import {DownloadFileService} from '../../services/download-file.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {ProcessType} from '../../services/crg/crg-models';
+import {ProcessType} from '../../services/crg/models';
 
 @Component({
   selector: 'crg-progress-item',

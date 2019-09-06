@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
@@ -11,7 +12,8 @@ import {LocalStorageService} from '../local-storage.service';
 import {ProjectModel} from '../geoserver/import/projectModel';
 import {ServerPropertiesService} from '../server-properties.service';
 import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
-import {CrgProcess, ProcessStatus} from './crg-models';
+import {Process, ProcessStatus} from './models';
+import {StorageKeys} from '../storage-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +22,8 @@ export class ProjectsService {
 
   private orgUrl = this.serverProp.organizationsUrl + '/';
 
-  private _projects$: BehaviorSubject<CrgProject[]> = new BehaviorSubject<CrgProject[]>(undefined);
-  public projects$: Observable<CrgProject[]> = this._projects$.asObservable()
+  private _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(undefined);
+  public projects$: Observable<Project[]> = this._projects$.asObservable()
     .pipe(
       // компоненты при подписке должны видеть одно последнее значение в потоке
       publishReplay(1),
@@ -30,6 +32,7 @@ export class ProjectsService {
     );
 
   constructor(private http: HttpClient,
+              private router: Router,
               private log: FizLogger,
               private wsService: WsService,
               private layerService: LayersService,
@@ -39,23 +42,34 @@ export class ProjectsService {
     this.projects$.subscribe();
   }
 
+  openProject (project: Project) {
+    const projectModel = new ProjectModel(project);
+    this.storageService.saveByKey(StorageKeys.projectKey, JSON.stringify(projectModel));
+
+    if (project.layersCount > 0) {
+      this.router.navigateByUrl('/workspace/map');
+    } else {
+      this.router.navigateByUrl('/workspace/data_import');
+    }
+  }
+
   fetchProjects(): void {
     const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
 
     this.http
-        .get<CrgProject[]>(url)
+        .get<Project[]>(url)
         .pipe(
-          flatMap((projects: CrgProject[]) => this.fetchProjectsLayers(projects)),
+          flatMap((projects: Project[]) => this.fetchProjectsLayers(projects)),
         )
-        .subscribe((projects: CrgProject[]) => {
+        .subscribe((projects: Project[]) => {
           this._projects$.next(projects);
         });
   }
 
-  getById(id: string): Observable<CrgProject> {
+  getById(id: string): Observable<Project> {
     const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + id;
 
-    return this.http.get<CrgProject>(url);
+    return this.http.get<Project>(url);
   }
 
   create(name: string): Observable<any> {
@@ -90,7 +104,7 @@ export class ProjectsService {
       importTasks: workImport.tasks
     };
 
-    return this.http.post<CrgProcess>(url, payload);
+    return this.http.post<Process>(url, payload);
   }
 
   clearCache() {
@@ -107,7 +121,7 @@ export class ProjectsService {
     return this.storageService.getProject();
   }
 
-  private fetchProjectsLayers(projects: CrgProject[]): Observable<CrgProject[]> {
+  private fetchProjectsLayers(projects: Project[]): Observable<Project[]> {
     if (!projects || projects.length === 0) {
       return of([]);
     }
@@ -116,7 +130,7 @@ export class ProjectsService {
       .getAllLayers()
       .pipe(
         map((layers: NameHrefProjection[]) => {
-          projects.forEach((project: CrgProject) => project.layersCount = this.countLayers(project, layers));
+          projects.forEach((project: Project) => project.layersCount = this.countLayers(project, layers));
 
           return projects;
         }),
@@ -127,7 +141,7 @@ export class ProjectsService {
       );
   }
 
-  private countLayers(project: CrgProject, layers: NameHrefProjection[]): number {
+  private countLayers(project: Project, layers: NameHrefProjection[]): number {
     let counter = 0;
     layers.forEach((layer: NameHrefProjection) => {
       const projectName = layer.name.split(':')[0];
@@ -144,7 +158,7 @@ export class ProjectsService {
   }
 }
 
-export interface CrgProject {
+export interface Project {
   id: string;
   workspaceName: string;
   internalName: string;

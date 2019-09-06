@@ -31,8 +31,9 @@
     <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
       Войти
     </button>
-    <a class="login-form__recovery-link" routerLink="/recovery">
+    <a *ngIf="!noRecovery" class="login-form__recovery-link" routerLink="/recovery">
       Забыли пароль?
     </a>
   </div>
+
 </form>

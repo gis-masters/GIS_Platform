@@ -1,0 +1,19 @@
+<div class="projects-list">
+  <crg-project-card class="projects-list__card" type="loading" *ngIf="!areProjectsLoaded">
+  </crg-project-card>
+
+  <ng-container *ngFor="let project of projects">
+    <crg-project-card class="projects-list__card"
+                      type="ready"
+                      [project]="project"
+                      *ngIf="project.status !== pending">
+    </crg-project-card>
+    <crg-project-card class="projects-list__card"
+                      type="loading"
+                      *ngIf="project.status === pending">
+    </crg-project-card>
+  </ng-container>
+
+  <crg-project-card class="projects-list__card" type="add">
+  </crg-project-card>
+</div>

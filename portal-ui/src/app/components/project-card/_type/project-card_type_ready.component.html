@@ -1,0 +1,18 @@
+<div class="project-card">
+  <div class="project-card__inner">
+    <mat-icon
+        class="project-card__delete"
+        (click)="openDeleteDialog()">
+      delete
+    </mat-icon>
+    <div class="project-card__name">
+      {{project.internalName}}
+    </div>
+    <div class="project-card__info">
+      Слоев загружено: {{project.layersCount}}
+    </div>
+  </div>
+  <div class="project-card__footer" (click)="openProject()">
+    Открыть
+  </div>
+</div>

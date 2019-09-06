@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {LocalStorageService} from '../local-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
-import {CrgProcess} from './crg-models';
+import {Process} from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ExportService {
     this.logger.info('ExportService constructor');
   }
 
-  export(requestModel: ExportGmlRequest): Observable<CrgProcess> {
+  export(requestModel: ExportGmlRequest): Observable<Process> {
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
     const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/export';
@@ -29,7 +29,7 @@ export class ExportService {
     payload.wsUiId = this.wsService.getId();
 
     return this.http
-               .post<CrgProcess>(url, JSON.stringify(payload), {headers: {'Content-Type': 'application/json'}});
+               .post<Process>(url, JSON.stringify(payload), {headers: {'Content-Type': 'application/json'}});
   }
 }
 

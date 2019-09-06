@@ -1,0 +1,40 @@
+<div
+    (click)="onClick()"
+    class="project-card project-card_type_add"
+    [ngClass]="{'project-card_editing': isEdit}">
+    
+  <form class="project-card__form"
+        [formGroup]="addForm"
+        novalidate
+        (ngSubmit)="create()">
+    <div class="project-card__inner">
+
+      <mat-form-field class="project-card__field">
+        <input matInput maxlength="50" placeholder="Название проекта" formControlName="name">
+        <mat-hint align="end">{{newProjectName.length}} / 50</mat-hint>
+        <button mat-button *ngIf="newProjectName" matSuffix mat-icon-button aria-label="Clear" (click)="newProjectName=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div *ngIf="newProjectError" class="project-card__form-error">
+        {{newProjectError}}
+      </div>
+    </div>
+    <div class="project-card__footer">
+      <button mat-button type="button" (click)="cancel()">
+        Отмена
+      </button>
+      <button mat-button type="submit" [disabled]="!newProjectName" >
+        Сохранить
+      </button>
+    </div>
+  </form>
+
+  <div class="project-card__add">
+    <mat-icon class="project-card__add-icon">add</mat-icon>
+    <div class="project-card__add-caption">
+      Создать новый проект
+    </div>
+  </div>
+
+</div>

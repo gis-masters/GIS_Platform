@@ -5,7 +5,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {WfsUtil} from '../../../services/open-layer/WfsUtil';
 import {FizLogger} from '../../../services/logger/fiz.logger';
 import {catchError, filter, flatMap, takeUntil, tap} from 'rxjs/operators';
-import {CrgProject} from '../../../services/crg/projects.service';
+import {Project} from '../../../services/crg/projects.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {CommunicationService} from '../../../services/communication.service';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
@@ -28,7 +28,7 @@ import {FeatureType} from '@fiz/geoserver-types/feature-types/FeatureType';
 })
 export class MapComponent implements OnInit, OnDestroy {
 
-  currentProject: CrgProject;
+  currentProject: Project;
 
   layers: CrgLayer[] = undefined;
 

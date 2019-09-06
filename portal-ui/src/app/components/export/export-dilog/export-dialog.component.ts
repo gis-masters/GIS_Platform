@@ -7,7 +7,7 @@ import {ValueTitleProjection} from '../../../services/geoserver/projections';
 import {CommunicationService} from '../../../services/communication.service';
 import {ExportGmlResponse, ExportService} from '../../../services/crg/export.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {CrgProcess} from '../../../services/crg/crg-models';
+import {Process} from '../../../services/crg/models';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -90,7 +90,7 @@ export class ExportDialogComponent implements OnDestroy {
     this.exportService
         .export({layers: layerNames, docSchema: this.selectedDocSchema})
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((process: CrgProcess) => {
+        .subscribe((process: Process) => {
           // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
           this.logger.info('export to GML response', process);
           this.isExportInited = false;
