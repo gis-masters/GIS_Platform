@@ -19,6 +19,7 @@ import {TokenStorageService} from '../token-storage.service';
 import {UsedGeometryType} from './GeometryType';
 import GeometryType from 'ol/geom/GeometryType';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
+import {environment} from '../../../environments/environment';
 
 export let BEARER_TOKEN = '';
 
@@ -41,10 +42,7 @@ export class OpenLayersService {
 
   mapClick$ = new EventEmitter<number[]>();
 
-  private currentTileSource: XYZ = new TileArcGISRest({
-    urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
-  });
-
+  private currentTileSource: XYZ;
   private tileSources: TileSource[] = [
     {
       name: 'OSM',
@@ -63,7 +61,9 @@ export class OpenLayersService {
     {
       name: 'SimfReg',
       title: 'Наша какаша',
-      source: this.currentTileSource,
+      source: new TileArcGISRest({
+        urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
+      }),
       thumbnail: 'ourThumbnail.png'
     },
   ];
@@ -92,6 +92,12 @@ export class OpenLayersService {
               private tokenStorage: TokenStorageService,
               private wmsService: WmsService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
+
+    if (environment.platform === 'conv') {
+      this.currentTileSource = this.getTileSource('OSM');
+    } else {
+      this.currentTileSource = this.getTileSource('SimfReg');
+    }
   }
 
   createMap() {
@@ -105,7 +111,7 @@ export class OpenLayersService {
     });
 
     this.tileLayer = new TileLayer({
-      source: this.getTileSource('SimfReg')
+      source: this.currentTileSource
     });
 
     this._map = new Map({
