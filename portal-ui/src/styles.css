@@ -1,12 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~@swimlane/ngx-datatable/release/index.css';
+@import '~@swimlane/ngx-datatable/index.css';
 
 @import 'bootstrap.css';
 
 @import 'bootstrap2.css';
 
-@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+@import '~@swimlane/ngx-datatable/assets/icons.css';
 
 html,
 body {
