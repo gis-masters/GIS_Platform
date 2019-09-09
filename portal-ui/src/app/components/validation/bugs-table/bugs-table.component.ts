@@ -34,8 +34,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() step: number;
   @Input() crgLayer: CrgLayer;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = ['objectid', 'classid', 'violationsCounter'];
   data: ValidationResultsResponse = {
     results: [],

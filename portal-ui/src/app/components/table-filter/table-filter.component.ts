@@ -14,7 +14,7 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
 
   @Input() property: PropertySchema;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
-  @ViewChild('filterInput') filterInput: ElementRef;
+  @ViewChild('filterInput', { static: false }) filterInput: ElementRef;
 
   selectionChangeEvent$: Subject<any> = new Subject<any>();
 

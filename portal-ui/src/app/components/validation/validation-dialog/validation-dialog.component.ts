@@ -11,7 +11,7 @@ import {CommunicationService} from '../../../services/communication.service';
   styleUrls: ['./validation-dialog.component.css']
 })
 export class ValidationDialogComponent {
-  @ViewChild(MatSelectionList) layers: MatSelectionList;
+  @ViewChild(MatSelectionList, { static: false }) layers: MatSelectionList;
   @Input() data: ValidationDialogData;
 
   filterTerm: string;

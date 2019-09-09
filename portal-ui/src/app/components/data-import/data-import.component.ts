@@ -19,7 +19,7 @@ import {interval, of, Subject} from 'rxjs';
   styleUrls: ['./data-import.component.scss']
 })
 export class DataImportComponent implements OnDestroy {
-  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
 
   isImportInited = false;
   isUploadComplete = false;

@@ -24,7 +24,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   @Input() layers: CrgLayer[];
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
 
-  @ViewChild(MatMenuTrigger)
+  @ViewChild(MatMenuTrigger, { static: false })
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
 

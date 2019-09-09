@@ -40,10 +40,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   @Input() layer: CrgLayer;
 
-  @ViewChild(DatatableComponent) attributeTable: DatatableComponent;
-  @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('customSelectAll') customSelectAll: TemplateRef<any>;
+  @ViewChild(DatatableComponent, { static: true }) attributeTable: DatatableComponent;
+  @ViewChild('filterTemplate', { static: true }) filterTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate', { static: true }) cellTemplate: TemplateRef<any>;
+  @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
 

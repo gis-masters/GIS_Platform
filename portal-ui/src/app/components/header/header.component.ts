@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
 export class HeaderComponent implements AfterViewInit, OnDestroy {
   moduleRef: NgModuleRef<NgModule>;
 
-  @ViewChild('here', { read: ViewContainerRef })
+  @ViewChild('here', { read: ViewContainerRef, static: true })
   here: ViewContainerRef;
 
   constructor(private compiler: Compiler, private injector: Injector) {}

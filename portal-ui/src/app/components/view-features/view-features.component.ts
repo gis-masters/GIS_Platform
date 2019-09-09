@@ -19,7 +19,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() data: ViewFeaturesData;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   isEditMode = false;
   isSingleEdit = true;

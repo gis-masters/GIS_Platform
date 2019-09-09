@@ -16,7 +16,7 @@ import {Subject} from 'rxjs';
   templateUrl: './export-dialog.component.html'
 })
 export class ExportDialogComponent implements OnDestroy {
-  @ViewChild(MatSelectionList) list: MatSelectionList;
+  @ViewChild(MatSelectionList, { static: false }) list: MatSelectionList;
   @Input() layers: CrgLayer[];
 
   selectAllList: boolean;
