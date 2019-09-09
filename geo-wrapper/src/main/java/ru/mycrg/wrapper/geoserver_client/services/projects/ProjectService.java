@@ -38,8 +38,10 @@ public class ProjectService implements IProject {
     }
 
     /**
-     * Создание проекта.
-     * Создание хранилища (postgis) на геосервере.
+     * <p>Создание проекта.</p>
+     *
+     * Под проектом на геосервере пониматся создание новой рабочей области и хранилища (postgis).
+     * А так же выставление прав доступа к ним, для админа данной организации.
      */
     @Override
     public void createProject(String projectName, Long orgId) throws GeoserverClientException {
@@ -65,10 +67,10 @@ public class ProjectService implements IProject {
     }
 
     /**
-     * При удалении проекта на геосервере удаляем проект, в режиме "recurse": delete workspace contents.
+     * При удалении проекта на геосервере удаляем рабочую область, в режиме "recurse": подразумевает удаление контента
+     * связанного с этой рабочей областью.
      *
      * @param projectName Нзвание проекта
-     * @throws GeoserverClientException
      */
     @Override
     public void deleteProject(@NotNull String projectName) throws GeoserverClientException {

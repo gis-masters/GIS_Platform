@@ -10,17 +10,18 @@ import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.CrgChainable;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
 import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 
 @Service
-public class GeoserverImportService implements CrgImportChain {
+public class GeoserverImportService implements CrgChainable<ImportMqTask> {
 
     private static final Logger log = LoggerFactory.getLogger(GeoserverImportService.class);
 
-    private CrgImportChain nextImporter;
-    private CrgImportChain previousImporter;
+    private CrgChainable<ImportMqTask> nextImporter;
+    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final FeatureTypeService featureTypesService;
@@ -32,7 +33,7 @@ public class GeoserverImportService implements CrgImportChain {
     }
 
     @Override
-    public void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler) {
+    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
         this.nextImporter = nextHandler;
         this.previousImporter = previousHandler;
     }

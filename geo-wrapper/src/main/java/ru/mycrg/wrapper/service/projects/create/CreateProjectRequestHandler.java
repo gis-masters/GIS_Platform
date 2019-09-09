@@ -7,13 +7,18 @@ import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.wrapper.geoserver_client.services.projects.ProjectService;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
-import ru.mycrg.wrapper.service.projects.CrgChainable;
+import ru.mycrg.wrapper.service.CrgChainable;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 /**
- * Сервис обрабатывающий события касательно проектов.
+ * Сервис обрабатывающий события создания проектов. <br>
+ *
+ * Создание проекта затрагивает: <br>
+ *  - GIS базу данных. Создание схемы под проект; <br>
+ *  - Геосервер. Вызов эндпоинта {@link ProjectService#createProject(String, Long)}  }
  */
 @Service
 public class CreateProjectRequestHandler extends BaseRequestHandler implements IRequestHandler {

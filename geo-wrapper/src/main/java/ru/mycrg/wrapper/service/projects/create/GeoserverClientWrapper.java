@@ -10,7 +10,7 @@ import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.services.projects.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.projects.CrgChainable;
+import ru.mycrg.wrapper.service.CrgChainable;
 
 @Service
 public class GeoserverClientWrapper implements CrgChainable<OrgMqProcessRequest> {
@@ -28,7 +28,6 @@ public class GeoserverClientWrapper implements CrgChainable<OrgMqProcessRequest>
         this.mqSender = mqSender;
         this.geoserverClient = geoserverClient;
     }
-
 
     @Override
     public void setHandlers(CrgChainable<OrgMqProcessRequest> nextHandler,

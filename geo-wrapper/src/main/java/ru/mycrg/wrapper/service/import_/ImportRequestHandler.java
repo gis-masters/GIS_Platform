@@ -9,6 +9,7 @@ import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
+import ru.mycrg.wrapper.service.CrgChainable;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.util.List;
@@ -22,9 +23,9 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
     private static final Logger log = LoggerFactory.getLogger(ImportRequestHandler.class);
 
     private final MqSender mqSender;
-    private final CrgImportChain initialImportService;
-    private final CrgImportChain postImportService;
-    private final CrgImportChain geoserverImportService;
+    private final CrgChainable<ImportMqTask> initialImportService;
+    private final CrgChainable<ImportMqTask> postImportService;
+    private final CrgChainable<ImportMqTask> geoserverImportService;
 
     public ImportRequestHandler(InitialImportService initialImporter,
                                 PostImportService postImporter,

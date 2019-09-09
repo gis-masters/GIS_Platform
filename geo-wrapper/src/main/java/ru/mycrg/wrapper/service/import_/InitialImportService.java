@@ -12,6 +12,7 @@ import ru.mycrg.common.import_.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.CrgChainable;
 
 import java.util.List;
 
@@ -24,12 +25,12 @@ import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
  * В случае неудачи откатывает свои изменения и генерит ошибку.
  */
 @Service
-public class InitialImportService implements CrgImportChain {
+public class InitialImportService implements CrgChainable<ImportMqTask> {
 
     private static final Logger log = LoggerFactory.getLogger(InitialImportService.class);
 
-    private CrgImportChain nextImporter;
-    private CrgImportChain previousImporter;
+    private CrgChainable<ImportMqTask> nextImporter;
+    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
@@ -44,7 +45,7 @@ public class InitialImportService implements CrgImportChain {
     }
 
     @Override
-    public void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler) {
+    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
         this.nextImporter = nextHandler;
         this.previousImporter = previousHandler;
     }

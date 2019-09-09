@@ -11,7 +11,7 @@ import ru.mycrg.wrapper.dao.CrgDaoSchemaService;
 import ru.mycrg.wrapper.dao.ICrgDaoSchema;
 import ru.mycrg.wrapper.exceptions.CrgDaoException;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.projects.CrgChainable;
+import ru.mycrg.wrapper.service.CrgChainable;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 

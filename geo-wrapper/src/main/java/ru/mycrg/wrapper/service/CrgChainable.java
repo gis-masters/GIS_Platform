@@ -1,9 +1,8 @@
-package ru.mycrg.wrapper.service.import_;
+package ru.mycrg.wrapper.service;
 
 import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.import_.ImportMqTask;
 
-public interface CrgImportChain {
+public interface CrgChainable<T> {
 
     /**
      * Задаем следующий и предыдущий обработчик в цепочке.
@@ -11,10 +10,10 @@ public interface CrgImportChain {
      * @param nextHandler     Следующий по цепочке обработчик.
      * @param previousHandler Предыдущий обработчик.
      */
-    void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler);
+    void setHandlers(CrgChainable<T> nextHandler, CrgChainable<T> previousHandler);
 
-    void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask);
+    void handle(BaseMqProcessRequest mqRequest, T request);
 
-    void rollback(ImportMqTask importTask);
+    void rollback(T request);
 
 }

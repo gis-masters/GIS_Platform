@@ -15,6 +15,7 @@ import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.CrgImportException;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.CrgChainable;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.math.BigDecimal;
@@ -25,12 +26,12 @@ import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
-public class PostImportService implements CrgImportChain {
+public class PostImportService implements CrgChainable<ImportMqTask> {
 
     private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
 
-    private CrgImportChain nextImporter;
-    private CrgImportChain previousImporter;
+    private CrgChainable<ImportMqTask> nextImporter;
+    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final CrgScriptEngine scriptEngine;
@@ -48,7 +49,7 @@ public class PostImportService implements CrgImportChain {
     }
 
     @Override
-    public void setHandlers(CrgImportChain nextHandler, CrgImportChain previousHandler) {
+    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
         this.nextImporter = nextHandler;
         this.previousImporter = previousHandler;
     }
