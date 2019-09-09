@@ -128,15 +128,14 @@ public class ProjectService extends BaseProcessService {
                 .findById(projectId)
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
 
-        Organization organization = organizationService.findById(orgId);
-        organization.removeProject(project);
-
         Process process = create(principal.getName(),
                 String.format("Удаление проекта: %s", project.getInternalName()),
                 ProcessType.DELETE_PROJECT);
 
         // Отсылаем евент
-        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.DELETE_PROJECT, project.getGeoserverName()));
+        OrgMqProcessRequest payload = new OrgMqProcessRequest(orgId, project.getGeoserverName());
+
+        mqSender.send(new BaseMqProcessRequest(process.getId(), ProcessType.DELETE_PROJECT, payload));
 
         return process;
     }
@@ -151,17 +150,31 @@ public class ProjectService extends BaseProcessService {
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getType()) {
             case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
-//            case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
+            case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
         }
     }
 
-//    private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
-//        if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-//            error(process);
-//        } else {
-//            complete(process);
-//        }
-//    }
+    private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
+        Long projectId = process.getExtra().get("id").asLong();
+
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+
+            if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
+                error(process, mqResponse.getError());
+            } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
+                project.getOrganization()
+                        .removeProject(project);
+
+                complete(process, null);
+            } else {
+                log.warn("Not supported process status for projectService. {}", process);
+            }
+        } else {
+            log.warn("Not found project by id: {}", projectId);
+        }
+    }
 
     private void handleProjectCreation(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
         Long projectId = process.getExtra().get("id").asLong();

@@ -43,7 +43,7 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
 
             datasourceFactory
                     .getJdbcTemplate(dbName)
-                    .execute("DROP SCHEMA " + schemaName);
+                    .execute("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE;");
         } catch (Exception e) {
             String msg = "Не удалось удалить схему: " + schemaName;
 
