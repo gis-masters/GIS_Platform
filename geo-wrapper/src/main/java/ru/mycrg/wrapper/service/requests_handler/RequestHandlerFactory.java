@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.wrapper.service.CreateOrganizationRequestHandler;
-import ru.mycrg.wrapper.service.projects.CreateProjectRequestHandler;
+import ru.mycrg.wrapper.service.projects.create.CreateProjectRequestHandler;
 import ru.mycrg.wrapper.service.export.ExportRequestHandler;
 import ru.mycrg.wrapper.service.import_.ImportRequestHandler;
 import ru.mycrg.wrapper.service.validation.ValidationService;

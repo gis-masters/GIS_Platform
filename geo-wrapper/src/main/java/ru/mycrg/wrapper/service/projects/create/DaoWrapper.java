@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.projects;
+package ru.mycrg.wrapper.service.projects.create;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,16 +11,17 @@ import ru.mycrg.wrapper.dao.CrgDaoSchemaService;
 import ru.mycrg.wrapper.dao.ICrgDaoSchema;
 import ru.mycrg.wrapper.exceptions.CrgDaoException;
 import ru.mycrg.wrapper.queue.MqSender;
+import ru.mycrg.wrapper.service.projects.CrgChainable;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
-public class DaoWrapper implements CrgProjectChain {
+public class DaoWrapper implements CrgChainable<OrgMqProcessRequest> {
 
     private final Logger log = LoggerFactory.getLogger(DaoWrapper.class);
 
-    private CrgProjectChain previousHandler;
-    private CrgProjectChain nextHandler;
+    private CrgChainable<OrgMqProcessRequest> previousHandler;
+    private CrgChainable<OrgMqProcessRequest> nextHandler;
 
     private final MqSender mqSender;
     private final ICrgDaoSchema daoSchemaService;
@@ -32,7 +33,7 @@ public class DaoWrapper implements CrgProjectChain {
     }
 
     @Override
-    public void setHandlers(CrgProjectChain nextHandler, CrgProjectChain previousHandler) {
+    public void setHandlers(CrgChainable nextHandler, CrgChainable previousHandler) {
         this.nextHandler = nextHandler;
         this.previousHandler = previousHandler;
     }

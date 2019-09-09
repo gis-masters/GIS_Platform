@@ -1,4 +1,4 @@
-package ru.mycrg.wrapper.service.projects;
+package ru.mycrg.wrapper.service.projects.create;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +9,7 @@ import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
+import ru.mycrg.wrapper.service.projects.CrgChainable;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 /**
@@ -20,8 +21,8 @@ public class CreateProjectRequestHandler extends BaseRequestHandler implements I
     private final Logger log = LoggerFactory.getLogger(CreateProjectRequestHandler.class);
 
     private final MqSender mqSender;
-    private final CrgProjectChain geoserverClientWrapper;
-    private final CrgProjectChain daoWrapper;
+    private final CrgChainable<OrgMqProcessRequest> geoserverClientWrapper;
+    private final CrgChainable<OrgMqProcessRequest> daoWrapper;
 
     public CreateProjectRequestHandler(GeoserverClientWrapper geoserverClientWrapper,
                                        DaoWrapper daoWrapper,

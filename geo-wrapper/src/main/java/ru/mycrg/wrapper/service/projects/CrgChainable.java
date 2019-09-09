@@ -1,9 +1,8 @@
 package ru.mycrg.wrapper.service.projects;
 
 import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.OrgMqProcessRequest;
 
-public interface CrgProjectChain {
+public interface CrgChainable<T> {
 
     /**
      * Задаем следующий и предыдущий обработчик в цепочке.
@@ -11,10 +10,10 @@ public interface CrgProjectChain {
      * @param nextHandler     Следующий по цепочке обработчик.
      * @param previousHandler Предыдущий обработчик.
      */
-    void setHandlers(CrgProjectChain nextHandler, CrgProjectChain previousHandler);
+    void setHandlers(CrgChainable<T> nextHandler, CrgChainable<T> previousHandler);
 
-    void handle(BaseMqProcessRequest mqRequest, OrgMqProcessRequest request);
+    void handle(BaseMqProcessRequest mqRequest, T request);
 
-    void rollback(OrgMqProcessRequest request);
+    void rollback(T request);
 
 }
