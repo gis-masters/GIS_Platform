@@ -18,7 +18,8 @@ import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/models';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {FizLogger} from '../../services/logger/fiz.logger';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {EditFeatureMode} from '../edit-feature/edit-feature.component';

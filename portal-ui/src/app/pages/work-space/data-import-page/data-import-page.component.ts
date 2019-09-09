@@ -1,7 +1,7 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {Component, OnDestroy} from '@angular/core';
 import {CommunicationService} from '../../../services/communication.service';
 import {ImportService} from '../../../services/geoserver/import/import.service';

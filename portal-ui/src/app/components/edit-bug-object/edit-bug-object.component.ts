@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {debounceTime, takeUntil} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ValidationService} from '../../services/crg/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';

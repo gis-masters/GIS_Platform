@@ -1,7 +1,7 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
-import {MatListOption, MatSelectionList} from '@angular/material';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
 import {CommunicationService} from '../../../services/communication.service';

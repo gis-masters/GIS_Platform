@@ -1,6 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {Subject, throwError} from 'rxjs';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {WfsUtil} from '../../../services/open-layer/WfsUtil';
 import {FizLogger} from '../../../services/logger/fiz.logger';

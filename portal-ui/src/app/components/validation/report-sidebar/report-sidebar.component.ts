@@ -1,6 +1,6 @@
 import {Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {filter, takeUntil} from 'rxjs/operators';
 import {StringUtil} from '../../../services/util/StringUtil';
 import {CrgLayer} from '../../../services/geoserver/layers.service';

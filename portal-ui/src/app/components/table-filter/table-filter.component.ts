@@ -3,7 +3,7 @@ import {FilterEvent} from '../../services/crg/models';
 import {PropertySchema} from '../../services/crg/data-schema.service';
 import {debounceTime, distinctUntilChanged, map, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
-import {MatSelectChange} from '@angular/material';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'crg-table-filter',

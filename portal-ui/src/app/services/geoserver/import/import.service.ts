@@ -121,7 +121,7 @@ export class ImportService {
   }
 
   getAllImportLayers(isScratch: boolean): Observable<ImportLayer[]> {
-    const observableTasks = [];
+    const observableTasks: Observable<ImportLayer>[] = [];
     this.getTasks(isScratch)
         .forEach((task: TaskItem) => {
           observableTasks.push(this.getImportLayer(task));
