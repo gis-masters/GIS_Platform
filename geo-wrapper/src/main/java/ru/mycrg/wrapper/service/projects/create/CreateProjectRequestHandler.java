@@ -14,8 +14,8 @@ import ru.mycrg.wrapper.service.CrgChainable;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 /**
- * Сервис обрабатывающий события создания проектов. <br>
- *
+ * Сервис обрабатывающий события создания проектов.
+ * Задает цепь событий, которые должны быть выполнены для успешного создания проекта. <br>
  * Создание проекта затрагивает: <br>
  *  - GIS базу данных. Создание схемы под проект; <br>
  *  - Геосервер. Вызов эндпоинта {@link ProjectService#createProject(String, Long)}  }

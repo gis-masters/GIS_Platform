@@ -34,4 +34,23 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
         }
     }
 
+    /**
+     * Удаление схемы
+     */
+    public void delete(String dbName, String schemaName) throws CrgDaoException {
+        try {
+            log.debug("Удаление схемы {} Для БД: {}", schemaName, dbName);
+
+            datasourceFactory
+                    .getJdbcTemplate(dbName)
+                    .execute("DROP SCHEMA " + schemaName);
+        } catch (Exception e) {
+            String msg = "Не удалось удалить схему: " + schemaName;
+
+            log.error(msg, e);
+
+            throw new CrgDaoException(msg, e.getCause());
+        }
+    }
+
 }

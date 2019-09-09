@@ -46,6 +46,7 @@ export enum ProcessType {
   CREATE_ORG = 'CREATE_ORG',
   CREATE_PROJECT = 'CREATE_PROJECT',
   DELETE_PROJECT = 'DELETE_PROJECT',
+  UPDATE_PROJECT = 'UPDATE_PROJECT',
 
   IMPORT = 'IMPORT',
   VALIDATION = 'VALIDATION',
@@ -61,6 +62,4 @@ export enum ProcessStatus {
 
   DONE = 'DONE',
   ERROR = 'ERROR',
-
-  EMPTY = 'EMPTY'
 }

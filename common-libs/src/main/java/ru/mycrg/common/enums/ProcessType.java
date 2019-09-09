@@ -7,6 +7,7 @@ public enum ProcessType {
     CREATE_ORG,
     CREATE_PROJECT,
     DELETE_PROJECT,
+    UPDATE_PROJECT,
 
     IMPORT,
     VALIDATION,
