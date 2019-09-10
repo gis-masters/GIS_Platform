@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 
@@ -90,6 +91,7 @@ public class Process {
         this.status = status;
     }
 
+    @Nullable
     public JsonNode getExtra() {
         return extra;
     }

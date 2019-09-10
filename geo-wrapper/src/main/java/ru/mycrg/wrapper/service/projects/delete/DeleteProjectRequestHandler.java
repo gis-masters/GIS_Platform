@@ -45,6 +45,8 @@ public class DeleteProjectRequestHandler extends BaseRequestHandler implements I
 
             geoserverClient.deleteProject(request.getProjectName());
             daoSchemaService.delete(DEFAULT_DB_NAME + request.getOrgId(), request.getProjectName());
+
+            mqSender.send(new BaseMqProcessResponse(mqRequest, request.getOrgId(), ProcessStatus.DONE));
         } catch (Exception e) {
             log.error("Не удалось удалить проект на геосервере: ", e);
 

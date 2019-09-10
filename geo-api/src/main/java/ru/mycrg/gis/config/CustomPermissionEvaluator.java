@@ -22,7 +22,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Object organizationId, Object userName) {
-        log.debug("hasPermission: {} for orgId: {}", authentication.getName(), organizationId);
+        log.trace("hasPermission: {} for orgId: {}", authentication.getName(), organizationId);
 
         long orgId;
         try {

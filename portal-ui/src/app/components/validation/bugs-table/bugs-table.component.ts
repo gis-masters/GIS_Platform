@@ -43,7 +43,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     validated: false,
     total: 0,
     lastValidated: '',
-    status: ProcessStatus.EMPTY,
+    status: ProcessStatus.PENDING,
   };
 
   isLoadingResults = true;

@@ -1,6 +1,8 @@
 package ru.mycrg.gis.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -130,7 +132,8 @@ public class ProjectService extends BaseProcessService {
 
         Process process = create(principal.getName(),
                 String.format("Удаление проекта: %s", project.getInternalName()),
-                ProcessType.DELETE_PROJECT);
+                ProcessType.DELETE_PROJECT,
+                project);
 
         // Отсылаем евент
         OrgMqProcessRequest payload = new OrgMqProcessRequest(orgId, project.getGeoserverName());
@@ -151,16 +154,14 @@ public class ProjectService extends BaseProcessService {
         switch (mqResponse.getType()) {
             case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
             case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
+            default:
+                log.warn("Not supported type: {}", mqResponse.getType());
         }
     }
 
     private void handleProjectDeletion(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
-        Long projectId = process.getExtra().get("id").asLong();
-
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isPresent()) {
-            Project project = projectOptional.get();
-
+        Project project = fetchProjectFromProcess(process);
+        if (project != null) {
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
@@ -171,21 +172,15 @@ public class ProjectService extends BaseProcessService {
             } else {
                 log.warn("Not supported process status for projectService. {}", process);
             }
-        } else {
-            log.warn("Not found project by id: {}", projectId);
         }
     }
 
     private void handleProjectCreation(@NotNull BaseMqProcessResponse mqResponse, @NotNull Process process) {
-        Long projectId = process.getExtra().get("id").asLong();
-
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isPresent()) {
-            Project project = projectOptional.get();
-
+        Project project = fetchProjectFromProcess(process);
+        if (project != null) {
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 project.getOrganization()
-                       .removeProject(project);
+                        .removeProject(project);
 
                 error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
@@ -196,8 +191,28 @@ public class ProjectService extends BaseProcessService {
             } else {
                 log.warn("Not supported process status for projectService. {}", process);
             }
+        }
+    }
+
+    @Nullable
+    private Project fetchProjectFromProcess(@NotNull Process process) {
+        Long projectId = null;
+
+        JsonNode extraInfo = process.getExtra();
+        if (extraInfo != null) {
+            projectId = extraInfo.get("id").asLong();
+            Optional<Project> projectOptional = projectRepository.findById(projectId);
+            if (projectOptional.isPresent()) {
+                return projectOptional.get();
+            } else {
+                log.warn("Not found project by id: {}", projectId);
+
+                return null;
+            }
         } else {
-            log.warn("Not found project by id: {}", projectId);
+            log.warn("empty extra: {}", process.toString());
+
+            return null;
         }
     }
 
