@@ -54,7 +54,7 @@ public class PostImportService implements CrgChainable<ImportMqTask> {
         this.previousImporter = previousHandler;
     }
 
-    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) throws CrgImportException {
+    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
         log.debug("Start additional handles");
 
         try {

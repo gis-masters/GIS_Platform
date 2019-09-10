@@ -118,7 +118,8 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка", e.getMessage()));
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка", e.getMessage()));
         }
     }
 

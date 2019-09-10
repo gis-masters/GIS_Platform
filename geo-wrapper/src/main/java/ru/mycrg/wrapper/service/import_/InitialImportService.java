@@ -56,7 +56,6 @@ public class InitialImportService implements CrgChainable<ImportMqTask> {
      * - Генерирование новой таблицы
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
-    @Transactional
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
         log.debug("Start first stage of import. From: {} to: {}", importTask.printSource(), importTask.printTarget());
 
@@ -94,7 +93,7 @@ public class InitialImportService implements CrgChainable<ImportMqTask> {
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
-                            new ImportMqResponse(importTask), TASK_ERROR, "Error", e.getMessage()));
+                            new ImportMqResponse(importTask), TASK_ERROR, "Error", msg));
         }
     }
 

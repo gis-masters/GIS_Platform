@@ -13,6 +13,7 @@ import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.CrgChainable;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
+import static ru.mycrg.common.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 
 @Service
@@ -49,6 +50,9 @@ public class GeoserverImportService implements CrgChainable<ImportMqTask> {
                     importTask.getUserToken());
 
             log.debug("Import chain successful end");
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest,
+                            new ImportMqResponse(importTask), TASK_DONE, "Готово", -1));
         } catch (GeoserverClientException e) {
             String msg = "Не удалось опубликовать слой на геосервере: " + importTask.getFeatureDescription().getName();
             log.error(msg, e);

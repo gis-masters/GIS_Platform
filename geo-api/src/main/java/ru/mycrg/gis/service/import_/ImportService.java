@@ -11,7 +11,6 @@ import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
-import ru.mycrg.gis.dto.DetailsModel;
 import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
@@ -23,9 +22,7 @@ import ru.mycrg.gis.service.CrgAuthHelper;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
-import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,45 +89,37 @@ public class ImportService extends BaseProcessService {
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getStatus()) {
             case TASK_ERROR:
-            case TASK_DONE: handleTask(process, mqResponse);        break;
+            case TASK_DONE: addSubStep(process, mqResponse);        break;
             case ERROR:     error(process, mqResponse.getError());  break;
             case DONE:      complete(process, null);           break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
 
-        String wsUiId = process.getExtra().asText();
+        JsonNode extraInfo = process.getExtra();
+        String wsUiId = "null";
+        if (extraInfo != null) {
+            wsUiId = extraInfo.asText();
+        }
+
         wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
     }
 
-    private void handleTask(Process process, BaseMqProcessResponse mqResponse) {
+    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
         try {
-            log.debug("Add task to process: {}", process.getId());
-            process.setStatus(mqResponse.getStatus());
-
-            TaskModel task = new TaskModel();
+            TaskModel subProcess = new TaskModel();
             if (!mqResponse.getPayload().equals("")) {
                 ImportMqResponse rPayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
-                task = new TaskModel(rPayload.getTargetLayer(), mqResponse.getStatus(), mqResponse.getError());
+                subProcess = new TaskModel(rPayload.getTargetLayer(), mqResponse.getStatus(), mqResponse.getError());
             } else if (mqResponse.getDescription() != null) {
-                task = new TaskModel(mqResponse.getStatus(), mqResponse.getError());
+                subProcess = new TaskModel(mqResponse.getStatus(), mqResponse.getError());
             } else {
                 log.warn("Task for processId: {} not have any description/payload?", process.getId());
             }
 
-            String content = "{}";
-            if (process.getDetails() != null) {
-                content = process.getDetails().toString();
-            }
-
-            DetailsModel details = mapper.readValue(content, DetailsModel.class);
-            details.addTask(task);
-
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
-
-            process.setDetails(jsonNode);
-        } catch (IOException e) {
-            log.error("Failed write details to process / Error: {}", e.getMessage());
+            addTask(process, subProcess);
+        } catch (Exception e) {
+            log.error("Failed add subStep to process / Error: {}", e.getMessage());
         }
     }
 

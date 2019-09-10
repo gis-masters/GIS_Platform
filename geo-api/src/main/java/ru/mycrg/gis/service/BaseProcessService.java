@@ -7,11 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
+import ru.mycrg.gis.dto.DetailsModel;
+import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -95,6 +98,26 @@ public abstract class BaseProcessService implements Processable {
 
         processesCache.remove(process);
         log.info("Процесс {}: '{}' завершился неудачей", process.getId(), process.getTitle());
+    }
+
+    protected void addTask(Process process, TaskModel taskModel) {
+        try {
+            log.debug("Add task to process: {}", process.getId());
+
+            String content = "{}";
+            if (process.getDetails() != null) {
+                content = process.getDetails().toString();
+            }
+
+            DetailsModel details = mapper.readValue(content, DetailsModel.class);
+            details.addTask(taskModel);
+
+            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
+
+            process.setDetails(jsonNode);
+        } catch (IOException e) {
+            log.error("Failed write details to process / Error: {}", e.getMessage());
+        }
     }
 
     private Optional<Process> getProcessFromCache(Long id) {

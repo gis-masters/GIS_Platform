@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ProcessType;
-import ru.mycrg.gis.dto.*;
+import ru.mycrg.gis.dto.ProjectModel;
+import ru.mycrg.gis.dto.TaskModel;
+import ru.mycrg.gis.dto.ValidationRequestDto;
+import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
@@ -15,9 +18,7 @@ import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
-import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
-import java.io.IOException;
 import java.security.Principal;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
@@ -86,43 +87,35 @@ public class ValidationService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case TASK_ERROR:
-            case TASK_DONE:  addSubStep(process, mqResponse);   break;
+            case TASK_DONE: addSubStep(process, mqResponse);        break;
             case ERROR:     error(process, mqResponse.getError());  break;
             case DONE:      complete(process, null);           break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
 
-        String wsUiId = process.getExtra().get("wsUiId").asText();
-    if (ProcessType.VALIDATION.equals(mqResponse.getType())) {
+        JsonNode extraInfo = process.getExtra();
+        String wsUiId = "null";
+        if (extraInfo != null) {
+            wsUiId = extraInfo.get("wsUiId").asText();
+        }
+
+        if (ProcessType.VALIDATION.equals(mqResponse.getType())) {
             wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
         }
     }
 
     private void addSubStep(Process process, BaseMqProcessResponse response) {
-        process.setStatus(response.getStatus());
-
         try {
-            String content = "{}";
-            if (process.getDetails() != null) {
-                content = process.getDetails().toString();
-            }
+            TaskModel subProcess = new TaskModel(
+                    response.getPayload().toString(),
+                    response.getStatus(),
+                    response.getError());
 
-            DetailsModel details = mapper.readValue(content, DetailsModel.class);
-
-            TaskModel subProcess = new TaskModel(response.getPayload().toString(),
-                    response.getStatus(), response.getError());
-
-            details.addTask(subProcess);
-
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
-
-            process.setDetails(jsonNode);
-        } catch (IOException e) {
-            log.error("Failed write details to process / Error: {}", e.getMessage());
+            addTask(process, subProcess);
+        } catch (Exception e) {
+            log.error("Failed add subStep to process / Error: {}", e.getMessage());
         }
-
-        log.debug("Add subStep to process: {}", process.getId());
     }
 
 }
