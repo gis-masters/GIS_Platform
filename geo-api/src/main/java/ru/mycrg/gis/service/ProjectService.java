@@ -128,7 +128,7 @@ public class ProjectService extends BaseProcessService {
      * рабочей области на геосервере и схемы в БД.
      *
      * @param projectId Идентификатор проекта.
-     * @param newProjectName Новаое название проекта.
+     * @param newProjectName Новое название проекта.
      */
     @Transactional
     public void update(Long projectId, String newProjectName) {
