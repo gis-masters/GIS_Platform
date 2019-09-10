@@ -40,7 +40,6 @@ public class RequestHandlerFactory {
         this.createOrganizationRequestHandler = createOrganizationRequestHandler;
     }
 
-    // TODO: Implement UPDATE_PROJECT
     IRequestHandler getHandler(ProcessType type) throws Exception {
         switch (type) {
             case CREATE_ORG:        return createOrganizationRequestHandler;

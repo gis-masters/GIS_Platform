@@ -86,8 +86,8 @@ public class ProjectService extends BaseProcessService {
      * Отправляем задание в очередь на создание проекта на геосервере
      *
      * @param orgId id организации
-     * @param principal
-     * @return нашу сущность проекта  {@link Project}
+     * @param principal Пользователь
+     * @return Инициированный процесс {@link Process}
      */
     @Transactional
     public Process create(Long orgId, ProjectRequestDto dto, Principal principal) {
@@ -122,7 +122,35 @@ public class ProjectService extends BaseProcessService {
         }
     }
 
+    /**
+     * Обновление проекта.
+     * До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не меняя названия
+     * рабочей области на геосервере и схемы в БД.
+     *
+     * @param projectId Идентификатор проекта.
+     * @param newProjectName Новаое название проекта.
+     */
     @Transactional
+    public void update(Long projectId, String newProjectName) {
+        log.info("Update project by id: {}", projectId);
+
+        Project project = projectRepository
+                .findById(projectId)
+                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
+
+        project.setInternalName(newProjectName);
+
+        projectRepository.save(project);
+    }
+
+    /**
+     * Удаление проекта.
+     *
+     * @param orgId id организации
+     * @param projectId Идентификатор проекта
+     * @param principal Пользователь
+     * @return Инициированный процесс {@link Process}
+     */
     public Process delete(long orgId, long projectId, Principal principal) {
         log.info("Init process Delete project by id: {}", projectId);
 

@@ -76,6 +76,19 @@ public class ProjectController extends BaseController {
         return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("/{projectId}")
+    @PreAuthorize("hasPermission(#orgId, '')")
+    public HttpStatus updateProject(@PathVariable Long orgId,
+                                    @PathVariable long projectId,
+                                    @Valid @RequestBody ProjectRequestDto projectDto,
+                                    Principal principal) {
+        log.debug("Request for updateProject for org: {}", orgId);
+
+        projectService.update(projectId, projectDto.getProjectName());
+
+        return HttpStatus.OK;
+    }
+
     @DeleteMapping("/{projectId}")
     @PreAuthorize("hasPermission(#orgId, '')")
     public ResponseEntity<Process> deleteProject(@PathVariable long orgId,
