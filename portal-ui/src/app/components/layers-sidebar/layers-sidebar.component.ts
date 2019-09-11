@@ -48,6 +48,7 @@ export class LayersSidebarComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log('drop(event: CdkDragDrop<string[]>)', event.previousIndex, event.currentIndex);
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
 
     this.layers.forEach((layer, index) => {

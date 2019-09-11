@@ -7,10 +7,7 @@
   width: 400px;
   height: calc(100% - 55px);
 
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
@@ -25,10 +22,7 @@
   width: 400px;
   height: calc(100% - 55px);
 
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);

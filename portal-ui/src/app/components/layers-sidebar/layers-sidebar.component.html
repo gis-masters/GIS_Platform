@@ -4,32 +4,39 @@
 
   <div class="crg-sidebar-content scroll">
 
-    <mat-nav-list>
-      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
-                          (selectionChange)="handleSelection(fizLayers)">
-        <ng-container *ngIf="layers; else layersLoading">
-          <mat-list-option class="example-box" style="height: 80px"
-                           *ngFor="let layer of layers" cdkDrag [value]="layer"
-                           (contextmenu)="onContextMenu($event, layer)">
-            <div style="position: fixed"
+    <ng-container *ngIf="layers; else layersLoading">
+      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"(selectionChange)="handleSelection(fizLayers)">
+        <mat-list-option cdkDrag *ngFor="let layer of layers" [value]="layer" (contextmenu)="onContextMenu($event, layer)">
+          <div style="position: fixed"
                  [style.left]="contextMenuPosition.x"
                  [style.top]="contextMenuPosition.y"
                  [matMenuTriggerFor]="contextMenu"
                  [matMenuTriggerData]="{layer: layer}">
             </div>
-
-            <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
-          </mat-list-option>
-        </ng-container>
-
-        <ng-template #layersLoading>
-          <div class="col-12 text-center">
-            Загрузка слоев...
-            <mat-progress-bar mode="query"></mat-progress-bar>
-          </div>
-        </ng-template>
+          <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
+        </mat-list-option>
       </mat-selection-list>
-    </mat-nav-list>
+    </ng-container>
+
+      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
+                        (selectionChange)="handleSelection(fizLayers)">
+      <ng-container *ngIf="layers; else layersLoading">
+          <mat-list-option class="example-box" style="height: 80px"
+                           *ngFor="let layer of layers" cdkDrag [value]="layer"
+                           (contextmenu)="onContextMenu($event, layer)">
+            
+
+          <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
+          </mat-list-option>
+      </ng-container>
+
+      <ng-template #layersLoading>
+        <div class="col-12 text-center">
+          Загрузка слоев...
+          <mat-progress-bar mode="query"></mat-progress-bar>
+        </div>
+      </ng-template>
+      </mat-selection-list>
 
   </div>
 </div>
