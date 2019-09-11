@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
 import ru.mycrg.common.ResourceProjection;
@@ -12,7 +11,6 @@ import ru.mycrg.common.import_.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.CrgChainable;
 
 import java.util.List;
 
@@ -25,12 +23,9 @@ import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
  * В случае неудачи откатывает свои изменения и генерит ошибку.
  */
 @Service
-public class InitialImportService implements CrgChainable<ImportMqTask> {
+public class InitialImportService extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(InitialImportService.class);
-
-    private CrgChainable<ImportMqTask> nextImporter;
-    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
@@ -42,12 +37,6 @@ public class InitialImportService implements CrgChainable<ImportMqTask> {
         this.mqSender = mqSender;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
-    }
-
-    @Override
-    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
-        this.nextImporter = nextHandler;
-        this.previousImporter = previousHandler;
     }
 
     /**
@@ -84,7 +73,9 @@ public class InitialImportService implements CrgChainable<ImportMqTask> {
 
             baseDaoService.copy(jdbcTemplate, importTask);
 
-            nextImporter.handle(mqRequest, importTask);
+            if (nextImporter != null) {
+                nextImporter.handle(mqRequest, importTask);
+            }
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
                     importTask.printTarget());
@@ -94,6 +85,8 @@ public class InitialImportService implements CrgChainable<ImportMqTask> {
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
                             new ImportMqResponse(importTask), TASK_ERROR, "Error", msg));
+
+            rollback(importTask);
         }
     }
 

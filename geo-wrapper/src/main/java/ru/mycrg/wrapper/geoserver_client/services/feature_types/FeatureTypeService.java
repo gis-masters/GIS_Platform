@@ -32,4 +32,25 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         doRequest(request, "create FeatureType");
     }
+
+    @Override
+    public void delete(String workspaceName, String dataStoreName, String featureName, String jwtToken)
+            throws GeoserverClientException {
+
+        String url = getRootRestUrl()
+                .append("/workspaces/").append(workspaceName)
+                .append("/datastores/").append(dataStoreName)
+                .append("/featuretypes/").append(featureName)
+                .toString();
+
+        log.debug("delete FeatureType with name: {} by URL: {}", featureName, url);
+
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + jwtToken)
+                .url(url)
+                .delete()
+                .build();
+
+        doRequest(request, "delete FeatureType");
+    }
 }

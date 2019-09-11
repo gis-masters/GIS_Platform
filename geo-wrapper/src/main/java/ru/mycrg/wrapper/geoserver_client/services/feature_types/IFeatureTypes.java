@@ -6,4 +6,6 @@ public interface IFeatureTypes {
 
     void create(String workspaceName, String dataStoreName, String featureName, String jwtToken) throws GeoserverClientException;
 
+    void delete(String workspaceName, String dataStoreName, String featureName, String jwtToken) throws GeoserverClientException;
+
 }

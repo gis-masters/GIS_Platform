@@ -13,9 +13,7 @@ import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.exceptions.CrgImportException;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.CrgChainable;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.math.BigDecimal;
@@ -26,12 +24,9 @@ import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service
-public class PostImportService implements CrgChainable<ImportMqTask> {
+public class PostImportService extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
-
-    private CrgChainable<ImportMqTask> nextImporter;
-    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final CrgScriptEngine scriptEngine;
@@ -46,12 +41,6 @@ public class PostImportService implements CrgChainable<ImportMqTask> {
         this.scriptEngine = scriptEngine;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
-    }
-
-    @Override
-    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
-        this.nextImporter = nextHandler;
-        this.previousImporter = previousHandler;
     }
 
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
@@ -88,7 +77,9 @@ public class PostImportService implements CrgChainable<ImportMqTask> {
                 log.debug("Update next batch: {}", offset);
             }
 
-            nextImporter.handle(mqRequest, importTask);
+            if (nextImporter != null) {
+                nextImporter.handle(mqRequest, importTask);
+            }
         } catch (Exception e) {
             String msg = "Не удалось выполнить доп. обработку ресурса: " + importTask.printTarget();
             log.error(msg, e);
@@ -97,13 +88,10 @@ public class PostImportService implements CrgChainable<ImportMqTask> {
                     new BaseMqProcessResponse(mqRequest,
                             new ImportMqResponse(importTask), TASK_ERROR, "", msg));
 
-            previousImporter.rollback(importTask);
+            if (previousImporter != null) {
+                previousImporter.rollback(importTask);
+            }
         }
-    }
-
-    @Override
-    public void rollback(ImportMqTask importTask) {
-        previousImporter.rollback(importTask);
     }
 
     /**

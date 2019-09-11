@@ -176,10 +176,10 @@ public class BaseDaoService {
     public void delete(JdbcTemplate jdbcTemplate, ResourceProjection target) {
         log.debug("Try delete: {}", target.toString());
 
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.%s",
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
                 target.getSchemaName(), target.getTableName()));
 
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.%s",
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
                 target.getSchemaName(), target.getTableName() + EXTENSION_POSTFIX));
     }
 

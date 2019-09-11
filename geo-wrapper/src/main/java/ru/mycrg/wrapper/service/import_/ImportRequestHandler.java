@@ -1,6 +1,7 @@
 package ru.mycrg.wrapper.service.import_;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,20 @@ import java.util.List;
 import static ru.mycrg.common.enums.ProcessStatus.DONE;
 import static ru.mycrg.common.enums.ProcessStatus.ERROR;
 
+/**
+ * <p>Сервис обрабатывающий событие импорта.</p>
+ *
+ * Формирует/инициирует последовательность действий необходимых для импорта:
+ * <ul>
+ *     <li>Копирование данных из чернового источника</li>
+ *     <li>Постобработка данных</li>
+ *     <li>Создание фичи на геосервере</li>
+ *     <li>Очистка данных чернового импорта.<br>
+ *         В случае, если импорт не удался, очистка не выполняется, чтобы можно было проанализировать ситауцию<br>
+ *         Не очищаем слои на геосервере в рабочей области "scratch_" потому как туда доступ только у админа
+*      </li>
+ * </ul>
+ */
 @Service
 public class ImportRequestHandler extends BaseRequestHandler implements IRequestHandler {
 
@@ -24,23 +39,20 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
     private final MqSender mqSender;
     private final CrgChainable<ImportMqTask> initialImportService;
-    private final CrgChainable<ImportMqTask> postImportService;
-    private final CrgChainable<ImportMqTask> geoserverImportService;
 
     public ImportRequestHandler(InitialImportService initialImporter,
                                 PostImportService postImporter,
                                 GeoserverImportService geoserverImporter,
+                                ScratchImportCleaner importCleaner,
                                 MqSender mqSender) {
         this.mqSender = mqSender;
         this.initialImportService = initialImporter;
-        this.postImportService = postImporter;
-        this.geoserverImportService = geoserverImporter;
 
-        // TODO: подчищать черновой импорт, как в БД так и на геосервере
         // Задаем цепочку отбработчиков
-        this.initialImportService.setHandlers(postImportService, null);
-        this.postImportService.setHandlers(geoserverImportService, this.initialImportService);
-        this.geoserverImportService.setHandlers(null, postImportService);
+        this.initialImportService.setHandlers(postImporter, null);
+        ((CrgChainable<ImportMqTask>) postImporter).setHandlers(geoserverImporter, initialImportService);
+        ((CrgChainable<ImportMqTask>) geoserverImporter).setHandlers(importCleaner, postImporter);
+        ((CrgChainable<ImportMqTask>) importCleaner).setHandlers(null, geoserverImporter);
     }
 
     @Override
@@ -58,7 +70,7 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
         }
     }
 
-    private List<ImportMqTask> getTasks(BaseMqProcessRequest mqRequest) {
+    private List<ImportMqTask> getTasks(@NotNull BaseMqProcessRequest mqRequest) {
         return mapper.convertValue(mqRequest.getPayload(), new TypeReference<List<ImportMqTask>>() {});
     }
 }

@@ -13,8 +13,7 @@ import ru.mycrg.wrapper.geoserver_client.services.storage.StorageService;
 import ru.mycrg.wrapper.geoserver_client.services.user_role.UsersAndRolesService;
 import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.common.CrgConstants.DEFAULT_ROLE_NAME;
+import static ru.mycrg.common.CrgConstants.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
 
@@ -66,11 +65,11 @@ public class OrganizationService implements IOrganization {
 
             String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
             String dbName = DEFAULT_DB_NAME + dto.getOrgId();
-            String scratchWorkspaceName = "scratch_" + dbName;
+            String scratchWorkspaceName = SCRATCH_DB_PREFIX + dbName;
 
             // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
             workspacesService.createWorkspace(scratchWorkspaceName);
-            storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + "_store");
+            storageService.createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + DEFAULT_STORE_POSTFIX);
 
             // Задаем правила доступа к рабочей области "scratch"
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());

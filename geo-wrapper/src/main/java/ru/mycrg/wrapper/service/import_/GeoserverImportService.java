@@ -10,19 +10,15 @@ import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.CrgChainable;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
 import static ru.mycrg.common.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
 
 @Service
-public class GeoserverImportService implements CrgChainable<ImportMqTask> {
+public class GeoserverImportService extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(GeoserverImportService.class);
-
-    private CrgChainable<ImportMqTask> nextImporter;
-    private CrgChainable<ImportMqTask> previousImporter;
 
     private final MqSender mqSender;
     private final FeatureTypeService featureTypesService;
@@ -31,12 +27,6 @@ public class GeoserverImportService implements CrgChainable<ImportMqTask> {
                                   FeatureTypeService featureTypesService) {
         this.mqSender = mqSender;
         this.featureTypesService = featureTypesService;
-    }
-
-    @Override
-    public void setHandlers(CrgChainable<ImportMqTask> nextHandler, CrgChainable<ImportMqTask> previousHandler) {
-        this.nextImporter = nextHandler;
-        this.previousImporter = previousHandler;
     }
 
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
@@ -53,6 +43,10 @@ public class GeoserverImportService implements CrgChainable<ImportMqTask> {
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
                             new ImportMqResponse(importTask), TASK_DONE, "Готово", -1));
+
+            if (nextImporter != null) {
+                nextImporter.handle(mqRequest, importTask);
+            }
         } catch (GeoserverClientException e) {
             String msg = "Не удалось опубликовать слой на геосервере: " + importTask.getFeatureDescription().getName();
             log.error(msg, e);
@@ -61,13 +55,10 @@ public class GeoserverImportService implements CrgChainable<ImportMqTask> {
                     new BaseMqProcessResponse(mqRequest,
                             new ImportMqResponse(importTask), TASK_ERROR, "", msg));
 
-            previousImporter.rollback(importTask);
+            if (previousImporter != null) {
+                previousImporter.rollback(importTask);
+            }
         }
-    }
-
-    @Override
-    public void rollback(ImportMqTask importTask) {
-        previousImporter.rollback(importTask);
     }
 
 }
