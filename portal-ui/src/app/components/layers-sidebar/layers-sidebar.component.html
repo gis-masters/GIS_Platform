@@ -1,64 +1,26 @@
-<div [ngClass]="isActive? 'crg-layers-sidebar' : 'crg-layers-sidebar_hidden'">
+<div class="layers-sidebar" [ngClass]="{'layers-sidebar_visible': !isActive}">
 
-  <crg-tile-source-select class="sidebar-tile-source-select"></crg-tile-source-select>
+  <crg-tile-source-select class="layers-sidebar__tile-source-select">
+  </crg-tile-source-select>
 
-  <div class="crg-sidebar-content scroll">
+  <div class="layers-sidebar__content scroll">
 
-    <ng-container *ngIf="layers; else layersLoading">
-      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"(selectionChange)="handleSelection(fizLayers)">
-        <mat-list-option cdkDrag *ngFor="let layer of layers" [value]="layer" (contextmenu)="onContextMenu($event, layer)">
-          <div style="position: fixed"
-                 [style.left]="contextMenuPosition.x"
-                 [style.top]="contextMenuPosition.y"
-                 [matMenuTriggerFor]="contextMenu"
-                 [matMenuTriggerData]="{layer: layer}">
-            </div>
-          <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
-        </mat-list-option>
-      </mat-selection-list>
-    </ng-container>
-
-      <mat-selection-list #fizLayers cdkDropList (cdkDropListDropped)="drop($event)"
+    <mat-selection-list #fizLayers
+                        *ngIf="layers; else layersLoading"
+                        cdkDropList
+                        (cdkDropListDropped)="drop($event)"
                         (selectionChange)="handleSelection(fizLayers)">
-      <ng-container *ngIf="layers; else layersLoading">
-          <mat-list-option class="example-box" style="height: 80px"
-                           *ngFor="let layer of layers" cdkDrag [value]="layer"
-                           (contextmenu)="onContextMenu($event, layer)">
-            
-
-          <crg-layer-list-item [layer]="layer"></crg-layer-list-item>
-          </mat-list-option>
-      </ng-container>
-
-      <ng-template #layersLoading>
-        <div class="col-12 text-center">
-          Загрузка слоев...
-          <mat-progress-bar mode="query"></mat-progress-bar>
-        </div>
-      </ng-template>
-      </mat-selection-list>
-
+      <crg-layer-list-item *ngFor="let layer of layers"
+                          [layer]="layer" cdkDrag
+                          (deleteLayer)="onDeleteLayer(layer)">
+      </crg-layer-list-item>
+    </mat-selection-list>
   </div>
 </div>
 
-<mat-menu #contextMenu="matMenu">
-  <ng-template matMenuContent let-item="layer">
-
-    <button mat-menu-item (click)="openAttributeTable()" class="without-outline">
-      <mat-icon>list_alt</mat-icon>
-      <span>Открыть таблицу атрибутов</span>
-    </button>
-
-    <mat-divider style="margin-top: 5px; margin-bottom: 5px;"></mat-divider>
-
-    <button mat-menu-item (click)="export()">
-      <mat-icon>archive</mat-icon>
-      <span>Экспорт ESRI Shape-файл</span>
-    </button>
-
-    <button mat-menu-item (click)="delete()">
-      <mat-icon>delete</mat-icon>
-      <span>Удалить слой</span>
-    </button>
-  </ng-template>
-</mat-menu>
+<ng-template #layersLoading>
+  <div class="layers-sidebar__loading">
+    Загрузка слоев...
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  </div>
+</ng-template>

@@ -1,0 +1,13 @@
+.layer-list-item {
+  position: relative;
+
+  &__menu-trigger {
+    position: fixed;
+  }
+}
+
+.mat-menu-item {
+  height: 30px;
+
+  line-height: 30px;
+}
