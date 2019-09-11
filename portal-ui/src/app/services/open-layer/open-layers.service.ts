@@ -42,13 +42,14 @@ export class OpenLayersService {
 
   mapClick$ = new EventEmitter<number[]>();
 
-  private currentTileSource: XYZ;
+  private currentTileSource: TileSource;
+
   private tileSources: TileSource[] = [
     {
       name: 'OSM',
       title: 'Open street map',
       source: new OSM(),
-      thumbnail: 'osmThumbnail.png'
+      thumbnail: '/assets/images/thumpnail-osm.jpg'
     },
     {
       name: 'ESRI',
@@ -56,15 +57,15 @@ export class OpenLayersService {
       source: new XYZ({
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
       }),
-      thumbnail: 'esriThumbnail.png'
+      thumbnail: '/assets/images/thumpnail-esri.jpg'
     },
     {
       name: 'SimfReg',
-      title: 'Наша какаша',
+      title: 'Ортофотоплан',
       source: new TileArcGISRest({
         urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
       }),
-      thumbnail: 'ourThumbnail.png'
+      thumbnail: '/assets/images/thumpnail-our.jpg'
     },
   ];
 
@@ -111,7 +112,7 @@ export class OpenLayersService {
     });
 
     this.tileLayer = new TileLayer({
-      source: this.currentTileSource
+      source: this.currentTileSource.source
     });
 
     this._map = new Map({
@@ -332,18 +333,18 @@ export class OpenLayersService {
   /**
    * Задать слой подложку.
    * Перечень доступынх подложек: tileSources
-   * @param tileName Название положки.
+   * @param tileSource
    */
-  setTileSource(tileName?: string) {
-    this.currentTileSource = this.getTileSource(tileName);
-    this.tileLayer.setSource(this.currentTileSource);
+  setTileSource(tileSource: TileSource) {
+    this.currentTileSource = tileSource;
+    this.tileLayer.setSource(this.currentTileSource.source);
   }
 
-  getCurrentTileSource() {
+  getCurrentTileSource(): TileSource {
     return this.currentTileSource;
   }
 
-  getTileSources() {
+  getTileSources(): TileSource[] {
     return this.tileSources;
   }
 
@@ -373,19 +374,13 @@ export class OpenLayersService {
     }
   }
 
-  private getTileSource(tileName?: string) {
-    if (tileName) {
+  private getTileSource(tileName: string) {
       const foundSource = this.tileSources.find((tSource: TileSource) => tSource.name === tileName);
       if (foundSource) {
-        return foundSource.source;
+        return foundSource;
       } else {
-        this.logger.warn('Not found tileSource by name: ', tileName);
-
-        return this.tileSources[0].source;
+        throw new Error('Not found tileSource by name: ' + tileName);
       }
-    } else {
-      return this.tileSources[0].source;
-    }
   }
 
   private crgImageLoadFunction(tile, src) {

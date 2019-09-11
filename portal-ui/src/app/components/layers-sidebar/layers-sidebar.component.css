@@ -51,3 +51,10 @@
 
   line-height: 30px;
 }
+
+::ng-deep .sidebar-tile-source-select {
+  display: block;
+
+  width: calc(100% - 40px);
+  margin: 20px 20px 0;
+}

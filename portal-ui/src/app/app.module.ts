@@ -14,6 +14,7 @@ import {AlertModule} from 'ngx-bootstrap';
 import {FileUploadModule} from 'ng2-file-upload';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import {LoginFormModule} from './components/login-form/login-form.module';
 import {LoadingModule} from './components/loading/loading.module';
@@ -56,6 +57,7 @@ import {DataImportTasksListComponent} from './components/data-import-tasks-list/
 import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 import {HomeComponent} from './components/home/home.component';
+import { TileSourceSelectComponent } from './components/tile-source-select/tile-source-select.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +96,8 @@ import {HomeComponent} from './components/home/home.component';
     DataImportTasksListComponent,
     AtleastPipe,
     WorkspaceHeaderComponent,
-    HomeComponent
+    HomeComponent,
+    TileSourceSelectComponent
   ],
   imports: [
     HttpClientModule,
@@ -116,6 +119,7 @@ import {HomeComponent} from './components/home/home.component';
     }),
     NgxMaskModule.forRoot(),
     NgxDatatableModule,
+    NgSelectModule,
 
     LoginFormModule,
     LoadingModule
