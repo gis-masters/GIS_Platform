@@ -21,6 +21,10 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+.mat-button:focus {
+  outline: none;
+}
+
 .mat-menu-item:focus {
   outline: none;
 }

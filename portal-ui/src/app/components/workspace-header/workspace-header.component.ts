@@ -10,7 +10,7 @@ import {
   Injector
 } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'crg-workspace-header',
@@ -19,10 +19,12 @@ import { environment } from '../../../environments/environment';
 export class WorkspaceHeaderComponent implements AfterViewInit, OnDestroy {
   moduleRef: NgModuleRef<NgModule>;
 
-  @ViewChild('here', { read: ViewContainerRef, static: true })
+  @ViewChild('here', {read: ViewContainerRef, static: true})
   here: ViewContainerRef;
 
-  constructor(private compiler: Compiler, private injector: Injector) {}
+  constructor(private compiler: Compiler,
+              private injector: Injector) {
+  }
 
   ngAfterViewInit(): void {
     import(`./workspace-header@${environment.platform}.module`)
