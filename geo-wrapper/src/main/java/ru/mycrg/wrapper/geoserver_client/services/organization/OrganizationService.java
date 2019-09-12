@@ -14,7 +14,7 @@ import ru.mycrg.wrapper.geoserver_client.services.user_role.UsersAndRolesService
 import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 
 import static ru.mycrg.common.CrgConstants.*;
-import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
 
 /**
@@ -73,6 +73,8 @@ public class OrganizationService implements IOrganization {
 
             // Задаем правила доступа к рабочей области "scratch"
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), DEFAULT_ROLE_NAME + dto.getOrgId());
+            rulesService.addLayersRule(buildRule(scratchWorkspaceName, WRITE), DEFAULT_ROLE_NAME + dto.getOrgId());
+            rulesService.addLayersRule(buildRule(scratchWorkspaceName, READ), DEFAULT_ROLE_NAME + dto.getOrgId());
 
             String rawPassword = AES.decrypt(dto.getRawPassword(), dto.getEmail());
             usersAndRolesService.createUser(dto.getEmail(), rawPassword);

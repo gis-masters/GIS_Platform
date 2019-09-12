@@ -12,8 +12,7 @@ import ru.mycrg.wrapper.geoserver_client.services.storage.StorageService;
 import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 
 import static ru.mycrg.common.CrgConstants.*;
-import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.ADMIN;
-import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.WRITE;
+import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
 
 @Service
@@ -61,6 +60,8 @@ public class ProjectService implements IProject {
             rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + orgId);
             // Задаю правило WRITE потому как не давало менять фичу через wfs
             rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + orgId);
+            // Если не задано правило на чтение, то, по-умолчанию, рабочая область видна всем.
+            rulesService.addLayersRule(buildRule(projectName, READ), DEFAULT_ROLE_NAME + orgId);
         } catch (Exception e) {
             throw new GeoserverClientException(e.getMessage(), e);
         }
