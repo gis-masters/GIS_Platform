@@ -25,14 +25,14 @@ export class StylesService {
    *
    * @param styleName style name
    */
-  getStyleSld(styleName: string): Observable<any> {
+  getStyleSld(styleName: string): Observable<string> {
     const currentProject = this.storageService.getProject().crgProject;
     const workspaceName = currentProject.workspaceName;
 
     const url = this.workspacesUrl + workspaceName + '/styles/' + styleName + '.sld';
 
     return this.http
-               .get<any>(url, {headers: {'Content-Type': 'application/vnd.ogc.sld+xml'}, responseType: 'text'});
+               .get(url, {headers: {'Content-Type': 'application/vnd.ogc.sld+xml'}, responseType: 'text'});
   }
 
 }
