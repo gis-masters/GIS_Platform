@@ -9,7 +9,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 @Injectable({
   providedIn: 'root'
 })
-export class WmsService {
+export class LegendService {
 
   private _baseUrl = this.serverProp.geoServerUrl + '/wms';
   private request = 'GetLegendGraphic';
@@ -23,11 +23,10 @@ export class WmsService {
               private logger: NGXLogger,
               private baseService: BaseService,
               private serverProp: ServerPropertiesService) {
-    logger.info('WmsService start');
   }
 
   // http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=topp:states
-  getFullLegend(complexLayerName: string): Observable<any> {
+  getFullLegendGraphic(complexLayerName: string): Observable<any> {
     const params = new HttpParams()
       .set('REQUEST', this.request)
       .set('VERSION', this.version)
@@ -47,10 +46,10 @@ export class WmsService {
    * Get a graphic that is representative of specific rule by their name.
    *
    * @param complexLayerName  Название слоя в формате 'workspace:layerName'
-   * @param ruleName          Название правила в стиле. Ожидаем что стили будут основаны на атрибуте classid,
-   *                          и будут содержать его значение в названии.
+   * @param ruleName          Название правила в стиле. Ожидаем что в названии стиля будет использован атрибут на
+   *                          основе которого сделан фильтр.
    */
-  getLegendRule(complexLayerName: string, ruleName: string): Observable<any> {
+  getLegendGraphicByRuleName(complexLayerName: string, ruleName: string): Observable<any> {
     const params = new HttpParams()
       .set('REQUEST', this.request)
       .set('VERSION', this.version)

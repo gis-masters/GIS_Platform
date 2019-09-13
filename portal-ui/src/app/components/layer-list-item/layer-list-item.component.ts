@@ -1,13 +1,13 @@
-import {Component, Input, OnInit, ViewChild, OnDestroy, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {ExportService} from '../../services/crg/export.service';
-import {WmsService} from '../../services/geoserver/wms.service';
+import {LegendService} from '../../services/geoserver/legend.service';
 import {StringUtil} from '../../services/util/StringUtil';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 
@@ -31,14 +31,14 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private wmsService: WmsService,
+  constructor(private legendService: LegendService,
               private exportService: ExportService,
               private sideBarManager: SideBarManager,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.wmsService
-        .getFullLegend(this.layer.complexName)
+    this.legendService
+        .getFullLegendGraphic(this.layer.complexName)
         .subscribe(data => {
           this.createImageFromBlob(data);
         });

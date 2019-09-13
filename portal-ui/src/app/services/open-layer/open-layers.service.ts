@@ -12,7 +12,7 @@ import {MapperUtil} from './MapperUtil';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Fill, Stroke, Style} from 'ol/style.js';
-import {WmsService} from '../geoserver/wms.service';
+import {LegendService} from '../geoserver/legend.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {EventEmitter, Injectable} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
@@ -91,7 +91,7 @@ export class OpenLayersService {
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
-              private wmsService: WmsService) {
+              private legendService: LegendService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
 
     if (environment.platform === 'conv') {
@@ -154,7 +154,7 @@ export class OpenLayersService {
 
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
-        url: this.wmsService.baseUrl,
+        url: this.legendService.baseUrl,
         params: params,
         imageLoadFunction: this.crgImageLoadFunction,
         ratio: 1,

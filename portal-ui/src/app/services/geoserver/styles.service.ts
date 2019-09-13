@@ -1,49 +1,38 @@
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {NameHrefProjection} from './projections';
 import {TokenStorageService} from '../token-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import {LocalStorageService} from '../local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StylesService {
 
-  private layersUrl = this.serverProp.geoServerUrl + '/rest/styles';
+  private workspacesUrl = this.serverProp.geoServerUrl + '/rest/workspaces/';
 
   constructor(private http: HttpClient,
               private logger: NGXLogger,
+              private storageService: LocalStorageService,
               private tokenStorage: TokenStorageService,
               private serverProp: ServerPropertiesService) {
   }
 
-  getAll(): Observable<NameHrefProjection[] | any> {
-    return this.http
-               .get(this.layersUrl)
-               .pipe(
-                 map((response: any) => response.styles.style)
-               );
-  }
-
   /**
-   * Я предпологаю что наименование стиля, которые поидее должны быть уже созданы, будет таким же как и слой + postfix: '_style'.
-   * @param styleName - Название стиля
+   * Get the style SLD definition body.
+   *
+   * @param styleName style name
    */
-  getByName(styleName: string): Observable<GeoStyle | any> {
+  getStyleSld(styleName: string): Observable<any> {
+    const currentProject = this.storageService.getProject().crgProject;
+    const workspaceName = currentProject.workspaceName;
+
+    const url = this.workspacesUrl + workspaceName + '/styles/' + styleName + '.sld';
+
     return this.http
-               .get<GeoStyle>(this.layersUrl + '/' + styleName + '_style');
+               .get<any>(url, {headers: {'Content-Type': 'application/vnd.ogc.sld+xml'}, responseType: 'text'});
   }
 
-}
-
-export interface GeoStyle {
-  name: string;
-  filename: string;
-  format: string;
-  languageVersion: {
-    version: string
-  };
 }
