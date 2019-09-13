@@ -190,36 +190,22 @@ export class OpenLayersService {
   getLayerOpacity(complexLayerName: string) {
     const layerByName = this.getLayerByName(complexLayerName);
     if (layerByName) {
-      layerByName.getOpacity();
+      return layerByName.getOpacity();
     }
   }
 
-  /**
-   * Принимает список включенных слоев.
-   * Проходит по всем слоям на карте проставляет true для всех переданных слоев и false для всех остальных.
-   *
-   * @param complexLayerNames - Навания включенных слоев.
-   */
-  changeLayersVisibility(complexLayerNames: string[]) {
-    this.getImageLayers().forEach((bLayer: BaseLayer) => {
-      const source: ImageWMS = bLayer.get('source');
+  setLayerVisibility(complexLayerName: string, visibility: boolean) {
+    const layer = this.getLayerByName(complexLayerName);
+    if (layer) {
+      layer.setVisible(visibility);
+    }
+  }
 
-      if (source && source.getParams()) {
-        const layerName = source.getParams().LAYERS;
-        let isExist = false;
-        complexLayerNames.forEach(complexLayerName => {
-          if (layerName === complexLayerName) {
-            isExist = true;
-          }
-        });
-
-        if (isExist) {
-          bLayer.setVisible(true);
-        } else {
-          bLayer.setVisible(false);
-        }
-      }
-    });
+  getLayerVisibility(complexLayerName: string): boolean {
+    const layer = this.getLayerByName(complexLayerName);
+    if (layer) {
+      return layer.getVisible();
+    }
   }
 
   public set_ZIndex(complexLayerName: string, index: number) {
@@ -253,8 +239,6 @@ export class OpenLayersService {
       return layer;
     } else {
       this.logger.warn('Not found layer: ', complexLayerName);
-
-      return undefined;
     }
   }
 

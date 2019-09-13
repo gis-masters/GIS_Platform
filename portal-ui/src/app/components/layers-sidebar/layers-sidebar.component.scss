@@ -27,10 +27,11 @@
     overflow: auto;
 
     max-height: calc(100% - 70px);
+    padding: 20px 0;
   }
 
   &__loading {
-    padding: 0 15px;
+    padding: 15px;
 
     text-align: center;
   }

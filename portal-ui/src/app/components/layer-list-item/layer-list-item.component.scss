@@ -1,13 +1,86 @@
 .layer-list-item {
   position: relative;
 
+  transition: color 0.3s;
+
+  color: var(--gray);
+
+  &_visible {
+    color: rgba(0,0,0,0.87);
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+
+    min-height: 40px;
+    padding: 5px 20px;
+
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+  }
+
+  &__visibility-trigger {
+    color: var(--primary);
+  }
+
+  &__title {
+    margin: 0 8px;
+    flex-grow: 1;
+  }
+
+  &__openness-trigger {
+    transition: transform 0.3s;
+
+    color: var(--primary);
+
+    &_open {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &__extra {
+    overflow: hidden;
+
+    height: 0;
+    padding: 0 20px 5px;
+
+    transition: opacity 0.3s;
+
+    opacity: 0;
+
+    &_open {
+      height: auto;
+
+      opacity: 1;
+    }
+  }
+
+  &__opacity-control {
+    width: 100%;
+  }
+
   &__menu-trigger {
     position: fixed;
   }
 }
 
-.mat-menu-item {
-  height: 30px;
+::ng-deep {
+  .cdk-drag-handle {
+    cursor: move;
 
-  line-height: 30px;
+    color: var(--primary);
+  }
+
+  .cdk-drag-preview {
+    cursor: move;
+
+    background: white;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
 }

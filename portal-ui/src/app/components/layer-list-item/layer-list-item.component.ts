@@ -8,7 +8,9 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {ExportService} from '../../services/crg/export.service';
 import {LegendService} from '../../services/geoserver/legend.service';
+import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {StringUtil} from '../../services/util/StringUtil';
+import {cn} from '../../services/util/cn';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -29,12 +31,36 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
   imageToShow: any;
   isImageLoaded = false;
 
+  cn = cn('layer-list-item');
+
+  open: boolean = false;
+
+  get visible (): boolean {
+    return this.openLayers.getLayerVisibility(this.layer.complexName);
+  }
+
+  set visible (visible: boolean) {
+    this.openLayers.setLayerVisibility(this.layer.complexName, visible);
+    if (!visible) {
+      this.open = false;
+    }
+  }
+
+  get opacity (): number {
+    return this.openLayers.getLayerOpacity(this.layer.complexName);
+  }
+
+  set opacity (opacity: number) {
+    this.openLayers.setLayerOpacity(this.layer.complexName, opacity);
+  }
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private legendService: LegendService,
               private exportService: ExportService,
               private sideBarManager: SideBarManager,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private openLayers: OpenLayersService) { }
 
   ngOnInit(): void {
     this.legendService
@@ -81,6 +107,14 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.deleteLayer.emit(this.layer);
         });
+  }
+
+  toggleVisibility () {
+    this.visible = !this.visible;
+  }
+
+  toggleOpenness () {
+    this.open = !this.open;
   }
 
   getGeometryType(name: string) {

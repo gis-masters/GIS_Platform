@@ -1,25 +1,28 @@
-<div class="layers-sidebar" [ngClass]="{'layers-sidebar_visible': !isActive}">
+<div [class]="cn({visible: !isActive})">
 
-  <crg-tile-source-select class="layers-sidebar__tile-source-select">
+  <crg-tile-source-select [class]="cn('tile-source-select')">
   </crg-tile-source-select>
 
-  <div class="layers-sidebar__content scroll">
+  <div [class]="cn('content', ['scroll'])">
 
-    <mat-selection-list #fizLayers
-                        *ngIf="layers; else layersLoading"
-                        cdkDropList
-                        (cdkDropListDropped)="drop($event)"
-                        (selectionChange)="handleSelection(fizLayers)">
+    <div [class]="cn('list')"
+        *ngIf="layers; else layersLoading"
+        cdkDropList
+        (cdkDropListDropped)="drop($event)">
       <crg-layer-list-item *ngFor="let layer of layers"
-                          [layer]="layer" cdkDrag
+                          [layer]="layer"
+                          cdkDrag
                           (deleteLayer)="onDeleteLayer(layer)">
+        <mat-icon cdkDragHandle>
+          drag_handle
+        </mat-icon>
       </crg-layer-list-item>
-    </mat-selection-list>
+    </div>
   </div>
 </div>
 
 <ng-template #layersLoading>
-  <div class="layers-sidebar__loading">
+  <div [class]="cn('loading')">
     Загрузка слоев...
     <mat-progress-bar mode="query"></mat-progress-bar>
   </div>
