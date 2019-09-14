@@ -10,10 +10,6 @@ public class DataSchema {
 
     public DataSchema() {}
 
-    public DataSchema(List<FeatureDescription> featureDescriptions) {
-        this.featureDescriptions = featureDescriptions;
-    }
-
     public void addFeatureDescription(FeatureDescription featureDescription) {
         featureDescriptions.add(featureDescription);
     }
@@ -22,8 +18,8 @@ public class DataSchema {
         return featureDescriptions;
     }
 
-    public void setFeatureDescriptions(List<FeatureDescription> featureDescriptions) {
-        this.featureDescriptions = featureDescriptions;
+    public void clear() {
+        featureDescriptions.clear();
     }
 
     /**

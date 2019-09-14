@@ -3,6 +3,7 @@ package ru.mycrg.gis.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
@@ -28,11 +29,11 @@ public class DataSchemaController {
         return dataSchemaService.getFewDescriptions(featureNames);
     }
 
-    @GetMapping("/schema/{featureName}")
-    public FeatureDescriptionDto getSchemaByFeatureName(@PathVariable String featureName) {
-        log.info("Get dataSchema for feature: {}", featureName);
+    @PostMapping("/schema/update")
+    public HttpStatus updateSchema() {
+        dataSchemaService.update();
 
-        return dataSchemaService.getDescriptionByName(featureName);
+        return HttpStatus.ACCEPTED;
     }
 
 }

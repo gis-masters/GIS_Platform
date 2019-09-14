@@ -10,6 +10,7 @@ public interface IDataSchemaHolder {
 
     FeatureDescriptionDto getDescriptionByName(String name);
 
-    boolean isCacheEmpty();
+    void update();
 
+    boolean isCacheEmpty();
 }

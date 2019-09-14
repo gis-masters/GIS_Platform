@@ -44,7 +44,7 @@ public class DataSchemaService implements IDataSchemaHolder {
 
     public List<FeatureDescriptionDto> getFewDescriptions(List<String> featureNames) {
         if (isCacheEmpty()) {
-            prepareSchema();
+            cacheSchema();
         }
 
         if (featureNames.isEmpty()) {
@@ -70,7 +70,7 @@ public class DataSchemaService implements IDataSchemaHolder {
      */
     public FeatureDescriptionDto getDescriptionByName(String featureName) throws CrgNotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
-            prepareSchema();
+            cacheSchema();
         }
 
         Optional<FeatureDescription> optionalFeature = dataSchema.getFeatureTypeByName(featureName);
@@ -84,6 +84,13 @@ public class DataSchemaService implements IDataSchemaHolder {
         } else {
             throw new CrgNotFoundException("Не найден слой: " + featureName);
         }
+    }
+
+    @Override
+    public void update() {
+        dataSchema.clear();
+
+        cacheSchema();
     }
 
     /**
@@ -138,7 +145,7 @@ public class DataSchemaService implements IDataSchemaHolder {
      */
     public void checkFeatureByName(String featureName) throws CrgNotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
-            prepareSchema();
+            cacheSchema();
         }
 
         dataSchema
@@ -202,10 +209,10 @@ public class DataSchemaService implements IDataSchemaHolder {
                 });
     }
 
-    private void prepareSchema() {
-        log.info("Cache dataSchema");
-
+    private void cacheSchema() {
         if (isCacheEmpty()) {
+            log.debug("Cache dataSchema");
+
             dataSchemaRepository
                     .findAll()
                     .forEach(schema -> dataSchema.addFeatureDescription(MapperUtil.mapXsdRuleToFeatureDescription(schema)));
