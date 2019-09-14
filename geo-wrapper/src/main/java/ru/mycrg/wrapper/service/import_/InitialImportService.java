@@ -56,10 +56,10 @@ public class InitialImportService extends AbstractImportChainItem {
 
             ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
-            List<GeoMapping> mapping = importTask.getMapping();
-            GeoMapping ruleIdMapping = new GeoMapping(
-                    new LayerInfo(RULE_ID, "String"),
-                    new ColumnProjection(AS_IS, AS_IS)
+            List<MatchingPair> mapping = importTask.getPairs();
+            MatchingPair ruleIdMapping = new MatchingPair(
+                    new SourceAttribute(RULE_ID, "String"),
+                    new TargetAttribute(AS_IS, AS_IS)
             );
 
             if (ruleIdNotExist(mapping)) {
@@ -104,7 +104,7 @@ public class InitialImportService extends AbstractImportChainItem {
         baseDaoService.delete(jdbcTemplate, targetResource);
     }
 
-    private boolean ruleIdNotExist(List<GeoMapping> mapping) {
+    private boolean ruleIdNotExist(List<MatchingPair> mapping) {
         return mapping
                 .stream()
                 .noneMatch(geoMapping -> RULE_ID.equals(geoMapping.getSource().getName().toLowerCase()));

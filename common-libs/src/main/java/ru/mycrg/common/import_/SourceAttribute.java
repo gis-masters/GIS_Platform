@@ -1,13 +1,21 @@
 package ru.mycrg.common.import_;
 
-public class LayerInfo {
+/**
+ * Класс отображающий описание атрибута от импорт плагина геосервера.
+ */
+public class SourceAttribute {
 
     private String name;
+
+    /**
+     * Отсылка на java класс, например: "org.locationtech.jts.geom.MultiPolygon", "java.lang.Long"
+     *
+     */
     private String binding;
 
-    public LayerInfo() {}
+    public SourceAttribute() {}
 
-    public LayerInfo(String name, String binding) {
+    public SourceAttribute(String name, String binding) {
         this.name = name;
         this.binding = binding;
     }

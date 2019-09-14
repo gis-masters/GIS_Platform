@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.import_;
 
-import ru.mycrg.common.import_.GeoMapping;
+import ru.mycrg.common.import_.MatchingPair;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ public class ImportTask {
 
     private String layerName;
     private String workTableName;
-    private List<GeoMapping> mapping;
+    private List<MatchingPair> mapping;
     private Integer srs;
 
     public ImportTask() {}
 
-    public ImportTask(String layerName, String workTableName, List<GeoMapping> mapping) {
+    public ImportTask(String layerName, String workTableName, List<MatchingPair> mapping) {
         this.layerName = layerName;
         this.workTableName = workTableName;
         this.mapping = mapping;
@@ -38,11 +38,11 @@ public class ImportTask {
         this.workTableName = workTableName;
     }
 
-    public List<GeoMapping> getMapping() {
+    public List<MatchingPair> getMapping() {
         return mapping;
     }
 
-    public void setMapping(List<GeoMapping> mapping) {
+    public void setMapping(List<MatchingPair> mapping) {
         this.mapping = mapping;
     }
 

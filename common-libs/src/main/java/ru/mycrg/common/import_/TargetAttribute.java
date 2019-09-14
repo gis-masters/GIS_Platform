@@ -1,13 +1,13 @@
 package ru.mycrg.common.import_;
 
-public class ColumnProjection {
+public class TargetAttribute {
 
     private String name;
     private String type;
 
-    public ColumnProjection() {}
+    public TargetAttribute() {}
 
-    public ColumnProjection(String name, String type) {
+    public TargetAttribute(String name, String type) {
         this.name = name;
         this.type = type;
     }

@@ -10,7 +10,7 @@ public class ImportMqTask {
     private FeatureDescriptionDto featureDescription;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
-    private List<GeoMapping> mapping;
+    private List<MatchingPair> pairs;
     private Integer srs;
     private String userToken;
 
@@ -19,13 +19,13 @@ public class ImportMqTask {
     public ImportMqTask(FeatureDescriptionDto featureDescription,
                         ResourceProjection sourceResource,
                         ResourceProjection targetResource,
-                        List<GeoMapping> mapping,
+                        List<MatchingPair> pairs,
                         Integer srs,
                         String userToken) {
         this.featureDescription = featureDescription;
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;
-        this.mapping = mapping;
+        this.pairs = pairs;
         this.srs = srs;
         this.userToken = userToken;
     }
@@ -46,12 +46,12 @@ public class ImportMqTask {
         this.targetResource = targetResource;
     }
 
-    public List<GeoMapping> getMapping() {
-        return mapping;
+    public List<MatchingPair> getPairs() {
+        return pairs;
     }
 
-    public void setMapping(List<GeoMapping> mapping) {
-        this.mapping = mapping;
+    public void setPairs(List<MatchingPair> pairs) {
+        this.pairs = pairs;
     }
 
     public String printSource() {

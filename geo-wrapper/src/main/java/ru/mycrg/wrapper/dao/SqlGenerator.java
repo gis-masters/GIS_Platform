@@ -1,14 +1,12 @@
 package ru.mycrg.wrapper.dao;
 
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ColumnProjection;
-import ru.mycrg.common.import_.GeoMapping;
+import ru.mycrg.common.import_.TargetAttribute;
+import ru.mycrg.common.import_.MatchingPair;
 import ru.mycrg.common.import_.ImportMqTask;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
@@ -30,21 +28,21 @@ public class SqlGenerator {
         return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(PRIMARY_KEY);
     }
 
-    public static String prepareAlterRequest(List<GeoMapping> mapping, String targetSchema, String targetTable) {
+    public static String prepareAlterRequest(List<MatchingPair> mapping, String targetSchema, String targetTable) {
 //        ALTER TABLE fiz.functionalzone ADD COLUMN IF NOT EXISTS fiz6 INTEGER,
 //                                       ADD COLUMN IF NOT EXISTS fiz5 INTEGER,
 //                                       ADD COLUMN IF NOT EXISTS fiz4 INTEGER;
         String alter = "ALTER TABLE " + targetSchema + "." + targetTable + " ";
         StringBuilder columns = new StringBuilder();
 
-        for (GeoMapping geoMapping : mapping) {
-            ColumnProjection target = geoMapping.getTarget();
+        for (MatchingPair matchingPair : mapping) {
+            TargetAttribute target = matchingPair.getTarget();
             if (target.getType().equals(AS_IS)) {
                 columns
                         .append("ADD COLUMN IF NOT EXISTS ")
-                        .append(geoMapping.getSource().getName())
+                        .append(matchingPair.getSource().getName())
                         .append(" ")
-                        .append(defineColumnType(geoMapping.getSource().getBinding()))
+                        .append(defineColumnType(matchingPair.getSource().getBinding()))
                         .append(", ");
             }
         }
@@ -69,65 +67,63 @@ public class SqlGenerator {
                 .append(" integer NOT NULL, ");
 
         // Сначала добавим атрибуты которые есть в схеме
-        AtomicBoolean isGeometryExist = new AtomicBoolean(false);
-        importTask.getFeatureDescription().getProperties().forEach(propertySchema -> {
-            String name = propertySchema.getName().toLowerCase();
-            if (GLOBAL_ID.equals(name)) {
-                createTableSql
-                        .append("globalid character varying(38) " +
-                                "DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, ");
-            } else {
-                switch (propertySchema.getValueType()) {
-                    case INT:
-                        createTableSql
-                                .append(name)
-                                .append(" integer, ");
-                        break;
-                    case STRING:
-                        Integer maxLength = propertySchema.getMaxLength();
-                        if (maxLength == -1) {
-                            maxLength = 255;
-                        }
+//        AtomicBoolean isGeometryExist = new AtomicBoolean(false);
+//        importTask.getFeatureDescription().getProperties().forEach(propertySchema -> {
+//            String name = propertySchema.getName().toLowerCase();
+//            if (GLOBAL_ID.equals(name)) {
+//                createTableSql
+//                        .append("globalid character varying(38) " +
+//                                "DEFAULT '{00000000-0000-0000-0000-000000000000}'::character varying, ");
+//            } else {
+//                switch (propertySchema.getValueType()) {
+//                    case INT:
+//                        createTableSql
+//                                .append(name)
+//                                .append(" integer, ");
+//                        break;
+//                    case STRING:
+//                        Integer maxLength = propertySchema.getMaxLength();
+//                        if (maxLength == -1) {
+//                            maxLength = 255;
+//                        }
+//
+//                        createTableSql
+//                                .append(name)
+//                                .append(" character varying(")
+//                                .append(maxLength)
+//                                .append("), ");
+//                        break;
+//                    case DOUBLE:
+//                        createTableSql
+//                                .append(name)
+//                                .append(" numeric(38,8), ");
+//                        break;
+//                    case CHOICE:
+//                        createTableSql
+//                                .append(name)
+//                                .append(" integer, ");
+//                        break;
+//                    case GEOMETRY:
+//                        isGeometryExist.set(true);
+//                    default:
+//                }
+//            }
+//        });
 
-                        createTableSql
-                                .append(name)
-                                .append(" character varying(")
-                                .append(maxLength)
-                                .append("), ");
-                        break;
-                    case DOUBLE:
-                        createTableSql
-                                .append(name)
-                                .append(" numeric(38,8), ");
-                        break;
-                    case CHOICE:
-                        createTableSql
-                                .append(name)
-                                .append(" integer, ");
-                        break;
-                    case GEOMETRY:
-                        isGeometryExist.set(true);
-                    default:
-                }
-            }
-        });
-
-        // Затем AS_IS атрибуты
-        if (importTask.getMapping() != null) {
+        if (importTask.getPairs() != null) {
             importTask
-                    .getMapping().stream()
-                    .filter(geoMapping -> AS_IS.equals(geoMapping.getTarget().getName()))
-                    .collect(Collectors.toList())
-                    .forEach(geoMapping -> {
+                    .getPairs().stream()
+                    .filter(matchingPair -> !NOT_IMPORT.equals(matchingPair.getTarget().getName()))
+                    .forEach(matchingPair -> {
                         createTableSql
-                                .append(geoMapping.getSource().getName())
+                                .append(matchingPair.getSource().getName())
                                 .append(" ")
-                                .append(defineColumnType(geoMapping.getSource().getBinding()))
+                                .append(defineColumnType(matchingPair.getSource().getBinding()))
                                 .append(", ");
                     });
         }
 
-        if (isGeometryExist.get()) {
+//        if (isGeometryExist.get()) {
             createTableSql
                     .append("shape public.geometry, ")
                     .append("CONSTRAINT ")
@@ -138,16 +134,16 @@ public class SqlGenerator {
                     .append("CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = ")
                     .append(srsCode)
                     .append("))); ");
-        } else {
-            createTableSql.delete(createTableSql.length() - 2, createTableSql.length());
-            createTableSql
-                    .append("); ")
-                    .append("ALTER TABLE ONLY ")
-                    .append(target)
-                    .append(" ADD CONSTRAINT ")
-                    .append(targetTable)
-                    .append("_pkey PRIMARY KEY (objectid);");
-        }
+//        } else {
+//            createTableSql.delete(createTableSql.length() - 2, createTableSql.length());
+//            createTableSql
+//                    .append("); ")
+//                    .append("ALTER TABLE ONLY ")
+//                    .append(target)
+//                    .append(" ADD CONSTRAINT ")
+//                    .append(targetTable)
+//                    .append("_pkey PRIMARY KEY (objectid);");
+//        }
 
         return createTableSql.toString();
     }

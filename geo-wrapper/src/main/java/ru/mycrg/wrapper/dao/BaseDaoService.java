@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ColumnProjection;
-import ru.mycrg.common.import_.GeoMapping;
+import ru.mycrg.common.import_.TargetAttribute;
+import ru.mycrg.common.import_.MatchingPair;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.service.validation.Util;
 
@@ -132,7 +132,7 @@ public class BaseDaoService {
     public void copy(JdbcTemplate jdbcTemplate, ImportMqTask request) {
         String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
                 request.getTargetResource().getTableName();
-        String data = handleInsertMappingColumns(request.getMapping());
+        String data = handleInsertMappingColumns(request.getPairs());
         String from = " FROM " + request.getSourceResource().getSchemaName() + "." + '\"' +
                 request.getSourceResource().getTableName() + '\"';
 
@@ -244,14 +244,14 @@ public class BaseDaoService {
         });
     }
 
-    private String handleInsertMappingColumns(List<GeoMapping> mapping) {
+    private String handleInsertMappingColumns(List<MatchingPair> mapping) {
         String pre = " (";
         String post = ") ";
 
         StringBuilder targetColumns = new StringBuilder();
         StringBuilder sourceColumns = new StringBuilder("SELECT ");
-        for (GeoMapping geoMapping : mapping) {
-            ColumnProjection target = geoMapping.getTarget();
+        for (MatchingPair matchingPair : mapping) {
+            TargetAttribute target = matchingPair.getTarget();
             if (target.getType().equals("serial") || target.getType().equals(DaoProperties.NOT_IMPORT)) {
                 continue;
             }
@@ -259,10 +259,10 @@ public class BaseDaoService {
             String tName;
             String sName;
             if (target.getType().equals(AS_IS)) {
-                tName = sName = geoMapping.getSource().getName();
+                tName = sName = matchingPair.getSource().getName();
             } else {
                 tName = target.getName();
-                sName = geoMapping.getSource().getName();
+                sName = matchingPair.getSource().getName();
             }
 
             targetColumns.append(tName).append(", ");
