@@ -1,7 +1,7 @@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {PropertySchema} from '../../crg/data-schema.service';
-import {InputStartResponseDto, LayerAttribute} from './import.service';
+import {AS_IS_TYPE, ImportTargetType, InputStartResponseDto, LayerAttribute, NOT_IMPORT} from './import.service';
 import {MatchingPair, TaskImport} from './taskImport';
 import {ProjectModel} from './projectModel';
 
@@ -31,13 +31,31 @@ export class WorkImport {
   }
 
   addMapping(layerName: string, source: LayerAttribute, targetProperty: PropertySchema) {
-    const newMapping = {
+    let newMapping = {
       source: source,
       target: {
         name: targetProperty.name,
-        type: targetProperty.valueType
+        type: ImportTargetType.FROM_SCHEMA
       }
     };
+
+    if (targetProperty.name === NOT_IMPORT.name) {
+      newMapping = {
+        source: source,
+        target: {
+          name: source.name,
+          type: targetProperty.name
+        }
+      };
+    } else if (targetProperty.name === AS_IS_TYPE.name) {
+      newMapping = {
+        source: source,
+        target: {
+          name: source.name,
+          type: targetProperty.name
+        }
+      };
+    }
 
     this.getTaskByLayerName(layerName)
         .pairs.push(newMapping);
@@ -47,10 +65,22 @@ export class WorkImport {
     this.getTaskByLayerName(layerName).pairs
         .forEach((mapItem: MatchingPair) => {
           if (mapItem.source.name === source.name) {
-            mapItem.target = {
-              name: targetProperty.name,
-              type: targetProperty.valueType
-            };
+            if (targetProperty.name === NOT_IMPORT.name) {
+              mapItem.target = {
+                name: source.name,
+                type: NOT_IMPORT.name
+              };
+            } else if (targetProperty.name === AS_IS_TYPE.name) {
+              mapItem.target = {
+                name: source.name,
+                type: AS_IS_TYPE.name
+              };
+            } else {
+              mapItem.target = {
+                name: targetProperty.name,
+                type: ImportTargetType.FROM_SCHEMA
+              };
+            }
           }
         });
   }

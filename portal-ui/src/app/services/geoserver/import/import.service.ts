@@ -269,12 +269,18 @@ export interface ImportLayer {
   layer: ImportLayerItem;
 }
 
+export enum ImportTargetType {
+  AS_IS = 'AsIs',
+  NOT_IMPORT = 'NotImport',
+  FROM_SCHEMA = 'FROM_SCHEMA'
+}
+
 export const AS_IS_TYPE = {
   title: 'Импортировать как есть',
-  name: 'AsIs',
+  name: ImportTargetType.AS_IS,
 };
 
 export const NOT_IMPORT = {
   title: 'Не импортировать',
-  name: 'NotImport',
+  name: ImportTargetType.NOT_IMPORT,
 };

@@ -1,4 +1,4 @@
-import {LayerAttribute} from './import.service';
+import {ImportTargetType, LayerAttribute} from './import.service';
 
 // Править в соответствии с моделью ru/mycrg/gis/service/import_/ImportTask.java
 export class TaskImport {
@@ -35,5 +35,5 @@ export interface MatchingPair {
 
 export interface ColumnProjection {
   name: string;
-  type: string;
+  type: ImportTargetType;
 }
