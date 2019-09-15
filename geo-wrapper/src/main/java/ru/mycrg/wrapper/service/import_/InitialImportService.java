@@ -59,7 +59,7 @@ public class InitialImportService extends AbstractImportChainItem {
             List<MatchingPair> mapping = importTask.getPairs();
             MatchingPair ruleIdMapping = new MatchingPair(
                     new SourceAttribute(RULE_ID, "String"),
-                    new TargetAttribute(AS_IS, AS_IS)
+                    new TargetAttribute(RULE_ID, AS_IS)
             );
 
             if (ruleIdNotExist(mapping)) {
@@ -104,10 +104,10 @@ public class InitialImportService extends AbstractImportChainItem {
         baseDaoService.delete(jdbcTemplate, targetResource);
     }
 
-    private boolean ruleIdNotExist(List<MatchingPair> mapping) {
-        return mapping
+    private boolean ruleIdNotExist(List<MatchingPair> pairs) {
+        return pairs
                 .stream()
-                .noneMatch(geoMapping -> RULE_ID.equals(geoMapping.getSource().getName().toLowerCase()));
+                .noneMatch(pair -> RULE_ID.equals(pair.getSource().getName().toLowerCase()));
     }
 
 }

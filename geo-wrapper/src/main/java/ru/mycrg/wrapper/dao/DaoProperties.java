@@ -8,18 +8,20 @@ public class DaoProperties {
     /**
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
      */
-    public static String PRIMARY_KEY = "objectid";
+    public static final String PRIMARY_KEY = "objectid";
 
-    public static String CLASS_ID = "classid";
+    public static final String CLASS_ID = "classid";
 
-    public static String GLOBAL_ID = "globalid";
+    public static final String GLOBAL_ID = "globalid";
 
-    public static String RULE_ID = "ruleid";
+    public static final String RULE_ID = "ruleid";
 
-    public static String EXTENSION_POSTFIX = "_extension";
+    public static final String EXTENSION_POSTFIX = "_extension";
 
-    public static String AS_IS = "AsIs";
+    public static final String AS_IS = "AsIs";
 
-    public static String NOT_IMPORT = "NotImport";
+    public static final String NOT_IMPORT = "NotImport";
+
+    public static final String FromSchema = "FromSchema";
 
 }

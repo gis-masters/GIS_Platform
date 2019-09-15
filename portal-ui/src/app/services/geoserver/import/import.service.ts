@@ -272,7 +272,7 @@ export interface ImportLayer {
 export enum ImportTargetType {
   AS_IS = 'AsIs',
   NOT_IMPORT = 'NotImport',
-  FROM_SCHEMA = 'FROM_SCHEMA'
+  FROM_SCHEMA = 'FromSchema'
 }
 
 export const AS_IS_TYPE = {
