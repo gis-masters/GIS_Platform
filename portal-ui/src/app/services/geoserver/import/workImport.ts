@@ -2,7 +2,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {PropertySchema} from '../../crg/data-schema.service';
 import {InputStartResponseDto, LayerAttribute} from './import.service';
-import {MappingItem, TaskImport} from './taskImport';
+import {MatchingPair, TaskImport} from './taskImport';
 import {ProjectModel} from './projectModel';
 
 export class WorkImport {
@@ -16,7 +16,6 @@ export class WorkImport {
 
   // Наименование рабочей области
   projectModel: ProjectModel;
-  dataStore: string;
 
   // Сюда ложим ответ от сервера при инициализации импорта
   target_import: InputStartResponseDto;
@@ -36,21 +35,21 @@ export class WorkImport {
       source: source,
       target: {
         name: targetProperty.name,
-        type: targetProperty.name
+        type: targetProperty.valueType
       }
     };
 
     this.getTaskByLayerName(layerName)
-        .mapping.push(newMapping);
+        .pairs.push(newMapping);
   }
 
-  updateMapping(layerName: string, source: LayerAttribute, property: PropertySchema) {
-    this.getTaskByLayerName(layerName).mapping
-        .forEach((mapItem: MappingItem) => {
+  updateMapping(layerName: string, source: LayerAttribute, targetProperty: PropertySchema) {
+    this.getTaskByLayerName(layerName).pairs
+        .forEach((mapItem: MatchingPair) => {
           if (mapItem.source.name === source.name) {
             mapItem.target = {
-              name: property.name,
-              type: property.name
+              name: targetProperty.name,
+              type: targetProperty.valueType
             };
           }
         });
@@ -60,7 +59,7 @@ export class WorkImport {
     this.projectModel = projectModel;
 
     this.tasks.forEach((task: TaskImport) => {
-      task.mapping = [];
+      task.pairs = [];
       task.workTableName = undefined;
     });
 
@@ -70,7 +69,7 @@ export class WorkImport {
   updateFeatureSchema(importLayerName: string, featureSchemaName: string) {
     const task = this.getTaskByLayerName(importLayerName);
     task.workTableName = featureSchemaName;
-    task.mapping = [];
+    task.pairs = [];
 
     this.updateWorkImportState();
   }

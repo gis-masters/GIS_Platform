@@ -11,15 +11,15 @@ public class ImportTask {
 
     private String layerName;
     private String workTableName;
-    private List<MatchingPair> mapping;
+    private List<MatchingPair> pairs;
     private Integer srs;
 
     public ImportTask() {}
 
-    public ImportTask(String layerName, String workTableName, List<MatchingPair> mapping) {
+    public ImportTask(String layerName, String workTableName, List<MatchingPair> pairs) {
         this.layerName = layerName;
         this.workTableName = workTableName;
-        this.mapping = mapping;
+        this.pairs = pairs;
     }
 
     public String getLayerName() {
@@ -38,12 +38,12 @@ public class ImportTask {
         this.workTableName = workTableName;
     }
 
-    public List<MatchingPair> getMapping() {
-        return mapping;
+    public List<MatchingPair> getPairs() {
+        return pairs;
     }
 
-    public void setMapping(List<MatchingPair> mapping) {
-        this.mapping = mapping;
+    public void setPairs(List<MatchingPair> pairs) {
+        this.pairs = pairs;
     }
 
     public Integer getSrs() {

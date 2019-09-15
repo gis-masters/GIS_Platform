@@ -67,7 +67,7 @@ public class ImportService extends BaseProcessService {
                             projectModel.getDatabaseName(),
                             projectModel.getWorkspaceName(),
                             uiTask.getWorkTableName()),
-                    uiTask.getMapping(),
+                    uiTask.getPairs(),
                     uiTask.getSrs(),
                     CrgAuthHelper.getToken(principal)
             );

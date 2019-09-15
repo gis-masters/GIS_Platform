@@ -5,12 +5,13 @@ export class TaskImport {
   // Наименование слоя из исходных данных
   layerName: string;
 
-  // Таблица выбранная из рабочих данных
+  // Название проекта
   workTableName: string;
 
-  // Список обьектов маппинга. (Что во что должно смапится)
-  mapping: MappingItem[] = [];
+  // Список сопоставлемых атрибутов
+  pairs: MatchingPair[] = [];
 
+  // Система координат определенная импорт плагином
   srs: number;
 
   constructor(layerName: string, srs: string) {
@@ -19,7 +20,7 @@ export class TaskImport {
   }
 
   isPrepared(): boolean {
-    if (!this.layerName || !this.workTableName || this.mapping.length < 1) {
+    if (!this.layerName || !this.workTableName || this.pairs.length < 1) {
       return false;
     }
 
@@ -27,7 +28,7 @@ export class TaskImport {
   }
 }
 
-export interface MappingItem {
+export interface MatchingPair {
   source: LayerAttribute;
   target: ColumnProjection;
 }
