@@ -48,8 +48,8 @@ public class SqlGeneratorTest {
                         "objectid integer NOT NULL, " +
                         "classid integer, " +
                         "number character varying(255), " +
-                        "\"feature_le\" integer, " +
-                        "\"feature__1\" varchar); " +
+                        "feature_le integer, " +
+                        "feature__1 varchar); " +
                         "ALTER TABLE ONLY tSchema.tTable " +
                         "ADD CONSTRAINT tTable_pkey PRIMARY KEY (objectid);",
                 resultSql);
@@ -86,10 +86,10 @@ public class SqlGeneratorTest {
 
         assertEquals("CREATE TABLE tSchema.tTable (" +
                         "objectid integer NOT NULL, " +
-                        "\"feature_le\" integer, " +
+                        "feature_le integer, " +
                         "szz_size numeric(38,8), " +
                         "status integer, " +
-                        "\"feature__1\" varchar, " +
+                        "feature__1 varchar, " +
                         "shape public.geometry, " +
                         "CONSTRAINT tTable_pkey PRIMARY KEY (objectid), " +
                         "CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = 28406)));",

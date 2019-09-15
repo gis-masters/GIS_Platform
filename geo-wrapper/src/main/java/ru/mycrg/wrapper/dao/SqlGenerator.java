@@ -100,9 +100,8 @@ public class SqlGenerator {
         switch (matchingPair.getTarget().getType()) {
             case AS_IS:
                 createTableSql
-                        .append(", \"")
+                        .append(", ")
                         .append(matchingPair.getSource().getName())
-                        .append("\"")
                         .append(" ")
                         .append(defineSourceAttributeType(matchingPair.getSource().getBinding()));
                 break;
