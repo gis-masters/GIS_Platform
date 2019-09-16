@@ -1,7 +1,7 @@
 import {ValueType} from './FeaturePropertyValidators';
 import {FeatureDescription} from '../crg/data-schema.service';
 import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
-import {ImportLayerItem, LayerAttribute} from '../geoserver/import/import.service';
+import {ImportLayerItem, LayerAttribute} from '../geoserver/import/models';
 
 export class FeatureDescriptionUtil {
 

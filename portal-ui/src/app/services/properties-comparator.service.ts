@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {PropertySchema} from './crg/data-schema.service';
-import {LayerAttribute} from './geoserver/import/import.service';
 import {DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison} from './util/CrgComparatorUtil';
+import {LayerAttribute} from './geoserver/import/models';
 
 @Injectable({
   providedIn: 'root'

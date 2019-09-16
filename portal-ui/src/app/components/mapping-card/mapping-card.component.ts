@@ -6,9 +6,11 @@ import {
   PropertySchema,
   FeatureDescription
 } from '../../services/crg/data-schema.service';
-import {AS_IS_TYPE, ImportService, ImportLayerItem, NOT_IMPORT} from '../../services/geoserver/import/import.service';
+import {ImportService} from '../../services/geoserver/import/import.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {ImportLayerItem} from '../../services/geoserver/import/models';
+import {AS_IS_TYPE, NOT_IMPORT} from '../../services/crg/models';
 
 @Component({
   selector: 'crg-mapping-card',

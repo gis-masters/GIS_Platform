@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {Pipe, PipeTransform} from '@angular/core';
 import {FeatureDescription} from '../services/crg/data-schema.service';
-import {ImportLayerItem} from '../services/geoserver/import/import.service';
+import {ImportLayerItem} from '../services/geoserver/import/models';
 
 /**
  * На основе прочитанного значения отсортируем массив FeatureDescription[]

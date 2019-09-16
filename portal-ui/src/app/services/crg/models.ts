@@ -62,3 +62,19 @@ export enum ProcessStatus {
   DONE = 'DONE',
   ERROR = 'ERROR',
 }
+
+export enum ImportTargetType {
+  AS_IS = 'AsIs',
+  NOT_IMPORT = 'NotImport',
+  FROM_SCHEMA = 'FromSchema'
+}
+
+export const AS_IS_TYPE = {
+  title: 'Импортировать как есть',
+  name: ImportTargetType.AS_IS,
+};
+
+export const NOT_IMPORT = {
+  title: 'Не импортировать',
+  name: ImportTargetType.NOT_IMPORT,
+};

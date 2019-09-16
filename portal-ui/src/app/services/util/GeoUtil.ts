@@ -1,5 +1,5 @@
 import {ConnectionInfo} from '../geoserver/layers.service';
-import {ImportTask, ImportTasks} from '../geoserver/import/import.service';
+import {ImportTask, ImportTasks} from '../geoserver/import/models';
 
 export class GeoUtil {
 

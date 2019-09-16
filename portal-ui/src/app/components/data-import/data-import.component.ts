@@ -1,17 +1,13 @@
 import * as _ from 'lodash';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
-import {Component, OnDestroy, ViewChild, ElementRef} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {FileUploader} from 'ng2-file-upload';
 import {CommunicationService} from '../../services/communication.service';
-import {
-  ImportService,
-  ImportTasks,
-  ImportTaskShort,
-  InputStartResponseDto
-} from '../../services/geoserver/import/import.service';
-import {flatMap, takeUntil} from 'rxjs/operators';
-import {interval, of, Subject} from 'rxjs';
+import {ImportService} from '../../services/geoserver/import/import.service';
+import {takeUntil} from 'rxjs/operators';
+import {interval, Subject} from 'rxjs';
+import {ImportTasks, ImportTaskShort, InputStartResponseDto} from '../../services/geoserver/import/models';
 
 @Component({
   selector: 'crg-data-import',

@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {FeatureDescription} from '../services/crg/data-schema.service';
 import {FeatureDescriptionUtil} from '../services/util/FeatureDescriptionUtil';
-import {ImportLayerItem} from '../services/geoserver/import/import.service';
+import {ImportLayerItem} from '../services/geoserver/import/models';
 
 @Pipe({
   name: 'geometry'

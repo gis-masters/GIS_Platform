@@ -1,10 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {
-  ImportTaskFull,
-  ImportTaskShort,
-  ImportTaskProgress,
-  ImportService
-} from '../../services/geoserver/import/import.service';
+import {ImportService} from '../../services/geoserver/import/import.service';
+import {ImportTaskFull, ImportTaskProgress, ImportTaskShort} from '../../services/geoserver/import/models';
 
 interface ImportTaskExtended extends ImportTaskFull {
   progressValue?: ImportTaskProgress;
@@ -26,9 +22,9 @@ export class DataImportTasksListComponent implements OnInit {
 
   private FETCH_DELAY = 100;
 
-  private currentTaskNum: number = -1;
+  private currentTaskNum = -1;
   private tasksBuffer: TasksBuffer = {};
-  private lastFetched: number = 0;
+  private lastFetched = 0;
 
   get extendedTasks (): Task[] {
     return this.tasks.map(task => (this.tasksBuffer[task.id] ? this.tasksBuffer[task.id] : task));
@@ -59,7 +55,7 @@ export class DataImportTasksListComponent implements OnInit {
   }
 
   private fetchNextTask (): void {
-    if (!this.hasUncompletedTasks()) return;
+    if (!this.hasUncompletedTasks()) { return; }
 
     const now = new Date().getTime();
     if (now - this.lastFetched < this.FETCH_DELAY) {

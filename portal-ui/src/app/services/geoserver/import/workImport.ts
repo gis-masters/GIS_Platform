@@ -1,9 +1,10 @@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {publishReplay, refCount} from 'rxjs/operators';
 import {PropertySchema} from '../../crg/data-schema.service';
-import {AS_IS_TYPE, ImportTargetType, InputStartResponseDto, LayerAttribute, NOT_IMPORT} from './import.service';
 import {MatchingPair, TaskImport} from './taskImport';
 import {ProjectModel} from './projectModel';
+import {InputStartResponseDto, LayerAttribute} from './models';
+import {AS_IS_TYPE, ImportTargetType, NOT_IMPORT} from '../../crg/models';
 
 export class WorkImport {
 

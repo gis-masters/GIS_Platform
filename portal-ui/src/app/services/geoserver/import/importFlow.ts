@@ -1,6 +1,6 @@
 import {WorkImport} from './workImport';
 import {ProjectModel} from './projectModel';
-import {ImportTasks, InputStartResponseDto} from './import.service';
+import {ImportTasks, InputStartResponseDto} from './models';
 
 export class ImportFlow {
   scratch_import: InputStartResponseDto;

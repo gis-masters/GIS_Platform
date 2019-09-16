@@ -8,13 +8,14 @@ import {LayersService} from '../../../services/geoserver/layers.service';
 import {StylesService} from '../../../services/geoserver/styles.service';
 import {TaskImport} from '../../../services/geoserver/import/taskImport';
 import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
-import {ImportLayer, ImportLayerItem, ImportService} from '../../../services/geoserver/import/import.service';
+import {ImportService} from '../../../services/geoserver/import/import.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
 import {ProjectModel} from '../../../services/geoserver/import/projectModel';
 import {ProjectsService} from '../../../services/crg/projects.service';
 import {Process, ProcessStatus} from '../../../services/crg/models';
 import {OrganizationService} from '../../../services/crg/organization.service';
+import {ImportLayer, ImportLayerItem} from '../../../services/geoserver/import/models';
 
 @Component({
   selector: 'crg-data-mapping',

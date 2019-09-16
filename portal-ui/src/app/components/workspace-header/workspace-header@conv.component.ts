@@ -7,7 +7,7 @@ import {LocalStorageService} from '../../services/local-storage.service';
 import {EventService, IEvent} from '../../services/event.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 
-import {WorkspaceHeader} from './workspace-header@common.component';
+import {WorkspaceHeader} from './workspace-header@common';
 
 @Component({
   selector: 'crg-workspace-header',

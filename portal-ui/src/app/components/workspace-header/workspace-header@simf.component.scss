@@ -1,1 +1,7 @@
-@import 'workspace-header@common.component.scss';
+@import 'workspace-header@common';
+
+.workspace-header {
+  &__title {
+    text-align: center;
+  }
+}

@@ -3,8 +3,9 @@ import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {PropertySchema} from '../../services/crg/data-schema.service';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ImportService, LayerAttribute} from '../../services/geoserver/import/import.service';
+import {ImportService} from '../../services/geoserver/import/import.service';
 import {PropertiesComparatorService} from '../../services/properties-comparator.service';
+import {LayerAttribute} from '../../services/geoserver/import/models';
 
 @Component({
   selector: 'crg-mapping-pair',
