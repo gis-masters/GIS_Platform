@@ -167,22 +167,25 @@ export class DataSchemaService {
   }
 
   getClassIdAlias(layerName: string, element: any) {
-    let result = layerName;
+    let result = '';
     const featureByName = this.getFeatureDescriptionByName(layerName);
-    if (featureByName) {
-      featureByName.properties
-        .forEach((simpleProperty: PropertySchema) => {
-          if (simpleProperty.enumerations) {
-            simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
-              if (element.classId && item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
-                result = item.title;
-              } else if (element.classid && item.value.toLowerCase() === element.classid.toString().toLowerCase()) {
-                result = item.title;
-              }
-            });
-          }
-        });
+    if (!featureByName) {
+      return result;
     }
+
+    featureByName.properties.forEach((simpleProperty: PropertySchema) => {
+      if (!simpleProperty.enumerations) {
+        return;
+      }
+
+      simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
+        if (element.classId && item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
+          result = item.title;
+        } else if (element.classid && item.value.toLowerCase() === element.classid.toString().toLowerCase()) {
+          result = item.title;
+        }
+      });
+    });
 
     return result;
   }
@@ -220,7 +223,7 @@ export class DataSchemaService {
    */
   getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
     return propertySchemas.find((propertySchema: PropertySchema) => {
-      return propertySchema.name === key.toUpperCase();
+      return propertySchema.name.toLowerCase() === key.toLowerCase();
     });
   }
 
