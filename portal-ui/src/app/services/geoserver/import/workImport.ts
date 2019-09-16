@@ -32,6 +32,10 @@ export class WorkImport {
   }
 
   addMapping(layerName: string, source: LayerAttribute, targetProperty: PropertySchema) {
+    if (targetProperty.name === NOT_IMPORT.name) {
+      return;
+    }
+
     let newMapping = {
       source: source,
       target: {
@@ -40,15 +44,7 @@ export class WorkImport {
       }
     };
 
-    if (targetProperty.name === NOT_IMPORT.name) {
-      newMapping = {
-        source: source,
-        target: {
-          name: source.name,
-          type: targetProperty.name
-        }
-      };
-    } else if (targetProperty.name === AS_IS_TYPE.name) {
+    if (targetProperty.name === AS_IS_TYPE.name) {
       newMapping = {
         source: source,
         target: {
@@ -63,14 +59,11 @@ export class WorkImport {
   }
 
   updateMapping(layerName: string, source: LayerAttribute, targetProperty: PropertySchema) {
-    this.getTaskByLayerName(layerName).pairs
-        .forEach((mapItem: MatchingPair) => {
+    this.getTaskByLayerName(layerName)
+        .pairs.forEach((mapItem: MatchingPair, index, array) => {
           if (mapItem.source.name === source.name) {
             if (targetProperty.name === NOT_IMPORT.name) {
-              mapItem.target = {
-                name: source.name,
-                type: NOT_IMPORT.name
-              };
+              array.splice(index, 1);
             } else if (targetProperty.name === AS_IS_TYPE.name) {
               mapItem.target = {
                 name: source.name,
