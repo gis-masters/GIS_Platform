@@ -166,28 +166,23 @@ export class DataSchemaService {
     }
   }
 
-  getClassIdAlias(layerName: string, element: any) {
-    let result = '';
+  getClassIdAlias(layerName: string, element: {[key: string]: string}) {
     const featureByName = this.getFeatureDescriptionByName(layerName);
     if (!featureByName) {
-      return result;
+      return '';
     }
 
-    featureByName.properties.forEach((simpleProperty: PropertySchema) => {
-      if (!simpleProperty.enumerations) {
-        return;
-      }
-
-      simpleProperty.enumerations.forEach((item: ValueTitleProjection) => {
-        if (element.classId && item.value.toLowerCase() === element.classId.toString().toLowerCase()) {
-          result = item.title;
-        } else if (element.classid && item.value.toLowerCase() === element.classid.toString().toLowerCase()) {
-          result = item.title;
-        }
-      });
-    });
-
-    return result;
+    return featureByName.properties
+      .filter((simpleProperty: PropertySchema) => simpleProperty.enumerations)
+      .reduce((val: string, simpleProperty: PropertySchema) => {
+        return simpleProperty.enumerations.reduce((title: string, item: ValueTitleProjection) => {
+          if (String(element.classId) === item.value || String(element.classid) === item.value) {
+            return item.title;
+          } else {
+            return title;
+          }
+        }, val);
+      }, '');
   }
 
   /**
