@@ -1,4 +1,6 @@
-<div [class]="cn({visible: !isActive})">
+<div [class]="cn({open: isOpen})">
+
+  <div [class]="cn('open-btn', {open: isOpen})" (click)="toggleOpen()"></div>
 
   <crg-tile-source-select [class]="cn('tile-source-select')">
   </crg-tile-source-select>

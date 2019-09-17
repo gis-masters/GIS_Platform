@@ -11,13 +11,18 @@ import {cn} from '../../services/util/cn';
   styleUrls: ['./layers-sidebar.component.scss']
 })
 export class LayersSidebarComponent {
-  @Input() isActive: boolean;
   @Input() layers: CrgLayer[];
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
+
+  isOpen: boolean = true;
 
   cn = cn('layers-sidebar');
 
   constructor(private openLayers: OpenLayersService) { }
+
+  toggleOpen () {
+    this.isOpen = !this.isOpen;
+  }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);

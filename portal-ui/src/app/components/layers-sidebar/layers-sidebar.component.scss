@@ -12,8 +12,86 @@
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
 
-  &_visible {
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 16px;
+
+    content: '';
+
+    background: white;
+  }
+
+  &_open {
     left: 0;
+  }
+
+  &__open-btn {
+    position: absolute;
+    z-index: -1;
+    top: calc(50% - 21px);
+    right: -29px;
+
+    width: 32px;
+    height: 42px;
+
+    cursor: pointer;
+    transition: top 0.3s, right 0.3s, width 0.3s, height 0.3s, line-height 0.3s;
+    text-align: center;
+
+    color: var(--primary);
+    border-radius: 3px;
+    background: white;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
+
+    font-family: 'Material Icons';
+    font-size: 24px;
+    line-height: 42px;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      transition: opacity 0.3s;
+      text-align: center;
+
+      opacity: 0;
+    }
+
+    &::before {
+      content: 'chevron_left';
+    }
+
+    &::after {
+      content: 'layers';
+
+      opacity: 1;
+    }
+
+    &_open {
+      top: calc(50% - 18px);
+      right: -20px;
+
+      width: 23px;
+      height: 36px;
+
+      line-height: 36px;
+
+      &::before {
+        opacity: 1;
+      }
+
+      &::after {
+        opacity: 0;
+      }
+    }
   }
 
   ::ng-deep &__tile-source-select {

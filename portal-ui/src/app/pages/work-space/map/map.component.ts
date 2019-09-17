@@ -32,7 +32,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   layers: CrgLayer[] = undefined;
 
-  isLayersSidebarActive = false;
   isBugReportSidebarActive = false;
 
   isFeaturesSidebarActive = false;

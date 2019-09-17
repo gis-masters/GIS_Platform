@@ -31,6 +31,7 @@ import {ProjectModel} from '../../services/geoserver/import/projectModel';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -47,6 +48,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
+
+  isSimf: boolean = environment.platform === 'simf';
 
   currentPositionFeature: WfsFeature;
   features: WfsFeatureView[] = [];

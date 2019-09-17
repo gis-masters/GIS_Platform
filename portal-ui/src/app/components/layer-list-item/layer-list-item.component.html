@@ -6,7 +6,7 @@
       [matMenuTriggerData]="{layer: layer}">
   </div>
 
-  <div [class]="cn('content')">
+  <div [class]="cn('content', {visible: visible})">
     <ng-content></ng-content>
 
     <div [class]="cn('title')">
@@ -60,7 +60,7 @@
       <span>Экспорт ESRI Shape-файл</span>
     </button>
 
-    <button mat-menu-item (click)="delete()">
+    <button mat-menu-item (click)="delete()" *ngIf="!isSimf">
       <mat-icon>delete</mat-icon>
       <span>Удалить слой</span>
     </button>

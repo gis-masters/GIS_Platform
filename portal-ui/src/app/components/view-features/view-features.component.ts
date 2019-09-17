@@ -9,6 +9,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'crg-view-features',
@@ -25,6 +26,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   isSingleEdit = true;
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
+  isSimf: boolean = environment.platform === 'simf';
 
   viewFeatures: WfsFeature[] = [];
   pageInfo: Pageable = {

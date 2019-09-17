@@ -6,7 +6,8 @@
     <div class="attributes-bar__header-right-side">
       <crg-button
           class="attributes-bar__head-button"
-          [matMenuTriggerFor]="editMenu">
+          [matMenuTriggerFor]="editMenu"
+          *ngIf="!isSimf">
         Правка
       </crg-button>
 

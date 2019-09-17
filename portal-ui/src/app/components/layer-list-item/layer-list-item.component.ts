@@ -4,6 +4,7 @@ import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
 
+import { environment } from '../../../environments/environment';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {ExportService} from '../../services/crg/export.service';
@@ -25,6 +26,8 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatMenuTrigger, { static: false })
   contextMenu: MatMenuTrigger;
+
+  isSimf: boolean = environment.platform === 'simf';
 
   contextMenuPosition: {x: string, y: string} = { x: '0px', y: '0px' };
 

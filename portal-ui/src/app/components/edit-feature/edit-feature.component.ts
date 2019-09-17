@@ -12,6 +12,7 @@ import {EditFeatureItem, DataSchemaService, PropertySchema, FeatureDescription} 
 import {from, Subject} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
 import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
+import { environment } from '../../../environments/environment';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -41,6 +42,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
+  isSimf: boolean = environment.platform === 'simf';
 
   private featureDescription: FeatureDescription;
   private BATCH_SIZE = 200;
