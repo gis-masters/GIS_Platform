@@ -1,7 +1,7 @@
 import {GeoUtil} from './GeoUtil';
-import {FeatureDescriptionUtil} from './FeatureDescriptionUtil';
-import {ImportTask} from '../geoserver/import/import.service';
+import {ImportTask} from '../geoserver/import/models';
 import {FeatureDescription} from '../crg/data-schema.service';
+import {FeatureDescriptionUtil} from './FeatureDescriptionUtil';
 
 describe('GeoUtil test', () => {
 
