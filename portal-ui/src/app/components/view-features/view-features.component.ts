@@ -140,8 +140,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private fillTitles(viewFeatures: WfsFeature[]) {
     viewFeatures.forEach((feature: WfsFeature) => {
-      console.count('fillTitles');
-
       const featureName = feature.id.split('.')[0];
       const classIdAlias = this.dataSchemaService.getClassIdAlias(featureName, feature.properties);
 
