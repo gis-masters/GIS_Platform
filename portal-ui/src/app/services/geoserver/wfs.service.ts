@@ -88,19 +88,6 @@ export class WfsService {
                .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
   }
 
-  // As example for PRODUCT BACKLOG ITEM: 121
-  private fillProp(complexName: string) {
-    if (complexName === 'yalta_1:functionalzone') {
-      return 'classid,fz_mfstp,fz_odstp,fz_ingstp,fz_trstp,fz_shstp,fz_recstp,fz_orecstp,area,info_obj,' +
-        'constr_den,bld_height,pop_den,population,hzrd_class,other,event_time,status,reg_status,globalid,shape,' +
-        'shape_leng,shape_area';
-    } else if (complexName === 'yalta_1:transpsanitarygapzone') {
-      return 'classid,zone_desc,objectname,source,note,status,globalid';
-    } else {
-      return '';
-    }
-  }
-
   private prepareLink(typeName: string, objectId: string) {
     const workspaceName = typeName.split(':')[0];
 

@@ -98,7 +98,7 @@ export class DataSchemaService {
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
-  public getFeatureDescriptionByName(layerName: string): FeatureDescription {
+  public getFeatureDescriptionByName(layerName: string): FeatureDescription | undefined {
     if (!layerName) {
       return;
     }

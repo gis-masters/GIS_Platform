@@ -31,6 +31,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     pageSize: 25,
   };
 
+  private featureTitles: Map<string, string> = new Map<string, string>();
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
@@ -41,6 +43,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+
+    this.fillTitles(this.viewFeatures);
 
     if (this.data.mode === EditFeatureMode.multipleEdit) {
       this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
@@ -71,6 +75,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
         this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+
+        this.fillTitles(this.viewFeatures);
 
         if (currentValue.mode === EditFeatureMode.multipleEdit) {
           this.editFeatureData = this.prepareDataForMultipleEdit(currentValue.features);
@@ -111,6 +117,15 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  onPaging(event) {
+    const start = this.pageInfo.pageSize * event.pageIndex;
+    this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
+  }
+
+  getTitle(feature: WfsFeature): string {
+    return this.featureTitles.get(feature.id);
+  }
+
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
     const tamplateFeature: WfsFeature = features[0];
     const listOfFeaturesId = features.map((feature: WfsFeature) => feature.id);
@@ -123,9 +138,24 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     } as EditFeatureData;
   }
 
-  onPaging(event) {
-    const start = this.pageInfo.pageSize * event.pageIndex;
-    this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
+  private fillTitles(viewFeatures: WfsFeature[]) {
+    viewFeatures.forEach((feature: WfsFeature) => {
+      console.count('fillTitles');
+
+      const featureName = feature.id.split('.')[0];
+      const classIdAlias = this.dataSchemaService.getClassIdAlias(featureName, feature.properties);
+
+      if (classIdAlias) {
+        this.featureTitles.set(feature.id, classIdAlias);
+      } else {
+        const fDescription = this.dataSchemaService.getFeatureDescriptionByName(featureName);
+        if (fDescription) {
+          this.featureTitles.set(feature.id, fDescription.title);
+        } else {
+          this.featureTitles.set(feature.id, '');
+        }
+      }
+    });
   }
 }
 
