@@ -7,7 +7,7 @@ export const environment: Environment = {
   production: true,
   version: APP_VERSION,
   server: {
-    'host': '10.10.10.172',
+    'host': 'simf-region.mycrg.ru',
     'port': 8100
   },
   scratchWorkspaceName: 'scratch_workspace'
