@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {Subject, forkJoin, Observable} from 'rxjs';
+import {filter, takeUntil, map} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
 
@@ -13,6 +13,17 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {StringUtil} from '../../services/util/StringUtil';
 import {cn} from '../../services/util/cn';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { StylesService } from '../../services/geoserver/styles.service';
+import { LayersService } from '../../services/geoserver/layers.service';
+
+interface Rule {
+  name: string;
+  title: string;
+}
+
+interface RuleWithLegend extends Rule {
+  legend: string;
+}
 
 @Component({
   selector: 'crg-layer-list-item',
@@ -31,12 +42,11 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
 
   contextMenuPosition: {x: string, y: string} = { x: '0px', y: '0px' };
 
-  imageToShow: any;
-  isImageLoaded = false;
-
   cn = cn('layer-list-item');
 
   open: boolean = false;
+
+  rules: RuleWithLegend[] = [];
 
   get visible (): boolean {
     return this.openLayers.getLayerVisibility(this.layer.complexName);
@@ -63,14 +73,39 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
               private exportService: ExportService,
               private sideBarManager: SideBarManager,
               private dialog: MatDialog,
-              private openLayers: OpenLayersService) { }
+              private openLayers: OpenLayersService,
+              private stylesService: StylesService,
+              private layersService: LayersService) { }
 
   ngOnInit(): void {
-    this.legendService
-        .getFullLegendGraphic(this.layer.complexName)
-        .subscribe(data => {
-          this.createImageFromBlob(data);
-        });
+    this.layersService.getFullLayer(this.layer).subscribe(({layer}) => {
+      const layerName = layer.defaultStyle.name.split(':').pop();
+
+      this.stylesService.getStyleSld(layerName).subscribe((styleSld: string) => {
+        const xmlDoc = new DOMParser().parseFromString(styleSld, "text/xml");
+        const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
+          .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
+          .map(rule => {
+            const name = rule.querySelector('Name').innerHTML;
+            return {
+              name,
+              title: rule.querySelector('Title').innerHTML
+            }
+          });
+
+          forkJoin(rules.map(({ name }) => {
+            return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
+          })).subscribe((arr)=>{
+            forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
+              this.rules = rules.map((rule, i) => ({
+                ...rule,
+                legend: imgs[i]
+              }))
+            })
+          })
+      });
+
+    });
   }
 
   onContextMenu(event: MouseEvent) {
@@ -120,24 +155,23 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     this.open = !this.open;
   }
 
-  getGeometryType(name: string) {
-    return StringUtil.splitGeomType(name);
-  }
-
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  private createImageFromBlob(image: Blob) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      this.imageToShow = reader.result;
-      this.isImageLoaded = true;
-    }, false);
+  private createImageFromBlob(image: Blob): Observable<string> {
+    return new Observable(sub => {
+      const reader = new FileReader();
 
-    if (image) {
-      reader.readAsDataURL(image);
-    }
+      reader.addEventListener('load', () => {
+        sub.next(reader.result as string);
+        sub.complete();
+      }, false);
+
+      if (image) {
+        reader.readAsDataURL(image);
+      }
+    });
   }
 }

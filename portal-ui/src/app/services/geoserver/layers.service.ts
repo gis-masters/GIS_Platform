@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {BaseService} from '../base.service';
+
 import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {Project} from '../crg/projects.service';
-import {DatastoreService} from './datastore.service';
 import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {DataSchemaService} from '../crg/data-schema.service';
 import {ServerPropertiesService} from '../server-properties.service';
@@ -29,9 +28,7 @@ export class LayersService {
 
   constructor(private http: HttpClient,
               private log: FizLogger,
-              private baseService: BaseService,
               private ruleService: DataSchemaService,
-              private datastoreService: DatastoreService,
               private serverProp: ServerPropertiesService) {
     this.log.debug('setUp', 'LayersService constructor');
 
@@ -129,9 +126,9 @@ export class LayersService {
    * Получить полную информацию о слое
    * @param layer Простое предствление слоя
    */
-  private getLayer(layer: NameHrefProjection): Observable<Layer> {
+  getFullLayer(layer: NameHrefProjection): Observable<{layer: Layer}> {
     return this.http
-      .get<Layer>(layer.href);
+      .get<{layer: Layer}>(layer.href);
   }
 
   private filterScratchLayers(layers: NameHrefProjection[]) {

@@ -37,12 +37,14 @@
         step="0.05"
         [(ngModel)]="opacity">
     </mat-slider>
-  </div>
 
-  <!--  <div class="legend">({{getGeometryType(layer.name)}})</div>
-  <div>
-    <img [src]="imageToShow" alt="legend" height="20" width="20" *ngIf="isImageLoaded">
-  </div>-->
+    <div [class]="cn('legend')">
+      <div [class]="cn('legend-item')" *ngFor="let rule of rules">
+        <img [src]="rule.legend" [class]="cn('legend-item-pic')" />
+        <div [class]="cn('legend-item-title')">{{rule.title}}</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <mat-menu #contextMenu="matMenu">
