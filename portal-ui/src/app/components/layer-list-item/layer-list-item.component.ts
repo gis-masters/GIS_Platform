@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {forkJoin, Observable, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
@@ -28,7 +28,7 @@ interface RuleWithLegend extends Rule {
   templateUrl: './layer-list-item.component.html',
   styleUrls: ['./layer-list-item.component.scss']
 })
-export class LayerListItemComponent implements OnInit, OnDestroy {
+export class LayerListItemComponent implements OnDestroy {
 
   @Input() layer: CrgLayer;
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
@@ -42,9 +42,13 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
 
   cn = cn('layer-list-item');
 
+  rules: RuleWithLegend[] = [];
+
   open = false;
 
-  rules: RuleWithLegend[] = [];
+  private legendLoaded: boolean = false;
+
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   get visible (): boolean {
     return this.openLayers.getLayerVisibility(this.layer.complexName);
@@ -55,6 +59,7 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     if (!visible) {
       this.open = false;
     }
+    this.loadLegend();
   }
 
   get opacity (): number {
@@ -65,8 +70,6 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     this.openLayers.setLayerOpacity(this.layer.complexName, opacity);
   }
 
-  private unsubscribe$: Subject<void> = new Subject<void>();
-
   constructor(private legendService: LegendService,
               private exportService: ExportService,
               private sideBarManager: SideBarManager,
@@ -74,37 +77,6 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
               private openLayers: OpenLayersService,
               private stylesService: StylesService,
               private layersService: LayersService) { }
-
-  ngOnInit(): void {
-    this.layersService.getFullLayer(this.layer).subscribe(({layer}) => {
-      const layerName = layer.defaultStyle.name.split(':').pop();
-
-      this.stylesService.getStyleSld(layerName).subscribe((styleSld: string) => {
-        const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
-        const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
-          .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
-          .map(rule => {
-            const name = rule.querySelector('Name').innerHTML;
-            return {
-              name,
-              title: rule.querySelector('Title').innerHTML
-            };
-          });
-
-          forkJoin(rules.map(({ name }) => {
-            return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
-          })).subscribe((arr) => {
-            forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
-              this.rules = rules.map((rule, i) => ({
-                ...rule,
-                legend: imgs[i]
-              }));
-            });
-          });
-      });
-
-    });
-  }
 
   onContextMenu(event: MouseEvent) {
     event.preventDefault();
@@ -157,6 +129,37 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+  private loadLegend () {
+    if (this.legendLoaded) return;
+    this.legendLoaded = true;
+
+    this.layersService.getFullLayer(this.layer).subscribe(({layer}) => {
+      this.stylesService.getStyleSld(layer.defaultStyle.name).subscribe((styleSld: string) => {
+        const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
+        const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
+          .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
+          .map(rule => {
+            const name = rule.querySelector('Name').innerHTML;
+
+            return {
+              name,
+              title: rule.querySelector('Title').innerHTML
+            };
+          });
+
+        forkJoin(rules.map(({ name }) => {
+          return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
+        })).subscribe((arr) => {
+          forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
+            this.rules = rules.map((rule, i) => ({
+              ...rule,
+              legend: imgs[i]
+            }));
+          });
+        });
+      });
+    });  }
 
   private createImageFromBlob(image: Blob): Observable<string> {
     return new Observable(sub => {

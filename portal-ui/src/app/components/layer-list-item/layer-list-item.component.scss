@@ -68,8 +68,12 @@
     }
   }
 
+  &__extra-controls {
+    display: flex;
+  }
+
   &__opacity-control {
-    width: 100%;
+    flex-grow: 1;
 
     &.mat-slider:not(.mat-slider-disabled) {
       cursor: pointer;
@@ -78,6 +82,10 @@
         cursor: pointer;
       }
     }
+  }
+
+  &__menu-control {
+    color: var(--primary);
   }
 
   &__legend-item {
