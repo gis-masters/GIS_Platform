@@ -271,8 +271,8 @@ export class OpenLayersService {
 
   fitToBbox(bbox: any, padding: [number, number, number, number]) {
     this._map
-      .getView()
-      .fit(bbox, {padding: padding, constrainResolution: false});
+        .getView()
+        .fit(bbox, {padding: padding}); // constrainResolution Ломает view на слоях с геометрией Point
   }
 
   /**
