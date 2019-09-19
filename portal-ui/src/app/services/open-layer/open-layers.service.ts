@@ -63,7 +63,7 @@ export class OpenLayersService {
       name: 'SimfReg',
       title: 'Ортофотоплан',
       source: new TileArcGISRest({
-        urls: ['http://10.10.10.56:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
+        urls: ['http://simf-region.mycrg.ru:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
       }),
       thumbnail: '/assets/images/thumpnail-our.jpg'
     },
