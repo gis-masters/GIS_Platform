@@ -1,20 +1,18 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Subject, forkJoin, Observable} from 'rxjs';
-import {filter, takeUntil, map} from 'rxjs/operators';
+import {forkJoin, Observable, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
 
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {CrgLayer} from '../../services/geoserver/layers.service';
+import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {ExportService} from '../../services/crg/export.service';
 import {LegendService} from '../../services/geoserver/legend.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {StringUtil} from '../../services/util/StringUtil';
 import {cn} from '../../services/util/cn';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { StylesService } from '../../services/geoserver/styles.service';
-import { LayersService } from '../../services/geoserver/layers.service';
+import {StylesService} from '../../services/geoserver/styles.service';
 
 interface Rule {
   name: string;
@@ -44,7 +42,7 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
 
   cn = cn('layer-list-item');
 
-  open: boolean = false;
+  open = false;
 
   rules: RuleWithLegend[] = [];
 
@@ -82,7 +80,7 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
       const layerName = layer.defaultStyle.name.split(':').pop();
 
       this.stylesService.getStyleSld(layerName).subscribe((styleSld: string) => {
-        const xmlDoc = new DOMParser().parseFromString(styleSld, "text/xml");
+        const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
         const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
           .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
           .map(rule => {
@@ -90,19 +88,19 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
             return {
               name,
               title: rule.querySelector('Title').innerHTML
-            }
+            };
           });
 
           forkJoin(rules.map(({ name }) => {
             return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
-          })).subscribe((arr)=>{
+          })).subscribe((arr) => {
             forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
               this.rules = rules.map((rule, i) => ({
                 ...rule,
                 legend: imgs[i]
-              }))
-            })
-          })
+              }));
+            });
+          });
       });
 
     });
