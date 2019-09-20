@@ -14,7 +14,7 @@ public class MaxLengthValidation implements CrgConstraintValidator {
             return true;
         }
 
-        return value.toString().length() < context.getMaxLength();
+        return value.toString().length() <= context.getMaxLength();
     }
 
     @Override

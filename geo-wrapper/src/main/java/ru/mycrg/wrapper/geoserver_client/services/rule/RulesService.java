@@ -57,7 +57,6 @@ public class RulesService extends GeoServerBaseService {
         }
     }
 
-
     /**
      * Роль будет добавлена в два существующих на геосерве правила: <p>
      * <p>
@@ -88,9 +87,46 @@ public class RulesService extends GeoServerBaseService {
     }
 
     /**
+     * Добавить роль для заданного сервиса <p>
+     *
+     * @param serviceKeys Service rule key
+     * @param role        Наименование роли
+     */
+    public void addServiceRule(ServiceKeys serviceKeys, String role) throws Exception {
+        log.info("add role {} for service: {}", role, serviceKeys);
+
+        Request getServiceRoles = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .url("http://" + geoserverHost() + "/geoserver/rest/security/acl/services")
+                .get()
+                .build();
+
+        Response response = httpClient.newCall(getServiceRoles).execute();
+        if (response.isSuccessful()) {
+            Map<String, String> newRules = new HashMap<>();
+
+            Map<String, String> oldRules = new ObjectMapper().readValue(response.body().string(), HashMap.class);
+            String serviceRoles = oldRules.get(serviceKeys.getRuleKey());
+            if (serviceRoles != null) {
+                serviceRoles = serviceRoles + "," + role;
+
+                newRules.put(serviceKeys.getRuleKey(), serviceRoles);
+
+                updateServiceRoles(newRules);
+            } else {
+                newRules.put(serviceKeys.getRuleKey(), role);
+
+                createServiceRoles(newRules);
+            }
+        } else {
+            response.close();
+        }
+    }
+
+    /**
      * Добавить роль к правилу доступа.
      * Если указана ключевое правило то работаем только с ним, если не указано то роль добавляется ко всем правилам.
-     *
+     * <p>
      * Examples:
      * "/**:POST,DELETE,PUT":"ROLE_ADMINISTRATOR,admin_workspace_1",
      * "/**:GET":"ROLE_ADMINISTRATOR,admin_workspace_1",
@@ -139,6 +175,30 @@ public class RulesService extends GeoServerBaseService {
                 .put(body)
                 .build();
         doRequest(setRestRoles, "updateRestRoles");
+    }
+
+    private void updateServiceRoles(Map<String, String> newRules) throws Exception {
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
+
+        Request setServiceRoles = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .url("http://" + geoserverHost() + "/geoserver/rest/security/acl/services")
+                .put(body)
+                .build();
+
+        doRequest(setServiceRoles, "updateServiceRoles");
+    }
+
+    private void createServiceRoles(Map<String, String> rule) throws Exception {
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(rule).toString());
+
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .url("http://" + geoserverHost() + "/geoserver/rest/security/acl/services")
+                .post(body)
+                .build();
+
+        doRequest(request, "createServiceRoles");
     }
 
     private void updateLayersRoles(Map<String, String> newRules) throws Exception {

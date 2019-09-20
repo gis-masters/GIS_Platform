@@ -9,12 +9,14 @@ import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
+import ru.mycrg.wrapper.service.validation.constraints.MaxLengthValidation;
+import ru.mycrg.wrapper.service.validation.constraints.MinLengthValidation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ValidatorTest {
 
@@ -153,43 +155,34 @@ public class ValidatorTest {
         assertEquals(1, objectValidationResult.getObjectViolations().size());
     }
 
-//    @Test
-//    public void should_DontCount_NotRequiredErrors() {
-//        IValidator validator = new ValidatorImpl();
-//
-//        SimplePropertyDto classId = new SimplePropertyDto();
-//        classId.setValueType(ValueType.STRING);
-//        classId.setName("classid");
-//        classId.setRequired(false);
-//        classId.setMinLength(2);
-//        classId.setMaxLength(6);
-//
-//        SimplePropertyDto requiredProperty = new SimplePropertyDto();
-//        requiredProperty.setValueType(ValueType.STRING);
-//        requiredProperty.setName("name");
-//        requiredProperty.setRequired(true);
-//        requiredProperty.setMinLength(2);
-//        requiredProperty.setMaxLength(10);
-//
-//        List<SimplePropertyDto> properties = new ArrayList<>();
-//        properties.add(classId);
-//        properties.add(requiredProperty);
-//
-//        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
-//        featureDescription.setName("Fiz_Type");
-//        featureDescription.setDescription("test description");
-//        featureDescription.setTitle("test title");
-//        featureDescription.setTableName("test tableName");
-//        featureDescription.setProperties(properties);
-//
-//        HashMap<String, Object> rowFromDb = new HashMap<>();
-//        rowFromDb.put("classid", "too long string");
-//        rowFromDb.put("name", "too long string");
-//
-//        ObjectValidationResult objectValidationResult = validator.validate(featureDescription, rowFromDb);
-//
-//        assertEquals(1, objectValidationResult.getPropertyViolations().size());
-//        assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
-//    }
+    @Test
+    public void should_ValidateMaxLength() {
+        MaxLengthValidation maxLengthValidation = new MaxLengthValidation();
+
+        SimplePropertyDto someAttr = new SimplePropertyDto();
+        someAttr.setValueType(ValueType.STRING);
+        someAttr.setName("someAttr");
+        someAttr.setRequired(false);
+        someAttr.setMaxLength(11);
+
+        assertFalse(maxLengthValidation.isValid("string length 16", someAttr));
+        assertTrue(maxLengthValidation.isValid("short", someAttr));
+        assertTrue(maxLengthValidation.isValid("equal to 11", someAttr));
+    }
+
+    @Test
+    public void should_ValidateMinLength() {
+        MinLengthValidation minLengthValidation = new MinLengthValidation();
+
+        SimplePropertyDto someAttr = new SimplePropertyDto();
+        someAttr.setValueType(ValueType.STRING);
+        someAttr.setName("someAttr");
+        someAttr.setRequired(false);
+        someAttr.setMinLength(5);
+
+        assertTrue(minLengthValidation.isValid("string length 16", someAttr));
+        assertFalse(minLengthValidation.isValid("not", someAttr));
+        assertTrue(minLengthValidation.isValid("equal", someAttr));
+    }
 
 }

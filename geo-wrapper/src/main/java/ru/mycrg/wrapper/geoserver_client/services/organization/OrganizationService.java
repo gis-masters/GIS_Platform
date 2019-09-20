@@ -16,6 +16,8 @@ import ru.mycrg.wrapper.geoserver_client.services.workspace.WorkspacesService;
 import static ru.mycrg.common.CrgConstants.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerPermissions.*;
 import static ru.mycrg.wrapper.geoserver_client.GeoServerUtil.buildRule;
+import static ru.mycrg.wrapper.geoserver_client.services.rule.ServiceKeys.WFS_RULE_KEY;
+import static ru.mycrg.wrapper.geoserver_client.services.rule.ServiceKeys.WMS_RULE_KEY;
 
 /**
  * При создании БД для организации, использую ИД организации для генерации названия БД.
@@ -80,6 +82,8 @@ public class OrganizationService implements IOrganization {
             usersAndRolesService.createUser(dto.getEmail(), rawPassword);
             usersAndRolesService.createRole(roleName);
             rulesService.addRestRule(roleName);
+            rulesService.addServiceRule(WMS_RULE_KEY, roleName);
+            rulesService.addServiceRule(WFS_RULE_KEY, roleName);
 
             usersAndRolesService.associateUserWithRole(dto.getUserName(), roleName);
         } catch (Exception e) {
