@@ -9,6 +9,8 @@ import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.services.feature_types.FeatureTypeService;
+import ru.mycrg.wrapper.geoserver_client.services.feature_types.IFeatureTypes;
+import ru.mycrg.wrapper.geoserver_client.services.styles.StyleService;
 import ru.mycrg.wrapper.queue.MqSender;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
@@ -21,11 +23,14 @@ public class GeoserverImportService extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(GeoserverImportService.class);
 
     private final MqSender mqSender;
-    private final FeatureTypeService featureTypesService;
+    private final IFeatureTypes featureTypesService;
+    private final StyleService styleService;
 
     public GeoserverImportService(MqSender mqSender,
-                                  FeatureTypeService featureTypesService) {
+                                  FeatureTypeService featureTypesService,
+                                  StyleService styleService) {
         this.mqSender = mqSender;
+        this.styleService = styleService;
         this.featureTypesService = featureTypesService;
     }
 
@@ -38,6 +43,15 @@ public class GeoserverImportService extends AbstractImportChainItem {
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
                     importTask.getFeatureDescription().getName(),
                     importTask.getUserToken());
+
+            try {
+                styleService.associate(
+                        importTask.getFeatureDescription().getName(),
+                        importTask.getFeatureDescription().getName(),
+                        importTask.getUserToken());
+            } catch (GeoserverClientException e) {
+                log.error("Не удалось прикрепить стиль к слою: {}", e.getMessage(), e);
+            }
 
             log.debug("Import chain successful end");
             mqSender.send(
