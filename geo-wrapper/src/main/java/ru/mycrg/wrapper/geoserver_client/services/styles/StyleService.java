@@ -9,7 +9,6 @@ import ru.mycrg.wrapper.geoserver_client.services.AuthService;
 import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static ru.mycrg.wrapper.geoserver_client.GeoServerConstants.JSON_MEDIA_TYPE;
 
@@ -34,11 +33,11 @@ public class StyleService extends GeoServerBaseService {
 
             RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
                     "{\n" +
-                            "    \"style\": {\n" +
-                            "        \"name\": \"" + styleName + "\",\n" +
-                            "        \"filename\": \"" + styleName + ".sld\"\n" +
-                            "    }\n" +
-                            "}");
+                    "    \"style\": {\n" +
+                    "        \"name\": \"" + styleName + "\",\n" +
+                    "        \"filename\": \"" + styleName + ".sld\"\n" +
+                    "    }\n" +
+                    "}");
 
             String url = getRootRestUrl()
                     .append("/layers/").append(layerName)
