@@ -47,10 +47,9 @@ public class GeoserverImportService extends AbstractImportChainItem {
             try {
                 styleService.associate(
                         importTask.getFeatureDescription().getName(),
-                        importTask.getFeatureDescription().getName(),
-                        importTask.getUserToken());
+                        importTask.getFeatureDescription().getName());
             } catch (GeoserverClientException e) {
-                log.error("Не удалось прикрепить стиль к слою: {}", e.getMessage(), e);
+                log.error("Не удалось прикрепить стиль к слою: {}", e.getMessage());
             }
 
             log.debug("Import chain successful end");
