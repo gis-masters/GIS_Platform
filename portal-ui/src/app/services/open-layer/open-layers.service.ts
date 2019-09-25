@@ -110,7 +110,9 @@ export class OpenLayersService {
 
     this.view = new View({
       center: this.defaultViewPoint,
-      zoom: this.defaultZoomValue
+      zoom: this.defaultZoomValue,
+      minZoom: 5,
+      maxZoom: 19
     });
 
     this.tileLayer = new TileLayer({
