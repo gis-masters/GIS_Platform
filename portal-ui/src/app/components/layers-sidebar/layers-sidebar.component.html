@@ -2,24 +2,27 @@
 
   <div [class]="cn('open-btn', {open: isOpen})" (click)="toggleOpen()"></div>
 
-  <crg-tile-source-select [class]="cn('tile-source-select')">
-  </crg-tile-source-select>
+  <div [class]="cn('inner')">
+    <crg-tile-source-select [class]="cn('tile-source-select')">
+    </crg-tile-source-select>
 
-  <div [class]="cn('content', ['scroll'])">
+    <div [class]="cn('content', ['scroll'])">
 
-    <div [class]="cn('list')"
-        *ngIf="layers; else layersLoading"
-        cdkDropList
-        (cdkDropListDropped)="drop($event)">
-      <crg-layer-list-item *ngFor="let layer of layers"
-                          [layer]="layer"
-                          cdkDrag
-                          (deleteLayer)="onDeleteLayer(layer)">
-        <mat-icon cdkDragHandle>
-          drag_handle
-        </mat-icon>
-      </crg-layer-list-item>
+      <div [class]="cn('list')"
+          *ngIf="layers; else layersLoading"
+          cdkDropList
+          (cdkDropListDropped)="drop($event)">
+        <crg-layer-list-item *ngFor="let layer of layers"
+                            [layer]="layer"
+                            cdkDrag
+                            (deleteLayer)="onDeleteLayer(layer)">
+          <mat-icon cdkDragHandle>
+            drag_handle
+          </mat-icon>
+        </crg-layer-list-item>
+      </div>
     </div>
+
   </div>
 </div>
 

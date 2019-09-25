@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
 
 import {CrgLayer} from '../../services/geoserver/layers.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -10,7 +10,7 @@ import {cn} from '../../services/util/cn';
   templateUrl: './layers-sidebar.component.html',
   styleUrls: ['./layers-sidebar.component.scss']
 })
-export class LayersSidebarComponent {
+export class LayersSidebarComponent implements OnInit {
   @Input() layers: CrgLayer[];
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
 
@@ -20,8 +20,22 @@ export class LayersSidebarComponent {
 
   constructor(private openLayers: OpenLayersService) { }
 
+  ngOnInit () {
+    window.dispatchEvent(new Event('resize'));
+  }
+
   toggleOpen () {
     this.isOpen = !this.isOpen;
+    
+    const animDuration = 300;
+    
+    const interval = setInterval(()=>{
+      window.dispatchEvent(new Event('resize'));
+    }, 20);
+
+    setTimeout(() => {
+      clearInterval(interval);
+    }, animDuration);
   }
 
   drop(event: CdkDragDrop<string[]>) {

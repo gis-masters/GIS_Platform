@@ -60,12 +60,12 @@ export class ResizableBarDirective implements OnInit {
     }
   }
 
-  onDocumentMouseMove (e: MouseEvent) {
+  private onDocumentMouseMove (e: MouseEvent) {
     this.size = this.initialSize - this.getPosFromE(e) + this.initialPos;
     window.dispatchEvent(new Event('resize'));
   }
 
-  onDocumentMouseOff () {
+  private onDocumentMouseOff () {
     document.removeEventListener('mousemove', this.onDocumentMouseMove);
     document.removeEventListener('mouseup', this.onDocumentMouseOff);
     document.removeEventListener('mouseleave', this.onDocumentMouseOff);
@@ -73,47 +73,49 @@ export class ResizableBarDirective implements OnInit {
     document.body.style.cursor = '';
   }
 
-  testResizeZone (pos: number): boolean {
+  private testResizeZone (pos: number): boolean {
     const dragZoneSize = 3;
-
+    const rect: DOMRect = this.el.nativeElement.getBoundingClientRect();
     let offset: number;
 
     if (this.direction === 'top') {
-      offset = this.el.nativeElement.offsetTop;
+      offset = rect.top;
     }
 
     return pos >= offset && pos <= offset + dragZoneSize;
   }
 
-  setResizeReadyState (ready: boolean): void {
+  private setResizeReadyState (ready: boolean): void {
     if (this.resizeReady !== ready) {
       this.el.nativeElement.style.cursor = ready ? this.cursor : this.initialCursor;
       this.resizeReady = ready;
     }
   }
 
-  getPosFromE (e: MouseEvent): number {
+  private getPosFromE (e: MouseEvent): number {
+    const x = e.screenX;
+    const y = e.pageY;
     let pos: number;
 
     switch (this.direction) {
       case 'top':
-        pos = e.y;
+        pos = y;
         break;
       case 'right':
-        pos = e.x;
+        pos = x;
         break;
       case 'bottom':
-        pos = document.body.clientHeight - e.y;
+        pos = document.body.clientHeight - y;
         break;
       case 'left':
-        pos = document.body.clientWidth - e.x;
+        pos = document.body.clientWidth - x;
         break;
     }
 
     return pos;
   }
 
-  get size (): number {
+  private get size (): number {
     if (this.direction === 'top' || this.direction === 'bottom') {
       return this.el.nativeElement.offsetHeight;
     } else {
@@ -121,7 +123,7 @@ export class ResizableBarDirective implements OnInit {
     }
   }
 
-  set size (size: number) {
+  private set size (size: number) {
     if (this.direction === 'top' || this.direction === 'bottom') {
       this.el.nativeElement.style.height = `${size}px`;
     } else {

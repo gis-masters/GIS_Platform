@@ -1,13 +1,11 @@
 .layers-sidebar {
-  position: fixed;
+  position: relative;
   z-index: 100;
-  top: 55px;
-  left: -400px;
 
-  width: 400px;
-  height: calc(100% - 55px);
+  width: 0;
+  height: 100%;
 
-  transition-duration: 0.3s;
+  transition: width 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
@@ -26,7 +24,16 @@
   }
 
   &_open {
-    left: 0;
+    width: 400px;
+  }
+
+  &__inner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 400px;
   }
 
   &__open-btn {

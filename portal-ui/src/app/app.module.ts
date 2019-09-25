@@ -58,6 +58,7 @@ import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 import {HomeComponent} from './components/home/home.component';
 import { TileSourceSelectComponent } from './components/tile-source-select/tile-source-select.component';
+import { MapComponent } from './components/map/map.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { TileSourceSelectComponent } from './components/tile-source-select/tile-
     AtleastPipe,
     WorkspaceHeaderComponent,
     HomeComponent,
-    TileSourceSelectComponent
+    TileSourceSelectComponent,
+    MapComponent
   ],
   imports: [
     HttpClientModule,

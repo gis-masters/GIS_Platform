@@ -1,0 +1,37 @@
+<div [class]="cn()">
+  <div id="fiz-openLayer-map" [class]="cn('map')"></div>
+
+  <crg-layers-sidebar [class]="cn('bar', {dir: 'left'})"
+                      [layers]="layers"
+                      (deleteLayer)="deleteLayer($event)">
+  </crg-layers-sidebar>
+
+  <crg-report-sidebar [class]="cn('bar', {dir: 'right'})"
+                      [isActive]="isBugReportSidebarActive"
+                      [layers]="layers">
+  </crg-report-sidebar>
+
+  <crg-view-features [class]="cn('bar', {dir: 'right'})"
+                    *ngIf="isFeaturesSidebarActive"
+                    [data]="viewFeaturesData">
+  </crg-view-features>
+
+  <crg-attributes-bar [class]="cn('bar', {dir: 'bottom'})"
+                      *ngIf="isAttrSidebarActive"
+                      [layer]="selectedLayer">
+  </crg-attributes-bar>
+</div>
+
+<p-dialog header="Проверка данных"
+          [style]="{width: '450px', height: '500px'}"
+          [(visible)]="isValidationDialogShow">
+  <crg-validation-dialog [data]="validationDialogData">
+  </crg-validation-dialog>
+</p-dialog>
+
+<p-dialog header="Экспорт"
+          [style]="{width: '450px', height: '500px'}"
+          [(visible)]="isGmlDialogShow">
+  <crg-export-dialog [layers]="gmlDialogData">
+  </crg-export-dialog>
+</p-dialog>

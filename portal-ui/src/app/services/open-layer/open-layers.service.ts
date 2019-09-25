@@ -1,3 +1,4 @@
+import {EventEmitter, Injectable} from '@angular/core';
 import {Map, View} from 'ol';
 import XYZ from 'ol/source/XYZ';
 import Feature from 'ol/Feature';
@@ -12,13 +13,14 @@ import {MapperUtil} from './MapperUtil';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Fill, Stroke, Style} from 'ol/style.js';
-import {LegendService} from '../geoserver/legend.service';
-import {WfsFeature} from '../geoserver/wfs.service';
-import {EventEmitter, Injectable} from '@angular/core';
-import {TokenStorageService} from '../token-storage.service';
-import {UsedGeometryType} from './GeometryType';
 import GeometryType from 'ol/geom/GeometryType';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
+import {defaults as defaultControls, ScaleLine} from 'ol/control';
+
+import {LegendService} from '../geoserver/legend.service';
+import {WfsFeature} from '../geoserver/wfs.service';
+import {TokenStorageService} from '../token-storage.service';
+import {UsedGeometryType} from './GeometryType';
 import {environment} from '../../../environments/environment';
 
 export let BEARER_TOKEN = '';
@@ -118,6 +120,9 @@ export class OpenLayersService {
     this._map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
+      controls: defaultControls().extend([
+          new ScaleLine()
+      ]),
       layers: [
         this.tileLayer,
         new VectorLayer({
@@ -137,6 +142,9 @@ export class OpenLayersService {
     });
 
     // MAP EVENTS
+    this._map.on('postrender', () =>  {
+      window.dispatchEvent(new Event('resize'));
+    });
     this._map.on('singleclick', event =>  {
       if (event.coordinate) {
         this.mapClick$.emit(event.coordinate);

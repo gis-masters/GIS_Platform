@@ -1,70 +1,62 @@
-import {NGXLogger} from 'ngx-logger';
-import {Subject, throwError} from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {MediaMatcher} from '@angular/cdk/layout';
-import {WfsUtil} from '../../../services/open-layer/WfsUtil';
-import {FizLogger} from '../../../services/logger/fiz.logger';
-import {catchError, filter, flatMap, takeUntil, tap} from 'rxjs/operators';
-import {Project} from '../../../services/crg/projects.service';
-import {LocalStorageService} from '../../../services/local-storage.service';
-import {CommunicationService} from '../../../services/communication.service';
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {CrgLayer, LayersService} from '../../../services/geoserver/layers.service';
-import {GmlDialogData} from '../../../components/export/export-dilog/export-dialog.component';
-import {ActionType, Sidebar, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {DataSchemaService} from '../../../services/crg/data-schema.service';
-import {GeoserverJSONException, WfsFeatureCollection, WfsService} from '../../../services/geoserver/wfs.service';
-import {ValidationDialogData} from '../../../components/validation/validation-dialog/validation-dialog.component';
-import {ViewFeaturesData} from '../../../components/view-features/view-features.component';
-import {EditFeatureMode} from '../../../components/edit-feature/edit-feature.component';
-import {FeatureTypesService} from '../../../services/geoserver/featuretypes.service';
-import {FeatureType} from '@fiz/geoserver-types/feature-types/FeatureType';
+import { Subject, throwError } from 'rxjs';
+import { catchError, filter, flatMap, takeUntil, tap } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
+
+import { cn } from '../../services/util/cn';
+import { Project } from '../../services/crg/projects.service';
+import { WfsUtil } from '../../services/open-layer/WfsUtil';
+import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
+import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';
+import { ViewFeaturesData } from '../../components/view-features/view-features.component';
+import { CommunicationService } from '../../services/communication.service';
+import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
+
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { GeoserverJSONException, WfsFeatureCollection, WfsService } from '../../services/geoserver/wfs.service';
+import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy {
-
   currentProject: Project;
 
-  layers: CrgLayer[] = undefined;
+  isAttrSidebarActive: boolean = false;
+  isBugReportSidebarActive: boolean = false;
+  isValidationDialogShow: boolean = false;
+  isGmlDialogShow: boolean = false;
+  isFeaturesSidebarActive: boolean = false;
 
-  isBugReportSidebarActive = false;
-
-  isFeaturesSidebarActive = false;
   viewFeaturesData: ViewFeaturesData;
-
-  isAttrSidebarActive = false;
-  selectedLayer;
-
-  isValidationDialogShow = false;
   validationDialogData: ValidationDialogData;
-  isGmlDialogShow = false;
-
+  layers: CrgLayer[] = [];
   gmlDialogData: CrgLayer[];
+  selectedLayer;
+  cn = cn('map');
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+  constructor (private logger: NGXLogger,
+              private openLayers: OpenLayersService,
               private layersService: LayersService,
-              private logger: NGXLogger,
-              private log: FizLogger,
+              private featureTypesService: FeatureTypesService,
+              private storageService: LocalStorageService,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
-              private featureTypesService: FeatureTypesService,
-              private ruleService: DataSchemaService,
-              private storageService: LocalStorageService,
-              private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
-              private openLayers: OpenLayersService) {
-    this.log.debug('mapComponent', 'MapComponent start');
-
+              private sideBarManager: SideBarManager) {
     this.communicationService.stepperEvents.emit(3);
   }
 
-  ngOnInit() {
+  ngOnInit () {
     this.openLayers.createMap();
 
     this.fetchLayers();
@@ -78,7 +70,6 @@ export class MapComponent implements OnInit, OnDestroy {
             if (data.layers && data.layers.length > 0) {
               this.validationDialogData = data;
             } else {
-              this.logger.warn('Empty data: ', data);
               this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
                 {duration: 10000});
             }
@@ -106,31 +97,43 @@ export class MapComponent implements OnInit, OnDestroy {
         .subscribe((sidebar: Sidebar) => {
           if (sidebar.target === SidebarType.BUG_REPORT) {
             switch (sidebar.action) {
-              case ActionType.CLOSE:  this.isBugReportSidebarActive = false;    break;
-              case ActionType.OPEN:   this.isBugReportSidebarActive = true;     break;
-              case ActionType.SWITCH: this.isBugReportSidebarActive = !this.isBugReportSidebarActive; break;
-              default:
-                this.logger.warn('Unsupported action type: ', sidebar.action);
+              case ActionType.CLOSE:
+                this.isBugReportSidebarActive = false;
+                break;
+              case ActionType.OPEN:
+                this.isBugReportSidebarActive = true;
+                break;
+              case ActionType.SWITCH:
+                this.isBugReportSidebarActive = !this.isBugReportSidebarActive;
+                break;
             }
           } else if (sidebar.target === SidebarType.FEATURES) {
             this.viewFeaturesData = sidebar.data;
 
             switch (sidebar.action) {
-              case ActionType.CLOSE:  this.isFeaturesSidebarActive = false;    break;
-              case ActionType.OPEN:   this.isFeaturesSidebarActive = true;     break;
-              case ActionType.SWITCH: this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive; break;
-              default:
-                this.logger.warn('Unsupported action type: ', sidebar.action);
+              case ActionType.CLOSE:
+                this.isFeaturesSidebarActive = false;
+                break;
+              case ActionType.OPEN:
+                this.isFeaturesSidebarActive = true;
+                break;
+              case ActionType.SWITCH:
+                this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive;
+                break;
             }
           } else if (sidebar.target === SidebarType.ATTRIBUTES) {
             this.selectedLayer = sidebar.data;
 
             switch (sidebar.action) {
-              case ActionType.CLOSE:  this.isAttrSidebarActive = false;    break;
-              case ActionType.OPEN:   this.isAttrSidebarActive = true;     break;
-              case ActionType.SWITCH: this.isAttrSidebarActive = !this.isAttrSidebarActive; break;
-              default:
-                this.logger.warn('Unsupported action type: ', sidebar.action);
+              case ActionType.CLOSE:
+                this.isAttrSidebarActive = false;
+                break;
+              case ActionType.OPEN:
+                this.isAttrSidebarActive = true;
+                break;
+              case ActionType.SWITCH:
+                this.isAttrSidebarActive = !this.isAttrSidebarActive;
+                break;
             }
           }
         });
@@ -190,8 +193,6 @@ export class MapComponent implements OnInit, OnDestroy {
               });
 
               this.communicationService.selectedFeatures$.emit(fCollection.features);
-            } else {
-              this.logger.info('No features selected');
             }
           }, (exception: GeoserverJSONException) => {
             this.logger.error('errorResponse: ', exception);
@@ -220,7 +221,6 @@ export class MapComponent implements OnInit, OnDestroy {
         .pipe(
           tap(layers => this.layers = layers),
           catchError(err => {
-            this.logger.error('layers-sidebar layers error', err);
             return throwError(err);
           }),
           takeUntil(this.unsubscribe$)
@@ -239,8 +239,6 @@ export class MapComponent implements OnInit, OnDestroy {
                 .subscribe((fCollection: WfsFeatureCollection) => {
                   if (fCollection && fCollection.bbox) {
                     this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
-                  } else {
-                    this.logger.info('Cant position to layer', fCollection);
                   }
                 });
           }

@@ -3,7 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {LoginPageComponent} from './pages/login/login-page.component';
 import {AboutComponent} from './pages/about/about.component';
 import {AuthGuardService} from './services/auth-guard.service';
-import {MapComponent} from './pages/work-space/map/map.component';
+import {MapPageComponent} from './pages/work-space/map-page/map-page.component';
 import {HomePageComponent} from './pages/home/home-page.component';
 import {RegisterComponent} from './pages/register/register.component';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
@@ -32,7 +32,7 @@ const routes: Routes = [
       {path: 'projects', component: ProjectsListPageComponent},
       {path: 'data_import', component: DataImportPageComponent, canActivate: [WorkflowGuardService]},
       {path: 'data_mapping', component: DataMappingComponent},
-      {path: 'map', component: MapComponent, canActivate: [WorkflowGuardService]},
+      {path: 'map', component: MapPageComponent, canActivate: [WorkflowGuardService]},
       {path: '**', redirectTo: 'map'},
     ],
     canActivate: [AuthGuardService]
@@ -50,7 +50,7 @@ export class AppRoutingModule {
 }
 
 export const routingComponents = [
-  MapComponent,
+  MapPageComponent,
   LoginPageComponent,
   AboutComponent,
   HomePageComponent,

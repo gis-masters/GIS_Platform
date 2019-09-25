@@ -1,0 +1,40 @@
+.map {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: grid;
+  align-content: stretch;
+  align-items: stretch;
+  justify-content: stretch;
+
+  justify-items: stretch;
+  grid-template-areas: 'bar-left map'
+  'bar-bottom bar-bottom';
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr auto;
+  grid-gap: 0 0;
+
+  &__map {
+    overflow: hidden;
+
+    grid-area: map;
+  }
+
+  &__bar {
+    position: relative;
+    z-index: 1;
+
+    &_dir {
+      &_left {
+        grid-area: bar-left;
+      }
+
+      &_bottom {
+        grid-area: bar-bottom;
+      }
+    }
+  }
+}

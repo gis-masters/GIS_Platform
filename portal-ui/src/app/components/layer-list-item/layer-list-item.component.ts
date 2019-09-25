@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
-import {forkJoin, Observable, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {forkJoin, Observable, Subject} from 'rxjs';
+import {filter, takeUntil} from 'rxjs/operators';
 
 import {environment} from '../../../environments/environment';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
