@@ -1,12 +1,14 @@
-### 2019-09-25
+## 2019-09-25
 
-#### UI
-
-* Feature: Add legend
-* Bug: Fix map layout
-* Feature: Set min/max scale
+### UI
+  ###### _Features_
+  - Add legend
+  - Set min/max scale
+  ###### _Bug fixes_
+  - Fix map layout
   
 #### Wrapper
-
-* Bug: Fix maxLength validation
-* Feature: Add rule for services on geoserver 
+  ###### _Features_
+  - Add rule for services on geoserver 
+  ###### _Bug fixes_
+  - Fix maxLength validation
