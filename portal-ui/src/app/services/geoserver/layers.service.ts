@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 
 import {FizLogger} from '../logger/fiz.logger';
@@ -9,6 +9,7 @@ import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators
 import {environment} from '../../../environments/environment';
 import {DataSchemaService} from '../crg/data-schema.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import {LayerGroupService} from "./layer-group.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class LayersService {
   constructor(private http: HttpClient,
               private log: FizLogger,
               private ruleService: DataSchemaService,
+              private layerGroupService: LayerGroupService,
               private serverProp: ServerPropertiesService) {
     this.log.debug('setUp', 'LayersService constructor');
 
@@ -48,6 +50,7 @@ export class LayersService {
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
         map(([layers, layersDescription]) => this.mergeWithRules(layers)),
+        flatMap((layers: CrgLayer[]) => this.addLayerGroups(layers)),
         tap((result) => {
           this._layers$.next(result);
         })
@@ -72,21 +75,13 @@ export class LayersService {
     return this.http.delete(this.layersUrl + '/' + layer.name);
   }
 
-  addStyle(styleName: string, fileName: string, layer: string): Observable<any> {
-    const params = new HttpParams();
-    params.append('default', 'true');
-
-    const payload = {
-      style: {
-        name: 'functionalzone_style',
-        filename: 'functionalzone_style.sld'
-      }
-    };
-
-    // this.logger.info('payload: ', payload);
-
+  /**
+   * Получить полную информацию о слое
+   * @param layer Простое предствление слоя
+   */
+  getFullLayer(layer: NameHrefProjection): Observable<{layer: Layer}> {
     return this.http
-      .post(this.layersUrl + '/' + layer + '/styles', payload, {params: params});
+      .get<{layer: Layer}>(layer.href);
   }
 
   private fetchLayersDescription(layers: NameHrefProjection[]): any {
@@ -122,15 +117,6 @@ export class LayersService {
     return crgLayers;
   }
 
-  /**
-   * Получить полную информацию о слое
-   * @param layer Простое предствление слоя
-   */
-  getFullLayer(layer: NameHrefProjection): Observable<{layer: Layer}> {
-    return this.http
-      .get<{layer: Layer}>(layer.href);
-  }
-
   private filterScratchLayers(layers: NameHrefProjection[]) {
     if (!layers) {
       return [];
@@ -146,6 +132,29 @@ export class LayersService {
       return projectName === project.workspaceName;
     });
   }
+
+  private addLayerGroups(layers: CrgLayer[]): Observable<CrgLayer[]> {
+    return this.layerGroupService.fetchLayerGroups()
+      .pipe(
+        map((layerGroups: NameHrefProjection[]) => {
+          if (!layerGroups) {
+            return layers;
+          }
+
+          layerGroups.forEach((layerGroup: NameHrefProjection) => {
+            let rightPart = layerGroup.href.split('workspaces/')[1];
+            layers.push({
+              title: layerGroup.name,
+              name: layerGroup.name,
+              complexName: rightPart.split('/')[0] + ':' + layerGroup.name,
+              href: ''
+            });
+          });
+
+          return layers;
+        })
+      );
+  }
 }
 
 export interface CrgLayer {
@@ -153,12 +162,6 @@ export interface CrgLayer {
   complexName: string;  // Like: work_workspace:functionalzone
   title: string;        // Like: Функциональные зоны
   href: string;
-}
-
-export interface ConnectionInfo {
-  dbName: string;
-  schemaName: string;
-  tableName: string;
 }
 
 export interface GeoLayer {
