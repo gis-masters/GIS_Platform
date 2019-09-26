@@ -1,14 +1,16 @@
-## 2019-09-25
+## (2019-09-26)
 
-### UI
-  ###### _Features_
-  - Add legend
-  - Set min/max scale
-  ###### _Bug fixes_
-  - Fix map layout
-  
-#### Wrapper
-  ###### _Features_
-  - Add rule for services on geoserver 
-  ###### _Bug fixes_
-  - Fix maxLength validation
+### docs
+
+* add changelog ([3039b5ca1b5209e6f5d68897529fa1504cfdc6dd](https://dev.azure.com/programgeoplan/GIS%20Platform/_git/GisPortal/commit/3039b5ca1b5209e6f5d68897529fa1504cfdc6dd))
+* Updated CHANGELOG.md ([5fde69eb296949570f8e459e5c78ddeb627fa74e](https://dev.azure.com/programgeoplan/GIS%20Platform/_git/GisPortal/commit/5fde69eb296949570f8e459e5c78ddeb627fa74e))
+
+### Feature
+
+* ui: add legend
+* ui: set min/max scale
+* geo-wrapper: add rule for services on geoserver 
+
+### Bug fixes
+* ui: fix map layout
+* geo-wrapper: fix maxLength validation
