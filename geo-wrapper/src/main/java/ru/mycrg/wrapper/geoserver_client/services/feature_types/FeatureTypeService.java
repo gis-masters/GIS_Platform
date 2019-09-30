@@ -12,10 +12,16 @@ import static ru.mycrg.wrapper.geoserver_client.GeoServerConstants.JSON_MEDIA_TY
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
     @Override
-    public void create(String workspaceName, String dataStoreName, String featureName, String jwtToken)
+    public void create(String workspaceName, String dataStoreName, String featureName, String jwtToken, Integer srs)
             throws GeoserverClientException {
 
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\"featureType\": {\"name\": \"" + featureName + "\"}}");
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
+                "{\"featureType\": " +
+                    "{" +
+                        "\"name\": \"" + featureName + "\"," +
+                        "\"nativeCRS\": \"EPSG:" + srs.toString() + "\"" +
+                    "}" +
+                "}");
 
         String url = getRootRestUrl()
                 .append("/workspaces/").append(workspaceName)

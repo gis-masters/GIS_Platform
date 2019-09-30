@@ -42,7 +42,8 @@ public class GeoserverImportService extends AbstractImportChainItem {
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
                     importTask.getFeatureDescription().getName(),
-                    importTask.getUserToken());
+                    importTask.getUserToken(),
+                    importTask.getSrs());
 
             try {
                 styleService.associate(
