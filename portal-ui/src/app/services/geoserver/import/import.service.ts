@@ -1,10 +1,11 @@
-import {map} from 'rxjs/operators';
-import {NGXLogger} from 'ngx-logger';
-import {ImportFlow} from './importFlow';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
-import {GeoUtil} from '../../util/GeoUtil';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
+
+import { HttpQueue } from '../../util/HttpQueue';
+import {GeoUtil} from '../../util/GeoUtil';
+import {ImportFlow} from './importFlow';
 import {LocalStorageService} from '../../local-storage.service';
 import {ServerPropertiesService} from '../../server-properties.service';
 import {
@@ -23,7 +24,7 @@ import {
 export class ImportService {
   taskStatusesList: {[key: string]: string} = {
     PENDING: 'PENDING',
-    READY: 'Готово',
+    READY: 'Подготовка',
     RUNNING: 'RUNNING',
     NO_CRS: 'Не определена проекция',
     NO_BOUNDS: 'NO_BOUNDS',
@@ -51,16 +52,16 @@ export class ImportService {
 
   importFlow = new ImportFlow();
 
+  private httpq: HttpQueue;
   private importUrl = this.serverProp.geoServerUrl + '/rest/imports';
   private JSON_FORMAT = new HttpHeaders({
     'Content-Type': 'application/json',
   });
 
   constructor(private http: HttpClient,
-              private logger: NGXLogger,
               private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
-    logger.info('ImportService start');
+    this.httpq = new HttpQueue();
   }
 
   isTaskPending (task: ImportTaskFull | ImportTaskShort) {
@@ -138,12 +139,13 @@ export class ImportService {
     return forkJoin(observableTasks);
   }
 
-  getFullImportTask(task: ImportTaskShort): Observable<{task: ImportTaskFull}> {
-    return this.http.get<{task: ImportTaskFull}>(task.href);
+  async getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
+    const { task } = await this.httpq.get<{task: ImportTaskFull}>(shortTask.href);
+    return task;
   }
 
-  getImportTaskProgress(task: ImportTaskFull): Observable<ImportTaskProgress> {
-    return this.http.get<ImportTaskProgress>(task.progress);
+  getImportTaskProgress(task: ImportTaskFull): Promise<ImportTaskProgress> {
+    return this.httpq.get<ImportTaskProgress>(task.progress);
   }
 
   checkImportStatus(url: string) {

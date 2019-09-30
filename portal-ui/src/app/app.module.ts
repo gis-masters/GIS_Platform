@@ -59,6 +59,7 @@ import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-
 import {HomeComponent} from './components/home/home.component';
 import { TileSourceSelectComponent } from './components/tile-source-select/tile-source-select.component';
 import { MapComponent } from './components/map/map.component';
+import { ServicesProvider } from './components/services-provider/services-provider.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { MapComponent } from './components/map/map.component';
     WorkspaceHeaderComponent,
     HomeComponent,
     TileSourceSelectComponent,
-    MapComponent
+    MapComponent,
+    ServicesProvider
   ],
   imports: [
     HttpClientModule,

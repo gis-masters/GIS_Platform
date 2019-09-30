@@ -28,6 +28,7 @@ export class DataImportComponent implements OnDestroy {
 
   errors: string[] = [];
   tasks: ImportTaskShort[] = [];
+  importState?: string;
 
   private CHECK_STATUS_INTERVAL = 1000;
   private WAIT_SERVER_RESPONSE_TIMER = 1200000;
@@ -81,6 +82,7 @@ export class DataImportComponent implements OnDestroy {
     this.uploader.clearQueue();
     this.errors = [];
     this.tasks = [];
+    this.importState = '';
     this.isUploadComplete = false;
     this.isWrongExt = false;
     this.isImportFailed = false;
@@ -150,6 +152,7 @@ export class DataImportComponent implements OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
               successResponse => {
+                this.importState = successResponse.import.state;
                 const { tasks } = successResponse.import;
 
                 if (!_.isEqual(tasks, this.tasks)) {
@@ -173,12 +176,15 @@ export class DataImportComponent implements OnDestroy {
 
     // Прибьем проверку статуса если она зятянулась
     const waitTimer = setTimeout(() => {
-      this.handleError('Failed start import');
-      this.unsubscribe$.next();
+      if (!this.isUploadComplete) {
+        this.handleError('Failed start import');
+        this.unsubscribe$.next();
+      }
     }, this.WAIT_SERVER_RESPONSE_TIMER);
   }
 
   private handleErrorsTasks() {
+    this.importState = 'ERROR';
     this.isImportFailed = true;
     this.isImportInited = false;
     this.unsubscribe$.next();
@@ -192,6 +198,7 @@ export class DataImportComponent implements OnDestroy {
     }
 
     this.unsubscribe$.next();
+    this.importState = 'ERROR';
     this.isImportFailed = true;
     this.isImportInited = false;
   }
