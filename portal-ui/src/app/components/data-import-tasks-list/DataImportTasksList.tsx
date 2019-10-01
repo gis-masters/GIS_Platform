@@ -29,6 +29,8 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
 
   private progressTimeout: number;
 
+  private ismounted: boolean = false;
+
   constructor(props: DataImportTasksListProps) {
     super(props);
 
@@ -36,6 +38,7 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
   }
 
   componentDidMount () {
+    this.ismounted = true;
     this.updateTasks();
   }
 
@@ -49,6 +52,7 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
   }
 
   componentWillUnmount () {
+    this.ismounted = false;
     window.clearTimeout(this.progressTimeout);
   }
 
@@ -113,7 +117,7 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
       this.setProgress(progress);
     }
 
-    if (!['COMPLETE', 'ERROR'].includes(this.props.importState)) {
+    if (!['COMPLETE', 'ERROR'].includes(this.props.importState) && this.ismounted) {
       this.progressTimeout = window.setTimeout(() => {
         this.checkProgress();
       }, 300);

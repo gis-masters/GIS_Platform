@@ -2,13 +2,14 @@ import {
   Component,
   Input,
   OnInit,
+  OnDestroy,
   OnChanges,
   ViewChild,
   ElementRef,
   ViewEncapsulation
 } from '@angular/core';
 import { createElement } from 'react';
-import { render } from 'react-dom';
+import { render, unmountComponentAtNode } from 'react-dom';
 
 import { DataImportTasksList } from './DataImportTasksList';
 
@@ -22,13 +23,17 @@ import { ImportTaskShort } from '../../services/geoserver/import/models';
     './DataImportTasksList.scss'
   ]
 })
-export class DataImportTasksListComponent implements OnInit, OnChanges {
+export class DataImportTasksListComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
   @Input() tasks: ImportTaskShort[];
   @Input() importState: string;
 
   ngOnInit () {
     this.renderReactElement();
+  }
+
+  ngOnDestroy () {
+    unmountComponentAtNode(this.ref.nativeElement);
   }
 
   ngOnChanges () {
