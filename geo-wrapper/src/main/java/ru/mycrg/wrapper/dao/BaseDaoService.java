@@ -133,8 +133,8 @@ public class BaseDaoService {
         String insertTo = "INSERT INTO " + request.getTargetResource().getSchemaName() + "." +
                 request.getTargetResource().getTableName();
         String data = handleInsertMappingColumns(request.getPairs());
-        String from = " FROM " + request.getSourceResource().getSchemaName() + "." + '\"' +
-                request.getSourceResource().getTableName() + '\"';
+        String from = " FROM " + request.getSourceResource().getSchemaName() + "." +
+                '\"' + request.getSourceResource().getTableName() + '\"';
 
         String insertRequest = insertTo + data + from;
 
@@ -266,7 +266,14 @@ public class BaseDaoService {
             }
 
             targetColumns.append(tName).append(", ");
-            sourceColumns.append("\"").append(sName).append("\", ");
+
+            if ("length".equals(sName.toLowerCase())) {
+                sourceColumns.append("st_length(the_geom), ");
+            } else if ("area".equals(sName.toLowerCase())) {
+                sourceColumns.append("st_area(the_geom), ");
+            } else {
+                sourceColumns.append("\"").append(sName).append("\", ");
+            }
         }
 
         targetColumns = new StringBuilder(pre + targetColumns.substring(0, targetColumns.length() - 2) + post);

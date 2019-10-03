@@ -2,6 +2,7 @@ package ru.mycrg.wrapper.geoserver_client.services.feature_types;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.springframework.stereotype.Service;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.wrapper.geoserver_client.services.GeoServerBaseService;
@@ -57,6 +58,25 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .delete()
                 .build();
 
-        doRequest(request, "delete FeatureType");
+        Response response;
+        try {
+            response = httpClient.newCall(request).execute();
+
+            if (!response.isSuccessful()) {
+                if (response.code() == 404) {
+                    log.warn("Not found featureType: {} nothing delete", featureName);
+                } else if (response.code() == 403) {
+                    log.warn("Delete featureType: {}. FORBIDDEN: feature type referenced by layer(s)", featureName);
+                } else {
+                    throw new GeoserverClientException("Delete featureType error: ", response.message());
+                }
+            }
+
+            response.close();
+        } catch (Exception e) {
+            log.error("Geoserver error body: {}", e.getMessage());
+
+            throw new GeoserverClientException("delete featureType failed", e.getMessage());
+        }
     }
 }

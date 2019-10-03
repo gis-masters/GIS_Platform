@@ -38,6 +38,12 @@ public class GeoserverImportService extends AbstractImportChainItem {
         log.debug("Publish feature on geoserver");
 
         try {
+            featureTypesService.delete(
+                    importTask.getTargetResource().getSchemaName(),
+                    importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
+                    importTask.getFeatureDescription().getName(),
+                    importTask.getUserToken());
+
             featureTypesService.create(
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,

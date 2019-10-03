@@ -36,9 +36,9 @@ public abstract class GeoServerBaseService {
             response = httpClient.newCall(request).execute();
 
             if (!response.isSuccessful()) {
-                response.close();
-
                 log.error("Geoserver error body: {}", response.toString());
+
+                response.close();
 
                 throw new GeoserverClientException(msg, response.message());
             } else {
