@@ -42,8 +42,6 @@ services:
     container_name: geoserver
     image: $DOCKER_CRG_HOST/geoserver:$GEOSERVER_TAG
     restart: always
-    environment:
-      JAVA_OPTS: $CRG_JAVA_OPTS
     ports:
       - "8080:8080"
     volumes:
