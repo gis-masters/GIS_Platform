@@ -53,11 +53,11 @@ public class UsersAndRolesService extends GeoServerBaseService {
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
     public void associateUserWithRole(String userName, String role) throws Exception {
-        log.debug("Try associate User: {} With role: {}", userName, role);
-
         RequestBody body = RequestBody.create(GeoServerConstants.JSON_MEDIA_TYPE, "");
 
-        String cName = castyl(userName);
+        String cName = prepareUserNameForGeoserver(userName);
+
+        log.debug("Try associate user: \"{}\" With role: {}", cName, role);
 
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getAccessToken())
@@ -71,16 +71,19 @@ public class UsersAndRolesService extends GeoServerBaseService {
     // Вот тут (org/geoserver/rest/security/RolesRestController.java) видно что прилетающее имя пользователя, например:
     // "admin@mail.ru" обрезается до "admin@mail" а
     // "admin@mail.ru.ru" обрезается до "admin@mail.ru" Где обрезается и зачем не искал.
-    // Цель костыля продублировать то что за точкой, чтобы на геосервере, после обрезки получить нормальное имя
+    // Цель метода продублировать то что за точкой, чтобы на геосервере, после обрезки получить нормальное имя
     // пользователя - email. Никаких извращений писать не буду предусматриваю только валидный e-mail
-    public String castyl(String userName) {
+    public String prepareUserNameForGeoserver(String userName) {
         if (userName == null) {
             return null;
         }
 
-        String[] splited = userName.split("\\.");
-        if (splited.length > 1) {
-            return String.join(".", splited[0], splited[1], splited[1]);
+        String[] splitByAt = userName.split("@");
+        String lastPartOfEmail = splitByAt[1];
+
+        String[] splitByDot = lastPartOfEmail.split("\\.");
+        if (splitByDot.length > 1) {
+            return splitByAt[0] + "@" + splitByDot[0] + "." + splitByDot[1] + "." + splitByDot[1];
         } else {
             return userName;
         }
