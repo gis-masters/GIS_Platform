@@ -7,6 +7,7 @@ import {MultiPolygon} from 'ol/geom';
 import {NGXLogger} from 'ngx-logger';
 import TileLayer from 'ol/layer/Tile';
 import BaseLayer from 'ol/layer/Base';
+import TileWMS from 'ol/source/TileWMS';
 import {ImageWMS, OSM} from 'ol/source';
 import ImageLayer from 'ol/layer/Image';
 import {MapperUtil} from './MapperUtil';
@@ -14,9 +15,8 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import GeometryType from 'ol/geom/GeometryType';
-import TileArcGISRest from 'ol/source/TileArcGISRest';
-import {defaults as defaultControls, ScaleLine} from 'ol/control';
 
+import {defaults as defaultControls, ScaleLine} from 'ol/control';
 import {LegendService} from '../geoserver/legend.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {TokenStorageService} from '../token-storage.service';
@@ -35,6 +35,7 @@ export interface TileSource {
 // WMS request parameters. At least a LAYERS param is required.
 export interface CrgWmsParams {
   LAYERS: string;
+  FORMAT?: string;
 }
 
 @Injectable({
@@ -46,30 +47,7 @@ export class OpenLayersService {
 
   private currentTileSource: TileSource;
 
-  private tileSources: TileSource[] = [
-    {
-      name: 'OSM',
-      title: 'Open street map',
-      source: new OSM(),
-      thumbnail: '/assets/images/thumpnail-osm.jpg'
-    },
-    {
-      name: 'ESRI',
-      title: 'ESRI',
-      source: new XYZ({
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-      }),
-      thumbnail: '/assets/images/thumpnail-esri.jpg'
-    },
-    {
-      name: 'SimfReg',
-      title: 'Ортофотоплан',
-      source: new TileArcGISRest({
-        urls: ['http://simf-region.mycrg.ru:6080/arcgis/rest/services/SimfRegGP_Pro/OFP_80cm_Summary/MapServer']
-      }),
-      thumbnail: '/assets/images/thumpnail-our.jpg'
-    },
-  ];
+  private tileSources: TileSource[];
 
   private _map: Map;
   private view: View;
@@ -97,8 +75,55 @@ export class OpenLayersService {
     BEARER_TOKEN = tokenStorage.getAccessToken();
 
     if (environment.platform === 'conv') {
+      this.tileSources = [
+        {
+          name: 'OSM',
+          title: 'Open street map',
+          source: new OSM(),
+          thumbnail: '/assets/images/thumpnail-osm.jpg'
+        },
+        {
+          name: 'ESRI',
+          title: 'ESRI',
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+          }),
+          thumbnail: '/assets/images/thumpnail-esri.jpg'
+        }
+      ];
+
       this.currentTileSource = this.getTileSource('OSM');
     } else {
+      this.tileSources = [
+        {
+          name: 'OSM',
+          title: 'Open street map',
+          source: new OSM(),
+          thumbnail: '/assets/images/thumpnail-osm.jpg'
+        },
+        {
+          name: 'ESRI',
+          title: 'ESRI',
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+          }),
+          thumbnail: '/assets/images/thumpnail-esri.jpg'
+        },
+        {
+          name: 'SimfReg',
+          title: 'Ортофотоплан',
+          source: new TileWMS({
+            urls: [this.legendService.baseUrl],
+            tileLoadFunction: this.crgImageLoadFunction,
+            params: {
+              LAYERS: 'substrate:T_42_6',
+              FORMAT: 'image/vnd.jpeg-png8'
+            }
+          }),
+          thumbnail: '/assets/images/thumpnail-our.jpg'
+        },
+      ];
+
       this.currentTileSource = this.getTileSource('SimfReg');
     }
   }
@@ -159,7 +184,8 @@ export class OpenLayersService {
 
   addLayerToMap(complexLayerName: string) {
     const params: CrgWmsParams = {
-      LAYERS: complexLayerName
+      LAYERS: complexLayerName,
+      FORMAT: 'image/vnd.jpeg-png8'
     };
 
     const imageLayer = new ImageLayer({
@@ -386,7 +412,7 @@ export class OpenLayersService {
 
     client.onload = function () {
       const arrayBufferView = new Uint8Array(this.response);
-      const blob = new Blob([arrayBufferView], { type: 'image/png' });
+      const blob = new Blob([arrayBufferView], { type: 'image/vnd.jpeg-png8' });
       const urlCreator = window.URL || (window as any).webkitURL;
 
       tile.getImage().src = urlCreator.createObjectURL(blob);
