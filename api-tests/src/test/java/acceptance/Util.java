@@ -1,4 +1,4 @@
-package ru.mycrg.gis.util;
+package acceptance;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ public class Util {
     public static Map<String, Object> getRandomOrganization() {
         String[] split = UUID.randomUUID().toString().split("-");
 
-        Map<String, Object> organization = new HashMap<>();
+        Map<String, Object> organization = new HashMap<String, Object>();
         organization.put("email", split[0] + "@rnd.com");
         organization.put("name", "organization name: " + split[1]);
         organization.put("password", "passSTRONG314:" +  split[2]);

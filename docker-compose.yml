@@ -3,7 +3,7 @@ version: '3.7'
 services:
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:$RABBIT_TAG
+    image: $DOCKER_CRG_HOST/rabbitmq:$RABBIT_TAG
     restart: always
     ports:
       - "5672:5672"
@@ -14,7 +14,7 @@ services:
 
   database:
     container_name: database
-    image: postgres:$POSTGRES_TAG
+    image: $DOCKER_CRG_HOST/postgres:$POSTGRES_TAG
     restart: always
     environment:
       POSTGRES_DB: gis_portal
@@ -27,7 +27,7 @@ services:
 
   postgis:
     container_name: postgis
-    image: kartoza/postgis:$POSTGIS_TAG
+    image: $DOCKER_CRG_HOST/postgis:$POSTGIS_TAG
     restart: always
     ports:
       - "5434:5432"

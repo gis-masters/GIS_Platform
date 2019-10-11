@@ -195,38 +195,6 @@
                     <finalName>${project.name}</finalName>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <configuration>
-                            <includes>
-                                <include>**/unit/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/acceptance/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>integration-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <exclude>**/acceptance/**</exclude>
-                            </includes>
-                            <excludes>
-                                <include>**/unit/**</include>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

@@ -1,24 +1,22 @@
-package ru.mycrg.gis.acceptance;
+package acceptance;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
-import okhttp3.*;
+import common.Auth;
+import common.JWTTokenHolder;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import ru.mycrg.common.JWTTokenHolder;
-import ru.mycrg.gis.util.Util;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static com.jayway.restassured.RestAssured.*;
+import static com.jayway.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.lessThan;
@@ -26,23 +24,35 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertNotNull;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class OrganizationAPITest {
+public class AcceptanceTests {
 
     private static JWTTokenHolder jwtToken;
     private static RequestSpecification requestJwt;
 
+    private static String testServerHost;
+    private static int testServerPort;
+    private static String rootUserName;
+    private static String rootPassword;
+
     @BeforeClass
     public static void setup() {
-        RestAssured.baseURI = "http://10.10.10.121";
-        RestAssured.port = 8088;
+        testServerHost = System.getProperty("env.HOST");
+        rootUserName = System.getProperty("env.ROOT_NAME");
+        rootPassword = System.getProperty("env.ROOT_PASS");
+
+        assert testServerHost != null && rootPassword != null && rootUserName != null
+                : "You should specify test server HOST as '-Denv.HOST', PORT as '-Denv.PORT', ROOT_NAME as '-Denv" +
+                  ".ROOT_NAME', ROOT_PASS as '-Denv.ROOT_PASS'";
+        testServerPort = Integer.parseInt(System.getProperty("env.PORT"));
+
+        RestAssured.baseURI = testServerHost;
+        RestAssured.port = testServerPort;
         RestAssured.basePath = "/organizations";
     }
 
     @Test
     public void aa_ShouldGetOk() throws IOException {
-        jwtToken = getJwtToken();
-
-        assertNotNull(jwtToken);
+        jwtToken = Auth.getJwtToken(testServerHost, testServerPort, rootUserName, rootPassword);
 
         requestJwt = RestAssured.given()
                 .headers("Authorization", "Bearer " + jwtToken.getAccess_token(), "Content-Type",
@@ -279,38 +289,6 @@ public class OrganizationAPITest {
             .post()
         .then()
             .statusCode(statusCode);
-    }
-
-    private static JWTTokenHolder getJwtToken() throws IOException {
-        JWTTokenHolder jwtTokenHolder;
-        String username = "admin@mail.ru";
-        String password = "geoserver";
-
-        MediaType mediaType = MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-        RequestBody body = RequestBody.create(mediaType, "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                "Content-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n" +
-                "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                "Content-Disposition: form-data; name=\"username\"\r\n\r\n" + username
-                + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
-                + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
-        Request request = new Request.Builder()
-                .url("http://10.10.10.121:8100/oauth/token")
-                .header("Authorization", Credentials.basic(username, password))
-                .header("Content-type", "multipart/form-data")
-                .header("cache-control", "no-cache")
-                .post(body)
-                .build();
-
-        OkHttpClient httpClient = new OkHttpClient();
-        Response response = httpClient.newCall(request).execute();
-
-        ObjectMapper mapper = new ObjectMapper();
-        jwtTokenHolder = mapper.readValue(response.body().string(), JWTTokenHolder.class);
-
-        response.close();
-
-        return jwtTokenHolder;
     }
 
 }

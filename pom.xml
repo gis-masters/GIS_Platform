@@ -44,6 +44,7 @@
         <module>geo-wrapper</module>
         <module>geo-api</module>
         <module>common-libs</module>
+        <module>api-tests</module>
     </modules>
 
 </project>
