@@ -1,8 +1,14 @@
 FROM openjdk:8-alpine
-MAINTAINER Fanatic Fiz <fanaticfiz@fanaticfiz.com>
+MAINTAINER Fanatic Fiz <fanaticfiz@outlook.com>
 
-ADD ./target/registry.jar /app/
+COPY ./target/apm-agent.jar apm-agent.jar
 
-CMD ["java", "-Xmx200m", "-javaagent:/opt/elastic-apm-agent/elastic-apm-agent-1.6.1.jar", "-Delastic.apm.service_name=crg-registry", "-Delastic.apm.server_url=http://10.10.10.116:8200", "-Delastic.apm.application_packages=ru.mycrg.registry", "-jar", "/app/registry.jar"]
+COPY ./target/registry.jar registry.jar
 
-EXPOSE 8761
+ENV XMX_SIZE=200m
+
+ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+                                     -Delastic.apm.service_name=crg-registry \
+                                     -Delastic.apm.server_url=${APM_URL} \
+                                     -Delastic.apm.application_packages=ru.mycrg.registry \
+                                     -jar registry.jar

@@ -54,11 +54,12 @@ services:
     container_name: crg-registry
     image: $DOCKER_CRG_HOST/crg-registry:$CRG_REGISTRY_TAG
     restart: always
+    environment:
+      APM_URL: ${APM_URL}
     ports:
       - 8761:8761
     volumes:
       - /opt/logs:/opt/logs
-      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -69,10 +70,11 @@ services:
     image: $DOCKER_CRG_HOST/jwt-service:$CRG_JWT_TAG
     restart: always
     environment:
+      APM_URL: ${APM_URL}
+
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
     volumes:
       - /opt/logs:/opt/logs
-      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -82,13 +84,14 @@ services:
     container_name: crg-gateway
     image: $DOCKER_CRG_HOST/crg-gateway:$CRG_GATEWAY_TAG
     restart: always
+    environment:
+      APM_URL: ${APM_URL}
     depends_on:
       - registry
     ports:
       - 8100:8100
     volumes:
       - /opt/logs:/opt/logs
-      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"
@@ -99,9 +102,12 @@ services:
     image: $DOCKER_CRG_HOST/geo-api:$CRG_API_TAG
     restart: always
     environment:
+      APM_URL: ${APM_URL}
+
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_FLYWAY_URL: jdbc:postgresql://database:5432/gis_portal
+
       POSTGIS_HOST: postgis:5432
       POSTGIS_USER: $CRG_USER
       POSTGIS_PASSWORD: $DB_PASS
@@ -120,7 +126,6 @@ services:
       - /opt/fgistp:/opt/fgistp
       - /opt/export:/opt/export
       - /opt/logs:/opt/logs
-      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     depends_on:
       - database
       - rabbitmq
@@ -136,10 +141,13 @@ services:
     image: $DOCKER_CRG_HOST/geo-wrapper:$CRG_WRAPPER_TAG
     restart: always
     environment:
+      APM_URL: ${APM_URL}
+
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
       SPRING_DATASOURCE_USERNAME: $CRG_USER
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
       SPRING_RABBITMQ_HOST: rabbitmq
+
       CRG_OPTIONS_GEOSERVER_HOST: gateway:8100
       CRG_OPTIONS_GEOSERVER_USER: $GEOSERVER_USER
       CRG_OPTIONS_GEOSERVER_PASSWORD: $GEOSERVER_PASSWORD
@@ -152,7 +160,6 @@ services:
       - /opt/fgistp:/opt/fgistp
       - /opt/export:/opt/export
       - /opt/logs:/opt/logs
-      - /opt/elastic-apm-agent:/opt/elastic-apm-agent
     logging:
       options:
         max-size: "10m"

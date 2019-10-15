@@ -1,12 +1,14 @@
 FROM 10.10.10.165:5000/zuzlu-opendjk-8:ogr-zip
-MAINTAINER Fanatic Fiz <fanaticfiz@fanaticfiz.com>
+MAINTAINER Fanatic Fiz <fanaticfiz@outlook.com>
+
+COPY ./target/apm-agent.jar apm-agent.jar
 
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
-# JMX
-EXPOSE 9010
+ENV XMX_SIZE=1G
 
-# JVM debugging port
-EXPOSE 5005
-
-ENTRYPOINT ["java", "-Xmx2G", "-javaagent:/opt/elastic-apm-agent/elastic-apm-agent-1.6.1.jar", "-Delastic.apm.service_name=crg-geo-wrapper", "-Delastic.apm.server_url=http://10.10.10.116:8200", "-Delastic.apm.application_packages=ru.mycrg.wrapper", "-jar", "geo-wrapper.jar"]
+ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+                                     -Delastic.apm.service_name=crg-geo-wrapper \
+                                     -Delastic.apm.server_url=${APM_PATH} \
+                                     -Delastic.apm.application_packages=ru.mycrg.wrapper \
+                                     -jar geo-wrapper.jar
