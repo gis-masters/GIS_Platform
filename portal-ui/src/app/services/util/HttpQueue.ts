@@ -1,30 +1,55 @@
-import { HttpClient } from '@angular/common/http';
-
-import { services } from '../../services/services';
-
-interface Options {
-  maxParallel?: number;
-}
+import {Injectable} from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 interface Task {
-  method: 'get';
+  method: 'get' | 'post' | 'delete';
   url: string;
+  body?: any | null,
+  options?: Options;
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
 }
 
+interface Options {
+  headers?: HttpHeaders | {
+      [header: string]: string | string[];
+  };
+  observe?: 'body';
+  params?: HttpParams | {
+      [param: string]: string | string[];
+  };
+  reportProgress?: boolean;
+  responseType?: 'text' | 'json' | 'blob';
+  withCredentials?: boolean;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpQueue {
   private executing: number;
   private queue: Task[] = [];
-  private maxParallel: number;
+  private maxParallel: number = 4;
 
-  constructor (options?: Options) {
-    this.maxParallel = options && options.maxParallel || 4;
+  constructor (private http: HttpClient) { }
+
+  get <T>(url: string, options?: Options): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.queue.push({method: 'get', url: url, options, resolve, reject})
+      this.tick();
+    });
   }
 
-  get <T>(url: string): Promise<T> {
+  post <T>(url: string, body: any | null, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({method: 'get', url: url, resolve, reject})
+      this.queue.push({ method: 'post', url: url, body, options, resolve, reject });
+      this.tick();
+    });
+  }
+
+  delete <T>(url: string): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.queue.push({method: 'delete', url: url, resolve, reject})
       this.tick();
     });
   }
@@ -35,10 +60,17 @@ export class HttpQueue {
     const task: Task = this.queue.shift();
     this.executing++;
 
-    services.httpClient.get(task.url).subscribe((result) => {
-      task.resolve(result);
-      this.executing--;
-      this.tick();
-    });
+    this.http.request(task.method, task.url, { body: task.body, ...task.options }).subscribe(
+      result => {
+        task.resolve(result);
+        this.executing--;
+        this.tick();
+      },
+      error => {
+        task.reject(error);
+        this.executing--;
+        this.tick();
+      }
+    );
   }
 }

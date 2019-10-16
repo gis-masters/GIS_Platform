@@ -1,6 +1,6 @@
-import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+
+import { HttpQueue } from './util/HttpQueue';
 import {ServerPropertiesService} from './server-properties.service';
 
 @Injectable({
@@ -8,11 +8,12 @@ import {ServerPropertiesService} from './server-properties.service';
 })
 export class DownloadFileService {
 
-  constructor(private http: HttpClient,
+  constructor(private httpq: HttpQueue,
               private propertiesService: ServerPropertiesService) {}
 
-  download(fileName: string): Observable<any> {
-    return this.http
-               .get(this.propertiesService.exportUrl + '/' + fileName, {responseType: 'blob'});
+  async download(fileName: string): Promise<any> {
+    const exportUrl = await this.propertiesService.exportUrl;
+
+    return this.httpq.get(exportUrl + '/' + fileName, {responseType: 'blob'});
   }
 }

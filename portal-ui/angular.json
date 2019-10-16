@@ -58,26 +58,26 @@
           "configurations": {
             "convProduction": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convProd.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.convProd.json"
               }]
             },
             "convTest": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convTest.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.convTest.json"
               }]
             },
             "convStaging": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convStaging.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.convStaging.json"
               }]
             },
             "convDev": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.convDev.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.convDev.json"
               }],
               "optimization": false,
               "sourceMap": true,
@@ -87,26 +87,26 @@
             },
             "simfProduction": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.simfProd.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.simfProd.json"
               }]
             },
             "simfTest": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.simfTest.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.simfTest.json"
               }]
             },
             "simfStaging": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.simfStaging.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.simfStaging.json"
               }]
             },
             "simfDev": {
               "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.simfDev.ts"
+                "replace": "src/assets/config/environment.json",
+                "with": "src/assets/config/environment.simfDev.json"
               }],
               "optimization": false,
               "sourceMap": true,

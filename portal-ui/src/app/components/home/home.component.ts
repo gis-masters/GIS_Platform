@@ -10,7 +10,7 @@ import {
   Injector
 } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
+import { getEnvironment } from '../../services/environment';
 
 @Component({
   selector: 'crg-home',
@@ -24,7 +24,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   constructor(private compiler: Compiler, private injector: Injector) {}
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    const environment = await getEnvironment();
     import(`./home@${environment.platform}.module`)
       .then(m => m.HomeModule)
       .then(lazyModule => {

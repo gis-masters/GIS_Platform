@@ -52,16 +52,19 @@ export class ImportService {
 
   importFlow = new ImportFlow();
 
-  private httpq: HttpQueue;
-  private importUrl = this.serverProp.geoServerUrl + '/rest/imports';
+  private importUrl: string;
   private JSON_FORMAT = new HttpHeaders({
     'Content-Type': 'application/json',
   });
 
   constructor(private http: HttpClient,
+              private httpq: HttpQueue,
               private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
-    this.httpq = new HttpQueue();
+      //TODO fixme
+      this.serverProp.geoServerUrl.then((geoServerUrl) => {
+        this.importUrl = geoServerUrl + '/rest/imports'
+      });
   }
 
   isTaskPending (task: ImportTaskFull | ImportTaskShort) {

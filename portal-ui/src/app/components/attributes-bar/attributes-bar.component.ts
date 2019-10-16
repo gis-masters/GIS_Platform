@@ -31,7 +31,7 @@ import {ProjectModel} from '../../services/geoserver/import/projectModel';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { environment } from '../../../environments/environment';
+import { getEnvironment } from '../../services/environment';
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -49,7 +49,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   isNeedPrepareColumn = true;
 
-  isSimf: boolean = environment.platform === 'simf';
+  isSimf: boolean = false;
 
   currentPositionFeature: WfsFeature;
   features: WfsFeatureView[] = [];
@@ -93,7 +93,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private snackBar: MatSnackBar,
               private log: FizLogger,
               private dialog: MatDialog,
-              private openLayersService: OpenLayersService) { }
+              private openLayersService: OpenLayersService) {
+    this.getEnv();
+  }
 
   ngAfterViewInit(): void {
     this.projectModel = this.projectsService.getCurrent();
@@ -360,6 +362,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
           this.attributeTable.selected = [];
         });
+  }
+
+  private async getEnv () {
+    const environment = await getEnvironment();
+    this.isSimf = environment.platform === 'simf';
   }
 
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {

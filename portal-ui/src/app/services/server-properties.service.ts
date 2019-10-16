@@ -1,71 +1,114 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+
+import { getEnvironment } from './environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerPropertiesService {
+  private waiting: Promise<void>;
+  private _host: string;
+  private _port: number;
+  private _wsPort: number;
+  private _baseUrl: string;
+  private _geoServerUrl: string;
+  private _authServerUrl: string;
+  private _organizationsUrl: string;
+  private _usersUrl: string;
+  private _schemaUrl: string;
+  private _exportUrl: string;
+  private _wsUrl: string;
 
-  private _host = 'http://' + environment.server.host;
-  private _port = environment.server.port;
-  private _baseUrl = this._host + ':' + this._port;
-
-  private _geoServerUrl = this._baseUrl + '/geoserver';
-  private _authServerUrl = this._baseUrl + '/oauth/token';
-  private _organizationsUrl = this._baseUrl + '/organizations';
-  private _usersUrl = this._baseUrl + '/users';
-  private _schemaUrl = this._baseUrl + '/schema';
-  private _exportUrl = this._baseUrl + '/export';
-  private _wsUrl = this._baseUrl + '/crg-ws-endpoint';
-
-  constructor() {
+  get host(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._host;
+    });
   }
 
-  get host(): string {
-    return this._host;
+  get port(): Promise<number> {
+    return this.getEnv().then(() => {
+      return this._port;
+    });
   }
 
-  get port(): number {
-    return this._port;
+  get wsPort(): Promise<number> {
+    return this.getEnv().then(() => {
+      return this._wsPort;
+    });
   }
 
-  get baseUrl(): string {
-    return this._baseUrl;
+  get baseUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._baseUrl;
+    });
   }
 
   /**
    * http://localhost:8080/geoserver
    */
-  get geoServerUrl(): string {
-    return this._geoServerUrl;
+  get geoServerUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._geoServerUrl;
+    });
   }
 
-  get authServerUrl(): string {
-    return this._authServerUrl;
+  get authServerUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._authServerUrl;
+    });
   }
 
-  get organizationsUrl(): string {
-    return this._organizationsUrl;
+  get organizationsUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._organizationsUrl;
+    });
   }
 
-  get schemaUrl(): string {
-    return this._schemaUrl;
+  get schemaUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._schemaUrl;
+    });
   }
 
-  get exportUrl(): string {
-    return this._exportUrl;
+  get exportUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._exportUrl;
+    });
   }
 
-  get wsUrl(): string {
-    return this._wsUrl;
+  get wsUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._wsUrl;
+    });
   }
 
-  get usersUrl(): string {
-    return this._usersUrl;
+  get usersUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._usersUrl;
+    });
   }
 
-  set usersUrl(value: string) {
-    this._usersUrl = value;
+  private async waitEnv (): Promise<void> {
+    const environment = await getEnvironment();
+
+    this._host = 'http://' + environment.server.host;
+    this._port = environment.server.port;
+    this._wsPort = environment.ws_port;
+    this._baseUrl = this._host + ':' + this._port;
+    this._geoServerUrl = this._baseUrl + '/geoserver';
+    this._authServerUrl = this._baseUrl + '/oauth/token';
+    this._organizationsUrl = this._baseUrl + '/organizations';
+    this._usersUrl = this._baseUrl + '/users';
+    this._schemaUrl = this._baseUrl + '/schema';
+    this._exportUrl = this._baseUrl + '/export';
+    this._wsUrl = this._baseUrl + '/crg-ws-endpoint';
   }
 
+  private getEnv (): Promise<void> {
+    if (!this.waiting) {
+      this.waiting = this.waitEnv();
+    }
+
+    return this.waiting;
+  }
 }

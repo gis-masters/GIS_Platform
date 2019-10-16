@@ -1,4 +1,3 @@
-import {NGXLogger} from 'ngx-logger';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
@@ -12,7 +11,7 @@ import {EditFeatureItem, DataSchemaService, PropertySchema, FeatureDescription} 
 import {from, Subject} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
 import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
-import { environment } from '../../../environments/environment';
+import { getEnvironment } from '../../services/environment';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -42,14 +41,13 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
-  isSimf: boolean = environment.platform === 'simf';
+  isSimf: boolean = false;
 
   private featureDescription: FeatureDescription;
   private BATCH_SIZE = 200;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private snackBar: MatSnackBar,
+  constructor(private snackBar: MatSnackBar,
               private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
               private communicationService: CommunicationService,
@@ -57,7 +55,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
               private openLayers: OpenLayersService,
               private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
-
+    this.getEnv();
   }
 
   ngOnInit(): void {
@@ -194,6 +192,11 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     this.closeMe.emit(true);
 
     this.openLayers.clearDraft();
+  }
+
+  private async getEnv () {
+    const environment = await getEnvironment();
+    this.isSimf = environment.platform === 'simf';
   }
 
   private getDirtyAndValidProperties(): EditFeatureItem[] {

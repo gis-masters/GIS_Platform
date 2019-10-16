@@ -1,8 +1,7 @@
-import {Observable} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+
+import { HttpQueue } from '../util/HttpQueue';
+import {WsService} from '../ws.service';
 import {LocalStorageService} from '../local-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Process} from './models';
@@ -12,23 +11,20 @@ import {Process} from './models';
 })
 export class ExportService {
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
+  constructor(private httpq: HttpQueue,
               private wsService: WsService,
               private serverProp: ServerPropertiesService,
-              private storageService: LocalStorageService, ) {
-    this.logger.info('ExportService constructor');
-  }
+              private storageService: LocalStorageService, ) { }
 
-  export(requestModel: ExportGmlRequest): Observable<Process> {
+  async export(requestModel: ExportGmlRequest): Promise<Process> {
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
-    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/export';
+    const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/export';
 
     const payload: ExportGmlRequest = requestModel;
     payload.wsUiId = this.wsService.getId();
 
-    return this.http
+    return this.httpq
                .post<Process>(url, JSON.stringify(payload), {headers: {'Content-Type': 'application/json'}});
   }
 }

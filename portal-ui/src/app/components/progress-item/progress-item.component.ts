@@ -3,7 +3,6 @@ import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnDestroy} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
 import {DownloadFileService} from '../../services/download-file.service';
-import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ProcessType} from '../../services/crg/models';
 
@@ -66,18 +65,14 @@ export class ProgressItemComponent implements OnDestroy {
     this.eventService.delete(this.event.id);
   }
 
-  download() {
+  async download() {
     const wsMessage = this.event.payload;
     const exportWsMsg = wsMessage.payload as any;
-
     const fileName = exportWsMsg.payload.split('/')[3];
-    this.fileService.download(fileName)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(data => {
-          const blob = new Blob([data], {type: 'text/xml'});
+    const data = await this.fileService.download(fileName);
+    const blob = new Blob([data], {type: 'text/xml'});
 
-          saveAs(blob, fileName);
-        });
+    saveAs(blob, fileName);
   }
 
   isShowActionBlock(): boolean {

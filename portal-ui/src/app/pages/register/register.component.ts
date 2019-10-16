@@ -45,21 +45,21 @@ export class RegisterComponent implements OnDestroy {
     this.errorMsg = '';
 
     if (this.registrationForm.valid) {
-      this.authService
-          .registration(this.registrationForm.getRawValue())
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(() => {
+      this.authService.registration(this.registrationForm.getRawValue()).then(
+          () => {
             this.registrationForm.getRawValue();
 
             this.snackBar.open('Регистрация прошла успешно', 'X', {duration: 5000});
             this.router.navigateByUrl('/login');
-          }, errorResponse => {
+          },
+          errorResponse => {
             if (errorResponse.error.message) {
               this.errorMsg = errorResponse.error.message;
             } else {
               this.logger.error(errorResponse);
             }
-          });
+          }
+      );
     } else {
       alert('Not valid!');
     }

@@ -1,4 +1,3 @@
-import {NGXLogger} from 'ngx-logger';
 import { MatPaginator } from '@angular/material/paginator';
 import {Pageable} from '../../services/crg/models';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
@@ -9,7 +8,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { getEnvironment } from '../../services/environment';
 
 @Component({
   selector: 'crg-view-features',
@@ -26,7 +25,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   isSingleEdit = true;
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
-  isSimf: boolean = environment.platform === 'simf';
+  isSimf: boolean = false;
 
   viewFeatures: WfsFeature[] = [];
   pageInfo: Pageable = {
@@ -37,10 +36,10 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private sideBarManager: SideBarManager,
+  constructor(private sideBarManager: SideBarManager,
               private dataSchemaService: DataSchemaService,
               private openLayers: OpenLayersService) {
+    this.getEnv();
   }
 
   ngOnInit(): void {
@@ -126,6 +125,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   getTitle(feature: WfsFeature): string {
     return this.featureTitles.get(feature.id);
+  }
+
+  private async getEnv () {
+    const environment = await getEnvironment();
+    this.isSimf = environment.platform === 'simf';
   }
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {

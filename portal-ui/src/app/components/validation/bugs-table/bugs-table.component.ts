@@ -105,27 +105,25 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  getValidation() {
-    this.validationService
-        .getValidationResults(this.crgLayer.name, 0, this.defaultPageSize, '', 'asc')
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
+  async getValidation() {
+    const response: ValidationResultsResponse = await this.validationService.getValidationResults(
+                                                              this.crgLayer.name,
+                                                              0,
+                                                              this.defaultPageSize,
+                                                              '',
+                                                              'asc');
+        this.handleResponse(response);
   }
 
   getClassIdAlias(element) {
     return this.ruleService.getClassIdAlias(this.crgLayer.name, element);
   }
 
-  showObject(event, objectId: string) {
+  async showObject(event: Event, objectId: string) {
     event.stopPropagation();
-
-    this.wfsService
-        .getFeatureById(this.crgLayer.complexName, objectId)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(
-          (wfsFeature: WfsFeature) => this.openLayers.showFeature(wfsFeature),
-          error => this.logger.error(error)
-        );
+    const wfsFeature: WfsFeature = await this.wfsService
+                        .getFeatureById(this.crgLayer.complexName, objectId);
+    this.openLayers.showFeature(wfsFeature);
   }
 
   editObject(event, objectId: string) {

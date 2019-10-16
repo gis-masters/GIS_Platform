@@ -1,8 +1,8 @@
-import {Observable} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
+import { HttpParams } from '@angular/common/http';
+
+import { HttpQueue } from '../util/HttpQueue';
 import {ValidationWsMsg, WsService} from '../ws.service';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {ServerPropertiesService} from '../server-properties.service';
 import {CrgLayer} from '../geoserver/layers.service';
 import {LocalStorageService} from '../local-storage.service';
@@ -13,19 +13,16 @@ import {ProcessStatus} from './models';
 })
 export class ValidationService {
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
+  constructor(private httpq: HttpQueue,
               private wsService: WsService,
               private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) {
-    this.logger.info('ValidationService constructor');
-  }
+              private serverProp: ServerPropertiesService) { }
 
   /**
    * Провалидировать слоя.
    * @param crgLayers Слоя на валидацию.
    */
-  initValidation(crgLayers: CrgLayer[]): Observable<ValidationWsMsg> {
+  async initValidation(crgLayers: CrgLayer[]): Promise<ValidationWsMsg> {
     const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
 
     const payload = {
@@ -35,9 +32,9 @@ export class ValidationService {
 
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
-    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation';
+    const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
 
-    return this.http
+    return this.httpq
                .post<ValidationWsMsg>(url, JSON.stringify(payload),
                      {headers: {'Content-Type': 'application/json'}});
   }
@@ -45,8 +42,8 @@ export class ValidationService {
   /**
    * Выборка результатов валидации.
    */
-  getValidationResults(layerName: string, page: number, size: number, sortBy: string,
-                       sortDirection: string): Observable<ValidationResultsResponse> {
+  async getValidationResults(layerName: string, page: number, size: number, sortBy: string,
+                       sortDirection: string): Promise<ValidationResultsResponse> {
     const params = new HttpParams()
       .set('layerName', layerName)
       .set('page', page ? String(page) : '0')
@@ -55,9 +52,9 @@ export class ValidationService {
 
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
-    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation';
+    const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
 
-    return this.http
+    return this.httpq
                .get<ValidationResultsResponse>(url,
                  {headers: {'Content-Type': 'application/json'}, params: params});
   }
@@ -66,7 +63,7 @@ export class ValidationService {
    * Получить краткую статистику по слоям
    * @param crgLayers Слои
    */
-  getShortInfo(crgLayers: CrgLayer[]): Observable<ValidationBrieflyInfo[]> {
+  async getShortInfo(crgLayers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
     const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
 
     const payload = {
@@ -76,9 +73,10 @@ export class ValidationService {
 
     const projectId = this.storageService.getProject().crgProject.id;
     const orgId = this.storageService.getOrgId();
-    const url = this.serverProp.organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';
+    const organizationsUrl = await this.serverProp.organizationsUrl;
+    const url = organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';
 
-    return this.http
+    return this.httpq
                .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),
                  {headers: {'Content-Type': 'application/json'}});
   }

@@ -1,22 +1,26 @@
-import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
-import {Injectable} from '@angular/core';
-import {TokenStorageService} from './token-storage.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ServerPropertiesService} from './server-properties.service';
+import { Injectable } from '@angular/core';
+import { HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+
+import { TokenStorageService, AuthModel } from './token-storage.service';
+import { ServerPropertiesService } from './server-properties.service';
+import { HttpQueue } from './util/HttpQueue';
+
+export interface AuthCredentials {
+  username: string;
+  password: string;
+}
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-
   private _authenticated = false;
 
-  constructor(private http: HttpClient,
+  constructor(private httpq: HttpQueue,
               private router: Router,
               private tokenStorage: TokenStorageService,
               private serverProperties: ServerPropertiesService,
               private logger: NGXLogger) {
-    logger.debug('AuthService start');
-
     const authModel = this.tokenStorage.getAuthModel();
     if (authModel) {
       if (authModel.created_in + (authModel.expires_in * 1000) > Date.now()) {
@@ -28,7 +32,7 @@ export class AuthService {
     }
   }
 
-  authenticate(credentials) {
+  async authenticate(credentials: AuthCredentials): Promise<AuthModel> {
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
@@ -39,8 +43,9 @@ export class AuthService {
     });
 
     const options = {withCredentials: true, headers: headers};
+    const url = await this.serverProperties.authServerUrl;
 
-    return this.http.post(this.serverProperties.authServerUrl, params.toString(), options);
+    return this.httpq.post<AuthModel>(url, params.toString(), options);
   }
 
   validateAuth(redirectTo: string) {
@@ -59,7 +64,7 @@ export class AuthService {
   }
 
   // TODO: Создание новой орг в модуле аутентификации???
-  registration(regData: RegData) {
+  async registration(regData: RegData): Promise<{}> {
     const payload = {
       email: regData.email,
       name: regData.company,
@@ -68,8 +73,9 @@ export class AuthService {
       userName: regData.firstName,
       userSurName: regData.lastName
     };
+    const url = await this.serverProperties.organizationsUrl;
 
-    return this.http.post(this.serverProperties.organizationsUrl, payload);
+    return this.httpq.post(url, payload);
   }
 
   get authenticated(): boolean {

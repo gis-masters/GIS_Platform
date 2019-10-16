@@ -1,0 +1,10 @@
+{
+  "platform": "conv",
+  "production": false,
+  "server": {
+    "host": "localhost",
+    "port": 8100
+  },
+  "ws_port": 8088,
+  "scratchWorkspaceName": "scratch_database"
+}

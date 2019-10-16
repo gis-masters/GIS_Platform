@@ -1,28 +1,23 @@
-import {Observable} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {BaseService} from '../base.service';
-import {HttpClient} from '@angular/common/http';
-import {ServerPropertiesService} from '../server-properties.service';
+import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UsersService {
-
-  constructor(private http: HttpClient,
-              private baseService: BaseService,
-              private serverProp: ServerPropertiesService) {
-  }
-
-  getInfo(): Observable<UserInfoModel> {
-    return this.http
-               .get<UserInfoModel>(this.serverProp.usersUrl + '/info');
-  }
-
-}
+import { HttpQueue } from '../util/HttpQueue';
+import { ServerPropertiesService } from '../server-properties.service';
 
 export interface UserInfoModel {
   userName: string;
   orgName: string;
   orgId: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  constructor(private httpq: HttpQueue,
+              private serverProp: ServerPropertiesService) { }
+
+  async getInfo(): Promise<UserInfoModel> {
+    return this.httpq
+               .get<UserInfoModel>((await this.serverProp.usersUrl) + '/info');
+  }
 }

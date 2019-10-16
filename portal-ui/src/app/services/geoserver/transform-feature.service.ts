@@ -18,13 +18,16 @@ export enum TransactionType {
 })
 export class TransformFeatureService {
 
-  private wfsUrl = this.propertiesService.geoServerUrl + '/wfs';
+  private wfsUrl: string;
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
 
   constructor(private logger: NGXLogger,
               private http: HttpClient,
               private propertiesService: ServerPropertiesService) {
+    this.propertiesService.geoServerUrl.then((geoServerUrl) => {
+      this.wfsUrl = geoServerUrl + '/wfs'
+    });
   }
 
   updateFeature(featureId: string, workspaceName: string, layerName: string, newProperties: any) {

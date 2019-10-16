@@ -1,6 +1,5 @@
 import {WsService} from '../ws.service';
 import {Injectable} from '@angular/core';
-import {BaseService} from '../base.service';
 import {FizLogger} from '../logger/fiz.logger';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
@@ -20,7 +19,7 @@ import {StorageKeys} from '../storage-keys';
 })
 export class ProjectsService {
 
-  private orgUrl = this.serverProp.organizationsUrl + '/';
+  private orgUrl: string;
 
   private _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(undefined);
   public projects$: Observable<Project[]> = this._projects$.asObservable()
@@ -36,10 +35,13 @@ export class ProjectsService {
               private log: FizLogger,
               private wsService: WsService,
               private layerService: LayersService,
-              private baseService: BaseService,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     this.projects$.subscribe();
+    this.serverProp.organizationsUrl.then((organizationsUrl) => {
+      // TODO выдернуть этот костыль при рефакторинге импорта (уже в процессе)
+      this.orgUrl = organizationsUrl + '/';
+    });
   }
 
   openProject (project: Project) {

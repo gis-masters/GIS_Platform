@@ -1,23 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 
-import {FizLogger} from '../logger/fiz.logger';
 import {NameHrefProjection} from './projections';
 import {Project} from '../crg/projects.service';
-import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {DataSchemaService} from '../crg/data-schema.service';
 import {ServerPropertiesService} from '../server-properties.service';
 import {LayerGroupService} from "./layer-group.service";
+import { getEnvironment, Environment } from '../environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService {
-
-  private layersUrl = this.serverProp.geoServerUrl + '/rest/layers';
-
+  private layersUrl: string;
+  private environment: Environment;
   private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>(undefined);
   public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
     .pipe(
@@ -28,13 +26,14 @@ export class LayersService {
     );
 
   constructor(private http: HttpClient,
-              private log: FizLogger,
               private ruleService: DataSchemaService,
               private layerGroupService: LayerGroupService,
               private serverProp: ServerPropertiesService) {
-    this.log.debug('setUp', 'LayersService constructor');
-
+    this.getEnv();
     this.layers$.subscribe();
+    this.serverProp.geoServerUrl.then((geoServerUrl) => {
+      this.layersUrl = geoServerUrl + '/rest/layers';
+    });
   }
 
   /**
@@ -84,6 +83,10 @@ export class LayersService {
       .get<{layer: Layer}>(layer.href);
   }
 
+  private async getEnv () {
+    this.environment = await getEnvironment();
+  }
+
   private fetchLayersDescription(layers: NameHrefProjection[]): any {
     if (layers.length === 0) {
       return of([]);
@@ -122,7 +125,7 @@ export class LayersService {
       return [];
     }
 
-    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(environment.scratchWorkspaceName));
+    return layers.filter((layer: NameHrefProjection) => !layer.name.includes(this.environment.scratchWorkspaceName));
   }
 
   private filterProjectLayers(project: Project, layers: NameHrefProjection[]) {

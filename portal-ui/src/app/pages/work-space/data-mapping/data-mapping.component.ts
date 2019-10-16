@@ -114,25 +114,21 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
           interval(this.CHECK_STATUS_INTERVAL)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-              this.organizationService
-                  .getProcessById(crgProcess.id)
-                  .pipe(takeUntil(this.unsubscribe$))
-                  .subscribe((response: Process) => {
-                    if (response.status === ProcessStatus.DONE) {
-                      this.layersService.fetchLayers(workImport.projectModel.crgProject);
+            .subscribe(async () => {
+              const response: Process = await this.organizationService.getProcessById(crgProcess.id);
+              if (response.status === ProcessStatus.DONE) {
+                this.layersService.fetchLayers(workImport.projectModel.crgProject);
 
-                      this.isWorkImportInited = false;
-                      this.isImportFinished = true;
+                this.isWorkImportInited = false;
+                this.isImportFinished = true;
 
-                      this.unsubscribe$.next();
-                    } else if (response.status === ProcessStatus.ERROR) {
-                      this.isWorkImportInited = false;
-                      this.isImportFinished = false;
+                this.unsubscribe$.next();
+              } else if (response.status === ProcessStatus.ERROR) {
+                this.isWorkImportInited = false;
+                this.isImportFinished = false;
 
-                      this.unsubscribe$.next();
-                    }
-                  });
+                this.unsubscribe$.next();
+              }
             });
 
           // Прибьем проверку статуса если она зятянулась

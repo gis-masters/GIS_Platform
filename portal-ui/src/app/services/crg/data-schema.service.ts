@@ -1,12 +1,12 @@
-import {map} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ValueTitleProjection} from '../geoserver/projections';
-import {ServerPropertiesService} from '../server-properties.service';
-import {CrgLayer} from '../geoserver/layers.service';
-import {FeatureDescriptionUtil} from '../util/FeatureDescriptionUtil';
+import { Injectable } from '@angular/core';
+import { Observable, of, defer } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+
+import { HttpQueue } from '../util/HttpQueue';
+import { ValueTitleProjection } from '../geoserver/projections';
+import { ServerPropertiesService } from '../server-properties.service';
+import { CrgLayer } from '../geoserver/layers.service';
+import { FeatureDescriptionUtil } from '../util/FeatureDescriptionUtil';
 
 
 export class FeatureXsdDefinition {
@@ -63,7 +63,7 @@ export class DataSchemaService {
 
   private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 
-  constructor(private http: HttpClient,
+  constructor(private httpq: HttpQueue,
               private logger: NGXLogger,
               private serverProp: ServerPropertiesService) {
   }
@@ -74,23 +74,21 @@ export class DataSchemaService {
       return of(this.featuresXsdDefinition);
     } else {
       // Пустой список подразумевает выборку всего
-      const payload = [];
+      const payload: [] = [];
 
-      return this.http
-                 .post<FeatureXsdDefinition>(this.serverProp.schemaUrl, payload)
-                 .pipe(
-                   map((respone: any) => {
-                     if (respone) {
-                       this.featuresXsdDefinition.xsdFeatures = respone;
+      return defer(async () => {
+        const url = await this.serverProp.schemaUrl;
+        const response = await this.httpq.post<FeatureDescription[]>(url, payload);
 
-                     } else {
-                       this.logger.warn('getFeaturesDefinition response is: ', respone);
-                       this.featuresXsdDefinition = {xsdFeatures: []};
-                     }
+        if (response) {
+          this.featuresXsdDefinition.xsdFeatures = response;
+        } else {
+          this.logger.warn('getFeaturesDefinition response is: ', response);
+          this.featuresXsdDefinition = {xsdFeatures: []};
+        }
 
-                     return this.featuresXsdDefinition;
-                   })
-                 );
+        return this.featuresXsdDefinition;
+      })
     }
   }
 

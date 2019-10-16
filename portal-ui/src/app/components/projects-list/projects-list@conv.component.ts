@@ -6,7 +6,6 @@ import {Project, ProjectsService} from '../../services/crg/projects.service';
 import {ProcessStatus} from '../../services/crg/models';
 import {DataSchemaService} from '../../services/crg/data-schema.service';
 import {CommunicationService} from '../../services/communication.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'crg-projects-list',

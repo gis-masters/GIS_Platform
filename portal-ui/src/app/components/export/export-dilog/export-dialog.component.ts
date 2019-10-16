@@ -83,20 +83,19 @@ export class ExportDialogComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  initValidation() {
+  async initValidation() {
     this.isExportInited = true;
 
     const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.name);
-    this.exportService
-        .export({layers: layerNames, docSchema: this.selectedDocSchema})
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((process: Process) => {
-          // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
-          this.logger.info('export to GML response', process);
-          this.isExportInited = false;
+    const process: Process = await this.exportService.export({
+      layers: layerNames,
+      docSchema: this.selectedDocSchema
+    });
+    // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
+    this.logger.info('export to GML response', process);
+    this.isExportInited = false;
 
-          this.communicationService.stepperEvents.emit(5);
-        });
+    this.communicationService.stepperEvents.emit(5);
 
     this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});

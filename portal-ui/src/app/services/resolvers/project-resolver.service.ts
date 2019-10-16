@@ -13,7 +13,7 @@ export class OrganizationInfoResolver implements Resolve<any> {
   /**
    * Сходим за инфой пользователя/организации перед загрузкой старницы с проектами.
    */
-  resolve(): Observable<UserInfoModel> {
+  resolve(): Promise<UserInfoModel> {
     return this.usersService.getInfo();
   }
 

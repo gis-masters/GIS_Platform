@@ -1,38 +1,37 @@
-import {Observable} from 'rxjs';
+import {Observable,defer} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+
+import {HttpQueue} from '../util/HttpQueue';
 import {ServerPropertiesService} from '../server-properties.service';
 import {NameHrefProjection} from "./projections";
 import {LocalStorageService} from "../local-storage.service";
-import {map} from "rxjs/operators";
+
+interface LayerGroups {
+  layerGroups: {
+    layerGroup: NameHrefProjection[]
+  }
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayerGroupService {
 
-  constructor(private http: HttpClient,
+  constructor(private httpq: HttpQueue,
               private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) {
-  }
+              private serverProp: ServerPropertiesService) { }
 
   fetchLayerGroups(): Observable<NameHrefProjection[]> {
     const currentProject = this.storageService.getProject().crgProject;
     const workspaceName = currentProject.workspaceName;
 
-    let url = this.serverProp.geoServerUrl + '/rest/workspaces/' + workspaceName + '/layergroups';
+    return defer(async () => {
+      const geoServerUrl = await this.serverProp.geoServerUrl;
+      const url = `${geoServerUrl}/rest/workspaces/${workspaceName}/layergroups`;
+      const groups = await this.httpq.get<LayerGroups>(url);
 
-    return this.http
-               .get<LayerGroups>(url)
-               .pipe(
-                 map((groups: LayerGroups) => groups.layerGroups.layerGroup)
-               );
+      return groups.layerGroups.layerGroup;
+    });
   }
 
-}
-
-interface LayerGroups {
-  layerGroups: {
-    layerGroup: NameHrefProjection[]
-  }
 }

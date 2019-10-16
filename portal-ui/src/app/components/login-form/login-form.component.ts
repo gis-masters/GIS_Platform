@@ -2,10 +2,8 @@ import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
 
-import {AuthService} from '../../services/auth.service';
-
+import {AuthService, AuthCredentials} from '../../services/auth.service';
 import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
 
 @Component({
@@ -42,7 +40,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const credentials = {
+    const credentials: AuthCredentials = {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password
     };
@@ -51,16 +49,15 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.isWrongPassword = false;
       this.isUserDisabled = false;
 
-      this.authService.authenticate(credentials)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((authModel: AuthModel) => {
+      this.authService.authenticate(credentials).then(
+          (authModel: AuthModel) => {
             this.authService.authenticated = true;
             this.tokenStorage.saveAuthModel(authModel);
             this.tokenStorage.saveAccessToken(authModel.access_token);
             this.tokenStorage.saveRefreshToken(authModel.refresh_token);
-
             this.router.navigateByUrl('/workspace/projects');
-          }, response => {
+          },
+          response => {
             this.authService.authenticated = false;
 
             if (response.error && response.error.error_description === 'User is disabled') {
@@ -68,10 +65,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
             } else if (response.error.error_description === 'Bad credentials') {
               this.isWrongPassword = true;
             }
-          });
+          }
+      );
     } else {
       alert('Not valid form!');
     }
   }
 }
-

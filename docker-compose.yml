@@ -169,10 +169,15 @@ services:
     container_name: crg-ui
     image: $DOCKER_CRG_HOST/crg-ui:$CRG_UI_TAG
     restart: always
+    environment:
+      UI_PLATFORM: $UI_PLATFORM
+      UI_PROD: $UI_PROD
+      UI_SERVER_HOST: $UI_SERVER_HOST
+      UI_SERVER_PORT: $UI_SERVER_PORT
+      UI_SWN: $UI_SWN
+      UI_WS_PORT: $UI_WS_PORT
     depends_on:
       - geo-api
       - geoserver
-    volumes:
-      - /opt/nginx/conf.d:/etc/nginx/conf.d
     ports:
     - 80:80

@@ -1,46 +1,32 @@
-import {Observable} from 'rxjs';
-import {CrgModels} from '../crg/models';
-import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
-import {filter, map} from 'rxjs/operators';
-import {BaseService} from '../base.service';
-import {HttpClient} from '@angular/common/http';
+import {Observable, defer} from 'rxjs';
+
+import {CrgModels} from '../crg/models';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Util} from './util';
 import {UsedGeometryType} from '../open-layer/GeometryType';
+import { HttpQueue } from '../util/HttpQueue';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WfsService {
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
-              private baseService: BaseService,
-              private serverProp: ServerPropertiesService) {
-    logger.info('WfsService start');
-  }
+  constructor(private httpq: HttpQueue,
+              private serverProp: ServerPropertiesService) { }
 
-  getFeatureById(complexName: string, objectId: string): Observable<WfsFeature> {
-    const url = this.prepareLink(complexName, objectId);
-
-    return this.http
-               .get<WfsFeatureCollection>(url)
-               .pipe(
-                 filter((featureCollection: WfsFeatureCollection) => !!featureCollection),
-                 map((featureCollection: WfsFeatureCollection) => {
-                   if (featureCollection.features.length > 0) {
-                     return featureCollection.features[0];
-                   } else {
-                     throw new Error('Not found feature by ID: ' + objectId);
-                   }
-                 })
-               );
+  async getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
+    const url = await this.prepareLink(complexName, objectId);
+    const featureCollection: WfsFeatureCollection = await this.httpq.get<WfsFeatureCollection>(url);
+    
+    if (featureCollection && featureCollection.features.length > 0) {
+      return featureCollection.features[0];
+    } else {
+      throw new Error('Not found feature by ID: ' + objectId);
+    }
   }
 
   getFeatures(complexName: string, requestModel?: CrgModels): Observable<WfsFeatureCollection> {
-    const url = this.serverProp.geoServerUrl + '/wfs';
-
     const params = {
       service: 'wfs',
       // version: '2.0.0',
@@ -70,28 +56,30 @@ export class WfsService {
       params['CQL_FILTER'] = cqlFilter;
     }
 
-    return this.http
-               .get<WfsFeatureCollection>(url, {params: params})
-               .pipe(
-                 map((fCollection: WfsFeatureCollection) => this.clearFeatureId(fCollection))
-               );
+    return defer(async () => {
+      const url = (await this.serverProp.geoServerUrl) + '/wfs';
+      const fCollection: WfsFeatureCollection =
+                    await this.httpq.get<WfsFeatureCollection>(url, {params: params})
+
+      return this.clearFeatureId(fCollection);
+    });
   }
 
   /**
    * Выборка обьектов слоя по XML фильтру.
    * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
    */
-  getFeaturesByXmlFilter(xml: string): Observable<WfsFeatureCollection> {
-    const url = this.serverProp.geoServerUrl + '/wfs';
+  async getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
+    const url = (await this.serverProp.geoServerUrl) + '/wfs';
 
-    return this.http
+    return this.httpq
                .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
   }
 
-  private prepareLink(typeName: string, objectId: string) {
+  private async prepareLink(typeName: string, objectId: string): Promise<string> {
     const workspaceName = typeName.split(':')[0];
 
-    return this.serverProp.geoServerUrl + '/' + workspaceName + '/ows'
+    return (await this.serverProp.geoServerUrl) + '/' + workspaceName + '/ows'
                         + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
                         + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }

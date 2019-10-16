@@ -10,7 +10,7 @@ import {
   Injector
 } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
+import { getEnvironment } from '../../services/environment';
 
 @Component({
   selector: 'crg-header',
@@ -24,7 +24,8 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
 
   constructor(private compiler: Compiler, private injector: Injector) {}
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    const environment = await getEnvironment();
     import(`./header@${environment.platform}.module`)
       .then(m => m.HeaderModule)
       .then(lazyModule => {

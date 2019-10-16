@@ -94,23 +94,21 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.step--;
   }
 
-  initValidation(crgLayers: CrgLayer[]) {
+  async initValidation(crgLayers: CrgLayer[]) {
     this.isValidationInited = true;
 
-    this.validationService
-        .initValidation(crgLayers)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((response: ValidationWsMsg) => {
-          if (response) {
-            // TODO: Ничего не предпринимаем здесь. Ждем сообщений из websocet. А надо бы отследивать процесс
-            //  страхуя websocet
-            this.logger.debug('return process', response);
-          } else {
-            this.showError();
-          }
-        }, error => {
-          this.showError(error);
-        });
+    try {
+      const response: ValidationWsMsg = await this.validationService.initValidation(crgLayers);
+      if (response) {
+        // TODO: Ничего не предпринимаем здесь. Ждем сообщений из websocet. А надо бы отследивать
+        // процесс страхуя websocet
+        this.logger.debug('return process', response);
+      } else {
+        this.showError();
+      }
+    } catch (error) {
+      this.showError(error);
+    }
   }
 
   closeMe() {
@@ -165,28 +163,30 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
     this.validationService
         .getShortInfo(layers)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((response: ValidationBrieflyInfo[]) => {
-          this.isValidationInited = false;
+        .then(
+          (response: ValidationBrieflyInfo[]) => {
+            this.isValidationInited = false;
 
-          if (!response) {
-            this.logger.warn('Cant get layer info', response);
-          } else {
-            // console.log('new SHORT response', response);
+            if (!response) {
+              this.logger.warn('Cant get layer info', response);
+            } else {
+              // console.log('new SHORT response', response);
 
-            response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
-              if (brieflyInfo.status === 'ERROR') {
-                this.logger.warn('Error for feature: ', brieflyInfo);
-              } else {
-                this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
-              }
-            });
+              response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+                if (brieflyInfo.status === 'ERROR') {
+                  this.logger.warn('Error for feature: ', brieflyInfo);
+                } else {
+                  this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
+                }
+              });
+            }
+          },
+          error => {
+            this.isValidationInited = false;
+
+            this.logger.error('Cant get validation info: ', error);
           }
-        }, error => {
-          this.isValidationInited = false;
-
-          this.logger.error('Cant get validation info: ', error);
-        });
+        );
   }
 
   private showError(error?) {

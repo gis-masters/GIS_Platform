@@ -15,13 +15,13 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import GeometryType from 'ol/geom/GeometryType';
-
 import {defaults as defaultControls, ScaleLine} from 'ol/control';
+
 import {LegendService} from '../geoserver/legend.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {TokenStorageService} from '../token-storage.service';
 import {UsedGeometryType} from './GeometryType';
-import {environment} from '../../../environments/environment';
+import { getEnvironment, Environment } from '../environment';
 
 export let BEARER_TOKEN = '';
 
@@ -74,58 +74,7 @@ export class OpenLayersService {
               private legendService: LegendService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
 
-    if (environment.platform === 'conv') {
-      this.tileSources = [
-        {
-          name: 'OSM',
-          title: 'Open street map',
-          source: new OSM(),
-          thumbnail: '/assets/images/thumpnail-osm.jpg'
-        },
-        {
-          name: 'ESRI',
-          title: 'ESRI',
-          source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-          }),
-          thumbnail: '/assets/images/thumpnail-esri.jpg'
-        }
-      ];
-
-      this.currentTileSource = this.getTileSource('OSM');
-    } else {
-      this.tileSources = [
-        {
-          name: 'OSM',
-          title: 'Open street map',
-          source: new OSM(),
-          thumbnail: '/assets/images/thumpnail-osm.jpg'
-        },
-        {
-          name: 'ESRI',
-          title: 'ESRI',
-          source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-          }),
-          thumbnail: '/assets/images/thumpnail-esri.jpg'
-        },
-        {
-          name: 'SimfReg',
-          title: 'Ортофотоплан',
-          source: new TileWMS({
-            urls: [this.legendService.baseUrl],
-            tileLoadFunction: this.crgImageLoadFunction,
-            params: {
-              LAYERS: 'substrate:T_42_6',
-              FORMAT: 'image/vnd.jpeg-png8'
-            }
-          }),
-          thumbnail: '/assets/images/thumpnail-our.jpg'
-        },
-      ];
-
-      this.currentTileSource = this.getTileSource('SimfReg');
-    }
+    this.setupTileSources();
   }
 
   createMap() {
@@ -366,6 +315,62 @@ export class OpenLayersService {
 
   getTileSources(): TileSource[] {
     return this.tileSources;
+  }
+
+  private async setupTileSources () {
+    const environment = await getEnvironment();
+    if (environment.platform === 'conv') {
+      this.tileSources = [
+        {
+          name: 'OSM',
+          title: 'Open street map',
+          source: new OSM(),
+          thumbnail: '/assets/images/thumpnail-osm.jpg'
+        },
+        {
+          name: 'ESRI',
+          title: 'ESRI',
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+          }),
+          thumbnail: '/assets/images/thumpnail-esri.jpg'
+        }
+      ];
+
+      this.currentTileSource = this.getTileSource('OSM');
+    } else {
+      this.tileSources = [
+        {
+          name: 'OSM',
+          title: 'Open street map',
+          source: new OSM(),
+          thumbnail: '/assets/images/thumpnail-osm.jpg'
+        },
+        {
+          name: 'ESRI',
+          title: 'ESRI',
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+          }),
+          thumbnail: '/assets/images/thumpnail-esri.jpg'
+        },
+        {
+          name: 'SimfReg',
+          title: 'Ортофотоплан',
+          source: new TileWMS({
+            urls: [this.legendService.baseUrl],
+            tileLoadFunction: this.crgImageLoadFunction,
+            params: {
+              LAYERS: 'substrate:T_42_6',
+              FORMAT: 'image/vnd.jpeg-png8'
+            }
+          }),
+          thumbnail: '/assets/images/thumpnail-our.jpg'
+        },
+      ];
+
+      this.currentTileSource = this.getTileSource('SimfReg');
+    }
   }
 
   private positionToFeature(wfsFeature: WfsFeature) {

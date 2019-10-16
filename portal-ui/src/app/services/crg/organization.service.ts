@@ -1,28 +1,24 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {NGXLogger} from 'ngx-logger';
-import {BaseService} from '../base.service';
+
 import {ServerPropertiesService} from '../server-properties.service';
-import {Observable} from 'rxjs';
 import {Process} from './models';
 import {LocalStorageService} from '../local-storage.service';
+import { HttpQueue } from '../util/HttpQueue';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationService {
 
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
-              private baseService: BaseService,
+  constructor(private httpq: HttpQueue,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
   }
 
-  getProcessById(taskId: number): Observable<Process> {
+  async getProcessById(taskId: number): Promise<Process> {
     const orgId = this.storageService.getOrgId();
+    const organizationsUrl = await this.serverProp.organizationsUrl;
 
-    return this.http
-               .get<Process>(this.serverProp.organizationsUrl + '/' + orgId + '/tasks/' + taskId);
+    return this.httpq.get<Process>(organizationsUrl + '/' + orgId + '/tasks/' + taskId);
   }
 }

@@ -164,7 +164,7 @@ export class MapComponent implements OnInit, OnDestroy {
   /**
    * Отобразить информацию об обьектах, которые пересекают заданные координаты.
    */
-  private showFeaturesInfo(coordinate: [number, number]) {
+  private async showFeaturesInfo(coordinate: [number, number]) {
     const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();
 
     if (visibleLayersComplexName.length > 0) {
@@ -175,28 +175,25 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.openLayers.drawPolygon(buffer.getCoordinates());
 
-      this.wfsService.getFeaturesByXmlFilter(xml)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((fCollection: WfsFeatureCollection) => {
-            this.openLayers.clearDraft();
+      const fCollection: WfsFeatureCollection = await this.wfsService.getFeaturesByXmlFilter(xml);
 
-            if (fCollection.features && fCollection.features.length > 0) {
-              this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
-                data: {
-                  features: fCollection.features,
-                  mode: EditFeatureMode.single
-                } as ViewFeaturesData
-              });
+      this.openLayers.clearDraft();
 
-              fCollection.features.forEach(feature => {
-                this.openLayers.paintFeature(feature);
-              });
+      if (fCollection.features && fCollection.features.length > 0) {
+        this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+          data: {
+            features: fCollection.features,
+            mode: EditFeatureMode.single
+          } as ViewFeaturesData
+        });
 
-              this.communicationService.selectedFeatures$.emit(fCollection.features);
-            }
-          }, (exception: GeoserverJSONException) => {
-            this.logger.error('errorResponse: ', exception);
-          });
+        fCollection.features.forEach(feature => {
+          this.openLayers.paintFeature(feature);
+        });
+
+        this.communicationService.selectedFeatures$.emit(fCollection.features);
+      }
+
     } else {
       this.logger.debug('No visible layers');
     }

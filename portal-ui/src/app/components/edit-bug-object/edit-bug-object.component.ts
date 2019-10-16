@@ -103,26 +103,26 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  private handleObject(objectDto: ObjectDto) {
-    this.wfsService
-        .getFeatureById(objectDto.crgLayer.complexName, objectDto.id)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((wfsFeature: WfsFeature) => {
-          this.isFeatureTypeLoaded = true;
+  private async handleObject(objectDto: ObjectDto) {
+    try {
+      const wfsFeature: WfsFeature = await this.wfsService
+                    .getFeatureById(objectDto.crgLayer.complexName, objectDto.id);
 
-          this.wfsFeature = wfsFeature;
-          this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(objectDto.crgLayer.name);
+      this.isFeatureTypeLoaded = true;
 
-          if (!!this.featureDescription) {
-            this.prepareEditForm(this.wfsFeature.properties);
-          } else {
-            this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
-          }
+      this.wfsFeature = wfsFeature;
+      this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(objectDto.crgLayer.name);
 
-          this.openLayers.showFeature(wfsFeature);
-        }, error1 => {
-          this.isFeatureTypeLoaded = true;
-        });
+      if (!!this.featureDescription) {
+        this.prepareEditForm(this.wfsFeature.properties);
+      } else {
+        this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
+      }
+
+      this.openLayers.showFeature(wfsFeature);
+    } catch (err) {
+      this.isFeatureTypeLoaded = true;
+    }
   }
 
   /**

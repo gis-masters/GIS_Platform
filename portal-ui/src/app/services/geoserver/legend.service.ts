@@ -8,7 +8,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 })
 export class LegendService {
 
-  private _baseUrl = this.serverProp.geoServerUrl + '/wms';
+  private _baseUrl: string;
   private request = 'GetLegendGraphic';
   private version = '1.3.0';
   private format = 'image/png';
@@ -17,6 +17,9 @@ export class LegendService {
 
   constructor(private http: HttpClient,
               private serverProp: ServerPropertiesService) {
+    this.serverProp.geoServerUrl.then((geoServerUrl) => {
+      this._baseUrl = geoServerUrl + '/wms';
+    });
   }
 
   /**

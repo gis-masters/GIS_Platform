@@ -1,6 +1,5 @@
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {CrgLayer} from './layers.service';
 import {HttpClient} from '@angular/common/http';
@@ -13,13 +12,15 @@ import {FeatureType} from '@fiz/geoserver-types/feature-types/FeatureType';
 })
 export class FeatureTypesService {
 
-  private featureTypesUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
+  private featureTypesUrl: string;
 
   constructor(private http: HttpClient,
-              private logger: NGXLogger,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
-    logger.info('FeatureTypesService start');
+    // TODO fixme
+    this.serverProp.geoServerUrl.then((geoServerUrl) => {
+      this.featureTypesUrl = geoServerUrl + '/rest/workspaces';
+    });
   }
 
   getByName(layer: CrgLayer): Observable<FeatureType> {

@@ -1,28 +1,20 @@
-import {NGXLogger} from 'ngx-logger';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable} from 'rxjs';
-import {BaseService} from '../base.service';
 import {TaskImport} from './import/taskImport';
 import {WorkImport} from './import/workImport';
 import {ProjectModel} from './import/projectModel';
-import {HttpClient} from '@angular/common/http';
 import {LocalStorageService} from '../local-storage.service';
 import {ServerPropertiesService} from '../server-properties.service';
+import { HttpQueue } from '../util/HttpQueue';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkspacesService {
 
-  private geoserverWorkspaceUrl = this.serverProp.geoServerUrl + '/rest/workspaces';
-
-  constructor(private http: HttpClient,
-              private logger: NGXLogger,
-              private baseService: BaseService,
+  constructor(private httpq: HttpQueue,
               private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) {
-    logger.info('WorkspacesService start');
-  }
+              private serverProp: ServerPropertiesService) { }
 
   /**
    * Опубликовать слой на геосервере.
@@ -32,13 +24,14 @@ export class WorkspacesService {
    * @param projectModel Проект
    * @param table Название таблицы
    */
-  publishLayer(projectModel: ProjectModel, table: string): Observable<any> {
+  async publishLayer(projectModel: ProjectModel, table: string): Promise<any> {
     const orgId = this.storageService.getOrgId();
     const workspaceName = projectModel.crgProject.workspaceName;
     const storeName = 'database_' + orgId + '_store';
+    const geoserverWorkspaceUrl = await this.serverProp.geoServerUrl + '/rest/workspaces';
 
-    return this.http.post(
-      this.geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + storeName + '/featuretypes',
+    return this.httpq.post(
+      geoserverWorkspaceUrl + '/' + workspaceName + '/datastores/' + storeName + '/featuretypes',
       {featureType: {name: table}});
   }
 
@@ -47,12 +40,11 @@ export class WorkspacesService {
    * @param workImport -
    */
   publishLayers(workImport: WorkImport): Observable<any> {
-    const observableTasks = [];
+    const tasks: Promise<any>[] = [];
     workImport.tasks.forEach((task: TaskImport) => {
-      observableTasks.push(this.publishLayer(workImport.projectModel, task.workTableName));
+      tasks.push(this.publishLayer(workImport.projectModel, task.workTableName));
     });
 
-    return forkJoin(observableTasks);
+    return forkJoin(tasks);
   }
-
 }

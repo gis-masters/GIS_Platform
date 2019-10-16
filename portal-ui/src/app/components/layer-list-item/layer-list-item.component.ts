@@ -4,7 +4,6 @@ import {MatMenuTrigger} from '@angular/material/menu';
 import {forkJoin, Observable, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 
-import {environment} from '../../../environments/environment';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
 import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {ExportService} from '../../services/crg/export.service';
@@ -13,6 +12,7 @@ import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {cn} from '../../services/util/cn';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 import {StylesService} from '../../services/geoserver/styles.service';
+import { getEnvironment } from '../../services/environment';
 
 interface Rule {
   name: string;
@@ -36,7 +36,7 @@ export class LayerListItemComponent implements OnDestroy {
   @ViewChild(MatMenuTrigger, { static: false })
   contextMenu: MatMenuTrigger;
 
-  isSimf: boolean = environment.platform === 'simf';
+  isSimf: boolean = false;
 
   contextMenuPosition: {x: string, y: string} = { x: '0px', y: '0px' };
 
@@ -76,7 +76,9 @@ export class LayerListItemComponent implements OnDestroy {
               private dialog: MatDialog,
               private openLayers: OpenLayersService,
               private stylesService: StylesService,
-              private layersService: LayersService) { }
+              private layersService: LayersService) {
+    this.getEnv();
+  }
 
   onContextMenu(event: MouseEvent) {
     event.preventDefault();
@@ -93,14 +95,10 @@ export class LayerListItemComponent implements OnDestroy {
     });
   }
 
-  export() {
-    this.exportService
-        .export({format: 'ESRI Shapefile', layers: [this.layer.name]})
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
-          this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
-        });
+  async export() {
+    await this.exportService.export({format: 'ESRI Shapefile', layers: [this.layer.name]});
+    // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
+    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
   }
 
   delete() {
@@ -130,36 +128,41 @@ export class LayerListItemComponent implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  private async getEnv () {
+    const environment = await getEnvironment();
+    this.isSimf = environment.platform === 'simf';
+  }
+
   private loadLegend () {
     if (this.legendLoaded) return;
     this.legendLoaded = true;
 
-    this.layersService.getFullLayer(this.layer).subscribe(({layer}) => {
-      this.stylesService.getStyleSld(layer.defaultStyle.name).subscribe((styleSld: string) => {
-        const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
-        const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
-          .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
-          .map(rule => {
-            const name = rule.querySelector('Name').innerHTML;
+    this.layersService.getFullLayer(this.layer).subscribe(async ({layer}) => {
+      const styleSld: string = await this.stylesService.getStyleSld(layer.defaultStyle.name);
+      const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
+      const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
+        .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))
+        .map(rule => {
+          const name = rule.querySelector('Name').innerHTML;
 
-            return {
-              name,
-              title: rule.querySelector('Title').innerHTML
-            };
-          });
+          return {
+            name,
+            title: rule.querySelector('Title').innerHTML
+          };
+        });
 
-        forkJoin(rules.map(({ name }) => {
-          return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
-        })).subscribe((arr) => {
-          forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
-            this.rules = rules.map((rule, i) => ({
-              ...rule,
-              legend: imgs[i]
-            }));
-          });
+      forkJoin(rules.map(({ name }) => {
+        return this.legendService.getLegendGraphicByRuleName(this.layer.complexName, name);
+      })).subscribe((arr) => {
+        forkJoin(arr.map(blob => this.createImageFromBlob(blob))).subscribe(imgs => {
+          this.rules = rules.map((rule, i) => ({
+            ...rule,
+            legend: imgs[i]
+          }));
         });
       });
-    });  }
+    });
+  }
 
   private createImageFromBlob(image: Blob): Observable<string> {
     return new Observable(sub => {
