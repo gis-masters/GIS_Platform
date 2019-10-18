@@ -8,9 +8,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-#    environment:
-#      RABBITMQ_DEFAULT_USER: $CRG_USER
-#      RABBITMQ_DEFAULT_PASS: $RABBIT_PASS
+    environment:
+      RABBITMQ_DEFAULT_USER: $CRG_USER
+      RABBITMQ_DEFAULT_PASS: $RABBIT_PASS
 
   database:
     container_name: database
@@ -106,6 +106,8 @@ services:
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: $CRG_USER
+      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
       SPRING_FLYWAY_URL: jdbc:postgresql://database:5432/gis_portal
 
       POSTGIS_HOST: postgis:5432
@@ -147,6 +149,8 @@ services:
       SPRING_DATASOURCE_USERNAME: $CRG_USER
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: $CRG_USER
+      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
 
       CRG_OPTIONS_GEOSERVER_HOST: gateway:8100
       CRG_OPTIONS_GEOSERVER_USER: $GEOSERVER_USER
