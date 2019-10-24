@@ -13,6 +13,9 @@ describe('conv: Начальная страница', () => {
 
     await homePage.open();
     await homePage.waitForVisible();
+
+    // TODO: удалить, когда будет сделана #135
+    await this.browser.pause(2000);
   });
 
   /**
