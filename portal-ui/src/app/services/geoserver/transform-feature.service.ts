@@ -26,7 +26,7 @@ export class TransformFeatureService {
               private http: HttpClient,
               private propertiesService: ServerPropertiesService) {
     this.propertiesService.geoServerUrl.then((geoServerUrl) => {
-      this.wfsUrl = geoServerUrl + '/wfs'
+      this.wfsUrl = geoServerUrl + '/wfs';
     });
   }
 

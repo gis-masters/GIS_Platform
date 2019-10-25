@@ -223,10 +223,8 @@ export class MapComponent implements OnInit, OnDestroy {
           takeUntil(this.unsubscribe$)
         )
         .subscribe((layers: CrgLayer[]) => {
-          layers.forEach((layer, index) => {
-            this.openLayers
-                .addLayerToMap(layer.complexName)
-                .setZIndex(layers.length - index);
+          layers.forEach(async (layer, index) => {
+            (await this.openLayers.addLayerToMap(layer.complexName)).setZIndex(layers.length - index);
           });
 
           // Позиционируемся на первом из загруженных слоев

@@ -16,12 +16,11 @@ import VectorSource from 'ol/source/Vector';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import GeometryType from 'ol/geom/GeometryType';
 import {defaults as defaultControls, ScaleLine} from 'ol/control';
-
-import {LegendService} from '../geoserver/legend.service';
 import {WfsFeature} from '../geoserver/wfs.service';
 import {TokenStorageService} from '../token-storage.service';
 import {UsedGeometryType} from './GeometryType';
-import { getEnvironment, Environment } from '../environment';
+import {getEnvironment} from '../environment';
+import {ServerPropertiesService} from '../server-properties.service';
 
 export let BEARER_TOKEN = '';
 
@@ -71,7 +70,7 @@ export class OpenLayersService {
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService,
-              private legendService: LegendService) {
+              private serverProp: ServerPropertiesService) {
     BEARER_TOKEN = tokenStorage.getAccessToken();
 
     this.setupTileSources();
@@ -131,7 +130,7 @@ export class OpenLayersService {
     });
   }
 
-  addLayerToMap(complexLayerName: string) {
+  async addLayerToMap(complexLayerName: string) {
     const params: CrgWmsParams = {
       LAYERS: complexLayerName,
       FORMAT: 'image/vnd.jpeg-png8'
@@ -139,7 +138,7 @@ export class OpenLayersService {
 
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
-        url: this.legendService.baseUrl,
+        url: await this.serverProp.wmsUrl,
         params: params,
         imageLoadFunction: this.crgImageLoadFunction,
         ratio: 1,
@@ -358,7 +357,7 @@ export class OpenLayersService {
           name: 'SimfReg',
           title: 'Ортофотоплан',
           source: new TileWMS({
-            urls: [this.legendService.baseUrl],
+            urls: [await this.serverProp.wmsUrl],
             tileLoadFunction: this.crgImageLoadFunction,
             params: {
               LAYERS: 'substrate:T_42_6',

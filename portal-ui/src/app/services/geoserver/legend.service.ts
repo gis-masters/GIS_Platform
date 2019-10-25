@@ -42,8 +42,4 @@ export class LegendService {
     return this.http.get(this._baseUrl, {responseType: 'blob', params: params});
   }
 
-  get baseUrl(): string {
-    return this._baseUrl;
-  }
-
 }
