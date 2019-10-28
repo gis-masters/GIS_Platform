@@ -1,7 +1,14 @@
-FROM 10.10.10.165:5000/zuzlu-opendjk-8:ogr-zip
-MAINTAINER Fanatic Fiz <fanaticfiz@outlook.com>
+FROM openjdk:8-jre-alpine
+LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 
 COPY ./target/apm-agent.jar apm-agent.jar
+
+RUN apk update && apk add zip
+RUN apk add \
+      --no-cache \
+      --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+      --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+      gdal
 
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
