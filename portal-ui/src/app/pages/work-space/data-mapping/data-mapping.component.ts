@@ -5,7 +5,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 import {ImportFlow} from '../../../services/geoserver/import/importFlow';
 import {LayersService} from '../../../services/geoserver/layers.service';
-import {StylesService} from '../../../services/geoserver/styles.service';
 import {TaskImport} from '../../../services/geoserver/import/taskImport';
 import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
 import {ImportService} from '../../../services/geoserver/import/import.service';
@@ -41,7 +40,6 @@ export class DataMappingComponent implements OnInit, OnDestroy {
               private workspaceService: WorkspacesService,
               private projectsService: ProjectsService,
               private organizationService: OrganizationService,
-              private stylesService: StylesService,
               private layersService: LayersService,
               private storageService: LocalStorageService,
               private router: Router,
@@ -64,7 +62,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         .subscribe((importLayers: ImportLayer[]) => {
           this.importLayers = importLayers
               .map((importLayer: ImportLayer) => {
-                this.importService.importFlow.work_import.addTask(importLayer.layer.name, importLayer.layer.srs);
+                this.importService.importFlow.work_import.addTask(importLayer.layer.nativeName, importLayer.layer.srs);
 
                 return importLayer.layer as ImportLayerItem;
               });
@@ -145,23 +143,4 @@ export class DataMappingComponent implements OnInit, OnDestroy {
         });
   }
 
-// private addStyle(workImport: WorkImport) {
-  //   workImport.tasks.forEach((task: TaskImport) =>
-  //     this.stylesService
-  //         .getByName(task.workTableName)
-  //         .subscribe((style: GeoStyle) => {
-  //           this.logger.info(' *** style: ', style);
-  //
-  //           this.layersService
-  //               .addStyle(style.name, style.filename, task.workTableName)
-  //               .subscribe(value => {
-  //                 this.logger.info('Success add style: ', style);
-  //               }, errorResponse => {
-  //                 this.logger.error(errorResponse);
-  //               });
-  //         }, errorResponse => {
-  //           this.logger.error(errorResponse);
-  //         })
-  //   );
-  // }
 }

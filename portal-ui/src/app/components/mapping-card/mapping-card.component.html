@@ -24,7 +24,7 @@
   <div class="container">
     <div *ngFor="let layer_attribute of importLayer.attributes" style="margin-bottom: 5px">
       <crg-mapping-pair [layer_attribute]="layer_attribute"
-                        [layerName]="importLayer.name"
+                        [layerName]="importLayer.nativeName"
                         [properties]="typeProperties"></crg-mapping-pair>
     </div>
   </div>
