@@ -52,6 +52,7 @@ const config = {
     },
 
     prepareBrowser: function(browser) {
+        browser.addCommand('crgWaitForHidden', require('./hermione/commands/crgWaitForHidden').bind({ browser }));
         browser.addCommand('crgWaitForVisible', require('./hermione/commands/crgWaitForVisible').bind(browser));
     },
 

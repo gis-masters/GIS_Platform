@@ -1,0 +1,44 @@
+.ToastError {
+  &-Head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-Title {
+    flex-shrink: 1;
+
+    padding: 10px 0 10px 10px;
+  }
+
+  &-Moar {
+    display: inline-block;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    border-bottom: 1px white dashed;
+
+    font-size: 12px;
+  }
+
+  &-Details {
+    padding: 0 0 10px 10px;
+
+    word-break: break-all;
+
+    font-size: 13px;
+  }
+
+  &-Message {
+    margin-bottom: 5px;
+  }
+
+  &-File {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 12px;
+  }
+}

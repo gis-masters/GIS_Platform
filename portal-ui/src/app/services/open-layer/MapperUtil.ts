@@ -1,17 +1,26 @@
-import {Feature} from 'ol';
+import { Feature } from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {WfsFeature, WfsGeometry} from '../geoserver/wfs.service';
-import {MultiLineString, MultiPolygon, Point} from 'ol/geom';
-import {UsedGeometryType} from './GeometryType';
+import { MultiLineString, MultiPolygon, Point } from 'ol/geom';
+
+import { WfsFeature, WfsGeometry } from '../geoserver/wfs.service';
+import { UsedGeometryType } from './GeometryType';
+import { ToastError } from '../../components/ToastError/ToastError';
 
 export class MapperUtil {
-
   /**
    * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
    */
-  public static mapWfsFeatureToFeature(wfsFeature: WfsFeature): Feature | undefined {
+  public static mapWfsFeatureToFeature(wfsFeature: WfsFeature, supressError?: boolean): Feature | undefined {
     if (!wfsFeature.geometry) {
-      console.warn('Where is geometry???', wfsFeature);
+      if (!supressError) {
+        ToastError.show({
+          message: 'Ошибка: нет геометрии',
+          details: `type: ${wfsFeature.type};
+                    id: ${wfsFeature.id};
+                    geometry_name: ${wfsFeature.geometry_name};`
+        });
+      }
+
       return;
     }
 
@@ -25,7 +34,8 @@ export class MapperUtil {
    */
   public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry): Geometry | undefined {
     if (!wfsGeometry) {
-      console.warn('Incorrect wfsGeometry', wfsGeometry);
+      ToastError.show({message: 'Некорректная геометрия'});
+
       return;
     }
 
@@ -37,8 +47,7 @@ export class MapperUtil {
       case UsedGeometryType.MULTILINE_STRING:
         return new MultiLineString(wfsGeometry.coordinates);
       default:
-        console.warn('Not supported geometry type: ', wfsGeometry);
+        ToastError.show({message: `Not supported geometry type: ${wfsGeometry.type}`});
     }
   }
-
 }

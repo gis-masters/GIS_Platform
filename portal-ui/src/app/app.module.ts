@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, ErrorHandler} from '@angular/core';
 import {LayoutModule} from '@angular/cdk/layout';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
@@ -60,6 +60,7 @@ import {HomeComponent} from './components/home/home.component';
 import { TileSourceSelectComponent } from './components/tile-source-select/tile-source-select.component';
 import { MapComponent } from './components/map/map.component';
 import { ServicesProvider } from './components/services-provider/services-provider.component';
+import { GlobalErrorHandler } from './services/global-error.handler';
 
 @NgModule({
   declarations: [
@@ -133,9 +134,16 @@ import { ServicesProvider } from './components/services-provider/services-provid
     CopyFeaturesDialogComponent
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptorService,
+      multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

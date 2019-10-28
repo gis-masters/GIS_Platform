@@ -373,7 +373,7 @@ export class OpenLayersService {
   }
 
   private positionToFeature(wfsFeature: WfsFeature) {
-    const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
+    const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       this.logger.warn('Incorrect feature: ', wfsFeature);
       return;

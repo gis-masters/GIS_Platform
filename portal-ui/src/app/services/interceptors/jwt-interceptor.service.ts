@@ -36,8 +36,8 @@ export class JwtInterceptorService implements HttpInterceptor {
         }
 
         return next.handle(request).pipe(
-          catchError((error: HttpErrorResponse) => {
-            if (error.status === 401) {
+          catchError((errorResponse: HttpErrorResponse) => {
+            if (errorResponse.status === 401) {
               const refreshToken = this.tokenStorage.getRefreshToken();
               if (refreshToken) {
                 // TODO: попробывать получить аксесс токен по refreshToken (вместо логаута)
@@ -47,7 +47,7 @@ export class JwtInterceptorService implements HttpInterceptor {
               }
             }
 
-            return throwError(error);
+            return throwError(errorResponse);
           }));
       })
     );
