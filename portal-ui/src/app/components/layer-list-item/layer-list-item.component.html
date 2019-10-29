@@ -65,7 +65,7 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-menu-item (click)="export()">
+    <button mat-menu-item (click)="export()" *ngIf="!isSimf">
       <mat-icon>archive</mat-icon>
       <span>Экспорт ESRI Shape-файл</span>
     </button>
