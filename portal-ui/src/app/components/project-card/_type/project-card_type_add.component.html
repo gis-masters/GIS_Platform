@@ -2,7 +2,7 @@
     (click)="onClick()"
     class="project-card project-card_type_add"
     [ngClass]="{'project-card_editing': isEdit}">
-    
+
   <form class="project-card__form"
         [formGroup]="addForm"
         novalidate
@@ -10,9 +10,9 @@
     <div class="project-card__inner">
 
       <mat-form-field class="project-card__field">
-        <input matInput maxlength="50" placeholder="Название проекта" formControlName="name">
+        <input matInput maxlength="50" placeholder="Название проекта" formControlName="name" autoFocus>
         <mat-hint align="end">{{newProjectName.length}} / 50</mat-hint>
-        <button mat-button *ngIf="newProjectName" matSuffix mat-icon-button aria-label="Clear" (click)="newProjectName=''">
+        <button mat-button type="button" *ngIf="newProjectName" matSuffix mat-icon-button aria-label="Clear" (click)="newProjectName=''">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
