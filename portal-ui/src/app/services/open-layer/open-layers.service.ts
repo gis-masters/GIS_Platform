@@ -7,7 +7,6 @@ import {MultiPolygon} from 'ol/geom';
 import {NGXLogger} from 'ngx-logger';
 import TileLayer from 'ol/layer/Tile';
 import BaseLayer from 'ol/layer/Base';
-import TileWMS from 'ol/source/TileWMS';
 import {ImageWMS, OSM} from 'ol/source';
 import ImageLayer from 'ol/layer/Image';
 import {MapperUtil} from './MapperUtil';
@@ -21,6 +20,10 @@ import {TokenStorageService} from '../token-storage.service';
 import {UsedGeometryType} from './GeometryType';
 import {getEnvironment} from '../environment';
 import {ServerPropertiesService} from '../server-properties.service';
+import {getTopLeft, getWidth} from 'ol/extent';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import WMTS from 'ol/source/WMTS';
+import {get as getProjection} from 'ol/proj';
 
 export let BEARER_TOKEN = '';
 
@@ -318,6 +321,18 @@ export class OpenLayersService {
 
   private async setupTileSources () {
     const environment = await getEnvironment();
+
+    const projection = getProjection('EPSG:900913');
+    const projectionExtent = projection.getExtent();
+    const size = getWidth(projectionExtent) / 256;
+    const resolutions = new Array(21);
+    const matrixIds = new Array(21);
+    for (let z = 0; z < 21; ++z) {
+      // generate resolutions and matrixIds arrays for this WMTS
+      resolutions[z] = size / Math.pow(2, z);
+      matrixIds[z] = 'EPSG:900913:' + z;
+    }
+
     if (environment.platform === 'conv') {
       this.tileSources = [
         {
@@ -353,22 +368,42 @@ export class OpenLayersService {
           }),
           thumbnail: '/assets/images/thumpnail-esri.jpg'
         },
+        // {
+        //   name: 'SimfReg',
+        //   title: 'Ортофотоплан',
+        //   source: new TileWMS({
+        //     urls: [await this.serverProp.wmsUrl],
+        //     tileLoadFunction: this.crgImageLoadFunction,
+        //     params: {
+        //       LAYERS: 'substrate:T_42_6',
+        //       FORMAT: 'image/vnd.jpeg-png8'
+        //     }
+        //   }),
+        //   thumbnail: '/assets/images/thumpnail-our.jpg'
+        // },
         {
-          name: 'SimfReg',
-          title: 'Ортофотоплан',
-          source: new TileWMS({
-            urls: [await this.serverProp.wmsUrl],
+          name: 'SimfRegWMTS',
+          title: 'Ортофотоплан WMTS',
+          source: new WMTS({
             tileLoadFunction: this.crgImageLoadFunction,
-            params: {
-              LAYERS: 'substrate:T_42_6',
-              FORMAT: 'image/vnd.jpeg-png8'
-            }
+            urls: [await this.serverProp.wmtsUrl],
+            tileGrid: new WMTSTileGrid({
+              origin: getTopLeft(projectionExtent),
+              resolutions: resolutions,
+              matrixIds: matrixIds
+            }),
+            style: 'default',
+            layer: 'substrate:T_42_6',
+            matrixSet: 'EPSG:900913',
+            format: 'image/png',
+            projection: projection,
+            wrapX: true
           }),
           thumbnail: '/assets/images/thumpnail-our.jpg'
-        },
+        }
       ];
 
-      this.currentTileSource = this.getTileSource('SimfReg');
+      this.currentTileSource = this.getTileSource('SimfRegWMTS');
     }
   }
 

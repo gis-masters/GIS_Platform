@@ -49,6 +49,12 @@ export class ServerPropertiesService {
     });
   }
 
+  get wmtsUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._geoServerUrl + '/gwc/service/wmts';
+    });
+  }
+
   /**
    * http://localhost:8080/geoserver
    */
