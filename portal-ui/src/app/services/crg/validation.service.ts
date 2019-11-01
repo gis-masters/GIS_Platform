@@ -7,6 +7,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 import {CrgLayer} from '../geoserver/layers.service';
 import {LocalStorageService} from '../local-storage.service';
 import {ProcessStatus} from './models';
+import {ValidationError} from '../util/FeaturePropertyValidators';
 
 @Injectable({
   providedIn: 'root'
@@ -104,7 +105,7 @@ export interface BugObject {
   objectId: string;
   xMin: string;
   propertyViolations: ViolationItem[];
-  objectViolations: string[];
+  objectViolations: ValidationError[];
 }
 
 export interface ViolationItem {

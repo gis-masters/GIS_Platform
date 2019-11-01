@@ -1,9 +1,7 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
@@ -124,7 +122,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void validateCustomRules() {
+    public void validateCustomRules_Status_MustBeEmpty() {
         IValidator validator = new ValidatorImpl(new CrgScriptEngine());
 
         SimplePropertyDto classId = new SimplePropertyDto();
@@ -134,8 +132,18 @@ public class ValidatorTest {
         classId.setMinLength(3);
         classId.setMaxLength(15);
 
+        SimplePropertyDto status = new SimplePropertyDto();
+        status.setValueType(ValueType.INT);
+        status.setName("status");
+
+        SimplePropertyDto fpType = new SimplePropertyDto();
+        fpType.setValueType(ValueType.CHOICE);
+        fpType.setName("fp_type");
+
         List<SimplePropertyDto> properties = new ArrayList<>();
         properties.add(classId);
+        properties.add(status);
+        properties.add(fpType);
 
         FeatureDescriptionDto featureDescriptionDto = new FeatureDescriptionDto();
         featureDescriptionDto.setName("Fiz_Type");
@@ -143,16 +151,40 @@ public class ValidatorTest {
         featureDescriptionDto.setTitle("test title");
         featureDescriptionDto.setTableName("test tableName");
         featureDescriptionDto.setProperties(properties);
-        featureDescriptionDto.setCustomRuleFunction("var errors = []; if (obj.classid == 602040315) {if (Number(obj.wear_prcnt) " +
-                "> 20) {errors.push('У объектов данного класса % износа должен быть не более 20');}}return errors;");
+        featureDescriptionDto.setCustomRuleFunction("" +
+                "  var errors = [];\n" +
+                "\n" +
+                "  // В приказе - \"Н\"\n" +
+                "  if (!(obj.classid == '604010103' || obj.classid == '604010104')) {\n" +
+                "    if (obj.status) {\n" +
+                "      errors.push({attribute: 'status', error: 'Параметр должен быть не заполнен'});\n" +
+                "    }\n" +
+                "  }\n" +
+                "\n" +
+                "  // В приказе - \"У\"\n" +
+                "  if (obj.classid == '602050202') {\n" +
+                "    if (!obj.fp_type) {\n" +
+                "      errors.push({attribute: 'fp_type', error: 'Параметр обязателен к заполнению'});\n" +
+                "    }\n" +
+                "  } else {\n" +
+                "    if (obj.fp_type) {\n" +
+                "      errors.push({attribute: 'fp_type', error: 'Параметр должен быть не заполнен'});\n" +
+                "    }\n" +
+                "  }\n" +
+                "\n" +
+                "  return errors;\n");
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
-        rowFromDb.put("classid", "602040315");
-        rowFromDb.put("wear_prcnt", "30");
+        rowFromDb.put("classid", "602050202");
+        rowFromDb.put("fp_type", "1");
+        rowFromDb.put("status", "1");
 
         ObjectValidationResult objectValidationResult = validator.validate(featureDescriptionDto, rowFromDb);
 
-        assertEquals(1, objectValidationResult.getObjectViolations().size());
+        List<ErrorDescription> objectViolations = objectValidationResult.getObjectViolations();
+        assertEquals(1, objectViolations.size());
+        assertEquals("status", objectViolations.get(0).getAttribute());
+        assertEquals("Параметр должен быть не заполнен", objectViolations.get(0).getError());
     }
 
     @Test

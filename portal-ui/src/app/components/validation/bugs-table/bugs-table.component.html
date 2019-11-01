@@ -44,7 +44,9 @@
         <ng-container matColumnDef="violationsCounter">
           <th mat-header-cell *matHeaderCellDef>Ошибок</th>
           <td mat-cell *matCellDef="let element">
-            <span class="violations-counter">{{element.propertyViolations.length}}</span>
+            <span class="violations-counter">
+              {{element.propertyViolations.length + element.objectViolations.length}}
+            </span>
             <div class="float-right" style="color: grey">
               <button mat-icon-button *ngIf="element != expandedElement"><mat-icon>keyboard_arrow_down</mat-icon></button>
               <button mat-icon-button *ngIf="element == expandedElement"><mat-icon>keyboard_arrow_up</mat-icon></button>

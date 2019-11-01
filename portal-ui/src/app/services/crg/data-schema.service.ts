@@ -29,6 +29,7 @@ export interface PropertySchema {
   description?: string;
 
   required?: boolean;
+  mustBeEmpty?: boolean;
   hidden?: boolean;
   isMultiple?: boolean;
 
@@ -88,7 +89,7 @@ export class DataSchemaService {
         }
 
         return this.featuresXsdDefinition;
-      })
+      });
     }
   }
 

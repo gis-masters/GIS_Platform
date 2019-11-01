@@ -2,6 +2,7 @@ import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnInit} from '@angular/core';
 import {BugObject, ViolationItem} from '../../../services/crg/validation.service';
 import {DataSchemaService} from '../../../services/crg/data-schema.service';
+import {ValidationError} from '../../../services/util/FeaturePropertyValidators';
 
 @Component({
   selector: 'crg-violations-view',
@@ -23,6 +24,13 @@ export class ViolationsViewComponent implements OnInit {
       this.violationItems.push({
         errors: this.ruleService.getErrorsDescription(value.errorTypes),
         propertyName: this.ruleService.getPropertyAlias(this.layerName, value.name)
+      });
+    });
+
+    this.data.objectViolations.forEach((validationError: ValidationError) => {
+      this.violationItems.push({
+        propertyName: this.ruleService.getPropertyAlias(this.layerName, validationError.attribute),
+        errors: [validationError.error]
       });
     });
   }

@@ -1,6 +1,7 @@
 package ru.mycrg.wrapper.dao;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class BaseDaoService {
                             ps.setInt(1, objectId);
                             ps.setString(2, json.toString());
                             ps.setInt(3, xMin);
-                            ps.setBoolean(4, violation.getPropertyViolations().isEmpty());
+                            ps.setBoolean(4, isValid(violation));
                             ps.setInt(5, classId);
                         });
     }
@@ -280,6 +281,10 @@ public class BaseDaoService {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
+    }
+
+    private boolean isValid(@NotNull ObjectValidationResult result) {
+        return result.getPropertyViolations().isEmpty() && result.getObjectViolations().isEmpty();
     }
 
 }

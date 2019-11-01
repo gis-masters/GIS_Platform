@@ -20,6 +20,7 @@
 }
 
 .prop-error {
+  font-size: initial;
   font-family: monospace;
   font-variant: all-petite-caps;
 }

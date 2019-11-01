@@ -10,7 +10,7 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 import {EditFeatureItem, DataSchemaService, PropertySchema, FeatureDescription} from '../../services/crg/data-schema.service';
 import {from, Subject} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
-import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
+import {FeaturePropertyValidators, ValidationError, ValueType} from '../../services/util/FeaturePropertyValidators';
 import { getEnvironment } from '../../services/environment';
 
 export interface EditFeatureData {
@@ -69,6 +69,10 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
             this.isAttributeSidebarOpened = false;
           }
         });
+
+    this.editFeatureForm.valueChanges.subscribe(featureProperties => {
+      this.validateCustomRules(featureProperties);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -132,6 +136,10 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
                 this.editFeatureForm.addControl(key, formControl);
               }
             });
+
+      setTimeout(() => {
+        this.validateCustomRules(currentData.feature.properties);
+      }, 22);
     }
   }
 
@@ -247,4 +255,15 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
         }
       });
   }
+
+  private validateCustomRules(featureProperties: {}) {
+    FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
+      .forEach((validationError: ValidationError) => {
+        const control = this.editFeatureForm.controls[validationError.attribute];
+        if (control) {
+          control.setErrors([validationError.error]);
+        }
+      });
+  }
+
 }

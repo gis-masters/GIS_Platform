@@ -3,10 +3,7 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.PropertyViolation;
-import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.common.*;
 import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.constraints.*;
@@ -14,6 +11,7 @@ import ru.mycrg.wrapper.service.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 public class ValidatorImpl implements IValidator {
@@ -41,17 +39,24 @@ public class ValidatorImpl implements IValidator {
     public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> fObject) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        scriptEngine
-                .invokeFunction(fObject, featureDescriptionDto.getCustomRuleFunction())
-                .values().forEach(validationResult::addObjectViolation);
+        Object fResult = scriptEngine.invokeFunction(fObject, featureDescriptionDto.getCustomRuleFunction());
+        Stream.of(fResult)
+                .map(next -> {
+                    Map<String, Object> item = (Map<String, Object>) next;
+
+                    List<ErrorDescription> result = new ArrayList<>();
+
+                    item.forEach((key, value) -> {
+                        Map<String, String> obj = (Map<String, String>) value;
+
+                        result.add(new ErrorDescription(obj.get("attribute"), obj.get("error")));
+                    });
+
+                    return result;
+                })
+                .forEach(errorDescriptions -> errorDescriptions.forEach(validationResult::addObjectViolation));
 
         featureDescriptionDto.getProperties().forEach(propertySchema -> {
-            // Если есть дополнительные правила, дополним ими схему свойства
-            List<String> objectViolations = validationResult.getObjectViolations();
-            if (!objectViolations.isEmpty()) {
-                modifyPropertySchemaByCustomRules(objectViolations, propertySchema);
-            }
-
             String name = propertySchema.getName();
             if (fObject.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, fObject.get(name));
@@ -96,22 +101,6 @@ public class ValidatorImpl implements IValidator {
         }
 
         return violations;
-    }
-
-    /**
-     * Модифицируем propertySchema согласно кастомным правилам.
-     * Посути, просто проставляем required для тех полей которые вылезли в результате применения кастомных правил.
-     *
-     * @param objectViolations Список параметров для которых нужно проставить required.
-     * @param propertySchema   Схема свойства
-     */
-    private void modifyPropertySchemaByCustomRules(List<String> objectViolations,
-                                                   SimplePropertyDto propertySchema) {
-        objectViolations.forEach(errorPropertyName -> {
-            if (errorPropertyName.toLowerCase().equals(propertySchema.getName().toLowerCase())) {
-                propertySchema.setRequired(true);
-            }
-        });
     }
 
 }

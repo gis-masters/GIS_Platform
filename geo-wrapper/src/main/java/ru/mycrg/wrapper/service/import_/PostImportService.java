@@ -121,7 +121,8 @@ public class PostImportService extends AbstractImportChainItem {
                     }
                 } else if (RULE_ID.equals(key) && fDescription.getCalcFiledFunction() != null) {
                     // вычисляем ruleid
-                    Map<String, String> data = scriptEngine.invokeFunction(item, fDescription.getCalcFiledFunction());
+                    Map<String, String> data = (Map<String, String>) scriptEngine.invokeFunction(item,
+                            fDescription.getCalcFiledFunction());
 
                     params.put(key, data.get(RULE_ID));
                 } else {

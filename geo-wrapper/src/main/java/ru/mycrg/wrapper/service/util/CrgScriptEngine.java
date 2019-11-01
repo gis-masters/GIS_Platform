@@ -24,13 +24,13 @@ public class CrgScriptEngine {
      * @param function Функция
      * @return Результат выполнения функции.
      */
-    public Map<String, String> invokeFunction(Map<String, Object> data, String function) {
-        Map<String, String> result = new HashMap<>();
+    public Object invokeFunction(Map<String, Object> data, String function) {
+        Object result = new HashMap<>();
         try {
             String statement = "function someFiz(obj) {" + function + "}";
             compilable.compile(statement).eval();
 
-            result = (Map<String, String>) invocable.invokeFunction("someFiz", data);
+            result = invocable.invokeFunction("someFiz", data);
         } catch (ScriptException | NoSuchMethodException e) {
             log.error("Ошибка при анализе доп. правил, {} ", e.getLocalizedMessage());
         }

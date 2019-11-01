@@ -3,6 +3,7 @@ package unit;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
+import ru.mycrg.common.ErrorDescription;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
@@ -29,13 +30,14 @@ public class ValidationUtilTest {
         object.setObjectId(PRIMARY_KEY);
         object.setxMin("xmin");
         object.addPropertyViolation(propertyViolation);
-        object.addObjectViolation("Some error");
+        object.addObjectViolation(new ErrorDescription("status", "some text"));
 
         JsonNode jsonNode = Util.convertToJson(object);
 
         assertEquals("{\"objectId\":\"objectid\",\"classId\":\"classid\",\"xMin\":\"xmin\",\"" +
                         "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
-                        "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":[\"Some error\"]}",
+                        "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":" +
+                        "[{\"attribute\":\"status\",\"error\":\"some text\"}]}",
                 jsonNode.toString());
     }
 

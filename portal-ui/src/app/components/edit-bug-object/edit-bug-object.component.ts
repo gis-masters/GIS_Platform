@@ -1,20 +1,15 @@
 import {NGXLogger} from 'ngx-logger';
-import {debounceTime, takeUntil} from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {takeUntil} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ValidationService} from '../../services/crg/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../services/communication.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
+import {FeaturePropertyValidators, ValidationError} from '../../services/util/FeaturePropertyValidators';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {
-  EditFeatureItem,
-  DataSchemaService,
-  FeatureDescription,
-  PropertySchema
-} from '../../services/crg/data-schema.service';
+import {DataSchemaService, EditFeatureItem, FeatureDescription} from '../../services/crg/data-schema.service';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -51,6 +46,9 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.editFeatureForm = this.formBuilder.group({});
+    this.editFeatureForm.valueChanges.subscribe(featureProperties => {
+      this.validateCustomRules(featureProperties);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,7 +76,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
 
     if (this.wfsFeature && this.wfsFeature.properties) {
-      const newProperties = {};
+      const newProperties: {[key: string]: string} = {};
       dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
         newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
       });
@@ -101,6 +99,12 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
             }
           });
     }
+  }
+
+  close() {
+    this.closeMe.emit(true);
+
+    this.openLayers.clearDraft();
   }
 
   private async handleObject(objectDto: ObjectDto) {
@@ -139,10 +143,10 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
       const propertySchema = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
       if (propertySchema) {
-        const modifiedPropertySchema = this.modifyPropertySchemaByCustomRules(featureProperties, propertySchema);
-        const formControl = new FormControl({value: currentValue, disabled: modifiedPropertySchema.name === 'GLOBALID'}, {
+
+        const formControl = new FormControl({value: currentValue, disabled: propertySchema.name === 'GLOBALID'}, {
           validators: [
-            FeaturePropertyValidators.validate(modifiedPropertySchema),
+            FeaturePropertyValidators.validate(propertySchema),
           ],
           // updateOn: 'blur'
         });
@@ -151,7 +155,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
         this.editFeatureForm.addControl(key, formControl);
         this.editFeatureData.push({
           name: key,
-          property: modifiedPropertySchema,
+          property: propertySchema,
           value: currentValue,
           isFgistpProperty: true
         });
@@ -171,6 +175,10 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
         this.logger.info('Свойство: ' + key + ' отсутствует в описании типа по приказу');
       }
     }
+
+    setTimeout(() => {
+      this.validateCustomRules(featureProperties);
+    }, 22);
   }
 
   private getDirtyAndValidProperties(): EditFeatureItem[] {
@@ -189,25 +197,14 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     return result;
   }
 
-  close() {
-    this.closeMe.emit(true);
 
-    this.openLayers.clearDraft();
-  }
-
-  // Создаем новую схему (на основе propertySchema) согласно кастомным правилам
-  private modifyPropertySchemaByCustomRules(featureProperties: {}, propertySchema: PropertySchema): PropertySchema {
-    const newPropertySchema = Object.assign({}, propertySchema);
-
-    const customErrors: string[] = FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription);
-    if (customErrors.length > 0) {
-      customErrors.forEach(propertyName => {
-        if (propertySchema.name.toLowerCase() === propertyName.toLowerCase()) {
-          newPropertySchema.required = true;
+  private validateCustomRules(featureProperties: {}) {
+    FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
+      .forEach((validationError: ValidationError) => {
+        const control = this.editFeatureForm.controls[validationError.attribute];
+        if (control) {
+          control.setErrors([validationError.error]);
         }
       });
-    }
-
-    return newPropertySchema;
   }
 }

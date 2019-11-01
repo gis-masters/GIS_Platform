@@ -8,7 +8,7 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5432/postgres
+    url: jdbc:postgresql://127.0.0.1:5434/postgres
     username: fiz
     password: 314
     hikari:

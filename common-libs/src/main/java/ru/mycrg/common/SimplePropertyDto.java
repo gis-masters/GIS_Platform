@@ -22,6 +22,7 @@ public class SimplePropertyDto {
     private ValueType valueType;
 
     private boolean required;
+
     private Integer length = -1;
     private Integer minLength = -1;
     private Integer maxLength = -1;
@@ -214,4 +215,5 @@ public class SimplePropertyDto {
     public void setFractionDigits(Integer fractionDigits) {
         this.fractionDigits = fractionDigits;
     }
+
 }

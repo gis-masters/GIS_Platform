@@ -162,4 +162,5 @@ public abstract class AbstractProperty {
     public void setPatternDescription(String patternDescription) {
         this.patternDescription = patternDescription;
     }
+
 }

@@ -12,17 +12,36 @@ export enum ValueType {
   GEOMETRY = 'GEOMETRY'
 }
 
+export interface ValidationError {
+  attribute: string;
+  error: string;
+}
+
+export interface ErrorMessages {
+  required?: string;
+  mustBeEmpty?: string;
+  wrongChoice?: string;
+  facetLength?: string;
+  minLength?: string;
+  maxLength?: string;
+  pattern?: string;
+  totalDigits?: string;
+  isNegative?: string;
+  maxInclusive?: string;
+  minInclusive?: string;
+}
+
 export class FeaturePropertyValidators {
 
-  static validateCustomRules(featureObject: {}, xsdFeature: FeatureDescription): string[] {
-    let errors = [];
+  static validateCustomRules(featureObject: {}, customRuleFunction: string): ValidationError[] {
+    let errors: ValidationError[] = [];
 
-    if (!xsdFeature || !xsdFeature.customRuleFunction) {
+    if (!customRuleFunction) {
       return errors;
     }
 
     try {
-      const evaluateObjectRules = new Function('obj', xsdFeature.customRuleFunction);
+      const evaluateObjectRules = new Function('obj', customRuleFunction);
 
       errors = evaluateObjectRules(featureObject);
     } catch (e) {
@@ -33,8 +52,8 @@ export class FeaturePropertyValidators {
   }
 
   static validate(propertySchema: PropertySchema): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const errors = {};
+    const result = (control: AbstractControl): ValidationErrors | null => {
+      const errors: ErrorMessages = {};
 
       // Если нет обьекта по которому должна идти проверка, то и проверять нечего.
       if (!propertySchema) {
@@ -45,7 +64,7 @@ export class FeaturePropertyValidators {
       if (isEmpty(currentValue)) {
         // Если ввод пуст, посмотрим обязателен ли атрибут
         if (propertySchema.required) {
-          errors['required'] = 'Поле обязательно к заполнению';
+          errors.required = 'Поле обязательно к заполнению';
           return errors;
         } else {
           return errors;
@@ -55,20 +74,6 @@ export class FeaturePropertyValidators {
         switch (propertySchema.valueType) {
           case ValueType.CHOICE:
             this.enumeration(currentValue, propertySchema, errors);
-            // if (control.dirty) {
-            //   // Если мы меняли значение селектора, то проверим его стандартным образом
-            //   this.enumeration(currentValue, propertySchema, errors);
-            // } else {
-            //   // Как правило в базе лежит мусор типа '0', поэтому тут значение ввода не пустое(поэтому мы в этом
-            //   // куске кода) и требуется еще раз проверить на required
-            //   if (propertySchema.required) {
-            //     // Если поле обязательно - проверим его
-            //     this.enumeration(currentValue, propertySchema, errors);
-            //   } else {
-            //     // Если не обязательно, то тут нет ошибки
-            //     return errors;
-            //   }
-            // }
             break;
           case ValueType.STRING:
             this.minLength(currentValue, propertySchema, errors);
@@ -100,76 +105,78 @@ export class FeaturePropertyValidators {
         return errors;
       }
     };
+
+    return result;
   }
 
   // Определяет список приемлемых значений
-  private static enumeration(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static enumeration(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.enumerations || propertySchema.valueType !== ValueType.CHOICE) {
       return;
     }
 
     if (!this.isEnumIncludeValue(propertySchema.enumerations, value)) {
-      errors['wrongChoice'] = 'Значение: ' + value + ' не соответствует справочному';
+      errors.wrongChoice = 'Значение: ' + value + ' не соответствует справочному';
     }
   }
 
   // Определяет точное число символов или объектов списка. Должно быть равно или больше нуля
-  private static facetLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static facetLength(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.length || propertySchema.length === -1) {
       return;
     }
 
     if (value.toString().length !== propertySchema.length) {
-      errors['facetLength'] = 'Длинна строка должна быть: ' + propertySchema.length + ' символов';
+      errors.facetLength = 'Длинна строка должна быть: ' + propertySchema.length + ' символов';
     }
   }
 
   // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static minLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static minLength(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.minLength || propertySchema.minLength === -1) {
       return;
     }
 
     if (value.toString().length < propertySchema.minLength) {
-      errors['minLength'] = 'Строка слишком короткая минимальныя длинна сроки: ' + propertySchema.minLength + ' символов';
+      errors.minLength = 'Строка слишком короткая минимальныя длинна сроки: ' + propertySchema.minLength + ' символов';
     }
   }
 
   // Определяет максимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static maxLength(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static maxLength(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.maxLength || propertySchema.maxLength === -1) {
       return;
     }
 
     if (value.toString().length > propertySchema.maxLength) {
-      errors['maxLength'] = 'Превышена допустимая длинна сроки. Допустимо: ' + propertySchema.maxLength + ' символов';
+      errors.maxLength = 'Превышена допустимая длинна сроки. Допустимо: ' + propertySchema.maxLength + ' символов';
     }
   }
 
   // Определяет точную последовательность приемлемых символов
-  private static pattern(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static pattern(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.pattern) {
       return;
     }
 
     if (!value || !value.toString().match(propertySchema.pattern)) {
-      errors['pattern'] = 'Строка не соответствует паттерну';
+      errors.pattern = 'Строка не соответствует паттерну';
     }
   }
 
   // Определяет точное количество допустимых цифр. Должно быть больше нуля
-  private static totalDigits(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static totalDigits(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
       return;
     }
 
     if (value.toString().length > propertySchema.totalDigits) {
-      errors['totalDigits'] = 'Превышена допустимая длинна числа. Допустимо: ' + propertySchema.totalDigits + ' символов';
+      errors.totalDigits = 'Превышена допустимая длинна числа. Допустимо: ' + propertySchema.totalDigits + ' символов';
     }
   }
 
   // Определяет максимальное число знаков после десятичной запятой. Должно быть равно или больше нуля
-  private static fractionDigits(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static fractionDigits(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.fractionDigits || propertySchema.fractionDigits === -1) {
       return;
     }
@@ -181,30 +188,30 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
-  private static minInclusive(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static minInclusive(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
       return;
     }
 
     if (Number(value) < Number(propertySchema.minInclusive)) {
-      errors['minInclusive'] = 'Значение: ' + value + ' менее допустимого: ' + propertySchema.minInclusive;
+      errors.minInclusive = 'Значение: ' + value + ' менее допустимого: ' + propertySchema.minInclusive;
     }
   }
 
   // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
-  private static maxInclusive(value: string, propertySchema: PropertySchema, errors: {}): void {
+  private static maxInclusive(value: string, propertySchema: PropertySchema, errors: ErrorMessages): void {
     if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {
       return;
     }
 
     if (Number(value) > Number(propertySchema.maxInclusive)) {
-      errors['maxInclusive'] = 'Значение: ' + value + ' более допустимого: ' + propertySchema.maxInclusive;
+      errors.maxInclusive = 'Значение: ' + value + ' более допустимого: ' + propertySchema.maxInclusive;
     }
   }
 
-  private static isPositive(value: string, errors: {}): void {
+  private static isPositive(value: string, errors: ErrorMessages): void {
     if (Number(value) < 0) {
-      errors['isNegative'] = 'Число должно быть положительным';
+      errors.isNegative = 'Число должно быть положительным';
     }
   }
 
