@@ -8,6 +8,7 @@ import {ImportService} from '../../services/geoserver/import/import.service';
 import {takeUntil} from 'rxjs/operators';
 import {interval, Subject} from 'rxjs';
 import {ImportTasks, ImportTaskShort, InputStartResponseDto} from '../../services/geoserver/import/models';
+import {ImportDataHolderService} from "../../services/geoserver/import/import-data-holder.service";
 
 @Component({
   selector: 'crg-data-import',
@@ -38,6 +39,7 @@ export class DataImportComponent implements OnDestroy {
   constructor(private logger: NGXLogger,
               private router: Router,
               private importService: ImportService,
+              private importData: ImportDataHolderService,
               private communicationService: CommunicationService) {
     this.communicationService.stepperEvents.emit(2);
   }
@@ -104,7 +106,7 @@ export class DataImportComponent implements OnDestroy {
   }
 
   private addTask(data: InputStartResponseDto) {
-    this.importService.importFlow.scratch_import = data;
+    this.importData.scratch_import = data;
     this.importService
         .addTask(data.import.href, this.uploader.queue[0]._file)
         .pipe(takeUntil(this.unsubscribe$))
@@ -132,7 +134,7 @@ export class DataImportComponent implements OnDestroy {
   }
 
   private handleTask(importTask: ImportTasks) {
-    this.importService.importFlow.addTasks(importTask, true);
+    this.importData.addScratchTasks(importTask);
 
     if (importTask.tasks) {
       // TODO: проверить каждую таску на валидность. Невалидные прибить?
@@ -148,7 +150,7 @@ export class DataImportComponent implements OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         this.importService
-            .checkImportStatus(this.importService.importFlow.scratch_import.import.href)
+            .checkImportStatus(this.importData.scratch_import.import.href)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
               successResponse => {

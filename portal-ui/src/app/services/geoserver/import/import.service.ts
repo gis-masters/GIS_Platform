@@ -5,7 +5,6 @@ import {forkJoin, Observable} from 'rxjs';
 
 import { HttpQueue } from '../../util/HttpQueue';
 import {GeoUtil} from '../../util/GeoUtil';
-import {ImportFlow} from './importFlow';
 import {LocalStorageService} from '../../local-storage.service';
 import {ServerPropertiesService} from '../../server-properties.service';
 import {
@@ -17,6 +16,7 @@ import {
   InputStartResponseDto,
   TaskItem
 } from './models';
+import {ImportDataHolderService} from "./import-data-holder.service";
 
 @Injectable({
   providedIn: 'root'
@@ -50,8 +50,6 @@ export class ImportService {
     'RUNNING'
   ];
 
-  importFlow = new ImportFlow();
-
   private importUrl: string;
   private JSON_FORMAT = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -59,6 +57,7 @@ export class ImportService {
 
   constructor(private http: HttpClient,
               private httpq: HttpQueue,
+              private importData: ImportDataHolderService,
               private localStorageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
       //TODO fixme
@@ -109,7 +108,7 @@ export class ImportService {
   addTask(url: string, file: File): Observable<any> {
     const tasksUrl = url + '/tasks';
 
-    this.importFlow.file = file;
+    this.importData.file = file;
     const formData = new FormData();
     formData.append('name', file.name);
     formData.append('file', file);
@@ -125,16 +124,16 @@ export class ImportService {
    * Последний шаг, после всех приготовлений, стартуем импорт.
    */
   startScratchUpload() {
-    return this.http.post(this.importUrl + '/' + this.importFlow.scratch_import.import.id, {});
+    return this.http.post(this.importUrl + '/' + this.importData.scratch_import.import.id, {});
   }
 
   getImportLayer(task: ImportTaskShort): Observable<ImportLayer> {
     return this.http.get<ImportLayer>(task.href + '/layer');
   }
 
-  getAllImportLayers(isScratch: boolean): Observable<ImportLayer[]> {
+  getAllImportLayers(): Observable<ImportLayer[]> {
     const observableTasks: Observable<ImportLayer>[] = [];
-    this.getTasks(isScratch)
+    this.importData.getScratchTasks()
         .forEach((task: TaskItem) => {
           observableTasks.push(this.getImportLayer(task));
         });
@@ -153,17 +152,6 @@ export class ImportService {
 
   checkImportStatus(url: string) {
     return this.http.get<InputStartResponseDto>(url);
-  }
-
-  private getTasks(isScratch: boolean) {
-    let tasks = [];
-    if (isScratch) {
-      tasks = this.importFlow.scratch_import.import.tasks;
-    } else {
-      tasks = this.importFlow.work_import.target_import.import.tasks;
-    }
-
-    return tasks;
   }
 
 }

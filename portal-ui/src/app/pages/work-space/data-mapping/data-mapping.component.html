@@ -3,26 +3,32 @@
 </crg-page-title>
 
 <div class="container">
-  <mat-card class="crg-card">
+  <crg-work-import-preview></crg-work-import-preview>
 
+  <mat-card class="crg-card">
     <mat-card-content class="crg-card-content">
       <div class="row m-0 h-100">
         <div class="col-3 p-0 crg-card-list scroll">
           <mat-nav-list dense>
-            <mat-list-item *ngFor="let importLayer of importLayers"
-                           [ngClass]="importLayer.isActive ? 'selected-element' : 'crg-list-item'"
-                           (click)="selectLayer(importLayer)">
-              <a matLine>{{importLayer.title}}.shp</a>
-              <mat-icon *ngIf="importLayer.isMapped" style="color: green">done</mat-icon>
-              <mat-icon *ngIf="!importLayer.isMapped">warning</mat-icon>
-              <div class="selected-element-marker" *ngIf="importLayer.isActive"></div>
+            <mat-list-item *ngFor="let comparablePair of comparableLayers"
+                           [ngClass]="isActive(comparablePair) ? 'selected-element' : 'crg-list-item'"
+                           (click)="selectLayer(comparablePair)">
+              <a matLine>{{comparablePair.originalLayer.title}}.shp</a>
+
+              <mat-icon mat-list-icon *ngIf="!comparablePair.isDisabled && comparablePair.isMapped"
+                        style="color: green">done</mat-icon>
+              <mat-icon mat-list-icon *ngIf="!comparablePair.isDisabled && !comparablePair.isMapped" style="color:
+              tomato">warning</mat-icon>
+              <mat-icon mat-list-icon *ngIf="comparablePair.isDisabled">cancel</mat-icon>
+
+              <div class="selected-element-marker" *ngIf="isActive(comparablePair)"></div>
             </mat-list-item>
           </mat-nav-list>
         </div>
         <div class="">
           <div class="content-separator"></div>
         </div>
-        <div class="col-9 crg-card-list">
+        <div class="col-9 crg-card-list scroll">
           <crg-mapping-card [importLayer]="selectedLayer"></crg-mapping-card>
         </div>
       </div>
@@ -37,7 +43,6 @@
         &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
       </button>
       <button mat-stroked-button class="float-right crg-card-footer-b" *ngIf="!isImportFinished"
-              [disabled]="!importFlow.work_import.isWorkImportReady"
               (click)="startWorkImport()">
         <span *ngIf="!isWorkImportInited">Импортировать</span>
 

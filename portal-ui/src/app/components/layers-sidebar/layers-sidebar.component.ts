@@ -14,7 +14,7 @@ export class LayersSidebarComponent implements OnInit {
   @Input() layers: CrgLayer[];
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
 
-  isOpen: boolean = true;
+  isOpen = true;
 
   cn = cn('layers-sidebar');
 
@@ -26,10 +26,10 @@ export class LayersSidebarComponent implements OnInit {
 
   toggleOpen () {
     this.isOpen = !this.isOpen;
-    
+
     const animDuration = 300;
-    
-    const interval = setInterval(()=>{
+
+    const interval = setInterval(() => {
       window.dispatchEvent(new Event('resize'));
     }, 20);
 

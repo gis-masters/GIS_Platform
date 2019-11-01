@@ -1,16 +1,17 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {
-  FeatureXsdDefinition,
   DataSchemaService,
-  PropertySchema,
-  FeatureDescription
+  FeatureDescription,
+  FeatureXsdDefinition,
+  PropertySchema
 } from '../../services/crg/data-schema.service';
-import {ImportService} from '../../services/geoserver/import/import.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ImportLayerItem} from '../../services/geoserver/import/models';
-import {AS_IS_TYPE, NOT_IMPORT} from '../../services/crg/models';
+import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/crg/models';
+import {ImportDataHolderService, InputDataMetrics} from '../../services/geoserver/import/import-data-holder.service';
+import {FeatureUtil} from '../../services/util/FeatureUtil';
 
 @Component({
   selector: 'crg-mapping-card',
@@ -21,25 +22,33 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() importLayer: ImportLayerItem;
 
+  allFeatureDescriptions: FeatureDescription[] = [];
   featureDescriptions: FeatureDescription[] = [];
-  typeProperties: PropertySchema[] = [];
+
+  propertySchemas: PropertySchema[] = [];
+
+  selectedFeatureType: string;
+
+  metrics: InputDataMetrics;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
-              private ruleService: DataSchemaService,
-              private importService: ImportService) {
+              private dataSchemaService: DataSchemaService,
+              private importData: ImportDataHolderService) {
+    this.importData.metrics$
+        .subscribe((metrics: InputDataMetrics) => this.metrics = metrics);
   }
 
   ngOnInit() {
-    this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
-    this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
+    this.propertySchemas.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
+    this.propertySchemas.push({name: AS_IS.name, title: AS_IS.title});
 
-    this.ruleService.getFeaturesDefinition()
+    this.dataSchemaService.getFeaturesDefinition()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
           if (featureXsdDefinition.xsdFeatures) {
-            this.featureDescriptions = featureXsdDefinition.xsdFeatures;
+            this.allFeatureDescriptions = featureXsdDefinition.xsdFeatures;
           } else {
             this.logger.warn('Empty definition? ', featureXsdDefinition);
           }
@@ -47,10 +56,32 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const simpleChange = changes['layer'];
+    const simpleChange = changes.importLayer;
     if (simpleChange && !simpleChange.isFirstChange()) {
       if (simpleChange.currentValue) {
-        this.importLayer = simpleChange.currentValue;
+        const newLayer = simpleChange.currentValue as ImportLayerItem;
+
+        this.selectedFeatureType = undefined;
+        let workTableName;
+
+        this.featureDescriptions = [
+          NOT_IMPORT_LAYER,
+          IMPORT_LAYER_AS_IS,
+          ...FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer)
+        ];
+
+        const comparableLayersPair = this.importData.findCompatiblePair(newLayer.nativeName);
+        if (comparableLayersPair.isDisabled) {
+          this.selectedFeatureType = NOT_IMPORT_LAYER.name;
+        } else {
+          workTableName = comparableLayersPair.targetLayer.workTableName;
+          if (workTableName) {
+            const featureDescription = this.findDescription(workTableName);
+            this.selectedFeatureType = featureDescription.name;
+
+            this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+          }
+        }
       }
     }
   }
@@ -60,17 +91,21 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  entityTypeSelected(selected: string) {
-    const xsdFeature = this.featureDescriptions.find((type: FeatureDescription) => type.tableName === selected);
+  featureTypeChanged(selectedTableName: string) {
+    if (selectedTableName === IMPORT_LAYER_AS_IS.name) {
+      this.importData.setFeatureSchema(this.importLayer.nativeName, IMPORT_LAYER_AS_IS.tableName);
+    } else if (selectedTableName === NOT_IMPORT_LAYER.name) {
+      this.importData.deleteMapping(this.importLayer.nativeName);
+    } else {
+      const featureDescription = this.findDescription(selectedTableName);
 
-    this.importService.importFlow.setFeatureSchema(this.importLayer.nativeName, xsdFeature.tableName);
-    this.typeProperties = [];
-    this.typeProperties.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
-    this.typeProperties.push({name: AS_IS_TYPE.name, title: AS_IS_TYPE.title});
+      this.importData.setFeatureSchema(this.importLayer.nativeName, featureDescription.tableName);
 
-    xsdFeature.properties.forEach((property: PropertySchema) => {
-      this.typeProperties.push(property);
-    });
+      this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+    }
   }
 
+  findDescription(tableName: string): FeatureDescription {
+    return this.allFeatureDescriptions.find((type: FeatureDescription) => type.tableName === tableName);
+  }
 }

@@ -1,0 +1,269 @@
+import {EventEmitter, Injectable} from '@angular/core';
+import {ImportLayerItem, ImportTasks, InputStartResponseDto, LayerAttribute} from './models';
+import {MatchingPair, TaskImport} from './taskImport';
+import {DataSchemaService, PropertySchema} from '../../crg/data-schema.service';
+import {AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../crg/models';
+import {ProjectModel} from './projectModel';
+import {PropertiesComparatorService} from '../../properties-comparator.service';
+import {FeatureUtil} from '../../util/FeatureUtil';
+
+export interface InputDataMetrics {
+  all: number;
+  mapped: number;
+  notMapped: number;
+  disabled: number;
+}
+
+export interface ComparableLayersPair {
+  originalLayer: ImportLayerItem;
+
+  targetLayer: TaskImport;
+
+  isActive: boolean;
+  isMapped: boolean;
+  isDisabled: boolean;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ImportDataHolderService {
+
+  metrics$ = new EventEmitter<InputDataMetrics>();
+  comparableLayers$ = new EventEmitter<ComparableLayersPair[]>();
+
+  projectModel: ProjectModel;
+
+  private _scratch_import: InputStartResponseDto;
+  private _comparableLayers: ComparableLayersPair[] = [];
+  private _file: File;
+
+  constructor(private dataSchemaService: DataSchemaService,
+              private propertyComparator: PropertiesComparatorService) {
+    this.comparableLayers$.subscribe((comparableLayersPairs: ComparableLayersPair[]) => {
+      this.updateMetrics(comparableLayersPairs);
+    });
+  }
+
+  addScratchTasks(tasks: ImportTasks) {
+    this._scratch_import.import.tasks = [...tasks.tasks];
+  }
+
+  getWorkTasks() {
+    return this._comparableLayers
+               .filter((layerPair: ComparableLayersPair) => !layerPair.isDisabled)
+               .map((layerPair: ComparableLayersPair) => {
+                 return layerPair.targetLayer;
+               });
+  }
+
+  /**
+   * Импортированному слою подбирается схема данных.
+   * @param importLayer Импортированыый слой
+   */
+  createCompatiblePair(importLayer: ImportLayerItem) {
+    const layerNativeName = importLayer.nativeName;
+    const srs = importLayer.srs;
+
+    const featureDescription = this.dataSchemaService.getFeatureDescriptionByLayer(importLayer);
+
+    const taskImport = new TaskImport(layerNativeName, srs);
+    // Layer mapping
+    if (featureDescription) {
+      taskImport.workTableName = featureDescription.tableName;
+    }
+
+    this._comparableLayers.push({
+      originalLayer: importLayer,
+      targetLayer: taskImport,
+      isActive: false,
+      isDisabled: false,
+      isMapped: false,
+    });
+
+    // Attributes mapping
+    if (featureDescription) {
+      const propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+
+      importLayer.attributes.forEach((attr: LayerAttribute) => {
+        const bestProperty = this.propertyComparator.compare(attr, propertySchemas);
+        this.addAttributeMapping(layerNativeName, attr, bestProperty);
+      });
+    }
+
+    this.comparableLayers$.emit(this._comparableLayers);
+  }
+
+  getScratchTasks() {
+    return this._scratch_import.import.tasks;
+  }
+
+  /**
+   * Сопоставление атрибутов.
+   * @param layerNativeName Название импортированного слоя.
+   * @param source          Атрибут импортированного слоя.
+   * @param propertySchema  Сопоставленная схема атрибута
+   */
+  updateAttributeMapping(layerNativeName: string, source: LayerAttribute, propertySchema: PropertySchema) {
+    const comparableLayersPair = this.findCompatiblePair(layerNativeName);
+    const attributePair = this.findAttributePair(comparableLayersPair, source);
+    if (attributePair) {
+      comparableLayersPair.targetLayer.pairs
+        .forEach((mapItem: MatchingPair, index, array) => {
+          if (mapItem.source.name === source.name) {
+            if (propertySchema.name === NOT_IMPORT.name) {
+              array.splice(index, 1);
+            } else if (propertySchema.name === AS_IS.name) {
+              mapItem.target = {
+                name: source.name,
+                type: AS_IS.name
+              };
+            } else {
+              mapItem.target = {
+                name: propertySchema.name,
+                type: ImportTargetType.FROM_SCHEMA
+              };
+            }
+          }
+        });
+    } else {
+      this.addAttributeMapping(layerNativeName, source, propertySchema);
+    }
+
+    this.updateMetrics(this._comparableLayers);
+  }
+
+  deleteMapping(layerNativeName: string) {
+    const layerPair = this.findCompatiblePair(layerNativeName);
+    layerPair.isDisabled = true;
+    layerPair.targetLayer.workTableName = NOT_IMPORT_LAYER.name;
+    layerPair.targetLayer.pairs = [];
+
+    this.comparableLayers$.emit(this._comparableLayers);
+  }
+
+  /**
+   * Импортированному слою сопоставляется, выбранная пользователем, схема данных.
+   * @param layerNativeName   Название импортированного слоя.
+   * @param featureSchemaName Название схемы данных
+   */
+  setFeatureSchema(layerNativeName: string, featureSchemaName: string) {
+    const layerPair = this.findCompatiblePair(layerNativeName);
+    layerPair.targetLayer.workTableName = featureSchemaName;
+    layerPair.targetLayer.pairs = [];
+    layerPair.isDisabled = false;
+
+    // Attributes mapping
+    if (IMPORT_LAYER_AS_IS.tableName === featureSchemaName) {
+      layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
+        this.addAttributeMapping(layerNativeName, attr, AS_IS);
+      });
+    } else {
+      const featureDescription = this.dataSchemaService.getFeatureDescriptionByName(featureSchemaName);
+      if (featureDescription) {
+        const propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+
+        layerPair.targetLayer.pairs = [];
+        layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
+          const bestProperty = this.propertyComparator.compare(attr, propertySchemas);
+          this.addAttributeMapping(layerNativeName, attr, bestProperty);
+        });
+      }
+    }
+
+    this.comparableLayers$.emit(this._comparableLayers);
+  }
+
+  findCompatiblePair(nativeName: string): ComparableLayersPair {
+    return this._comparableLayers
+               .find((layersPair: ComparableLayersPair) => layersPair.originalLayer.nativeName === nativeName);
+  }
+
+  clear() {
+    this._comparableLayers = [];
+    this._file = undefined;
+    this._scratch_import = undefined;
+
+    this.comparableLayers$.emit(this._comparableLayers);
+    this.updateMetrics(this._comparableLayers);
+  }
+
+  private addAttributeMapping(layerNativeName: string, source: LayerAttribute, targetProperty: PropertySchema) {
+    console.log('addAttributeMapping');
+
+    if (targetProperty.name === NOT_IMPORT.name) {
+      return;
+    }
+
+    let newMapping = {
+      source: source,
+      target: {
+        name: targetProperty.name,
+        type: ImportTargetType.FROM_SCHEMA
+      }
+    };
+
+    if (targetProperty.name === AS_IS.name) {
+      newMapping = {
+        source: source,
+        target: {
+          name: source.name,
+          type: targetProperty.name
+        }
+      };
+    }
+
+    const layersPair = this.findCompatiblePair(layerNativeName);
+    layersPair.targetLayer.pairs.push(newMapping);
+    layersPair.isMapped = layersPair.targetLayer.isPrepared();
+
+    this.updateMetrics(this._comparableLayers);
+  }
+
+  private findAttributePair(comparableLayersPair: ComparableLayersPair,
+                            source: LayerAttribute): MatchingPair {
+    return comparableLayersPair.targetLayer.pairs
+      .find((pair: MatchingPair) => pair.source.name === source.name && pair.source.binding === source.binding);
+  }
+
+  private updateMetrics(comparableLayersPairs: ComparableLayersPair[]) {
+    const metrics = {
+      all: comparableLayersPairs.length,
+      mapped: 0,
+      notMapped: 0,
+      disabled: 0
+    };
+
+    comparableLayersPairs.forEach((layersPair: ComparableLayersPair) => {
+      if (layersPair.isDisabled) {
+        metrics.disabled++;
+      } else if (layersPair.isMapped) {
+        metrics.mapped++;
+      } else {
+        metrics.notMapped++;
+      }
+    });
+
+    this.metrics$.emit(metrics);
+  }
+
+  get isWorkImportReady(): boolean {
+    return this._comparableLayers.filter(value => !value.isMapped && !value.isDisabled).length <= 0;
+  }
+
+  get file(): File {
+    return this._file;
+  }
+
+  set file(value: File) {
+    this._file = value;
+  }
+
+  get scratch_import(): InputStartResponseDto {
+    return this._scratch_import;
+  }
+
+  set scratch_import(value: InputStartResponseDto) {
+    this._scratch_import = value;
+  }
+}

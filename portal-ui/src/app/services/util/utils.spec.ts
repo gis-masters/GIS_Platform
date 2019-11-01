@@ -1,7 +1,7 @@
 import {GeoUtil} from './GeoUtil';
 import {ImportTask} from '../geoserver/import/models';
 import {FeatureDescription} from '../crg/data-schema.service';
-import {FeatureDescriptionUtil} from './FeatureDescriptionUtil';
+import {FeatureUtil} from './FeatureUtil';
 
 describe('GeoUtil test', () => {
 
@@ -110,12 +110,12 @@ describe('GeoUtil test', () => {
       tableName: ''
     };
 
-    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('Point', entityPoint));
-    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('-Point-', entityPoint));
-    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiLineString', entityLineString));
-    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('Polygon', entityLineString));
-    expect(true).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiPolygon', entityPolygon));
-    expect(false).toEqual(FeatureDescriptionUtil.isFeatureGeometryCompatible('MultiLineString', entityMultiGeometry));
+    expect(true).toEqual(FeatureUtil.isFeatureGeometryCompatible('Point', entityPoint));
+    expect(false).toEqual(FeatureUtil.isFeatureGeometryCompatible('-Point-', entityPoint));
+    expect(true).toEqual(FeatureUtil.isFeatureGeometryCompatible('MultiLineString', entityLineString));
+    expect(false).toEqual(FeatureUtil.isFeatureGeometryCompatible('Polygon', entityLineString));
+    expect(true).toEqual(FeatureUtil.isFeatureGeometryCompatible('MultiPolygon', entityPolygon));
+    expect(false).toEqual(FeatureUtil.isFeatureGeometryCompatible('MultiLineString', entityMultiGeometry));
   });
 
   it('should check custom rules', () => {

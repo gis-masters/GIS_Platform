@@ -1,7 +1,7 @@
 import {PropertySchema} from '../crg/data-schema.service';
 import {CrgComparison} from '../properties-comparator.service';
 import {LayerAttribute} from '../geoserver/import/models';
-import {AS_IS_TYPE, NOT_IMPORT} from '../crg/models';
+import {AS_IS, NOT_IMPORT} from '../crg/models';
 
 /**
  * Первый и самый простой компаратор.
@@ -104,8 +104,8 @@ export class LastComparison implements CrgComparison {
 
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     return {
-      name: AS_IS_TYPE.name,
-      title: AS_IS_TYPE.title
+      name: AS_IS.name,
+      title: AS_IS.title
     };
   }
 

@@ -4,7 +4,6 @@ import {FizLogger} from '../logger/fiz.logger';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {WorkImport} from '../geoserver/import/workImport';
 import {LayersService} from '../geoserver/layers.service';
 import {NameHrefProjection} from '../geoserver/projections';
 import {LocalStorageService} from '../local-storage.service';
@@ -13,6 +12,7 @@ import {ServerPropertiesService} from '../server-properties.service';
 import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
 import {Process, ProcessStatus} from './models';
 import {StorageKeys} from '../storage-keys';
+import {TaskImport} from "../geoserver/import/taskImport";
 
 @Injectable({
   providedIn: 'root'
@@ -95,15 +95,12 @@ export class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  doWorkImport(workImport: WorkImport) {
-    this.log.info('projects', 'do Work Import', workImport);
-
-    const projectId = workImport.projectModel.crgProject.id;
+  doWorkImport(tasks: TaskImport[], projectId, workspaceName) {
     const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + projectId + '/import';
     const payload = {
       wsUiId: this.wsService.getId(),
-      targetSchema: workImport.projectModel.crgProject.workspaceName,
-      importTasks: workImport.tasks
+      targetSchema: workspaceName,
+      importTasks: tasks
     };
 
     return this.http.post<Process>(url, payload);

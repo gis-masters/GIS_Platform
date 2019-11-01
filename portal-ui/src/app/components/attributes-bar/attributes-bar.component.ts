@@ -49,7 +49,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   isNeedPrepareColumn = true;
 
-  isSimf: boolean = false;
+  isSimf = false;
 
   currentPositionFeature: WfsFeature;
   features: WfsFeatureView[] = [];
@@ -215,7 +215,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     // костыль для того, чтобы заставить datatable пересчитать свои размеры
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
-    }, 100)
+    }, 100);
   }
 
   getSimpleProperty(name: string): PropertySchema | undefined {

@@ -8,9 +8,9 @@ import nl2br from 'react-nl2br';
 const cnToastError = cn('ToastError');
 
 interface ToastErrorOpts {
-  source?: string,
-  fileno?: number,
-  columnNumber?: number,
+  source?: string;
+  fileno?: number;
+  columnNumber?: number;
   error?: Error;
   message?: JSX.Element | string;
   details?: JSX.Element | string;
@@ -24,6 +24,15 @@ interface ToastErrorProps extends ToastErrorOpts {
 
 @observer
 export class ToastError extends React.Component<ToastErrorProps> {
+
+  constructor (props: ToastErrorProps) {
+    super(props);
+    this.toggleOpen = this.toggleOpen.bind(this);
+  }
+
+  @observable
+  open = false;
+
   static show (opts: ToastErrorOpts) {
     const toastInfo: {id: ToastId} = { id: '0' };
 
@@ -34,14 +43,6 @@ export class ToastError extends React.Component<ToastErrorProps> {
 
     toastInfo.id = toast.error(<ToastError {...props} />, { autoClose: 10000 });
   }
-
-  constructor (props: ToastErrorProps) {
-    super(props);
-    this.toggleOpen = this.toggleOpen.bind(this);
-  }
-
-  @observable
-  open: boolean = false;
 
   render () {
     const { error, details, source, fileno, columnNumber, message } = this.props;
@@ -84,6 +85,6 @@ export class ToastError extends React.Component<ToastErrorProps> {
   @action
   private toggleOpen () {
     this.open = !this.open;
-    toast.update(this.props.toastInfo.id, { autoClose: !this.open && 10000 })
+    toast.update(this.props.toastInfo.id, {autoClose: !this.open && 10000});
   }
 }

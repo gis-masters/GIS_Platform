@@ -3,9 +3,11 @@ import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {PropertySchema} from '../../services/crg/data-schema.service';
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ImportService} from '../../services/geoserver/import/import.service';
 import {PropertiesComparatorService} from '../../services/properties-comparator.service';
 import {LayerAttribute} from '../../services/geoserver/import/models';
+import {ImportDataHolderService} from '../../services/geoserver/import/import-data-holder.service';
+import {MatchingPair} from '../../services/geoserver/import/taskImport';
+import {ImportTargetType} from '../../services/crg/models';
 
 @Component({
   selector: 'crg-mapping-pair',
@@ -14,36 +16,64 @@ import {LayerAttribute} from '../../services/geoserver/import/models';
 })
 export class MappingPairComponent implements OnInit, OnChanges {
 
-  @Input() layer_attribute: LayerAttribute;
   @Input() layerName: string;
-  @Input() properties: PropertySchema[];
+  @Input() importedLayerAttribute: LayerAttribute; // Атрибут импортированного шейпа
+  @Input() propertySchemas: PropertySchema[];      // Атрибуты описанные в схеме
 
   columnForm: FormGroup;
   selectedProperty: PropertySchema;
 
   constructor(private logger: NGXLogger,
-              private importService: ImportService,
+              private importData: ImportDataHolderService,
               private crgComparator: PropertiesComparatorService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
-    this.columnForm = this.formBuilder.group({
-      columnFiz: [this.properties[0]]
-    });
+    let currentAttrPair: MatchingPair;
+    const comparableLayersPair = this.importData.findCompatiblePair(this.layerName);
+    if (comparableLayersPair && comparableLayersPair.targetLayer.pairs.length > 0) {
+      currentAttrPair = comparableLayersPair.targetLayer.pairs
+        .find((matchingPair: MatchingPair) => matchingPair.source.name === this.importedLayerAttribute.name);
+
+      if (currentAttrPair) {
+        if (currentAttrPair.target.type === ImportTargetType.FROM_SCHEMA) {
+          this.columnForm = this.formBuilder.group({
+            columnFiz: [this.getPropertySchema(currentAttrPair.target.name)]
+          });
+        } else if (currentAttrPair.target.type === ImportTargetType.AS_IS) {
+          this.columnForm = this.formBuilder.group({
+            columnFiz: [this.propertySchemas[1]]
+          });
+        } else {
+          this.columnForm = this.formBuilder.group({
+            columnFiz: [this.propertySchemas[1]]
+          });
+        }
+      } else {
+        this.columnForm = this.formBuilder.group({
+          columnFiz: [this.propertySchemas[0]]
+        });
+      }
+    } else {
+      this.columnForm = this.formBuilder.group({
+        columnFiz: [this.propertySchemas[0]]
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const propertiesChanged = changes['properties'];
-    if (propertiesChanged && !propertiesChanged.isFirstChange()) {
+    const propertySchemasChanged = changes['propertySchemas'];
+    if (propertySchemasChanged && !propertySchemasChanged.isFirstChange()) {
       this.setIdenticalColumn();
     }
   }
 
   // Подбираем и устанавливаем наиболее похожий столбец
   private setIdenticalColumn() {
-    const bestCompareProperty = this.crgComparator.compare(this.layer_attribute, this.properties);
+    const bestCompareProperty = this.crgComparator.compare(this.importedLayerAttribute, this.propertySchemas);
 
-    this.importService.importFlow.work_import.addMapping(this.layerName, this.layer_attribute, bestCompareProperty);
+    this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, bestCompareProperty);
 
     this.columnForm.controls['columnFiz'].patchValue(bestCompareProperty);
     this.selectedProperty = bestCompareProperty;
@@ -62,6 +92,10 @@ export class MappingPairComponent implements OnInit, OnChanges {
   columnChanged() {
     this.selectedProperty = this.columnForm.controls['columnFiz'].value as PropertySchema;
 
-    this.importService.importFlow.work_import.updateMapping(this.layerName, this.layer_attribute, this.selectedProperty);
+    this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, this.selectedProperty);
+  }
+
+  private getPropertySchema(name: string) {
+    return this.propertySchemas.find((propertySchema: PropertySchema) => propertySchema.name === name);
   }
 }

@@ -69,7 +69,7 @@ export enum ImportTargetType {
   FROM_SCHEMA = 'FromSchema'
 }
 
-export const AS_IS_TYPE = {
+export const AS_IS = {
   title: 'Импортировать как есть',
   name: ImportTargetType.AS_IS,
 };
@@ -77,4 +77,20 @@ export const AS_IS_TYPE = {
 export const NOT_IMPORT = {
   title: 'Не импортировать',
   name: ImportTargetType.NOT_IMPORT,
+};
+
+export const IMPORT_LAYER_AS_IS = {
+  name: 'IMPORT_LAYER_AS_IS',
+  title: 'Импортировать как есть',
+  description: '',
+  tableName: 'IMPORT_LAYER_AS_IS',
+  properties: []
+};
+
+export const NOT_IMPORT_LAYER = {
+  name: 'NOT_IMPORT_LAYER',
+  title: 'Не импортировать',
+  description: '',
+  tableName: 'NOT_IMPORT_LAYER',
+  properties: []
 };

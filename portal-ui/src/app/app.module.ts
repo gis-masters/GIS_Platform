@@ -14,7 +14,7 @@ import {AlertModule} from 'ngx-bootstrap';
 import {FileUploadModule} from 'ng2-file-upload';
 import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 import {LoginFormModule} from './components/login-form/login-form.module';
 import {LoadingModule} from './components/loading/loading.module';
@@ -57,10 +57,12 @@ import {DataImportTasksListComponent} from './components/data-import-tasks-list/
 import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 import {HomeComponent} from './components/home/home.component';
-import { TileSourceSelectComponent } from './components/tile-source-select/tile-source-select.component';
-import { MapComponent } from './components/map/map.component';
-import { ServicesProvider } from './components/services-provider/services-provider.component';
-import { GlobalErrorHandler } from './services/global-error.handler';
+import {TileSourceSelectComponent} from './components/tile-source-select/tile-source-select.component';
+import {MapComponent} from './components/map/map.component';
+import {ServicesProvider} from './components/services-provider/services-provider.component';
+import {GlobalErrorHandler} from './services/global-error.handler';
+import {WorkImportPreviewComponent} from './components/work-import-preview/work-import-preview.component';
+import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +104,9 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     HomeComponent,
     TileSourceSelectComponent,
     MapComponent,
-    ServicesProvider
+    ServicesProvider,
+    WorkImportPreviewComponent,
+    AlertDialogComponent
   ],
   imports: [
     HttpClientModule,
@@ -130,6 +134,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     LoadingModule
   ],
   entryComponents: [
+    AlertDialogComponent,
     ConfirmDialogComponent,
     CopyFeaturesDialogComponent
   ],
@@ -146,4 +151,5 @@ import { GlobalErrorHandler } from './services/global-error.handler';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

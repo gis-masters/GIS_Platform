@@ -1,9 +1,10 @@
 import {ValueType} from './FeaturePropertyValidators';
-import {FeatureDescription} from '../crg/data-schema.service';
+import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
 import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
 import {ImportLayerItem, LayerAttribute} from '../geoserver/import/models';
+import {AS_IS, NOT_IMPORT} from '../crg/models';
 
-export class FeatureDescriptionUtil {
+export class FeatureUtil {
 
   static getLayerGeometry(importLayer: ImportLayerItem) {
     return importLayer.attributes
@@ -38,6 +39,27 @@ export class FeatureDescriptionUtil {
     } else {
       return [];
     }
+  }
+
+  static filterByGeometry(fDescription: FeatureDescription[], layer?: ImportLayerItem): FeatureDescription[] {
+    const geometryName = FeatureUtil.getLayerGeometry(layer);
+
+    return fDescription.filter((featureDescription: FeatureDescription) => {
+      return FeatureUtil.isFeatureGeometryCompatible(geometryName, featureDescription);
+    });
+  }
+
+  static preparePropertySchema(targetFeatureType: FeatureDescription): PropertySchema[] {
+    const propertySchemas: PropertySchema[] = [
+      {name: NOT_IMPORT.name, title: NOT_IMPORT.title},
+      {name: AS_IS.name, title: AS_IS.title}
+    ];
+
+    targetFeatureType.properties.forEach((property: PropertySchema) => {
+      propertySchemas.push(property);
+    });
+
+    return propertySchemas;
   }
 
   /**

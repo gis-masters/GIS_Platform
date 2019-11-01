@@ -6,7 +6,8 @@ import { HttpQueue } from '../util/HttpQueue';
 import { ValueTitleProjection } from '../geoserver/projections';
 import { ServerPropertiesService } from '../server-properties.service';
 import { CrgLayer } from '../geoserver/layers.service';
-import { FeatureDescriptionUtil } from '../util/FeatureDescriptionUtil';
+import { FeatureUtil } from '../util/FeatureUtil';
+import {ImportLayerItem} from '../geoserver/import/models';
 
 
 export class FeatureXsdDefinition {
@@ -112,16 +113,39 @@ export class DataSchemaService {
     if (byFullCompare) {
       return byFullCompare;
     } else {
-      this.logger.warn('Прямого совпадения имени не нашлось. Подберем слой через include');
-
       const xsdFeature = this.featuresXsdDefinition.xsdFeatures
         .find((feature: FeatureDescription) => {
           return feature.name.toLowerCase().includes(layerName.toLowerCase());
         });
 
-      this.logger.info(layerName + ': ' + xsdFeature);
       return xsdFeature;
     }
+  }
+
+  /**
+   * Возвращает, наиболее подходящую для слоя, схему.
+   * Метод опирается на название и геометрию слоя.
+   * @param layer Слой
+   */
+  public getFeatureDescriptionByLayer(layer: ImportLayerItem): FeatureDescription | undefined {
+    if (!layer) {
+      return;
+    }
+
+    let layerName = layer.originalName.toLowerCase();
+
+    const geometryName = FeatureUtil.getLayerGeometry(layer);
+    if (geometryName.includes('MultiLineString')) {
+      if (!layerName.includes('_line')) {
+        layerName += '_line';
+      }
+    } else if (geometryName.includes('Point')) {
+      if (!layerName.includes('_point')) {
+        layerName += '_point';
+      }
+    }
+
+    return this.getFeatureDescriptionByName(layerName);
   }
 
   /**
@@ -133,14 +157,14 @@ export class DataSchemaService {
    */
   public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
     const baseFeatureDescription = this.getFeatureDescriptionByName(baseLayer.name);
-    const baseFeatureGeometry: string[] = FeatureDescriptionUtil.getFeatureGeometry(baseFeatureDescription);
+    const baseFeatureGeometry: string[] = FeatureUtil.getFeatureGeometry(baseFeatureDescription);
 
     const result: CrgLayer[] = [];
     baseFeatureGeometry.forEach(fGeometry => {
       layers.forEach((layer: CrgLayer) => {
         if (baseLayer.complexName !== layer.complexName) {
           const fDescription = this.getFeatureDescriptionByName(layer.name);
-          if (FeatureDescriptionUtil.isFeatureGeometryCompatible(fGeometry, fDescription)) {
+          if (FeatureUtil.isFeatureGeometryCompatible(fGeometry, fDescription)) {
             result.push(layer);
           }
         }

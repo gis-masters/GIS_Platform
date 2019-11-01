@@ -2,11 +2,8 @@ import {interval, Subject} from 'rxjs';
 import {NGXLogger} from 'ngx-logger';
 import {Router} from '@angular/router';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {debounceTime, filter, takeUntil} from 'rxjs/operators';
-import {ImportFlow} from '../../../services/geoserver/import/importFlow';
+import {takeUntil} from 'rxjs/operators';
 import {LayersService} from '../../../services/geoserver/layers.service';
-import {TaskImport} from '../../../services/geoserver/import/taskImport';
-import {WorkspacesService} from '../../../services/geoserver/workspaces.service';
 import {ImportService} from '../../../services/geoserver/import/import.service';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {StorageKeys} from '../../../services/storage-keys';
@@ -15,6 +12,12 @@ import {ProjectsService} from '../../../services/crg/projects.service';
 import {Process, ProcessStatus} from '../../../services/crg/models';
 import {OrganizationService} from '../../../services/crg/organization.service';
 import {ImportLayer, ImportLayerItem} from '../../../services/geoserver/import/models';
+import {
+  ComparableLayersPair,
+  ImportDataHolderService
+} from '../../../services/geoserver/import/import-data-holder.service';
+import {MatDialog} from '@angular/material/dialog';
+import {AlertDialogComponent} from '../../../components/dialogs/alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'crg-data-mapping',
@@ -23,90 +26,79 @@ import {ImportLayer, ImportLayerItem} from '../../../services/geoserver/import/m
 })
 export class DataMappingComponent implements OnInit, OnDestroy {
 
-  importLayers: ImportLayerItem[] = [];
   selectedLayer: ImportLayerItem;
 
-  importFlow: ImportFlow;
   isImportFinished = false;
   isWorkImportInited = false;
+
+  comparableLayers: ComparableLayersPair[];
 
   private CHECK_STATUS_INTERVAL = 1000;
   private WAIT_SERVER_RESPONSE_TIMER = 120000;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private workspacesService: WorkspacesService,
+  constructor(private dialog: MatDialog,
               private importService: ImportService,
-              private workspaceService: WorkspacesService,
               private projectsService: ProjectsService,
               private organizationService: OrganizationService,
               private layersService: LayersService,
               private storageService: LocalStorageService,
               private router: Router,
+              private importData: ImportDataHolderService,
               private logger: NGXLogger) {
     // TODO: Перенести логику блокирования страницы при неверных данных, по примеру WorkflowGuardService
-    this.importFlow = this.importService.importFlow;
-    if (!this.importFlow.scratch_import && !this.importFlow.scratch_import) {
+    if (!this.importData.scratch_import) {
       this.router.navigateByUrl('/workspace/data_import');
       throw Error('WRONG WAY');
     }
 
-    const projectModel = JSON.parse(this.storageService.getByKey(StorageKeys.projectKey)) as ProjectModel;
-    this.importService.importFlow.setProject(projectModel);
+    this.importData.projectModel = JSON.parse(this.storageService.getByKey(StorageKeys.projectKey)) as ProjectModel;
   }
 
   ngOnInit() {
     this.importService
-        .getAllImportLayers(true)
+        .getAllImportLayers()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((importLayers: ImportLayer[]) => {
-          this.importLayers = importLayers
-              .map((importLayer: ImportLayer) => {
-                this.importService.importFlow.work_import.addTask(importLayer.layer.nativeName, importLayer.layer.srs);
-
-                return importLayer.layer as ImportLayerItem;
-              });
-        });
-
-    this.importFlow.work_import.tasks$
-        .pipe(
-          filter(value => !!value && !!value.length),
-          debounceTime(100),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((tasks: TaskImport[]) => {
-          tasks.forEach((task: TaskImport) => {
-            const layerItem = this.importLayers.find(layer => layer.name === task.layerName);
-            if (layerItem) {
-              layerItem.isMapped = task.isPrepared();
-            }
+          importLayers.map((importLayer: ImportLayer) => {
+            this.importData.createCompatiblePair(importLayer.layer as ImportLayerItem);
           });
         });
+
+    this.importData.comparableLayers$.subscribe((comparableLayers: ComparableLayersPair[]) => {
+      this.comparableLayers = comparableLayers;
+    });
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
 
-    this.importService.importFlow.work_import.clear();
+    this.importData.clear();
   }
 
-  selectLayer(layer: ImportLayerItem) {
-    this.importLayers.forEach(value => value.isActive = false);
-
-    layer.isActive = true;
-    this.selectedLayer = layer;
+  selectLayer(comparableLayersPair: ComparableLayersPair) {
+    comparableLayersPair.isActive = true;
+    this.selectedLayer = comparableLayersPair.originalLayer;
   }
 
   startWorkImport() {
+    if (!this.importData.isWorkImportReady) {
+      this.dialog.open(AlertDialogComponent, {data: {message: 'Есть не обработанные слои'}});
+
+      return;
+    }
+
     this.isWorkImportInited = true;
 
-    const workImport = this.importFlow.work_import;
+    const workTasks = this.importData.getWorkTasks();
+    const project = this.importData.projectModel.crgProject;
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.projectsService
-        .doWorkImport(workImport)
+        .doWorkImport(workTasks, project.id, project.workspaceName)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((crgProcess: Process) => {
 
@@ -115,7 +107,7 @@ export class DataMappingComponent implements OnInit, OnDestroy {
             .subscribe(async () => {
               const response: Process = await this.organizationService.getProcessById(crgProcess.id);
               if (response.status === ProcessStatus.DONE) {
-                this.layersService.fetchLayers(workImport.projectModel.crgProject);
+                this.layersService.fetchLayers(project);
 
                 this.isWorkImportInited = false;
                 this.isImportFinished = true;
@@ -141,6 +133,10 @@ export class DataMappingComponent implements OnInit, OnDestroy {
 
           this.isWorkImportInited = false;
         });
+  }
+
+  isActive(comparablePair: ComparableLayersPair) {
+    return this.selectedLayer ? this.selectedLayer.name === comparablePair.originalLayer.name : false;
   }
 
 }
