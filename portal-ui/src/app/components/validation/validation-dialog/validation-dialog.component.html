@@ -6,16 +6,21 @@
     </button>
   </mat-form-field>
 
-  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange(fizLayers)"
+  <div class="select-all">
+    <mat-checkbox [labelPosition]="'before'" (click)="selectAll()" [(ngModel)]="isAllSelected">
+      {{isAllSelected ? 'Снять выделение' : 'Выделить всё'}}
+    </mat-checkbox>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange()"
                       dense style="height: 330px">
-<!--    <mat-list-option class="text-right" (click)="selectAll()">{{selectText}}</mat-list-option>-->
-    <mat-divider></mat-divider>
     <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm" [value]="layer">
       <span class="cut-text">
         {{handleTitle(layer)}}
       </span>
     </mat-list-option>
   </mat-selection-list>
+  <mat-divider></mat-divider>
 
   <button mat-raised-button color="primary" class="float-right mat-primary" style="margin-top: 10px"
           [disabled]="fizLayers.selectedOptions.selected.length < 1"

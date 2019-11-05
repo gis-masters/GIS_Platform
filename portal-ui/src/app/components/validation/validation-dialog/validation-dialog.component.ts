@@ -17,16 +17,16 @@ export class ValidationDialogComponent {
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
 
-  selectAllLayers: boolean;
-  selectText = 'Выделить всё';
+  isAllSelected: boolean;
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService) {
   }
 
-  onChange(selectionList: MatSelectionList) {
-    this.selectedLayers = selectionList.selectedOptions.selected
-      .map((selectedOption: MatListOption) => selectedOption.value);
+  onChange() {
+    this.isAllSelected = this.data.layers.length == this.layers.selectedOptions.selected.length;
+
+    this.updateSelectedLayers();
   }
 
   initValidation() {
@@ -42,15 +42,18 @@ export class ValidationDialogComponent {
   }
 
   selectAll() {
-    if (!this.selectAllLayers) {
-      this.layers.selectAll();
-      this.selectAllLayers = true;
-      this.selectText = 'Снять выделение';
-    } else {
+    if (this.isAllSelected) {
       this.layers.deselectAll();
-      this.selectAllLayers = false;
-      this.selectText = 'Выделить всё';
+    } else {
+      this.layers.selectAll();
     }
+
+    this.updateSelectedLayers();
+  }
+
+  private updateSelectedLayers() {
+    this.selectedLayers = this.layers.selectedOptions.selected
+        .map((selectedOption: MatListOption) => selectedOption.value);
   }
 }
 

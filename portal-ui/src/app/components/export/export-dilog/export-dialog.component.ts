@@ -1,26 +1,25 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
-import { MatListOption, MatSelectionList } from '@angular/material/list';
+import {MatListOption, MatSelectionList} from '@angular/material/list';
 import {CrgLayer} from '../../../services/geoserver/layers.service';
 import {ValueTitleProjection} from '../../../services/geoserver/projections';
 import {CommunicationService} from '../../../services/communication.service';
-import {ExportGmlResponse, ExportService} from '../../../services/crg/export.service';
+import {ExportService} from '../../../services/crg/export.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {Process} from '../../../services/crg/models';
-import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
   selector: 'crg-export-dialog',
-  templateUrl: './export-dialog.component.html'
+  templateUrl: './export-dialog.component.html',
+  styleUrls: ['./export-dialog.component.css']
 })
 export class ExportDialogComponent implements OnDestroy {
   @ViewChild(MatSelectionList, { static: false }) list: MatSelectionList;
   @Input() layers: CrgLayer[];
 
-  selectAllList: boolean;
-  selectText = 'Выделить всё';
+  isAllSelected: boolean;
 
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
@@ -74,8 +73,9 @@ export class ExportDialogComponent implements OnDestroy {
   }
 
   onChange(selectionList: MatSelectionList) {
-    this.selectedLayers = selectionList.selectedOptions.selected
-        .map((selectedOption: MatListOption) => selectedOption.value);
+    this.isAllSelected = this.layers.length == this.list.selectedOptions.selected.length;
+
+    this.updateSelectedLayers();
   }
 
   ngOnDestroy(): void {
@@ -106,16 +106,20 @@ export class ExportDialogComponent implements OnDestroy {
   }
 
   selectAll() {
-    if (!this.selectAllList) {
-      this.list.selectAll();
-      this.selectAllList = true;
-      this.selectText = 'Снять выделение';
-    } else {
+    if (this.isAllSelected) {
       this.list.deselectAll();
-      this.selectAllList = false;
-      this.selectText = 'Выделить всё';
+    } else {
+      this.list.selectAll();
     }
+
+    this.updateSelectedLayers();
   }
+
+  private updateSelectedLayers() {
+    this.selectedLayers = this.list.selectedOptions.selected
+        .map((selectedOption: MatListOption) => selectedOption.value);
+  }
+
 }
 
 export interface GmlDialogData {

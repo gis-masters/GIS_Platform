@@ -4,7 +4,7 @@ import {Component, Input, OnDestroy} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
 import {DownloadFileService} from '../../services/download-file.service';
 import {Subject} from 'rxjs';
-import {ProcessType} from '../../services/crg/models';
+import {ProcessStatus, ProcessType} from '../../services/crg/models';
 
 @Component({
   selector: 'crg-progress-item',
@@ -28,16 +28,16 @@ export class ProgressItemComponent implements OnDestroy {
   }
 
   getDescription(): string {
-    if (this.event.payload.payload.status === 'PENDING') {
+    if (this.event.payload.payload.status === ProcessStatus.PENDING) {
       return this.event.payload.payload.description;
-    } else if (this.event.payload.payload.status === 'SUB_DONE') {
+    } else if (this.event.payload.payload.status === ProcessStatus.TASK_DONE) {
       return this.event.payload.payload.description;
-    } else if (this.event.payload.payload.status === 'DONE') {
+    } else if (this.event.payload.payload.status === ProcessStatus.DONE) {
       if (this.event.payload.type === ProcessType.EXPORT) {
         const layerName = this.event.payload.payload['layerName'];
         return layerName ? layerName : 'Готово';
       }
-    } else if (this.event.payload.payload.status === 'ERROR') {
+    } else if (this.event.payload.payload.status === ProcessStatus.ERROR) {
       return 'Ошибка экспорта';
     } else {
       this.logger.warn('Unknown status');
@@ -47,7 +47,8 @@ export class ProgressItemComponent implements OnDestroy {
 
   isSpinner(): boolean {
     if (!!this.event.payload.payload.progress) {
-      return this.event.payload.payload.status === 'PENDING' || this.event.payload.payload.status === 'SUB_DONE';
+      return this.event.payload.payload.status === ProcessStatus.PENDING ||
+             this.event.payload.payload.status === ProcessStatus.TASK_DONE;
     } else {
       return false;
     }
@@ -58,7 +59,8 @@ export class ProgressItemComponent implements OnDestroy {
       return false;
     }
 
-    return this.event.payload.payload.status === 'PENDING' || this.event.payload.payload.status === 'SUB_DONE';
+    return this.event.payload.payload.status === ProcessStatus.PENDING ||
+           this.event.payload.payload.status === ProcessStatus.TASK_DONE;
   }
 
   closeNotice() {
@@ -76,11 +78,12 @@ export class ProgressItemComponent implements OnDestroy {
   }
 
   isShowActionBlock(): boolean {
-    return this.event.payload.payload.status === 'DONE' || this.event.payload.payload.status === 'ERROR';
+    return this.event.payload.payload.status === ProcessStatus.DONE ||
+           this.event.payload.payload.status === ProcessStatus.ERROR;
   }
 
   isShowDownloadLink(): boolean {
-    return this.event.payload.payload.status === 'DONE';
+    return this.event.payload.payload.status === ProcessStatus.DONE;
   }
 
   getLinkTitle(): string {
