@@ -37,7 +37,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   viewFeaturesData: ViewFeaturesData;
   validationDialogData: ValidationDialogData;
-  layers: CrgLayer[] = [];
+  layers: CrgLayer[];
   gmlDialogData: CrgLayer[];
   selectedLayer;
   cn = cn('map');
