@@ -46,7 +46,7 @@
       </button>
     </div>
 
-    <div [class]="cn('legend')">
+    <div [class]="cn('legend')" *ngIf="rules; else legendLoading">
       <div [class]="cn('legend-item')" *ngFor="let rule of rules">
         <img [src]="rule.legend" [class]="cn('legend-item-pic')" />
         <div [class]="cn('legend-item-title')">{{rule.title}}</div>
@@ -54,6 +54,12 @@
     </div>
   </div>
 </div>
+
+<ng-template #legendLoading>
+  <div [class]="cn('legend', {loading: true})">
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  </div>
+</ng-template>
 
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent let-item="layer">

@@ -42,7 +42,7 @@ export class LayerListItemComponent implements OnDestroy {
 
   cn = cn('layer-list-item');
 
-  rules: RuleWithLegend[] = [];
+  rules: RuleWithLegend[];
 
   open = false;
 
