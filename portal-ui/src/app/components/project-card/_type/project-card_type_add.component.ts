@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import {Project, ProjectsService} from '../../../services/crg/projects.service';
-import {Process, ProcessStatus} from '../../../services/crg/models';
+import { ProjectsService } from '../../../services/crg/projects.service';
+import { Process, ProcessStatus } from '../../../services/crg/models';
 
 @Component({
   selector: 'crg-project-card_type_add',
@@ -49,8 +49,8 @@ export class ProjectCardTypeAddComponent {
   create() {
     this.projectsService
         .create(this.newProjectName)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((process: Process) => {
+        .then(
+          (process: Process) => {
             this.isEdit = false;
             this.projectsService.fetchProjects();
 
@@ -62,7 +62,8 @@ export class ProjectCardTypeAddComponent {
             } else {
               this.newProjectError = 'Ошибка при создании проекта';
             }
-          });
+          }
+        );
 
     this.newProjectName = '';
     this.newProjectError = '';
@@ -74,19 +75,17 @@ export class ProjectCardTypeAddComponent {
   private checkProjectStatus(processResponse: Process) {
     const startTime = Date.now();
     const minute = 60000;
-    const checkStatusInterval = setInterval(() => {
+    const checkStatusInterval = setInterval(async () => {
       if (startTime - Date.now() > minute) {
         clearInterval(checkStatusInterval);
       }
 
-      this.projectsService.getById(processResponse.extra.id)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe((project: Project) => {
-            if (project.status === ProcessStatus.DONE) {
-              this.projectsService.fetchProjects();
-              clearInterval(checkStatusInterval);
-            }
-          });
+      const project = await this.projectsService.getById(processResponse.extra.id);
+
+      if (project.status === ProcessStatus.DONE) {
+        this.projectsService.fetchProjects();
+        clearInterval(checkStatusInterval);
+      }
     }, 2000);
   }
 }

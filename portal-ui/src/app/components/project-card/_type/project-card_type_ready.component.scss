@@ -3,7 +3,7 @@
 }
 
 .project-card {
-  transition: background-size 0.3s;
+  transition: background-size 0.3s, opacity 0.3s;
 
   background-image: url(project-card_type_ready.png);
   background-position: 50% 50%;

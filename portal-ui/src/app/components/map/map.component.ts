@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, throwError } from 'rxjs';
-import { catchError, filter, flatMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
@@ -17,7 +17,7 @@ import { EditFeatureMode } from '../../components/edit-feature/edit-feature.comp
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
-import { LocalStorageService } from '../../services/local-storage.service';
+import { ProjectsService } from '../../services/crg/projects.service';
 import { GeoserverJSONException, WfsFeatureCollection, WfsService } from '../../services/geoserver/wfs.service';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 
@@ -48,7 +48,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private openLayers: OpenLayersService,
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
-              private storageService: LocalStorageService,
+              private projectsService: ProjectsService,
               private snackBar: MatSnackBar,
               private wfsService: WfsService,
               private communicationService: CommunicationService,
@@ -148,17 +148,12 @@ export class MapComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  deleteLayer(layer: CrgLayer) {
-    this.layersService.deleteLayer(layer)
-        .pipe(
-          flatMap(() => this.featureTypesService.getByName(layer)),
-          flatMap((fType: FeatureType) => this.featureTypesService.delete(fType)),
-          takeUntil(this.unsubscribe$)
-        ).subscribe(() => {
-          this.snackBar.open('Удалено', 'X', {duration: 3000});
-
-          this.fetchLayers();
-        });
+  async deleteLayer(layer: CrgLayer) {
+    await this.layersService.deleteLayer(layer);
+    const fType: FeatureType = await this.featureTypesService.getByName(layer);
+    await this.featureTypesService.delete(fType);
+    this.snackBar.open('Удалено', 'X', {duration: 3000});
+    this.fetchLayers();
   }
 
   /**
@@ -212,8 +207,8 @@ export class MapComponent implements OnInit, OnDestroy {
             sidebar.target === SidebarType.ATTRIBUTES;
   }
 
-  private fetchLayers() {
-    this.currentProject = this.storageService.getProject().crgProject;
+  private async fetchLayers() {
+    this.currentProject = await this.projectsService.getCurrent();
     this.layersService.fetchLayers(this.currentProject)
         .pipe(
           tap(layers => this.layers = layers),

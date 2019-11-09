@@ -1,36 +1,50 @@
-import {WsService} from '../ws.service';
-import {Injectable} from '@angular/core';
-import {FizLogger} from '../logger/fiz.logger';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {LayersService} from '../geoserver/layers.service';
-import {NameHrefProjection} from '../geoserver/projections';
-import {LocalStorageService} from '../local-storage.service';
-import {ProjectModel} from '../geoserver/import/projectModel';
-import {ServerPropertiesService} from '../server-properties.service';
-import {catchError, filter, flatMap, map, publishReplay, refCount} from 'rxjs/operators';
-import {Process, ProcessStatus} from './models';
-import {StorageKeys} from '../storage-keys';
-import {TaskImport} from "../geoserver/import/taskImport";
+import { Injectable } from '@angular/core';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { catchError, filter, flatMap, map, publishReplay, refCount, takeUntil } from 'rxjs/operators';
+
+import { getRoute } from '../services';
+import { TaskImport } from "../geoserver/import/taskImport";
+import { WsService } from '../ws.service';
+import { FizLogger } from '../logger/fiz.logger';
+import { LayersService } from '../geoserver/layers.service';
+import { NameHrefProjection } from '../geoserver/projections';
+import { LocalStorageService } from '../local-storage.service';
+import { ServerPropertiesService } from '../server-properties.service';
+import { Process, ProcessStatus } from './models';
+import { HttpQueue } from '../util/HttpQueue';
+
+export interface Project {
+  id: string;
+  workspaceName: string;
+  internalName: string;
+  databaseName?: string;
+  storeName?: string;
+  href?: string;
+  type?: string;
+  layersCount?: number;
+  status?: ProcessStatus;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsService {
-
-  private orgUrl: string;
-
+  private currentProject?: Promise<Project>;
   private _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(undefined);
-  public projects$: Observable<Project[]> = this._projects$.asObservable()
+  private deletedProjects: string[] = [];
+
+  projects$: Observable<Project[]> = this._projects$.asObservable()
     .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
+      map(projects => projects && projects.filter(p => !this.deletedProjects.includes(p.id))),
       publishReplay(1),
       refCount(),
       filter(data => !!data)
     );
 
   constructor(private http: HttpClient,
+              private httpq: HttpQueue,
               private router: Router,
               private log: FizLogger,
               private wsService: WsService,
@@ -38,25 +52,20 @@ export class ProjectsService {
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) {
     this.projects$.subscribe();
-    this.serverProp.organizationsUrl.then((organizationsUrl) => {
-      // TODO выдернуть этот костыль при рефакторинге импорта (уже в процессе)
-      this.orgUrl = organizationsUrl + '/';
-    });
   }
 
   openProject (project: Project) {
-    const projectModel = new ProjectModel(project);
-    this.storageService.saveByKey(StorageKeys.projectKey, JSON.stringify(projectModel));
-
-    if (project.layersCount > 0) {
-      this.router.navigateByUrl('/workspace/map');
-    } else {
-      this.router.navigateByUrl('/workspace/data_import');
-    }
+    this.router.navigateByUrl(this.getProjectUrl(project));
   }
 
-  fetchProjects(): void {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+  getProjectUrl (project: Project): string {
+    return project.layersCount ?
+          `/project/${project.id}/map` :
+          `/project/${project.id}/import`;
+  }
+
+  async fetchProjects() {
+    const url = `${await this.serverProp.organizationsUrl}/${this.storageService.getOrgId()}/projects`;
 
     this.http
         .get<Project[]>(url)
@@ -68,26 +77,30 @@ export class ProjectsService {
         });
   }
 
-  getById(id: string): Observable<Project> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + id;
+  async getById(id: string): Promise<Project> {
+    const url = `${await this.serverProp.organizationsUrl}/${this.storageService.getOrgId()}/projects/${id}`;
 
-    return this.http.get<Project>(url);
+    return this.httpq.get<Project>(url);
   }
 
-  create(name: string): Observable<any> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects';
+  async create(name: string): Promise<any> {
+    const url = `${await this.serverProp.organizationsUrl}/${this.storageService.getOrgId()}/projects`;
 
     const payload = {
       'projectName': name
     };
 
-    return this.http.post(url, payload);
+    return this.httpq.post(url, payload);
   }
 
-  delete(id: string): Observable<any> {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + id;
+  async delete(id: string) {
+    const url = `${await this.serverProp.organizationsUrl}/${this.storageService.getOrgId()}/projects/${id}`;
 
-    return this.http.delete(url);
+    await this.httpq.delete(url);
+
+    this.deletedProjects.push(id);
+
+    this._projects$.next(this._projects$.value);
   }
 
   /**
@@ -95,20 +108,18 @@ export class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  doWorkImport(tasks: TaskImport[], projectId, workspaceName) {
-    const url = this.orgUrl + this.storageService.getOrgId() + '/projects/' + projectId + '/import';
+  async doWorkImport(tasks: TaskImport[], projectId: string, workspaceName: string): Promise<Process> {
+    const url = `${await this.serverProp.organizationsUrl}/${this.storageService.getOrgId()}/projects/${projectId}/import`;
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workspaceName,
       importTasks: tasks
     };
 
-    return this.http.post<Process>(url, payload);
+    return this.httpq.post<Process>(url, payload);
   }
 
   clearCache() {
-    this.log.info('projects', 'clearCache');
-
     this._projects$.next(undefined);
   }
 
@@ -116,8 +127,20 @@ export class ProjectsService {
     this.storageService.clearProject();
   }
 
-  getCurrent(): ProjectModel {
-    return this.storageService.getProject();
+  async getCurrent(route?: ActivatedRouteSnapshot): Promise<Project> {
+    route = route || getRoute().snapshot;
+    const projectId = route.params.projectId;
+
+    if (this.currentProject) {
+      const project = await this.currentProject;
+      if (String(project.id) === projectId) {
+        return project;
+      }
+    }
+
+    this.currentProject = this.getById(projectId);
+
+    return this.currentProject;
   }
 
   private fetchProjectsLayers(projects: Project[]): Observable<Project[]> {
@@ -155,16 +178,4 @@ export class ProjectsService {
 
     return counter;
   }
-}
-
-export interface Project {
-  id: string;
-  workspaceName: string;
-  internalName: string;
-  databaseName?: string;
-  storeName?: string;
-  href?: string;
-  type?: string;
-  layersCount?: number;
-  status?: ProcessStatus;
 }

@@ -1,4 +1,4 @@
-import {ImportTask, ImportTasks} from '../geoserver/import/models';
+import {ImportTaskResponse, ImportTaskFull} from '../geoserver/import/models';
 
 export class GeoUtil {
 
@@ -6,22 +6,12 @@ export class GeoUtil {
    * Приведем в нормальный вид ответ от API геосервера.
    * @param importTask Обьект с тасками полученный от геосервера
    */
-  static tasksHandler(importTask?: ImportTask): ImportTasks {
-    const result = {
-      tasks: []
-    };
-
+  static tasksHandler(importTask?: ImportTaskResponse): ImportTaskFull[] {
     if (!importTask) {
-      return result;
+      return [];
     }
 
-    if (importTask.task) {
-      result.tasks.push(importTask.task);
-    } else {
-      result.tasks = [...importTask.tasks];
-    }
-
-    return result;
+    return importTask.task ? [importTask.task] : importTask.tasks || [];
   }
 
   static replaceUrl(url: string, envServer: { host: string; port: number }): string {
@@ -29,13 +19,12 @@ export class GeoUtil {
       return '';
     }
 
-    const gatewayUrl = envServer.host + ':' + envServer.port;
+    const newUrl = new URL(url);
 
-    const firstSplit = url.split('//');
-    const secondSplit = firstSplit[1].split('/');
-    const thirdSplit = firstSplit[1].split(secondSplit[0] + '/');
+    newUrl.host = envServer.host;
+    newUrl.port = String(envServer.port);
 
-    return firstSplit[0] + '//' + gatewayUrl + '/' + thirdSplit[1];
+    return newUrl.href;
   }
 
   static getAliasForBaseType(type: string) {
@@ -51,5 +40,4 @@ export class GeoUtil {
       return type;
     }
   }
-
 }

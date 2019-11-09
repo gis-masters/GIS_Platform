@@ -23,7 +23,6 @@ import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 
 import {AppComponent} from './pages/_app/app.component';
-import {ProjectsListPageComponent} from './pages/work-space/projects-list/projects-list-page.component';
 
 import {ProjectsListComponent} from './components/projects-list/projects-list.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -53,7 +52,6 @@ import {ButtonComponent} from './components/button/button.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
 import {PageTitleComponent} from './components/page-title/page-title.component';
 import {DataImportComponent} from './components/data-import/data-import.component';
-import {DataImportTasksListComponent} from './components/data-import-tasks-list/data-import-tasks-list.component';
 import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 import {HomeComponent} from './components/home/home.component';
@@ -63,6 +61,10 @@ import {ServicesProvider} from './components/services-provider/services-provider
 import {GlobalErrorHandler} from './services/global-error.handler';
 import {WorkImportPreviewComponent} from './components/work-import-preview/work-import-preview.component';
 import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dialog.component';
+import {WorkspaceComponent} from './components/workspace/workspace.component';
+
+import { configure } from 'mobx';
+configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
 
 @NgModule({
   declarations: [
@@ -85,7 +87,6 @@ import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dial
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
-    ProjectsListPageComponent,
     ProjectsListComponent,
     ConfirmDialogComponent,
     ViewFeaturesComponent,
@@ -98,7 +99,6 @@ import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dial
     ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,
-    DataImportTasksListComponent,
     AtleastPipe,
     WorkspaceHeaderComponent,
     HomeComponent,
@@ -106,7 +106,8 @@ import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dial
     MapComponent,
     ServicesProvider,
     WorkImportPreviewComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    WorkspaceComponent
   ],
   imports: [
     HttpClientModule,

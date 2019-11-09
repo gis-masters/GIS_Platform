@@ -27,7 +27,7 @@ import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {CommunicationService} from '../../services/communication.service';
-import {ProjectModel} from '../../services/geoserver/import/projectModel';
+import { Project } from '../../services/crg/projects.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -79,7 +79,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private projectModel: ProjectModel;
+  private project: Project;
 
   private BATCH_SIZE = 200;
 
@@ -97,8 +97,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.getEnv();
   }
 
-  ngAfterViewInit(): void {
-    this.projectModel = this.projectsService.getCurrent();
+  async ngAfterViewInit() {
+    this.project = await this.projectsService.getCurrent();
 
     this.requestModel$
         .pipe(
@@ -382,7 +382,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   private makeInsert(selectedLayer: CrgLayer): Observable<string> {
-    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const { workspaceName } = this.project;
 
     return this.tFeatureService
                .insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name);
@@ -397,7 +397,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.showPercent = true;
     this.loadPercent = 0;
 
-    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const { workspaceName } = this.project;
     const selectedFeatures = this.attributeTable.selected;
     const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
     const onePartOf100 = 100 / countOfParts;
@@ -431,7 +431,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.showPercent = true;
     this.loadPercent = 0;
 
-    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const { workspaceName } = this.project;
     const selectedFeatures = this.attributeTable.selected;
     const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
     const onePartOf100 = 100 / countOfParts;
@@ -479,7 +479,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.showPercent = true;
     this.loadPercent = 0;
 
-    const workspaceName = this.projectModel.crgProject.workspaceName;
+    const { workspaceName } = this.project;
     const selectedFeatures = this.attributeTable.selected;
     const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
     const onePartOf100 = 100 / countOfParts;

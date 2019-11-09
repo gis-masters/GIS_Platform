@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { MaterialModule } from '../../material.module';
 import { LoadingModule } from '../loading/loading.module';
@@ -28,7 +29,8 @@ import { ProjectCardTypeReadyComponent } from './_type/project-card_type_ready.c
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    LoadingModule
+    LoadingModule,
+    RouterModule
   ]
 })
 export class ProjectCardModule { }

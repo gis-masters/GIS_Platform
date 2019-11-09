@@ -39,7 +39,14 @@
 
     user-select: none;
     text-align: center;
+    text-decoration: none;
 
     color: white;
+
+    &:hover {
+      text-decoration: none;
+
+      color: white;
+    }
   }
 }

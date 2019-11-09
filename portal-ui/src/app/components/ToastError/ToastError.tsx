@@ -5,6 +5,8 @@ import { observer } from 'mobx-react';
 import { toast, ToastId } from 'react-toastify';
 import nl2br from 'react-nl2br';
 
+import '!style-loader!css-loader!sass-loader!./ToastError.scss';
+
 const cnToastError = cn('ToastError');
 
 interface ToastErrorOpts {

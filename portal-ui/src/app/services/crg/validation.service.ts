@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 
+import { getRoute } from '../services';
 import { HttpQueue } from '../util/HttpQueue';
-import {ValidationWsMsg, WsService} from '../ws.service';
-import {ServerPropertiesService} from '../server-properties.service';
-import {CrgLayer} from '../geoserver/layers.service';
-import {LocalStorageService} from '../local-storage.service';
-import {ProcessStatus} from './models';
-import {ValidationError} from '../util/FeaturePropertyValidators';
+import { ValidationError } from '../util/FeaturePropertyValidators';
+import { ValidationWsMsg, WsService } from '../ws.service';
+import { ServerPropertiesService } from '../server-properties.service';
+import { CrgLayer } from '../geoserver/layers.service';
+import { LocalStorageService } from '../local-storage.service';
+import { ProcessStatus } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class ValidationService {
       layers: layerNames
     };
 
-    const projectId = this.storageService.getProject().crgProject.id;
+    const projectId = getRoute().snapshot.params.projectId;
     const orgId = this.storageService.getOrgId();
     const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
 
@@ -51,7 +52,7 @@ export class ValidationService {
       .set('size', page ? String(size) : '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
-    const projectId = this.storageService.getProject().crgProject.id;
+    const projectId = getRoute().snapshot.params.projectId;
     const orgId = this.storageService.getOrgId();
     const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
 
@@ -72,7 +73,7 @@ export class ValidationService {
       layers: layerNames
     };
 
-    const projectId = this.storageService.getProject().crgProject.id;
+    const projectId = getRoute().snapshot.params.projectId;
     const orgId = this.storageService.getOrgId();
     const organizationsUrl = await this.serverProp.organizationsUrl;
     const url = organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';

@@ -1,5 +1,5 @@
 import {GeoUtil} from './GeoUtil';
-import {ImportTask} from '../geoserver/import/models';
+import {ImportTaskResponse} from '../geoserver/import/models';
 import {FeatureDescription} from '../crg/data-schema.service';
 import {FeatureUtil} from './FeatureUtil';
 
@@ -14,19 +14,19 @@ describe('GeoUtil test', () => {
     const importTask_case1 = {
       tasks: tasks,
       task: undefined
-    } as ImportTask;
+    } as ImportTaskResponse;
 
     const importTasks_case1 = GeoUtil.tasksHandler(importTask_case1);
-    expect(2).toEqual(importTasks_case1.tasks.length);
+    expect(2).toEqual(importTasks_case1.length);
 
     const importTask_case2 = {
       tasks: undefined,
       task: task3
-    } as ImportTask;
+    } as ImportTaskResponse;
 
     const importTasks = GeoUtil.tasksHandler(importTask_case2);
-    expect(1).toEqual(importTasks.tasks.length);
-    expect(3).toEqual(importTasks.tasks[0].id);
+    expect(1).toEqual(importTasks.length);
+    expect(3).toEqual(importTasks[0].id);
   });
 
   it('should convert all url to GatewayAPI Url', () => {
@@ -35,13 +35,14 @@ describe('GeoUtil test', () => {
     const url3 = 'http://one_more_url_withOut_port/any';
     const url4 = 'https://https_url/any';
 
-    expect('http://anyHost:8100/geoserver/rest/imports').toEqual(GeoUtil.replaceUrl(url1, {
-      host: 'anyHost',
-      port: 8100
-    }));
-    expect('http://anyOtherHost:8100/geoserver').toEqual(GeoUtil.replaceUrl(url2, {host: 'anyOtherHost', port: 8100}));
-    expect('http://localhost:8100/any').toEqual(GeoUtil.replaceUrl(url3, {host: 'localhost', port: 8100}));
-    expect('https://192.168.100.100:8100/any').toEqual(GeoUtil.replaceUrl(url4, {host: '192.168.100.100', port: 8100}));
+    expect('http://anyhost:8100/geoserver/rest/imports')
+        .toEqual(GeoUtil.replaceUrl(url1, { host: 'anyhost', port: 8100 }));
+    expect('http://anyotherhost:8100/geoserver')
+        .toEqual(GeoUtil.replaceUrl(url2, { host: 'anyotherhost', port: 8100 }));
+    expect('http://localhost:8100/any')
+        .toEqual(GeoUtil.replaceUrl(url3, { host: 'localhost', port: 8100 }));
+    expect('https://192.168.100.100:8100/any')
+        .toEqual(GeoUtil.replaceUrl(url4, { host: '192.168.100.100', port: 8100 }));
   });
 
   it('should correct mapping geometry between Layer and EntityType', () => {

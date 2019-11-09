@@ -1,9 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { Project, ProjectsService } from '../../../services/crg/projects.service';
+import { cn } from '../../../services/util/cn';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData
@@ -14,13 +13,18 @@ import {
   templateUrl: './project-card_type_ready.component.html',
   styleUrls: ['./project-card_type_ready.component.scss']
 })
-export class ProjectCardTypeReadyComponent {
+export class ProjectCardTypeReadyComponent implements OnInit {
   @Input() project: Project;
 
-  private unsubscribe$: Subject<void> = new Subject<void>();
+  link: string;
+  cn = cn('project-card');
 
   constructor (private dialog: MatDialog,
               private projectsService: ProjectsService) {}
+
+  ngOnInit () {
+    this.link = this.projectsService.getProjectUrl(this.project);
+  }
 
   openProject() {
     this.projectsService.openProject(this.project);
@@ -34,11 +38,10 @@ export class ProjectCardTypeReadyComponent {
 
     this.dialog
         .open(ConfirmDialogComponent, {width: '400px', data: data})
-        .afterClosed().subscribe(result => {
+        .afterClosed()
+        .subscribe(result => {
           if (result) {
-            this.projectsService.delete(this.project.id)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(() => this.projectsService.fetchProjects());
+            this.projectsService.delete(this.project.id);
           }
         });
   }

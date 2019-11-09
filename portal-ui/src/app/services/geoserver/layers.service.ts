@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { filter, flatMap, map, publishReplay, refCount, tap } from 'rxjs/operators';
 
-import {NameHrefProjection} from './projections';
-import {Project} from '../crg/projects.service';
-import {DataSchemaService} from '../crg/data-schema.service';
-import {ServerPropertiesService} from '../server-properties.service';
-import {LayerGroupService} from "./layer-group.service";
+import { NameHrefProjection } from './projections';
+import { Project } from '../crg/projects.service';
 import { getEnvironment, Environment } from '../environment';
+import { DataSchemaService } from '../crg/data-schema.service';
+import { ServerPropertiesService } from '../server-properties.service';
+import { LayerGroupService } from "./layer-group.service";
+import { HttpQueue } from '../util/HttpQueue';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class LayersService {
     );
 
   constructor(private http: HttpClient,
+              private httpq: HttpQueue,
               private ruleService: DataSchemaService,
               private layerGroupService: LayerGroupService,
               private serverProp: ServerPropertiesService) {
@@ -49,7 +51,7 @@ export class LayersService {
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
         flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
         map(([layers, layersDescription]) => this.mergeWithRules(layers)),
-        flatMap((layers: CrgLayer[]) => this.addLayerGroups(layers)),
+        flatMap((layers: CrgLayer[]) => this.addLayerGroups(layers, project)),
         tap((result) => {
           this._layers$.next(result);
         })
@@ -70,8 +72,8 @@ export class LayersService {
                );
   }
 
-  deleteLayer(layer: CrgLayer) {
-    return this.http.delete(this.layersUrl + '/' + layer.name);
+  deleteLayer(layer: CrgLayer): Promise<Object> {
+    return this.httpq.delete(this.layersUrl + '/' + layer.name);
   }
 
   /**
@@ -136,27 +138,24 @@ export class LayersService {
     });
   }
 
-  private addLayerGroups(layers: CrgLayer[]): Observable<CrgLayer[]> {
-    return this.layerGroupService.fetchLayerGroups()
-      .pipe(
-        map((layerGroups: NameHrefProjection[]) => {
-          if (!layerGroups) {
-            return layers;
-          }
+  private async addLayerGroups(layers: CrgLayer[], project: Project): Promise<CrgLayer[]> {
+    const layerGroups = await this.layerGroupService.fetchLayerGroups(project);
 
-          layerGroups.forEach((layerGroup: NameHrefProjection) => {
-            let rightPart = layerGroup.href.split('workspaces/')[1];
-            layers.push({
-              title: layerGroup.name,
-              name: layerGroup.name,
-              complexName: rightPart.split('/')[0] + ':' + layerGroup.name,
-              href: ''
-            });
-          });
+    if (!layerGroups) {
+      return layers;
+    }
 
-          return layers;
-        })
-      );
+    layerGroups.forEach((layerGroup: NameHrefProjection) => {
+      const rightPart = layerGroup.href.split('workspaces/')[1];
+      layers.push({
+        title: layerGroup.name,
+        name: layerGroup.name,
+        complexName: rightPart.split('/')[0] + ':' + layerGroup.name,
+        href: ''
+      });
+    });
+
+    return layers;
   }
 }
 

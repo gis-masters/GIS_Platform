@@ -1,34 +1,32 @@
 import {NameHrefProjection} from '../projections';
 
-export interface InputStartResponseDto {
-  import: {
-    id: number,
-    href: string,
-    state: string,
-    archive: boolean,
-    targetWorkspace: {
-      workspace: {
-        name: string,
-        isolated: boolean
-      }
-    },
-    targetStore: {
-      dataStore: {
-        name: string,
-        type: string
-      }
-    },
-    tasks: ImportTaskShort[];
+export interface ScratchImport {
+  id: number;
+  href: string;
+  state: string;
+  archive: boolean;
+  targetWorkspace: {
+    workspace: {
+      name: string,
+      isolated: boolean
+    }
   };
-}
-
-export interface ImportTask {
-  tasks?: ImportTaskShort[];
-  task?: ImportTaskShort;
-}
-
-export interface ImportTasks {
+  targetStore: {
+    dataStore: {
+      name: string,
+      type: string
+    }
+  };
   tasks: ImportTaskShort[];
+}
+
+export interface InputStartResponseDto {
+  import: ScratchImport;
+}
+
+export interface ImportTaskResponse {
+  tasks?: ImportTaskFull[];
+  task?: ImportTaskFull;
 }
 
 export interface ImportTaskShort {
@@ -37,12 +35,14 @@ export interface ImportTaskShort {
   state: string;
 }
 
-export interface ImportTaskFull {
-  id: number;
-  href: string;
-  state: string;
+export interface ImportTaskFull extends ImportTaskShort {
   layer: NameHrefProjection;
   progress: string;
+}
+
+export interface ImportTask extends ImportTaskShort {
+  layer?: NameHrefProjection;
+  progress?: string;
 }
 
 export interface ImportTaskProgress {

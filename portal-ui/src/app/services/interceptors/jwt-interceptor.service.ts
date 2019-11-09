@@ -23,6 +23,7 @@ export class JwtInterceptorService implements HttpInterceptor {
       flatMap((environment: Environment) => {
         if (this.authService.authenticated) {
           const accessToken = this.tokenStorage.getAccessToken();
+
           if (!accessToken) {
             this.logger.warn('user authenticated but token empty!', accessToken);
           }
@@ -40,7 +41,7 @@ export class JwtInterceptorService implements HttpInterceptor {
             if (errorResponse.status === 401) {
               const refreshToken = this.tokenStorage.getRefreshToken();
               if (refreshToken) {
-                // TODO: попробывать получить аксесс токен по refreshToken (вместо логаута)
+                // TODO: попробовать получить аксесс токен по refreshToken (вместо логаута)
                 this.authService.logout();
               } else {
                 this.authService.logout();

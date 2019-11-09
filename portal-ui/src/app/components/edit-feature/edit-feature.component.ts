@@ -148,7 +148,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  editFeature() {
+  async editFeature() {
     if (this.editFeatureForm.pristine) {
       return;
     }
@@ -159,12 +159,12 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
 
     if (this.data && this.data.feature && this.data.feature.properties) {
-      const newProperties = {};
+      const newProperties: {[key:string]: string} = {};
       dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
         newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
       });
 
-      const workspaceName = this.projectsService.getCurrent().crgProject.workspaceName;
+      const { workspaceName } = await this.projectsService.getCurrent();
 
       if (this.data.mode === EditFeatureMode.single) {
         this.batchUpdateFeatures([this.data.feature.id], workspaceName, this.featureDescription.tableName, newProperties);

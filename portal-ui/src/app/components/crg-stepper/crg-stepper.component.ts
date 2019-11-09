@@ -1,5 +1,5 @@
 import {Subject} from 'rxjs';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy} from '@angular/core';
 import {ProjectsService} from '../../services/crg/projects.service';
@@ -19,6 +19,7 @@ export class CrgStepperComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private router: Router,
+              private route: ActivatedRoute,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
               private projectService: ProjectsService) {
@@ -35,26 +36,27 @@ export class CrgStepperComponent implements OnDestroy {
   }
 
   doAction(selectedStep: number) {
+    const { projectId } = this.route.snapshot.params;
+
     if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
       if (selectedStep === 1) {
         this.projectService.changeProject();
 
-        this.router.navigate(['/workspace/projects']);
+        this.router.navigate(['/projects']);
         this.sideBarManager.closeAll();
       }
       if (selectedStep === 2) {
-        this.router.navigate(['/workspace/data_import']);
+        this.router.navigate([`/project/${projectId}/import`]);
         this.sideBarManager.closeAll();
       }
       if (selectedStep === 3) {
-        this.router.navigate(['/workspace/map']);
+        this.router.navigate([`/project/${projectId}/map`]);
         this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
       }
       if (selectedStep === 4) {
-        this.router.navigate(['/workspace/map']);
+        this.router.navigate([`/project/${projectId}/map`]);
         this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
       }
     }
   }
-
 }

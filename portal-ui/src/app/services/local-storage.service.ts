@@ -1,17 +1,15 @@
-import {Injectable} from '@angular/core';
-import {StorageKeys} from './storage-keys';
-import {LogModel} from './logger/fiz.logger';
-import {UserInfoModel} from './crg/users.service';
-import {ProjectModel} from './geoserver/import/projectModel';
+import { Injectable } from '@angular/core';
+
+import { StorageKeys } from './storage-keys';
+import { LogModel } from './logger/fiz.logger';
+import { UserInfoModel } from './crg/users.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
 
-  constructor() {
-
-  }
+  constructor() { }
 
   cleanUp() {
     window.localStorage.clear();
@@ -29,16 +27,12 @@ export class LocalStorageService {
     return localStorage.removeItem(key);
   }
 
-  getProject(): ProjectModel {
-    return JSON.parse(this.getByKey(StorageKeys.projectKey)) as ProjectModel;
-  }
-
   clearProject(): void {
     this.clearByKey(StorageKeys.projectKey);
   }
 
   getOrgId(): number | undefined {
-    if (this.getUserInfo().orgId) {
+    if (this.getUserInfo() && this.getUserInfo().orgId) {
       return this.getUserInfo().orgId;
     } else {
       console.warn('Не удалось получить orgId');

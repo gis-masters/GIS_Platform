@@ -1,18 +1,18 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
+
 import {LoginPageComponent} from './pages/login/login-page.component';
 import {AboutComponent} from './pages/about/about.component';
-import {AuthGuardService} from './services/auth-guard.service';
-import {MapPageComponent} from './pages/work-space/map-page/map-page.component';
+import {MapPageComponent} from './pages/map/map-page.component';
 import {HomePageComponent} from './pages/home/home-page.component';
 import {RegisterComponent} from './pages/register/register.component';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
-import {WorkflowGuardService} from './services/workflow-guard.service';
-import {ProjectsListPageComponent} from './pages/work-space/projects-list/projects-list-page.component';
-import {WorkspaceComponent} from './pages/work-space/workspace/workspace.component';
-import {DataImportPageComponent} from './pages/work-space/data-import-page/data-import-page.component';
-import {DataMappingComponent} from './pages/work-space/data-mapping/data-mapping.component';
+import {ProjectsPageComponent} from './pages/projects/projects-page.component';
+import {ImportPageComponent} from './pages/import/import-page.component';
+import {MappingPageComponent} from './pages/mapping/mapping-page.component';
 
+import {AuthGuardService} from './services/auth-guard.service';
+import {WorkflowGuardService} from './services/workflow-guard.service';
 import {OrganizationInfoResolver} from './services/resolvers/project-resolver.service';
 
 const routes: Routes = [
@@ -22,20 +22,53 @@ const routes: Routes = [
   {path: 'recovery', component: RecoveryComponent},
   {path: 'about', component: AboutComponent},
   {
-    path: 'workspace',
-    component: WorkspaceComponent,
+    path: 'projects',
+    component: ProjectsPageComponent,
+    canActivate: [ AuthGuardService ],
     resolve: {
       orgInfo: OrganizationInfoResolver
-    },
+    }
+  },
+  {
+    path: 'project/:projectId',
+    canActivate: [ AuthGuardService, WorkflowGuardService ],
     children: [
-      {path: '', redirectTo: 'projects', pathMatch: 'full'},
-      {path: 'projects', component: ProjectsListPageComponent},
-      {path: 'data_import', component: DataImportPageComponent, canActivate: [WorkflowGuardService]},
-      {path: 'data_mapping', component: DataMappingComponent},
-      {path: 'map', component: MapPageComponent, canActivate: [WorkflowGuardService]},
-      {path: '**', redirectTo: 'map'},
-    ],
-    canActivate: [AuthGuardService]
+      {
+        path: 'import',
+        component: ImportPageComponent,
+        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        resolve: {
+          orgInfo: OrganizationInfoResolver
+        }
+      },
+      {
+        path: 'import/:importId',
+        component: ImportPageComponent,
+        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        resolve: {
+          orgInfo: OrganizationInfoResolver
+        }
+      },
+      {
+        path: 'import/:importId/mapping',
+        component: MappingPageComponent,
+        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        resolve: {
+          orgInfo: OrganizationInfoResolver
+        }
+      },
+      {
+        path: 'map',
+        component: MapPageComponent,
+        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        resolve: {
+          orgInfo: OrganizationInfoResolver
+        }
+      },
+      {
+        path: '**', redirectTo: '../projects'
+      }
+    ]
   },
   {path: '**', redirectTo: ''}
 ];
@@ -45,19 +78,16 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [AuthGuardService, WorkflowGuardService]
 })
-
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }
 
 export const routingComponents = [
+  HomePageComponent,
   MapPageComponent,
   LoginPageComponent,
   AboutComponent,
-  HomePageComponent,
   RegisterComponent,
   RecoveryComponent,
-  WorkspaceComponent,
-  DataImportPageComponent,
-  DataMappingComponent,
-  ProjectsListPageComponent
+  ImportPageComponent,
+  MappingPageComponent,
+  ProjectsPageComponent
 ];

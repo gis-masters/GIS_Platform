@@ -12,8 +12,6 @@ import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
-//import 'react-toastify/dist/ReactToastify.css';
-
 import { getEnvironment } from '../../services/environment';
 import { ToastError } from '../../components/ToastError/ToastError';
 
@@ -22,8 +20,7 @@ import { ToastError } from '../../components/ToastError/ToastError';
   templateUrl: './app.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    '../../../../node_modules/react-toastify/dist/ReactToastify.css',
-    '../../components/ToastError/ToastError.scss'
+    '../../../../node_modules/react-toastify/dist/ReactToastify.css'
   ]
 
 })

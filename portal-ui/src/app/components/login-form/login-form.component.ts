@@ -55,7 +55,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
             this.tokenStorage.saveAuthModel(authModel);
             this.tokenStorage.saveAccessToken(authModel.access_token);
             this.tokenStorage.saveRefreshToken(authModel.refresh_token);
-            this.router.navigateByUrl('/workspace/projects');
+            this.router.navigateByUrl('/projects');
           },
           response => {
             this.authService.authenticated = false;

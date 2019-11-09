@@ -1,9 +1,10 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ImportLayerItem, ImportTasks, InputStartResponseDto, LayerAttribute} from './models';
+
+import {ImportLayerItem, LayerAttribute} from './models';
+import { Project } from '../../crg/projects.service';
 import {MatchingPair, TaskImport} from './taskImport';
 import {DataSchemaService, PropertySchema} from '../../crg/data-schema.service';
 import {AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../crg/models';
-import {ProjectModel} from './projectModel';
 import {PropertiesComparatorService} from '../../properties-comparator.service';
 import {FeatureUtil} from '../../util/FeatureUtil';
 
@@ -28,25 +29,18 @@ export interface ComparableLayersPair {
   providedIn: 'root'
 })
 export class ImportDataHolderService {
-
   metrics$ = new EventEmitter<InputDataMetrics>();
   comparableLayers$ = new EventEmitter<ComparableLayersPair[]>();
 
-  projectModel: ProjectModel;
+  project: Project;
 
-  private _scratch_import: InputStartResponseDto;
   private _comparableLayers: ComparableLayersPair[] = [];
-  private _file: File;
 
   constructor(private dataSchemaService: DataSchemaService,
               private propertyComparator: PropertiesComparatorService) {
     this.comparableLayers$.subscribe((comparableLayersPairs: ComparableLayersPair[]) => {
       this.updateMetrics(comparableLayersPairs);
     });
-  }
-
-  addScratchTasks(tasks: ImportTasks) {
-    this._scratch_import.import.tasks = [...tasks.tasks];
   }
 
   getWorkTasks() {
@@ -92,10 +86,6 @@ export class ImportDataHolderService {
     }
 
     this.comparableLayers$.emit(this._comparableLayers);
-  }
-
-  getScratchTasks() {
-    return this._scratch_import.import.tasks;
   }
 
   /**
@@ -181,16 +171,11 @@ export class ImportDataHolderService {
 
   clear() {
     this._comparableLayers = [];
-    this._file = undefined;
-    this._scratch_import = undefined;
-
     this.comparableLayers$.emit(this._comparableLayers);
     this.updateMetrics(this._comparableLayers);
   }
 
   private addAttributeMapping(layerNativeName: string, source: LayerAttribute, targetProperty: PropertySchema) {
-    console.log('addAttributeMapping');
-
     if (targetProperty.name === NOT_IMPORT.name) {
       return;
     }
@@ -249,21 +234,5 @@ export class ImportDataHolderService {
 
   get isWorkImportReady(): boolean {
     return this._comparableLayers.filter(value => !value.isMapped && !value.isDisabled).length <= 0;
-  }
-
-  get file(): File {
-    return this._file;
-  }
-
-  set file(value: File) {
-    this._file = value;
-  }
-
-  get scratch_import(): InputStartResponseDto {
-    return this._scratch_import;
-  }
-
-  set scratch_import(value: InputStartResponseDto) {
-    this._scratch_import = value;
   }
 }

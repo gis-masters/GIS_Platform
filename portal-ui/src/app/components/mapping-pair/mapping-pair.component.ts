@@ -1,4 +1,3 @@
-import {NGXLogger} from 'ngx-logger';
 import {GeoUtil} from '../../services/util/GeoUtil';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {PropertySchema} from '../../services/crg/data-schema.service';
@@ -23,8 +22,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   columnForm: FormGroup;
   selectedProperty: PropertySchema;
 
-  constructor(private logger: NGXLogger,
-              private importData: ImportDataHolderService,
+  constructor(private importData: ImportDataHolderService,
               private crgComparator: PropertiesComparatorService,
               private formBuilder: FormBuilder) {
   }
