@@ -47,8 +47,8 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.dataSchemaService.getFeaturesDefinition()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
-          if (featureXsdDefinition.xsdFeatures) {
-            this.allFeatureDescriptions = featureXsdDefinition.xsdFeatures;
+          if (featureXsdDefinition.schemas) {
+            this.allFeatureDescriptions = featureXsdDefinition.schemas;
           } else {
             this.logger.warn('Empty definition? ', featureXsdDefinition);
           }
@@ -62,24 +62,28 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
         const newLayer = simpleChange.currentValue as ImportLayerItem;
 
         this.selectedFeatureType = undefined;
-        let workTableName;
 
-        this.featureDescriptions = [
-          NOT_IMPORT_LAYER,
-          IMPORT_LAYER_AS_IS,
-          ...FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer)
-        ];
+        let filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer);
+        let sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
+
+        this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
 
         const comparableLayersPair = this.importData.findCompatiblePair(newLayer.nativeName);
         if (comparableLayersPair.isDisabled) {
           this.selectedFeatureType = NOT_IMPORT_LAYER.name;
+        } else if (comparableLayersPair.targetLayer.schemaName === IMPORT_LAYER_AS_IS.tableName) {
+          this.selectedFeatureType = IMPORT_LAYER_AS_IS.name;
         } else {
-          workTableName = comparableLayersPair.targetLayer.workTableName;
-          if (workTableName) {
-            const featureDescription = this.findDescription(workTableName);
-            this.selectedFeatureType = featureDescription.name;
+          let schemaName = comparableLayersPair.targetLayer.schemaName;
+          if (schemaName) {
+            const featureDescription = this.findDescription(schemaName);
+            if (featureDescription) {
+              this.selectedFeatureType = featureDescription.name;
 
-            this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+              this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+            } else {
+              this.logger.warn('Not found schema:', schemaName);
+            }
           }
         }
       }
@@ -108,4 +112,11 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   findDescription(tableName: string): FeatureDescription {
     return this.allFeatureDescriptions.find((type: FeatureDescription) => type.tableName === tableName);
   }
+
+  openAttributes() {
+    return !!this.selectedFeatureType &&
+             this.selectedFeatureType !== 'NOT_IMPORT_LAYER' &&
+             this.selectedFeatureType !== 'IMPORT_LAYER_AS_IS';
+  }
+
 }

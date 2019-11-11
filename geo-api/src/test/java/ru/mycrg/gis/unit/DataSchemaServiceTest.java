@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class FgistpRuleServiceTest {
+public class DataSchemaServiceTest {
 
     @InjectMocks
     private DataSchemaService dataSchemaService;
@@ -37,14 +37,6 @@ public class FgistpRuleServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test(expected = CrgNotFoundException.class)
-    public void shouldThrowException() {
-        when(dataSchemaRepository.findAll()).thenReturn(new ArrayList<>());
-        when(customFeatureDefinitionRepository.findAll()).thenReturn(new ArrayList<>());
-
-        dataSchemaService.getDescriptionByName("someFeatureName");
     }
 
     @Test

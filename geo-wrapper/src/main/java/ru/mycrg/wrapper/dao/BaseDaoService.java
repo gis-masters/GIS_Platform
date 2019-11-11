@@ -178,10 +178,10 @@ public class BaseDaoService {
         log.debug("Try delete: {}", target.toString());
 
         jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                target.getSchemaName(), target.getTableName()));
+                target.getSchemaName(), target.getTableName().toLowerCase()));
 
         jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                target.getSchemaName(), target.getTableName() + EXTENSION_POSTFIX));
+                target.getSchemaName(), target.getTableName().toLowerCase() + EXTENSION_POSTFIX));
     }
 
     /**
@@ -266,7 +266,11 @@ public class BaseDaoService {
                 sName = matchingPair.getSource().getName();
             }
 
-            targetColumns.append(tName).append(", ");
+            if ("the_geom".equals(tName)) {
+                targetColumns.append("shape, ");
+            } else {
+                targetColumns.append(tName).append(", ");
+            }
 
             if ("length".equals(sName.toLowerCase())) {
                 sourceColumns.append("st_length(the_geom), ");

@@ -23,7 +23,7 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="!!selectedFeatureType && selectedFeatureType !== 'NOT_IMPORT_LAYER'">
+  <div *ngIf="openAttributes()">
     <div class="row" style="text-align: center">
       <div class="col-12">
         <h3 class="mat-h2 m-0">Сопоставьте атрибуты</h3>

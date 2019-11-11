@@ -19,7 +19,6 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {LoginFormModule} from './components/login-form/login-form.module';
 import {LoadingModule} from './components/loading/loading.module';
 
-import {GeometryPipe} from './pipes/geometry.pipe';
 import {FilterLayersPipe} from './pipes/filter-layers.pipe';
 
 import {AppComponent} from './pages/_app/app.component';
@@ -47,7 +46,6 @@ import {EditFeatureComponent} from './components/edit-feature/edit-feature.compo
 import {AttributesBarComponent} from './components/attributes-bar/attributes-bar.component';
 import {TableFilterComponent} from './components/table-filter/table-filter.component';
 import {CopyFeaturesDialogComponent} from './components/dialogs/copy-features-dialog/copy-features-dialog.component';
-import {BestMatchingPipe} from './pipes/best-matching.pipe';
 import {ButtonComponent} from './components/button/button.component';
 import {ResizableBarDirective} from './directives/resizableBar.directive';
 import {PageTitleComponent} from './components/page-title/page-title.component';
@@ -74,7 +72,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     MappingCardComponent,
     LayerListItemComponent,
     MappingPairComponent,
-    GeometryPipe,
     BugsTableComponent,
     ReportSidebarComponent,
     ViolationsViewComponent,
@@ -94,7 +91,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     AttributesBarComponent,
     TableFilterComponent,
     CopyFeaturesDialogComponent,
-    BestMatchingPipe,
     ButtonComponent,
     ResizableBarDirective,
     PageTitleComponent,

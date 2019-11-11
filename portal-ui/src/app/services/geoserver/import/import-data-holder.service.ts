@@ -65,6 +65,7 @@ export class ImportDataHolderService {
     // Layer mapping
     if (featureDescription) {
       taskImport.workTableName = featureDescription.tableName;
+      taskImport.schemaName = featureDescription.name;
     }
 
     this._comparableLayers.push({
@@ -128,6 +129,7 @@ export class ImportDataHolderService {
     layerPair.isDisabled = true;
     layerPair.targetLayer.workTableName = NOT_IMPORT_LAYER.name;
     layerPair.targetLayer.pairs = [];
+    layerPair.targetLayer.schemaName = NOT_IMPORT_LAYER.name;
 
     this.comparableLayers$.emit(this._comparableLayers);
   }
@@ -139,8 +141,9 @@ export class ImportDataHolderService {
    */
   setFeatureSchema(layerNativeName: string, featureSchemaName: string) {
     const layerPair = this.findCompatiblePair(layerNativeName);
-    layerPair.targetLayer.workTableName = featureSchemaName;
+    layerPair.targetLayer.workTableName = layerNativeName;
     layerPair.targetLayer.pairs = [];
+    layerPair.targetLayer.schemaName = featureSchemaName;
     layerPair.isDisabled = false;
 
     // Attributes mapping

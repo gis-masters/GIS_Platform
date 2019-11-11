@@ -223,9 +223,14 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    return this.dataSchemaService
-               .getFeatureDescriptionByName(this.layer.name).properties
-               .find((property: PropertySchema) => property.name.toLowerCase() === name.toLowerCase());
+    let featureDescription = this.dataSchemaService.getFeatureDescriptionByName(this.layer.name);
+    if (featureDescription) {
+      return featureDescription
+                .properties
+                .find((property: PropertySchema) => property.name.toLowerCase() === name.toLowerCase());
+    } else {
+      return undefined;
+    }
   }
 
   closeMe() {

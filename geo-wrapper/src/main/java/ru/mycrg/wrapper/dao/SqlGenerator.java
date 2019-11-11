@@ -1,19 +1,18 @@
 package ru.mycrg.wrapper.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.enums.ValueType;
 import ru.mycrg.common.import_.ImportMqTask;
-import ru.mycrg.common.import_.MatchingPair;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import static ru.mycrg.wrapper.dao.DaoProperties.*;
+import static ru.mycrg.wrapper.dao.DaoProperties.AS_IS;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 
 public class SqlGenerator {
 
@@ -24,7 +23,7 @@ public class SqlGenerator {
 
         item.forEach((key, value) -> {
             if (!PRIMARY_KEY.equals(key)) {
-                if (value.equals(DaoProperties.NULL_MARKER)) {
+                if (DaoProperties.NULL_MARKER.equals(value)) {
                     sql[0] = sql[0] + key + "=NULL, ";
                 } else {
                     sql[0] = sql[0] + key + "='" + value + "', ";
@@ -35,9 +34,16 @@ public class SqlGenerator {
         return sql[0].substring(0, sql[0].length() - 2) + " WHERE objectid=" + item.get(PRIMARY_KEY);
     }
 
-    public static String prepareCreateTableRequest(ImportMqTask importTask) {
-        String targetSchema = importTask.getTargetResource().getSchemaName();
-        String targetTable = importTask.getTargetResource().getTableName();
+    @NotNull
+    public static String prepareCreateTableRequest(@NotNull ImportMqTask importTask) {
+        FeatureDescriptionDto featureDescription = importTask.getFeatureDescription();
+        assert featureDescription != null;
+
+        ResourceProjection targetResource = importTask.getTargetResource();
+        assert targetResource != null;
+
+        String targetSchema = targetResource.getSchemaName();
+        String targetTable = targetResource.getTableName();
         Integer srsCode = importTask.getSrs();
         String target = targetSchema + "." + targetTable;
 
@@ -49,105 +55,56 @@ public class SqlGenerator {
                 .append(PRIMARY_KEY)
                 .append(" integer NOT NULL");
 
-        importTask
-                .getPairs()
-                .forEach(mPair -> addAttribute(mPair, createTableSql, importTask.getFeatureDescription()));
-
-        if (isGeometryExist(importTask.getFeatureDescription().getProperties())) {
+        // Атрибуты по схеме
+        featureDescription.getProperties().forEach(propertyDto -> {
             createTableSql
                     .append(", ")
-                    .append("shape public.geometry, ")
-                    .append("CONSTRAINT ")
-                    .append(targetTable)
-                    .append("_pkey PRIMARY KEY (")
-                    .append(PRIMARY_KEY)
-                    .append("), ")
-                    .append("CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = ")
-                    .append(srsCode)
-                    .append(")));");
-        } else {
+                    .append(generatePropertySqlString(propertyDto));
+        });
+
+        // Атрибуты "AsIs"
+        importTask
+                .getPairs().stream()
+                .filter(mPair -> AS_IS.equals(mPair.getTarget().getType()))
+                .filter(mPair -> !PRIMARY_KEY.equals(mPair.getTarget().getName().toLowerCase()))
+                .filter(mPair -> isNotExistInSchema(featureDescription.getProperties(), mPair.getTarget().getName()))
+                .forEach(mPair -> {
+                    if ("the_geom".equals(mPair.getSource().getName().toLowerCase())) {
+                        createTableSql.append(", shape public.geometry");
+                    } else {
+                        createTableSql
+                                .append(", ")
+                                .append(mPair.getSource().getName())
+                                .append(" ")
+                                .append(defineSourceAttributeType(mPair.getSource().getBinding()));
+                    }
+                });
+
+        // Add PRIMARY_KEY CONSTRAINT
+        createTableSql
+                .append(");")
+                .append(" ALTER TABLE ONLY ")
+                .append(target)
+                .append(" ADD CONSTRAINT ")
+                .append(targetTable)
+                .append("_pkey PRIMARY KEY (")
+                .append(PRIMARY_KEY)
+                .append(");");
+
+        // Add GEOMETRY CONSTRAINT
+        if (isGeometryExist(createTableSql)) {
             createTableSql
-                    .append("); ")
-                    .append("ALTER TABLE ONLY ")
+                    .append(" ALTER TABLE ONLY ")
                     .append(target)
-                    .append(" ADD CONSTRAINT ")
-                    .append(targetTable)
-                    .append("_pkey PRIMARY KEY (objectid);");
+                    .append(" ADD CONSTRAINT enforce_srid_shape CHECK ((public.st_srid(shape) = ")
+                    .append(srsCode)
+                    .append("));");
         }
 
         return createTableSql.toString();
     }
 
-    private static boolean isGeometryExist(List<SimplePropertyDto> properties) {
-        return properties.stream()
-                .anyMatch(propertyDto -> propertyDto.getValueType().equals(ValueType.GEOMETRY));
-    }
-
-    private static void addAttribute(MatchingPair matchingPair,
-                                     StringBuilder createTableSql,
-                                     FeatureDescriptionDto featureDescription) {
-        String targetName = matchingPair.getTarget().getName();
-        Optional<SimplePropertyDto> byName = featureDescription.getProperties().stream()
-                .filter(propertyDto -> propertyDto.getName().equals(targetName))
-                .findFirst();
-
-        if (byName.isPresent()) {
-            if (byName.get().getValueType().equals(ValueType.GEOMETRY)) {
-                return;
-            }
-        }
-
-        switch (matchingPair.getTarget().getType()) {
-            case AS_IS:
-                createTableSql
-                        .append(", ")
-                        .append(matchingPair.getSource().getName())
-                        .append(" ")
-                        .append(defineSourceAttributeType(matchingPair.getSource().getBinding()));
-                break;
-
-            case FromSchema:
-                if (byName.isPresent()) {
-                    createTableSql
-                            .append(", ")
-                            .append(targetName.toLowerCase())
-                            .append(" ")
-                            .append(defineTargetAttributeType(byName.get(), targetName));
-                } else {
-                    log.warn("Attribute '{}' not found in schema", targetName);
-                }
-
-                break;
-            default:
-                log.warn("Not supported target type: {}", matchingPair.getTarget().getType());
-        }
-    }
-
-    private static String defineTargetAttributeType(SimplePropertyDto attrDescription, String targetAttrName) {
-        switch (attrDescription.getValueType()) {
-            case INT:
-            case CHOICE:
-                return "integer";
-            case STRING:
-                Integer maxLength = attrDescription.getMaxLength();
-                if (maxLength == -1) {
-                    maxLength = 255;
-                }
-
-                return "character varying(" + maxLength + ")";
-            case DOUBLE:
-                return "numeric(38,8)";
-            case GEOMETRY:
-                // Геометрию тут игнорим (обрабатывается в конце)
-                break;
-            default:
-                log.warn("Not supported attribute type: {}", attrDescription.getValueType());
-        }
-
-        return "";
-    }
-
-    public static String getExtensionTableRequest(String targetSchema, String extensionTable) {
+    static String getExtensionTableRequest(String targetSchema, String extensionTable) {
         return "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
                 "   object_id integer NOT NULL, " +
                 "   violations jsonb, " +
@@ -158,7 +115,7 @@ public class SqlGenerator {
                 "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
     }
 
-    public static String getSequenceRequest(String target) {
+    static String getSequenceRequest(String target) {
         return "CREATE SEQUENCE " + target + "_objectid_seq" +
                 "    AS integer " +
                 "    START WITH 1 " +
@@ -166,6 +123,39 @@ public class SqlGenerator {
                 "    NO MINVALUE " +
                 "    NO MAXVALUE " +
                 "    CACHE 1; ";
+    }
+
+    private static boolean isNotExistInSchema(@NotNull List<SimplePropertyDto> properties, String attrName) {
+        return properties.stream()
+                .noneMatch(propertyDto -> propertyDto.getName().toLowerCase().equals(attrName.toLowerCase()));
+    }
+
+    private static boolean isGeometryExist(StringBuilder createTableSql) {
+        return createTableSql.toString().contains("shape public.geometry");
+    }
+
+    @NotNull
+    private static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
+        switch (attrDescription.getValueType()) {
+            case INT:
+            case CHOICE:
+                return attrDescription.getName() + " integer";
+            case STRING:
+                Integer maxLength = attrDescription.getMaxLength();
+                if (maxLength == -1) {
+                    maxLength = 255;
+                }
+
+                return attrDescription.getName() + " character varying(" + maxLength + ")";
+            case DOUBLE:
+                return attrDescription.getName() + " numeric(38,8)";
+            case GEOMETRY:
+                return "shape public.geometry";
+            default:
+                log.warn("Not supported attribute type: {}", attrDescription.getValueType());
+        }
+
+        return "";
     }
 
     private static String defineSourceAttributeType(String binding) {

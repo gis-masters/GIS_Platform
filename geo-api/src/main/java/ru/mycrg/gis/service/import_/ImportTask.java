@@ -13,6 +13,7 @@ public class ImportTask {
     private String workTableName;
     private List<MatchingPair> pairs;
     private Integer srs;
+    private String schemaName;
 
     public ImportTask() {}
 
@@ -52,5 +53,13 @@ public class ImportTask {
 
     public void setSrs(Integer srs) {
         this.srs = srs;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
     }
 }

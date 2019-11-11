@@ -66,9 +66,8 @@ public class DataSchemaService implements IDataSchemaHolder {
      *
      * @param featureName Название фичи(Слоя)
      * @return Описание фичи {@link ru.mycrg.common.FeatureDescriptionDto}
-     * @throws CrgNotFoundException 404 если не нашли название фичи.
      */
-    public FeatureDescriptionDto getDescriptionByName(String featureName) throws CrgNotFoundException {
+    public Optional<FeatureDescriptionDto> getDescriptionByName(String featureName) throws CrgNotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
             cacheSchema();
         }
@@ -80,10 +79,10 @@ public class DataSchemaService implements IDataSchemaHolder {
                     .findDefinitionByClassName(featureDescription.getName())
                     .ifPresent(customRule -> featureDescription.setCustomRuleFunction(customRule.getClassRule()));
 
-            return MapperUtil.mapFeatureDescriptionToDto(featureDescription);
-        } else {
-            throw new CrgNotFoundException("Не найден слой: " + featureName);
+            return Optional.of(MapperUtil.mapFeatureDescriptionToDto(featureDescription));
         }
+
+        return Optional.empty();
     }
 
     @Override

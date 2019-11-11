@@ -3,6 +3,7 @@ import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
 import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
 import {ImportLayerItem, LayerAttribute} from '../geoserver/import/models';
 import {AS_IS, NOT_IMPORT} from '../crg/models';
+import * as _ from "lodash";
 
 export class FeatureUtil {
 
@@ -49,6 +50,14 @@ export class FeatureUtil {
     });
   }
 
+  static sortByBestCompatibility(fDescription: FeatureDescription[], layer?: ImportLayerItem): FeatureDescription[] {
+    fDescription.forEach((fDescription: FeatureDescription) => {
+      this.calculateAttributeCompatibility(layer, fDescription);
+    });
+
+    return _.sortBy(fDescription, ['matchingCounter']);
+  }
+
   static preparePropertySchema(targetFeatureType: FeatureDescription): PropertySchema[] {
     const propertySchemas: PropertySchema[] = [
       {name: NOT_IMPORT.name, title: NOT_IMPORT.title},
@@ -87,4 +96,25 @@ export class FeatureUtil {
       this.collectAll(geometryItem, allowedGeometry, name);
     });
   }
+
+  /**
+   * Подбор наиболее совместимого слоя по кол-ву совпадающих названий атрибутов.
+   * Для удобства пользования сортировкой, меньшее значение - лучше.
+   * @param feature       Импортированный нам слой
+   * @param fDescription  Описание фичи
+   */
+  private static calculateAttributeCompatibility(feature: ImportLayerItem, fDescription: FeatureDescription) {
+    let counter = 0;
+    feature.attributes.forEach(sourceAttribute => {
+      fDescription.properties.forEach(attribute => {
+        if (sourceAttribute.name.toLowerCase() === attribute.name.toLowerCase()) {
+          counter--;
+          return;
+        }
+      });
+    });
+
+    fDescription.matchingCounter = counter;
+  }
+
 }

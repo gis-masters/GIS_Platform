@@ -19,6 +19,7 @@ import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Optional;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.enums.ProcessStatus.PENDING;
@@ -63,15 +64,11 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(layerName);
-
-            // TODO: Может не плеваться 404 если один из слоев ненайден а просто не добавлять его.
-            // Можно сразу выставить в процессе эту фичу как ошибочную
-            // Во всех операциях (импорт, валидация) можно внедрить тоже самое
-
-            payload.addRule(featureDescription);
-            payload.addResource(
-                    new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
+            schemaService.getDescriptionByName(layerName).ifPresent(featureDescription -> {
+                payload.addRule(featureDescription);
+                payload.addResource(
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
+            });
         });
 
         BaseMqProcessRequest mqRequest = new BaseMqProcessRequest(process.getId(), ProcessType.EXPORT, payload);

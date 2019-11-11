@@ -26,6 +26,7 @@ import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ImportService extends BaseProcessService {
@@ -60,13 +61,27 @@ public class ImportService extends BaseProcessService {
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
         workImport.getImportTasks().forEach(uiTask -> {
-            FeatureDescriptionDto featureDescription = schemaService.getDescriptionByName(uiTask.getWorkTableName());
+            String workTableName = uiTask.getWorkTableName().toLowerCase();
+
+            FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+            Optional<FeatureDescriptionDto> oDescription = schemaService.getDescriptionByName(uiTask.getSchemaName());
+            if (oDescription.isPresent()) {
+                featureDescription = oDescription.get();
+
+                log.debug("Import by schema: {}", featureDescription.getName());
+            } else {
+                featureDescription.setName(workTableName);
+                featureDescription.setTableName(workTableName);
+
+                log.debug("Import AsIs, workTableName: {}", workTableName);
+            }
+
             ImportMqTask importMqTask = new ImportMqTask(featureDescription,
                     new ResourceProjection(projectModel.getDatabaseName(), "public", uiTask.getLayerName()),
                     new ResourceProjection(
                             projectModel.getDatabaseName(),
                             projectModel.getWorkspaceName(),
-                            uiTask.getWorkTableName()),
+                            featureDescription.getTableName()),
                     uiTask.getPairs(),
                     uiTask.getSrs(),
                     CrgAuthHelper.getToken(principal)

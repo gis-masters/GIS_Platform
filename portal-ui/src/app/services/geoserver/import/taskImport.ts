@@ -15,6 +15,8 @@ export class TaskImport {
   // Система координат определенная импорт плагином
   srs: number;
 
+  schemaName: string;
+
   constructor(layerName: string, srs: string) {
     this.srs = Number(srs.split(':')[1]);
     this.layerName = layerName;

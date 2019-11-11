@@ -93,7 +93,12 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
             .filter(key => key !== 'bbox')
             .forEach(key => {
               const currentValue = currentData.feature.properties[key];
-              const property = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+
+              let property: PropertySchema;
+              if (this.featureDescription) {
+                property = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+              }
+
               if (property) {
                 this.editFeatureData.push({
                   name: key,
@@ -257,6 +262,10 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private validateCustomRules(featureProperties: {}) {
+    if (!this.featureDescription) {
+      return;
+    }
+
     FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
       .forEach((validationError: ValidationError) => {
         const control = this.editFeatureForm.controls[validationError.attribute];

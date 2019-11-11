@@ -11,7 +11,7 @@ import {ImportLayerItem} from '../geoserver/import/models';
 
 
 export class FeatureXsdDefinition {
-  xsdFeatures: FeatureDescription[] = [];
+  schemas: FeatureDescription[] = [];
 }
 
 export interface FeatureDescription {
@@ -71,7 +71,7 @@ export class DataSchemaService {
   }
 
   getFeaturesDefinition(): Observable<FeatureXsdDefinition> {
-    if (this.featuresXsdDefinition.xsdFeatures && this.featuresXsdDefinition.xsdFeatures.length) {
+    if (this.featuresXsdDefinition.schemas && this.featuresXsdDefinition.schemas.length) {
       this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
     } else {
@@ -83,10 +83,10 @@ export class DataSchemaService {
         const response = await this.httpq.post<FeatureDescription[]>(url, payload);
 
         if (response) {
-          this.featuresXsdDefinition.xsdFeatures = response;
+          this.featuresXsdDefinition.schemas = response;
         } else {
           this.logger.warn('getFeaturesDefinition response is: ', response);
-          this.featuresXsdDefinition = {xsdFeatures: []};
+          this.featuresXsdDefinition = {schemas: []};
         }
 
         return this.featuresXsdDefinition;
@@ -104,7 +104,7 @@ export class DataSchemaService {
     }
 
     let byFullCompare: FeatureDescription;
-    this.featuresXsdDefinition.xsdFeatures.forEach((feature: FeatureDescription) => {
+    this.featuresXsdDefinition.schemas.forEach((feature: FeatureDescription) => {
       if (feature.name.toLowerCase() === layerName.toLowerCase()) {
         byFullCompare = feature;
       }
@@ -113,12 +113,12 @@ export class DataSchemaService {
     if (byFullCompare) {
       return byFullCompare;
     } else {
-      const xsdFeature = this.featuresXsdDefinition.xsdFeatures
+      const fDescription = this.featuresXsdDefinition.schemas
         .find((feature: FeatureDescription) => {
           return feature.name.toLowerCase().includes(layerName.toLowerCase());
         });
 
-      return xsdFeature;
+      return fDescription ? fDescription : undefined;
     }
   }
 
@@ -175,7 +175,7 @@ export class DataSchemaService {
   }
 
   public getLayerTitle(layerName: string): string {
-    if (!this.featuresXsdDefinition.xsdFeatures || this.featuresXsdDefinition.xsdFeatures.length < 1) {
+    if (!this.featuresXsdDefinition.schemas || this.featuresXsdDefinition.schemas.length < 1) {
       this.logger.warn('xsd feature definition not ready yet');
 
       return layerName;
