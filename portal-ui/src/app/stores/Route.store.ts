@@ -1,0 +1,61 @@
+import {
+  ActivatedRouteSnapshot,
+  RoutesRecognized,
+  UrlSegment,
+  Params,
+  Data,
+  ParamMap,
+  RouterEvent
+} from '@angular/router';
+import { observable, action } from 'mobx';
+
+import { services } from '../services/services';
+
+class Route {
+  private static _instance: Route;
+
+  @observable url: UrlSegment[];
+  @observable params: Params;
+  @observable queryParams: Params;
+  @observable fragment: string;
+  @observable data: Data;
+  @observable paramMap: ParamMap;
+  @observable queryParamMap: ParamMap;
+
+  @action
+  private setRoute (route: ActivatedRouteSnapshot) {
+    this.url = route.url;
+    this.params = route.params;
+    this.queryParams = route.queryParams;
+    this.fragment = route.fragment;
+    this.data = route.data;
+    this.paramMap = route.paramMap;
+    this.queryParamMap = route.queryParamMap;
+  }
+
+  private constructor() {
+    this.subscribe();
+  }
+
+  private async subscribe () {
+    await services.provided;
+
+    this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
+
+    services.router.events.subscribe((event: RouterEvent) => {
+      if(event instanceof RoutesRecognized) {
+        this.setRoute(this.getDeepestChildren(event.state.root));
+      }
+    });
+  }
+
+  private getDeepestChildren (snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
+    return snapshot.children.length ? this.getDeepestChildren(snapshot.children[0]) : snapshot;
+  }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+}
+
+export const route = Route.instance;

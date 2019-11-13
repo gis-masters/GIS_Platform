@@ -4,6 +4,7 @@ import { computed, action } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { services } from '../../services/services';
+import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { Project } from '../../services/crg/projects.service';
 import { Button } from '../Button/Button';
@@ -32,8 +33,10 @@ export class DataImport extends React.Component<{}> {
   }
 
   async componentDidMount () {
-    const { importService, route } = services;
-    const urlImportId = route.snapshot.params.importId;
+    await services.provided;
+
+    const urlImportId = route.params.importId;
+    const { importService } = services;
 
     if (urlImportId) {
       if (currentImport.id && currentImport.id !== urlImportId) {
@@ -46,6 +49,10 @@ export class DataImport extends React.Component<{}> {
       } catch (err) {
         this.reset();
       }
+    } else {
+      if (currentImport.id) {
+        this.reset();
+      }
     }
   }
 
@@ -54,9 +61,12 @@ export class DataImport extends React.Component<{}> {
   }
 
   render () {
+    if (!route.params) {
+      return null;
+    }
+
     const { isSuccess, on, file, isWrongExt, isError } = currentImport;
-    const { route } = services;
-    const { projectId, importId } = route.snapshot.params;
+    const { projectId, importId } = route.params;
     const nextUrl = `/project/${projectId}/import/${importId}/mapping`;
 
     return (
@@ -116,20 +126,22 @@ export class DataImport extends React.Component<{}> {
     this.stopPolling();
     currentImport.reset();
     const currentProject: Project = await services.projectsService.getCurrent();
-    services.router.navigate(
-        [`/project/${currentProject.id}/import`],
-        { replaceUrl: true }
-    );
+    services.ngZone.run(() => {
+      services.router.navigate(
+          [`/project/${currentProject.id}/import`],
+          { replaceUrl: true }
+      );
+    });
   }
 
-  private async start () {
-    const currentProject: Project = await services.projectsService.getCurrent();
-    const { id } = await services.importService
+  private start () {
+    services.ngZone.run(async () => {
+      const currentProject: Project = await services.projectsService.getCurrent();
+      const { id } = await services.importService
                                  .initScratchImport(currentImport.file);
-
-    services.router.navigate([`/project/${currentProject.id}/import/${id}`]);
-
-    this.launchPolling();
+      services.router.navigate([`/project/${currentProject.id}/import/${id}`]);
+      this.launchPolling();
+    });
   }
 
   private launchPolling () {

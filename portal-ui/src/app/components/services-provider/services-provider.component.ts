@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { services } from '../../services/services';
@@ -13,13 +13,17 @@ import { HttpQueue } from '../../services/util/HttpQueue';
 export class ServicesProvider {
   constructor (private route: ActivatedRoute,
               private router: Router,
+              private ngZone: NgZone,
               private importService: ImportService,
               private projectsService: ProjectsService,
               private httpq: HttpQueue) {
-    services.importService = this.importService;
-    services.projectsService = this.projectsService;
-    services.httpq = this.httpq;
-    services.route = this.route;
-    services.router = this.router;
+    services.provide({
+      importService: this.importService,
+      projectsService: this.projectsService,
+      httpq: this.httpq,
+      route: this.route,
+      router: this.router,
+      ngZone: this.ngZone
+    });
   }
 }

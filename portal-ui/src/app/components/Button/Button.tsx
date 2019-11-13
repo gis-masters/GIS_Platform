@@ -28,7 +28,11 @@ export class Button extends React.Component<ButtonProps> {
     return <BaseButton {...this.extendedProps} />;
   }
 
-  private navigate = () => {
-    services.router.navigateByUrl(this.props.routerLink);
+  private async navigate () {
+    await services.provided;
+
+    services.ngZone.run(() => {
+      services.router.navigateByUrl(this.props.routerLink);
+    });
   }
 }
