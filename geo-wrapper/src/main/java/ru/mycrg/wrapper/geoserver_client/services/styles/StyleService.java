@@ -21,11 +21,11 @@ public class StyleService extends GeoServerBaseService {
     /**
      * Привязать стиль к слою. (Устанавливает слой по-умолчанию)
      *
-     * @param layerName Название слоя
-     * @param styleName Название стиля
+     * @param complexLayerName Название слоя
+     * @param styleName        Название стиля
      * @throws GeoserverClientException
      */
-    public void associate(String layerName, String styleName)
+    public void associate(String complexLayerName, String styleName)
             throws GeoserverClientException {
 
         try {
@@ -40,7 +40,7 @@ public class StyleService extends GeoServerBaseService {
                     "}");
 
             String url = getRootRestUrl()
-                    .append("/layers/").append(layerName)
+                    .append("/layers/").append(complexLayerName)
                     .append("/styles")
                     .append("?default=true").toString();
 

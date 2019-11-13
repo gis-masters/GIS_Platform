@@ -1,10 +1,12 @@
 package ru.mycrg.wrapper.service.import_;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common.BaseMqProcessRequest;
 import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
@@ -34,27 +36,30 @@ public class GeoserverImportService extends AbstractImportChainItem {
         this.featureTypesService = featureTypesService;
     }
 
-    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
+    public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
         log.debug("Publish feature on geoserver");
 
+        FeatureDescriptionDto featureDescription = null;
         try {
+            featureDescription = importTask.getFeatureDescription();
+
             featureTypesService.delete(
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
-                    importTask.getFeatureDescription().getName(),
+                    featureDescription.getName(),
                     importTask.getUserToken());
 
             featureTypesService.create(
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
-                    importTask.getFeatureDescription().getName(),
+                    featureDescription.getName(),
                     importTask.getUserToken(),
                     importTask.getSrs());
 
             try {
                 styleService.associate(
-                        importTask.getFeatureDescription().getName(),
-                        importTask.getFeatureDescription().getName());
+                        importTask.getTargetResource().getSchemaName() + ":" + featureDescription.getName(),
+                        featureDescription.getName());
             } catch (GeoserverClientException e) {
                 log.error("Не удалось прикрепить стиль к слою: {}", e.getMessage());
             }
@@ -68,7 +73,7 @@ public class GeoserverImportService extends AbstractImportChainItem {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (GeoserverClientException e) {
-            String msg = "Не удалось опубликовать слой на геосервере: " + importTask.getFeatureDescription().getName();
+            String msg = "Не удалось опубликовать слой на геосервере: " + featureDescription.getName();
             log.error(msg, e);
 
             mqSender.send(
