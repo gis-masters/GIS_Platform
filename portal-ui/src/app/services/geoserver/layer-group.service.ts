@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ServerPropertiesService } from '../server-properties.service';
 import { NameHrefProjection } from "./projections";
 import { HttpQueue } from '../../services/util/HttpQueue';
-import { Project } from '../crg/projects.service';
+import { Project } from '../../stores/ProjectsList.store';
 
 interface LayerGroups {
   layerGroups: {

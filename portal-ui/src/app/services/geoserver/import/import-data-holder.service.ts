@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 
 import {ImportLayerItem, LayerAttribute} from './models';
-import { Project } from '../../crg/projects.service';
+import { Project } from '../../../stores/ProjectsList.store';
 import {MatchingPair, TaskImport} from './taskImport';
 import {DataSchemaService, PropertySchema} from '../../crg/data-schema.service';
 import {AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../crg/models';

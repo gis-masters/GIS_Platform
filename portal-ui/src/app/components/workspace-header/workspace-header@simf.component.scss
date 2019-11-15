@@ -4,4 +4,13 @@
   &__title {
     text-align: center;
   }
+
+  &__back {
+    position: absolute;
+    z-index: 3;
+    top: -5px;
+    left: 4px;
+
+    color: white;
+  }
 }

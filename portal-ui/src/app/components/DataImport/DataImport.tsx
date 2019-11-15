@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
-import { Project } from '../../services/crg/projects.service';
+import { Project } from '../../stores/ProjectsList.store';
 import { Button } from '../Button/Button';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
 
@@ -67,7 +67,7 @@ export class DataImport extends React.Component<{}> {
 
     const { isSuccess, on, file, isWrongExt, isError } = currentImport;
     const { projectId, importId } = route.params;
-    const nextUrl = `/project/${projectId}/import/${importId}/mapping`;
+    const nextUrl = `/projects/${projectId}/import/${importId}/mapping`;
 
     return (
       <div className={cnDataImport()}>
@@ -128,7 +128,7 @@ export class DataImport extends React.Component<{}> {
     const currentProject: Project = await services.projectsService.getCurrent();
     services.ngZone.run(() => {
       services.router.navigate(
-          [`/project/${currentProject.id}/import`],
+          [`/projects/${currentProject.id}/import`],
           { replaceUrl: true }
       );
     });
@@ -139,7 +139,7 @@ export class DataImport extends React.Component<{}> {
       const currentProject: Project = await services.projectsService.getCurrent();
       const { id } = await services.importService
                                  .initScratchImport(currentImport.file);
-      services.router.navigate([`/project/${currentProject.id}/import/${id}`]);
+      services.router.navigate([`/projects/${currentProject.id}/import/${id}`]);
       this.launchPolling();
     });
   }

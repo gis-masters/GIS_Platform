@@ -27,7 +27,7 @@ import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {CommunicationService} from '../../services/communication.service';
-import { Project } from '../../services/crg/projects.service';
+import { Project } from '../../stores/ProjectsList.store';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';

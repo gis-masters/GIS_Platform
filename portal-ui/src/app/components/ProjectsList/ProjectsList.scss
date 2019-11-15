@@ -1,4 +1,4 @@
-.projects-list {
+.ProjectsList {
   display: flex;
   overflow: auto;
   flex-wrap: wrap;
@@ -12,7 +12,7 @@
     justify-content: center;
   }
 
-  &__card {
+  &-Card {
     width: calc(33.33% - 10px);
     margin: 0 5px 10px;
 

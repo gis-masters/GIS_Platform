@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { filter, flatMap, map, publishReplay, refCount, tap } from 'rxjs/operators';
 
 import { NameHrefProjection } from './projections';
-import { Project } from '../crg/projects.service';
+import { Project } from '../../stores/ProjectsList.store';
 import { getEnvironment, Environment } from '../environment';
 import { DataSchemaService } from '../crg/data-schema.service';
 import { ServerPropertiesService } from '../server-properties.service';

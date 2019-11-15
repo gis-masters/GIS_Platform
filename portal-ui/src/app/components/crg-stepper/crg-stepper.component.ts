@@ -46,15 +46,15 @@ export class CrgStepperComponent implements OnDestroy {
         this.sideBarManager.closeAll();
       }
       if (selectedStep === 2) {
-        this.router.navigate([`/project/${projectId}/import`]);
+        this.router.navigate([`/projects/${projectId}/import`]);
         this.sideBarManager.closeAll();
       }
       if (selectedStep === 3) {
-        this.router.navigate([`/project/${projectId}/map`]);
+        this.router.navigate([`/projects/${projectId}/map`]);
         this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
       }
       if (selectedStep === 4) {
-        this.router.navigate([`/project/${projectId}/map`]);
+        this.router.navigate([`/projects/${projectId}/map`]);
         this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
       }
     }

@@ -30,7 +30,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'project/:projectId',
+    path: 'projects/:projectId',
     canActivate: [ AuthGuardService, WorkflowGuardService ],
     children: [
       {

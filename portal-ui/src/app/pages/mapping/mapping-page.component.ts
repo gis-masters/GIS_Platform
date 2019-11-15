@@ -52,12 +52,12 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     const { projectId, importId } = this.route.snapshot.params;
-    this.prevLink = `/project/${projectId}/import/${importId}`;
-    this.nextLink = `/project/${projectId}/map`;
+    this.prevLink = `/projects/${projectId}/import/${importId}`;
+    this.nextLink = `/projects/${projectId}/map`;
 
     // TODO: Перенести логику блокирования страницы при неверных данных, по примеру WorkflowGuardService
     if (!currentImport.scratch) {
-      this.router.navigateByUrl(`/project/${projectId}/import`);
+      this.router.navigateByUrl(`/projects/${projectId}/import`);
     }
 
     this.importData.project = await this.projectsService.getCurrent();

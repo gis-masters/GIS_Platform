@@ -55,8 +55,6 @@ export class AuthService {
   }
 
   logout() {
-    // this.projectService.clearCache();
-
     this.tokenStorage.signOut();
 
     this._authenticated = false;

@@ -1,0 +1,28 @@
+.ProjectCard {
+  &-Form {
+    padding: 15px 16px;
+
+    .ProjectCard-Footer {
+      padding: 0 5px;
+
+      background-color: lightslategray;
+    }
+  }
+
+  &-FormField {
+    width: 100%;
+  }
+
+  & &-FormButton {
+    color: ghostwhite;
+    outline: none;
+  }
+
+  & &-FormHelperText {
+    text-align: right;
+  }
+
+  &-FormError {
+    color: var(--danger);
+  }
+}

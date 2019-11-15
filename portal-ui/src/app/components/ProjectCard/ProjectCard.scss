@@ -1,0 +1,90 @@
+.ProjectCard {
+  &-Inner {
+    position: relative;
+
+    overflow: hidden;
+
+    box-sizing: content-box;
+    width: 100%;
+    height: 0;
+    padding-bottom: 50%;
+
+    vertical-align: top;
+
+    border-radius: 6px;
+    background: aliceblue;
+
+    &_typ {
+      &_card {
+        transition: background-size 0.3s, opacity 0.3s;
+
+        background-image: url(ProjectCard_typ_card.png);
+        background-position: 50% 50%;
+        background-size: 100% 100%;
+
+        &:hover {
+          background-size: 110% 110%;
+        }
+
+        .ProjectCard-Footer {
+          display: block;
+
+          height: 30px;
+
+          cursor: pointer;
+          transition: background-color 0.3s;
+          text-align: center;
+
+          background: rgba(255,255,255,0.6);
+
+          font-weight: 500;
+          line-height: 28px;
+
+          &:hover {
+            background: rgba(255,255,255,0.7);
+          }
+        }
+      }
+
+      &_loader,
+      &_add {
+        &::before {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+
+          content: '';
+
+          border: 1px lightsteelblue dotted;
+          border-radius: 7px;
+        }
+      }
+    }
+  }
+
+  &-Footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: space-between;
+
+    height: 35px;
+
+    user-select: none;
+    text-align: center;
+    text-decoration: none;
+
+    color: white;
+
+    &:hover {
+      text-decoration: none;
+
+      color: white;
+    }
+  }
+}

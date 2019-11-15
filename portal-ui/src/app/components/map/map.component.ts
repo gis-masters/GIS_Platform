@@ -6,7 +6,7 @@ import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
 import { cn } from '../../services/util/cn';
-import { Project } from '../../services/crg/projects.service';
+import { Project } from '../../stores/ProjectsList.store';
 import { WfsUtil } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';

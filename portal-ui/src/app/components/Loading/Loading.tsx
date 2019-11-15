@@ -8,14 +8,16 @@ import '!style-loader!css-loader!sass-loader!./Loading.scss';
 
 interface LoadingProps {
   visible?: boolean;
+  className?: string;
+  noBackdrop?: boolean;
 }
 
-export const Loading: React.FC<LoadingProps> = ({ visible }) => {
+export const Loading: React.FC<LoadingProps> = ({ visible, className, noBackdrop }) => {
   if (visible === false) {
     return null;
   }
   return (
-    <div className={cnLoading()}>
+    <div className={cnLoading({noBackdrop}, [className])}>
       <CircularProgress size={100} />
     </div>
   );

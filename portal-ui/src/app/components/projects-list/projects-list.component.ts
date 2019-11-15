@@ -1,47 +1,37 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
-  NgModuleRef,
-  NgModule,
+  OnInit,
   ViewChild,
-  ViewContainerRef,
-  Compiler,
-  Injector
+  ElementRef
 } from '@angular/core';
+import { createElement } from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
 
-import { getEnvironment } from '../../services/environment';
+import { ProjectsList } from '../ProjectsList/ProjectsList';
 
 @Component({
   selector: 'crg-projects-list',
-  template: '<div #here></div>'
+  template: '<div #react></div>'
 })
-export class ProjectsListComponent implements AfterViewInit, OnDestroy {
-  moduleRef: NgModuleRef<NgModule>;
+export class ProjectsListComponent implements OnDestroy, OnInit {
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  @ViewChild('here', { read: ViewContainerRef, static: true })
-  here: ViewContainerRef;
-
-  constructor(private compiler: Compiler, private injector: Injector) {}
-
-  async ngAfterViewInit() {
-    const environment = await getEnvironment();
-    import(`./projects-list@${environment.platform}.module`)
-      .then(m => m.ProjectsListModule)
-      .then(lazyModule => {
-        this.compiler.compileModuleAsync(lazyModule).then(ngModuleFactory => {
-          this.moduleRef = ngModuleFactory.create(this.injector);
-          const compFactory = this.moduleRef.componentFactoryResolver.resolveComponentFactory(
-            lazyModule.rootEntry
-          );
-          this.here.createComponent(compFactory);
-        });
-      });
+  ngOnInit () {
+    this.renderReactElement();
   }
 
   ngOnDestroy(): void {
-    if (this.moduleRef) {
-      this.moduleRef.destroy();
-    }
+    unmountComponentAtNode(this.ref.nativeElement);
+  }
+
+  ngOnChanges () {
+    this.renderReactElement();
+  }
+
+  private renderReactElement() {
+    const reactElement = createElement(ProjectsList);
+
+    render(reactElement, this.ref.nativeElement);
   }
 }

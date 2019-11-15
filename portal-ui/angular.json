@@ -34,8 +34,6 @@
               "./src/app/components/header/header@simf.module",
               "./src/app/components/home/home@conv.module",
               "./src/app/components/home/home@simf.module",
-              "./src/app/components/projects-list/projects-list@conv.module.ts",
-              "./src/app/components/projects-list/projects-list@simf.module.ts",
               "./src/app/components/workspace-header/workspace-header@conv.module",
               "./src/app/components/workspace-header/workspace-header@simf.module"
             ],
