@@ -1,4 +1,6 @@
 .progress-item {
+  position: relative;
+
   height: 60px;
   margin: 5px;
 
@@ -55,10 +57,9 @@
 }
 
 .info-close-icon {
-  position: relative;
-  left: 5px;
-
-  float: right;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 
   cursor: pointer;
 
@@ -88,6 +89,8 @@
   top: -5px;
 
   padding-right: 10px;
+
+  cursor: pointer;
 
   font-family: monospace;
 }
