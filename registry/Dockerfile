@@ -11,4 +11,5 @@ ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                      -Delastic.apm.service_name=crg-registry \
                                      -Delastic.apm.server_url=${APM_URL} \
                                      -Delastic.apm.application_packages=ru.mycrg.registry \
+                                     -Delastic.apm.enable_log_correlation=true \
                                      -jar registry.jar

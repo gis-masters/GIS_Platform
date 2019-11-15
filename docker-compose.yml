@@ -5,6 +5,8 @@ services:
     container_name: rabbitmq
     image: $DOCKER_CRG_HOST/rabbitmq:$RABBIT_TAG
     restart: always
+    labels: 
+       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -16,6 +18,8 @@ services:
     container_name: database
     image: $DOCKER_CRG_HOST/postgres:$POSTGRES_TAG
     restart: always
+    labels: 
+      co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5432?sslmode=disable\"],\"username\":\"postgres\",\"password\":\"$DB_PASS\"}]"
     environment:
       POSTGRES_DB: gis_portal
       POSTGRES_PASSWORD: $DB_PASS
@@ -28,6 +32,8 @@ services:
   postgis:
     container_name: postgis
     image: $DOCKER_CRG_HOST/postgis:$POSTGIS_TAG
+    labels: 
+      co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5434?sslmode=disable\"],\"username\":\"$CRG_USER\",\"password\":\"$DB_PASS\"}]"
     restart: always
     ports:
       - "5434:5432"
@@ -71,7 +77,6 @@ services:
     restart: always
     environment:
       APM_URL: ${APM_URL}
-
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
     volumes:
       - /opt/logs:/opt/logs
@@ -84,6 +89,8 @@ services:
     container_name: crg-gateway
     image: $DOCKER_CRG_HOST/crg-gateway:$CRG_GATEWAY_TAG
     restart: always
+    extra_hosts:
+     - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
     depends_on:
@@ -101,9 +108,10 @@ services:
     container_name: geo-api
     image: $DOCKER_CRG_HOST/geo-api:$CRG_API_TAG
     restart: always
+    extra_hosts:
+     - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
-
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: $CRG_USER
@@ -142,6 +150,8 @@ services:
     container_name: geo-wrapper
     image: $DOCKER_CRG_HOST/geo-wrapper:$CRG_WRAPPER_TAG
     restart: always
+    extra_hosts:
+     - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
 

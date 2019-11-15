@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property scope="context" name="HOSTNAME" value="geo-api" />
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/opt/logs/api.log</file>
 
@@ -19,7 +20,7 @@
 
 
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>10.10.10.116:5000</destination>
+        <destination>logstash:5000</destination>
 
         <!-- encoder is required -->
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
