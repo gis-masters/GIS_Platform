@@ -35,7 +35,7 @@ zuul:
   routes:
     auth-service:
       path: /oauth/token/**
-      service-id: http://jwt-service:9000/oauth/token
+      service-id: http://auth-service:9000/oauth/token
 
     # Our API
     gis-users:

@@ -1,4 +1,4 @@
-package ru.mycrg.sts.config;
+package ru.mycrg.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

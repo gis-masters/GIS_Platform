@@ -5,8 +5,8 @@ services:
     ports:
       - 5672:5672
 
-  jwt-service:
-    build: jwt-service
+  auth-service:
+    build: auth-service
     ports:
       - 9000:9000
 

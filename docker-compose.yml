@@ -55,10 +55,12 @@ services:
       - /opt/data/geoserver:/opt/geoserver/data_dir
 
 
-  jwt-service:
-    container_name: jwt-service
-    image: $DOCKER_CRG_HOST/jwt-service:$CRG_JWT_TAG
+  auth-service:
+    container_name: crg-auth
+    image: $DOCKER_CRG_HOST/auth-service:$CRG_AUTH_TAG
     restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
