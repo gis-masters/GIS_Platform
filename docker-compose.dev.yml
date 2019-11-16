@@ -5,9 +5,6 @@ services:
     ports:
       - 5672:5672
 
-  registry:
-    build: registry
-
   jwt-service:
     build: jwt-service
     ports:

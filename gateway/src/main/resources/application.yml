@@ -15,13 +15,6 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://crg-registry:8761/eureka/
-
 hystrix:
   command:
     default:

@@ -36,8 +36,6 @@
 	</dependencyManagement>
 	
 	<modules>
-		<module>registry</module>
-
 		<module>gateway</module>
 		<module>jwt-service</module>
 
