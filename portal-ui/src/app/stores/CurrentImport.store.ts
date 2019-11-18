@@ -16,7 +16,7 @@ export interface ImportInfo {
   error?: boolean;
 }
 
-interface ImportTaskExtended extends ImportTask {
+export interface ImportTaskExtended extends ImportTask {
   isError: boolean;
   isPending: boolean;
   statusText: string;
@@ -104,7 +104,7 @@ class CurrentImport implements ImportInfo {
 
   @computed
   get notFullfilledTasks (): ImportTaskShort[] {
-    return (this.scratch && this.scratch.tasks || []).filter(t => this.fullTasks[t.id]);
+    return (this.scratch && this.scratch.tasks || []).filter(t => !this.fullTasks[t.id]);
   }
 
   @computed

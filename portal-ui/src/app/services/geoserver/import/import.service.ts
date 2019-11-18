@@ -136,10 +136,10 @@ export class ImportService {
     formData.append('file', file);
 
     try {
-      const tasks: ImportTaskFull[] = GeoUtil.tasksHandler(
+      const tasks: ImportTaskShort[] = GeoUtil.tasksHandler(
                         await this.httpq.post<ImportTaskResponse>(tasksUrl, formData));
 
-      currentImport.setFullTasks(tasks);
+      this.fillTasks();
 
       if (tasks.length) {
         await this.uploadToScratch();
@@ -177,5 +177,10 @@ export class ImportService {
   private async getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
     const { task } = await this.httpq.get<{task: ImportTaskFull}>(shortTask.href);
     return task;
+  }
+
+  async deleteTask(task: ImportTaskShort) {
+    await this.httpq.delete(task.href);
+    await this.checkImportStatus();
   }
 }

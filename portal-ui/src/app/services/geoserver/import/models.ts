@@ -25,8 +25,8 @@ export interface InputStartResponseDto {
 }
 
 export interface ImportTaskResponse {
-  tasks?: ImportTaskFull[];
-  task?: ImportTaskFull;
+  tasks?: ImportTaskShort[];
+  task?: ImportTaskShort;
 }
 
 export interface ImportTaskShort {

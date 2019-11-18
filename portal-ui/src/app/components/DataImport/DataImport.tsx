@@ -85,7 +85,7 @@ export class DataImport extends React.Component<{}> {
             isImportFailed={isError}
             isSuccess={isSuccess} />
 
-        <DataImportTasksList className={cnDataImport('TasksList')} />
+        <DataImportTasksList className={cnDataImport('TasksList')} onDeleteAllTask={this.reset} />
 
         <div className={cnDataImport('NavButtons')}>
 
