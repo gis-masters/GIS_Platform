@@ -10,7 +10,7 @@
     <select class="form-control form-control-sm" formControlName="columnFiz" [compareWith]="compareFn"
             (change)="columnChanged()">
       <option *ngFor="let property of propertySchemas" [ngValue]="property">
-        {{property.name}} <span *ngIf="property.valueType !== undefined"> ({{property.valueType}})</span>
+        {{getOptionText(property)}}
       </option>
     </select>
 

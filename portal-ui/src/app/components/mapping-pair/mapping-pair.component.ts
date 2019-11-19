@@ -6,7 +6,7 @@ import {PropertiesComparatorService} from '../../services/properties-comparator.
 import {LayerAttribute} from '../../services/geoserver/import/models';
 import {ImportDataHolderService} from '../../services/geoserver/import/import-data-holder.service';
 import {MatchingPair} from '../../services/geoserver/import/taskImport';
-import {ImportTargetType} from '../../services/crg/models';
+import {ImportTargetType, NOT_IMPORT, AS_IS} from '../../services/crg/models';
 
 @Component({
   selector: 'crg-mapping-pair',
@@ -91,6 +91,13 @@ export class MappingPairComponent implements OnInit, OnChanges {
     this.selectedProperty = this.columnForm.controls['columnFiz'].value as PropertySchema;
 
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, this.selectedProperty);
+  }
+
+  getOptionText (property: PropertySchema): string {
+    const { valueType, name, title } = property;
+    const isSpecial = name === NOT_IMPORT.name || name === AS_IS.name;
+
+    return `${isSpecial ? title : name} ${valueType !== undefined ? `(${valueType})` : ''}`;
   }
 
   private getPropertySchema(name: string) {
