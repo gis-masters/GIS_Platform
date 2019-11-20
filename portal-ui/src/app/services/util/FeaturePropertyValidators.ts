@@ -1,5 +1,5 @@
 import {isEmpty} from 'validate.js';
-import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
+import {PropertySchema} from '../crg/data-schema.service';
 import {ValueTitleProjection} from '../geoserver/projections';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 

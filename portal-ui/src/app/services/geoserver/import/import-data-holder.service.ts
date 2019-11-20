@@ -152,9 +152,9 @@ export class ImportDataHolderService {
         this.addAttributeMapping(layerNativeName, attr, AS_IS);
       });
     } else {
-      const featureDescription = this.dataSchemaService.getFeatureDescriptionByName(featureSchemaName);
-      if (featureDescription) {
-        const propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
+      const featureSchema = this.dataSchemaService.getFeatureSchemaByName(featureSchemaName);
+      if (featureSchema) {
+        const propertySchemas = FeatureUtil.preparePropertySchema(featureSchema);
 
         layerPair.targetLayer.pairs = [];
         layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {

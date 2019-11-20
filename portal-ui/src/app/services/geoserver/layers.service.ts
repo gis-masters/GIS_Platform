@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { filter, flatMap, map, publishReplay, refCount, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
 
-import { NameHrefProjection } from './projections';
-import { Project } from '../../stores/ProjectsList.store';
-import { getEnvironment, Environment } from '../environment';
-import { DataSchemaService } from '../crg/data-schema.service';
-import { ServerPropertiesService } from '../server-properties.service';
-import { LayerGroupService } from "./layer-group.service";
-import { HttpQueue } from '../util/HttpQueue';
+import {NameHrefProjection} from './projections';
+import {Project} from '../../stores/ProjectsList.store';
+import {Environment, getEnvironment} from '../environment';
+import {DataSchemaService, FeatureDescription} from '../crg/data-schema.service';
+import {ServerPropertiesService} from '../server-properties.service';
+import {LayerGroupService} from './layer-group.service';
+import {HttpQueue} from '../util/HttpQueue';
+import {GeometryType, StringUtil} from '../util/StringUtil';
+import {LAYERS_GROUP} from '../crg/models';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,7 @@ export class LayersService {
 
   constructor(private http: HttpClient,
               private httpq: HttpQueue,
-              private ruleService: DataSchemaService,
+              private schemaService: DataSchemaService,
               private layerGroupService: LayerGroupService,
               private serverProp: ServerPropertiesService) {
     this.getEnv();
@@ -49,8 +51,9 @@ export class LayersService {
         map((geoLayer: GeoLayer) => geoLayer.layers.layer as NameHrefProjection[]),
         map((layers: NameHrefProjection[]) => this.filterScratchLayers(layers)),
         map((layers: NameHrefProjection[]) => this.filterProjectLayers(project, layers)),
-        flatMap((layers: NameHrefProjection[]) => this.fetchLayersDescription(layers)),
-        map(([layers, layersDescription]) => this.mergeWithRules(layers)),
+        flatMap((layers: NameHrefProjection[]) => this.fetchFeatureSchemas(layers)),
+        map(([layers, data]) => this.mergeWithSchemas(layers)),
+        map((layers: CrgLayer[]) => this.fillGeometry(layers)),
         flatMap((layers: CrgLayer[]) => this.addLayerGroups(layers, project)),
         tap((result) => {
           this._layers$.next(result);
@@ -73,6 +76,14 @@ export class LayersService {
   }
 
   deleteLayer(layer: CrgLayer): Promise<Object> {
+    const crgLayers = this._layers$.getValue();
+    const index = crgLayers.indexOf(layer);
+    if (index > -1) {
+      crgLayers.splice(index, 1);
+    }
+
+    this._layers$.next(crgLayers);
+
     return this.httpq.delete(this.layersUrl + '/' + layer.name);
   }
 
@@ -89,18 +100,18 @@ export class LayersService {
     this.environment = await getEnvironment();
   }
 
-  private fetchLayersDescription(layers: NameHrefProjection[]): any {
+  private fetchFeatureSchemas(layers: NameHrefProjection[]): any {
     if (layers.length === 0) {
       return of([]);
     }
 
     return combineLatest(
       of(layers),
-      this.ruleService.getFeaturesDefinition()
+      this.schemaService.getFeaturesSchemas()
     );
   }
 
-  private mergeWithRules(layers: NameHrefProjection[]): CrgLayer[] {
+  private mergeWithSchemas(layers: NameHrefProjection[]): CrgLayer[] {
     const crgLayers: CrgLayer[] = [];
 
     if (!layers || !layers.length) {
@@ -109,13 +120,14 @@ export class LayersService {
 
     layers.forEach((layer: NameHrefProjection) => {
       const layerName = layer.name.split(':')[1];
-      const layerTitle = this.ruleService.getLayerTitle(layerName);
+      const featureSchema = this.schemaService.getFeatureSchemaByName(layerName);
 
       crgLayers.push({
         name: layerName,
         complexName: layer.name,
         href: layer.href,
-        title: layerTitle
+        title: featureSchema ? featureSchema.title : layerName,
+        schema: featureSchema
       });
     });
 
@@ -151,8 +163,17 @@ export class LayersService {
         title: layerGroup.name,
         name: layerGroup.name,
         complexName: rightPart.split('/')[0] + ':' + layerGroup.name,
-        href: ''
+        href: '',
+        schema: LAYERS_GROUP
       });
+    });
+
+    return layers;
+  }
+
+  private fillGeometry(layers: CrgLayer[]) {
+    layers.forEach(layer => {
+      layer.geometry = StringUtil.defineGeomType(layer.name);
     });
 
     return layers;
@@ -164,6 +185,8 @@ export interface CrgLayer {
   complexName: string;  // Like: work_workspace:functionalzone
   title: string;        // Like: Функциональные зоны
   href: string;
+  schema: FeatureDescription;
+  geometry?: GeometryType | undefined;
 }
 
 export interface GeoLayer {

@@ -25,7 +25,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   isSingleEdit = true;
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
-  isSimf: boolean = false;
+  isSimf = false;
 
   viewFeatures: WfsFeature[] = [];
   pageInfo: Pageable = {
@@ -152,7 +152,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       if (classIdAlias) {
         this.featureTitles.set(feature.id, classIdAlias);
       } else {
-        const fDescription = this.dataSchemaService.getFeatureDescriptionByName(featureName);
+        const fDescription = this.dataSchemaService.getFeatureSchemaByName(featureName);
         if (fDescription) {
           this.featureTitles.set(feature.id, fDescription.title);
         } else {

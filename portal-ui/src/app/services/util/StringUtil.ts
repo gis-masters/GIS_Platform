@@ -1,17 +1,10 @@
-import {Layer} from '../geoserver/layers.service';
+export enum GeometryType {
+  POLYGON = 'polygon',
+  LINE = 'line',
+  POINT = 'point',
+}
 
 export class StringUtil {
-
-  // Все свойства обьекта, в том месте где этот метод используется, indefined, хотя в консоле обьект полный.
-  static getHrefFromBlyadskiyJson(layer: Layer): string {
-    const layerAsString = JSON.stringify(layer);
-
-    return layerAsString
-      .split('resource')[1]
-      .split('"href":"')[1]
-      .split('"}')[0]
-      .split('/featuretypes')[0];
-  }
 
   // 'yypefc'
   static generateRandomId() {
@@ -19,14 +12,20 @@ export class StringUtil {
   }
 
   static addGeometryTypeToTitle(title: string, featureName: string) {
-    return '(' + StringUtil.splitGeomType(featureName) + ') ' + title;
+    return '(' + StringUtil.defineGeomType(featureName) + ') ' + title;
   }
 
-  public static splitGeomType(featureName: string): string {
+  public static defineGeomType(featureName: string): GeometryType {
     if (featureName.includes('_')) {
-      return featureName.split('_')[1];
+      const element = featureName.split('_')[1];
+
+      if (GeometryType.LINE === element) {
+        return GeometryType.LINE;
+      } else if (GeometryType.POINT === element) {
+        return GeometryType.POINT;
+      }
     } else {
-      return 'polygon';
+      return GeometryType.POLYGON;
     }
   }
 }

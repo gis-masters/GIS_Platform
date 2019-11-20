@@ -102,6 +102,7 @@ export interface ValidationBrieflyInfo {
 }
 
 export interface BugObject {
+  title?: string;
   classId: string;
   objectId: string;
   xMin: string;

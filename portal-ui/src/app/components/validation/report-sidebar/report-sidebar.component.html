@@ -25,7 +25,7 @@
                         <mat-icon *ngIf="!commonInfo.get(layer.name)?.validated" style="color: lightgrey">warning</mat-icon>
                         <mat-icon *ngIf="isDone(layer.name)" style="color: forestgreen">done</mat-icon>
                       </div>
-                      <span style="padding-left: 10px">{{layer.title}} ({{getGeometryType(layer.name)}})</span>
+                      <span style="padding-left: 10px">{{layer.title}} ({{layer.geometry}})</span>
                     </mat-panel-title>
 
                     <div class="float-right" *ngIf="!!commonInfo.get(layer.name)">

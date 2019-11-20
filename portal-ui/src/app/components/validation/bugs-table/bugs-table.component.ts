@@ -12,7 +12,7 @@ import {DataSchemaService} from '../../../services/crg/data-schema.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
+import {BugObject, ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
 import {AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {ProcessStatus} from '../../../services/crg/models';
 
@@ -59,7 +59,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private ruleService: DataSchemaService,
+              private schemaService: DataSchemaService,
               private wfsService: WfsService,
               private openLayers: OpenLayersService,
               private validationService: ValidationService) {
@@ -106,17 +106,10 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   async getValidation() {
-    const response: ValidationResultsResponse = await this.validationService.getValidationResults(
-                                                              this.crgLayer.name,
-                                                              0,
-                                                              this.defaultPageSize,
-                                                              '',
-                                                              'asc');
-        this.handleResponse(response);
-  }
+    const response: ValidationResultsResponse =
+      await this.validationService.getValidationResults(this.crgLayer.name, 0, this.defaultPageSize, '', 'asc');
 
-  getClassIdAlias(element) {
-    return this.ruleService.getClassIdAlias(this.crgLayer.name, element);
+    this.handleResponse(response);
   }
 
   async showObject(event: Event, objectId: string) {
@@ -135,6 +128,10 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   private handleResponse(response: ValidationResultsResponse) {
     if (response) {
       this.data = response;
+      this.data.results.forEach(bugObject => {
+        bugObject.title = this.schemaService.getClassIdAlias(this.crgLayer.name, bugObject);
+      });
+
       this.totalElements = response.total;
       this.isLoadingResults = false;
     } else if (response === null) {

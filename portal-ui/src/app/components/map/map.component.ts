@@ -153,7 +153,8 @@ export class MapComponent implements OnInit, OnDestroy {
     const fType: FeatureType = await this.featureTypesService.getByName(layer);
     await this.featureTypesService.delete(fType);
     this.snackBar.open('Удалено', 'X', {duration: 3000});
-    this.fetchLayers();
+
+    await this.openLayers.deleteLayerFromMap(layer.complexName);
   }
 
   /**

@@ -1,17 +1,19 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {EditFeatureItem, DataSchemaService, PropertySchema, FeatureDescription} from '../../services/crg/data-schema.service';
-import {from, Subject} from 'rxjs';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
+import {from} from 'rxjs';
 import {concatMap, takeUntil} from 'rxjs/operators';
-import {FeaturePropertyValidators, ValidationError, ValueType} from '../../services/util/FeaturePropertyValidators';
-import { getEnvironment } from '../../services/environment';
+import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
+import {getEnvironment} from '../../services/environment';
+import {BaseEdit} from '../edit-bug-object/base-edit';
+import {FeatureUtil} from '../../services/util/FeatureUtil';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -31,21 +33,17 @@ export enum EditFeatureMode {
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
+export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit {
 
   @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
 
-  editFeatureForm: FormGroup;
-  editFeatureData: EditFeatureItem[] = [];
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
-  isSimf: boolean = false;
+  isSimf = false;
 
-  private featureDescription: FeatureDescription;
   private BATCH_SIZE = 200;
-  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private snackBar: MatSnackBar,
               private formBuilder: FormBuilder,
@@ -55,6 +53,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
               private openLayers: OpenLayersService,
               private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
+    super();
     this.getEnv();
   }
 
@@ -63,11 +62,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
           const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
-          if (attrSidebarState === ActionType.OPEN) {
-            this.isAttributeSidebarOpened = true;
-          } else {
-            this.isAttributeSidebarOpened = false;
-          }
+          this.isAttributeSidebarOpened = attrSidebarState === ActionType.OPEN;
         });
 
     this.editFeatureForm.valueChanges.subscribe(featureProperties => {
@@ -85,7 +80,7 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
         this.openLayers.showFeature(currentData.feature);
       }
 
-      this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(currentData.feature.id.split('.')[0]);
+      this.featureDescription = this.dataSchemaService.getFeatureSchemaByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
       Object.keys(currentData.feature.properties)
@@ -148,33 +143,26 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   async editFeature() {
     if (this.editFeatureForm.pristine) {
       return;
     }
 
     this.isSaveInProgress = true;
-    // Сохраняем только те свойства что были затронуты пользователем и валидны
-    // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
-    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
 
     if (this.data && this.data.feature && this.data.feature.properties) {
-      const newProperties: {[key:string]: string} = {};
-      dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
-        newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
-      });
-
-      const { workspaceName } = await this.projectsService.getCurrent();
+      const propCopy = Object.assign({}, this.data.feature.properties);
+      const newProperties = this.getActualValuesFromForm(propCopy);
 
       if (this.data.mode === EditFeatureMode.single) {
-        this.batchUpdateFeatures([this.data.feature.id], workspaceName, this.featureDescription.tableName, newProperties);
+        const calcAttributes = FeatureUtil.calculateByFunction(propCopy, this.featureDescription.calcFiledFunction);
+        Object.keys(calcAttributes).forEach(key => {
+          newProperties[key] = calcAttributes[key];
+        });
+
+        this.batchUpdateFeatures([this.data.feature.id], newProperties);
       } else {
-        this.batchUpdateFeatures(this.data.featuresId, workspaceName, this.featureDescription.tableName, newProperties);
+        this.batchUpdateFeatures(this.data.featuresId, newProperties);
       }
     }
   }
@@ -212,32 +200,20 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
     this.isSimf = environment.platform === 'simf';
   }
 
-  private getDirtyAndValidProperties(): EditFeatureItem[] {
-    const result: EditFeatureItem[] = [];
-    if (!this.editFeatureForm.dirty) {
-      return result;
-    }
-
-    this.editFeatureData.forEach((property: EditFeatureItem) => {
-      const formProperty = this.editFeatureForm.controls[property.name];
-      if (formProperty.dirty && formProperty.valid) {
-        result.push(property);
-      }
-    });
-
-    return result;
-  }
-
-  private batchUpdateFeatures(featuresId: string[], geoserverName: string, tableName: string, newProperties: {}) {
+  private async batchUpdateFeatures(featuresId: string[], newProperties: {}) {
     const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
     const onePartOf100 = 100 / countOfParts;
+
+    const { workspaceName } = await this.projectsService.getCurrent();
+    const { tableName } = this.featureDescription;
 
     const result = this.transformFeatureService.splitListToParts(featuresId, countOfParts);
 
     let i = 0;
     from(result)
       .pipe(
-        concatMap(features => this.transformFeatureService.updateFeatures(features, geoserverName, tableName, newProperties)),
+        concatMap(features => this.transformFeatureService
+                                         .updateFeatures(features, workspaceName, tableName, newProperties)),
         takeUntil(this.unsubscribe$)
       ).subscribe(() => {
         i++;
@@ -257,20 +233,6 @@ export class EditFeatureComponent implements OnChanges, OnInit, OnDestroy {
           });
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
-        }
-      });
-  }
-
-  private validateCustomRules(featureProperties: {}) {
-    if (!this.featureDescription) {
-      return;
-    }
-
-    FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
-      .forEach((validationError: ValidationError) => {
-        const control = this.editFeatureForm.controls[validationError.attribute];
-        if (control) {
-          control.setErrors([validationError.error]);
         }
       });
   }

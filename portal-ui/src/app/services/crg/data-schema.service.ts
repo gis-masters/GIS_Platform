@@ -8,6 +8,7 @@ import { ServerPropertiesService } from '../server-properties.service';
 import { CrgLayer } from '../geoserver/layers.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import {ImportLayerItem} from '../geoserver/import/models';
+import {BugObject} from './validation.service';
 
 
 export class FeatureXsdDefinition {
@@ -22,6 +23,7 @@ export interface FeatureDescription {
   tableName: string;
   customRuleFunction?: any;
   matchingCounter?: number;
+  calcFiledFunction?: string;
 }
 
 export interface PropertySchema {
@@ -70,7 +72,7 @@ export class DataSchemaService {
               private serverProp: ServerPropertiesService) {
   }
 
-  getFeaturesDefinition(): Observable<FeatureXsdDefinition> {
+  getFeaturesSchemas(): Observable<FeatureXsdDefinition> {
     if (this.featuresXsdDefinition.schemas && this.featuresXsdDefinition.schemas.length) {
       this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
@@ -98,7 +100,7 @@ export class DataSchemaService {
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
-  public getFeatureDescriptionByName(layerName: string): FeatureDescription | undefined {
+  public getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
     if (!layerName) {
       return;
     }
@@ -145,7 +147,7 @@ export class DataSchemaService {
       }
     }
 
-    return this.getFeatureDescriptionByName(layerName);
+    return this.getFeatureSchemaByName(layerName);
   }
 
   /**
@@ -156,15 +158,13 @@ export class DataSchemaService {
    * @return The new array of {@link CrgLayer}.
    */
   public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
-    const baseFeatureDescription = this.getFeatureDescriptionByName(baseLayer.name);
-    const baseFeatureGeometry: string[] = FeatureUtil.getFeatureGeometry(baseFeatureDescription);
+    const baseFeatureGeometry: string[] = FeatureUtil.getFeatureGeometry(baseLayer.schema);
 
     const result: CrgLayer[] = [];
     baseFeatureGeometry.forEach(fGeometry => {
       layers.forEach((layer: CrgLayer) => {
         if (baseLayer.complexName !== layer.complexName) {
-          const fDescription = this.getFeatureDescriptionByName(layer.name);
-          if (FeatureUtil.isFeatureGeometryCompatible(fGeometry, fDescription)) {
+          if (FeatureUtil.isFeatureGeometryCompatible(fGeometry, baseLayer.schema)) {
             result.push(layer);
           }
         }
@@ -174,32 +174,17 @@ export class DataSchemaService {
     return result;
   }
 
-  public getLayerTitle(layerName: string): string {
-    if (!this.featuresXsdDefinition.schemas || this.featuresXsdDefinition.schemas.length < 1) {
-      this.logger.warn('xsd feature definition not ready yet');
-
-      return layerName;
-    }
-
-    const fDescription = this.getFeatureDescriptionByName(layerName);
-    if (fDescription) {
-      return fDescription.title;
-    } else {
-      return layerName;
-    }
-  }
-
-  getClassIdAlias(layerName: string, element: {[key: string]: string}) {
-    const featureByName = this.getFeatureDescriptionByName(layerName);
-    if (!featureByName) {
+  getClassIdAlias(layerName: string, bugObject: BugObject) {
+    const featureSchema = this.getFeatureSchemaByName(layerName);
+    if (!featureSchema) {
       return '';
     }
 
-    return featureByName.properties
+    return featureSchema.properties
       .filter((simpleProperty: PropertySchema) => simpleProperty.enumerations)
       .reduce((val: string, simpleProperty: PropertySchema) => {
         return simpleProperty.enumerations.reduce((title: string, item: ValueTitleProjection) => {
-          if (String(element.classId) === item.value || String(element.classid) === item.value) {
+          if (String(bugObject.classId) === item.value || String(bugObject.classId) === item.value) {
             return item.title;
           } else {
             return title;
@@ -216,9 +201,9 @@ export class DataSchemaService {
    */
   getPropertyAlias(layerName: string, propertyName: string) {
     let result;
-    const featureByName = this.getFeatureDescriptionByName(layerName);
-    if (featureByName) {
-      featureByName.properties
+    const featureSchema = this.getFeatureSchemaByName(layerName);
+    if (featureSchema) {
+      featureSchema.properties
         .forEach((simpleProperty: PropertySchema) => {
           if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
             result = simpleProperty.title;

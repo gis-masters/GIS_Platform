@@ -1,4 +1,4 @@
-import {PropertySchema} from './data-schema.service';
+import {FeatureDescription, PropertySchema} from './data-schema.service';
 
 export interface CrgModels {
   page?: Pageable;
@@ -85,7 +85,7 @@ export const IMPORT_LAYER_AS_IS = {
   description: '',
   tableName: 'IMPORT_LAYER_AS_IS',
   properties: []
-};
+} as FeatureDescription;
 
 export const NOT_IMPORT_LAYER = {
   name: 'NOT_IMPORT_LAYER',
@@ -93,4 +93,12 @@ export const NOT_IMPORT_LAYER = {
   description: '',
   tableName: 'NOT_IMPORT_LAYER',
   properties: []
-};
+} as FeatureDescription;
+
+export const LAYERS_GROUP = {
+  name: 'Group',
+  title: 'Группа слоёв',
+  description: '',
+  tableName: '',
+  properties: []
+} as FeatureDescription;

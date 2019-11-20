@@ -44,7 +44,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
     this.propertySchemas.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.propertySchemas.push({name: AS_IS.name, title: AS_IS.title});
 
-    this.dataSchemaService.getFeaturesDefinition()
+    this.dataSchemaService.getFeaturesSchemas()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
           if (featureXsdDefinition.schemas) {
@@ -63,8 +63,8 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
         this.selectedFeatureType = undefined;
 
-        let filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer);
-        let sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
+        const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer);
+        const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
 
         this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
 
@@ -74,7 +74,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
         } else if (comparableLayersPair.targetLayer.schemaName === IMPORT_LAYER_AS_IS.tableName) {
           this.selectedFeatureType = IMPORT_LAYER_AS_IS.name;
         } else {
-          let schemaName = comparableLayersPair.targetLayer.schemaName;
+          const schemaName = comparableLayersPair.targetLayer.schemaName;
           if (schemaName) {
             const featureDescription = this.findDescription(schemaName);
             if (featureDescription) {

@@ -1,37 +1,33 @@
 import {NGXLogger} from 'ngx-logger';
 import {takeUntil} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {ValidationService} from '../../services/crg/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../services/communication.service';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {FeaturePropertyValidators, ValidationError} from '../../services/util/FeaturePropertyValidators';
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {DataSchemaService, EditFeatureItem, FeatureDescription} from '../../services/crg/data-schema.service';
-import {Subject} from 'rxjs';
+import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {DataSchemaService} from '../../services/crg/data-schema.service';
+import {FeatureUtil} from '../../services/util/FeatureUtil';
+import {BaseEdit} from './base-edit';
 
 @Component({
   selector: 'crg-edit-bug-object',
   templateUrl: './edit-bug-object.component.html',
   styleUrls: ['./edit-bug-object.component.css']
 })
-export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
+export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit {
 
   @Input() data: ObjectDto[];
   @Output() closeMe = new EventEmitter<boolean>();
 
-  editFeatureForm: FormGroup;
-
-  featureDescription: FeatureDescription;
   wfsFeature: WfsFeature;
 
-  editFeatureData: EditFeatureItem[] = [];
   isFeatureTypeLoaded = false;
 
   private object: ObjectDto;
-  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
@@ -42,6 +38,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
               private communicationService: CommunicationService,
               private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -65,24 +62,19 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   editFeature() {
-    // Сохраняем только те свойства что были затронуты пользователем и валидны
-    // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
-    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
-
     if (this.wfsFeature && this.wfsFeature.properties) {
-      const newProperties: {[key: string]: string} = {};
-      dirtyProperties.forEach((item: EditFeatureItem) => { // Collect actual value from form
-        newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
+      const propCopy = Object.assign({}, this.wfsFeature.properties);
+      const newProperties = this.getActualValuesFromForm(propCopy);
+
+      const calcAttributes = FeatureUtil.calculateByFunction(propCopy, this.featureDescription.calcFiledFunction);
+      Object.keys(calcAttributes).forEach(key => {
+        newProperties[key] = calcAttributes[key];
       });
 
       const crgLayer = this.object.crgLayer;
       const workspaceName = crgLayer.complexName.split(':')[0];
+
       this.transformFeatureService
           .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.name, newProperties)
           .pipe(takeUntil(this.unsubscribe$))
@@ -93,6 +85,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
 
               // Сразу провалидируем слой при успешном сохранении
               this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
+              this.openLayers.refreshLayer(this.data[0].crgLayer.complexName);
             } else {
               this.logger.warn('UpdateFeature response: ', response);
               this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
@@ -115,7 +108,7 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
       this.isFeatureTypeLoaded = true;
 
       this.wfsFeature = wfsFeature;
-      this.featureDescription = this.dataSchemaService.getFeatureDescriptionByName(objectDto.crgLayer.name);
+      this.featureDescription = objectDto.crgLayer.schema;
 
       if (!!this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
@@ -181,30 +174,4 @@ export class EditBugObjectComponent implements OnChanges, OnInit, OnDestroy {
     }, 22);
   }
 
-  private getDirtyAndValidProperties(): EditFeatureItem[] {
-    const result: EditFeatureItem[] = [];
-    if (!this.editFeatureForm.dirty) {
-      return result;
-    }
-
-    this.editFeatureData.forEach((property: EditFeatureItem) => {
-      const formProperty = this.editFeatureForm.controls[property.name];
-      if (formProperty.dirty && formProperty.valid) {
-        result.push(property);
-      }
-    });
-
-    return result;
-  }
-
-
-  private validateCustomRules(featureProperties: {}) {
-    FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
-      .forEach((validationError: ValidationError) => {
-        const control = this.editFeatureForm.controls[validationError.attribute];
-        if (control) {
-          control.setErrors([validationError.error]);
-        }
-      });
-  }
 }

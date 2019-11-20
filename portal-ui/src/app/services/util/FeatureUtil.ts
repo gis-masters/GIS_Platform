@@ -1,9 +1,9 @@
+import * as _ from 'lodash';
 import {ValueType} from './FeaturePropertyValidators';
 import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
 import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
 import {ImportLayerItem, LayerAttribute} from '../geoserver/import/models';
 import {AS_IS, NOT_IMPORT} from '../crg/models';
-import * as _ from "lodash";
 
 export class FeatureUtil {
 
@@ -51,8 +51,8 @@ export class FeatureUtil {
   }
 
   static sortByBestCompatibility(fDescription: FeatureDescription[], layer?: ImportLayerItem): FeatureDescription[] {
-    fDescription.forEach((fDescription: FeatureDescription) => {
-      this.calculateAttributeCompatibility(layer, fDescription);
+    fDescription.forEach((description: FeatureDescription) => {
+      this.calculateAttributeCompatibility(layer, description);
     });
 
     return _.sortBy(fDescription, ['matchingCounter']);
@@ -69,6 +69,19 @@ export class FeatureUtil {
     });
 
     return propertySchemas;
+  }
+
+  static calculateByFunction(featureObject, calcFunction: string): {[key: string]: string} {
+    let result;
+    try {
+      const cFunction = new Function('obj', calcFunction);
+
+      result = cFunction(featureObject);
+    } catch (e) {
+      throw Error('Ошибка при попытке просчитать атрибуты' + e);
+    }
+
+    return result;
   }
 
   /**
@@ -116,5 +129,4 @@ export class FeatureUtil {
 
     fDescription.matchingCounter = counter;
   }
-
 }

@@ -24,6 +24,7 @@ import {getTopLeft, getWidth} from 'ol/extent';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import WMTS from 'ol/source/WMTS';
 import {get as getProjection} from 'ol/proj';
+import Layer from 'ol/layer/Layer';
 
 export let BEARER_TOKEN = '';
 
@@ -158,6 +159,12 @@ export class OpenLayersService {
     return imageLayer;
   }
 
+  async deleteLayerFromMap(complexLayerName: string) {
+    const layerByName = this.getLayerByName(complexLayerName);
+
+    this._map.removeLayer(layerByName);
+  }
+
   /**
    * Установить прозрачность слоя.
    *
@@ -226,6 +233,15 @@ export class OpenLayersService {
       return layer;
     } else {
       this.logger.warn('Not found layer: ', complexLayerName);
+    }
+  }
+
+  // Принудительный рефреш
+  refreshLayer(complexLayerName: string) {
+    const layerByName = this.getLayerByName(complexLayerName) as Layer;
+
+    if (layerByName) {
+      layerByName.getSource().refresh();
     }
   }
 

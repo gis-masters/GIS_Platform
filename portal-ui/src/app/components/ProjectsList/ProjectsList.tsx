@@ -25,7 +25,7 @@ export class ProjectsList extends React.Component<{}> {
     await services.provided;
     const { communicationService, dataSchemaService, projectsService } = services;
     communicationService.stepperEvents.emit(1);
-    dataSchemaService.getFeaturesDefinition().subscribe();
+    dataSchemaService.getFeaturesSchemas().subscribe();
     projectsService.fetchProjects();
   }
 

@@ -5,7 +5,7 @@ import {CrgModels} from '../crg/models';
 import {ServerPropertiesService} from '../server-properties.service';
 import {Util} from './util';
 import {UsedGeometryType} from '../open-layer/GeometryType';
-import { HttpQueue } from '../util/HttpQueue';
+import {HttpQueue} from '../util/HttpQueue';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,13 @@ import { HttpQueue } from '../util/HttpQueue';
 export class WfsService {
 
   constructor(private httpq: HttpQueue,
-              private serverProp: ServerPropertiesService) { }
+              private serverProp: ServerPropertiesService) {
+  }
 
   async getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
     const url = await this.prepareLink(complexName, objectId);
     const featureCollection: WfsFeatureCollection = await this.httpq.get<WfsFeatureCollection>(url);
-    
+
     if (featureCollection && featureCollection.features.length > 0) {
       return featureCollection.features[0];
     } else {
@@ -39,10 +40,6 @@ export class WfsService {
       sortBy: Util.generateSortParam(requestModel)
     };
 
-    if (complexName === 'yalta_1:transpsanitarygapzone') {
-
-    }
-
     if (requestModel && requestModel.page) {
       const countRows = (requestModel.page.pageSize) ? requestModel.page.pageSize.toString() : '100';
       const offset = (requestModel.page.offset) ? requestModel.page.offset.toString() : '0';
@@ -59,7 +56,7 @@ export class WfsService {
     return defer(async () => {
       const url = (await this.serverProp.geoServerUrl) + '/wfs';
       const fCollection: WfsFeatureCollection =
-                    await this.httpq.get<WfsFeatureCollection>(url, {params: params})
+        await this.httpq.get<WfsFeatureCollection>(url, {params: params})
 
       return this.clearFeatureId(fCollection);
     });
@@ -73,15 +70,15 @@ export class WfsService {
     const url = (await this.serverProp.geoServerUrl) + '/wfs';
 
     return this.httpq
-               .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
+      .post<WfsFeatureCollection>(url, xml, {params: {exceptions: 'application/json'}});
   }
 
   private async prepareLink(typeName: string, objectId: string): Promise<string> {
     const workspaceName = typeName.split(':')[0];
 
     return (await this.serverProp.geoServerUrl) + '/' + workspaceName + '/ows'
-                        + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
-                        + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
+      + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
+      + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
   }
 
   private clearFeatureId(fCollection: WfsFeatureCollection): WfsFeatureCollection {

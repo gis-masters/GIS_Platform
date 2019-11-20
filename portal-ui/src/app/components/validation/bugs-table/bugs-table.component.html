@@ -38,7 +38,7 @@
 
         <ng-container matColumnDef="classid">
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Название</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{getClassIdAlias(element)}}</td>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{element.title}}</td>
         </ng-container>
 
         <ng-container matColumnDef="violationsCounter">

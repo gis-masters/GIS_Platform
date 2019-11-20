@@ -129,10 +129,6 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.isEditMode = !this.isEditMode;
   }
 
-  getGeometryType(name: string) {
-    return StringUtil.splitGeomType(name);
-  }
-
   isDone(name: string) {
     const brieflyInfo = this.commonInfo.get(name);
     if (brieflyInfo) {
