@@ -14,6 +14,7 @@ const cnDataImportTasksList = cn('DataImportTasksList');
 interface DataImportTasksListTaskProps {
   task: ImportTaskExtended;
   onDeleteTask: () => void;
+  short: boolean;
 }
 
 @observer
@@ -30,33 +31,38 @@ export class DataImportTasksListTask extends React.Component<DataImportTasksList
   }
 
   render() {
-    const { statusText, layer, state, isError } = this.props.task;
+    const { short, task } = this.props;
+    const { statusText, layer, state, isError } = task;
     const progress = state === 'RUNNING' && currentImport.progress;
 
     return (
       <>
-        <tr className={cnDataImportTasksList('Task', {error: isError, deleting: this.isDeleting})}>
+        <tr className={cnDataImportTasksList('Task', { error: isError, deleting: this.isDeleting, short })}>
           <td className={cnDataImportTasksList('TaskName')}>
             {layer ? layer.name : ''}
           </td>
           <td className={cnDataImportTasksList('TaskStatus')}>
             {statusText}
           </td>
-          <td className={cnDataImportTasksList('TaskProgress')}>
-            {progress ? progress.progress : '\u00A0'}
-            {progress && progress.total ? ` / ${progress.total}` : ''}
-          </td>
-          <td className={cnDataImportTasksList('TaskControls')}>
-            <Tooltip title='Удалить слой'>
-              <IconButton aria-label="delete"
-                          className={cnDataImportTasksList('TaskDel')}
-                          size="small"
-                          disabled={this.isDeleting}
-                          onClick={this.openDeleteDialog}>
-                <DeleteIcon fontSize="inherit" className={cnDataImportTasksList('TaskDelIcon')} />
-              </IconButton>
-            </Tooltip>
-          </td>
+          {!short ? (
+              <>
+                <td className={cnDataImportTasksList('TaskProgress')}>
+                  {progress ? progress.progress : '\u00A0'}
+                  {progress && progress.total ? ` / ${progress.total}` : ''}
+                </td>
+                <td className={cnDataImportTasksList('TaskControls')}>
+                  <Tooltip title='Удалить слой'>
+                    <IconButton aria-label="delete"
+                                className={cnDataImportTasksList('TaskDel')}
+                                size="small"
+                                disabled={this.isDeleting}
+                                onClick={this.openDeleteDialog}>
+                      <DeleteIcon fontSize="inherit" className={cnDataImportTasksList('TaskDelIcon')} />
+                    </IconButton>
+                  </Tooltip>
+                </td>
+              </>
+            ) : null}
         </tr>
 
         <Dialog open={this.isDelDialogOpen}>

@@ -18,6 +18,14 @@
       opacity: 0.2;
     }
 
+    &_short {
+      .DataImportTasksList-TaskStatus {
+        width: auto;
+        text-align: right;
+        padding-right: 15px;
+      }
+    }
+
     &:hover {
       .DataImportTasksList-TaskDelIcon {
         opacity: 1;

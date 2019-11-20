@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { computed, action } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
-import { Project } from '../../stores/ProjectsList.store';
-import { Button } from '../Button/Button';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
 
 import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
 import { DataImportNotice } from './Notice/DataImport-Notice';
 import { DataImportNotifications } from './Notifications/DataImport-Notifications';
+import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
+import { DataImportPopup } from './Popup/DataImport-Popup';
 
 import '!style-loader!css-loader!sass-loader!./DataImport.scss';
 
@@ -23,6 +23,17 @@ export class DataImport extends React.Component<{}> {
   private pollTimeout?: number;
   private pollingOn = false;
   private pollingDelay = 500;
+  @observable private popupOpen = false;
+
+  @computed
+  private get importUrl (): string {
+    return `/projects/${route.params.projectId}/import`;
+  }
+
+  @computed
+  private get nextUrl (): string {
+    return `${this.importUrl}/${route.params.importId}/mapping`;
+  }
 
   constructor (props: {}) {
     super(props);
@@ -30,6 +41,8 @@ export class DataImport extends React.Component<{}> {
     this.fileDropHandler = this.fileDropHandler.bind(this);
     this.reset = this.reset.bind(this);
     this.poll = this.poll.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+    this.handlePopupClose = this.handlePopupClose.bind(this);
   }
 
   async componentDidMount () {
@@ -65,9 +78,7 @@ export class DataImport extends React.Component<{}> {
       return null;
     }
 
-    const { isSuccess, on, file, isWrongExt, isError } = currentImport;
-    const { projectId, importId } = route.params;
-    const nextUrl = `/projects/${projectId}/import/${importId}/mapping`;
+    const { on, file } = currentImport;
 
     return (
       <div className={cnDataImport()}>
@@ -80,28 +91,21 @@ export class DataImport extends React.Component<{}> {
 
         <DataImportNotice />
 
-        <DataImportNotifications
-            isWrongExt={isWrongExt}
-            isImportFailed={isError}
-            isSuccess={isSuccess} />
+        <DataImportNotifications />
 
-        <DataImportTasksList className={cnDataImport('TasksList')} onDeleteAllTask={this.reset} />
+        <DataImportTasksList
+            className={cnDataImport('TasksList')}
+            onDeleteAllTask={this.reset} />
 
-        <div className={cnDataImport('NavButtons')}>
+        <DataImportNavButtons
+            onNext={this.handleNext}
+            onCancel={this.reset}
+            nextUrl={this.nextUrl} />
 
-          {on ? (
-              <Button onClick={this.reset} variant='outlined'>
-                Отменить импорт
-              </Button>
-            ) : (
-              <Button routerLink='/projects' variant='outlined'>
-                Вернуться к выбору проекта
-              </Button>
-            )}
-          <Button disabled={!isSuccess}  routerLink={nextUrl} variant='outlined' color='primary'>
-            Далее
-          </Button>
-        </div>
+        <DataImportPopup
+            open={this.popupOpen}
+            onClose={this.handlePopupClose}
+            nextUrl={this.nextUrl} />
       </div>
     );
   }
@@ -122,24 +126,19 @@ export class DataImport extends React.Component<{}> {
     }
   }
 
-  private async reset () {
+  private reset () {
     this.stopPolling();
     currentImport.reset();
-    const currentProject: Project = await services.projectsService.getCurrent();
     services.ngZone.run(() => {
-      services.router.navigate(
-          [`/projects/${currentProject.id}/import`],
-          { replaceUrl: true }
-      );
+      services.router.navigate([this.importUrl], { replaceUrl: true });
     });
   }
 
   private start () {
     services.ngZone.run(async () => {
-      const currentProject: Project = await services.projectsService.getCurrent();
       const { id } = await services.importService
                                  .initScratchImport(currentImport.file);
-      services.router.navigate([`/projects/${currentProject.id}/import/${id}`]);
+      services.router.navigate([`${this.importUrl}/${id}`]);
       this.launchPolling();
     });
   }
@@ -170,5 +169,18 @@ export class DataImport extends React.Component<{}> {
   private stopPolling() {
     this.pollingOn = false;
     clearTimeout(this.pollTimeout);
+  }
+
+  @action
+  private handleNext (e: React.MouseEvent<HTMLButtonElement>) {
+    if (currentImport.hasErrorTasks) {
+      e.preventDefault();
+      this.popupOpen = true;
+    }
+  }
+
+  @action
+  private handlePopupClose () {
+    this.popupOpen = false;
   }
 }

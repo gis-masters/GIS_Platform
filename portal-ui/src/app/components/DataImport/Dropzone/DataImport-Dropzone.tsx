@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Dropzone from 'react-dropzone'
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { cn } from '@bem-react/classname';
 
@@ -59,9 +59,9 @@ export const DataImportDropzone: React.FC<DataImportDropzoneProps> = (props) => 
                 { Number(fileSize.toFixed(3)) } MB
               </div>
             )}
-            <Button size='small' className={cnDataImport('DropzoneFileDel')} onClick={onClear}>
+            <IconButton className={cnDataImport('DropzoneFileDel')} onClick={onClear}>
               <DeleteIcon color='error' />
-            </Button>
+            </IconButton>
           </div>
         </div>
       ) : null}

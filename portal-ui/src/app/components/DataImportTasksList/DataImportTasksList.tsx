@@ -11,7 +11,9 @@ import '!style-loader!css-loader!sass-loader!./DataImportTasksList.scss';
 const cnDataImportTasksList = cn('DataImportTasksList');
 
 interface DataImportTasksListProps {
-  onDeleteAllTask: () => void;
+  onDeleteAllTask?: () => void;
+  short?: boolean;
+  onlyErrors?: boolean;
   className?: string;
 }
 
@@ -36,12 +38,18 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
   }
 
   render() {
+    const tasks = this.props.onlyErrors ? currentImport.errorTasks : currentImport.tasks;
+
     return (
       <div className={cnDataImportTasksList(null, [this.props.className])}>
         <table className={cnDataImportTasksList('Table')}>
           <tbody>
-            {currentImport.tasks.map(task => (
-              <DataImportTasksListTask task={task} key={task.id} onDeleteTask={this.onDeleteTask} />)
+            {tasks.map(task => (
+              <DataImportTasksListTask task={task}
+                                       key={task.id}
+                                       onDeleteTask={this.onDeleteTask}
+                                       short={this.props.short}
+              />)
             )}
           </tbody>
         </table>

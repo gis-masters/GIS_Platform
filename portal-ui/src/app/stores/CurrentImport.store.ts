@@ -123,10 +123,23 @@ class CurrentImport implements ImportInfo {
   }
 
   @computed
-  get isSuccess (): boolean {
-    const hasErrorTasks = this.tasks.some(t => t.isError);
+  get errorTasks (): ImportTaskExtended[] {
+    return this.tasks.filter(t => t.isError);
+  }
 
-    return this.isFinished && !this.isError && this.tasks.length && !hasErrorTasks;
+  @computed
+  get hasErrorTasks (): boolean {
+    return Boolean(this.errorTasks.length);
+  }
+
+  @computed
+  get hasSuccessTasks (): boolean {
+    return this.tasks.some(t => !t.isError);
+  }
+
+  @computed
+  get isSuccess (): boolean {
+    return this.isFinished && !this.isError && this.hasSuccessTasks;
   }
 
   @action

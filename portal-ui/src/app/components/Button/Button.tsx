@@ -11,21 +11,32 @@ interface ButtonProps extends BaseButtonProps {
 }
 
 export class Button extends React.Component<ButtonProps> {
-  private extendedProps: ButtonProps;
-
   constructor (props: ButtonProps) {
     super(props);
-    this.navigate = this.navigate.bind(this);
+
+    this.onClickHandler = this.onClickHandler.bind(this);
   }
 
   render () {
-    this.extendedProps = {
+    const extendedProps: ButtonProps = {
       ...this.props,
-      onClick: this.props.routerLink ? this.navigate : this.props.onClick
+      href: this.props.routerLink || this.props.href,
+      onClick: this.onClickHandler
     };
-    delete this.extendedProps.routerLink;
+    delete extendedProps.routerLink;
 
-    return <BaseButton {...this.extendedProps} />;
+    return <BaseButton {...extendedProps} />;
+  }
+
+  private onClickHandler (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    if (this.props.onClick) {
+      this.props.onClick(e);
+    }
+
+    if (this.props.routerLink && !e.isDefaultPrevented()) {
+      e.preventDefault();
+      this.navigate();
+    }
   }
 
   private async navigate () {
