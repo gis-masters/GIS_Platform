@@ -3,17 +3,17 @@
 const assert = require('chai').assert;
 
 const HomePage = require('../../../objects/Home/Home.page');
-const ToastError = require('../../../objects/ToastError/ToastError.block');
+const Toast = require('../../../objects/Toast/Toast.block');
 
 describe('common: Нотификация пользователя при непредвиденных ошибках', () => {
   beforeEach(async function () {
     const homePage = new HomePage(this.browser);
-    const toastError = new ToastError(this.browser);
+    const toast = new Toast(this.browser);
 
     await homePage.open();
     await homePage.waitForVisible();
-    await toastError.produceError();
-    await toastError.waitForVisible();
+    await toast.produceError();
+    await toast.waitForVisible();
   });
 
   /**
@@ -24,9 +24,9 @@ describe('common: Нотификация пользователя при неп�
    *   Then нотифификация выглядит как положено
    */
   it('Внешний вид', async function() {
-    const toastError = new ToastError(this.browser);
+    const toast = new Toast(this.browser);
 
-    await toastError.assertSelfie();
+    await toast.assertSelfie();
   });
 
   /**
@@ -41,12 +41,12 @@ describe('common: Нотификация пользователя при неп�
    *   Then исчезают подробности ошибки
    */
   it('Подробности', async function() {
-    const toastError = new ToastError(this.browser);
+    const toast = new Toast(this.browser);
 
-    await toastError.clickMoar();
-    await toastError.waitForDetails();
-    await toastError.assertSelfie();
-    await toastError.clickMoar();
-    await toastError.waitForDetailsHidden();
+    await toast.clickMoar();
+    await toast.waitForDetails();
+    await toast.assertSelfie();
+    await toast.clickMoar();
+    await toast.waitForDetailsHidden();
   });
 });

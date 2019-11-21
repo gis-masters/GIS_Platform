@@ -4,7 +4,7 @@ import { MultiLineString, MultiPolygon, Point } from 'ol/geom';
 
 import { WfsFeature, WfsGeometry } from '../geoserver/wfs.service';
 import { UsedGeometryType } from './GeometryType';
-import { ToastError } from '../../components/ToastError/ToastError';
+import { Toast } from '../../components/Toast/Toast';
 
 export class MapperUtil {
   /**
@@ -13,7 +13,7 @@ export class MapperUtil {
   public static mapWfsFeatureToFeature(wfsFeature: WfsFeature, supressError?: boolean): Feature | undefined {
     if (!wfsFeature.geometry) {
       if (!supressError) {
-        ToastError.show({
+        Toast.error({
           message: 'Ошибка: нет геометрии',
           details: `type: ${wfsFeature.type};
                     id: ${wfsFeature.id};
@@ -34,7 +34,7 @@ export class MapperUtil {
    */
   public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry): Geometry | undefined {
     if (!wfsGeometry) {
-      ToastError.show({message: 'Некорректная геометрия'});
+      Toast.error({message: 'Некорректная геометрия'});
 
       return;
     }
@@ -47,7 +47,7 @@ export class MapperUtil {
       case UsedGeometryType.MULTILINE_STRING:
         return new MultiLineString(wfsGeometry.coordinates);
       default:
-        ToastError.show({message: `Not supported geometry type: ${wfsGeometry.type}`});
+        Toast.error({message: `Not supported geometry type: ${wfsGeometry.type}`});
     }
   }
 }

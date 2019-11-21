@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, throwError } from 'rxjs';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
@@ -18,8 +17,9 @@ import { OpenLayersService } from '../../services/open-layer/open-layers.service
 import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { ProjectsService } from '../../services/crg/projects.service';
-import { GeoserverJSONException, WfsFeatureCollection, WfsService } from '../../services/geoserver/wfs.service';
+import { WfsFeatureCollection, WfsService } from '../../services/geoserver/wfs.service';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { Toast } from '../Toast/Toast';
 
 @Component({
   selector: 'crg-map',
@@ -39,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy {
   validationDialogData: ValidationDialogData;
   layers: CrgLayer[];
   gmlDialogData: CrgLayer[];
-  selectedLayer;
+  selectedLayer: CrgLayer;
   cn = cn('map');
 
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -49,7 +49,6 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
               private projectsService: ProjectsService,
-              private snackBar: MatSnackBar,
               private wfsService: WfsService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) {
@@ -70,8 +69,7 @@ export class MapComponent implements OnInit, OnDestroy {
             if (data.layers && data.layers.length > 0) {
               this.validationDialogData = data;
             } else {
-              this.snackBar.open('Отсутствуют данные. Начните свою работу с загрузки слоев.', 'X',
-                {duration: 10000});
+              Toast.warn('Отсутствуют данные. Начните свою работу с загрузки слоев.');
             }
           } else {
             this.isValidationDialogShow = false;
@@ -152,13 +150,13 @@ export class MapComponent implements OnInit, OnDestroy {
     await this.layersService.deleteLayer(layer);
     const fType: FeatureType = await this.featureTypesService.getByName(layer);
     await this.featureTypesService.delete(fType);
-    this.snackBar.open('Удалено', 'X', {duration: 3000});
+    Toast.info('Удалено');
 
     await this.openLayers.deleteLayerFromMap(layer.complexName);
   }
 
   /**
-   * Отобразить информацию об обьектах, которые пересекают заданные координаты.
+   * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: [number, number]) {
     const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();

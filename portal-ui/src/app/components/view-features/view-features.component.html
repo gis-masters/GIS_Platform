@@ -4,11 +4,11 @@
       <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
       <mat-icon class="edit-icon fiz-border"
                 (click)="editFeatures()"
-                matTooltip="Редактировать выделенные обьекты"
+                matTooltip="Редактировать выделенные объекты"
                 *ngIf="!isSimf">
         edit
       </mat-icon>
-      Обьекты
+      Объекты
     </div>
 
     <ng-container *ngIf="data?.features; else noFeatures">
@@ -35,7 +35,7 @@
 
     <ng-template #noFeatures>
       <div class="col-12 text-center">
-        Обьекты не выбраны
+        Объекты не выбраны
       </div>
     </ng-template>
   </div>

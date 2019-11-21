@@ -19,7 +19,6 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
 import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/models';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {FizLogger} from '../../services/logger/fiz.logger';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {EditFeatureMode} from '../edit-feature/edit-feature.component';
@@ -32,6 +31,7 @@ import {TransformFeatureService} from '../../services/geoserver/transform-featur
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { getEnvironment } from '../../services/environment';
+import { Toast } from '../Toast/Toast';
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -90,7 +90,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private layersService: LayersService,
               private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
-              private snackBar: MatSnackBar,
               private log: FizLogger,
               private dialog: MatDialog,
               private openLayersService: OpenLayersService) {
@@ -306,7 +305,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   editFeatures() {
     const selectedFeatures = this.attributeTable.selected;
     if (selectedFeatures.length < 1) {
-      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      Toast.warn('Нет выделенных объектов');
       return;
     }
     // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
@@ -349,12 +348,12 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   deleteObjects() {
     if (this.attributeTable.selected.length < 1) {
-      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      Toast.warn('Нет выделенных объектов');
       return;
     }
 
     const data: ConfirmDialogData = {
-      title: 'Удалить выделенные обьекты?',
+      title: 'Удалить выделенные объекты?',
       approveBtnName: 'Удалить'
     };
 
@@ -419,7 +418,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       if (i >= countOfParts) {
         this.loadPercent = percent > 100 ? 100 : percent;
         this.loading = false;
-        this.snackBar.open('Обьекты скопированы', 'X', {duration: 3000});
+        Toast.info('Объекты скопированы');
       } else {
         this.loadPercent = percent > 100 ? 100 : percent;
       }
@@ -462,7 +461,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         if (i >= countOfParts) {
           this.loadPercent = percent > 100 ? 100 : percent;
           this.loading = false;
-          this.snackBar.open('Обьекты перемещены', 'X', {duration: 3000});
+          Toast.info('Объекты перемещены');
 
           this.updateTable(this.requestModel$.getValue());
         } else {
@@ -473,7 +472,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   private handleError(reason: string) {
     this.loading = false;
-    this.snackBar.open('Не удалось переместить', 'X', {duration: 3000});
+    Toast.warn('Не удалось переместить');
 
     return of();
   }
@@ -500,7 +499,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       if (i >= countOfParts) {
         this.loadPercent = percent > 100 ? 100 : percent;
         this.loading = false;
-        this.snackBar.open('Обьекты удалены', 'X', {duration: 3000});
+        Toast.info('Объекты удалены');
 
         this.updateTable(this.requestModel$.getValue());
       } else {
@@ -511,7 +510,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   private prepareSuitableLayers() {
     if (this.attributeTable.selected.length < 1) {
-      this.snackBar.open('Нет выделенных обьектов', 'X', {duration: 3000});
+      Toast.warn('Нет выделенных объектов');
       return of([]);
     }
 
@@ -704,7 +703,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     if (!!suitableLayers.length) {
       return true;
     } else {
-      this.snackBar.open('Нет подходящих слоев', 'X', {duration: 6000});
+      Toast.warn('Нет подходящих слоев');
       return false;
     }
   }

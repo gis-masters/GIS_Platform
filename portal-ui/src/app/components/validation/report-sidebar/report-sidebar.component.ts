@@ -1,16 +1,17 @@
-import {Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import {filter, takeUntil} from 'rxjs/operators';
-import {StringUtil} from '../../../services/util/StringUtil';
-import {CrgLayer} from '../../../services/geoserver/layers.service';
-import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {CommunicationService, ObjectDto} from '../../../services/communication.service';
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+
+import { StringUtil } from '../../../services/util/StringUtil';
+import { CrgLayer } from '../../../services/geoserver/layers.service';
+import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
+import { CommunicationService, ObjectDto } from '../../../services/communication.service';
 import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
 import {IWsMessage, ValidationWsMsg, WsService} from '../../../services/ws.service';
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {ProcessStatus, ProcessType} from '../../../services/crg/models';
+import { Toast } from '../../Toast/Toast';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -36,7 +37,6 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private wsService: WsService,
-              private snackBar: MatSnackBar,
               private validationService: ValidationService,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
@@ -188,7 +188,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   private showError(error?) {
     this.isValidationInited = false;
     this.logger.error('Cant validate layers: ', error);
-    this.snackBar.open('Ошибка проверки данных', 'X', {duration: 10000});
+    Toast.error('Ошибка проверки данных');
   }
 
 }

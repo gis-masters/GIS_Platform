@@ -13,7 +13,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { getEnvironment } from '../../services/environment';
-import { ToastError } from '../../components/ToastError/ToastError';
+import { Toast } from '../../components/Toast/Toast';
 
 @Component({
   selector: 'crg-root',
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
               error?: Error) {
       if (oldOnError) oldOnError.apply(this, arguments);
 
-      ToastError.show({
+      Toast.error({
         source,
         fileno,
         columnNumber,
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
   private renderReactElement() {
     const props = {
       position: toast.POSITION.TOP_RIGHT,
-      autoClose: 10000,
+      autoClose: Toast.defaultDuration,
       hideProgressBar: false,
       newestOnTop: false,
       closeOnClick: false,

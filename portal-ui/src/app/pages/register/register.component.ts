@@ -1,11 +1,11 @@
-import {NGXLogger} from 'ngx-logger';
-import {Router} from '@angular/router';
-import {Component, OnDestroy} from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import {AuthService} from '../../services/auth.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+
+import { AuthService } from '../../services/auth.service';
+import { Toast } from '../../components/Toast/Toast';
 
 @Component({
   selector: 'crg-register',
@@ -32,7 +32,6 @@ export class RegisterComponent implements OnDestroy {
   constructor(private fb: FormBuilder,
               private router: Router,
               private logger: NGXLogger,
-              private snackBar: MatSnackBar,
               private authService: AuthService) {
   }
 
@@ -49,7 +48,7 @@ export class RegisterComponent implements OnDestroy {
           () => {
             this.registrationForm.getRawValue();
 
-            this.snackBar.open('Регистрация прошла успешно', 'X', {duration: 5000});
+            Toast.success('Регистрация прошла успешно');
             this.router.navigateByUrl('/login');
           },
           errorResponse => {

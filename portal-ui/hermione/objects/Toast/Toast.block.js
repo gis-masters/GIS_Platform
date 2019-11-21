@@ -1,11 +1,11 @@
 const Block = require('../Block');
 
-module.exports = class ToastError extends Block {
+module.exports = class Toast extends Block {
   _elements = {
-    container: '.ToastError',
-    moar: '.ToastError-Moar',
-    details: '.ToastError-Details',
-    file: '.ToastError-File'
+    container: '.Toast',
+    moar: '.Toast-Moar',
+    details: '.Toast-Details',
+    file: '.Toast-File'
   }
 
   clickMoar () {
@@ -23,20 +23,20 @@ module.exports = class ToastError extends Block {
   async waitForVisible () {
     const { container } = this._elements;
 
-    await this.browser.crgWaitForVisible(container, 2000, 'Не появляется уведомление об ошибке');
+    await this.browser.crgWaitForVisible(container, 2000, 'Не появляется уведомление');
     await this.browser.pause(1000); // animation
   }
 
   async waitForDetails () {
     const { details } = this._elements;
 
-    await this.browser.crgWaitForVisible(details, 'Не появляются детали ошибки');
+    await this.browser.crgWaitForVisible(details, 'Не появляются детали');
   }
 
   async waitForDetailsHidden () {
     const { details } = this._elements;
 
-    await this.browser.crgWaitForHidden(details, 'Не скрываются детали ошибки');
+    await this.browser.crgWaitForHidden(details, 'Не скрываются детали');
   }
 
   assertSelfie () {

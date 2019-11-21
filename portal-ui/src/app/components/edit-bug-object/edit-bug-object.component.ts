@@ -1,8 +1,6 @@
 import {NGXLogger} from 'ngx-logger';
 import {takeUntil} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {ValidationService} from '../../services/crg/validation.service';
 import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {CommunicationService, ObjectDto} from '../../services/communication.service';
@@ -12,6 +10,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {DataSchemaService} from '../../services/crg/data-schema.service';
 import {FeatureUtil} from '../../services/util/FeatureUtil';
 import {BaseEdit} from './base-edit';
+import { Toast } from '../Toast/Toast';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -31,10 +30,8 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
-              private snackBar: MatSnackBar,
               private wfsService: WfsService,
               private openLayers: OpenLayersService,
-              private validationService: ValidationService,
               private communicationService: CommunicationService,
               private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
@@ -81,14 +78,14 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
               this.closeMe.emit(true);
-              this.snackBar.open('Сохранено', 'X', {duration: 3000});
+              Toast.success('Сохранено');
 
               // Сразу провалидируем слой при успешном сохранении
               this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
               this.openLayers.refreshLayer(this.data[0].crgLayer.complexName);
             } else {
               this.logger.warn('UpdateFeature response: ', response);
-              this.snackBar.open('Не удалось сохранить', 'X', {duration: 6000});
+              Toast.warn('Не удалось сохранить');
             }
           });
     }

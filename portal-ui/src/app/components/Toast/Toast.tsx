@@ -1,0 +1,200 @@
+import * as React from 'react';
+import { cn } from '@bem-react/classname';
+import { observable, action } from 'mobx';
+import { observer } from 'mobx-react';
+import { toast, ToastId, ToastOptions } from 'react-toastify';
+import nl2br from 'react-nl2br';
+import { IconButton } from '@material-ui/core';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
+import WarningIcon from '@material-ui/icons/Warning';
+import CloseIcon from '@material-ui/icons/Close';
+import { SvgIconProps } from '@material-ui/core/SvgIcon/';
+
+import '!style-loader!css-loader!sass-loader!./Toast.scss';
+
+const cnToast = cn('Toast');
+
+interface ToastOpts extends ToastOptions {
+  message?: JSX.Element | string;
+  details?: JSX.Element | string;
+}
+
+interface ToastErrorOpts extends ToastOpts {
+  source?: string;
+  fileno?: number;
+  columnNumber?: number;
+  error?: Error;
+}
+
+interface ToastProps extends ToastOpts {
+  toastInfo: {
+    id: ToastId;
+  };
+  icon: JSX.Element;
+}
+
+@observer
+export class Toast extends React.Component<ToastProps> {
+  static defaultDuration = 5000;
+
+  @observable
+  open = false;
+
+  private static icons: {[key: string]: React.FC<SvgIconProps>} = {
+    error: ErrorIcon,
+    success: CheckCircleIcon,
+    warning: WarningIcon,
+    info: InfoIcon
+  };
+
+  constructor (props: ToastProps) {
+    super(props);
+    this.toggleOpen = this.toggleOpen.bind(this);
+  }
+
+  static show (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+    const normalizedOpts = this.normalizeOpts(message, opts);
+    const Icon = this.icons[normalizedOpts.type] || null;
+    const toastInfo: {id: ToastId} = { id: '0' };
+    const closeHandler = () => {
+      toast.dismiss(toastInfo.id);
+    }
+
+    opts = {
+      ...normalizedOpts,
+      className: 'Toast-Toastify',
+      closeButton: (
+        <>
+          <IconButton type='button'
+                      className={cnToast('Close')}
+                      onClick={closeHandler}>
+            <CloseIcon className={cnToast('CloseIcon')} />
+          </IconButton>
+        </>
+      )
+    };
+
+    const props: ToastProps = {
+      ...opts,
+      icon: Icon ? <Icon className={cnToast('Icon')} /> : null,
+      toastInfo
+    };
+
+    toastInfo.id = toast(<Toast {...props} />, opts);
+  }
+
+  static info (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+    this.show({
+      ...this.normalizeOpts(message, opts),
+      type: 'info'
+    } as ToastOpts);
+  }
+
+  static warn (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+    this.show({
+      ...this.normalizeOpts(message, opts),
+      type: 'warning'
+    } as ToastOpts);
+  }
+
+  static success (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+    this.show({
+      ...this.normalizeOpts(message, opts),
+      type: 'success'
+    } as ToastOpts);
+  }
+
+  private static normalizeOpts (message: JSX.Element | string | ToastOpts, opts?: ToastOpts): ToastOpts {
+    if (!opts) {
+      if (message.hasOwnProperty('message')) {
+        opts = message as ToastOpts;
+        message = opts.message;
+      } else {
+        opts = {};
+      }
+    }
+
+    return {
+      ...opts,
+      message: message as JSX.Element | string,
+    }
+  }
+
+  static error (message: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
+    if (!opts) {
+      if (message.hasOwnProperty('message') ||
+            message.hasOwnProperty('error') ||
+            message.hasOwnProperty('details') ||
+            message.hasOwnProperty('source')) {
+        opts = message as ToastErrorOpts;
+        message = opts.message;
+      } else {
+        opts = {};
+      }
+    }
+
+    const { source, error, details, fileno, columnNumber } = opts;
+    const sourceFile = source ? (new URL(source)).pathname : '';
+
+
+    this.show({
+      autoClose: 10000,
+      ...opts,
+      type: 'error',
+      message: message as JSX.Element | string || 'Произошла ошибка.',
+      details: error || details || source ? (
+          <>
+            <div className={cnToast('Message')}>
+              {nl2br(details)}
+              {error ? nl2br(error.message ? error.message : error.toString()) : null}
+            </div>
+            {sourceFile ? (
+              <div className={cnToast('File')}>
+                <div className={cnToast('Source')}>
+                  {sourceFile}
+                </div>
+                <div className={cnToast('FileNums')}>
+                  {fileno}:{columnNumber}
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : null
+    } as ToastOpts);
+  }
+
+  render () {
+    const { details, message, type } = this.props;
+
+    return (
+      <div className={cnToast({ type })}>
+        <div className={cnToast('Head')}>
+          {this.props.icon}
+          <div className={cnToast('Title')}>
+            {nl2br(message)}
+          </div>
+          {details ? (
+            <div className={cnToast('Moar')} onClick={this.toggleOpen}>
+              {this.open ? 'Скрыть' : 'Подробнее'}
+            </div>
+          ) : null}
+        </div>
+        {this.open ? (
+          <div className={cnToast('Details')}>
+            {nl2br(details)}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  @action
+  private toggleOpen () {
+    this.open = !this.open;
+    toast.update(this.props.toastInfo.id, {
+      autoClose: !this.open && (this.props.hasOwnProperty('autoClose') ? this.props.autoClose : Toast.defaultDuration)
+    });
+  }
+}

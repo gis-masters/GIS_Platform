@@ -1,4 +1,3 @@
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {WfsFeature} from '../../services/geoserver/wfs.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {ProjectsService} from '../../services/crg/projects.service';
@@ -14,6 +13,7 @@ import {FeaturePropertyValidators, ValueType} from '../../services/util/FeatureP
 import {getEnvironment} from '../../services/environment';
 import {BaseEdit} from '../edit-bug-object/base-edit';
 import {FeatureUtil} from '../../services/util/FeatureUtil';
+import { Toast } from '../Toast/Toast';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -45,8 +45,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
 
   private BATCH_SIZE = 200;
 
-  constructor(private snackBar: MatSnackBar,
-              private formBuilder: FormBuilder,
+  constructor(private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager,
@@ -170,9 +169,9 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   getTooltip() {
     const featuresCount = this.data.total;
     if (featuresCount) {
-      return 'Сохранить данные для ' + this.data.total + ' обьектов';
+      return 'Сохранить данные для ' + this.data.total + ' объектов';
     } else {
-      return 'Сохраниить обьект';
+      return 'Сохранить объект';
     }
   }
 
@@ -222,7 +221,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
           this.loadPercent = percent > 100 ? 100 : percent;
           this.isSaveInProgress = false;
           this.closeMe.emit(true);
-          this.snackBar.open('Сохранено', 'X', {duration: 3000});
+          Toast.success('Сохранено');
 
           this.communicationService.featuresUpdate$.emit({
             feature: this.data.feature,

@@ -63,7 +63,7 @@ export class WfsService {
   }
 
   /**
-   * Выборка обьектов слоя по XML фильтру.
+   * Выборка объектов слоя по XML фильтру.
    * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
    */
   async getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {

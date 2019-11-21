@@ -64,7 +64,7 @@ export class OpenLayersService {
   // Hit-detection tolerance. Pixels inside the square around the given position will be checked for features.
   private HIT_TOLERANCE = 10;
 
-  // ZIndex чернового слоя который используется для подсвечивания обьектов
+  // ZIndex чернового слоя который используется для подсвечивания объектов
   private DRAFT_LAYER_ZINDEX = 10000;
 
   // Default view options
@@ -245,7 +245,7 @@ export class OpenLayersService {
     }
   }
 
-  // Очистить карту от слоя, который отображал обьект.
+  // Очистить карту от слоя, который отображал объект.
   clearDraft() {
     this.draftSource.clear();
   }

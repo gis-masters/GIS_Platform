@@ -55,7 +55,7 @@ export class FeaturePropertyValidators {
     const result = (control: AbstractControl): ValidationErrors | null => {
       const errors: ErrorMessages = {};
 
-      // Если нет обьекта по которому должна идти проверка, то и проверять нечего.
+      // Если нет объекта по которому должна идти проверка, то и проверять нечего.
       if (!propertySchema) {
         return errors;
       }

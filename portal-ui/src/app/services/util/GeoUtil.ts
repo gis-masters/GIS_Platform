@@ -4,7 +4,7 @@ export class GeoUtil {
 
   /**
    * Приведем в нормальный вид ответ от API геосервера.
-   * @param importTask Обьект с тасками полученный от геосервера
+   * @param importTask Объект с тасками полученный от геосервера
    */
   static tasksHandler(importTask?: ImportTaskResponse): ImportTaskShort[] {
     if (!importTask) {

@@ -1,10 +1,10 @@
 import { ErrorHandler, Injectable } from '@angular/core';
-import { ToastError } from '../components/ToastError/ToastError';
+import { Toast } from '../components/Toast/Toast';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: Error) {
-    ToastError.show({error});
+    Toast.error({error});
     console.error(error);
   }
 }
