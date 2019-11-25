@@ -7,6 +7,7 @@ RUN apk update && apk add zip
 RUN apk add \
       --no-cache \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+      --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
       gdal
 
