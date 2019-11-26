@@ -24,6 +24,7 @@ export interface FeatureDescription {
   customRuleFunction?: any;
   matchingCounter?: number;
   calcFiledFunction?: string;
+  readOnly: boolean;
 }
 
 export interface PropertySchema {
@@ -36,7 +37,7 @@ export interface PropertySchema {
   hidden?: boolean;
   isMultiple?: boolean;
 
-  updateability?: any;
+  updateability?: Updateability;
   choice?: any;
   valueType?: any;
 
@@ -51,6 +52,12 @@ export interface PropertySchema {
   fractionDigits?: number;
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
+}
+
+export enum Updateability {
+  CREATE_ONLY = 'CREATE_ONLY',
+  CREATE_WRITE = 'CREATE_WRITE',
+  READ_ONLY = 'READ_ONLY'
 }
 
 export interface EditFeatureItem {

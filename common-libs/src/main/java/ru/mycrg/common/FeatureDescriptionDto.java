@@ -13,6 +13,7 @@ public class FeatureDescriptionDto {
     private String customRuleFunction = "";
     private String calcFiledFunction = "";
     private String originName;
+    private boolean readOnly;
 
     public FeatureDescriptionDto() {}
 
@@ -82,5 +83,13 @@ public class FeatureDescriptionDto {
 
     public void setCalcFiledFunction(String calcFiledFunction) {
         this.calcFiledFunction = calcFiledFunction;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 }

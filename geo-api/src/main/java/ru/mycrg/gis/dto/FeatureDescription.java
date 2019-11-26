@@ -15,6 +15,7 @@ public class FeatureDescription {
     private String customRuleFunction;
     private String calcFiledFunction;
     private String originName;
+    private boolean readOnly;
 
     public FeatureDescription() {}
 
@@ -31,6 +32,7 @@ public class FeatureDescription {
         this.properties = featureDescription.getProperties();
         this.originName = featureDescription.getOriginName();
         this.calcFiledFunction = featureDescription.getCalcFiledFunction();
+        this.readOnly = featureDescription.isReadOnly();
     }
 
     public void addProperty(AbstractProperty property) {
@@ -99,5 +101,13 @@ public class FeatureDescription {
 
     public void setCalcFiledFunction(String calcFiledFunction) {
         this.calcFiledFunction = calcFiledFunction;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,21 +22,6 @@ public class MapperUtil {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    @NotNull
-    public static FeatureDescription mapFeatureDescriptionToXsdRule(ru.mycrg.gis.dto.FeatureDescription featureDescription) {
-        FeatureDescription xsdRule = new FeatureDescription();
-        xsdRule.setClassName(featureDescription.getName());
-
-        try {
-            JsonNode jsonNode = JacksonUtil.toJsonNode(getJsonString(mapFeatureDescriptionToDto(featureDescription)));
-            xsdRule.setClassRule(jsonNode);
-        } catch (Exception e) {
-            log.warn("Failed get json for: {} / With error: {}", featureDescription.getName(), e.getMessage());
-        }
-
-        return xsdRule;
-    }
-
     public static FeatureDescriptionDto mapFeatureDescriptionToDto(ru.mycrg.gis.dto.FeatureDescription featureDescription) {
         FeatureDescriptionDto dto = new FeatureDescriptionDto();
         dto.setName(featureDescription.getName());
@@ -47,6 +31,7 @@ public class MapperUtil {
         dto.setTableName(featureDescription.getTableName());
         dto.setCustomRuleFunction(featureDescription.getCustomRuleFunction());
         dto.setCalcFiledFunction(featureDescription.getCalcFiledFunction());
+        dto.setReadOnly(featureDescription.isReadOnly());
 
         featureDescription.getProperties().forEach(abstractProperty -> {
             dto.addProperty(mapPropertyToDto(abstractProperty));
@@ -131,6 +116,7 @@ public class MapperUtil {
         featureDescription.setTitle(dto.getTitle());
         featureDescription.setDescription(dto.getDescription());
         featureDescription.setTableName(dto.getTableName());
+        featureDescription.setReadOnly(dto.isReadOnly());
 
         dto.getProperties().forEach(propertyDto -> {
             mapDtoToProperty(propertyDto).ifPresent(featureDescription::addProperty);
