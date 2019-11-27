@@ -59,7 +59,8 @@ describe('GeoUtil test', () => {
         ]
       }
       ],
-      tableName: ''
+      tableName: '',
+      readOnly: false
     };
 
     const entityLineString: FeatureDescription = {
@@ -75,7 +76,8 @@ describe('GeoUtil test', () => {
         ]
       }
       ],
-      tableName: ''
+      tableName: '',
+      readOnly: false
     };
 
     const entityPolygon: FeatureDescription = {
@@ -89,9 +91,9 @@ describe('GeoUtil test', () => {
         allowedValues: [
           'Polygon'
         ]
-      }
-      ],
-      tableName: ''
+      }],
+      tableName: '',
+      readOnly: false
     };
 
     const entityMultiGeometry: FeatureDescription = {
@@ -108,7 +110,8 @@ describe('GeoUtil test', () => {
         ]
       }
       ],
-      tableName: ''
+      tableName: '',
+      readOnly: false
     };
 
     expect(true).toEqual(FeatureUtil.isFeatureGeometryCompatible('Point', entityPoint));
