@@ -123,20 +123,6 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
-  public splitListToParts(arr, n): [] {
-    const plen = Math.ceil(arr.length / n);
-
-    return arr.reduce(function (p, c, i, a) {
-      if (i % plen === 0) {
-        p.push([]);
-      }
-
-      p[p.length - 1][i] = c;
-
-      return p;
-    }, []);
-  }
-
   private getNode(type: TransactionType, features: Feature[], options: WriteTransactionOptions): Node {
     let node;
     switch (type) {

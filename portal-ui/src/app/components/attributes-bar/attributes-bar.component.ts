@@ -16,22 +16,23 @@ import {
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {FilterEvent, Pageable, CrgModels, Sortable} from '../../services/crg/models';
+import {CrgModels, FilterEvent, Pageable, Sortable} from '../../services/crg/models';
 import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import { MatDialog } from '@angular/material/dialog';
-import {FizLogger} from '../../services/logger/fiz.logger';
+import {MatDialog} from '@angular/material/dialog';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {EditFeatureMode} from '../edit-feature/edit-feature.component';
 import {ValueTitleProjection} from '../../services/geoserver/projections';
 import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
 import {ViewFeaturesData} from '../view-features/view-features.component';
 import {CommunicationService} from '../../services/communication.service';
-import { Project } from '../../stores/ProjectsList.store';
+import {Project} from '../../stores/ProjectsList.store';
 import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
 import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { getEnvironment } from '../../services/environment';
-import { Toast } from '../Toast/Toast';
+import {getEnvironment} from '../../services/environment';
+import {Toast} from '../Toast/Toast';
+import {NGXLogger} from 'ngx-logger';
+import {BatchModel} from '../../services/crg/batch-model';
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -42,10 +43,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   @Input() layer: CrgLayer;
 
-  @ViewChild(DatatableComponent, { static: true }) attributeTable: DatatableComponent;
-  @ViewChild('filterTemplate', { static: true }) filterTemplate: TemplateRef<any>;
-  @ViewChild('cellTemplate', { static: true }) cellTemplate: TemplateRef<any>;
-  @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
+  @ViewChild(DatatableComponent, {static: true}) attributeTable: DatatableComponent;
+  @ViewChild('filterTemplate', {static: true}) filterTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate', {static: true}) cellTemplate: TemplateRef<any>;
+  @ViewChild('customSelectAll', {static: true}) customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
 
@@ -81,8 +82,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private unsubscribe$: Subject<void> = new Subject<void>();
   private project: Project;
 
-  private BATCH_SIZE = 200;
-
   constructor(private sideBarManager: SideBarManager,
               private wfsService: WfsService,
               private tFeatureService: TransformFeatureService,
@@ -90,7 +89,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private layersService: LayersService,
               private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
-              private log: FizLogger,
+              private logger: NGXLogger,
               private dialog: MatDialog,
               private openLayersService: OpenLayersService) {
     this.getEnv();
@@ -115,13 +114,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           const lastRequest = this.requestModel$.getValue();
           this.updateTable(lastRequest);
         });
-
-    this.communicationService.selectedFeatures$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((features: WfsFeature[]) => {
-          // this.attributeTable.selected = features;
-        });
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -166,7 +158,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               return wfsFeatureView;
             });
           } else {
-            this.log.warn('attributes table', 'Unexpected response:', fCollection);
+            this.logger.warn('Unexpected response:', fCollection);
           }
         });
   }
@@ -223,8 +215,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
 
     if (this.layer.schema) {
-      return this.layer.schema
-                 .properties
+      return this.layer.schema.properties
                  .find((property: PropertySchema) => property.name.toLowerCase() === name.toLowerCase());
     } else {
       return undefined;
@@ -302,19 +293,29 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  editFeatures() {
-    const selectedFeatures = this.attributeTable.selected;
-    if (selectedFeatures.length < 1) {
+  private checkSelectionEmptiness(selected) {
+    if (!selected.length) {
       Toast.warn('Нет выделенных объектов');
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private editFeatures() {
+    const { selected } = this.attributeTable;
+    if (this.checkSelectionEmptiness(selected)) {
       return;
     }
+
     // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
-    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(selectedFeatures));
+    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(selected));
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.name + '.' + feature.id;
     });
     // Отсылка в сайдбар
-    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
+    this.sideBarManager.do({
+      target: SidebarType.FEATURES, action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
         mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
@@ -322,33 +323,49 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     });
   }
 
-  copyObjects() {
-    this.prepareSuitableLayers()
+  private copyObjects() {
+    const { selected } = this.attributeTable;
+    if (this.checkSelectionEmptiness(selected)) {
+      return;
+    }
+
+    this.layersService.layers$
         .pipe(
+          map(layers => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
-          flatMap((suitableLayers: CrgLayer[]) => this.openEditDialog('Копирование', suitableLayers)),
+          flatMap(suitableLayers => this.openEditDialog('Копирование', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
-          this.batchInsertFeatures(selectedLayer);
+          const batchModel = this.prepareBatchProcess(selected);
+
+          this.batchInsertFeatures(selectedLayer, batchModel);
 
           this.attributeTable.selected = [];
         });
   }
 
-  moveObjects() {
-    this.prepareSuitableLayers()
+  private moveObjects() {
+    const { selected } = this.attributeTable;
+    if (this.checkSelectionEmptiness(selected)) {
+      return;
+    }
+
+    this.layersService.layers$
         .pipe(
+          map(layers => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
           flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
-          this.batchReplaceFeatures(selectedLayer);
+          const batchModel = this.prepareBatchProcess(selected);
+
+          this.batchReplaceFeatures(selectedLayer, batchModel);
         });
   }
 
-  deleteObjects() {
-    if (this.attributeTable.selected.length < 1) {
-      Toast.warn('Нет выделенных объектов');
+  private deleteObjects() {
+    const { selected } = this.attributeTable;
+    if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
@@ -361,13 +378,15 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         .open(ConfirmDialogComponent, {width: '400px', data: data})
         .afterClosed().pipe(filter(value => !!value))
         .subscribe(() => {
-          this.batchDeleteFeatures();
+          const batchModel = this.prepareBatchProcess(selected);
+
+          this.batchDeleteFeatures(batchModel);
 
           this.attributeTable.selected = [];
         });
   }
 
-  private async getEnv () {
+  private async getEnv() {
     const environment = await getEnvironment();
     this.isSimf = environment.platform === 'simf';
   }
@@ -384,81 +403,52 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
                .afterClosed();
   }
 
-  private makeInsert(selectedLayer: CrgLayer): Observable<string> {
-    const { workspaceName } = this.project;
-
-    return this.tFeatureService
-               .insertFeatures(this.attributeTable.selected, workspaceName, selectedLayer.name);
-  }
-
-  private batchInsertFeatures(selectedLayer: CrgLayer) {
-    if (!selectedLayer) {
-      return;
-    }
-
+  private prepareBatchProcess(selectedFeatures: WfsFeature[]): BatchModel<WfsFeature> {
     this.loading = true;
     this.showPercent = true;
     this.loadPercent = 0;
 
-    const { workspaceName } = this.project;
-    const selectedFeatures = this.attributeTable.selected;
-    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
-    const onePartOf100 = 100 / countOfParts;
+    return new BatchModel(selectedFeatures);
+  }
 
-    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
-
+  private batchInsertFeatures(selectedLayer: CrgLayer, batchModel: BatchModel<WfsFeature>) {
     let i = 0;
-    from(listToParts)
+    from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)),
+        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.workspaceName, selectedLayer.name)),
         catchError(err => this.handleError(err)),
-      ).subscribe(value => {
-      i++;
-      const percent = Math.ceil(onePartOf100 * i);
-      if (i >= countOfParts) {
-        this.loadPercent = percent > 100 ? 100 : percent;
-        this.loading = false;
-        Toast.info('Объекты скопированы');
-      } else {
-        this.loadPercent = percent > 100 ? 100 : percent;
-      }
-    });
+      ).subscribe(() => {
+        i++;
+        const percent = Math.ceil(batchModel.percentOfOneBatch * i);
+        if (i >= batchModel.totalBatches) {
+          this.loadPercent = percent > 100 ? 100 : percent;
+          this.loading = false;
+          Toast.info('Объекты скопированы');
+        } else {
+          this.loadPercent = percent > 100 ? 100 : percent;
+        }
+      });
   }
 
-  private batchReplaceFeatures(selectedLayer: CrgLayer) {
-    if (!selectedLayer) {
-      return;
-    }
-
-    this.loading = true;
-    this.showPercent = true;
-    this.loadPercent = 0;
-
-    const { workspaceName } = this.project;
-    const selectedFeatures = this.attributeTable.selected;
-    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
-    const onePartOf100 = 100 / countOfParts;
-
-    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
-
+  private batchReplaceFeatures(selectedLayer: CrgLayer, batchModel: BatchModel<WfsFeature>) {
     let i = 0;
-    from(listToParts)
+    from(batchModel.batches)
       .pipe(
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, workspaceName, selectedLayer.name)
+            this.tFeatureService.insertFeatures(features, this.project.workspaceName, selectedLayer.name)
           );
         }),
         concatMap(([features, insertResult]) => {
-          return this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name);
+          return this.tFeatureService.deleteFeatures(features, this.project.workspaceName, this.layer.name);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
-      ).subscribe((result) => {
+      ).subscribe(() => {
         i++;
-        const percent = Math.ceil(onePartOf100 * i);
-        if (i >= countOfParts) {
+        const percent = Math.ceil(batchModel.percentOfOneBatch * i);
+        if (i >= batchModel.totalBatches) {
           this.loadPercent = percent > 100 ? 100 : percent;
           this.loading = false;
           Toast.info('Объекты перемещены');
@@ -470,118 +460,34 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       });
   }
 
+  private batchDeleteFeatures(batchModel: BatchModel<WfsFeature>) {
+    let i = 0;
+    from(batchModel.batches)
+      .pipe(
+        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.workspaceName, this.layer.name)),
+      ).subscribe(() => {
+        i++;
+        const percent = Math.ceil(batchModel.percentOfOneBatch * i);
+        if (i >= batchModel.totalBatches) {
+          this.loadPercent = percent > 100 ? 100 : percent;
+          this.loading = false;
+          Toast.info('Объекты удалены');
+
+          this.updateTable(this.requestModel$.getValue());
+        } else {
+          this.loadPercent = percent > 100 ? 100 : percent;
+        }
+      });
+  }
+
   private handleError(reason: string) {
     this.loading = false;
-    Toast.warn('Не удалось переместить');
+    const message = 'Не удалось переместить.';
+    Toast.warn(message);
+    this.logger.error(message, reason);
 
     return of();
   }
-
-  private batchDeleteFeatures() {
-    this.loading = true;
-    this.showPercent = true;
-    this.loadPercent = 0;
-
-    const { workspaceName } = this.project;
-    const selectedFeatures = this.attributeTable.selected;
-    const countOfParts = Math.ceil(selectedFeatures.length / this.BATCH_SIZE);
-    const onePartOf100 = 100 / countOfParts;
-
-    const listToParts = this.tFeatureService.splitListToParts(selectedFeatures, countOfParts);
-
-    let i = 0;
-    from(listToParts)
-      .pipe(
-        concatMap(features => this.tFeatureService.deleteFeatures(features, workspaceName, this.layer.name)),
-      ).subscribe(value => {
-      i++;
-      const percent = Math.ceil(onePartOf100 * i);
-      if (i >= countOfParts) {
-        this.loadPercent = percent > 100 ? 100 : percent;
-        this.loading = false;
-        Toast.info('Объекты удалены');
-
-        this.updateTable(this.requestModel$.getValue());
-      } else {
-        this.loadPercent = percent > 100 ? 100 : percent;
-      }
-    });
-  }
-
-  private prepareSuitableLayers() {
-    if (this.attributeTable.selected.length < 1) {
-      Toast.warn('Нет выделенных объектов');
-      return of([]);
-    }
-
-    return this.layersService.layers$
-               .pipe(
-                 map((layers: CrgLayer[]) => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
-                 takeUntil(this.unsubscribe$)
-               );
-  }
-
-  // onViewModeChange(event: MatSelectChange) {
-  //   if (this.viewSettings.viewMode === ViewMode.alias) {
-  //     // Название столбца
-  //     this.attributeTable.columns.forEach(column => {
-  //       const property = column.prop.toString();
-  //       if (property === 'id') {
-  //         column.name = 'Идентификатор';
-  //       } else {
-  //         const simpleProperty = this.getSimpleProperty(property.split('.')[1]);
-  //         if (simpleProperty) {
-  //           column.name = simpleProperty.title;
-  //         }
-  //       }
-  //     });
-  //
-  //     // Данные
-  //     const features: WfsFeatureView[] = this.attributeTable.rows;
-  //     features.forEach((feature: WfsFeatureView) => {
-  //       feature.updated = Date.now().toString();
-  //
-  //       Object.keys(feature.properties).forEach(prop => {
-  //         const simpleProperty = this.getSimpleProperty(prop);
-  //         if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
-  //           const valueTitle = this.getValueTitle(feature.properties[prop], simpleProperty.enumerations);
-  //           if (valueTitle) {
-  //             feature.aliases[prop] = valueTitle;
-  //           } else {
-  //             feature.aliases[prop] = '';
-  //           }
-  //         }
-  //       });
-  //     });
-  //
-  //     this.features = [...features];
-  //   } else {
-  //     // Название столбца
-  //     this.attributeTable.columns.forEach(column => {
-  //       const property = column.prop.toString();
-  //       if (property === 'id') {
-  //         column.name = 'id';
-  //       } else {
-  //         column.name = property.split('.')[1];
-  //       }
-  //     });
-  //
-  //     // Данные
-  //     const features: WfsFeatureView[] = this.attributeTable.rows;
-  //     features.forEach((feature: WfsFeatureView) => {
-  //       feature.updated = Date.now().toString();
-  //
-  //       Object.keys(feature.properties).forEach(prop => {
-  //         const simpleProperty = this.getSimpleProperty(prop);
-  //         if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
-  //           feature.aliases[prop] = feature.properties[prop];
-  //         }
-  //       });
-  //     });
-  //
-  //     this.features = [...features];
-  //   }
-  // }
 
   private prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [

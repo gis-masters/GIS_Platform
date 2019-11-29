@@ -165,20 +165,9 @@ export class DataSchemaService {
    * @return The new array of {@link CrgLayer}.
    */
   public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
-    const baseFeatureGeometry: string[] = FeatureUtil.getFeatureGeometry(baseLayer.schema);
-
-    const result: CrgLayer[] = [];
-    baseFeatureGeometry.forEach(fGeometry => {
-      layers.forEach((layer: CrgLayer) => {
-        if (baseLayer.complexName !== layer.complexName) {
-          if (FeatureUtil.isFeatureGeometryCompatible(fGeometry, baseLayer.schema)) {
-            result.push(layer);
-          }
-        }
-      });
-    });
-
-    return result;
+    return layers
+      .filter((layer: CrgLayer) => baseLayer.complexName !== layer.complexName)
+      .filter((layer: CrgLayer) => baseLayer.geometry === layer.geometry);
   }
 
   getClassIdAlias(layerName: string, bugObject: BugObject) {

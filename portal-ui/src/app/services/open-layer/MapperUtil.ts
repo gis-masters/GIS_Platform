@@ -14,10 +14,8 @@ export class MapperUtil {
     if (!wfsFeature.geometry) {
       if (!supressError) {
         Toast.error({
-          message: 'Ошибка: нет геометрии',
-          details: `type: ${wfsFeature.type};
-                    id: ${wfsFeature.id};
-                    geometry_name: ${wfsFeature.geometry_name};`
+          message: 'Ошибка отображения объекта',
+          details: `id: ${wfsFeature.id}. Нет геометрии`
         });
       }
 

@@ -13,7 +13,8 @@ import {FeaturePropertyValidators, ValueType} from '../../services/util/FeatureP
 import {getEnvironment} from '../../services/environment';
 import {BaseEdit} from '../edit-bug-object/base-edit';
 import {FeatureUtil} from '../../services/util/FeatureUtil';
-import { Toast } from '../Toast/Toast';
+import {Toast} from '../Toast/Toast';
+import {BatchModel} from '../../services/crg/batch-model';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -42,8 +43,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   isSaveInProgress = false;
   loadPercent = 0;
   isSimf = false;
-
-  private BATCH_SIZE = 200;
 
   constructor(private formBuilder: FormBuilder,
               private projectsService: ProjectsService,
@@ -200,24 +199,21 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   }
 
   private async batchUpdateFeatures(featuresId: string[], newProperties: {}) {
-    const countOfParts = Math.ceil(featuresId.length / this.BATCH_SIZE);
-    const onePartOf100 = 100 / countOfParts;
-
     const { workspaceName } = await this.projectsService.getCurrent();
     const { tableName } = this.featureDescription;
 
-    const result = this.transformFeatureService.splitListToParts(featuresId, countOfParts);
+    const batchModel = new BatchModel(featuresId);
 
     let i = 0;
-    from(result)
+    from(batchModel.batches)
       .pipe(
         concatMap(features => this.transformFeatureService
                                          .updateFeatures(features, workspaceName, tableName, newProperties)),
         takeUntil(this.unsubscribe$)
       ).subscribe(() => {
         i++;
-        const percent = Math.ceil(onePartOf100 * i);
-        if (i >= countOfParts) {
+        const percent = Math.ceil(batchModel.percentOfOneBatch * i);
+        if (i >= batchModel.totalBatches) {
           this.loadPercent = percent > 100 ? 100 : percent;
           this.isSaveInProgress = false;
           this.closeMe.emit(true);
