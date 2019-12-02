@@ -12,7 +12,7 @@ import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
 import { DataImportNotice } from './Notice/DataImport-Notice';
 import { DataImportNotifications } from './Notifications/DataImport-Notifications';
 import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
-import { DataImportPopup } from './Popup/DataImport-Popup';
+import { DataImportDialog } from './Dialog/DataImport-Dialog';
 
 import '!style-loader!css-loader!sass-loader!./DataImport.scss';
 
@@ -23,7 +23,7 @@ export class DataImport extends React.Component<{}> {
   private pollTimeout?: number;
   private pollingOn = false;
   private pollingDelay = 500;
-  @observable private popupOpen = false;
+  @observable private dialogOpen = false;
 
   @computed
   private get importUrl (): string {
@@ -42,7 +42,7 @@ export class DataImport extends React.Component<{}> {
     this.reset = this.reset.bind(this);
     this.poll = this.poll.bind(this);
     this.handleNext = this.handleNext.bind(this);
-    this.handlePopupClose = this.handlePopupClose.bind(this);
+    this.handleDialogClose = this.handleDialogClose.bind(this);
   }
 
   async componentDidMount () {
@@ -102,9 +102,9 @@ export class DataImport extends React.Component<{}> {
             onCancel={this.reset}
             nextUrl={this.nextUrl} />
 
-        <DataImportPopup
-            open={this.popupOpen}
-            onClose={this.handlePopupClose}
+        <DataImportDialog
+            open={this.dialogOpen}
+            onClose={this.handleDialogClose}
             nextUrl={this.nextUrl} />
       </div>
     );
@@ -175,12 +175,12 @@ export class DataImport extends React.Component<{}> {
   private handleNext (e: React.MouseEvent<HTMLButtonElement>) {
     if (currentImport.hasErrorTasks) {
       e.preventDefault();
-      this.popupOpen = true;
+      this.dialogOpen = true;
     }
   }
 
   @action
-  private handlePopupClose () {
-    this.popupOpen = false;
+  private handleDialogClose () {
+    this.dialogOpen = false;
   }
 }

@@ -1,10 +1,12 @@
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 import {Router, ActivatedRoute} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
-import {Component, OnDestroy} from '@angular/core';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {CommunicationService} from '../../services/communication.service';
 import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import { route } from '../../stores/Route.store';
+import { fromMobx } from '../../services/util/fromMobx';
 
 @Component({
   selector: 'crg-crg-stepper',
@@ -12,7 +14,7 @@ import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-m
   styleUrls: ['./crg-stepper.component.css']
 })
 
-export class CrgStepperComponent implements OnDestroy {
+export class CrgStepperComponent implements OnDestroy, OnInit {
 
   activeStep = 5;
 
@@ -22,10 +24,10 @@ export class CrgStepperComponent implements OnDestroy {
               private route: ActivatedRoute,
               private sideBarManager: SideBarManager,
               private communicationService: CommunicationService,
-              private projectService: ProjectsService) {
-    this.activeStep = communicationService.activeStep;
+              private projectService: ProjectsService) { }
 
-    communicationService.stepperEvents
+  ngOnInit () {
+    fromMobx<number>(route.data.step)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(step => this.activeStep = step);
   }

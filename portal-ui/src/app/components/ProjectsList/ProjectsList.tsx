@@ -23,8 +23,7 @@ export class ProjectsList extends React.Component<{}> {
       this.enableCreation();
     }
     await services.provided;
-    const { communicationService, dataSchemaService, projectsService } = services;
-    communicationService.stepperEvents.emit(1);
+    const { dataSchemaService, projectsService } = services;
     dataSchemaService.getFeaturesSchemas().subscribe();
     projectsService.fetchProjects();
   }

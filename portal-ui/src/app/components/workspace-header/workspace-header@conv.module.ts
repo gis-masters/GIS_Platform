@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../../material.module';
+import { HelpTogglerModule } from '../help-toggler/help-toggler.module';
+import { CrgStepperComponent } from '../crg-stepper/crg-stepper.component';
 
-import {CrgStepperComponent} from '../crg-stepper/crg-stepper.component';
 import { WorkspaceHeaderComponent } from './workspace-header@conv.component';
 
 @NgModule({
@@ -16,7 +17,8 @@ import { WorkspaceHeaderComponent } from './workspace-header@conv.component';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    HelpTogglerModule
   ],
 })
 export class WorkspaceHeaderModule {

@@ -1,0 +1,64 @@
+[
+  {
+    "id": "projects",
+    "title": "Управление проектами",
+    "platforms": ["conv"],
+    "children": [
+      {
+        "id": "create",
+        "title": "Создание проекта",
+        "contentUrl": "/assets/help/projects/01create.html"
+      },
+      {
+        "id": "delete",
+        "title": "Удаление проекта",
+        "contentUrl": "/assets/help/projects/02delete.html"
+      }
+    ]
+  },
+  {
+    "id": "import",
+    "title": "Загрузка векторных данных в формате sph",
+    "platforms": ["conv"],
+    "contentUrl": "/assets/help/import/00import.html",
+    "children": [
+      {
+        "id": "upload",
+        "title": "Этап I: Загрузка zip архива со слоями.",
+        "contentUrl": "/assets/help/import/01upload.html"
+      },
+      {
+        "id": "mapping",
+        "title": "Этап II: Преобразование слоёв в формат GML и импортирование в проект.",
+        "contentUrl": "/assets/help/import/02mapping.html"
+      }
+    ]
+  },
+  {
+    "id": "map",
+    "title": "Карта",
+    "children": [
+      {
+        "id": "copy",
+        "title": "Копирование и перенос векторных данных между слоями.",
+        "contentUrl": "/assets/help/map/01copy.html"
+      },
+      {
+        "id": "edit",
+        "title": "Внесение изменений в требуемую Приказом информацию.",
+        "contentUrl": "/assets/help/map/02edit.html"
+      },
+      {
+        "id": "validate",
+        "title": "Выполнение проверки данных на соответствие приказу.",
+        "contentUrl": "/assets/help/map/03validate.html"
+      },
+      {
+        "id": "layersList",
+        "title": "Список слоёв формы, после проверки.",
+        "platforms": ["conv"],
+        "content": "раздел еще не написан"
+      }
+    ]
+  }
+]

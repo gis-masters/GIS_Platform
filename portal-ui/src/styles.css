@@ -66,3 +66,15 @@ body {
 .mat-icon-button:focus {
   outline: none;
 }
+
+.page-container {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.page {
+  overflow: auto;
+}

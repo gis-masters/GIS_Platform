@@ -1,0 +1,18 @@
+.Help {
+  display: flex;
+
+  margin-bottom: 20px;
+
+  &-Toc {
+    flex-basis: 33%;
+    flex-grow: 1;
+
+    min-width: 200px;
+    margin-right: 20px;
+  }
+
+  &-Content {
+    flex-basis: 67%;
+    flex-grow: 2;
+  }
+}

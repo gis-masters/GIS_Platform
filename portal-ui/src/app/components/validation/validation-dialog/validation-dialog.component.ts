@@ -1,4 +1,3 @@
-import {NGXLogger} from 'ngx-logger';
 import {Component, Input, ViewChild} from '@angular/core';
 import {StringUtil} from '../../../services/util/StringUtil';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
@@ -19,8 +18,7 @@ export class ValidationDialogComponent {
 
   isAllSelected: boolean;
 
-  constructor(private logger: NGXLogger,
-              private communicationService: CommunicationService) {
+  constructor(private communicationService: CommunicationService) {
   }
 
   onChange() {
@@ -34,7 +32,6 @@ export class ValidationDialogComponent {
     this.communicationService.validationDialog.emit({show: false, layers: null});
 
     this.communicationService.selectedForValidation.emit(this.selectedLayers);
-    this.communicationService.stepperEvents.emit(4);
   }
 
   handleTitle(crgLayer: CrgLayer) {

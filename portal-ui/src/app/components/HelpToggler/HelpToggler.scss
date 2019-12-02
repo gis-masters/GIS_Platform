@@ -1,0 +1,19 @@
+body .HelpToggler {
+  margin-right: 10px;
+
+  color: var(--white);
+
+  &:focus {
+    outline: none;
+  }
+
+  &-Popup {
+    z-index: 100;
+  }
+
+  &-Dialog {
+    width: 80%;
+    max-width: calc(1200px);
+    min-height: 60%;
+  }
+}

@@ -1,0 +1,15 @@
+.HelpToc {
+  &-Subitems {
+    padding-left: 10px;
+  }
+
+  &-ItemTitle {
+    display: inline-block;
+
+    margin-bottom: 5px;
+
+    &_selected {
+      font-weight: bold;
+    }
+  }
+}

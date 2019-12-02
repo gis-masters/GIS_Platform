@@ -1,0 +1,16 @@
+.HelpPopup {
+  max-width: 400px;
+  padding: 25px;
+
+  &-Title {
+    margin-bottom: 5px;
+
+    font-size: 20px;
+  }
+
+  &-Actions {
+    padding-top: 10px;
+
+    text-align: right;
+  }
+}

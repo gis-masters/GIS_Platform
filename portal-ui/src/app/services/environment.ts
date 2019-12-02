@@ -1,4 +1,4 @@
-type Platform = 'conv' | 'simf';
+export type Platform = 'conv' | 'simf';
 
 export interface Environment {
   platform: Platform;

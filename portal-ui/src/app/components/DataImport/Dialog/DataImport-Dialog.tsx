@@ -10,21 +10,21 @@ import { DataImportTasksList } from '../../DataImportTasksList/DataImportTasksLi
 import { services } from '../../../services/services';
 import { currentImport } from '../../../stores/CurrentImport.store';
 
-import '!style-loader!css-loader!sass-loader!./DataImport-Popup.scss';
+import '!style-loader!css-loader!sass-loader!./DataImport-Dialog.scss';
 
 const cnDataImport = cn('DataImport');
 
-interface DataImportPopupProps {
+interface DataImportDialogProps {
   open: boolean;
   onClose: () => void;
   nextUrl: string;
 }
 
 @observer
-export class DataImportPopup extends React.Component<DataImportPopupProps> {
+export class DataImportDialog extends React.Component<DataImportDialogProps> {
   @observable private busy = false;
 
-  constructor (props: DataImportPopupProps) {
+  constructor (props: DataImportDialogProps) {
     super(props);
     
     this.handleNext = this.handleNext.bind(this);
@@ -39,7 +39,7 @@ export class DataImportPopup extends React.Component<DataImportPopupProps> {
           <DialogContentText>
             Некоторые слои будут удалены перед продолжением:<br />
           </DialogContentText>
-          <DataImportTasksList short onlyErrors className={cnDataImport('PopupTasksList')} />
+          <DataImportTasksList short onlyErrors className={cnDataImport('DialogTasksList')} />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleNext} color="primary" variant='outlined' disabled={this.busy}>

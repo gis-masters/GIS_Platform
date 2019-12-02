@@ -11,21 +11,13 @@ import {WfsFeature} from './geoserver/wfs.service';
   providedIn: 'root'
 })
 export class CommunicationService {
-  activeStep: number = 0;
-
   @Output() sidebarManager = new EventEmitter<Sidebar>();
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
   @Output() gmlDialog = new EventEmitter<GmlDialogData>();
   @Output() editView = new EventEmitter<ObjectDto[]>();
-  @Output() stepperEvents = new EventEmitter<number>();
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
   @Output() selectedFeatures$ = new EventEmitter<WfsFeature[]>();
-
-  constructor() {
-    this.stepperEvents.subscribe((step: number) => this.activeStep = step);
-  }
-
 }
 
 export interface ObjectDto {

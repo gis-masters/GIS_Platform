@@ -51,9 +51,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private projectsService: ProjectsService,
               private wfsService: WfsService,
               private communicationService: CommunicationService,
-              private sideBarManager: SideBarManager) {
-    this.communicationService.stepperEvents.emit(3);
-  }
+              private sideBarManager: SideBarManager) { }
 
   ngOnInit () {
     this.openLayers.createMap();

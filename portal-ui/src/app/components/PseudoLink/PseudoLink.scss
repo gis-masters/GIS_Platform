@@ -1,0 +1,15 @@
+.PseudoLink {
+  cursor: pointer;
+  transition: border-bottom-color 0.3s;
+
+  &-Inner {
+    color: var(--blue);
+    border-bottom: 1px var(--blue) dashed;
+  }
+
+  &:hover {
+    .PseudoLink-Inner {
+      border-bottom-color: var(--red);
+    }
+  }
+}

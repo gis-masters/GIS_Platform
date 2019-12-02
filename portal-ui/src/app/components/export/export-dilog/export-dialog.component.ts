@@ -95,8 +95,6 @@ export class ExportDialogComponent implements OnDestroy {
     this.logger.info('export to GML response', process);
     this.isExportInited = false;
 
-    this.communicationService.stepperEvents.emit(5);
-
     this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
     this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }

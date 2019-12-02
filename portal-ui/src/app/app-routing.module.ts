@@ -27,6 +27,10 @@ const routes: Routes = [
     canActivate: [ AuthGuardService ],
     resolve: {
       orgInfo: OrganizationInfoResolver
+    },
+    data: {
+      step: 1,
+      helpPage: 'projects'
     }
   },
   {
@@ -39,6 +43,10 @@ const routes: Routes = [
         canActivate: [ AuthGuardService, WorkflowGuardService ],
         resolve: {
           orgInfo: OrganizationInfoResolver
+        },
+        data: {
+          step: 2,
+          helpPage: 'import'
         }
       },
       {
@@ -47,6 +55,10 @@ const routes: Routes = [
         canActivate: [ AuthGuardService, WorkflowGuardService ],
         resolve: {
           orgInfo: OrganizationInfoResolver
+        },
+        data: {
+          step: 2,
+          helpPage: 'import'
         }
       },
       {
@@ -55,6 +67,10 @@ const routes: Routes = [
         canActivate: [ AuthGuardService, WorkflowGuardService ],
         resolve: {
           orgInfo: OrganizationInfoResolver
+        },
+        data: {
+          step: 2,
+          helpPage: 'import'
         }
       },
       {
@@ -63,6 +79,10 @@ const routes: Routes = [
         canActivate: [ AuthGuardService, WorkflowGuardService ],
         resolve: {
           orgInfo: OrganizationInfoResolver
+        },
+        data: {
+          step: 3,
+          helpPage: 'map'
         }
       },
       {
