@@ -51,8 +51,12 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /opt/docker-scripts/setenv.sh:/usr/local/tomcat/bin/setenv.sh
       - /opt/data/geoserver:/opt/geoserver/data_dir
+    environment:
+      APM_URL: ${APM_URL}
+      GEOSERVER_ADMIN_PASSWORD: $GEOSERVER_PASSWORD
+      INITIAL_MEMORY: ${JAVA_XMS_SIZE}
+      MAXIMUM_MEMORY: ${JAVA_XMX_SIZE}
 
 
   auth-service:
