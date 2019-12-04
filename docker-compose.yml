@@ -52,6 +52,7 @@ services:
       - "8080:8080"
     volumes:
       - /opt/data/geoserver:/opt/geoserver/data_dir
+      - /opt/gwc_storage:/opt/gwc_storage
     environment:
       APM_URL: ${APM_URL}
       GEOSERVER_ADMIN_PASSWORD: $GEOSERVER_PASSWORD
