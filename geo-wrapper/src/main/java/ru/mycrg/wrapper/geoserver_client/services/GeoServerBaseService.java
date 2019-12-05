@@ -9,11 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import ru.mycrg.common.JWTTokenHolder;
+import ru.mycrg.wrapper.geoserver_client.dto.JwtToken;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
-
-import java.io.IOException;
 
 public abstract class GeoServerBaseService {
 
@@ -92,13 +90,13 @@ public abstract class GeoServerBaseService {
     }
 
     protected String getAccessToken() {
-        JWTTokenHolder jwtTokenHolder = authService.getJwtTokenHolder();
-        if (jwtTokenHolder == null) {
+        JwtToken jwtToken = authService.getJwtToken();
+        if (jwtToken == null) {
             log.warn("Empty jwt token");
 
             return "";
         } else {
-            return jwtTokenHolder.getAccess_token();
+            return jwtToken.getAccess_token();
         }
     }
 

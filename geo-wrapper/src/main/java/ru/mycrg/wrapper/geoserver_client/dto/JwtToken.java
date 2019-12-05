@@ -1,15 +1,14 @@
-package ru.mycrg.common;
+package ru.mycrg.wrapper.geoserver_client.dto;
 
-public class JWTTokenHolder {
+public class JwtToken {
 
-    private String access_token;
     private String token_type;
+    private String access_token;
     private String refresh_token;
-    private Integer expires_in;
     private String scope;
-    private String jti;
+    private Integer expires_in;
 
-    public JWTTokenHolder() {}
+    public JwtToken() {}
 
     public String getAccess_token() {
         return access_token;
@@ -51,11 +50,4 @@ public class JWTTokenHolder {
         this.scope = scope;
     }
 
-    public String getJti() {
-        return jti;
-    }
-
-    public void setJti(String jti) {
-        this.jti = jti;
-    }
 }

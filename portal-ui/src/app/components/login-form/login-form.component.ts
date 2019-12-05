@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
 
 import {AuthService, AuthCredentials} from '../../services/auth.service';
-import {AuthModel, TokenStorageService} from '../../services/token-storage.service';
+import {JwtToken, TokenStorageService} from '../../services/token-storage.service';
 
 @Component({
   selector: 'crg-login-form',
@@ -50,11 +50,9 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.isUserDisabled = false;
 
       this.authService.authenticate(credentials).then(
-          (authModel: AuthModel) => {
+          (jwtToken: JwtToken) => {
             this.authService.authenticated = true;
-            this.tokenStorage.saveAuthModel(authModel);
-            this.tokenStorage.saveAccessToken(authModel.access_token);
-            this.tokenStorage.saveRefreshToken(authModel.refresh_token);
+            this.tokenStorage.saveToken(jwtToken);
             this.router.navigateByUrl('/projects');
           },
           response => {

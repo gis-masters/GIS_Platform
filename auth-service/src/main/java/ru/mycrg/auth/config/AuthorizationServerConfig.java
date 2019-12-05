@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import ru.mycrg.auth.CustomTokenConverter;
 
 @Configuration
 @EnableAuthorizationServer
@@ -21,11 +22,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
     private String SECRET;
 
-    @Value("${security.jwt.admin_name:admin}")
-    private String ADMIN_NAME;
+    @Value("${security.jwt.client_id:admin}")
+    private String CLIENT_ID;
 
-    @Value("${security.jwt.admin_pass:geoserver}")
-    private String ADMIN_PASS;
+    @Value("${security.jwt.client_secret:geoserver}")
+    private String CLIENT_SECRET;
 
     private static final int ACCESS_TOKEN_VALIDITY_TIME = 60 * 60 * 24;
     private static final int REFRESH_TOKEN_VALIDITY_TIME = 60 * 60 * 24 * 14;
@@ -44,8 +45,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
-                .withClient(ADMIN_NAME)
-                .secret(encoder.encode(ADMIN_PASS))
+                .withClient(CLIENT_ID)
+                .secret(encoder.encode(CLIENT_SECRET))
                 .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_TIME)
                 .refreshTokenValiditySeconds(REFRESH_TOKEN_VALIDITY_TIME)
                 .scopes("read", "write")
@@ -62,7 +63,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        CustomTokenConverter converter = new CustomTokenConverter();
         converter.setSigningKey(SECRET);
 
         return converter;

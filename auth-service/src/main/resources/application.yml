@@ -10,17 +10,23 @@ logging:
 
 spring:
   profiles: fiz-dev
+#  data:
+#    rest:
+#      detection-strategy: annotated
   datasource:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5432/gis_portal
     username: postgres
     password: 314
+  jpa:
+    properties:
+      hibernate.temp.use_jdbc_metadata_defaults: false
 
 security:
   jwt:
     secret: vjp4lLW_QmjMHiUw1OBVRIZH
-    admin_name: admin
-    admin_pass: geoserver
+    client_id: admin
+    client_secret: geoserver
 
 server:
   port: 9000

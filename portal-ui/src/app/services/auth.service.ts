@@ -3,7 +3,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 
-import { TokenStorageService, AuthModel } from './token-storage.service';
+import { TokenStorageService, JwtToken } from './token-storage.service';
 import { ServerPropertiesService } from './server-properties.service';
 import { HttpQueue } from './util/HttpQueue';
 
@@ -21,18 +21,13 @@ export class AuthService {
               private tokenStorage: TokenStorageService,
               private serverProperties: ServerPropertiesService,
               private logger: NGXLogger) {
-    const authModel = this.tokenStorage.getAuthModel();
-    if (authModel) {
-      if (authModel.created_in + (authModel.expires_in * 1000) > Date.now()) {
-        this._authenticated = true;
-      } else {
-        // TODO: try use refresh token
-        this.logger.info('Token expired');
-      }
+    const jwtToken = this.tokenStorage.getToken();
+    if (jwtToken) {
+      this._authenticated = true;
     }
   }
 
-  async authenticate(credentials: AuthCredentials): Promise<AuthModel> {
+  async authenticate(credentials: AuthCredentials): Promise<JwtToken> {
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
@@ -45,7 +40,7 @@ export class AuthService {
     const options = {withCredentials: true, headers: headers};
     const url = await this.serverProperties.authServerUrl;
 
-    return this.httpq.post<AuthModel>(url, params.toString(), options);
+    return this.httpq.post<JwtToken>(url, params.toString(), options);
   }
 
   validateAuth(redirectTo: string) {

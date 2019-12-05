@@ -8,7 +8,7 @@ import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.JWTTokenHolder;
+import ru.mycrg.wrapper.geoserver_client.dto.JwtToken;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -18,7 +18,9 @@ public class AuthService extends GeoServerBaseService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
-    private JWTTokenHolder jwtTokenHolder;
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private JwtToken jwtToken;
 
     // TODO: Сечас при каждом обращении сюда мы получаем новый токен,
     // а стоило бы следить за полученным токеном и обновлять его при необходимости используя рефреш
@@ -52,8 +54,7 @@ public class AuthService extends GeoServerBaseService {
             response.close();
             return Optional.empty();
         } else {
-            ObjectMapper mapper = new ObjectMapper();
-            jwtTokenHolder = mapper.readValue(response.body().string(), JWTTokenHolder.class);
+            jwtToken = mapper.readValue(response.body().string(), JwtToken.class);
 
             log.debug("Success authenticated");
             response.close();
@@ -61,7 +62,7 @@ public class AuthService extends GeoServerBaseService {
         }
     }
 
-    public JWTTokenHolder getJwtTokenHolder() {
-        return jwtTokenHolder;
+    public JwtToken getJwtToken() {
+        return jwtToken;
     }
 }

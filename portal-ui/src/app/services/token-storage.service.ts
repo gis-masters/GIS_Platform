@@ -8,7 +8,7 @@ export class TokenStorageService {
 
   private ACCESS_TOKEN_KEY = 'accessToken';
   private REFRESH_TOKEN_KEY = 'refreshToken';
-  private AUTH_MODEL = 'authModel';
+  private JWT_TOKEN = 'jwtToken';
 
   constructor(private storageService: LocalStorageService) {
   }
@@ -17,22 +17,14 @@ export class TokenStorageService {
     this.storageService.cleanUp();
   }
 
-  saveAuthModel(authModel: AuthModel) {
-    authModel.created_in = Date.now();
-
-    this.storageService.saveByKey(this.AUTH_MODEL, JSON.stringify(authModel));
+  saveToken(jwtToken: JwtToken) {
+    this._save(this.JWT_TOKEN, JSON.stringify(jwtToken));
+    this._save(this.ACCESS_TOKEN_KEY, jwtToken.access_token);
+    this._save(this.REFRESH_TOKEN_KEY, jwtToken.refresh_token);
   }
 
-  getAuthModel(): AuthModel {
-    return JSON.parse(this.storageService.getByKey(this.AUTH_MODEL));
-  }
-
-  saveAccessToken(token: string) {
-    this.saveToken(this.ACCESS_TOKEN_KEY, token);
-  }
-
-  saveRefreshToken(token: string) {
-    this.saveToken(this.REFRESH_TOKEN_KEY, token);
+  getToken(): JwtToken {
+    return JSON.parse(this.storageService.getByKey(this.JWT_TOKEN));
   }
 
   getAccessToken(): string {
@@ -43,19 +35,17 @@ export class TokenStorageService {
     return this.storageService.getByKey(this.REFRESH_TOKEN_KEY);
   }
 
-  private saveToken(key: string, token: string) {
+  private _save(key: string, token: string) {
     this.storageService.clearByKey(key);
     this.storageService.saveByKey(key, token);
   }
 
 }
 
-export interface AuthModel {
+export interface JwtToken {
+  token_type: string;
   access_token: string;
-  expires_in: number;
-  created_in?: number;
-  jti: string;
   refresh_token: string;
   scope: string;
-  token_type: string;
+  expires_in: number;
 }
