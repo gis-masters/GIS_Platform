@@ -1,8 +1,32 @@
 [
   {
+    "id": "about",
+    "title": "О программе",
+    "platforms": ["conv"],
+    "contentUrl": "/assets/help/about/03task.html",
+    "children": [
+      {
+        "id": "evolution",
+        "title": "Эволюция документов территориального планирования",
+        "contentUrl": "/assets/help/about/01evolution.html"
+      },
+      {
+        "id": "GML",
+        "title": "Что такое GML-документ территориального планирования",
+        "contentUrl": "/assets/help/about/02GML.html"
+      },
+      {
+        "id": "task",
+        "title": "Задачи GML конвертера",
+        "contentUrl": "/assets/help/about/03task.html"
+      }
+    ]
+  },
+  {
     "id": "projects",
     "title": "Управление проектами",
     "platforms": ["conv"],
+    "contentUrl": "/assets/help/projects/00projects.html",
     "children": [
       {
         "id": "create",
@@ -37,6 +61,7 @@
   {
     "id": "map",
     "title": "Карта",
+    "contentUrl": "/assets/help/map/00map.html",
     "children": [
       {
         "id": "copy",
@@ -47,17 +72,55 @@
         "id": "edit",
         "title": "Внесение изменений в требуемую Приказом информацию.",
         "contentUrl": "/assets/help/map/02edit.html"
-      },
+      }
+    ]
+  },
+  {
+    "id": "validate",
+    "title": "Проверка данных",
+    "contentUrl": "/assets/help/validate/00validate.html",
+    "children": [
       {
-        "id": "validate",
+        "id": "validateLayers",
         "title": "Выполнение проверки данных на соответствие приказу.",
-        "contentUrl": "/assets/help/map/03validate.html"
+        "contentUrl": "/assets/help/validate/01validateLayers.html"
       },
       {
         "id": "layersList",
         "title": "Список слоёв формы, после проверки.",
         "platforms": ["conv"],
-        "content": "раздел еще не написан"
+        "contentUrl": "/assets/help/validate/02layersList.html"
+      },
+      {
+        "id": "objectsList",
+        "title": "Список объектов, содержащих ошибки по приказу.",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/validate/03objectsList.html"
+      },
+      {
+        "id": "errorsList",
+        "title": "Список содержащихся в объектах ошибок согласно приказу.",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/validate/04errorsList.html"
+      }
+    ]
+  },
+  {
+    "id": "export",
+    "title": "Выгрузка данных",
+    "contentUrl": "/assets/help/export/00export.html",
+    "children": [
+      {
+        "id": "exportShp",
+        "title": "Выгрузка векторных данных в формате shp с атрибутами согласно требованиям приказа.",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/export/01exportShp.html"
+      },
+      {
+        "id": "exportGml",
+        "title": "Выгрузка документа территориального планирования в формате GML в соответствии с требованиями приказа.",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/export/02exportGml.html"
       }
     ]
   }
