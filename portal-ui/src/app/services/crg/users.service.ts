@@ -18,6 +18,6 @@ export class UsersService {
 
   async getInfo(): Promise<UserInfoModel> {
     return this.httpq
-               .get<UserInfoModel>((await this.serverProp.usersUrl) + '/info');
+               .get<UserInfoModel>((await this.serverProp.usersUrl) + '/current');
   }
 }

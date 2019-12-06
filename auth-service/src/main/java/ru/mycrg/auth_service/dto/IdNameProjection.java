@@ -1,4 +1,4 @@
-package ru.mycrg.auth;
+package ru.mycrg.auth_service.dto;
 
 public class IdNameProjection {
 

@@ -1,4 +1,4 @@
-package ru.mycrg.auth.config;
+package ru.mycrg.auth_service.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import ru.mycrg.auth.CustomTokenConverter;
+import ru.mycrg.auth_service.CustomTokenConverter;
 
 @Configuration
 @EnableAuthorizationServer

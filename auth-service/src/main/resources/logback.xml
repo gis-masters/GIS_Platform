@@ -27,7 +27,7 @@
     </appender>
 
 
-    <logger name="ru.mycrg.auth" level="DEBUG"></logger>
+    <logger name="ru.mycrg.auth_service" level="DEBUG"></logger>
 <!--    <logger name="com.zaxxer.hikari" level="DEBUG"></logger>-->
 <!--    <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="DEBUG"></logger>-->
 

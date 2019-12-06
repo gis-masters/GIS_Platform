@@ -1,12 +1,10 @@
-package ru.mycrg.auth.entity;
+package ru.mycrg.auth_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

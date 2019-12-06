@@ -1,4 +1,4 @@
-package ru.mycrg.auth.entity;
+package ru.mycrg.auth_service.entity;
 
 import javax.persistence.*;
 

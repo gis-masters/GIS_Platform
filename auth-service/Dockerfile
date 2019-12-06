@@ -11,5 +11,5 @@ ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                      -Delastic.apm.service_name=crg-jwt \
                                      -Delastic.apm.server_url=${APM_URL} \
                                      -Delastic.apm.enable_log_correlation=true \
-                                     -Delastic.apm.application_packages=ru.mycrg.auth \
+                                     -Delastic.apm.application_packages=ru.mycrg.auth_service \
                                      -jar auth-service.jar

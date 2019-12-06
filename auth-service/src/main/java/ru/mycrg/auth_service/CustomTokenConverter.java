@@ -1,4 +1,4 @@
-package ru.mycrg.auth;
+package ru.mycrg.auth_service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -6,8 +6,9 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.auth.entity.User;
-import ru.mycrg.auth.repository.UserRepository;
+import ru.mycrg.auth_service.dto.IdNameProjection;
+import ru.mycrg.auth_service.entity.User;
+import ru.mycrg.auth_service.repository.UserRepository;
 
 import java.util.HashMap;
 import java.util.List;

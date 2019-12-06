@@ -37,10 +37,9 @@ zuul:
       path: /oauth/token/**
       service-id: http://auth-service:9000/oauth/token
 
-    # Our API
     gis-users:
       path: /users/**
-      url: http://geo-api:8088/users/
+      url: http://auth-service:9000/users/
 
     gis-organizations:
       path: /organizations/**

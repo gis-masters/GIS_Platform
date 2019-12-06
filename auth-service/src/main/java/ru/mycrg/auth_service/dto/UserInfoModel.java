@@ -1,4 +1,4 @@
-package ru.mycrg.gis.dto;
+package ru.mycrg.auth_service.dto;
 
 public class UserInfoModel {
 
@@ -12,6 +12,10 @@ public class UserInfoModel {
         this.userName = userName;
         this.orgName = orgName;
         this.orgId = orgId;
+    }
+
+    public UserInfoModel(String userName) {
+        this.userName = userName;
     }
 
     public String getUserName() {
