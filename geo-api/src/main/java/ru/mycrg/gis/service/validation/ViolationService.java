@@ -10,20 +10,23 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common.ObjectValidationResult;
 import ru.mycrg.common.ValidationInfo;
 import ru.mycrg.gis.config.CrgProperties;
-import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.CrgFailedException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.enums.ProcessStatus.DONE;
 import static ru.mycrg.common.enums.ProcessStatus.ERROR;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 public class ViolationService {
@@ -43,34 +46,36 @@ public class ViolationService {
     /**
      * Выборка результатов валидации
      *
-     * @param orgId     Организация
      * @param projectId Проект
      * @param layerName Название слоя
      * @param pIndex    индекс страницы
      * @param pSize     размер старницы
      * @return {@link ValidationResponseDto}
      */
-    public ValidationResponseDto getViolations(Long orgId, Long projectId, String layerName, int pIndex, int pSize)
+    public ValidationResponseDto getViolations(Principal principal, Long projectId, String layerName, int pIndex, int pSize)
             throws CrgFailedException {
+        long orgId = getOrganizationId(principal);
+
         schemaService.checkFeatureByName(layerName);
 
-        ProjectModel projectModel = projectService.getProject(orgId, projectId);
+        Project project = projectService.getProject(orgId, projectId);
 
+        String dbName = DEFAULT_DB_NAME + orgId;
         ValidationResponseDto response = new ValidationResponseDto();
-        HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
+        HikariDataSource datasource = getDatasource(dbName);
         try {
-            log.debug("Get info for: {}", projectModel.getWorkspaceName() + "." + layerName);
+            log.debug("Get info for: {}", project.getGeoserverName() + "." + layerName);
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
 
-            Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
+            Long totalViolations = countTotalViolations(jdbcTemplate, project.getGeoserverName(), layerName);
             if (totalViolations > 0) {
-                List<Map<String, Object>> violations = getViolations(jdbcTemplate, projectModel.getWorkspaceName(),
+                List<Map<String, Object>> violations = getViolations(jdbcTemplate, project.getGeoserverName(),
                         layerName, pSize, pIndex);
 
                 log.info("Found {} violations", violations.size());
                 response.setResults(mapToViolations(violations));
-                response.setValidated(isValidated(jdbcTemplate, projectModel.getWorkspaceName(), layerName));
+                response.setValidated(isValidated(jdbcTemplate, project.getGeoserverName(), layerName));
             }
 
             response.setTotal(totalViolations);
@@ -90,27 +95,31 @@ public class ViolationService {
 
     /**
      * Выборка общей инфы по провалидированным слоям
-     * @param orgId     Организация
+     *
+     * @param principal
      * @param projectId Проект
      * @param request Список слоев {@link ValidationRequestDto}
      * @return list of {@link ValidationInfo}
      */
-    public List<ValidationInfo> getShortInfo(Long orgId, Long projectId, ValidationRequestDto request) {
+    public List<ValidationInfo> getShortInfo(Principal principal, Long projectId, ValidationRequestDto request) {
+        long orgId = getOrganizationId(principal);
+
         List<ValidationInfo> result = new ArrayList<>();
 
-        ProjectModel projectModel = projectService.getProject(orgId, projectId);
+        Project project = projectService.getProject(orgId, projectId);
 
-        HikariDataSource datasource = getDatasource(projectModel.getDatabaseName());
+        String dbName = DEFAULT_DB_NAME + orgId;
+        HikariDataSource datasource = getDatasource(dbName);
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasource);
         request.getLayers().forEach(layerName -> {
             ValidationInfo validationInfo = new ValidationInfo();
             try {
-                Long totalViolations = countTotalViolations(jdbcTemplate, projectModel.getWorkspaceName(), layerName);
+                Long totalViolations = countTotalViolations(jdbcTemplate, project.getGeoserverName(), layerName);
 
                 if (totalViolations > 0) {
                     validationInfo.setValidated(true);
                 } else {
-                    validationInfo.setValidated(isValidated(jdbcTemplate, projectModel.getWorkspaceName(), layerName));
+                    validationInfo.setValidated(isValidated(jdbcTemplate, project.getGeoserverName(), layerName));
                 }
 
                 validationInfo.setTotalViolations(totalViolations);

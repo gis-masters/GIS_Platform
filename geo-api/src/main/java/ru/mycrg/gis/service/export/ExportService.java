@@ -4,25 +4,29 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.MqExportProcessRequest;
+import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.*;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.CrgConflictException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.dataSchema.MapperUtil;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.gis.service.dataSchema.MapperUtil;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Optional;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.common.enums.ProcessStatus.PENDING;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 public class ExportService extends BaseProcessService {
@@ -47,8 +51,10 @@ public class ExportService extends BaseProcessService {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process export(Long orgId, Long projectId, ExportRequestModel request, Principal principal) {
-        ProjectModel project = projectService.getProject(orgId, projectId);
+    public Process export(Long projectId, ExportRequestModel request, Principal principal) {
+        long orgId = getOrganizationId(principal);
+
+        Project project = projectService.getProject(orgId, projectId);
 
         if (request.getFormat() != null && !request.getFormat().equals("ESRI Shapefile")) {
             throw new CrgConflictException("Формат: " + request.getFormat() + ", не поддерживается");
@@ -67,7 +73,7 @@ public class ExportService extends BaseProcessService {
             schemaService.getDescriptionByName(layerName).ifPresent(featureDescription -> {
                 payload.addRule(featureDescription);
                 payload.addResource(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getWorkspaceName(), layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getGeoserverName(), layerName));
             });
         });
 

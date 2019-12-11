@@ -27,7 +27,7 @@ export class FeatureTypesService {
   async getByName(layer: CrgLayer): Promise<FeatureType> {
     const currentProject = await this.projectsService.getCurrent();
     const orgId = this.storageService.getOrgId();
-    const workspaceName = currentProject.workspaceName;
+    const workspaceName = currentProject.geoserverName;
     const storeName = 'database_' + orgId + '_store';
     const url = `${this.featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${layer.name}`;
     const { featureType } = await this.httpq.get<{featureType: FeatureType}>(url);
@@ -38,7 +38,7 @@ export class FeatureTypesService {
   async delete(featureType: FeatureType): Promise<Object> {
     const currentProject = await this.projectsService.getCurrent();
     const orgId = this.storageService.getOrgId();
-    const workspaceName = currentProject.workspaceName;
+    const workspaceName = currentProject.geoserverName;
     const storeName = 'database_' + orgId + '_store';
     const url = this.featureTypesUrl + '/' + workspaceName + '/datastores/' + storeName + '/featuretypes/' + featureType.name;
 

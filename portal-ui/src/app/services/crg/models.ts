@@ -1,9 +1,27 @@
 import {FeatureDescription, PropertySchema} from './data-schema.service';
+import {Project} from '../../stores/ProjectsList.store';
+
+export interface CrgApiProjects {
+  projects: Project[];
+}
+
+export interface CrgApiResponse {
+  _embedded: CrgApiProjects;
+  _links: Sortable;
+  page: CrgApiPageable;
+}
 
 export interface CrgModels {
   page?: Pageable;
   sort?: Sortable;
   filter?: FilterEvent[];
+}
+
+export interface CrgApiPageable {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface Pageable {

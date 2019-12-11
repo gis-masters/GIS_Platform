@@ -14,10 +14,10 @@ export class OrganizationService {
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) { }
 
-  async getProcessById(taskId: number): Promise<Process> {
+  async getProcessById(processId: number): Promise<Process> {
     const orgId = this.storageService.getOrgId();
-    const organizationsUrl = await this.serverProp.organizationsUrl;
+    const baseUrl = await this.serverProp.baseUrl;
 
-    return this.httpq.get<Process>(`${organizationsUrl}/${orgId}/tasks/${taskId}`);
+    return this.httpq.get<Process>(`${baseUrl}/processes/${processId}`);
   }
 }

@@ -19,9 +19,9 @@ export class LayerGroupService {
               private serverProp: ServerPropertiesService) { }
 
   async fetchLayerGroups(project: Project): Promise<NameHrefProjection[]> {
-    const { workspaceName } = project;
+    const { geoserverName } = project;
     const geoServerUrl = await this.serverProp.geoServerUrl;
-    const url = `${geoServerUrl}/rest/workspaces/${workspaceName}/layergroups`;
+    const url = `${geoServerUrl}/rest/workspaces/${geoserverName}/layergroups`;
     const groups = await this.httpq.get<LayerGroups>(url);
 
     return groups.layerGroups.layerGroup;

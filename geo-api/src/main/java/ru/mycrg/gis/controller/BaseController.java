@@ -10,11 +10,10 @@ import java.net.URI;
 public class BaseController {
 
     @NotNull
-    HttpHeaders createHeadersWithLinkToTask(Long orgId, Process process) {
+    HttpHeaders createHeadersWithLinkToProcess(Process process) {
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/organizations/{orgId}/tasks/{processId}")
-                .buildAndExpand(orgId, process.getId())
-                .toUri();
+                .path("/processes/{processId}")
+                .build(process.getId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);

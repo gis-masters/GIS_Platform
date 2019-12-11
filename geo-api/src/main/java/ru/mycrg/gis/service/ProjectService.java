@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.common.BaseMqProcessRequest;
@@ -13,9 +15,7 @@ import ru.mycrg.common.OrgMqProcessRequest;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.controller.ProjectController;
-import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.ProjectRequestDto;
-import ru.mycrg.gis.entity.Organization;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.CrgConflictException;
@@ -28,55 +28,37 @@ import ru.mycrg.gis.util.Translit;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @Service
+@Transactional
 public class ProjectService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
     private final MqSender mqSender;
     private final ProjectRepository projectRepository;
-    private final OrganizationService organizationService;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProcessRepository processRepository,
-                          MqSender mqSender,
-                          OrganizationService organizationService) {
+                          MqSender mqSender) {
         super(processRepository);
 
         this.mqSender = mqSender;
         this.projectRepository = projectRepository;
-        this.organizationService = organizationService;
-    }
-
-    /**
-     * Проекты принадлежащие организации.
-     * Перед выборкой проверяет имеет ли права пользователь на доступ к проекту
-     * @param orgId
-     * @return
-     */
-    @Transactional
-    public List<ProjectModel> getProjects(Long orgId) {
-        return organizationService.findById(orgId)
-                .getProjects().stream()
-                .map(project -> mapToProjectModel(orgId, project))
-                .collect(Collectors.toList());
     }
 
     /**
      * Только проект который принадлежит указанной организации.
-     * @param orgId
-     * @param projectId
-     * @return
+     *
+     * @param orgId     Идентификатор организации
+     * @param projectId Идентификатор проекта
+     * @return Проект {@link Project}
      */
-    @Transactional
-    public ProjectModel getProject(Long orgId, Long projectId) {
-        return getProjects(orgId).stream()
-                .filter(project -> projectId == project.getId())
+    public Project getProject(Long orgId, Long projectId) {
+        return getProjectsByOrganization(orgId).stream()
+                .filter(project -> projectId.equals(project.getId()))
                 .findFirst()
                 .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
     }
@@ -85,23 +67,20 @@ public class ProjectService extends BaseProcessService {
      * Создаем проект у нас.
      * Отправляем задание в очередь на создание проекта на геосервере
      *
-     * @param orgId id организации
      * @param principal Пользователь
      * @return Инициированный процесс {@link Process}
      */
-    @Transactional
-    public Process create(Long orgId, ProjectRequestDto dto, Principal principal) {
+    public Process create(ProjectRequestDto dto, Principal principal) {
+        long orgId = getOrganizationId(principal);
+
         log.info("Init create project process: {}", dto.getProjectName());
 
-        Organization organization = organizationService.findById(orgId);
-        Optional<Project> projectWithSameName = organization.getProjects().stream()
-                .filter(project -> project.getInternalName().equals(dto.getProjectName()))
-                .findFirst();
+        Optional<Project> projectWithSameName = projectRepository.findByInternalName(dto.getProjectName());
 
         if (projectWithSameName.isPresent()) {
             throw new CrgConflictException("Проект с таким именем уже существует");
         } else {
-            Project newProject = new Project(dto.getProjectName(), Translit.doIt(dto.getProjectName()), organization);
+            Project newProject = new Project(dto.getProjectName(), Translit.doIt(dto.getProjectName()), orgId);
             Project savedProject = projectRepository.save(newProject);
             savedProject.setGeoserverName(savedProject.getGeoserverName() + "_" + savedProject.getId());
 
@@ -127,10 +106,9 @@ public class ProjectService extends BaseProcessService {
      * До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не меняя названия
      * рабочей области на геосервере и схемы в БД.
      *
-     * @param projectId Идентификатор проекта.
+     * @param projectId      Идентификатор проекта.
      * @param newProjectName Новое название проекта.
      */
-    @Transactional
     public void update(Long projectId, String newProjectName) {
         log.info("Update project by id: {}", projectId);
 
@@ -146,13 +124,14 @@ public class ProjectService extends BaseProcessService {
     /**
      * Удаление проекта.
      *
-     * @param orgId id организации
      * @param projectId Идентификатор проекта
      * @param principal Пользователь
      * @return Инициированный процесс {@link Process}
      */
-    public Process delete(long orgId, long projectId, Principal principal) {
-        log.info("Init process Delete project by id: {}", projectId);
+    public Process delete(long projectId, Principal principal) {
+        long orgId = getOrganizationId(principal);
+
+        log.info("Init process Delete project with id: {} for organization id: {}", projectId, orgId);
 
         Project project = projectRepository
                 .findById(projectId)
@@ -172,7 +151,6 @@ public class ProjectService extends BaseProcessService {
     }
 
     @Override
-    @Transactional
     public void handleMqResponse(@NotNull BaseMqProcessResponse mqResponse) {
         if (mqResponse.getId() == null) {
             log.warn("Return invalid mqResponse: {}", mqResponse);
@@ -180,8 +158,12 @@ public class ProjectService extends BaseProcessService {
 
         Process process = getProcessById(mqResponse.getId());
         switch (mqResponse.getType()) {
-            case CREATE_PROJECT: handleProjectCreation(mqResponse, process); break;
-            case DELETE_PROJECT: handleProjectDeletion(mqResponse, process); break;
+            case CREATE_PROJECT:
+                handleProjectCreation(mqResponse, process);
+                break;
+            case DELETE_PROJECT:
+                handleProjectDeletion(mqResponse, process);
+                break;
             default:
                 log.warn("Not supported type: {}", mqResponse.getType());
         }
@@ -193,8 +175,7 @@ public class ProjectService extends BaseProcessService {
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
                 error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
-                project.getOrganization()
-                        .removeProject(project);
+                projectRepository.deleteById(project.getId());
 
                 complete(process, null);
             } else {
@@ -207,8 +188,7 @@ public class ProjectService extends BaseProcessService {
         Project project = fetchProjectFromProcess(process);
         if (project != null) {
             if (ProcessStatus.ERROR.equals(mqResponse.getStatus())) {
-                project.getOrganization()
-                        .removeProject(project);
+                projectRepository.deleteById(project.getId());
 
                 error(process, mqResponse.getError());
             } else if (ProcessStatus.DONE.equals(mqResponse.getStatus())) {
@@ -224,7 +204,7 @@ public class ProjectService extends BaseProcessService {
 
     @Nullable
     private Project fetchProjectFromProcess(@NotNull Process process) {
-        Long projectId = null;
+        Long projectId;
 
         JsonNode extraInfo = process.getExtra();
         if (extraInfo != null) {
@@ -244,11 +224,17 @@ public class ProjectService extends BaseProcessService {
         }
     }
 
-    private ProjectModel mapToProjectModel(Long orgId, Project project) {
-        ProjectModel projectModel = new ProjectModel(project);
-        projectModel.setDatabaseName(DEFAULT_DB_NAME + orgId);
-        projectModel.setStoreName(DEFAULT_DB_NAME + orgId + DEFAULT_STORE_POSTFIX);
-
-        return projectModel;
+    public boolean isProjectAllowedForUser(Long orgId, Long projectId) {
+        return getProjectsByOrganization(orgId).stream()
+                .anyMatch(project -> project.getId().equals(projectId));
     }
+
+    public Page<Project> findAll(Pageable pageable, Principal principal) {
+        return projectRepository.findByOrganizationId(getOrganizationId(principal), pageable);
+    }
+
+    private List<Project> getProjectsByOrganization(Long orgId) {
+        return projectRepository.findByOrganizationId(orgId);
+    }
+
 }

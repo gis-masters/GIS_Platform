@@ -27,9 +27,6 @@ public class Organization {
     @OneToMany(cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Project> projects = new ArrayList<>();
-
     public Organization() {}
 
     public Organization(String name, String phone) {
@@ -39,11 +36,6 @@ public class Organization {
 
     public void addUser(User user) {
         users.add(user);
-    }
-
-    public void removeProject(Project project) {
-        projects.remove(project);
-        project.setOrganization(null);
     }
 
     public long getId() {
@@ -86,11 +78,4 @@ public class Organization {
         this.status = status;
     }
 
-    public List<Project> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
 }

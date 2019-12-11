@@ -102,7 +102,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.projectsService
-        .doWorkImport(workTasks, project.id, project.workspaceName)
+        .doWorkImport(workTasks, project.id, project.geoserverName)
         .then((crgProcess: Process) => {
 
           interval(this.CHECK_STATUS_INTERVAL)

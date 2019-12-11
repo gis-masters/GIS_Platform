@@ -45,6 +45,10 @@ zuul:
       path: /organizations/**
       url: http://geo-api:8088/organizations/
 
+    gis-processes:
+      path: /processes/**
+      url: http://geo-api:8088/processes/
+
     gis-projects:
       path: /projects/**
       url: http://geo-api:8088/projects/

@@ -5,6 +5,7 @@ import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.hateoas.Identifiable;
 import ru.mycrg.common.enums.ProcessStatus;
 import ru.mycrg.common.enums.ProcessType;
 
@@ -17,7 +18,7 @@ import java.util.Objects;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class Process {
+public class Process implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +60,8 @@ public class Process {
         this.extra = extra;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 

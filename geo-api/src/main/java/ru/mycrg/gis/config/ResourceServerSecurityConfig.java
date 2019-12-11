@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import ru.mycrg.gis.security.CustomAccessTokenConverter;
 
 @Configuration
 @EnableResourceServer
@@ -21,10 +22,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     private String SECRET;
 
     @Autowired
-    TokenStore tokenStore;
-
-    @Autowired
-    JwtAccessTokenConverter accessTokenConverter;
+    private CustomAccessTokenConverter customAccessTokenConverter;
 
     private static final String[] SWAGGER_WHITELIST = {
             "/v2/api-docs",
@@ -51,6 +49,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setAccessTokenConverter(customAccessTokenConverter);
         converter.setSigningKey(SECRET);
 
         return converter;
@@ -62,10 +61,10 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     }
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) {
-        resources
+    public void configure(ResourceServerSecurityConfigurer configurer) {
+        configurer
                 .resourceId("dummy")
-                .tokenStore(tokenStore);
+                .tokenStore(tokenStore());
     }
 
 }

@@ -1,10 +1,10 @@
 package ru.mycrg.gis.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.springframework.hateoas.Identifiable;
 import ru.mycrg.common.enums.ProcessStatus;
 
 import javax.persistence.*;
@@ -15,7 +15,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class Project {
+public class Project implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +23,10 @@ public class Project {
     private long id;
 
     @Column
-    private String geoserverName;
+    private String internalName;
 
     @Column
-    private String internalName;
+    private String geoserverName;
 
     @Enumerated(value = EnumType.STRING)
     private ProcessStatus status = ProcessStatus.PENDING;
@@ -35,19 +35,19 @@ public class Project {
     @Column(columnDefinition = "json")
     private JsonNode extra;
 
-    @ManyToOne
-    @JsonIgnore
-    private Organization organization;
+    @Column
+    private long organizationId;
 
     public Project() {}
 
-    public Project(String internalName, String geoserverName, Organization organization) {
+    public Project(String internalName, String geoserverName, long organizationId) {
         this.internalName = internalName;
         this.geoserverName = geoserverName.toLowerCase();
-        this.organization = organization;
+        this.organizationId = organizationId;
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
@@ -87,11 +87,11 @@ public class Project {
         this.status = status;
     }
 
-    public Organization getOrganization() {
-        return organization;
+    public long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setOrganizationId(long organizationId) {
+        this.organizationId = organizationId;
     }
 }

@@ -13,12 +13,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.gis.dto.OrganizationCreateDto;
 import ru.mycrg.gis.dto.OrganizationUpdateDto;
 import ru.mycrg.gis.entity.Organization;
-import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.service.OrganizationService;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 
 import static ru.mycrg.gis.util.PageAndSortUtil.getPageableRequest;
 
@@ -69,7 +67,6 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasPermission(#id, '')")
     public ResponseEntity<Organization> getById(@PathVariable long id) {
         log.debug("Get organization by id: {}", id);
 
@@ -77,7 +74,6 @@ public class OrganizationController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasPermission(#id, '')")
     public HttpStatus deleteOrganization(@PathVariable long id) {
         log.debug("Delete organization by id: {}", id);
 
@@ -87,7 +83,6 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasPermission(#id, '')")
     public ResponseEntity<Organization> updateOrganization(@Valid @RequestBody OrganizationUpdateDto organizationDto,
                                                            @PathVariable long id) {
         log.debug("Update organization");
@@ -95,15 +90,6 @@ public class OrganizationController {
         organizationService.update(id, organizationDto);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}/tasks/{taskId}")
-    @PreAuthorize("hasPermission(#id, '')")
-    public ResponseEntity<Process> getOrganizationTasks(@PathVariable long id, @PathVariable long taskId,
-                                                        Principal principal) {
-        log.debug("Get organization task: {}", taskId);
-
-        return ResponseEntity.ok(organizationService.getProcess(taskId));
     }
 
 }

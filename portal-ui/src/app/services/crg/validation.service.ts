@@ -33,8 +33,7 @@ export class ValidationService {
     };
 
     const projectId = getRoute().snapshot.params.projectId;
-    const orgId = this.storageService.getOrgId();
-    const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
+    const url = (await this.serverProp.baseUrl) + '/projects/' + projectId + '/validation';
 
     return this.httpq
                .post<ValidationWsMsg>(url, JSON.stringify(payload),
@@ -53,8 +52,7 @@ export class ValidationService {
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
     const projectId = getRoute().snapshot.params.projectId;
-    const orgId = this.storageService.getOrgId();
-    const url = (await this.serverProp.organizationsUrl) + '/' + orgId + '/projects/' + projectId + '/validation';
+    const url = (await this.serverProp.baseUrl) + '/projects/' + projectId + '/validation';
 
     return this.httpq
                .get<ValidationResultsResponse>(url,
@@ -74,9 +72,8 @@ export class ValidationService {
     };
 
     const projectId = getRoute().snapshot.params.projectId;
-    const orgId = this.storageService.getOrgId();
-    const organizationsUrl = await this.serverProp.organizationsUrl;
-    const url = organizationsUrl + '/' + orgId + '/projects/' + projectId + '/validation/short';
+    const baseUrl = await this.serverProp.baseUrl;
+    const url = baseUrl + '/projects/' + projectId + '/validation/short';
 
     return this.httpq
                .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),

@@ -4,7 +4,7 @@ import { ProcessStatus } from '../services/crg/models';
 
 export interface Project {
   id: string;
-  workspaceName: string;
+  geoserverName: string;
   internalName: string;
   databaseName?: string;
   storeName?: string;

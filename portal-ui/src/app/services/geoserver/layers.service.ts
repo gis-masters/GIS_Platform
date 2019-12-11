@@ -146,7 +146,7 @@ export class LayersService {
     return layers.filter((layer: CrgLayer) => {
       const projectName = layer.name.split(':')[0];
 
-      return projectName === project.workspaceName;
+      return projectName === project.geoserverName;
     });
   }
 

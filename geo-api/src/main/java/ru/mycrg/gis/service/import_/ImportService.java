@@ -11,10 +11,10 @@ import ru.mycrg.common.ResourceProjection;
 import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.common.import_.ImportMqResponse;
 import ru.mycrg.common.import_.ImportMqTask;
-import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
@@ -27,6 +27,9 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 public class ImportService extends BaseProcessService {
@@ -51,12 +54,14 @@ public class ImportService extends BaseProcessService {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process initProcess(Long orgId, Long projectId, WorkImport workImport, Principal principal) {
-        ProjectModel projectModel = projectService.getProject(orgId, projectId);
+    public Process initProcess(Long projectId, WorkImport workImport, Principal principal) {
+        long orgId = getOrganizationId(principal);
+
+        Project project = projectService.getProject(orgId, projectId);
 
         Process process = create(principal.getName(),
                 String.format("Импорт %d слоя(ёв) в проект: %s",
-                        workImport.getImportTasks().size(), projectModel.getInternalName()),
+                        workImport.getImportTasks().size(), project.getInternalName()),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
@@ -76,11 +81,12 @@ public class ImportService extends BaseProcessService {
                 log.debug("Import AsIs, workTableName: {}", workTableName);
             }
 
+            String dbName = DEFAULT_DB_NAME + orgId;
             ImportMqTask importMqTask = new ImportMqTask(featureDescription,
-                    new ResourceProjection(projectModel.getDatabaseName(), "public", uiTask.getLayerName()),
+                    new ResourceProjection(dbName, "public", uiTask.getLayerName()),
                     new ResourceProjection(
-                            projectModel.getDatabaseName(),
-                            projectModel.getWorkspaceName(),
+                            dbName,
+                            project.getGeoserverName(),
                             featureDescription.getTableName()),
                     uiTask.getPairs(),
                     uiTask.getSrs(),

@@ -2,179 +2,126 @@ package ru.mycrg.gis.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.ValidationInfo;
-import ru.mycrg.gis.dto.*;
+import ru.mycrg.gis.dto.ExportRequestModel;
+import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgBadRequestException;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.export.ExportService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.import_.WorkImport;
-import ru.mycrg.gis.service.validation.ValidationService;
-import ru.mycrg.gis.service.validation.ViolationService;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @RestController
-@RequestMapping(value = "/organizations/{orgId}/projects")
+@RequestMapping(value = "/projects")
 public class ProjectController extends BaseController {
 
     private static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
+    @Autowired
+    private PagedResourcesAssembler<Project> assembler;
+
+    @Autowired
+    private EntityLinks links;
+
     private final ImportService importService;
     private final ProjectService projectService;
     private final ExportService exportService;
-    private final ValidationService validationService;
-    private final ViolationService violationService;
 
     public ProjectController(ImportService importService,
-                             ValidationService validationService,
-                             ViolationService violationService,
                              ExportService exportService,
                              ProjectService projectService) {
         this.importService = importService;
         this.exportService = exportService;
         this.projectService = projectService;
-        this.validationService = validationService;
-        this.violationService = violationService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<List<ProjectModel>> getProjects(@PathVariable Long orgId) {
-        log.debug("Request get projects for org: {}", orgId);
+    @GetMapping()
+    public ResponseEntity<?> getProjects(Pageable pageable, Principal principal) {
+        Page<Project> projects = projectService.findAll(pageable, principal);
 
-        List<ProjectModel> projects = projectService.getProjects(orgId);
+        Link pageSelfLink = links.linkFor(Project.class).withSelfRel();
+        PagedResources<?> pagedResources = assembler.toResource(projects, this::toResource, pageSelfLink);
 
-        return ResponseEntity.ok(projects);
+        return ResponseEntity.ok(pagedResources);
     }
 
     @GetMapping("/{projectId}")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<ProjectModel> getProjectById(@PathVariable Long orgId,
-                                                       @PathVariable Long projectId) {
-        log.debug("Request get project: {} for org: {}", projectId, orgId);
+    @PreAuthorize("hasPermission('projects', #projectId)")
+    public Resource<Project> getProjectById(@PathVariable Long projectId, Principal principal) {
+        Project project = projectService.getProject(getOrganizationId(principal), projectId);
 
-        return ResponseEntity.ok(projectService.getProject(orgId, projectId));
+        Resource<Project> resource = new Resource<>(project);
+        resource.add(linkTo(ProjectController.class).slash(project.getId()).withSelfRel());
+        resource.add(linkTo(ProjectController.class).slash(project.getId()).withRel("project"));
+
+        return resource;
+    }
+
+    private ResourceSupport toResource(Project project) {
+        Link projectLink = links.linkForSingleResource(project).withRel("project");
+        Link selfLink = links.linkForSingleResource(project).withSelfRel();
+
+        return new Resource<>(project, projectLink, selfLink);
     }
 
     @PostMapping
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<Process> createProject(@PathVariable Long orgId,
-                                                 @Valid @RequestBody ProjectRequestDto projectDto,
+    public ResponseEntity<Process> createProject(@Valid @RequestBody ProjectRequestDto projectDto,
                                                  Principal principal) {
-        log.debug("Request for createProject for org: {}", orgId);
+        Process process = projectService.create(projectDto, principal);
 
-        Process process = projectService.create(orgId, projectDto, principal);
-
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{projectId}")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public HttpStatus updateProject(@PathVariable Long orgId,
-                                    @PathVariable long projectId,
+    public HttpStatus updateProject(@PathVariable long projectId,
                                     @Valid @RequestBody ProjectRequestDto projectDto,
                                     Principal principal) {
-        log.debug("Request for updateProject for org: {}", orgId);
-
         projectService.update(projectId, projectDto.getProjectName());
 
         return HttpStatus.OK;
     }
 
     @DeleteMapping("/{projectId}")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<Process> deleteProject(@PathVariable long orgId,
-                                                 @PathVariable long projectId,
+    public ResponseEntity<Process> deleteProject(@PathVariable long projectId,
                                                  Principal principal) {
-        log.debug("Request delete project with id: {} for org: {}", projectId, orgId);
+        Process process = projectService.delete(projectId, principal);
 
-        Process process = projectService.delete(orgId, projectId, principal);
-
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{projectId}/import")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<Process> initImport(@PathVariable Long orgId,
-                                              @PathVariable Long projectId,
+    public ResponseEntity<Process> initImport(@PathVariable Long projectId,
                                               @RequestBody WorkImport workImport,
                                               Principal principal) {
-        log.debug("Request import for org: {} project: {}", orgId, projectId);
+        Process process = importService.initProcess(projectId, workImport, principal);
 
-        Process process = importService.initProcess(orgId, projectId, workImport, principal);
-
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{projectId}/export")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<Process> exportProjectLayers(@PathVariable Long orgId,
-                                                       @PathVariable Long projectId,
+    public ResponseEntity<Process> exportProjectLayers(@PathVariable Long projectId,
                                                        @Valid @RequestBody ExportRequestModel requestModel,
                                                        Principal principal) {
         log.debug("Request export layers. For projectId: {} Format: {}", projectId, requestModel.getFormat());
 
-        Process process = exportService.export(orgId, projectId, requestModel, principal);
+        Process process = exportService.export(projectId, requestModel, principal);
 
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
-    }
-
-    @PostMapping("/{projectId}/validation")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<Process> initValidation(@PathVariable Long orgId,
-                                                  @PathVariable Long projectId,
-                                                  @Valid @RequestBody ValidationRequestDto request,
-                                                  Principal principal) {
-        log.debug("Init validation for: {} resources", request.getLayers().size());
-
-        Process process = validationService.validate(orgId, projectId, principal, request);
-
-        return new ResponseEntity<>(process, createHeadersWithLinkToTask(orgId, process), HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/{projectId}/validation")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<ValidationResponseDto> getValidationResults(
-            @PathVariable Long orgId,
-            @PathVariable Long projectId,
-            @RequestParam String layerName,
-            @RequestParam(required = false, name = "page", defaultValue = "0") String page,
-            @RequestParam(required = false, name = "size", defaultValue = "25") String size,
-            Principal principal) {
-        log.info("Request get validation results for layer: {} - {}/{}", layerName, page, size);
-
-        int nPage;
-        int nSize;
-        try {
-            nPage = Integer.parseInt(page);
-            nSize = Integer.parseInt(size);
-        } catch (NumberFormatException e) {
-            throw new CrgBadRequestException(e.getLocalizedMessage());
-        }
-
-        ValidationResponseDto result = violationService.getViolations(orgId, projectId, layerName, nPage, nSize);
-
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/{projectId}/validation/short")
-    @PreAuthorize("hasPermission(#orgId, '')")
-    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@PathVariable Long orgId,
-                                                                  @PathVariable Long projectId,
-                                                                  @Valid @RequestBody ValidationRequestDto request) {
-        log.debug("Request get short validation info");
-
-        List<ValidationInfo> result = violationService.getShortInfo(orgId, projectId, request);
-
-        return ResponseEntity.ok(result);
+        return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
 }

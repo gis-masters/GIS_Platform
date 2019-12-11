@@ -5,13 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
+import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.common.ResourceProjection;
+import ru.mycrg.common.ValidationMqProcessRequest;
 import ru.mycrg.common.enums.ProcessType;
-import ru.mycrg.gis.dto.ProjectModel;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
@@ -22,6 +25,7 @@ import ru.mycrg.gis.service.dataSchema.DataSchemaService;
 import java.security.Principal;
 
 import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 public class ValidationService extends BaseProcessService {
@@ -50,13 +54,14 @@ public class ValidationService extends BaseProcessService {
     /**
      * Запустить процесс валидации.
      *
-     * @param orgId     Организация
      * @param projectId Проект
      * @param principal Пользователь
      * @param request   Список ресурсов {@link ValidationRequestDto}
      */
-    public Process validate(Long orgId, Long projectId, Principal principal, ValidationRequestDto request) {
-        ProjectModel projectById = projectService.getProject(orgId, projectId);
+    public Process validate(Long projectId, Principal principal, ValidationRequestDto request) {
+        long orgId = getOrganizationId(principal);
+
+        Project projectById = projectService.getProject(orgId, projectId);
         Process process = create(
                 principal.getName(),
                 String.format("Валидация %d слоёв(я) Проекта: %s",
@@ -69,7 +74,7 @@ public class ValidationService extends BaseProcessService {
             schemaService.getDescriptionByName(layerName).ifPresent(featureDescription -> {
                 payload.addFeatureProjections(featureDescription);
                 payload.addResourceProjections(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getWorkspaceName(), layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getGeoserverName(), layerName));
             });
         });
 
