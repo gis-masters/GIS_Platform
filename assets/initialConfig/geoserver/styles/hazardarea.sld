@@ -6,14 +6,14 @@
       <se:Name>HazardArea</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60601030101</se:Name>
+          <se:Name>60601030100</se:Name>
           <se:Description>
             <se:Title>Зона экстренного оповещения существующая и строящаяся</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60601030101</ogc:Literal>
+              <ogc:Literal>60601030100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

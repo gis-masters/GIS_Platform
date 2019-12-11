@@ -6,14 +6,14 @@
       <se:Name>TranspSanitaryGapZone</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60301020101</se:Name>
+          <se:Name>60301020100</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв автомагистралей существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020101</ogc:Literal>
+              <ogc:Literal>60301020100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -52,14 +52,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020102</se:Name>
+          <se:Name>60301020100</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв автомагистралей планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020102</ogc:Literal>
+              <ogc:Literal>60301020100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -98,14 +98,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020201</se:Name>
+          <se:Name>60301020200</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв линий железнодорожного транспорта существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020201</ogc:Literal>
+              <ogc:Literal>60301020200</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -152,14 +152,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020202</se:Name>
+          <se:Name>60301020200</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв линий железнодорожного транспорта планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020202</ogc:Literal>
+              <ogc:Literal>60301020200</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -198,14 +198,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020301</se:Name>
+          <se:Name>60301020300</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв линий метрополитена существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020301</ogc:Literal>
+              <ogc:Literal>60301020300</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -243,14 +243,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020302</se:Name>
+          <se:Name>60301020300</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв линий метрополитена планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020302</ogc:Literal>
+              <ogc:Literal>60301020300</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -289,14 +289,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020401</se:Name>
+          <se:Name>60301020400</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв вдоль стандартных маршрутов полета в зоне взлета и посадки воздушных судов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020401</ogc:Literal>
+              <ogc:Literal>60301020400</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -334,14 +334,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020402</se:Name>
+          <se:Name>60301020400</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв вдоль стандартных маршрутов полета в зоне взлета и посадки воздушных судов планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020402</ogc:Literal>
+              <ogc:Literal>60301020400</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -380,14 +380,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020501</se:Name>
+          <se:Name>60301020500</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв от сооружений для хранения легкового автотранспорта до объектов застройки существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020501</ogc:Literal>
+              <ogc:Literal>60301020500</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -425,14 +425,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301020502</se:Name>
+          <se:Name>60301020500</se:Name>
           <se:Description>
             <se:Title>Санитарный разрыв от сооружений для хранения легкового автотранспорта до объектов застройки планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301020502</ogc:Literal>
+              <ogc:Literal>60301020500</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 pushd migration-scripts/
 
+echo "Copy styles"
+cp -r ../initialConfig/geoserver/styles/* ${GEOSERVER_DATA_DIR}/styles
+
 echo "List of migrations for geoserver catalog: ${GEOSERVER_DATA_DIR}"
 ls -l
 

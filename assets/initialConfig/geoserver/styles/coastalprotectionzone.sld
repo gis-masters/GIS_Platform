@@ -6,14 +6,14 @@
       <se:Name>CoastalProtectionZone</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60301120101</se:Name>
+          <se:Name>60301120100</se:Name>
           <se:Description>
             <se:Title>Прибрежная защитная полоса существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301120101</ogc:Literal>
+              <ogc:Literal>60301120100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -71,14 +71,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301120102</se:Name>
+          <se:Name>60301120100</se:Name>
           <se:Description>
             <se:Title>Прибрежная защитная полоса планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301120102</ogc:Literal>
+              <ogc:Literal>60301120100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

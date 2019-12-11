@@ -9,14 +9,14 @@ xmlns:se="http://www.opengis.net/se">
 			<se:Name>TechnoRiskArea</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
-					<se:Name>60601020101</se:Name>
+					<se:Name>60601020100</se:Name>
 					<se:Description>
 						<se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601020101</ogc:Literal>
+							<ogc:Literal>60601020100</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -30,14 +30,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601020201</se:Name>
+					<se:Name>60601020200</se:Name>
 					<se:Description>
 						<se:Title>Зона, подверженная риску радиоактивного загрязнения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601020201</ogc:Literal>
+							<ogc:Literal>60601020200</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -51,14 +51,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601020301</se:Name>
+					<se:Name>60601020300</se:Name>
 					<se:Description>
 						<se:Title>Зона, подверженная риску химического заражения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601020301</ogc:Literal>
+							<ogc:Literal>60601020300</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -72,14 +72,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601020401</se:Name>
+					<se:Name>60601020400</se:Name>
 					<se:Description>
 						<se:Title>Зона возможного катастрофического затопления (при аварии на гидродинамически опасном объекте)</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601020401</ogc:Literal>
+							<ogc:Literal>60601020400</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>

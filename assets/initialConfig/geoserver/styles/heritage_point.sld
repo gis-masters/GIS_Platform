@@ -9,14 +9,14 @@ xmlns:se="http://www.opengis.net/se">
 			<se:Name>Heritage</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
-					<se:Name>60401010101</se:Name>
+					<se:Name>60401010100</se:Name>
 					<se:Description>
 						<se:Title>Памятник существующий</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010101</ogc:Literal>
+							<ogc:Literal>60401010100</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -30,14 +30,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010201</se:Name>
+					<se:Name>60401010200</se:Name>
 					<se:Description>
 						<se:Title>Ансамбль существующий</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010201</ogc:Literal>
+							<ogc:Literal>60401010200</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -51,14 +51,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010301</se:Name>
+					<se:Name>60401010300</se:Name>
 					<se:Description>
 						<se:Title>Достопримечательное место существующее</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010301</ogc:Literal>
+							<ogc:Literal>60401010300</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -72,14 +72,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010302</se:Name>
+					<se:Name>60401010300</se:Name>
 					<se:Description>
 						<se:Title>Достопримечательное место планируемое к размещению</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010302</ogc:Literal>
+							<ogc:Literal>60401010300</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -93,14 +93,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010401</se:Name>
+					<se:Name>60401010400</se:Name>
 					<se:Description>
 						<se:Title>Историко-культурный заповедник существующий</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010401</ogc:Literal>
+							<ogc:Literal>60401010400</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -114,14 +114,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010402</se:Name>
+					<se:Name>60401010400</se:Name>
 					<se:Description>
 						<se:Title>Историко-культурный заповедник планируемый к размещению</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010402</ogc:Literal>
+							<ogc:Literal>60401010400</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>

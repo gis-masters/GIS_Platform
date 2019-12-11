@@ -6,14 +6,14 @@
       <se:Name>AdmBorder</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60101010001</se:Name>
+          <se:Name>60101010000</se:Name>
           <se:Description>
             <se:Title>Государственная граница Российской Федерации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101010001</ogc:Literal>
+              <ogc:Literal>60101010000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -51,14 +51,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101020001</se:Name>
+          <se:Name>60101020000</se:Name>
           <se:Description>
             <se:Title>Граница субъекта Российской Федерации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101020001</ogc:Literal>
+              <ogc:Literal>60101020000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -80,14 +80,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030101</se:Name>
+          <se:Name>60101030100</se:Name>
           <se:Description>
             <se:Title>Граница муниципального района существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030101</ogc:Literal>
+              <ogc:Literal>60101030100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -126,14 +126,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030102</se:Name>
+          <se:Name>60101030100</se:Name>
           <se:Description>
             <se:Title>Граница муниципального района планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030102</ogc:Literal>
+              <ogc:Literal>60101030100</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -172,14 +172,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030201</se:Name>
+          <se:Name>60101030200</se:Name>
           <se:Description>
             <se:Title>Граница городского округа существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030201</ogc:Literal>
+              <ogc:Literal>60101030200</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -218,14 +218,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030202</se:Name>
+          <se:Name>60101030200</se:Name>
           <se:Description>
             <se:Title>Граница городского округа планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030202</ogc:Literal>
+              <ogc:Literal>60101030200</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -264,14 +264,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030301</se:Name>
+          <se:Name>60101030300</se:Name>
           <se:Description>
             <se:Title>Граница городского округа с внутригородским делением существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030301</ogc:Literal>
+              <ogc:Literal>60101030300</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -310,14 +310,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030302</se:Name>
+          <se:Name>60101030300</se:Name>
           <se:Description>
             <se:Title>Граница городского округа с внутригородским делением планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030302</ogc:Literal>
+              <ogc:Literal>60101030300</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -356,14 +356,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030401</se:Name>
+          <se:Name>60101030400</se:Name>
           <se:Description>
             <se:Title>Граница внутригородской территории (внутригородского муниципального образования) города федерального значения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030401</ogc:Literal>
+              <ogc:Literal>60101030400</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -402,14 +402,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030402</se:Name>
+          <se:Name>60101030400</se:Name>
           <se:Description>
             <se:Title>Граница внутригородской территории (внутригородского муниципального образования) города федерального значения планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030402</ogc:Literal>
+              <ogc:Literal>60101030400</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -448,14 +448,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030501</se:Name>
+          <se:Name>60101030500</se:Name>
           <se:Description>
             <se:Title>Граница внутригородского района существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030501</ogc:Literal>
+              <ogc:Literal>60101030500</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -511,14 +511,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030502</se:Name>
+          <se:Name>60101030500</se:Name>
           <se:Description>
             <se:Title>Граница внутригородского района планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030502</ogc:Literal>
+              <ogc:Literal>60101030500</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -574,14 +574,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030601</se:Name>
+          <se:Name>60101030600</se:Name>
           <se:Description>
             <se:Title>Граница городского поселения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030601</ogc:Literal>
+              <ogc:Literal>60101030600</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -637,14 +637,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030602</se:Name>
+          <se:Name>60101030600</se:Name>
           <se:Description>
             <se:Title>Граница городского поселения планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030602</ogc:Literal>
+              <ogc:Literal>60101030600</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -700,14 +700,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030701</se:Name>
+          <se:Name>60101030700</se:Name>
           <se:Description>
             <se:Title>Граница сельского поселения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030701</ogc:Literal>
+              <ogc:Literal>60101030700</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -763,14 +763,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101030702</se:Name>
+          <se:Name>60101030700</se:Name>
           <se:Description>
             <se:Title>Граница сельского поселения планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101030702</ogc:Literal>
+              <ogc:Literal>60101030700</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -826,14 +826,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101040001</se:Name>
+          <se:Name>60101040000</se:Name>
           <se:Description>
             <se:Title>Граница населенного пункта существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101040001</ogc:Literal>
+              <ogc:Literal>60101040000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>
@@ -906,14 +906,14 @@
           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60101040002</se:Name>
+          <se:Name>60101040000</se:Name>
           <se:Description>
             <se:Title>Граница населенного пункта планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60101040002</ogc:Literal>
+              <ogc:Literal>60101040000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:LineSymbolizer>

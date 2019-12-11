@@ -6,14 +6,14 @@
       <se:Name>AdmeNP</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60102040001</se:Name>
+          <se:Name>60102040000</se:Name>
           <se:Description>
             <se:Title>Территория населенного пункта существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102040001</ogc:Literal>
+              <ogc:Literal>60102040000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -26,14 +26,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102040002</se:Name>
+          <se:Name>60102040000</se:Name>
           <se:Description>
             <se:Title>Территория населенного пункта планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102040002</ogc:Literal>
+              <ogc:Literal>60102040000</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
