@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import ru.mycrg.auth_service.CustomTokenConverter;
+import ru.mycrg.auth_service.security.CustomTokenConverter;
 
 @Configuration
 @EnableAuthorizationServer
@@ -49,7 +49,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret(encoder.encode(CLIENT_SECRET))
                 .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_TIME)
                 .refreshTokenValiditySeconds(REFRESH_TOKEN_VALIDITY_TIME)
-                .scopes("read", "write")
+                .scopes("crg")
                 .authorizedGrantTypes("password", "refresh_token");
     }
 

@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service;
+package ru.mycrg.auth_service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -37,8 +37,7 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
                         .map(org -> new IdNameProjection(org.getId(), org.getName()))
                         .collect(Collectors.toList());
 
-                additionalInfo.put("userId", user.getId());
-                additionalInfo.put("userName", user.getUsername());
+                additionalInfo.put("user_id", user.getId());
                 additionalInfo.put("organizations", usersOrganizations);
             }
 

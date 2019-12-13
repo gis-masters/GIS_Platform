@@ -10,9 +10,6 @@ logging:
 
 spring:
   profiles: fiz-dev
-#  data:
-#    rest:
-#      detection-strategy: annotated
   datasource:
     platform: postgres
     url: jdbc:postgresql://127.0.0.1:5432/gis_portal
