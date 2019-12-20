@@ -210,13 +210,6 @@ export class OpenLayersService {
   }
 
   /**
-   * Все слоя карты включая подложку.
-   */
-  public allLayers() {
-    return this._map.getLayers();
-  }
-
-  /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
   public getLayerByName(complexLayerName: string): BaseLayer | undefined {
@@ -319,12 +312,19 @@ export class OpenLayersService {
 
   /**
    * Задать слой подложку.
-   * Перечень доступынх подложек: tileSources
-   * @param tileSource
+   *
+   * @param tileSource The source providing images divided into a tile grid.
    */
   setTileSource(tileSource: TileSource) {
     this.currentTileSource = tileSource;
-    this.tileLayer.setSource(this.currentTileSource.source);
+
+    const substrate = this.getSubstrate();
+    if (tileSource.name === 'Empty') {
+      substrate.setVisible(false);
+    } else {
+      substrate.setVisible(true);
+      this.tileLayer.setSource(this.currentTileSource.source);
+    }
   }
 
   getCurrentTileSource(): TileSource {
@@ -349,75 +349,66 @@ export class OpenLayersService {
       matrixIds[z] = 'EPSG:900913:' + z;
     }
 
-    if (environment.platform === 'conv') {
-      this.tileSources = [
-        {
-          name: 'OSM',
-          title: 'Open street map',
-          source: new OSM(),
-          thumbnail: '/assets/images/thumpnail-osm.jpg'
-        },
-        {
-          name: 'ESRI',
-          title: 'ESRI',
-          source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-          }),
-          thumbnail: '/assets/images/thumpnail-esri.jpg'
-        }
-      ];
+    this.tileSources = [
+      {
+        name: 'OSM',
+        title: 'Open street map',
+        source: new OSM(),
+        thumbnail: '/assets/images/thumbnail-osm.jpg'
+      },
+      {
+        name: 'ESRI',
+        title: 'ESRI',
+        source: new XYZ({
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+        }),
+        thumbnail: '/assets/images/thumbnail-esri.jpg'
+      },
+      {
+        name: 'Empty',
+        title: 'Без подложки',
+        source: new XYZ(),
+        thumbnail: '/assets/images/thumbnail-empty.jpg'
+      }
+    ];
 
+    if (environment.platform === 'conv') {
       this.currentTileSource = this.getTileSource('OSM');
     } else {
-      this.tileSources = [
-        {
-          name: 'OSM',
-          title: 'Open street map',
-          source: new OSM(),
-          thumbnail: '/assets/images/thumpnail-osm.jpg'
-        },
-        {
-          name: 'ESRI',
-          title: 'ESRI',
-          source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+      // {
+      //   name: 'SimfReg',
+      //   title: 'Ортофотоплан',
+      //   source: new TileWMS({
+      //     urls: [await this.serverProp.wmsUrl],
+      //     tileLoadFunction: this.crgImageLoadFunction,
+      //     params: {
+      //       LAYERS: 'substrate:T_42_6',
+      //       FORMAT: 'image/vnd.jpeg-png8'
+      //     }
+      //   }),
+      //   thumbnail: '/assets/images/thumbnail-our.jpg'
+      // },
+
+      this.tileSources.splice(2, 0, {
+        name: 'SimfRegWMTS',
+        title: 'Ортофотоплан WMTS',
+        source: new WMTS({
+          tileLoadFunction: this.crgImageLoadFunction,
+          urls: [await this.serverProp.wmtsUrl],
+          tileGrid: new WMTSTileGrid({
+            origin: getTopLeft(projectionExtent),
+            resolutions: resolutions,
+            matrixIds: matrixIds
           }),
-          thumbnail: '/assets/images/thumpnail-esri.jpg'
-        },
-        // {
-        //   name: 'SimfReg',
-        //   title: 'Ортофотоплан',
-        //   source: new TileWMS({
-        //     urls: [await this.serverProp.wmsUrl],
-        //     tileLoadFunction: this.crgImageLoadFunction,
-        //     params: {
-        //       LAYERS: 'substrate:T_42_6',
-        //       FORMAT: 'image/vnd.jpeg-png8'
-        //     }
-        //   }),
-        //   thumbnail: '/assets/images/thumpnail-our.jpg'
-        // },
-        {
-          name: 'SimfRegWMTS',
-          title: 'Ортофотоплан WMTS',
-          source: new WMTS({
-            tileLoadFunction: this.crgImageLoadFunction,
-            urls: [await this.serverProp.wmtsUrl],
-            tileGrid: new WMTSTileGrid({
-              origin: getTopLeft(projectionExtent),
-              resolutions: resolutions,
-              matrixIds: matrixIds
-            }),
-            style: 'default',
-            layer: 'substrate:T_42_6',
-            matrixSet: 'EPSG:900913',
-            format: 'image/png',
-            projection: projection,
-            wrapX: true
-          }),
-          thumbnail: '/assets/images/thumpnail-our.jpg'
-        }
-      ];
+          style: 'default',
+          layer: 'substrate:T_42_6',
+          matrixSet: 'EPSG:900913',
+          format: 'image/png',
+          projection: projection,
+          wrapX: true
+        }),
+        thumbnail: '/assets/images/thumbnail-our.jpg'
+      });
 
       this.currentTileSource = this.getTileSource('SimfRegWMTS');
     }
@@ -483,6 +474,12 @@ export class OpenLayersService {
     return this._map
                .getLayers().getArray()
                .filter((bLayer: BaseLayer) => bLayer.getType() === LayerType.IMAGE);
+  }
+
+  private getSubstrate(): BaseLayer {
+    return this._map
+               .getLayers().getArray()
+               .find(bLayer => bLayer.getType() === LayerType.TILE);
   }
 
 }
