@@ -1,7 +1,7 @@
 package ru.mycrg.wrapper.service.import_;
 
 import org.jetbrains.annotations.Nullable;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.service.CrgChainable;
 
 public abstract class AbstractImportChainItem implements CrgChainable<ImportMqTask> {

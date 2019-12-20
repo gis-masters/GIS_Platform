@@ -3,9 +3,9 @@ package ru.mycrg.gis.queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 
-import static ru.mycrg.common.config.MqProperties.*;
+import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
 
 @Component
 @EnableRabbit
@@ -18,7 +18,7 @@ public class MqListener {
     }
 
     @RabbitListener(queues = {
-            QUEUE_ORG_CREATED,
+            QUEUE_PROJECT_RESPONSE,
             QUEUE_VALIDATION_RESULT,
             QUEUE_IMPORT_RESPONSE,
             QUEUE_GML_RESPONSE

@@ -3,18 +3,19 @@ package ru.mycrg.wrapper.service.projects.delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.geoserver_client.services.projects.ProjectService;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.OrgMqProcessRequest;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.CrgDaoSchemaService;
 import ru.mycrg.wrapper.dao.ICrgDaoSchema;
-import ru.mycrg.wrapper.geoserver_client.services.projects.IProject;
+import ru.mycrg.geoserver_client.services.projects.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 /**
  * Сервис обрабатывающий события удаления проектов.
@@ -29,10 +30,9 @@ public class DeleteProjectRequestHandler extends BaseRequestHandler implements I
     private final ICrgDaoSchema daoSchemaService;
 
     public DeleteProjectRequestHandler(CrgDaoSchemaService daoSchemaService,
-                                       IProject geoserverClient,
                                        MqSender mqSender) {
         this.mqSender = mqSender;
-        this.geoserverClient = geoserverClient;
+        this.geoserverClient = new ProjectService();
         this.daoSchemaService = daoSchemaService;
     }
 

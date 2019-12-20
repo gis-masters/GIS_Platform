@@ -8,10 +8,10 @@ import org.locationtech.jts.io.ParseException;
 import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.MqExportProcessRequest;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 
 import java.util.ArrayList;

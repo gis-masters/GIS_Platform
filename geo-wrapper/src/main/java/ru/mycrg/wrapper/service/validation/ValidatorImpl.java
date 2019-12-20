@@ -3,8 +3,8 @@ package ru.mycrg.wrapper.service.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.mq_queue_contract.*;
+import ru.mycrg.mq_queue_contract.enums.ValueType;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 

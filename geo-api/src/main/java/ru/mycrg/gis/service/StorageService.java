@@ -6,7 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.config.CrgProperties;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -43,11 +43,11 @@ public class StorageService {
                 return resource;
             } else {
                 log.error("Resource not exist");
-                throw new CrgNotFoundException("Resource not exist: " + fileName);
+                throw new NotFoundException("Resource not exist: " + fileName);
             }
         } catch (MalformedURLException e) {
             log.error("File not found", e);
-            throw new CrgNotFoundException("File not found: " + fileName);
+            throw new NotFoundException("File not found: " + fileName);
         }
     }
 

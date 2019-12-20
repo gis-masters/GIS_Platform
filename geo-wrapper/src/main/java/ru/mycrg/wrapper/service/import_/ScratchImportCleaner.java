@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 

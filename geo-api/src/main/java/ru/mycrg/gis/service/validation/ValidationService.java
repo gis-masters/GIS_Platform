@@ -5,11 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.ValidationMqProcessRequest;
-import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
@@ -21,11 +16,16 @@ import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.ValidationMqProcessRequest;
+import ru.mycrg.mq_queue_contract.enums.ProcessType;
 
 import java.security.Principal;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class ValidationService extends BaseProcessService {

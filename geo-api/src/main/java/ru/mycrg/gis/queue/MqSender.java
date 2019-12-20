@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 
-import static ru.mycrg.common.config.MqProperties.*;
+import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
 
 @Service
 public class MqSender {
@@ -24,11 +24,10 @@ public class MqSender {
     public void send(BaseMqProcessRequest mqRequest) {
         switch (mqRequest.getType()) {
             case CREATE_PROJECT:
-            case DELETE_PROJECT:
-            case CREATE_ORG:        send(FANOUT_ORG_INIT, KEY_ORG_INIT, mqRequest); break;
-            case IMPORT:            send(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, mqRequest);   break;
+            case DELETE_PROJECT:    send(FANOUT_PROJECT_REQUEST, KEY_PROJECT_REQUEST, mqRequest);   break;
+            case IMPORT:            send(FANOUT_IMPORT_INIT, KEY_IMPORT_INIT, mqRequest);           break;
             case VALIDATION:        send(FANOUT_VALIDATION_START, KEY_VALIDATION_START, mqRequest); break;
-            case EXPORT:            send(FANOUT_GML_INIT, KEY_GML_INIT, mqRequest); break;
+            case EXPORT:            send(FANOUT_GML_INIT, KEY_GML_INIT, mqRequest);                 break;
             default:
                 log.warn("Unsupported mqRequest type: {}", mqRequest.getType());
         }

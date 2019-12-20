@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.ValidationInfo;
+import ru.mycrg.gis.dto.ValidationInfo;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgBadRequestException;
+import ru.mycrg.gis.exceptions.BadRequestException;
 import ru.mycrg.gis.service.validation.ValidationService;
 import ru.mycrg.gis.service.validation.ViolationService;
 
@@ -58,7 +58,7 @@ public class ValidationController extends BaseController {
             nPage = Integer.parseInt(page);
             nSize = Integer.parseInt(size);
         } catch (NumberFormatException e) {
-            throw new CrgBadRequestException(e.getLocalizedMessage());
+            throw new BadRequestException(e.getLocalizedMessage());
         }
 
         ValidationResponseDto result = violationService.getViolations(principal, projectId, layerName, nPage, nSize);

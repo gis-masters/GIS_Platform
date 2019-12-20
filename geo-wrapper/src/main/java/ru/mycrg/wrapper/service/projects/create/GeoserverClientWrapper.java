@@ -3,12 +3,13 @@ package ru.mycrg.wrapper.service.projects.create;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
-import ru.mycrg.wrapper.geoserver_client.services.projects.IProject;
+import ru.mycrg.geoserver_client.services.projects.ProjectService;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.OrgMqProcessRequest;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
+import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.geoserver_client.services.projects.IProject;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.CrgChainable;
 
@@ -23,10 +24,9 @@ public class GeoserverClientWrapper implements CrgChainable<OrgMqProcessRequest>
     private final MqSender mqSender;
     private final IProject geoserverClient;
 
-    public GeoserverClientWrapper(IProject geoserverClient,
-                                  MqSender mqSender) {
+    public GeoserverClientWrapper(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.geoserverClient = geoserverClient;
+        this.geoserverClient = new ProjectService();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GeoserverClientWrapper implements CrgChainable<OrgMqProcessRequest>
 
             geoserverClient.deleteProject(request.getProjectName());
         } catch (GeoserverClientException e) {
-            log.error("Не удалось откатить создание проекта: " + request.getProjectName(), e.getMessage());
+            log.error("Не удалось откатить создание проекта: {} / {}", request.getProjectName(), e.getMessage());
         }
     }
 }

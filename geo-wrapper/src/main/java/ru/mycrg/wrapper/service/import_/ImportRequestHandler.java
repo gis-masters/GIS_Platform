@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.CrgChainable;
@@ -15,8 +15,9 @@ import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
 import java.util.List;
 
-import static ru.mycrg.common.enums.ProcessStatus.DONE;
-import static ru.mycrg.common.enums.ProcessStatus.ERROR;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.DONE;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
+
 
 /**
  * <p>Сервис обрабатывающий событие импорта.</p>

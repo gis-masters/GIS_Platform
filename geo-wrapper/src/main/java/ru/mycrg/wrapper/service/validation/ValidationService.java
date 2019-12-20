@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.*;
+import ru.mycrg.mq_queue_contract.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -18,7 +18,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static ru.mycrg.common.enums.ProcessStatus.*;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
 import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;

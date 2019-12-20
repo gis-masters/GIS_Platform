@@ -1,6 +1,6 @@
 package ru.mycrg.wrapper.service;
 
-import ru.mycrg.common.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 
 public interface CrgChainable<T> {
 

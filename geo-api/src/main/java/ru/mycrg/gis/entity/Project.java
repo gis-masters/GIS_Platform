@@ -5,7 +5,7 @@ import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.hateoas.Identifiable;
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 
 import javax.persistence.*;
 

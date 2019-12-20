@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.repository.ProcessRepository;
 
 import javax.validation.constraints.NotNull;
@@ -25,7 +25,7 @@ public class ProcessService {
     public Process findById(long id) {
         return processRepository
                 .findById(id)
-                .orElseThrow(() -> new CrgNotFoundException("Not found process with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Not found process with id: " + id));
     }
 
     /**

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.exceptions.CrgDaoException;
+import ru.mycrg.wrapper.exceptions.DaoException;
 
 @Service
 public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema {
@@ -18,7 +18,7 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
     /**
      * Создание схемы
      */
-    public void create(String dbName, String schemaName) throws CrgDaoException {
+    public void create(String dbName, String schemaName) throws DaoException {
         try {
             log.debug("Создание схемы {} Для БД: {}", schemaName, dbName);
 
@@ -30,14 +30,14 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
 
             log.error(msg, e);
 
-            throw new CrgDaoException(msg, e.getCause());
+            throw new DaoException(msg, e.getCause());
         }
     }
 
     /**
      * Удаление схемы
      */
-    public void delete(String dbName, String schemaName) throws CrgDaoException {
+    public void delete(String dbName, String schemaName) throws DaoException {
         try {
             log.debug("Удаление схемы {} Для БД: {}", schemaName, dbName);
 
@@ -49,7 +49,7 @@ public class CrgDaoSchemaService extends BaseDaoService implements ICrgDaoSchema
 
             log.error(msg, e);
 
-            throw new CrgDaoException(msg, e.getCause());
+            throw new DaoException(msg, e.getCause());
         }
     }
 

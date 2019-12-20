@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.ObjectValidationResult;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
 import java.util.Map;
 

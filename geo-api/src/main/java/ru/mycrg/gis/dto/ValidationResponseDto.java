@@ -1,7 +1,7 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 
 import java.util.ArrayList;
 import java.util.List;

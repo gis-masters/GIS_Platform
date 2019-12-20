@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 @Service

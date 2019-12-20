@@ -1,25 +1,11 @@
 package ru.mycrg.gis.unit;
 
 import org.junit.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.mycrg.common.crypt.AES;
 import ru.mycrg.gis.util.Translit;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
 
 import static org.junit.Assert.assertEquals;
 
 public class TranslitTest {
-
-    private static SecretKeySpec secretKey;
-    private static byte[] key;
 
     @Test
     public void shouldCorrectTranslit() {
@@ -34,11 +20,6 @@ public class TranslitTest {
                 Translit.doIt("Без мягкого(ь) и твердого(ъ) знака"));
         assertEquals("Proverka314", Translit.doIt("Proverka314"));
         assertEquals("314", Translit.doIt("314"));
-    }
-
-    @Test
-    public void shouldEncryptText() {
-        assertEquals("secure text", AES.decrypt(AES.encrypt("secure text", "salt"), "salt"));
     }
 
 }

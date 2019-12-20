@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.import_;
 
-import ru.mycrg.common.import_.MatchingPair;
+import ru.mycrg.mq_queue_contract.import_.MatchingPair;
 
 import java.util.List;
 

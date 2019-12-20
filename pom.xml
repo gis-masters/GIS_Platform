@@ -36,13 +36,18 @@
 	</dependencyManagement>
 	
 	<modules>
-		<module>gateway</module>
 		<module>auth-service</module>
+		<module>auth-service-contract</module>
 
-        <module>geo-wrapper</module>
-        <module>geo-api</module>
-        <module>common-libs</module>
-        <module>api-tests</module>
-    </modules>
+		<module>oauth-client</module>
+		<module>geoserver-client</module>
+
+		<module>gateway</module>
+
+		<module>geo-api</module>
+		<module>geo-wrapper</module>
+
+		<module>mq-queue-contract</module>
+	</modules>
 
 </project>

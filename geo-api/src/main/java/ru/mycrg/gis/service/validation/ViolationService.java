@@ -7,15 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ValidationInfo;
 import ru.mycrg.gis.config.CrgProperties;
+import ru.mycrg.gis.dto.ValidationInfo;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.entity.Project;
-import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.common.enums.ProcessStatus.DONE;
-import static ru.mycrg.common.enums.ProcessStatus.ERROR;
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.DONE;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
 
 @Service
 public class ViolationService {
@@ -53,7 +53,7 @@ public class ViolationService {
      * @return {@link ValidationResponseDto}
      */
     public ValidationResponseDto getViolations(Principal principal, Long projectId, String layerName, int pIndex, int pSize)
-            throws CrgFailedException {
+            throws FailedException {
         long orgId = getOrganizationId(principal);
 
         schemaService.checkFeatureByName(layerName);
@@ -86,7 +86,7 @@ public class ViolationService {
             response.setError(e.getMessage());
 
             datasource.close();
-            throw new CrgFailedException(e.getMessage());
+            throw new FailedException(e.getMessage());
         }
 
         datasource.close();

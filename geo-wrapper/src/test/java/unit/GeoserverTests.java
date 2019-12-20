@@ -2,9 +2,9 @@ package unit;
 
 import org.junit.Test;
 import junit.framework.TestCase;
-import ru.mycrg.wrapper.geoserver_client.GeoServerUtil;
-import ru.mycrg.wrapper.geoserver_client.services.rule.RulesService;
-import ru.mycrg.wrapper.geoserver_client.GeoServerPermissions;
+import ru.mycrg.geoserver_client.services.rule.GeoServerPermissions;
+import ru.mycrg.geoserver_client.services.rule.RulesUtil;
+import ru.mycrg.geoserver_client.services.rule.RulesService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +15,11 @@ public class GeoserverTests {
 
     @Test
     public void shouldGetCorrectPermissions() {
-        TestCase.assertEquals("workspace.*.a", GeoServerUtil.buildRule("workspace", "*", GeoServerPermissions.ADMIN));
-        assertEquals("workspace.*.r", GeoServerUtil.buildRule("workspace", "*", GeoServerPermissions.READ));
-        assertEquals("workspace.*.w", GeoServerUtil.buildRule("workspace", "*", GeoServerPermissions.WRITE));
-        assertEquals("workspace.*.w", GeoServerUtil.buildRule("workspace", GeoServerPermissions.WRITE));
-        assertEquals("workspace.layer1.w", GeoServerUtil.buildRule("workspace", "layer1", GeoServerPermissions.WRITE));
+        TestCase.assertEquals("workspace.*.a", RulesUtil.buildRule("workspace", "*", GeoServerPermissions.ADMIN));
+        assertEquals("workspace.*.r", RulesUtil.buildRule("workspace", "*", GeoServerPermissions.READ));
+        assertEquals("workspace.*.w", RulesUtil.buildRule("workspace", "*", GeoServerPermissions.WRITE));
+        assertEquals("workspace.*.w", RulesUtil.buildRule("workspace", GeoServerPermissions.WRITE));
+        assertEquals("workspace.layer1.w", RulesUtil.buildRule("workspace", "layer1", GeoServerPermissions.WRITE));
     }
 
     @Test

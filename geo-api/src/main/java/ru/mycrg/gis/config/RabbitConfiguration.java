@@ -9,26 +9,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.mycrg.common.config.MqProperties;
 
-import static ru.mycrg.common.config.MqProperties.*;
+import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
 
 @Configuration
 public class RabbitConfiguration {
-
-    // Config "created" exchange/queue
-    @Bean public Queue queueOrgCreated() { return new Queue(MqProperties.QUEUE_ORG_CREATED, false);}
-    @Bean public FanoutExchange fanoutExchangeOrgCreated() { return new FanoutExchange(MqProperties.FANOUT_ORG_CREATED);}
-    @Bean public Binding bindingOrgCreated() {
-        return BindingBuilder.bind(queueOrgCreated()).to(fanoutExchangeOrgCreated());
-    }
-
-    // Config "init organization" exchange/queue
-    @Bean public Queue queueOrgInit() { return new Queue(QUEUE_ORG_INIT, false);}
-    @Bean public FanoutExchange fanoutExchangeOrgInit() { return new FanoutExchange(FANOUT_ORG_INIT);}
-    @Bean public Binding bindingOrgInit() {
-        return BindingBuilder.bind(queueOrgInit()).to(fanoutExchangeOrgInit());
-    }
 
     // Config "init import" exchange/queue
     @Bean public Queue queueImportInit() { return new Queue(QUEUE_IMPORT_INIT, false);}
@@ -42,6 +27,20 @@ public class RabbitConfiguration {
     @Bean public FanoutExchange fanoutExchangeImportResponse() { return new FanoutExchange(FANOUT_IMPORT_RESPONSE);}
     @Bean public Binding bindingImportResponse() {
         return BindingBuilder.bind(queueImportResponse()).to(fanoutExchangeImportResponse());
+    }
+
+    // Config "project request" exchange/queue
+    @Bean public Queue queueProjectRequest() { return new Queue(QUEUE_PROJECT_REQUEST, false);}
+    @Bean public FanoutExchange fanoutExchangeProjectRequest() { return new FanoutExchange(FANOUT_PROJECT_REQUEST);}
+    @Bean public Binding bindingProjectRequest() {
+        return BindingBuilder.bind(queueProjectRequest()).to(fanoutExchangeProjectRequest());
+    }
+
+    // Config "project response" exchange/queue
+    @Bean public Queue queueProjectResponse() { return new Queue(QUEUE_PROJECT_RESPONSE, false);}
+    @Bean public FanoutExchange fanoutExchangeProjectResponse() { return new FanoutExchange(FANOUT_PROJECT_RESPONSE);}
+    @Bean public Binding bindingProjectResponse() {
+        return BindingBuilder.bind(queueProjectResponse()).to(fanoutExchangeProjectResponse());
     }
 
     // Config "validation start" exchange/queue

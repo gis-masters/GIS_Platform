@@ -5,23 +5,19 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ru.mycrg.common.propertyTypes.AbstractProperty;
-import ru.mycrg.common.propertyTypes.GeometryProperty;
-import ru.mycrg.common.propertyTypes.StringProperty;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.dto.DataSchema;
 import ru.mycrg.gis.dto.FeatureDescription;
 import ru.mycrg.gis.repository.CustomFeatureDefinitionRepository;
 import ru.mycrg.gis.repository.DataSchemaRepository;
-import ru.mycrg.gis.repository.OrganizationRepository;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
-import ru.mycrg.gis.dto.DataSchema;
+import ru.mycrg.mq_queue_contract.propertyTypes.AbstractProperty;
+import ru.mycrg.mq_queue_contract.propertyTypes.GeometryProperty;
+import ru.mycrg.mq_queue_contract.propertyTypes.StringProperty;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 public class DataSchemaServiceTest {
 

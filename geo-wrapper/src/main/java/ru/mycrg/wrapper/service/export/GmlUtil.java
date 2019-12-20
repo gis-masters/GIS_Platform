@@ -2,9 +2,9 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.enums.ValueType;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.enums.ValueType;
 import ru.mycrg.wrapper.exceptions.RuleNotFoundException;
 
 import java.math.BigDecimal;
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class GmlUtil {
 
-    public static FeatureDescriptionDto getRuleByTableName(List<FeatureDescriptionDto> featuresDescription, String tableName)
-            throws RuleNotFoundException {
+    public static FeatureDescriptionDto getRuleByTableName(List<FeatureDescriptionDto> featuresDescription,
+                                                           String tableName) {
         return featuresDescription.stream()
-                .filter(fDescription -> fDescription.getTableName().toLowerCase().equals(tableName.toLowerCase()))
+                .filter(fDescription -> fDescription.getTableName().equalsIgnoreCase(tableName))
                 .findFirst()
                 .orElseThrow(() -> new RuleNotFoundException(tableName));
     }
@@ -25,7 +25,7 @@ public class GmlUtil {
         int result = Math.round(((float) processedRows / (float) totalRows) * 100);
 
         // 2% на остальные действия после основной выборки.
-        return result > 98 ? 98 : result;
+        return Math.min(result, 98);
     }
 
     @NotNull

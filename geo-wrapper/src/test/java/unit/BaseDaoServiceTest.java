@@ -8,7 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.mycrg.common.ValidationMqProcessRequest;
+import ru.mycrg.mq_queue_contract.ValidationMqProcessRequest;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 

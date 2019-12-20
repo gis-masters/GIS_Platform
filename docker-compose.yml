@@ -69,6 +69,9 @@ services:
     environment:
       APM_URL: ${APM_URL}
       SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/gis_portal
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: $CRG_USER
+      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
     volumes:
       - /opt/logs:/opt/logs
     logging:
@@ -151,7 +154,11 @@ services:
       SPRING_RABBITMQ_USERNAME: $CRG_USER
       SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
 
-      CRG_OPTIONS_GEOSERVER_HOST: gateway:8100
+      #TODO: Add auth host
+      CRG_OPTIONS_AUTH_SERVICE_HOST: auth-service:9000
+      CRG_OPTIONS_CLIENT_ID: admin
+      CRG_OPTIONS_CLIENT_SECRET: geoserver
+      CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
       CRG_OPTIONS_GEOSERVER_USER: $GEOSERVER_USER
       CRG_OPTIONS_GEOSERVER_PASSWORD: $GEOSERVER_PASSWORD
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service

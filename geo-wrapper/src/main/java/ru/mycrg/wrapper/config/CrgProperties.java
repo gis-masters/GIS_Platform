@@ -10,6 +10,10 @@ import java.util.Optional;
 @ConfigurationProperties(prefix = "crg-options")
 public class CrgProperties {
 
+    private String authServiceHost;
+    private String clientId;
+    private String clientSecret;
+
     private String geoserverHost;
     private String geoserverUser;
     private String geoserverPassword;
@@ -17,11 +21,41 @@ public class CrgProperties {
     private String exportStoragePath;
     private String userServiceName;
 
-    public CrgProperties() {
+    @NotNull
+    public String getAuthServiceHost() {
+        return Optional
+                .ofNullable(authServiceHost)
+                .orElseThrow(() -> new IllegalStateException("Not set authServiceHost"));
+    }
+
+    public void setAuthServiceHost(String authHost) {
+        this.authServiceHost = authHost;
     }
 
     @NotNull
-    public String getGeoserverHostWithPort() {
+    public String getClientId() {
+        return Optional
+                .ofNullable(clientId)
+                .orElseThrow(() -> new IllegalStateException("Not set clientId"));
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    @NotNull
+    public String getClientSecret() {
+        return Optional
+                .ofNullable(clientSecret)
+                .orElseThrow(() -> new IllegalStateException("Not set clientSecret"));
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    @NotNull
+    public String getGeoserverHost() {
         return Optional
                 .ofNullable(geoserverHost)
                 .orElseThrow(() -> new IllegalStateException("Not set getGeoserverHost"));

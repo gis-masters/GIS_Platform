@@ -18,6 +18,11 @@ spring:
   jpa:
     properties:
       hibernate.temp.use_jdbc_metadata_defaults: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
 
 security:
   jwt:

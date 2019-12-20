@@ -1,6 +1,6 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 
 public class TaskModel {
 

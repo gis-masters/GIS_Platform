@@ -1,12 +1,14 @@
 package ru.mycrg.wrapper.service.requests_handler;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.wrapper.queue.MqListener;
+import ru.mycrg.auth_service_contract.IOrganizationEvent;
+import ru.mycrg.auth_service_contract.OrganizationDependencyProvisionFailedEvent;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 import ru.mycrg.wrapper.queue.MqSender;
 
 /**
@@ -16,7 +18,7 @@ import ru.mycrg.wrapper.queue.MqSender;
 @Service
 public class EventDispatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(MqListener.class);
+    private static final Logger log = LoggerFactory.getLogger(EventDispatcher.class);
 
     private final MqSender mqSender;
     private final RequestHandlerFactory requestHandlerFactory;
@@ -26,7 +28,7 @@ public class EventDispatcher {
         this.requestHandlerFactory = requestHandlerFactory;
     }
 
-    public void handleEvent(BaseMqProcessRequest mqRequest) {
+    public void handleEvent(@NotNull BaseMqProcessRequest mqRequest) {
         log.info("handleEvent: {}", mqRequest.getId());
 
         try {
@@ -38,4 +40,15 @@ public class EventDispatcher {
         }
     }
 
+    public void handleOrganizationEvent(@NotNull IOrganizationEvent mqEvent) {
+        log.info("handle organization event: {}", mqEvent.getOrgId());
+
+        try {
+            requestHandlerFactory
+                    .getOrgHandler(mqEvent)
+                    .handle(mqEvent);
+        } catch (Exception e) {
+            mqSender.sendOrgEvent(new OrganizationDependencyProvisionFailedEvent(mqEvent));
+        }
+    }
 }

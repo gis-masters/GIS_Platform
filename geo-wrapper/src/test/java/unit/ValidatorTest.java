@@ -1,9 +1,12 @@
 package unit;
 
 import org.junit.Test;
-import ru.mycrg.common.*;
-import ru.mycrg.common.enums.ValueType;
-import ru.mycrg.common.propertyTypes.ValueTitleProjection;
+import ru.mycrg.mq_queue_contract.ErrorDescription;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.mq_queue_contract.propertyTypes.ValueTitleProjection;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.common.FeatureDescriptionDto;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
 
 import java.util.List;
 

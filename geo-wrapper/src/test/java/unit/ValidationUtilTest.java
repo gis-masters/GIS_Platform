@@ -3,9 +3,9 @@ package unit;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
-import ru.mycrg.common.ErrorDescription;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.PropertyViolation;
+import ru.mycrg.mq_queue_contract.ErrorDescription;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.mq_queue_contract.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.nio.charset.StandardCharsets;

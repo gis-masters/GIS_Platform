@@ -1,6 +1,6 @@
 package ru.mycrg.wrapper.service.validation.constraints;
 
-import ru.mycrg.common.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 
 import java.util.List;
 

@@ -9,21 +9,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.controller.ProjectController;
 import ru.mycrg.gis.dto.ProjectRequestDto;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.entity.Project;
-import ru.mycrg.gis.exceptions.CrgConflictException;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.ConflictException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.repository.ProjectRepository;
 import ru.mycrg.gis.util.Translit;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.OrgMqProcessRequest;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.enums.ProcessType;
 
 import java.security.Principal;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ProjectService extends BaseProcessService {
         return getProjectsByOrganization(orgId).stream()
                 .filter(project -> projectId.equals(project.getId()))
                 .findFirst()
-                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
+                .orElseThrow(() -> new NotFoundException("Не найден проект с id: " + projectId));
     }
 
     /**
@@ -70,15 +70,16 @@ public class ProjectService extends BaseProcessService {
      * @param principal Пользователь
      * @return Инициированный процесс {@link Process}
      */
-    public Process create(ProjectRequestDto dto, Principal principal) {
+    public Process create(@NotNull ProjectRequestDto dto, Principal principal) {
         long orgId = getOrganizationId(principal);
 
-        log.info("Init create project process: {}", dto.getProjectName());
+        log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
 
-        Optional<Project> projectWithSameName = projectRepository.findByInternalName(dto.getProjectName());
+        Optional<Project> projectWithSameName =
+                projectRepository.findByInternalNameAndOrganizationId(dto.getProjectName(), orgId);
 
         if (projectWithSameName.isPresent()) {
-            throw new CrgConflictException("Проект с таким именем уже существует");
+            throw new ConflictException("Проект с таким именем уже существует");
         } else {
             Project newProject = new Project(dto.getProjectName(), Translit.doIt(dto.getProjectName()), orgId);
             Project savedProject = projectRepository.save(newProject);
@@ -114,7 +115,7 @@ public class ProjectService extends BaseProcessService {
 
         Project project = projectRepository
                 .findById(projectId)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
+                .orElseThrow(() -> new NotFoundException("Не найден проект с id: " + projectId));
 
         project.setInternalName(newProjectName);
 
@@ -135,7 +136,7 @@ public class ProjectService extends BaseProcessService {
 
         Project project = projectRepository
                 .findById(projectId)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден проект с id: " + projectId));
+                .orElseThrow(() -> new NotFoundException("Не найден проект с id: " + projectId));
 
         Process process = create(principal.getName(),
                 String.format("Удаление проекта: %s", project.getInternalName()),

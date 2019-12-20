@@ -1,6 +1,6 @@
 package ru.mycrg.gis.service.dataSchema;
 
-import ru.mycrg.common.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
 
 import java.util.List;
 import java.util.Optional;

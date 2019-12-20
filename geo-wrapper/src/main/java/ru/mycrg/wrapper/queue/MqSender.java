@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessResponse;
+import ru.mycrg.auth_service_contract.IOrganizationEvent;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 
-import static ru.mycrg.common.config.MqProperties.*;
+import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
+import static ru.mycrg.wrapper.config.RabbitConfig.*;
 
 @Service
 public class MqSender {
@@ -24,8 +26,7 @@ public class MqSender {
     public void send(BaseMqProcessResponse mqResponse) {
         switch (mqResponse.getType()) {
             case CREATE_PROJECT:
-            case DELETE_PROJECT:
-            case CREATE_ORG:        send(FANOUT_ORG_CREATED, KEY_ORG_CREATED, mqResponse);              break;
+            case DELETE_PROJECT:    send(FANOUT_PROJECT_RESPONSE, KEY_PROJECT_RESPONSE, mqResponse);    break;
             case IMPORT:            send(FANOUT_IMPORT_RESPONSE, KEY_IMPORT_RESPONSE, mqResponse);      break;
             case VALIDATION:        send(FANOUT_VALIDATION_RESULT, KEY_VALIDATION_RESULT, mqResponse);  break;
             case EXPORT:            send(FANOUT_GML_RESPONSE, KEY_IMPORT_RESPONSE, mqResponse);         break;
@@ -33,6 +34,10 @@ public class MqSender {
                 log.warn("Unsupported mqResponse type: {}", mqResponse.getType());
         }
 
+    }
+
+    public void sendOrgEvent(IOrganizationEvent mqEvent) {
+        rabbitTemplate.convertAndSend(RESPONSE_FANOUT, RESPONSE_KEY, mqEvent);
     }
 
     private void send(String fanout, String key, BaseMqProcessResponse payload) {

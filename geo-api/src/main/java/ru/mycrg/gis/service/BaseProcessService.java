@@ -5,14 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.enums.ProcessStatus;
-import ru.mycrg.common.enums.ProcessType;
 import ru.mycrg.gis.dto.DetailsModel;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgFailedException;
+import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.dataSchema.MapperUtil;
+import ru.mycrg.mq_queue_contract.Processable;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.enums.ProcessType;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public abstract class BaseProcessService implements Processable {
     public Process getProcess(long taskId) {
         return processRepository
                 .findById(taskId)
-                .orElseThrow(() -> new CrgFailedException("Not found process by id: " + taskId));
+                .orElseThrow(() -> new FailedException("Not found process by id: " + taskId));
     }
 
 
@@ -67,7 +68,7 @@ public abstract class BaseProcessService implements Processable {
 
                 return optionalProcess.get();
             } else {
-                throw new CrgFailedException("Not found process by id: " + id);
+                throw new FailedException("Not found process by id: " + id);
             }
         }
     }

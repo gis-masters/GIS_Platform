@@ -3,17 +3,17 @@ package ru.mycrg.wrapper.service.projects.create;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.OrgMqProcessRequest;
-import ru.mycrg.common.enums.ProcessStatus;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.OrgMqProcessRequest;
+import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 import ru.mycrg.wrapper.dao.CrgDaoSchemaService;
 import ru.mycrg.wrapper.dao.ICrgDaoSchema;
-import ru.mycrg.wrapper.exceptions.CrgDaoException;
+import ru.mycrg.wrapper.exceptions.DaoException;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.CrgChainable;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class DaoWrapper implements CrgChainable<OrgMqProcessRequest> {
@@ -46,7 +46,7 @@ public class DaoWrapper implements CrgChainable<OrgMqProcessRequest> {
             daoSchemaService.create(DEFAULT_DB_NAME + request.getOrgId(), request.getProjectName());
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, request.getOrgId(), ProcessStatus.DONE));
-        } catch (CrgDaoException e) {
+        } catch (DaoException e) {
             mqSender.send(new BaseMqProcessResponse(mqRequest, ProcessStatus.ERROR, e.getMessage()));
 
             previousHandler.rollback(request);

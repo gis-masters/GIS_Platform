@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.propertyTypes.AbstractProperty;
-import ru.mycrg.common.propertyTypes.GeometryProperty;
 import ru.mycrg.gis.dto.DataSchema;
 import ru.mycrg.gis.dto.FeatureDescription;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.repository.CustomFeatureDefinitionRepository;
 import ru.mycrg.gis.repository.DataSchemaRepository;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.propertyTypes.AbstractProperty;
+import ru.mycrg.mq_queue_contract.propertyTypes.GeometryProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,9 +65,9 @@ public class DataSchemaService implements IDataSchemaHolder {
      * Возвращает описание фичи.
      *
      * @param featureName Название фичи(Слоя)
-     * @return Описание фичи {@link ru.mycrg.common.FeatureDescriptionDto}
+     * @return Описание фичи {@link FeatureDescriptionDto}
      */
-    public Optional<FeatureDescriptionDto> getDescriptionByName(String featureName) throws CrgNotFoundException {
+    public Optional<FeatureDescriptionDto> getDescriptionByName(String featureName) throws NotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
             cacheSchema();
         }
@@ -140,16 +140,16 @@ public class DataSchemaService implements IDataSchemaHolder {
     /**
      * Проверяем наличие фичи по названию.
      * @param featureName Название фичи(Слоя)
-     * @throws CrgNotFoundException
+     * @throws NotFoundException
      */
-    public void checkFeatureByName(String featureName) throws CrgNotFoundException {
+    public void checkFeatureByName(String featureName) throws NotFoundException {
         if (dataSchema.getFeatureDescriptions().isEmpty()) {
             cacheSchema();
         }
 
         dataSchema
                 .getFeatureTypeByName(featureName)
-                .orElseThrow(() -> new CrgNotFoundException("Не найден слой: " + featureName));
+                .orElseThrow(() -> new NotFoundException("Не найден слой: " + featureName));
     }
 
     /**

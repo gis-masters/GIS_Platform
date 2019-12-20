@@ -43,7 +43,7 @@ zuul:
 
     gis-organizations:
       path: /organizations/**
-      url: http://geo-api:8088/organizations/
+      url: http://auth-service:9000/organizations/
 
     gis-processes:
       path: /processes/**

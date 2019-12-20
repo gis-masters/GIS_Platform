@@ -12,10 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import ru.mycrg.common.*;
+import ru.mycrg.mq_queue_contract.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.exceptions.CrgExportException;
+import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.FileService;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.io.File.separator;
-import static ru.mycrg.common.enums.ProcessStatus.*;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.BATCH_SIZE;
 import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
@@ -70,7 +70,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @param mqRequest Запрос с данными
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(BaseMqProcessRequest mqRequest) throws CrgExportException {
+    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
         idCounter = 1;
         log.debug("Start gml generation");
 
@@ -91,7 +91,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws CrgExportException {
+    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
         try {
             MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
@@ -113,7 +113,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
             return docHolder;
         } catch (ParserConfigurationException e) {
-            throw new CrgExportException("Ошибка экспорта", e);
+            throw new ExportException("Ошибка экспорта", e);
         }
     }
 
@@ -369,7 +369,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @param fileName Название файла
      * @return Путь к сохраненному файлу
      */
-    private String saveXml(Document document, String fileName) throws CrgExportException {
+    private String saveXml(Document document, String fileName) throws ExportException {
         log.debug("Save {} to file", fileName);
 
         try {
@@ -380,7 +380,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
             StreamResult result = new StreamResult(fileService.getExportStoragePath() + separator + fileName);
             transformer.transform(source, result);
         } catch (TransformerException e) {
-            throw new CrgExportException("Ошибка формирования GML", e);
+            throw new ExportException("Ошибка формирования GML", e);
         }
 
         return fileService.getPathToFile(fileName);

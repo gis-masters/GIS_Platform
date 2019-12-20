@@ -3,7 +3,7 @@ package ru.mycrg.gis.security;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import ru.mycrg.gis.exceptions.CrgForbiddenException;
+import ru.mycrg.gis.exceptions.ForbiddenException;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class CrgClaimsParser {
                 }
             }
         } catch (Exception e) {
-            throw new CrgForbiddenException("Incorrect organization claims");
+            throw new ForbiddenException("Incorrect organization claims");
         }
 
         return orgId;

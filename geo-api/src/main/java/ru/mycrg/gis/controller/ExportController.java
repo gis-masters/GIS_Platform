@@ -6,21 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.dto.ExportRequestModel;
-import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.CrgNotFoundException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.service.StorageService;
-import ru.mycrg.gis.service.export.ExportService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
-import java.security.Principal;
 
 @RestController
 public class ExportController extends BaseController {
@@ -56,7 +49,7 @@ public class ExportController extends BaseController {
         } catch (IOException e) {
             log.error("Wrong file URL", e);
 
-            throw new CrgNotFoundException("Wrong file URL");
+            throw new NotFoundException("Wrong file URL");
         }
 
         if (contentType == null) {

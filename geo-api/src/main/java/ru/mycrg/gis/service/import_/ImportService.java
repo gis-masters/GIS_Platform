@@ -4,13 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.enums.ProcessType;
-import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.common.import_.ImportMqTask;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
@@ -22,14 +15,21 @@ import ru.mycrg.gis.service.CrgAuthHelper;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.enums.ProcessType;
+import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class ImportService extends BaseProcessService {

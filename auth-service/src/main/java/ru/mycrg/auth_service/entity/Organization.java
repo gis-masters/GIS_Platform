@@ -1,12 +1,14 @@
 package ru.mycrg.auth_service.entity;
 
+import org.springframework.hateoas.Identifiable;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "organizations")
-public class Organization {
+public class Organization implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +20,9 @@ public class Organization {
 
     @Column
     private String phone;
+
+    @Column
+    private String status = "PROVISIONING";
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -38,7 +43,8 @@ public class Organization {
         users.add(user);
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 
@@ -68,5 +74,13 @@ public class Organization {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

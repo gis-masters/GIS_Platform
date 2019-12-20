@@ -7,11 +7,11 @@ import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.enums.ValueType;
-import ru.mycrg.common.propertyTypes.*;
 import ru.mycrg.gis.entity.FeatureDescription;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.mq_queue_contract.propertyTypes.*;
 
 import java.io.IOException;
 import java.util.Optional;

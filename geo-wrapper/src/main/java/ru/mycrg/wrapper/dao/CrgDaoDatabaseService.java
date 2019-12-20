@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.wrapper.exceptions.CrgDaoException;
+import ru.mycrg.wrapper.exceptions.DaoException;
 
 import java.text.MessageFormat;
 
@@ -24,10 +24,10 @@ public class CrgDaoDatabaseService implements ICrgDaoDatabase {
      * (CREATE DATABASE cannot run inside a transaction block)
      *
      * @param dbName Название БД
-     * @throws CrgDaoException
+     * @throws DaoException
      */
     @Override
-    public void createDb(final String dbName) throws CrgDaoException {
+    public void createDb(final String dbName) throws DaoException {
         try {
             log.debug("Try create db: {}", dbName);
 
@@ -44,7 +44,7 @@ public class CrgDaoDatabaseService implements ICrgDaoDatabase {
 
             datasourceFactory.removeDatasourceByDbName(dbName);
         } catch (Exception e) {
-            throw new CrgDaoException("Не удалось создать организацию: " + dbName, e.getCause());
+            throw new DaoException("Не удалось создать организацию: " + dbName, e.getCause());
         }
     }
 

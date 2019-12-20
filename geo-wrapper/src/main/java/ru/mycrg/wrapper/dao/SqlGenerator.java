@@ -3,10 +3,10 @@ package ru.mycrg.wrapper.dao;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.SimplePropertyDto;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 
 import java.util.List;
 import java.util.Map;

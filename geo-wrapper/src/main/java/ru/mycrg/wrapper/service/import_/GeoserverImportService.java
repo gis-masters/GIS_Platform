@@ -4,20 +4,20 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common.BaseMqProcessRequest;
-import ru.mycrg.common.BaseMqProcessResponse;
-import ru.mycrg.common.FeatureDescriptionDto;
-import ru.mycrg.common.import_.ImportMqResponse;
-import ru.mycrg.common.import_.ImportMqTask;
-import ru.mycrg.wrapper.geoserver_client.exceptions.GeoserverClientException;
-import ru.mycrg.wrapper.geoserver_client.services.feature_types.FeatureTypeService;
-import ru.mycrg.wrapper.geoserver_client.services.feature_types.IFeatureTypes;
-import ru.mycrg.wrapper.geoserver_client.services.styles.StyleService;
+import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
+import ru.mycrg.geoserver_client.services.feature_types.IFeatureTypes;
+import ru.mycrg.geoserver_client.services.styles.StyleService;
+import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
 
-import static ru.mycrg.common.CrgConstants.DEFAULT_STORE_POSTFIX;
-import static ru.mycrg.common.enums.ProcessStatus.TASK_DONE;
-import static ru.mycrg.common.enums.ProcessStatus.TASK_ERROR;
+import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_STORE_POSTFIX;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_DONE;
+import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
 public class GeoserverImportService extends AbstractImportChainItem {
@@ -28,12 +28,10 @@ public class GeoserverImportService extends AbstractImportChainItem {
     private final IFeatureTypes featureTypesService;
     private final StyleService styleService;
 
-    public GeoserverImportService(MqSender mqSender,
-                                  FeatureTypeService featureTypesService,
-                                  StyleService styleService) {
+    public GeoserverImportService(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.styleService = styleService;
-        this.featureTypesService = featureTypesService;
+        this.styleService = new StyleService();
+        this.featureTypesService = new FeatureTypeService();
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {

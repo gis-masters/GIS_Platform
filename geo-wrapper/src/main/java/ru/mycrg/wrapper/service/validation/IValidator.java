@@ -1,7 +1,7 @@
 package ru.mycrg.wrapper.service.validation;
 
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
 import java.util.Map;
 

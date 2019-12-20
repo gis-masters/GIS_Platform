@@ -1,6 +1,7 @@
 package ru.mycrg.gis.dto;
 
-import ru.mycrg.common.propertyTypes.AbstractProperty;
+
+import ru.mycrg.mq_queue_contract.propertyTypes.AbstractProperty;
 
 import java.util.ArrayList;
 import java.util.List;

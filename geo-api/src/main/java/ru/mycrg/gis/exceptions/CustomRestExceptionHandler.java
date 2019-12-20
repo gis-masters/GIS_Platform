@@ -209,36 +209,35 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // Handle CrgExceptions
-
-    @ExceptionHandler(CrgNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFound(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler(CrgBadRequestException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequest(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler(CrgConflictException.class)
+    @ExceptionHandler(ConflictException.class)
     public ResponseEntity<Object> handleConflict(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.CONFLICT, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler(CrgFailedException.class)
+    @ExceptionHandler(FailedException.class)
     public ResponseEntity<Object> handleFail(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 
-    @ExceptionHandler(value = {CrgForbiddenException.class, AccessDeniedException.class})
+    @ExceptionHandler(value = {ForbiddenException.class, AccessDeniedException.class})
     public ResponseEntity<Object> forbidden(final RuntimeException ex) {
         final ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, ex.getLocalizedMessage());
 

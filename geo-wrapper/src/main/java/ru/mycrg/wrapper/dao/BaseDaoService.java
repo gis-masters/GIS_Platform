@@ -9,11 +9,11 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.common.ObjectValidationResult;
-import ru.mycrg.common.ResourceProjection;
-import ru.mycrg.common.import_.TargetAttribute;
-import ru.mycrg.common.import_.MatchingPair;
-import ru.mycrg.common.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.mq_queue_contract.import_.MatchingPair;
+import ru.mycrg.mq_queue_contract.import_.TargetAttribute;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.util.List;
