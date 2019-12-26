@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
@@ -50,7 +50,7 @@ public class PostImportService extends AbstractImportChainItem {
             String sourceDbName = importTask.getSourceResource().getDbName();
             String targetTableName = importTask.getTargetResource().getTableName();
             String targetSchemaName = importTask.getTargetResource().getSchemaName();
-            FeatureDescriptionDto fDescription = importTask.getFeatureDescription();
+            SchemaDto fDescription = importTask.getFeatureDescription();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
             log.debug("start postHandle");
@@ -103,7 +103,7 @@ public class PostImportService extends AbstractImportChainItem {
      * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
      * обработки, дабы не обновлять то что не изменилось.
      */
-    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, FeatureDescriptionDto fDescription) {
+    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, SchemaDto fDescription) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         batch.forEach(item -> {

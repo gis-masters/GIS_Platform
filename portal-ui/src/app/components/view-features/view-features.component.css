@@ -78,9 +78,8 @@
   width: 98%;
   height: 100%;
 
-  grid-column-gap: 3px;
-  grid-template-rows: 34% 66%;
-  grid-template-columns: 3% 97%;
+  grid-template-rows: 34% 33% 33%;
+  grid-template-columns: 2% 98%;
 }
 
 .feature-alias {

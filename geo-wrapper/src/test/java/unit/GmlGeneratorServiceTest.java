@@ -8,7 +8,7 @@ import org.locationtech.jts.io.ParseException;
 import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.env.MockEnvironment;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
@@ -37,9 +37,9 @@ public class GmlGeneratorServiceTest {
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "functionalzone"));
         gmlMqRequest.addResource(new ResourceProjection("gis", "fiz", "electricline"));
 
-        List<FeatureDescriptionDto> fgistpRules = new ArrayList<>();
+        List<SchemaDto> fgistpRules = new ArrayList<>();
         // FZ
-        FeatureDescriptionDto functionalZone = new FeatureDescriptionDto();
+        SchemaDto functionalZone = new SchemaDto();
         functionalZone.setName("FunctionalZone_Type");
 
         List<SimplePropertyDto> functionalZoneProperties = new ArrayList<>();
@@ -59,7 +59,7 @@ public class GmlGeneratorServiceTest {
         functionalZone.setProperties(functionalZoneProperties);
 
         // Electricline
-        FeatureDescriptionDto electricline = new FeatureDescriptionDto();
+        SchemaDto electricline = new SchemaDto();
         electricline.setName("ElectricLine_Type");
 
         List<SimplePropertyDto> electriclineProperties = new ArrayList<>();

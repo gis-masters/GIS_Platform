@@ -1,51 +1,24 @@
-package ru.mycrg.gis.dto;
-
-
-import ru.mycrg.mq_queue_contract.propertyTypes.AbstractProperty;
+package ru.mycrg.mq_queue_contract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeatureDescription {
+public class SchemaDto {
 
     private String name;
     private String title;
     private String description;
     private String tableName;
-    private List<AbstractProperty> properties = new ArrayList<>();
-    private String customRuleFunction;
-    private String calcFiledFunction;
+    private List<SimplePropertyDto> properties = new ArrayList<>();
+    private String customRuleFunction = "";
+    private String calcFiledFunction = "";
     private String originName;
     private boolean readOnly;
 
-    public FeatureDescription() {}
+    public SchemaDto() {}
 
-    public FeatureDescription(String name) {
-        this.name = name;
-    }
-
-    public FeatureDescription(FeatureDescription featureDescription) {
-        this.name = featureDescription.getName();
-        this.title = featureDescription.getTitle();
-        this.description = featureDescription.getDescription();
-        this.tableName = featureDescription.getTableName();
-        this.customRuleFunction = featureDescription.getCustomRuleFunction();
-        this.properties = featureDescription.getProperties();
-        this.originName = featureDescription.getOriginName();
-        this.calcFiledFunction = featureDescription.getCalcFiledFunction();
-        this.readOnly = featureDescription.isReadOnly();
-    }
-
-    public void addProperty(AbstractProperty property) {
-        properties.add(property);
-    }
-
-    public List<AbstractProperty> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<AbstractProperty> properties) {
-        this.properties = properties;
+    public void addProperty(SimplePropertyDto propertyDto) {
+        properties.add(propertyDto);
     }
 
     public String getName() {
@@ -80,6 +53,14 @@ public class FeatureDescription {
         this.tableName = tableName;
     }
 
+    public List<SimplePropertyDto> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<SimplePropertyDto> properties) {
+        this.properties = properties;
+    }
+
     public String getCustomRuleFunction() {
         return customRuleFunction;
     }
@@ -111,4 +92,5 @@ public class FeatureDescription {
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
+
 }

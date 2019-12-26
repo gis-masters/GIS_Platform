@@ -104,6 +104,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     this.editFeatureData = {feature: feature, mode: EditFeatureMode.single} as EditFeatureData;
   }
 
+  highlightFeature(feature: WfsFeature) {
+    this.openLayers.clearDraft();
+    this.openLayers.paintFeature(feature);
+  }
+
   closeMe() {
     this.openLayers.clearDraft();
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
@@ -121,6 +126,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   onPaging(event) {
     const start = this.pageInfo.pageSize * event.pageIndex;
     this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
+
+    this.fillTitles(this.viewFeatures);
   }
 
   getTitle(feature: WfsFeature): string {
@@ -133,11 +140,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
-    const tamplateFeature: WfsFeature = features[0];
+    const templateFeature: WfsFeature = features[0];
     const listOfFeaturesId = features.map((feature: WfsFeature) => feature.id);
 
     return {
-      feature: tamplateFeature,
+      feature: templateFeature,
       mode: EditFeatureMode.multipleEdit,
       featuresId: listOfFeaturesId,
       total: features.length
@@ -147,20 +154,27 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   private fillTitles(viewFeatures: WfsFeature[]) {
     viewFeatures.forEach((feature: WfsFeature) => {
       const featureName = feature.id.split('.')[0];
-      const classIdAlias = this.dataSchemaService.getClassIdAlias(featureName, feature.properties);
+      const { properties } = feature;
 
-      if (classIdAlias) {
-        this.featureTitles.set(feature.id, classIdAlias);
-      } else {
-        const fDescription = this.dataSchemaService.getFeatureSchemaByName(featureName);
-        if (fDescription) {
-          this.featureTitles.set(feature.id, fDescription.title);
-        } else {
-          this.featureTitles.set(feature.id, '');
+      let title = '';
+      const fDescription = this.dataSchemaService.getFeatureSchemaByName(featureName);
+      if (fDescription) {
+        const iProperty = fDescription.properties.find(property => property.objectIdentityOnUi);
+        if (!iProperty) { // By default from 'name'
+          title = properties.name;
+        } else if (iProperty.valueType !== 'CHOICE') {
+          title = properties[iProperty.name.toLowerCase()];
+        } else if (iProperty.valueType === 'CHOICE' && iProperty.enumerations) {
+          const valueTitleProjection = iProperty.enumerations.find(item => item.value == properties[iProperty.name]);
+
+          title = valueTitleProjection ? valueTitleProjection.title : '';
         }
       }
+
+      this.featureTitles.set(feature.id, title);
     });
   }
+
 }
 
 export interface ViewFeaturesData {

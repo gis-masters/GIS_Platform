@@ -10,7 +10,7 @@ import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.dataSchema.MapperUtil;
+import ru.mycrg.gis.service.data_schema.MapperUtil;
 import ru.mycrg.mq_queue_contract.Processable;
 import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 import ru.mycrg.mq_queue_contract.enums.ProcessType;

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis.service.dataSchema.DataSchemaService;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.gis.service.data_schema.DataSchemaService;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.util.List;
 
@@ -23,10 +23,10 @@ public class DataSchemaController {
     }
 
     @PostMapping("/schema")
-    public List<FeatureDescriptionDto> getSchemaForFewFeatures(@RequestBody List<String> featureNames) {
+    public List<SchemaDto> getSchemaForFewFeatures(@RequestBody List<String> featureNames) {
         log.info("Get dataSchema for: {}", featureNames);
 
-        return dataSchemaService.getFewDescriptions(featureNames);
+        return dataSchemaService.getSchemas(featureNames);
     }
 
     @PostMapping("/schema/update")

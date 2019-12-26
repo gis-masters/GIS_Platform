@@ -1,4 +1,4 @@
-package ru.mycrg.mq_queue_contract.propertyTypes;
+package ru.mycrg.mq_queue_contract;
 
 public class ValueTitleProjection {
 

@@ -15,7 +15,8 @@
       <mat-nav-list role="list"
                     [ngClass]="isAttributeSidebarOpened? 'feature-content scroll short-h' : 'feature-content scroll full-h'">
         <mat-list-item role="listitem" *ngFor="let feature of viewFeatures; let index = index"
-                       (click)="selectFeature(feature)" style="height: 60px">
+                       (click)="highlightFeature(feature)"
+                       (dblclick)="selectFeature(feature)" style="height: 60px">
           <div class="feature-info">
             <div></div>
             <div class="feature-id">ID: {{feature.id.split('.')[1]}}</div>

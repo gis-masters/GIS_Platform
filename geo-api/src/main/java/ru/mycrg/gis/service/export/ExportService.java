@@ -13,8 +13,8 @@ import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.dataSchema.DataSchemaService;
-import ru.mycrg.gis.service.dataSchema.MapperUtil;
+import ru.mycrg.gis.service.data_schema.DataSchemaService;
+import ru.mycrg.gis.service.data_schema.MapperUtil;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
@@ -70,7 +70,7 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            schemaService.getDescriptionByName(layerName).ifPresent(featureDescription -> {
+            schemaService.getSchemaByName(layerName).ifPresent(featureDescription -> {
                 payload.addRule(featureDescription);
                 payload.addResource(
                         new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getGeoserverName(), layerName));

@@ -10,7 +10,7 @@ import ru.mycrg.geoserver_client.services.feature_types.IFeatureTypes;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
@@ -37,7 +37,7 @@ public class GeoserverImportService extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
         log.debug("Publish feature on geoserver");
 
-        FeatureDescriptionDto featureDescription = null;
+        SchemaDto featureDescription = null;
         try {
             featureDescription = importTask.getFeatureDescription();
 

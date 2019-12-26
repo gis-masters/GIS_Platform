@@ -36,10 +36,10 @@ public class ValidatorImpl implements IValidator {
     }
 
     @Override
-    public ObjectValidationResult validate(FeatureDescriptionDto featureDescriptionDto, Map<String, Object> fObject) {
+    public ObjectValidationResult validate(SchemaDto schemaDto, Map<String, Object> fObject) {
         ObjectValidationResult validationResult = new ObjectValidationResult();
 
-        Object fResult = scriptEngine.invokeFunction(fObject, featureDescriptionDto.getCustomRuleFunction());
+        Object fResult = scriptEngine.invokeFunction(fObject, schemaDto.getCustomRuleFunction());
         Stream.of(fResult)
                 .map(next -> {
                     Map<String, Object> item = (Map<String, Object>) next;
@@ -56,7 +56,7 @@ public class ValidatorImpl implements IValidator {
                 })
                 .forEach(errorDescriptions -> errorDescriptions.forEach(validationResult::addObjectViolation));
 
-        featureDescriptionDto.getProperties().forEach(propertySchema -> {
+        schemaDto.getProperties().forEach(propertySchema -> {
             String name = propertySchema.getName();
             if (fObject.containsKey(name)) {
                 PropertyViolation propertyViolation = new PropertyViolation(name, fObject.get(name));

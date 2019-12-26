@@ -1,13 +1,13 @@
 package ru.mycrg.mq_queue_contract.import_;
 
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 
 import java.util.List;
 
 public class ImportMqTask {
 
-    private FeatureDescriptionDto featureDescription;
+    private SchemaDto featureDescription;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
     private List<MatchingPair> pairs;
@@ -16,7 +16,7 @@ public class ImportMqTask {
 
     public ImportMqTask() {}
 
-    public ImportMqTask(FeatureDescriptionDto featureDescription,
+    public ImportMqTask(SchemaDto featureDescription,
                         ResourceProjection sourceResource,
                         ResourceProjection targetResource,
                         List<MatchingPair> pairs,
@@ -62,11 +62,11 @@ public class ImportMqTask {
         return String.join(".", targetResource.getDbName(), targetResource.getSchemaName(), targetResource.getTableName());
     }
 
-    public FeatureDescriptionDto getFeatureDescription() {
+    public SchemaDto getFeatureDescription() {
         return featureDescription;
     }
 
-    public void setFeatureDescription(FeatureDescriptionDto featureDescription) {
+    public void setFeatureDescription(SchemaDto featureDescription) {
         this.featureDescription = featureDescription;
     }
 

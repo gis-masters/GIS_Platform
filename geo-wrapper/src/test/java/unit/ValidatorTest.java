@@ -2,11 +2,11 @@ package unit;
 
 import org.junit.Test;
 import ru.mycrg.mq_queue_contract.ErrorDescription;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
-import ru.mycrg.mq_queue_contract.propertyTypes.ValueTitleProjection;
+import ru.mycrg.mq_queue_contract.ValueTitleProjection;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.IValidator;
 import ru.mycrg.wrapper.service.validation.ValidatorImpl;
@@ -98,12 +98,12 @@ public class ValidatorTest {
         properties.add(validDouble);
         properties.add(validEnum);
 
-        FeatureDescriptionDto featureDescriptionDto = new FeatureDescriptionDto();
-        featureDescriptionDto.setName("Fiz_Type");
-        featureDescriptionDto.setDescription("test description");
-        featureDescriptionDto.setTitle("test title");
-        featureDescriptionDto.setTableName("test tableName");
-        featureDescriptionDto.setProperties(properties);
+        SchemaDto schemaDto = new SchemaDto();
+        schemaDto.setName("Fiz_Type");
+        schemaDto.setDescription("test description");
+        schemaDto.setTitle("test title");
+        schemaDto.setTableName("test tableName");
+        schemaDto.setProperties(properties);
 
         HashMap<String, Object> rowFromDb = new HashMap<>();
         rowFromDb.put("CLASSID", null);
@@ -116,7 +116,7 @@ public class ValidatorTest {
         rowFromDb.put("validDouble", 3.1415);
         rowFromDb.put("validEnum", "3");
 
-        ObjectValidationResult objectValidationResult = validator.validate(featureDescriptionDto, rowFromDb);
+        ObjectValidationResult objectValidationResult = validator.validate(schemaDto, rowFromDb);
 
         assertEquals(5, objectValidationResult.getPropertyViolations().size());
         assertEquals(1, objectValidationResult.getPropertyViolations().get(0).getErrorTypes().size());
@@ -148,13 +148,13 @@ public class ValidatorTest {
         properties.add(status);
         properties.add(fpType);
 
-        FeatureDescriptionDto featureDescriptionDto = new FeatureDescriptionDto();
-        featureDescriptionDto.setName("Fiz_Type");
-        featureDescriptionDto.setDescription("test description");
-        featureDescriptionDto.setTitle("test title");
-        featureDescriptionDto.setTableName("test tableName");
-        featureDescriptionDto.setProperties(properties);
-        featureDescriptionDto.setCustomRuleFunction("" +
+        SchemaDto schemaDto = new SchemaDto();
+        schemaDto.setName("Fiz_Type");
+        schemaDto.setDescription("test description");
+        schemaDto.setTitle("test title");
+        schemaDto.setTableName("test tableName");
+        schemaDto.setProperties(properties);
+        schemaDto.setCustomRuleFunction("" +
                 "  var errors = [];\n" +
                 "\n" +
                 "  // В приказе - \"Н\"\n" +
@@ -182,7 +182,7 @@ public class ValidatorTest {
         rowFromDb.put("fp_type", "1");
         rowFromDb.put("status", "1");
 
-        ObjectValidationResult objectValidationResult = validator.validate(featureDescriptionDto, rowFromDb);
+        ObjectValidationResult objectValidationResult = validator.validate(schemaDto, rowFromDb);
 
         List<ErrorDescription> objectViolations = objectValidationResult.getObjectViolations();
         assertEquals(1, objectViolations.size());

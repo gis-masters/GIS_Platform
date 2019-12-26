@@ -37,6 +37,8 @@ export interface PropertySchema {
   hidden?: boolean;
   isMultiple?: boolean;
 
+  objectIdentityOnUi?: boolean;
+
   updateability?: Updateability;
   choice?: any;
   valueType?: any;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
@@ -39,7 +39,7 @@ public class SqlGeneratorTest {
 
     @Test
     public void shouldGenerateTableWithObjectIdOnly() {
-        importModel.setFeatureDescription(new FeatureDescriptionDto());
+        importModel.setFeatureDescription(new SchemaDto());
         importModel.setPairs(new ArrayList<>());
 
         // ACT
@@ -59,7 +59,7 @@ public class SqlGeneratorTest {
         classIdPropertySchema.setValueType(ValueType.INT);
         classIdPropertySchema.setName("classid");
 
-        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+        SchemaDto featureDescription = new SchemaDto();
         featureDescription.addProperty(classIdPropertySchema);
         featureDescription.addProperty(stringPropertySchema);
 
@@ -93,7 +93,7 @@ public class SqlGeneratorTest {
         geometryPropertySchema.setValueType(ValueType.GEOMETRY);
         geometryPropertySchema.setName("shape");
 
-        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+        SchemaDto featureDescription = new SchemaDto();
         featureDescription.addProperty(szzSizePropertySchema);
         featureDescription.addProperty(statusPropertySchema);
         featureDescription.addProperty(geometryPropertySchema);
@@ -131,7 +131,7 @@ public class SqlGeneratorTest {
         geometryPropertySchema.setValueType(ValueType.GEOMETRY);
         geometryPropertySchema.setName("shape");
 
-        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+        SchemaDto featureDescription = new SchemaDto();
         featureDescription.addProperty(szzSizePropertySchema);
         featureDescription.addProperty(statusPropertySchema);
         featureDescription.addProperty(geometryPropertySchema);
@@ -155,7 +155,7 @@ public class SqlGeneratorTest {
 
     @Test
     public void shouldGenerateTableAsIs() {
-        importModel.setFeatureDescription(new FeatureDescriptionDto());
+        importModel.setFeatureDescription(new SchemaDto());
         importModel.setPairs(getSimpleMatchingPairs(MatchingSamples.asIs));
 
         // ACT
@@ -181,7 +181,7 @@ public class SqlGeneratorTest {
         statusPropertySchema.setValueType(ValueType.INT);
         statusPropertySchema.setName("status");
 
-        FeatureDescriptionDto featureDescription = new FeatureDescriptionDto();
+        SchemaDto featureDescription = new SchemaDto();
         featureDescription.addProperty(szzSizePropertySchema);
         featureDescription.addProperty(statusPropertySchema);
 
@@ -201,7 +201,7 @@ public class SqlGeneratorTest {
 
     @Test
     public void shouldConvertTheGeomToShape() {
-        importModel.setFeatureDescription(new FeatureDescriptionDto());
+        importModel.setFeatureDescription(new SchemaDto());
         importModel.setPairs(getSimpleMatchingPairs(MatchingSamples.the_geom));
 
         // ACT

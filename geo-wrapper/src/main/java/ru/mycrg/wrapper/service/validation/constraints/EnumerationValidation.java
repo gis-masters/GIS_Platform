@@ -1,7 +1,7 @@
 package ru.mycrg.wrapper.service.validation.constraints;
 
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
-import ru.mycrg.mq_queue_contract.propertyTypes.ValueTitleProjection;
+import ru.mycrg.mq_queue_contract.ValueTitleProjection;
 
 import java.util.List;
 import java.util.function.Function;

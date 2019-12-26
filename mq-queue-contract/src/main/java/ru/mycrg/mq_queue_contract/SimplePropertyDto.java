@@ -1,9 +1,9 @@
 package ru.mycrg.mq_queue_contract;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.mycrg.mq_queue_contract.enums.ChoiceType;
 import ru.mycrg.mq_queue_contract.enums.Updateability;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
-import ru.mycrg.mq_queue_contract.propertyTypes.ValueTitleProjection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +14,21 @@ public class SimplePropertyDto {
     private String title;
     private String description;
 
+    private boolean required;
     private boolean hidden;
-    private boolean isMultiple;
+
+    private boolean objectIdentityOnUi;
 
     private Updateability updateability;
+    private boolean multiple;
     private ChoiceType choice;
     private ValueType valueType;
 
-    private boolean required;
+    private String whiteSpace;
+    private String pattern;
+    private String patternDescription = "";
+
+    private int sequenceNumber;
 
     private Integer length = -1;
     private Integer minLength = -1;
@@ -30,13 +37,8 @@ public class SimplePropertyDto {
     private Integer maxInclusive = -1;
     private Integer totalDigits = -1;
     private Integer fractionDigits = -1;
-    private String whiteSpace;
-    private String pattern;
-    private String patternDescription = "";
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
-
-    private int sequenceNumber;
 
     public SimplePropertyDto() {}
 
@@ -89,11 +91,11 @@ public class SimplePropertyDto {
     }
 
     public boolean isMultiple() {
-        return isMultiple;
+        return multiple;
     }
 
     public void setMultiple(boolean multiple) {
-        isMultiple = multiple;
+        this.multiple = multiple;
     }
 
     public ChoiceType getChoice() {
@@ -216,4 +218,16 @@ public class SimplePropertyDto {
         this.fractionDigits = fractionDigits;
     }
 
+    public boolean isObjectIdentityOnUi() {
+        return objectIdentityOnUi;
+    }
+
+    public void setObjectIdentityOnUi(boolean objectIdentityOnUi) {
+        this.objectIdentityOnUi = objectIdentityOnUi;
+    }
+
+    @JsonIgnore
+    public boolean isGeometry() {
+        return this.valueType == ValueType.GEOMETRY;
+    }
 }

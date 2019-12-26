@@ -2,7 +2,7 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
 import ru.mycrg.wrapper.exceptions.RuleNotFoundException;
@@ -13,8 +13,8 @@ import java.util.List;
 
 public class GmlUtil {
 
-    public static FeatureDescriptionDto getRuleByTableName(List<FeatureDescriptionDto> featuresDescription,
-                                                           String tableName) {
+    public static SchemaDto getRuleByTableName(List<SchemaDto> featuresDescription,
+                                               String tableName) {
         return featuresDescription.stream()
                 .filter(fDescription -> fDescription.getTableName().equalsIgnoreCase(tableName))
                 .findFirst()

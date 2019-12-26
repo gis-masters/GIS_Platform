@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.dao;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.mq_queue_contract.FeatureDescriptionDto;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
@@ -36,7 +36,7 @@ public class SqlGenerator {
 
     @NotNull
     public static String prepareCreateTableRequest(@NotNull ImportMqTask importTask) {
-        FeatureDescriptionDto featureDescription = importTask.getFeatureDescription();
+        SchemaDto featureDescription = importTask.getFeatureDescription();
         assert featureDescription != null;
 
         ResourceProjection targetResource = importTask.getTargetResource();

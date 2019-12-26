@@ -14,7 +14,7 @@ import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.service.ProjectService;
-import ru.mycrg.gis.service.dataSchema.DataSchemaService;
+import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
 import java.io.IOException;
