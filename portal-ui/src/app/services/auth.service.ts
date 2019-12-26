@@ -68,7 +68,7 @@ export class AuthService {
     };
     const url = await this.serverProperties.organizationsUrl;
 
-    return this.httpq.post(url, payload);
+    return this.httpq.post(url + '/init', payload);
   }
 
   get authenticated(): boolean {

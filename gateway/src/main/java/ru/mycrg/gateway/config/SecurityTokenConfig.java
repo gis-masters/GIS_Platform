@@ -51,7 +51,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 // Add a filter to validate the tokens with every request
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
-                .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations").permitAll()
+                .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations/init").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 

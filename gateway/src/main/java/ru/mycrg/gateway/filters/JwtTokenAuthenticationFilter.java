@@ -35,8 +35,8 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         log.info("Fiz JwtTokenAuthenticationFilter doFilterInternal Path: {}", request.getServletPath());
 
         if (request.getServletPath().contains("/oauth/token")
-                || (request.getServletPath().equals("/organizations") && request.getMethod().equals("POST"))) {
-            log.info("This request for '/oauth/token' or '/organizations' Method: POST. Allow it without auth");
+                || (request.getServletPath().equals("/organizations/init") && request.getMethod().equals("POST"))) {
+            log.info("This request for '/oauth/token' or '/organizations/init' Method: POST. Allow it without auth");
         } else {
             // 1. get the authentication header.
             String token = request.getParameter("access_token");

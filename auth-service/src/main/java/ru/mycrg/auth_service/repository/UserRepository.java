@@ -6,10 +6,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ru.mycrg.auth_service.entity.User;
+import ru.mycrg.auth_service.dto.UserProjection;
 
 import java.util.Optional;
 
-@RepositoryRestResource(collectionResourceRel = "users", path = "users")
+@RepositoryRestResource(collectionResourceRel = "users", path = "users", excerptProjection = UserProjection.class)
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @PreAuthorize("permitAll()")
@@ -17,7 +18,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @PreAuthorize("permitAll()")
     Optional<User> findByEmail(@Param("email") String email);
-
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -27,8 +27,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @PreAuthorize("hasAuthority('ADMIN')")
     Optional<User> findById(Long aLong);
 
+    @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    void deleteById(Long aLong);
 
-    // Not exported
+    // NOT Exported
     @Override
     @RestResource(exported = false)
     <S extends User> S save(S entity);
@@ -40,7 +43,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RestResource(exported = false)
+     @RestResource(exported = false)
     boolean existsById(Long aLong);
 
     @Override
@@ -52,11 +55,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @PreAuthorize("hasAuthority('ADMIN')")
     @RestResource(exported = false)
     long count();
-
-    @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @RestResource(exported = false)
-    void deleteById(Long aLong);
 
     @Override
     @RestResource(exported = false)

@@ -2,8 +2,10 @@ package ru.mycrg.auth_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +49,12 @@ public class User {
     )
     private Set<Organization> organizations = new HashSet<>();
 
+    @Column(name = "created_at")
+    public @LastModifiedDate LocalDateTime createdAt;
+
+    @Column(name = "last_modified")
+    public @LastModifiedDate LocalDateTime lastModified = LocalDateTime.now();
+
     public User() {}
 
     public User(String password, String name, String surName, String email) {
@@ -55,6 +63,7 @@ public class User {
         this.surName = surName;
         this.email = email;
         this.enabled = false;
+        this.createdAt = LocalDateTime.now();
     }
 
     public long getId() {
@@ -131,5 +140,21 @@ public class User {
 
     public void setOrganizations(Set<Organization> organizations) {
         this.organizations = organizations;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

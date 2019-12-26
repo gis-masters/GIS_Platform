@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.auth_service.dto.UserInfoModel;
+import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.repository.UserRepository;

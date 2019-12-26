@@ -7,17 +7,21 @@ logging:
     ru.mycrg: DEBUG
 
 ---
-
 spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5432/gis_portal
+    url: jdbc:postgresql://127.0.0.1:5432/crg_auth_service
     username: postgres
     password: 314
   jpa:
     properties:
       hibernate.temp.use_jdbc_metadata_defaults: false
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5432/crg_auth_service
+    user: postgres
+    password: 314
   rabbitmq:
     host: localhost
     port: 5672

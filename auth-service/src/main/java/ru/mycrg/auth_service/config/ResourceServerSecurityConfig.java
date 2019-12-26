@@ -14,7 +14,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/organizations", "/organizations/").permitAll()
+                .antMatchers(HttpMethod.POST, "/organizations/init").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                 .anyRequest().authenticated();
     }

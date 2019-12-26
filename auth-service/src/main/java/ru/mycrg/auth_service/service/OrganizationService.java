@@ -1,17 +1,12 @@
 package ru.mycrg.auth_service.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exeptions.ConflictException;
-import ru.mycrg.auth_service.exeptions.NotFoundException;
 import ru.mycrg.auth_service.queue.MqSender;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
@@ -29,8 +24,6 @@ import java.util.Optional;
 @Transactional
 public class OrganizationService {
 
-    private static Logger log = LoggerFactory.getLogger(OrganizationService.class);
-
     private final MqSender mqSender;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
@@ -42,22 +35,6 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
         this.mqSender = mqSender;
-    }
-
-    /**
-     * Вернет сущность
-     *
-     * @param id Идентификатор
-     * @return {@link Organization}
-     */
-    public Organization findById(Long id) {
-        return organizationRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("Not found organization by id: " + id));
-    }
-
-    public Page<Organization> findAll(Pageable pageable) {
-        return organizationRepository.findAll(pageable);
     }
 
     /**

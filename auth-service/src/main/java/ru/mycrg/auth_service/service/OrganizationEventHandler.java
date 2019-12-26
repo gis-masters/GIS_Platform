@@ -71,6 +71,5 @@ public class OrganizationEventHandler implements EventHandler {
                 throw new AuthServiceException("Not supported event status: " + status);
             }
         }
-
     }
 }
