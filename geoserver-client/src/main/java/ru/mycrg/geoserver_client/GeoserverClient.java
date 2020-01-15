@@ -16,15 +16,13 @@ public class GeoserverClient {
     public static void initialize(AuthServiceInfo authServiceInfo,
                                   GeoserverInfo geoserverInfo,
                                   DbInfo dbInfo) {
-        OAuthClient oAuthClient = OAuthClient.builder()
-                .host(authServiceInfo.getHost())
-                .port(authServiceInfo.getPort())
+        GeoServerBaseService.geoserverInfo = geoserverInfo;
+        GeoServerBaseService.dbInfo = dbInfo;
+
+        GeoServerBaseService.oAuthClient = OAuthClient.builder()
+                .url(authServiceInfo.getUrl())
                 .clientId(authServiceInfo.getClientId())
                 .clientSecret(authServiceInfo.getClientSecret())
                 .build();
-
-        GeoServerBaseService.oAuthClient = oAuthClient;
-        GeoServerBaseService.geoserverInfo = geoserverInfo;
-        GeoServerBaseService.dbInfo = dbInfo;
     }
 }

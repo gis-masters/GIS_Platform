@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import ru.mycrg.oauth_client.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -49,10 +51,9 @@ public class AcceptanceTests {
     }
 
     @Test
-    public void aa_ShouldAuthorize() throws OAuthClientException {
+    public void aa_ShouldAuthorize() throws OAuthClientException, MalformedURLException {
         OAuthClient oAuthClient = OAuthClient.builder()
-                .host(testServerHost)
-                .port(testServerPort)
+                .url(new URL("http://" + testServerHost + ":" + testServerPort))
                 .clientId(rootUserName)
                 .clientSecret(rootPassword)
                 .build();

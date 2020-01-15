@@ -4,32 +4,34 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.util.Optional;
 
 @Component
 @ConfigurationProperties(prefix = "crg-options")
 public class CrgProperties {
 
-    private String authServiceHost;
     private String clientId;
     private String clientSecret;
 
-    private String geoserverHost;
-    private String geoserverUser;
-    private String geoserverPassword;
+    private String rootUserName;
+    private String rootUserPassword;
 
-    private String exportStoragePath;
+    private URL authServiceUrl;
+    private String geoserverHost;
     private String userServiceName;
 
+    private String exportStoragePath;
+
     @NotNull
-    public String getAuthServiceHost() {
+    public URL getAuthServiceUrl() {
         return Optional
-                .ofNullable(authServiceHost)
-                .orElseThrow(() -> new IllegalStateException("Not set authServiceHost"));
+                .ofNullable(authServiceUrl)
+                .orElseThrow(() -> new IllegalStateException("Not set authServiceUrl"));
     }
 
-    public void setAuthServiceHost(String authHost) {
-        this.authServiceHost = authHost;
+    public void setAuthServiceUrl(URL authServiceUrl) {
+        this.authServiceUrl = authServiceUrl;
     }
 
     @NotNull
@@ -66,25 +68,25 @@ public class CrgProperties {
     }
 
     @NotNull
-    public String getGeoserverUser() {
+    public String getRootUserName() {
         return Optional
-                .ofNullable(geoserverUser)
+                .ofNullable(rootUserName)
                 .orElseThrow(() -> new IllegalStateException("Not set dbOwnerUser"));
     }
 
-    public void setGeoserverUser(String geoserverUser) {
-        this.geoserverUser = geoserverUser;
+    public void setRootUserName(String rootUserName) {
+        this.rootUserName = rootUserName;
     }
 
     @NotNull
-    public String getGeoserverPassword() {
+    public String getRootUserPassword() {
         return Optional
-                .ofNullable(geoserverPassword)
+                .ofNullable(rootUserPassword)
                 .orElseThrow(() -> new IllegalStateException("Not set dbOwnerPassword"));
     }
 
-    public void setGeoserverPassword(String geoserverPassword) {
-        this.geoserverPassword = geoserverPassword;
+    public void setRootUserPassword(String rootUserPassword) {
+        this.rootUserPassword = rootUserPassword;
     }
 
     public void setExportStoragePath(String exportStoragePath) {

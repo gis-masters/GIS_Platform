@@ -7,7 +7,12 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import ru.mycrg.oauth_client.*;
+import ru.mycrg.oauth_client.JwtToken;
+import ru.mycrg.oauth_client.OAuthClient;
+import ru.mycrg.oauth_client.OAuthClientException;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -41,10 +46,9 @@ public class SmokeTests {
     }
 
     @Test
-    public void aa_ShouldAuthorize() throws OAuthClientException {
+    public void aa_ShouldAuthorize() throws OAuthClientException, MalformedURLException {
         OAuthClient oAuthClient = OAuthClient.builder()
-                .host(testServerHost)
-                .port(testServerPort)
+                .url(new URL("http://" + testServerHost + ":" + testServerPort))
                 .clientId(rootUserName)
                 .clientSecret(rootPassword)
                 .build();

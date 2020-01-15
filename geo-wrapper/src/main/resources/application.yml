@@ -20,13 +20,16 @@ spring:
     password: 314
 
 crg-options:
-  auth-service-host: 127.0.0.1:9000
   client-id: admin
   client-secret: geoserver
+
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver
+
+  auth-service-url: http://127.0.0.1:9000
   geoserver-host: 127.0.0.1:8080
-  geoserver-user: admin@mail.ru
-  geoserver-password: geoserver
-  exportStoragePath: /opt/export/
   userServiceName: postgres_db_user_service
+
+  exportStoragePath: /opt/export/
 server:
   port: 8354

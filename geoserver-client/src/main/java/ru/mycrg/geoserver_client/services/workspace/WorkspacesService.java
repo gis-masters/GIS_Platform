@@ -15,7 +15,7 @@ public class WorkspacesService extends GeoServerBaseService {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\"workspace\": {\"name\": \"" + name + "\"}}");
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/workspaces")
                 .post(body)
                 .build();
@@ -27,7 +27,7 @@ public class WorkspacesService extends GeoServerBaseService {
         log.debug("delete workspace: {}", name);
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/workspaces/" + name + "?recurse=true")
                 .delete()
                 .build();

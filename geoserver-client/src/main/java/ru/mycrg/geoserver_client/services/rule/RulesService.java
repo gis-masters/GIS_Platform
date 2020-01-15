@@ -31,7 +31,7 @@ public class RulesService extends GeoServerBaseService {
         log.debug("addLayersRule: Rule: {} Role: {}", rule, role);
 
         Request getLayersRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .get()
                 .build();
@@ -67,7 +67,7 @@ public class RulesService extends GeoServerBaseService {
         log.info("addRestRule for Role: {}", role);
 
         Request getRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
                 .get()
                 .build();
@@ -94,7 +94,7 @@ public class RulesService extends GeoServerBaseService {
         log.info("add role {} for service: {}", role, serviceKeys);
 
         Request getServiceRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .get()
                 .build();
@@ -157,7 +157,7 @@ public class RulesService extends GeoServerBaseService {
                         "</rules>");
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .post(body)
                 .build();
@@ -168,7 +168,7 @@ public class RulesService extends GeoServerBaseService {
     private void updateRestRoles(Map<String, String> newRules) throws Exception {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
                 .put(body)
                 .build();
@@ -179,7 +179,7 @@ public class RulesService extends GeoServerBaseService {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
 
         Request setServiceRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .put(body)
                 .build();
@@ -191,7 +191,7 @@ public class RulesService extends GeoServerBaseService {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(rule).toString());
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .post(body)
                 .build();
@@ -202,7 +202,7 @@ public class RulesService extends GeoServerBaseService {
     private void updateLayersRoles(Map<String, String> newRules) throws Exception {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .put(body)
                 .build();

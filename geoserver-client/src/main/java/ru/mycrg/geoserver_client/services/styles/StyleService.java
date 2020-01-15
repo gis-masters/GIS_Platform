@@ -35,7 +35,7 @@ public class StyleService extends GeoServerBaseService {
         log.debug("associate style url: {}", url);
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(url)
                 .post(body)
                 .build();

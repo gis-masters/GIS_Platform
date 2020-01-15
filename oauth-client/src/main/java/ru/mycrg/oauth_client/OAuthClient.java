@@ -3,8 +3,16 @@ package ru.mycrg.oauth_client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class OAuthClient {
+
+    private static final Logger log = LoggerFactory.getLogger(OAuthClient.class);
+    private static final String TOKEN_PATH = "/oauth/token";
 
     private static ObjectMapper mapper = new ObjectMapper();
     private static OkHttpClient httpClient = new OkHttpClient();
@@ -12,47 +20,41 @@ public class OAuthClient {
     private String clientId;
     private String clientSecret;
 
-    private String baseUrl;
+    private URL baseUrl;
 
     @Builder
-    public OAuthClient(String clientId, String clientSecret, String host, int port) {
+    public OAuthClient(String clientId, String clientSecret, URL url) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-
-        this.baseUrl = "http://" + host + ":" + port + "/oauth/token";
+        this.baseUrl = url;
     }
 
-    public JwtToken getJwtToken(String userName, String password) throws OAuthClientException {
-        JwtToken jwtToken;
+    public JwtToken getJwtToken(String userName, String password) throws OAuthClientException, MalformedURLException {
+        log.debug("getJwtToken by: {} for user: {}", baseUrl, userName);
 
-        try {
-            MediaType mediaType = MediaType.parse("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
-            RequestBody body = RequestBody.create(mediaType, "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                    "Content-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n" +
-                    "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                    "Content-Disposition: form-data; name=\"username\"\r\n\r\n" + userName
-                    + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n" +
-                    "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + password
-                    + "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--");
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("grant_type", "password")
+                .addFormDataPart("username", userName)
+                .addFormDataPart("password", password)
+                .build();
 
-            Request request = new Request.Builder()
-                    .url(baseUrl)
-                    .header("Authorization", Credentials.basic(clientId, clientSecret))
-                    .header("Content-type", "multipart/form-data")
-                    .header("cache-control", "no-cache")
-                    .post(body)
-                    .build();
+        Request request = new Request.Builder()
+                .url(new URL(baseUrl, TOKEN_PATH))
+                .header("Authorization", Credentials.basic(clientId, clientSecret))
+                .header("Content-type", "multipart/form-data")
+                .header("cache-control", "no-cache")
+                .post(body)
+                .build();
 
-            Response response = httpClient.newCall(request).execute();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new OAuthClientException(response.body().string());
 
-            jwtToken = mapper.readValue(response.body().string(), JwtToken.class);
-
-            response.close();
-
-            return jwtToken;
+            return mapper.readValue(response.body().string(), JwtToken.class);
         } catch (Exception e) {
             throw new OAuthClientException("Failed get token: " + e.getMessage(), e.getCause());
         }
+
     }
 
 }

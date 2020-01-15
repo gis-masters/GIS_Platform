@@ -19,7 +19,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role)
                 .post(body)
                 .build();
@@ -42,7 +42,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
         log.debug("createUserUrl: {}", url);
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(url)
                 .post(body)
                 .build();
@@ -60,7 +60,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         log.debug("Try associate user: \"{}\" With role: {}", cName, role);
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getAccessToken())
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
                 .post(body)
                 .build();

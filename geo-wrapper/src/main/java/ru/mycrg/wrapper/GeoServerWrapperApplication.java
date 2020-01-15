@@ -36,8 +36,7 @@ public class GeoServerWrapperApplication {
         log.info("initGeoserverClient");
 
         AuthServiceInfo authServiceInfo = AuthServiceInfo.builder()
-                .host(properties.getAuthServiceHost().split(":")[0])
-                .port(Integer.parseInt(properties.getAuthServiceHost().split(":")[1]))
+                .url(properties.getAuthServiceUrl())
                 .clientId(properties.getClientId())
                 .clientSecret(properties.getClientSecret())
                 .build();
@@ -45,8 +44,8 @@ public class GeoServerWrapperApplication {
         GeoserverInfo geoserverInfo = GeoserverInfo.builder()
                 .host(properties.getGeoserverHost().split(":")[0])
                 .port(Integer.parseInt(properties.getGeoserverHost().split(":")[1]))
-                .rootUserName(properties.getGeoserverUser())
-                .password(properties.getGeoserverPassword())
+                .rootUserName(properties.getRootUserName())
+                .rootUserPassword(properties.getRootUserPassword())
                 .userServiceName(properties.getUserServiceName())
                 .build();
 

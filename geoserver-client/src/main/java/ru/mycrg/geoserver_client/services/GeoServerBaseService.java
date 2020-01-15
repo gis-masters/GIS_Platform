@@ -13,6 +13,8 @@ import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 import ru.mycrg.oauth_client.OAuthClientException;
 
+import java.net.MalformedURLException;
+
 public class GeoServerBaseService {
 
     public static final Logger log = LoggerFactory.getLogger(GeoServerBaseService.class);
@@ -38,17 +40,15 @@ public class GeoServerBaseService {
                 response.close();
             }
         } catch (Exception e) {
-            log.error("Geoserver error body: {}", e.getMessage());
-
-            throw new GeoserverClientException(msg, e.getMessage());
+            throw new GeoserverClientException("Geoserver error" , e.getMessage());
         }
     }
 
-    protected String getAccessToken() throws GeoserverClientException {
-        JwtToken jwtToken = null;
+    protected String getRootAccessToken() throws GeoserverClientException {
+        JwtToken jwtToken;
         try {
-            jwtToken = oAuthClient.getJwtToken(geoserverInfo.getRootUserName(), geoserverInfo.getPassword());
-        } catch (OAuthClientException e) {
+            jwtToken = oAuthClient.getJwtToken(geoserverInfo.getRootUserName(), geoserverInfo.getRootUserPassword());
+        } catch (OAuthClientException | MalformedURLException e) {
             throw new GeoserverClientException(e.getMessage(), e.getCause());
         }
 
