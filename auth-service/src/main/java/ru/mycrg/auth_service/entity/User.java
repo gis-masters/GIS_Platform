@@ -3,6 +3,7 @@ package ru.mycrg.auth_service.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
-public class User {
+public class User implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +67,8 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public long getId() {
+    @Override
+    public Long getId() {
         return id;
     }
 

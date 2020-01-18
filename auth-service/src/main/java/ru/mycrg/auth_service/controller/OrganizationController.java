@@ -34,7 +34,7 @@ public class OrganizationController {
         Organization newOrganization = organizationService.createOrg(createDto);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
+                .fromCurrentContextPath()
                 .path("/{id}")
                 .buildAndExpand(newOrganization.getId())
                 .toUri();

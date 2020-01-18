@@ -13,6 +13,9 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     private static final Logger log = LoggerFactory.getLogger(UsersAndRolesService.class);
 
+    public UsersAndRolesService() {
+    }
+
     public void createRole(String role) throws Exception {
         log.debug("create role: {}", role);
 
@@ -45,6 +48,19 @@ public class UsersAndRolesService extends GeoServerBaseService {
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(url)
                 .post(body)
+                .build();
+
+        doRequest(request, "createUser");
+    }
+
+    public void deleteUser(String userName) throws Exception {
+        String url = String.format("%s/security/usergroup/service/%s/user/%s",
+                getGeoserverRestUrl(), geoserverInfo.getUserServiceName(), userName);
+
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+                .url(url)
+                .delete()
                 .build();
 
         doRequest(request, "createUser");

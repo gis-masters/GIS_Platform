@@ -15,6 +15,7 @@ spring:
     username: postgres
     password: 314
   jpa:
+    show-sql: false
     properties:
       hibernate.temp.use_jdbc_metadata_defaults: false
   flyway:

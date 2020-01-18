@@ -9,10 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public static final String REQUEST_QUEUE = "org.request.queue";
+    public static final String ORG_REQUEST_QUEUE = "org.request.queue";
+    public static final String ORG_RESPONSE_FANOUT = "org.response.fanout";
+    public static final String ORG_RESPONSE_KEY = "org.response.key";
 
-    public static final String RESPONSE_FANOUT = "org.response.fanout";
-    public static final String RESPONSE_KEY = "org.response.key";
+    public static final String USER_REQUEST_QUEUE = "user.request.queue";
+    public static final String USER_RESPONSE_FANOUT = "user.response.fanout";
+    public static final String USER_RESPONSE_KEY = "user.response.key";
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

@@ -22,6 +22,14 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
     private UserRepository userRepository;
 
     @Override
+    public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
+        OAuth2Authentication authentication = super.extractAuthentication(claims);
+        authentication.setDetails(claims);
+
+        return authentication;
+    }
+
+    @Override
     @Transactional
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         if (authentication.getOAuth2Request().getGrantType().equalsIgnoreCase("password")) {

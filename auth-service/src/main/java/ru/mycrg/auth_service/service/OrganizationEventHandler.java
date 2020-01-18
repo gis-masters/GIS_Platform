@@ -17,13 +17,12 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class OrganizationEventHandler implements EventHandler {
+public class OrganizationEventHandler {
 
     private static Logger log = LoggerFactory.getLogger(OrganizationEventHandler.class);
 
     private static final String PROVISIONED = "PROVISIONED";
     private static final String PROVISIONING_FAILED = "PROVISIONING_FAILED";
-    private static final String PROVISIONING = "PROVISIONING";
 
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
@@ -33,9 +32,8 @@ public class OrganizationEventHandler implements EventHandler {
         this.organizationRepository = organizationRepository;
     }
 
-    @Override
     public void handle(IOrganizationEvent mqEvent) {
-        String status = PROVISIONING;
+        String status = "";
         if (mqEvent instanceof OrganizationDependencyProvisionSucceededEvent) {
             status = PROVISIONED;
         } else if (mqEvent instanceof OrganizationDependencyProvisionFailedEvent) {

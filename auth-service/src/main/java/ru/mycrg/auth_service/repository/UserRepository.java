@@ -1,5 +1,7 @@
 package ru.mycrg.auth_service.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -12,6 +14,12 @@ import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "users", path = "users", excerptProjection = UserProjection.class)
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
+
+    @Modifying
+    @Query("UPDATE User u SET u.enabled = true, u.lastModified = CURRENT_TIMESTAMP WHERE u.username = :username")
+    int activateUserByName(@Param("username") String username);
+
+    void deleteByUsername(@Param("username") String userName);
 
     @PreAuthorize("permitAll()")
     Optional<User> findByUsername(@Param("username") String userName);
@@ -27,11 +35,10 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @PreAuthorize("hasAuthority('ADMIN')")
     Optional<User> findById(Long aLong);
 
+    // NOT Exported
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     void deleteById(Long aLong);
 
-    // NOT Exported
     @Override
     @RestResource(exported = false)
     <S extends User> S save(S entity);
@@ -43,7 +50,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
-     @RestResource(exported = false)
+    @RestResource(exported = false)
     boolean existsById(Long aLong);
 
     @Override

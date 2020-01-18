@@ -4,8 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.IOrganizationEvent;
-import ru.mycrg.auth_service_contract.OrganizationDependencyProvisionFailedEvent;
+import ru.mycrg.auth_service_contract.*;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
@@ -29,7 +28,7 @@ public class EventDispatcher {
     }
 
     public void handleEvent(@NotNull BaseMqProcessRequest mqRequest) {
-        log.info("handleEvent: {}", mqRequest.getId());
+        log.debug("handleEvent: {}", mqRequest.getId());
 
         try {
             requestHandlerFactory
@@ -41,7 +40,7 @@ public class EventDispatcher {
     }
 
     public void handleOrganizationEvent(@NotNull IOrganizationEvent mqEvent) {
-        log.info("handle organization event: {}", mqEvent.getOrgId());
+        log.debug("handle organization event: {}", mqEvent.getOrgId());
 
         try {
             requestHandlerFactory
@@ -49,6 +48,18 @@ public class EventDispatcher {
                     .handle(mqEvent);
         } catch (Exception e) {
             mqSender.sendOrgEvent(new OrganizationDependencyProvisionFailedEvent(mqEvent));
+        }
+    }
+
+    public void handleUserEvent(@NotNull IUserEvent mqEvent) {
+        log.debug("handle user event: {}", mqEvent.getLogin());
+
+        try {
+            requestHandlerFactory
+                    .getUserHandler(mqEvent)
+                    .handle(mqEvent);
+        } catch (Exception e) {
+            mqSender.sendUserEvent(new UserProvisioningFailedEvent(mqEvent));
         }
     }
 }

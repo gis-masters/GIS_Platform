@@ -11,7 +11,8 @@ public class BaseController {
 
     @NotNull
     HttpHeaders createHeadersWithLinkToProcess(Process process) {
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
                 .path("/processes/{processId}")
                 .build(process.getId());
 

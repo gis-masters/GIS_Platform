@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.dto.OrganizationCreateDto;
+import ru.mycrg.auth_service.dto.UserCreateDto;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exeptions.ConflictException;
-import ru.mycrg.auth_service.queue.MqSender;
+import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service.security.AES;
@@ -24,17 +25,19 @@ import java.util.Optional;
 @Transactional
 public class OrganizationService {
 
-    private final MqSender mqSender;
+    private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
+
+    private final MessageBus messageBus;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
                                UserRepository userRepository,
-                               MqSender mqSender) {
+                               MessageBus messageBus) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
-        this.mqSender = mqSender;
+        this.messageBus = messageBus;
     }
 
     /**
@@ -46,28 +49,29 @@ public class OrganizationService {
      * @return {@link Organization}
      */
     public Organization createOrg(@Valid OrganizationCreateDto createDto) {
-        Optional<User> userByEmail = userRepository.findByEmail(createDto.getEmail());
+        UserCreateDto owner = createDto.getOwner();
+        Optional<User> userByEmail = userRepository.findByEmail(owner.getEmail());
         if (userByEmail.isPresent()) {
             throw new ConflictException("Данный email уже занят");
         }
 
         Organization newOrganization;
 
-        User newUser = userRepository.save(mapDtoToUser(createDto));
+        User newUser = userRepository.save(mapDtoToUser(owner));
 
         newOrganization = mapDtoToOrganization(createDto);
         newOrganization.addUser(newUser);
 
         organizationRepository.save(newOrganization);
         // We use email as login
-        newUser.setUsername(createDto.getEmail());
+        newUser.setUsername(owner.getEmail());
         newUser.addAuthority("GEOSERVER_ADMIN");
 
-        mqSender.send(
+        messageBus.sendOrgEvent(
                 new OrganizationInitializedEvent(
                         newOrganization.getId(),
-                        AES.encrypt(createDto.getPassword(), createDto.getEmail()),
-                        createDto.getEmail(),
+                        AES.encrypt(owner.getPassword(), owner.getEmail()),
+                        owner.getEmail(),
                         newUser.getUsername()));
 
         return newOrganization;
@@ -77,15 +81,13 @@ public class OrganizationService {
         return new Organization(dto.getName(), dto.getPhone());
     }
 
-    private User mapDtoToUser(OrganizationCreateDto dto) {
-        BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
-
+    private User mapDtoToUser(UserCreateDto owner) {
         return
                 new User(
-                        bCrypt.encode(dto.getPassword()),
-                        dto.getUserName(),
-                        dto.getUserSurName(),
-                        dto.getEmail()
+                        bCrypt.encode(owner.getPassword()),
+                        owner.getName(),
+                        owner.getSurName(),
+                        owner.getEmail()
                 );
     }
 

@@ -59,12 +59,14 @@ export class AuthService {
   // TODO: Создание новой орг в модуле аутентификации???
   async registration(regData: RegData): Promise<{}> {
     const payload = {
-      email: regData.email,
       name: regData.company,
-      password: regData.password,
       phone: regData.contactPhone,
-      userName: regData.firstName,
-      userSurName: regData.lastName
+      owner: {
+        name: regData.firstName,
+        surName: regData.lastName,
+        email: regData.email,
+        password: regData.password
+      }
     };
     const url = await this.serverProperties.organizationsUrl;
 

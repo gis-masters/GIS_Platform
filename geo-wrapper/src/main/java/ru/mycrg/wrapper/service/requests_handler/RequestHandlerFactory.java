@@ -12,6 +12,8 @@ import ru.mycrg.wrapper.service.export.ExportRequestHandler;
 import ru.mycrg.wrapper.service.import_.ImportRequestHandler;
 import ru.mycrg.wrapper.service.projects.create.CreateProjectRequestHandler;
 import ru.mycrg.wrapper.service.projects.delete.DeleteProjectRequestHandler;
+import ru.mycrg.wrapper.service.users.CreateUserRequestHandler;
+import ru.mycrg.wrapper.service.users.DeleteUserRequestHandler;
 import ru.mycrg.wrapper.service.validation.ValidationService;
 
 @Service
@@ -26,13 +28,17 @@ public class RequestHandlerFactory {
     private final IRequestHandler deleteProjectRequestHandler;
 
     private final IOrganizationRequestHandler createOrganizationHandler;
+    private final IUserRequestHandler createUserRequestHandler;
+    private final IUserRequestHandler deleteUserRequestHandler;
 
     public RequestHandlerFactory(CreateProjectRequestHandler createProjectRequestHandler,
                                  DeleteProjectRequestHandler deleteProjectRequestHandler,
                                  ValidationService validationService,
                                  ExportRequestHandler exportRequestHandler,
                                  ImportRequestHandler importRequestHandler,
-                                 CreateOrganizationHandler createOrganizationHandler) {
+                                 CreateOrganizationHandler createOrganizationHandler,
+                                 CreateUserRequestHandler createUserRequestHandler,
+                                 DeleteUserRequestHandler deleteUserRequestHandler) {
         this.validationService = validationService;
 
         this.importRequestHandler = importRequestHandler;
@@ -42,6 +48,8 @@ public class RequestHandlerFactory {
         this.deleteProjectRequestHandler = deleteProjectRequestHandler;
 
         this.createOrganizationHandler = createOrganizationHandler;
+        this.createUserRequestHandler = createUserRequestHandler;
+        this.deleteUserRequestHandler = deleteUserRequestHandler;
     }
 
     IRequestHandler getHandler(@NotNull ProcessType type) throws QueueException {
@@ -62,7 +70,17 @@ public class RequestHandlerFactory {
         if (mqEvent instanceof OrganizationInitializedEvent) {
             return createOrganizationHandler;
         } else {
-            throw new QueueException("Not supported event");
+            throw new QueueException("Not supported organization event");
+        }
+    }
+
+    IUserRequestHandler getUserHandler(@NotNull IUserEvent mqEvent) throws QueueException {
+        if (mqEvent instanceof UserCreatedEvent) {
+            return createUserRequestHandler;
+        } else if (mqEvent instanceof UserDeletedEvent) {
+            return deleteUserRequestHandler;
+        } else {
+            throw new QueueException("Not supported user event");
         }
     }
 }
