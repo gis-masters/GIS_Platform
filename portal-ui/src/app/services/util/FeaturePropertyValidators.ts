@@ -9,7 +9,8 @@ export enum ValueType {
   STRING = 'STRING',
   DOUBLE = 'DOUBLE',
   CHOICE = 'CHOICE',
-  GEOMETRY = 'GEOMETRY'
+  GEOMETRY = 'GEOMETRY',
+  URL = 'URL'
 }
 
 export interface ValidationError {

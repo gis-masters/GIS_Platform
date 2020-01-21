@@ -28,6 +28,9 @@ public class SimplePropertyDto {
     private String pattern;
     private String patternDescription = "";
 
+    private String url;
+    private String displayMode;
+
     private int sequenceNumber;
 
     private Integer length = -1;
@@ -224,6 +227,22 @@ public class SimplePropertyDto {
 
     public void setObjectIdentityOnUi(boolean objectIdentityOnUi) {
         this.objectIdentityOnUi = objectIdentityOnUi;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDisplayMode() {
+        return displayMode;
+    }
+
+    public void setDisplayMode(String displayMode) {
+        this.displayMode = displayMode;
     }
 
     @JsonIgnore

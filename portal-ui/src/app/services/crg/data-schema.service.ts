@@ -54,6 +54,8 @@ export interface PropertySchema {
   fractionDigits?: number;
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
+  url?: string;
+  displayMode?: string;
 }
 
 export enum Updateability {

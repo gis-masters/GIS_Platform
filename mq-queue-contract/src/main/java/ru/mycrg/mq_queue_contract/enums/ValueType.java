@@ -7,4 +7,5 @@ public enum ValueType {
     DOUBLE,
     CHOICE,
     GEOMETRY,
+    URL
 }
