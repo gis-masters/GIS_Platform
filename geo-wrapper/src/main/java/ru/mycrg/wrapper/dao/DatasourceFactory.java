@@ -29,10 +29,10 @@ public class DatasourceFactory {
     }
 
     public HikariDataSource getDatasource(String dbName) {
-        log.debug("Try get datasource for DB: {}", dbName);
+        log.trace("Try get datasource for DB: {}", dbName);
 
         if (dataSources.containsKey(dbName)) {
-            log.debug("Get from pool");
+            log.trace("Get from pool");
 
             return dataSources.get(dbName);
         } else {
@@ -55,7 +55,7 @@ public class DatasourceFactory {
     }
 
     public JdbcTemplate getJdbcTemplate(final String dbName) {
-        log.debug("get new JdbcTemplate for: {}", dbName);
+        log.trace("get new JdbcTemplate for: {}", dbName);
 
         return new JdbcTemplate(getDatasource(dbName));
     }

@@ -149,6 +149,8 @@ public class SqlGenerator {
                 return attrDescription.getName() + " character varying(" + maxLength + ")";
             case DOUBLE:
                 return attrDescription.getName() + " numeric(38,8)";
+            case URL:
+                return attrDescription.getName() + " character varying(254)";
             case GEOMETRY:
                 return "shape public.geometry";
             default:

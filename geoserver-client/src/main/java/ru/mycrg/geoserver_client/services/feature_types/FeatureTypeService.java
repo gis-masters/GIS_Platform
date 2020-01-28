@@ -27,8 +27,6 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .append("/datastores/").append(dataStoreName)
                 .append("/featuretypes").toString();
 
-        log.debug("create FeatureType with name: {} by URL: {}", featureName, url);
-
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + jwtToken)
                 .url(url)
@@ -48,8 +46,6 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .append("/featuretypes/").append(featureName)
                 .toString();
 
-        log.debug("delete FeatureType with name: {} by URL: {}", featureName, url);
-
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + jwtToken)
                 .url(url)
@@ -61,19 +57,13 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
             response = httpClient.newCall(request).execute();
 
             if (!response.isSuccessful()) {
-                if (response.code() == 404) {
-                    log.warn("Not found featureType: {} nothing delete", featureName);
-                } else if (response.code() == 403) {
-                    log.warn("Delete featureType: {}. FORBIDDEN: feature type referenced by layer(s)", featureName);
-                } else {
+                if (response.code() != 404 && response.code() != 403) {
                     throw new GeoserverClientException("Delete featureType error: ", response.message());
                 }
             }
 
             response.close();
         } catch (Exception e) {
-            log.error("Geoserver error body: {}", e.getMessage());
-
             throw new GeoserverClientException("delete featureType failed", e.getMessage());
         }
     }

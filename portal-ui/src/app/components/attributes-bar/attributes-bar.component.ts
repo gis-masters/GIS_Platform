@@ -415,7 +415,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.geoserverName, selectedLayer.name)),
+        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.name)),
         catchError(err => this.handleError(err)),
       ).subscribe(() => {
         i++;
@@ -437,11 +437,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, this.project.geoserverName, selectedLayer.name)
+            this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.name)
           );
         }),
         concatMap(([features, insertResult]) => {
-          return this.tFeatureService.deleteFeatures(features, this.project.geoserverName, this.layer.name);
+          return this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.name);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -464,7 +464,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.geoserverName, this.layer.name)),
+        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.name)),
       ).subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);

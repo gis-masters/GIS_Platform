@@ -39,6 +39,8 @@
 		<module>auth-service</module>
 		<module>auth-service-contract</module>
 
+		<module>gis-service</module>
+
 		<module>oauth-client</module>
 		<module>geoserver-client</module>
 
@@ -48,6 +50,6 @@
 		<module>geo-wrapper</module>
 
 		<module>mq-queue-contract</module>
-	</modules>
+    </modules>
 
 </project>

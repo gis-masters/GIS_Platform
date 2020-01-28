@@ -18,7 +18,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/projects")
+@RequestMapping(value = "/api")
 public class ValidationController extends BaseController {
 
     private static Logger log = LoggerFactory.getLogger(ValidationController.class);
@@ -32,20 +32,20 @@ public class ValidationController extends BaseController {
         this.violationService = violationService;
     }
 
-    @PostMapping("/{projectId}/validation")
-    public ResponseEntity<Process> initValidation(@PathVariable Long projectId,
+    @PostMapping("/{projectName}/validation")
+    public ResponseEntity<Process> initValidation(@PathVariable String projectName,
                                                   @Valid @RequestBody ValidationRequestDto request,
                                                   Principal principal) {
         log.debug("Init validation for: {} resources", request.getLayers().size());
 
-        Process process = validationService.validate(projectId, principal, request);
+        Process process = validationService.validate(projectName, principal, request);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{projectId}/validation")
+    @GetMapping("/{projectName}/validation")
     public ResponseEntity<ValidationResponseDto> getValidationResults(
-            @PathVariable Long projectId,
+            @PathVariable String projectName,
             @RequestParam String layerName,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
@@ -61,18 +61,18 @@ public class ValidationController extends BaseController {
             throw new BadRequestException(e.getLocalizedMessage());
         }
 
-        ValidationResponseDto result = violationService.getViolations(principal, projectId, layerName, nPage, nSize);
+        ValidationResponseDto result = violationService.getViolations(principal, projectName, layerName, nPage, nSize);
 
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{projectId}/validation/short")
-    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@PathVariable Long projectId,
+    @PostMapping("/{projectName}/validation/short")
+    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@PathVariable String projectName,
                                                                   @Valid @RequestBody ValidationRequestDto request,
                                                                   Principal principal) {
         log.debug("Request get short validation info");
 
-        List<ValidationInfo> result = violationService.getShortInfo(principal, projectId, request);
+        List<ValidationInfo> result = violationService.getShortInfo(principal, projectName, request);
 
         return ResponseEntity.ok(result);
     }

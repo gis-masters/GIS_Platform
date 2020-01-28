@@ -33,25 +33,32 @@ zuul:
   ignoredServices: '*'
   sensitive-headers: Cookie,Set-Cookie
   routes:
-    auth-service:
+    # AUTH SERVICE
+    crg-auth-service:
       path: /oauth/token/**
       service-id: http://auth-service:9000/oauth/token
 
-    gis-users:
+    crg-auth-service-users:
       path: /users/**
       url: http://auth-service:9000/users/
 
-    gis-organizations:
+    crg-auth-service-organizations:
       path: /organizations/**
       url: http://auth-service:9000/organizations/
+
+    # GIS SERVICE
+    crg-gis-service-projects:
+      path: /projects/**
+      url: http://crg-gis-service:8082/projects/
+
+    # API SERVICE
+    api-common:
+      path: /api/**
+      url: http://geo-api:8088/api/
 
     gis-processes:
       path: /processes/**
       url: http://geo-api:8088/processes/
-
-    gis-projects:
-      path: /projects/**
-      url: http://geo-api:8088/projects/
 
     gis-schema:
       path: /schema/**

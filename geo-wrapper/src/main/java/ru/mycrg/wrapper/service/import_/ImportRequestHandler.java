@@ -18,7 +18,6 @@ import java.util.List;
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
 
-
 /**
  * <p>Сервис обрабатывающий событие импорта.</p>
  *
@@ -26,7 +25,9 @@ import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
  * <ul>
  *     <li>Копирование данных из чернового источника</li>
  *     <li>Постобработка данных</li>
+ *     <li>Создание хранилища если нужно</li>
  *     <li>Создание фичи на геосервере</li>
+ *     <li>Присоединение стиля к слою</li>
  *     <li>Очистка данных чернового импорта.<br>
  *         В случае, если импорт не удался, очистка не выполняется, чтобы можно было проанализировать ситауцию<br>
  *         Не очищаем слои на геосервере в рабочей области "scratch_" потому как туда доступ только у админа
@@ -43,7 +44,9 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
     public ImportRequestHandler(InitialImportService initialImporter,
                                 PostImportService postImporter,
-                                GeoserverImportService geoserverImporter,
+                                GeoserverFeatureTypeHandler featureTypeHandler,
+                                GeoserverStorageHandler storageHandler,
+                                GeoserverStyleHandler styleHandler,
                                 ScratchImportCleaner importCleaner,
                                 MqSender mqSender) {
         this.mqSender = mqSender;
@@ -51,9 +54,11 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
         // Задаем цепочку отбработчиков
         this.initialImportService.setHandlers(postImporter, null);
-        ((CrgChainable<ImportMqTask>) postImporter).setHandlers(geoserverImporter, initialImportService);
-        ((CrgChainable<ImportMqTask>) geoserverImporter).setHandlers(importCleaner, postImporter);
-        ((CrgChainable<ImportMqTask>) importCleaner).setHandlers(null, geoserverImporter);
+        postImporter.setHandlers(storageHandler, initialImportService);
+        storageHandler.setHandlers(featureTypeHandler, postImporter);
+        featureTypeHandler.setHandlers(styleHandler, storageHandler);
+        styleHandler.setHandlers(importCleaner, featureTypeHandler);
+        importCleaner.setHandlers(null, styleHandler);
     }
 
     @Override

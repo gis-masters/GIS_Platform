@@ -13,6 +13,6 @@ export class MapPageComponent implements OnInit {
 
   async ngOnInit() {
     const project = await this.projectsService.getCurrent();
-    this.projectName = project.internalName;
+    this.projectName = project.name;
   }
 }

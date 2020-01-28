@@ -14,6 +14,8 @@ public class Util {
 
     private static Logger log = LoggerFactory.getLogger(Util.class);
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     public static String getPropertyByKey(Map<String, Object> data, String keyFiled) {
         if (data.containsKey(keyFiled)) {
             Object o = data.get(keyFiled);
@@ -31,7 +33,7 @@ public class Util {
 
     public static JsonNode convertToJson(ObjectValidationResult object) {
         try {
-            String asString = new ObjectMapper().writer()
+            String asString = mapper.writer()
                     .withDefaultPrettyPrinter()
                     .writeValueAsString(object);
             return JacksonUtil.toJsonNode(asString);

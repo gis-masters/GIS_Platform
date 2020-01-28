@@ -9,11 +9,9 @@ import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
@@ -34,38 +32,33 @@ public class ValidationService extends BaseProcessService {
 
     private final MqSender mqSender;
     private final DataSchemaService schemaService;
-    private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
                              DataSchemaService schemaService,
-                             ProjectService projectService,
                              ProcessRepository processRepository,
                              WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
         this.schemaService = schemaService;
-        this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
 
     /**
      * Запустить процесс валидации.
      *
-     * @param projectId Проект
-     * @param principal Пользователь
-     * @param request   Список ресурсов {@link ValidationRequestDto}
+     * @param projectName internalName проекта
+     * @param principal   Пользователь
+     * @param request     Список ресурсов {@link ValidationRequestDto}
      */
-    public Process validate(Long projectId, Principal principal, ValidationRequestDto request) {
+    public Process validate(String projectName, Principal principal, ValidationRequestDto request) {
         long orgId = getOrganizationId(principal);
 
-        Project projectById = projectService.getProject(orgId, projectId);
         Process process = create(
                 principal.getName(),
-                String.format("Валидация %d слоёв(я) Проекта: %s",
-                        request.getLayers().size(), projectById.getInternalName()),
+                String.format("Валидация %d слоёв(я) Проекта: %s", request.getLayers().size(), projectName),
                 ProcessType.VALIDATION, request);
 
         ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
@@ -74,7 +67,7 @@ public class ValidationService extends BaseProcessService {
             schemaService.getSchemaByName(layerName).ifPresent(featureDescription -> {
                 payload.addFeatureProjections(featureDescription);
                 payload.addResourceProjections(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectById.getGeoserverName(), layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
             });
         });
 
@@ -93,9 +86,15 @@ public class ValidationService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case TASK_ERROR:
-            case TASK_DONE: addSubStep(process, mqResponse);        break;
-            case ERROR:     error(process, mqResponse.getError());  break;
-            case DONE:      complete(process, null);           break;
+            case TASK_DONE:
+                addSubStep(process, mqResponse);
+                break;
+            case ERROR:
+                error(process, mqResponse.getError());
+                break;
+            case DONE:
+                complete(process, null);
+                break;
             default:
                 log.warn("Not supported process status. {}", process);
         }

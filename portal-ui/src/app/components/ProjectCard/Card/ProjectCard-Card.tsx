@@ -21,14 +21,14 @@ interface ProjectCardCardProps {
 
 @observer
 export class ProjectCardCard extends React.Component<ProjectCardCardProps> {
-  @observable private isDeleteDialogOpen: boolean = false;
-  @observable private isDeleteButtonShown: boolean = false;
+  @observable private isDeleteDialogOpen = false;
+  @observable private isDeleteButtonShown = false;
 
   @computed
   private get url (): string {
-    const { layersCount, id } = this.props.project;
+    const { id, layers } = this.props.project;
 
-    return layersCount ? `/projects/${id}/map` : `/projects/${id}/import`;
+    return layers.length ? `/projects/${id}/map` : `/projects/${id}/import`;
   }
 
   async componentDidMount () {
@@ -56,10 +56,10 @@ export class ProjectCardCard extends React.Component<ProjectCardCardProps> {
               <DeleteIcon className={cnProjectCard('Delete')} onClick={this.openDeleteDialog} /> :
               null}
           <div className={cnProjectCard('Name')}>
-            {project.internalName}
+            {project.name}
           </div>
           <div className={cnProjectCard('Info')}>
-            Слоев загружено: {project.layersCount}
+            Слоев загружено: {project.layers.length}
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export class ProjectCardCard extends React.Component<ProjectCardCardProps> {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.deleteProject} color="primary" variant='outlined'>
+            <Button onClick={this.deleteProject} color='primary' variant='outlined'>
               Ok
             </Button>
             <Button onClick={this.closeDeleteDialog} variant='outlined'>

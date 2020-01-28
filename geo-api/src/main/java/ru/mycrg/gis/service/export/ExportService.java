@@ -4,14 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.gis.dto.*;
+import ru.mycrg.gis.dto.DetailsModel;
+import ru.mycrg.gis.dto.ExportRequestModel;
+import ru.mycrg.gis.dto.TaskModel;
+import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.exceptions.ConflictException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.gis.service.data_schema.MapperUtil;
@@ -35,34 +36,28 @@ public class ExportService extends BaseProcessService {
 
     private final MqSender mqSender;
     private final DataSchemaService schemaService;
-    private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     public ExportService(MqSender mqSender,
                          DataSchemaService schemaService,
                          ProcessRepository processRepository,
-                         ProjectService projectService,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
         this.schemaService = schemaService;
-        this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process export(Long projectId, ExportRequestModel request, Principal principal) {
+    public Process export(String projectName, ExportRequestModel request, Principal principal) {
         long orgId = getOrganizationId(principal);
-
-        Project project = projectService.getProject(orgId, projectId);
 
         if (request.getFormat() != null && !request.getFormat().equals("ESRI Shapefile")) {
             throw new ConflictException("Формат: " + request.getFormat() + ", не поддерживается");
         }
 
         Process process = create(principal.getName(),
-                String.format("Экспорт. Проект: %s. Кол-во слоев: %d", project.getInternalName(),
-                        request.getLayers().size()),
+                String.format("Экспорт. Проект: %s. Кол-во слоев: %d", projectName, request.getLayers().size()),
                 ProcessType.EXPORT, request);
 
         MqExportProcessRequest payload = new MqExportProcessRequest();
@@ -73,7 +68,7 @@ public class ExportService extends BaseProcessService {
             schemaService.getSchemaByName(layerName).ifPresent(featureDescription -> {
                 payload.addRule(featureDescription);
                 payload.addResource(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, project.getGeoserverName(), layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
             });
         });
 

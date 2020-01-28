@@ -199,7 +199,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   }
 
   private async batchUpdateFeatures(featuresId: string[], newProperties: {}) {
-    const { geoserverName } = await this.projectsService.getCurrent();
+    const { internalName } = await this.projectsService.getCurrent();
     const { tableName } = this.featureDescription;
 
     const batchModel = new BatchModel(featuresId);
@@ -208,7 +208,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
     from(batchModel.batches)
       .pipe(
         concatMap(features => this.transformFeatureService
-                                         .updateFeatures(features, geoserverName, tableName, newProperties)),
+                                         .updateFeatures(features, internalName, tableName, newProperties)),
         takeUntil(this.unsubscribe$)
       ).subscribe(() => {
         i++;

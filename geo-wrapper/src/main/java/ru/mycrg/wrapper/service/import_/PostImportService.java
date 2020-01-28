@@ -109,6 +109,11 @@ public class PostImportService extends AbstractImportChainItem {
         batch.forEach(item -> {
             HashMap<String, Object> params = new HashMap<>();
 
+            if (fDescription.getCalcFiledFunction() != null) {
+                Object functionResult = scriptEngine.invokeFunction(item, fDescription.getCalcFiledFunction());
+                ((Map<String, Object>) functionResult).forEach((k, v) -> item.put(k, v.toString()));
+            }
+
             item.forEach((key, value) -> {
                 // Добавим чтобы опираться не него при вставке
                 if (PRIMARY_KEY.equals(key)) {
@@ -119,12 +124,6 @@ public class PostImportService extends AbstractImportChainItem {
                     if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
                         params.put(key, UUID.randomUUID());
                     }
-                } else if (RULE_ID.equals(key) && fDescription.getCalcFiledFunction() != null) {
-                    // вычисляем ruleid
-                    Map<String, String> data = (Map<String, String>) scriptEngine.invokeFunction(item,
-                            fDescription.getCalcFiledFunction());
-
-                    params.put(key, data.get(RULE_ID));
                 } else {
                     // Декодируем строковые атрибуты
                     if (value instanceof String) {

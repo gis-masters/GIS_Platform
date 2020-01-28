@@ -23,6 +23,7 @@ export GEOSERVER_TAG=${GEOSERVER_TAG:-v2.16_jwt}
 
 export CRG_REGISTRY_TAG=${CRG_REGISTRY_TAG:-latest}
 export CRG_AUTH_TAG=${CRG_AUTH_TAG:-latest}
+export CRG_GIS_SERVICE_TAG=${CRG_GIS_SERVICE_TAG:-latest}
 export CRG_GATEWAY_TAG=${CRG_GATEWAY_TAG:-latest}
 export CRG_API_TAG=${CRG_API_TAG:-latest}
 export CRG_WRAPPER_TAG=${CRG_WRAPPER_TAG:-latest}

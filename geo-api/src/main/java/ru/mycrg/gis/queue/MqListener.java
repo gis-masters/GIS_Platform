@@ -18,7 +18,6 @@ public class MqListener {
     }
 
     @RabbitListener(queues = {
-            QUEUE_PROJECT_RESPONSE,
             QUEUE_VALIDATION_RESULT,
             QUEUE_IMPORT_RESPONSE,
             QUEUE_GML_RESPONSE

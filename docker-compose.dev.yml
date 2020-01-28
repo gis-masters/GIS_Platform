@@ -10,6 +10,9 @@ services:
     ports:
       - 9000:9000
 
+  gis-service:
+    build: gis-service
+
   geo-api:
     build: geo-api
     ports:

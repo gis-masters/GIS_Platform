@@ -1,13 +1,10 @@
 package ru.mycrg.geoserver_client.services.rule;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 import java.util.HashMap;
@@ -18,8 +15,6 @@ import static ru.mycrg.geoserver_client.GeoserverClient.XML_MEDIA_TYPE;
 
 public class RulesService extends GeoServerBaseService {
 
-    private static final Logger log = LoggerFactory.getLogger(RulesService.class);
-
     /**
      * Добавить правило доступа роли к определенному ресурсу.
      * Вставляет правило если таковое отсутствует или добавляет роль к уже существующему ресурсу.
@@ -28,8 +23,6 @@ public class RulesService extends GeoServerBaseService {
      * @param role Роль
      */
     public void addLayersRule(String rule, String role) throws Exception {
-        log.debug("addLayersRule: Rule: {} Role: {}", rule, role);
-
         Request getLayersRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
@@ -38,7 +31,7 @@ public class RulesService extends GeoServerBaseService {
 
         Response response = httpClient.newCall(getLayersRoles).execute();
         if (response.isSuccessful()) {
-            Map<String, String> oldRules = new ObjectMapper().readValue(response.body().string(), HashMap.class);
+            Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
             String valueByKey = oldRules.get("scratch_workspace.*.a");
             if (valueByKey != null) {
                 valueByKey = valueByKey + "," + role;
@@ -64,8 +57,6 @@ public class RulesService extends GeoServerBaseService {
      * @param role Наименование роли
      */
     public void addRestRule(String role) throws Exception {
-        log.info("addRestRule for Role: {}", role);
-
         Request getRestRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
@@ -75,7 +66,7 @@ public class RulesService extends GeoServerBaseService {
         Response response = httpClient.newCall(getRestRoles).execute();
         if (response.isSuccessful()) {
 
-            Map<String, String> oldRules = new ObjectMapper().readValue(response.body().string(), HashMap.class);
+            Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
             Map<String, String> newRules = insertNewRole(oldRules, role, null);
 
             updateRestRoles(newRules);
@@ -91,8 +82,6 @@ public class RulesService extends GeoServerBaseService {
      * @param role        Наименование роли
      */
     public void addServiceRule(ServiceKeys serviceKeys, String role) throws Exception {
-        log.info("add role {} for service: {}", role, serviceKeys);
-
         Request getServiceRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/services")
@@ -103,7 +92,7 @@ public class RulesService extends GeoServerBaseService {
         if (response.isSuccessful()) {
             Map<String, String> newRules = new HashMap<>();
 
-            Map<String, String> oldRules = new ObjectMapper().readValue(response.body().string(), HashMap.class);
+            Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
             String serviceRoles = oldRules.get(serviceKeys.getRuleKey());
             if (serviceRoles != null) {
                 serviceRoles = serviceRoles + "," + role;

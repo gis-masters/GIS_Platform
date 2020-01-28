@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { observable, action } from 'mobx';
-import { observer } from 'mobx-react';
+import {action, observable} from 'mobx';
+import {observer} from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
-import { cn } from '@bem-react/classname';
+import {cn} from '@bem-react/classname';
 
-import { services } from '../../../services/services';
-import { projectsList } from '../../../stores/ProjectsList.store';
-import { Button } from '../../Button/Button';
-import { Loading } from '../../Loading/Loading';
+import {services} from '../../../services/services';
+import {Button} from '../../Button/Button';
+import {Loading} from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Form.scss';
 
@@ -28,9 +27,8 @@ export class ProjectCardForm extends React.Component<ProjectCardFormProps> {
   constructor (props: ProjectCardFormProps) {
     super(props);
 
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.checkStatus = this.checkStatus.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   render () {
@@ -84,12 +82,20 @@ export class ProjectCardForm extends React.Component<ProjectCardFormProps> {
 
   private async handleSubmit (e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (this.busy) {
+      return;
+    }
+
     this.setError('');
     this.setBusy(true);
 
     try {
       await services.projectsService.create(this.newProjectName);
-      this.checkStatus();
+      await services.projectsService.fetchProjects();
+
+      this.setBusy(false);
+      this.props.onCancel();
     } catch (err) {
       this.setBusy(false);
       if (err.error.status === 409) {
@@ -97,14 +103,6 @@ export class ProjectCardForm extends React.Component<ProjectCardFormProps> {
       } else {
         this.setError('Ошибка при создании проекта');
       }
-    }
-  }
-
-  private async checkStatus () {
-    await services.projectsService.fetchProjects();
-
-    if (projectsList.isSomePending) {
-      window.setTimeout(this.checkStatus, 500);
     }
   }
 }

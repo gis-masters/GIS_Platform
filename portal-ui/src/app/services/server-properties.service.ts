@@ -13,6 +13,8 @@ export class ServerPropertiesService {
   private _baseUrl: string;
   private _geoServerUrl: string;
   private _authServerUrl: string;
+  private _projectsUrl: string;
+  private _apiUrl: string;
   private _organizationsUrl: string;
   private _usersUrl: string;
   private _schemaUrl: string;
@@ -100,6 +102,18 @@ export class ServerPropertiesService {
     });
   }
 
+  get projectsUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._projectsUrl;
+    });
+  }
+
+  get apiUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._apiUrl;
+    });
+  }
+
   private async waitEnv (): Promise<void> {
     const environment = await getEnvironment();
 
@@ -109,6 +123,8 @@ export class ServerPropertiesService {
     this._baseUrl = this._host + ':' + this._port;
     this._geoServerUrl = this._baseUrl + '/geoserver';
     this._authServerUrl = this._baseUrl + '/oauth/token';
+    this._projectsUrl = this._baseUrl + '/projects';
+    this._apiUrl = this._baseUrl + '/api';
     this._organizationsUrl = this._baseUrl + '/organizations';
     this._usersUrl = this._baseUrl + '/users';
     this._schemaUrl = this._baseUrl + '/schema';

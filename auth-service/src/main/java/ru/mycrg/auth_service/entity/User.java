@@ -51,10 +51,10 @@ public class User implements Identifiable<Long> {
     private Set<Organization> organizations = new HashSet<>();
 
     @Column(name = "created_at")
-    public @LastModifiedDate LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "last_modified")
-    public @LastModifiedDate LocalDateTime lastModified = LocalDateTime.now();
+    private @LastModifiedDate LocalDateTime lastModified;
 
     public User() {}
 
@@ -65,6 +65,7 @@ public class User implements Identifiable<Long> {
         this.email = email;
         this.enabled = false;
         this.createdAt = LocalDateTime.now();
+        this.lastModified = LocalDateTime.now();
     }
 
     @Override

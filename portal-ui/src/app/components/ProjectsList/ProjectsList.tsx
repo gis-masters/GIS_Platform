@@ -9,13 +9,14 @@ import { getEnvironment } from '../../services/environment';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 
 import '!style-loader!css-loader!sass-loader!./ProjectsList.scss';
+import {ProjectsListLoader} from './Loader/ProjectsList-Loader';
 
 const cnProjectsList = cn('ProjectsList');
 
 @observer
 export class ProjectsList extends React.Component<{}> {
   @observable
-  private isCreationEnabled: boolean = false;
+  private isCreationEnabled = false;
 
   async componentDidMount () {
     const { platform } = await getEnvironment();
@@ -25,18 +26,18 @@ export class ProjectsList extends React.Component<{}> {
     await services.provided;
     const { dataSchemaService, projectsService } = services;
     dataSchemaService.getFeaturesSchemas().subscribe();
-    projectsService.fetchProjects();
+    await projectsService.fetchProjects();
   }
 
   render () {
     return (
       <div className={cnProjectsList()}>
-        {!projectsList.isLoaded ? <ProjectCard className={cnProjectsList('Card')} typ='loader' /> : (
+        {!projectsList.isLoaded ? <ProjectsListLoader /> : (
           <>
             {projectsList.list.map((project, i) => (
               <ProjectCard className={cnProjectsList('Card')} project={project} typ='card' key={i} />
             ))}
-            {this.isCreationEnabled && !projectsList.isSomePending ?
+            {this.isCreationEnabled ?
                 <ProjectCard className={cnProjectsList('Card')} typ='add' /> :
                 null}
           </>

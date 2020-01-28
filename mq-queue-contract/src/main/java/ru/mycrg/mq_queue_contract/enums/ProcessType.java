@@ -5,8 +5,6 @@ package ru.mycrg.mq_queue_contract.enums;
  */
 public enum ProcessType {
     CREATE_ORG,
-    CREATE_PROJECT,
-    DELETE_PROJECT,
 
     IMPORT,
     VALIDATION,

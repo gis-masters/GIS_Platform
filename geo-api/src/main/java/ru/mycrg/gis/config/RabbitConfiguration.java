@@ -29,20 +29,6 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueImportResponse()).to(fanoutExchangeImportResponse());
     }
 
-    // Config "project request" exchange/queue
-    @Bean public Queue queueProjectRequest() { return new Queue(QUEUE_PROJECT_REQUEST, false);}
-    @Bean public FanoutExchange fanoutExchangeProjectRequest() { return new FanoutExchange(FANOUT_PROJECT_REQUEST);}
-    @Bean public Binding bindingProjectRequest() {
-        return BindingBuilder.bind(queueProjectRequest()).to(fanoutExchangeProjectRequest());
-    }
-
-    // Config "project response" exchange/queue
-    @Bean public Queue queueProjectResponse() { return new Queue(QUEUE_PROJECT_RESPONSE, false);}
-    @Bean public FanoutExchange fanoutExchangeProjectResponse() { return new FanoutExchange(FANOUT_PROJECT_RESPONSE);}
-    @Bean public Binding bindingProjectResponse() {
-        return BindingBuilder.bind(queueProjectResponse()).to(fanoutExchangeProjectResponse());
-    }
-
     // Config "validation start" exchange/queue
     @Bean public Queue queueStartValidation() { return new Queue(QUEUE_VALIDATION_START, false);}
     @Bean public FanoutExchange fanoutExchangeValidationStart() { return new FanoutExchange(FANOUT_VALIDATION_START);}

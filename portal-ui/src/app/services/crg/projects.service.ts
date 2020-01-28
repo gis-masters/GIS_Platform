@@ -28,7 +28,7 @@ export class ProjectsService {
               private serverProp: ServerPropertiesService) { }
 
   async fetchProjects() {
-    const url = `${await this.serverProp.baseUrl}/projects`;
+    const url = await this.serverProp.projectsUrl;
 
     const response = await this.httpq.get<CrgApiResponse>(url);
     let projectsWithLayers: Project[] = [];
@@ -40,13 +40,13 @@ export class ProjectsService {
   }
 
   async getById(id: string): Promise<Project> {
-    const url = `${await this.serverProp.baseUrl}/projects/${id}`;
+    const url = `${await this.serverProp.projectsUrl}/${id}`;
 
     return this.httpq.get<Project>(url);
   }
 
   async create(name: string): Promise<Process> {
-    const url = `${await this.serverProp.baseUrl}/projects`;
+    const url = await this.serverProp.projectsUrl;
 
     const payload = {
       'projectName': name
@@ -56,7 +56,7 @@ export class ProjectsService {
   }
 
   async delete(id: string) {
-    const url = `${await this.serverProp.baseUrl}/projects/${id}`;
+    const url = `${await this.serverProp.projectsUrl}/${id}`;
     await this.httpq.delete(url);
     projectsList.considerDeleted(id);
   }
@@ -66,8 +66,8 @@ export class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  async doWorkImport(tasks: TaskImport[], projectId: string, workspaceName: string): Promise<Process> {
-    const url = `${await this.serverProp.baseUrl}/projects/${projectId}/import`;
+  async doWorkImport(tasks: TaskImport[], internalName: string, workspaceName: string): Promise<Process> {
+    const url = `${await this.serverProp.apiUrl}/${internalName}/import`;
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workspaceName,
@@ -106,7 +106,7 @@ export class ProjectsService {
       .getAllLayers()
       .pipe(
         map((layers: NameHrefProjection[]) => {
-          projects.forEach((project: Project) => project.layersCount = this.countLayers(project, layers));
+          projects.forEach((project: Project) => project.layers.length = this.countLayers(project, layers));
 
           return projects;
         }),
@@ -122,7 +122,7 @@ export class ProjectsService {
     layers.forEach((layer: NameHrefProjection) => {
       const projectName = layer.name.split(':')[0];
       if (projectName) {
-        if (project.geoserverName === projectName) {
+        if (project.internalName === projectName) {
           counter++;
         }
       } else {

@@ -26,8 +26,6 @@ public class MqSender {
 
     public void send(BaseMqProcessResponse mqResponse) {
         switch (mqResponse.getType()) {
-            case CREATE_PROJECT:
-            case DELETE_PROJECT:    send(FANOUT_PROJECT_RESPONSE, KEY_PROJECT_RESPONSE, mqResponse);    break;
             case IMPORT:            send(FANOUT_IMPORT_RESPONSE, KEY_IMPORT_RESPONSE, mqResponse);      break;
             case VALIDATION:        send(FANOUT_VALIDATION_RESULT, KEY_VALIDATION_RESULT, mqResponse);  break;
             case EXPORT:            send(FANOUT_GML_RESPONSE, KEY_IMPORT_RESPONSE, mqResponse);         break;

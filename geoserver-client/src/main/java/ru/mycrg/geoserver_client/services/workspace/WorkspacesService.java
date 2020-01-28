@@ -10,8 +10,6 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 public class WorkspacesService extends GeoServerBaseService {
 
     public void createWorkspace(String name) throws Exception {
-        log.debug("create workspace: {}", name);
-
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\"workspace\": {\"name\": \"" + name + "\"}}");
 
         Request request = new Request.Builder()
@@ -24,8 +22,6 @@ public class WorkspacesService extends GeoServerBaseService {
     }
 
     public void deleteWorkspace(@NotNull String name) throws Exception {
-        log.debug("delete workspace: {}", name);
-
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/workspaces/" + name + "?recurse=true")

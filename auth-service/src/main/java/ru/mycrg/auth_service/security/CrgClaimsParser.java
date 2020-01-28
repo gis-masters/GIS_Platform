@@ -20,11 +20,11 @@ public class CrgClaimsParser {
     private static final String CLAIM_ORGANIZATIONS = "organizations";
 
     public static boolean isRoot(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.ROOT);
+        return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
     }
 
     public static boolean isGeoserverAdmin(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.GEOSERVER_ADMIN);
+        return isUserHasAuthority(authentication, Authorities.ORG_ADMIN);
     }
 
     private static boolean isUserHasAuthority(Authentication authentication, String authority) {

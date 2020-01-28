@@ -1,22 +1,25 @@
-import { observable, computed, action } from 'mobx';
+import {action, computed, observable} from 'mobx';
 
-import { ProcessStatus } from '../services/crg/models';
+export interface Layer {
+  id: string;
+  title: string;
+  internalName: string;
+  order: number;
+  geometryType: string;
+}
 
 export interface Project {
   id: string;
-  geoserverName: string;
+  name: string;
   internalName: string;
-  databaseName?: string;
-  storeName?: string;
-  href?: string;
-  type?: string;
-  layersCount?: number;
-  status?: ProcessStatus;
+  bbox: string;
+  order: number;
+  organizationId: number;
+  layers: Layer[];
+  createdAt: string;
 }
 
 class ProjectsList {
-  @observable private _list?: Project[];
-  @observable private deleted: string[] = [];
 
   @computed
   get list (): Project[] {
@@ -28,10 +31,15 @@ class ProjectsList {
     return Boolean(this._list);
   }
 
-  @computed
-  get isSomePending () {
-    return this.list.some((p) => p.status === ProcessStatus.PENDING);
+  private constructor() { }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
   }
+
+  private static _instance: ProjectsList;
+  @observable private _list?: Project[];
+  @observable private deleted: string[] = [];
 
   @action
   setList (list: Project[]) {
@@ -41,14 +49,6 @@ class ProjectsList {
   @action
   considerDeleted(id: string) {
     this.deleted.push(id);
-  }
-
-  private static _instance: ProjectsList;
-
-  private constructor() { }
-
-  public static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 

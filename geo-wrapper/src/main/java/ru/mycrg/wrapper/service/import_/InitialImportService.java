@@ -9,6 +9,7 @@ import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.import_.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
+import ru.mycrg.wrapper.dao.CrgDaoSchemas;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
 
@@ -30,11 +31,14 @@ public class InitialImportService extends AbstractImportChainItem {
     private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
+    private final CrgDaoSchemas daoSchemas;
 
     public InitialImportService(BaseDaoService baseDaoService,
+                                CrgDaoSchemas daoSchemas,
                                 MqSender mqSender,
                                 DatasourceFactory datasourceFactory) {
         this.mqSender = mqSender;
+        this.daoSchemas = daoSchemas;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
@@ -46,7 +50,7 @@ public class InitialImportService extends AbstractImportChainItem {
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
-        log.debug("Start first stage of import. From: {} to: {}", importTask.printSource(), importTask.printTarget());
+        log.debug("=== Start first stage. Import. From: {} to: {}", importTask.printSource(), importTask.printTarget());
 
         try {
             String sourceDbName = importTask.getSourceResource().getDbName();
@@ -66,6 +70,7 @@ public class InitialImportService extends AbstractImportChainItem {
                 mapping.add(ruleIdMapping);
             }
 
+            daoSchemas.create(jdbcTemplate, targetSchemaName);
             baseDaoService.delete(jdbcTemplate, targetResource);
             baseDaoService.createTable(jdbcTemplate, importTask);
 
@@ -92,7 +97,7 @@ public class InitialImportService extends AbstractImportChainItem {
 
     @Override
     public void rollback(ImportMqTask importTask) {
-        log.warn("Do rollback of import feature: {}", importTask.getFeatureDescription().getName());
+        log.warn("Rollback. Initial import: {}", importTask.getFeatureDescription().getName());
 
         String sourceDbName = importTask.getSourceResource().getDbName();
         String targetTableName = importTask.getTargetResource().getTableName();
@@ -107,7 +112,7 @@ public class InitialImportService extends AbstractImportChainItem {
     private boolean ruleIdNotExist(List<MatchingPair> pairs) {
         return pairs
                 .stream()
-                .noneMatch(pair -> RULE_ID.equals(pair.getSource().getName().toLowerCase()));
+                .noneMatch(pair -> RULE_ID.equalsIgnoreCase(pair.getSource().getName()));
     }
 
 }

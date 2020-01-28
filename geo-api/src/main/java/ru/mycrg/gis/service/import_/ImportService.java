@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.entity.Project;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.CrgAuthHelper;
-import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
@@ -38,30 +36,24 @@ public class ImportService extends BaseProcessService {
 
     private final DataSchemaService schemaService;
     private final MqSender mqSender;
-    private final ProjectService projectService;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
                          DataSchemaService schemaService,
-                         ProjectService projectService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
         this.schemaService = schemaService;
-        this.projectService = projectService;
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process initProcess(Long projectId, WorkImport workImport, Principal principal) {
+    public Process initProcess(String projectName, WorkImport workImport, Principal principal) {
         long orgId = getOrganizationId(principal);
 
-        Project project = projectService.getProject(orgId, projectId);
-
         Process process = create(principal.getName(),
-                String.format("Импорт %d слоя(ёв) в проект: %s",
-                        workImport.getImportTasks().size(), project.getInternalName()),
+                String.format("Импорт %d слоя(ёв) в проект: %s", workImport.getImportTasks().size(), projectName),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
@@ -86,7 +78,7 @@ public class ImportService extends BaseProcessService {
                     new ResourceProjection(dbName, "public", uiTask.getLayerName()),
                     new ResourceProjection(
                             dbName,
-                            project.getGeoserverName(),
+                            projectName,
                             featureDescription.getTableName()),
                     uiTask.getPairs(),
                     uiTask.getSrs(),

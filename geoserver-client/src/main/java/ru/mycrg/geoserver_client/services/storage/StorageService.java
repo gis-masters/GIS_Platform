@@ -2,6 +2,8 @@ package ru.mycrg.geoserver_client.services.storage;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
@@ -9,9 +11,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 public class StorageService extends GeoServerBaseService {
 
     public void createStorage(final String databaseName, final String schemaName,
-                              final String workspaceName, final String dataStoreName) throws Exception {
-        log.debug("create storage: {}", dataStoreName);
-
+                              final String workspaceName, final String dataStoreName) throws GeoserverClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\n" +
                 "\t\"dataStore\": {\n" +
                 "\t\t\"name\": \"" + dataStoreName + "\",\n" +
@@ -36,4 +36,38 @@ public class StorageService extends GeoServerBaseService {
         doRequest(request, "createDataStore");
     }
 
+    public DataStores getStores(final String workspaceName) throws GeoserverClientException {
+        Request getStores = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+                .url(getGeoserverRestUrl() + "/workspaces/" + workspaceName + "/datastores")
+                .get()
+                .build();
+
+        try (Response response = httpClient.newCall(getStores).execute()) {
+            return getDataFromResponse(response);
+        } catch (Exception e) {
+            throw new GeoserverClientException("Geoserver error", e.getMessage());
+        }
+    }
+
+    private DataStores getDataFromResponse(Response response) {
+        DataStores dataStores = new DataStores();
+        try {
+            return mapper
+                    .readValue(response.body().string(), DataStoreResponse.class)
+                    .getDataStores();
+        } catch (Exception e) {
+            return dataStores;
+        }
+    }
+
+    public void deleteStorage(final String workspaceName, final String dataStoreName) throws GeoserverClientException {
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+                .url(getGeoserverRestUrl() + "/workspaces/" + workspaceName + "/datastores/" + dataStoreName + "?recurse=true")
+                .delete()
+                .build();
+
+        doRequest(request, "createDataStore");
+    }
 }

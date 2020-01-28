@@ -3,7 +3,6 @@ package ru.mycrg.gis.queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.gis.service.ProjectService;
 import ru.mycrg.gis.service.export.ExportService;
 import ru.mycrg.gis.service.import_.ImportService;
 import ru.mycrg.gis.service.validation.ValidationService;
@@ -22,16 +21,13 @@ public class EventDispatcher {
     private final ValidationService validationService;
     private final ImportService importService;
     private final ExportService exportService;
-    private final ProjectService projectService;
 
     public EventDispatcher(ValidationService validationService,
                            ImportService importService,
-                           ExportService exportService,
-                           ProjectService projectService) {
+                           ExportService exportService) {
         this.validationService = validationService;
         this.importService = importService;
         this.exportService = exportService;
-        this.projectService = projectService;
     }
 
     public void handleEvent(BaseMqProcessResponse mqResponse) {
@@ -45,8 +41,6 @@ public class EventDispatcher {
 
     private Processable getHandler(ProcessType type) throws Exception {
         switch (type) {
-            case CREATE_PROJECT:
-            case DELETE_PROJECT:    return projectService;
             case IMPORT:            return importService;
             case EXPORT:            return exportService;
             case VALIDATION:        return validationService;

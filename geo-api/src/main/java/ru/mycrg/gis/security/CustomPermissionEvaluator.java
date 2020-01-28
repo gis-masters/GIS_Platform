@@ -7,7 +7,6 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.service.ProcessService;
-import ru.mycrg.gis.service.ProjectService;
 
 import java.io.Serializable;
 
@@ -21,9 +20,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private ProcessService processService;
 
-    @Autowired
-    private ProjectService projectService;
-
     @Override
     public boolean hasPermission(Authentication authentication, Object targetEndpoint, Object id) {
         String userName = authentication.getName();
@@ -32,8 +28,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         if ("processes".equals(targetEndpoint)) {
             return processService.isUserOwnProcess(userName, (Long) id);
-        } else if ("projects".equals(targetEndpoint)) {
-            return projectService.isProjectAllowedForUser(getOrganizationId(authentication), (Long) id);
         } else {
             return false;
         }

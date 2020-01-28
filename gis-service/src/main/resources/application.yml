@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: fiz-dev
+logging:
+  file: /opt/logs/gis-service.log
+  level:
+    ru.mycrg: DEBUG
+
+---
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
+    username: fiz
+    password: 314
+  jpa:
+    properties:
+      hibernate.temp.use_jdbc_metadata_defaults: false
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
+    user: fiz
+    password: 314
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
+
+crg-options:
+  client-id: admin
+  client-secret: geoserver
+
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver
+
+  auth-service-url: http://127.0.0.1:9000
+  geoserver-host: 127.0.0.1:8080
+  userServiceName: postgres_db_user_service
+server:
+  port: 8082

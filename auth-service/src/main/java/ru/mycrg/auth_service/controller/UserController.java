@@ -23,6 +23,7 @@ import java.net.URI;
 import java.security.Principal;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
 
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GEOSERVER_ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<?> getUsers(Pageable pageable, Authentication authentication) {
 
         Page<User> users = userService.findAll(pageable, authentication);
@@ -62,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GEOSERVER_ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public Resource<User> getUserById(@PathVariable Long id, Authentication authentication) {
 
         User user = userService.findById(id, authentication);
@@ -74,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GEOSERVER_ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity createUser(@Valid @RequestBody UserCreateDto userCreateDto,
                                      @RequestParam(name = "orgId", required = false) Long orgId,
                                      Authentication authentication) {
@@ -104,7 +105,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'GEOSERVER_ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public HttpStatus deleteUser(@PathVariable Long id, Authentication authentication) {
         userService.delete(id, authentication);
 

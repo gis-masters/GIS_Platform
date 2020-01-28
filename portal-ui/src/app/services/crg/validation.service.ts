@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 
-import { getRoute } from '../services';
 import { HttpQueue } from '../util/HttpQueue';
 import { ValidationError } from '../util/FeaturePropertyValidators';
 import { ValidationWsMsg, WsService } from '../ws.service';
@@ -9,6 +8,7 @@ import { ServerPropertiesService } from '../server-properties.service';
 import { CrgLayer } from '../geoserver/layers.service';
 import { LocalStorageService } from '../local-storage.service';
 import { ProcessStatus } from './models';
+import { ProjectsService } from './projects.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class ValidationService {
 
   constructor(private httpq: HttpQueue,
               private wsService: WsService,
+              private projectsService: ProjectsService,
               private storageService: LocalStorageService,
               private serverProp: ServerPropertiesService) { }
 
@@ -32,8 +33,8 @@ export class ValidationService {
       layers: layerNames
     };
 
-    const projectId = getRoute().snapshot.params.projectId;
-    const url = (await this.serverProp.baseUrl) + '/projects/' + projectId + '/validation';
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation';
 
     return this.httpq
                .post<ValidationWsMsg>(url, JSON.stringify(payload),
@@ -51,8 +52,8 @@ export class ValidationService {
       .set('size', page ? String(size) : '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
-    const projectId = getRoute().snapshot.params.projectId;
-    const url = (await this.serverProp.baseUrl) + '/projects/' + projectId + '/validation';
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation';
 
     return this.httpq
                .get<ValidationResultsResponse>(url,
@@ -71,9 +72,8 @@ export class ValidationService {
       layers: layerNames
     };
 
-    const projectId = getRoute().snapshot.params.projectId;
-    const baseUrl = await this.serverProp.baseUrl;
-    const url = baseUrl + '/projects/' + projectId + '/validation/short';
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation/short';
 
     return this.httpq
                .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),

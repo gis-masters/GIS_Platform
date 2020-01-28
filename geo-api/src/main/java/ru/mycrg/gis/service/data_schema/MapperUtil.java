@@ -18,7 +18,6 @@ public class MapperUtil {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-
     public static SchemaDto mapXsdRuleToFeatureDescriptionNew(FeatureDescription featureDescription) {
         try {
             JsonNode classRule = featureDescription.getClassRule();
@@ -40,10 +39,9 @@ public class MapperUtil {
         }
     }
 
-
     @Nullable
     static private String getJsonString(Object classType) throws JsonProcessingException {
-        return new ObjectMapper().writer()
+        return mapper.writer()
                 .withDefaultPrettyPrinter()
                 .writeValueAsString(classType);
     }

@@ -13,7 +13,7 @@ import ru.mycrg.wrapper.dao.DatasourceFactory;
 @Service
 public class ScratchImportCleaner extends AbstractImportChainItem {
 
-    private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
+    private static final Logger log = LoggerFactory.getLogger(ScratchImportCleaner.class);
 
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;

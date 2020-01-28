@@ -2,15 +2,6 @@ package ru.mycrg.mq_queue_contract.config;
 
 public class MqProperties {
 
-    // Проекты
-    public static final String FANOUT_PROJECT_REQUEST = "fanout.project.request";
-    public static final String QUEUE_PROJECT_REQUEST = "project.request";
-    public static final String KEY_PROJECT_REQUEST = "key.project.request";
-
-    public static final String FANOUT_PROJECT_RESPONSE = "fanout.project.response";
-    public static final String QUEUE_PROJECT_RESPONSE = "project.response";
-    public static final String KEY_PROJECT_RESPONSE = "key.project.response";
-
     // Валидация
     public static final String FANOUT_VALIDATION_START = "fanout.validation.start";
     public static final String QUEUE_VALIDATION_START = "validation.start";

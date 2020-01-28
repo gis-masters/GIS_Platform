@@ -86,6 +86,42 @@ services:
         max-size: "10m"
         max-file: "10"
 
+  gis-service:
+    container_name: crg-gis-service
+    image: $DOCKER_CRG_HOST/crg-gis-service:$CRG_GIS_SERVICE_TAG
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_gis_service
+      SPRING_DATASOURCE_USERNAME: $CRG_USER
+      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_gis_service
+      SPRING_FLYWAY_USER: $CRG_USER
+      SPRING_FLYWAY_PASSWORD: $DB_PASS
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: $CRG_USER
+      SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+
+      CRG_OPTIONS_CLIENT_ID: admin
+      CRG_OPTIONS_CLIENT_SECRET: geoserver
+
+      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
+      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
+
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
+      CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
+    volumes:
+      - /opt/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
   gateway:
     container_name: crg-gateway
     image: $DOCKER_CRG_HOST/crg-gateway:$CRG_GATEWAY_TAG

@@ -1,0 +1,30 @@
+package ru.mycrg.gis_service.dto;
+
+import org.springframework.data.rest.core.config.Projection;
+import ru.mycrg.gis_service.entity.Project;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Projection(
+        name = "projectProjection",
+        types = { Project.class })
+public interface ProjectProjection {
+
+    Long getId();
+
+    String getName();
+
+    String getInternalName();
+
+    long getOrganizationId();
+
+    String getBbox();
+
+    LocalDateTime getCreatedAt();
+
+    LocalDateTime getLastModified();
+
+    List<LayerProjection> getLayers();
+
+}

@@ -2,6 +2,9 @@ package ru.mycrg.gis.service.import_;
 
 import ru.mycrg.mq_queue_contract.import_.MatchingPair;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -9,10 +12,19 @@ import java.util.List;
  */
 public class ImportTask {
 
+    @NotBlank(message = "Please provide layerName")
     private String layerName;
+
+    @NotBlank(message = "Please provide workTableName")
     private String workTableName;
+
+    @NotEmpty
     private List<MatchingPair> pairs;
+
+    @NotBlank(message = "Please provide srs")
     private Integer srs;
+
+    @NotBlank(message = "Please provide schemaName")
     private String schemaName;
 
     public ImportTask() {}

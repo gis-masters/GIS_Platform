@@ -22,6 +22,4 @@ public class DaoProperties {
 
     public static final String NOT_IMPORT = "NotImport";
 
-    public static final String FromSchema = "FromSchema";
-
 }
