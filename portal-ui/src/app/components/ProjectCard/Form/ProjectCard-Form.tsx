@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
+import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
-import {cn} from '@bem-react/classname';
+import { cn } from '@bem-react/classname';
 
-import {services} from '../../../services/services';
-import {Button} from '../../Button/Button';
-import {Loading} from '../../Loading/Loading';
+import { services } from '../../../services/services';
+import { Button } from '../../Button/Button';
+import { Loading } from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Form.scss';
 

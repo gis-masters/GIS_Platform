@@ -1,20 +1,21 @@
-import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {FormBuilder, FormControl} from '@angular/forms';
-import {ProjectsService} from '../../services/crg/projects.service';
-import {CommunicationService} from '../../services/communication.service';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
-import {from} from 'rxjs';
-import {concatMap, takeUntil} from 'rxjs/operators';
-import {FeaturePropertyValidators, ValueType} from '../../services/util/FeaturePropertyValidators';
-import {getEnvironment} from '../../services/environment';
-import {BaseEdit} from '../edit-bug-object/base-edit';
-import {FeatureUtil} from '../../services/util/FeatureUtil';
-import {Toast} from '../Toast/Toast';
-import {BatchModel} from '../../services/crg/batch-model';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { from } from 'rxjs';
+import { concatMap, takeUntil } from 'rxjs/operators';
+
+import { WfsFeature } from '../../services/geoserver/wfs.service';
+import { ProjectsService } from '../../services/crg/projects.service';
+import { CommunicationService } from '../../services/communication.service';
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { DataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
+import { getEnvironment } from '../../services/environment';
+import { BaseEdit } from '../edit-bug-object/base-edit';
+import { FeatureUtil } from '../../services/util/FeatureUtil';
+import { Toast } from '../Toast/Toast';
+import { BatchModel } from '../../services/crg/batch-model';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича

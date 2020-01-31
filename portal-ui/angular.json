@@ -39,8 +39,8 @@
             ],
 
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/reglaments"
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",

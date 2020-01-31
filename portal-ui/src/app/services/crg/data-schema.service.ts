@@ -64,6 +64,10 @@ export enum Updateability {
   READ_ONLY = 'READ_ONLY'
 }
 
+export enum FieldType {
+  URL = 'url'
+}
+
 export interface EditFeatureItem {
   name: string;
   value: string;
@@ -235,8 +239,8 @@ export class DataSchemaService {
    * в выпадающем списке в таблице с ошибками.
    * @param errorTypes Тип ошибки
    */
-  getErrorsDescription(errorTypes: string[]) {
-    const result = [];
+  getErrorsDescription(errorTypes: string[]): string[] {
+    const result: string[] = [];
 
     errorTypes.forEach(error => {
       if (error === 'enumeration') {

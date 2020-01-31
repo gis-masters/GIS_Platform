@@ -440,7 +440,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
             this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.name)
           );
         }),
-        concatMap(([features, insertResult]) => {
+        concatMap(([features]) => {
           return this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.name);
         }),
         catchError(err => this.handleError(err)),

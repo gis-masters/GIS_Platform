@@ -60,6 +60,7 @@ import {GlobalErrorHandler} from './services/global-error.handler';
 import {WorkImportPreviewComponent} from './components/work-import-preview/work-import-preview.component';
 import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dialog.component';
 import {WorkspaceComponent} from './components/workspace/workspace.component';
+import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 
 import { configure } from 'mobx';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
@@ -103,7 +104,8 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     ServicesProvider,
     WorkImportPreviewComponent,
     AlertDialogComponent,
-    WorkspaceComponent
+    WorkspaceComponent,
+    EditFeatureFieldComponent
   ],
   imports: [
     HttpClientModule,

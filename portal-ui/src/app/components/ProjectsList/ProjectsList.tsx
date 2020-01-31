@@ -8,8 +8,9 @@ import { services } from '../../services/services';
 import { getEnvironment } from '../../services/environment';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 
+import { ProjectsListLoader } from './Loader/ProjectsList-Loader';
+
 import '!style-loader!css-loader!sass-loader!./ProjectsList.scss';
-import {ProjectsListLoader} from './Loader/ProjectsList-Loader';
 
 const cnProjectsList = cn('ProjectsList');
 

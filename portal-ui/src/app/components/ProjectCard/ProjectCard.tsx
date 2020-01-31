@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {cn} from '@bem-react/classname';
+import { cn } from '@bem-react/classname';
 
-import {Project} from '../../stores/ProjectsList.store';
+import { Project } from '../../stores/ProjectsList.store';
 
-import {ProjectCardAdd} from './Add/ProjectCard-Add';
-import {ProjectCardCard} from './Card/ProjectCard-Card';
+import { ProjectCardAdd } from './Add/ProjectCard-Add';
+import { ProjectCardCard } from './Card/ProjectCard-Card';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard.scss';
 

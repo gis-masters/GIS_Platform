@@ -1,20 +1,17 @@
-import {OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {EditFeatureItem, FeatureDescription} from '../../services/crg/data-schema.service';
-import {Subject} from 'rxjs';
-import {FeaturePropertyValidators, ValidationError} from '../../services/util/FeaturePropertyValidators';
+import { OnDestroy } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+
+import { EditFeatureItem, FeatureDescription } from '../../services/crg/data-schema.service';
+import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
 export class BaseEdit implements OnDestroy {
-
   editFeatureForm: FormGroup;
   editFeatureData: EditFeatureItem[] = [];
 
   protected featureDescription: FeatureDescription;
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
-
-  constructor() {
-  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
