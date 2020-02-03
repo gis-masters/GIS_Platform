@@ -1,14 +1,23 @@
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import {Pageable} from '../../services/crg/models';
-import {WfsFeature} from '../../services/geoserver/wfs.service';
-import {DataSchemaService} from '../../services/crg/data-schema.service';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {EditFeatureData, EditFeatureMode} from '../edit-feature/edit-feature.component';
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { Pageable } from '../../services/crg/models';
+import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { CrgLayer } from '../../services/geoserver/layers.service';
 import { getEnvironment } from '../../services/environment';
+
+export interface ViewFeaturesData {
+  features: WfsFeature[];
+  mode: EditFeatureMode;
+  layer?: CrgLayer;
+  isNew?: true;
+}
 
 @Component({
   selector: 'crg-view-features',
@@ -21,6 +30,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  deletedFeaturesIds: string[] = [];
   isEditMode = false;
   isSingleEdit = true;
   isAttributeSidebarOpened = false;
@@ -43,7 +53,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+    this.showFeatures();
 
     this.fillTitles(this.viewFeatures);
 
@@ -75,7 +85,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       if (currentValue && currentValue.features && currentValue.features.length === 1) {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
-        this.viewFeatures = this.data.features.slice(this.pageInfo.pageSize * this.pageInfo.count, this.pageInfo.pageSize);
+        this.showFeatures();
 
         this.fillTitles(this.viewFeatures);
 
@@ -101,7 +111,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   selectFeature(feature: WfsFeature) {
     this.isEditMode = true;
     this.isSingleEdit = true;
-    this.editFeatureData = {feature: feature, mode: EditFeatureMode.single} as EditFeatureData;
+    this.editFeatureData = {
+      feature: feature,
+      mode: EditFeatureMode.single,
+      isNew: this.data.isNew
+    };
   }
 
   highlightFeature(feature: WfsFeature) {
@@ -114,6 +128,14 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
 
+  deleteHandler (id: string) {
+    this.deletedFeaturesIds.push(id);
+    this.showFeatures();
+    if (this.data.features.length === this.deletedFeaturesIds.length) {
+      this.closeMe();
+    }
+  }
+
   editFeatures() {
     if (this.data.features.length === 1) {
       this.selectFeature(this.data.features[0]);
@@ -123,7 +145,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  onPaging(event) {
+  onPaging(event: { pageIndex: number }) {
     const start = this.pageInfo.pageSize * event.pageIndex;
     this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
 
@@ -132,6 +154,13 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   getTitle(feature: WfsFeature): string {
     return this.featureTitles.get(feature.id);
+  }
+
+  private showFeatures(page: number = 0) {
+    const start = this.pageInfo.pageSize * page;
+    this.viewFeatures = this.data.features
+                                 .filter(feature => !this.deletedFeaturesIds.includes(feature.id))
+                                 .slice(start, start + this.pageInfo.pageSize);
   }
 
   private async getEnv () {
@@ -174,10 +203,4 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       this.featureTitles.set(feature.id, title);
     });
   }
-
-}
-
-export interface ViewFeaturesData {
-  features: WfsFeature[];
-  mode: EditFeatureMode;
 }

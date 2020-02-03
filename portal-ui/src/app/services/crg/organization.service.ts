@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 import { Process } from './models';
-import { LocalStorageService } from '../local-storage.service';
 import { HttpQueue } from '../util/HttpQueue';
 
 @Injectable({
@@ -10,13 +9,10 @@ import { HttpQueue } from '../util/HttpQueue';
 })
 export class OrganizationService {
 
-  constructor(private httpq: HttpQueue,
-              private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) { }
+  constructor(private httpq: HttpQueue) { }
 
   async getProcessById(processId: number): Promise<Process> {
-    const orgId = this.storageService.getOrgId();
-    const baseUrl = await this.serverProp.baseUrl;
+    const baseUrl = await serverProperties.baseUrl;
 
     return this.httpq.get<Process>(`${baseUrl}/processes/${processId}`);
   }

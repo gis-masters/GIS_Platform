@@ -2,9 +2,24 @@ import { Injectable } from '@angular/core';
 
 import { HttpQueue } from '../util/HttpQueue';
 import { Process } from './models';
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 import { WsService } from '../ws.service';
 import { ProjectsService } from './projects.service';
+
+export interface ExportGmlRequest {
+  layers: string[];
+  wsUiId?: string;
+  docSchema?: string;
+  format?: string;
+}
+
+export interface ExportGmlResponse {
+  id: string;
+  pathToFile: string;
+  pathToLog: string;
+  status: string;
+  description: string;
+}
 
 export interface ExportGmlRequest {
   layers: string[];
@@ -19,12 +34,11 @@ export interface ExportGmlRequest {
 export class ExportService {
   constructor(private httpq: HttpQueue,
               private wsService: WsService,
-              private projectsService: ProjectsService,
-              private serverProp: ServerPropertiesService ) { }
+              private projectsService: ProjectsService) { }
 
   async export(requestModel: ExportGmlRequest): Promise<Process> {
     const { internalName } = await this.projectsService.getCurrent();
-    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/export';
+    const url = (await serverProperties.apiUrl) + '/' + internalName + '/export';
 
     const payload: ExportGmlRequest = requestModel;
     payload.wsUiId = this.wsService.getId();

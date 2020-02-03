@@ -3,7 +3,6 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
-import { StringUtil } from '../../../services/util/StringUtil';
 import { CrgLayer } from '../../../services/geoserver/layers.service';
 import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
 import { CommunicationService, ObjectDto } from '../../../services/communication.service';

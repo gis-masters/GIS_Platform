@@ -1,9 +1,10 @@
-import * as _ from 'lodash';
-import {ValueType} from './FeaturePropertyValidators';
-import {FeatureDescription, PropertySchema} from '../crg/data-schema.service';
-import {CrgRootGeometry, GeometryItem} from './crg-root-geometry';
-import {ImportLayerItem, LayerAttribute} from '../geoserver/import/models';
-import {AS_IS, NOT_IMPORT} from '../crg/models';
+import { sortBy } from 'lodash';
+
+import { ValueType } from './FeaturePropertyValidators';
+import { FeatureDescription, PropertySchema } from '../crg/data-schema.service';
+import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
+import { ImportLayerItem, LayerAttribute } from '../geoserver/import/models';
+import { AS_IS, NOT_IMPORT } from '../crg/models';
 
 export class FeatureUtil {
 
@@ -55,7 +56,7 @@ export class FeatureUtil {
       this.calculateAttributeCompatibility(layer, description);
     });
 
-    return _.sortBy(fDescription, ['matchingCounter']);
+    return sortBy(fDescription, ['matchingCounter']);
   }
 
   static preparePropertySchema(targetFeatureType: FeatureDescription): PropertySchema[] {

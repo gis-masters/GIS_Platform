@@ -1,15 +1,17 @@
-import {NGXLogger} from 'ngx-logger';
-import {takeUntil} from 'rxjs/operators';
-import {FormBuilder, FormControl} from '@angular/forms';
-import {WfsFeature, WfsService} from '../../services/geoserver/wfs.service';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {CommunicationService, ObjectDto} from '../../services/communication.service';
-import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {FeaturePropertyValidators} from '../../services/util/FeaturePropertyValidators';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {DataSchemaService} from '../../services/crg/data-schema.service';
-import {FeatureUtil} from '../../services/util/FeatureUtil';
-import {BaseEdit} from './base-edit';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+
+import { getFeatureById } from '../../services/geoserver/wfs.service';
+import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { CommunicationService, ObjectDto } from '../../services/communication.service';
+import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
+import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
+import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { FeatureUtil } from '../../services/util/FeatureUtil';
+import { BaseEdit } from './base-edit';
 import { Toast } from '../Toast/Toast';
 
 @Component({
@@ -30,7 +32,6 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
-              private wfsService: WfsService,
               private openLayers: OpenLayersService,
               private communicationService: CommunicationService,
               private dataSchemaService: DataSchemaService,
@@ -99,8 +100,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private async handleObject(objectDto: ObjectDto) {
     try {
-      const wfsFeature: WfsFeature = await this.wfsService
-                    .getFeatureById(objectDto.crgLayer.complexName, objectDto.id);
+      const wfsFeature: WfsFeature = await getFeatureById(objectDto.crgLayer.complexName, objectDto.id);
 
       this.isFeatureTypeLoaded = true;
 

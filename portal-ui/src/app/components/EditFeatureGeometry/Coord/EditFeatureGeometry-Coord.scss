@@ -1,0 +1,13 @@
+.EditFeatureGeometry-Coord {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 6px;
+
+  --EditFeatureGeometryCoordDelOpacity: 0.2;
+
+  &:hover {
+    --EditFeatureGeometryCoordDelOpacity: 1;
+  }
+}

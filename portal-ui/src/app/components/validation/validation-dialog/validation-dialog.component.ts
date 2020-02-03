@@ -1,8 +1,9 @@
-import {Component, Input, ViewChild} from '@angular/core';
-import {StringUtil} from '../../../services/util/StringUtil';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
-import {CrgLayer} from '../../../services/geoserver/layers.service';
-import {CommunicationService} from '../../../services/communication.service';
+
+import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
+import { CrgLayer } from '../../../services/geoserver/layers.service';
+import { CommunicationService } from '../../../services/communication.service';
 
 @Component({
   selector: 'crg-validation-dialog',
@@ -35,7 +36,7 @@ export class ValidationDialogComponent {
   }
 
   handleTitle(crgLayer: CrgLayer) {
-    return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+    return addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
   }
 
   selectAll() {

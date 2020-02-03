@@ -5,7 +5,12 @@ import {ValidationDialogData} from '../components/validation/validation-dialog/v
 import {EditFeatureData} from '../components/edit-feature/edit-feature.component';
 import {CrgLayer} from './geoserver/layers.service';
 import {Sidebar} from './side-bar-manager.service';
-import {WfsFeature} from './geoserver/wfs.service';
+import {WfsFeature} from './geoserver/wfs-models';
+
+export interface ObjectDto {
+  id: string;
+  crgLayer: CrgLayer;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +23,4 @@ export class CommunicationService {
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
   @Output() selectedFeatures$ = new EventEmitter<WfsFeature[]>();
-}
-
-export interface ObjectDto {
-  id: string;
-  crgLayer: CrgLayer;
 }

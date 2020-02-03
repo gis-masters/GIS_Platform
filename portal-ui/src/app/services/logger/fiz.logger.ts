@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { findLast } from 'lodash';
 import {Injectable} from '@angular/core';
 import {LocalStorageService} from '../local-storage.service';
 
@@ -100,9 +100,9 @@ export class FizLogger {
    * конкретного режима вернет undefined.
    */
   private getItemLevel(searchKey: string): LogLevel | undefined {
-    const logItem: LogItem = _.findLast(this.logModel.logItems, ['key', searchKey]);
+    const logItem: LogItem = findLast(this.logModel.logItems, ['key', searchKey]);
     if (logItem) {
-      const logType: LogType = _.findLast(logItem.types, ['mod', this.logModel.mode]);
+      const logType: LogType = findLast(logItem.types, ['mod', this.logModel.mode]);
       if (logType) {
         return logType.level;
       } else {

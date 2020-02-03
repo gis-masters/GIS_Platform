@@ -12,10 +12,10 @@ export class BatchModel<T> {
     this.batches = this.splitListToParts(objects, this.totalBatches);
   }
 
-  public splitListToParts(arr, n): T[][] {
+  splitListToParts(arr: T[], n: number): T[][] {
     const plen = Math.ceil(arr.length / n);
 
-    return arr.reduce(function (p, c, i, a) {
+    return arr.reduce(function (p, c, i) {
       if (i % plen === 0) {
         p.push([]);
       }

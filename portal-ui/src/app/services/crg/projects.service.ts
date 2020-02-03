@@ -8,7 +8,7 @@ import { WsService } from '../ws.service';
 import { LayersService } from '../geoserver/layers.service';
 import { NameHrefProjection } from '../geoserver/projections';
 import { LocalStorageService } from '../local-storage.service';
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 import { CrgApiResponse, Process } from './models';
 import { HttpQueue } from '../util/HttpQueue';
 import { projectsList, Project } from '../../stores/ProjectsList.store';
@@ -24,11 +24,10 @@ export class ProjectsService {
               private logger: NGXLogger,
               private wsService: WsService,
               private layerService: LayersService,
-              private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) { }
+              private storageService: LocalStorageService) { }
 
   async fetchProjects() {
-    const url = await this.serverProp.projectsUrl;
+    const url = await serverProperties.projectsUrl;
 
     const response = await this.httpq.get<CrgApiResponse>(url);
     let projectsWithLayers: Project[] = [];
@@ -40,13 +39,13 @@ export class ProjectsService {
   }
 
   async getById(id: string): Promise<Project> {
-    const url = `${await this.serverProp.projectsUrl}/${id}`;
+    const url = `${await serverProperties.projectsUrl}/${id}`;
 
     return this.httpq.get<Project>(url);
   }
 
   async create(name: string): Promise<Process> {
-    const url = await this.serverProp.projectsUrl;
+    const url = await serverProperties.projectsUrl;
 
     const payload = {
       'projectName': name
@@ -56,7 +55,7 @@ export class ProjectsService {
   }
 
   async delete(id: string) {
-    const url = `${await this.serverProp.projectsUrl}/${id}`;
+    const url = `${await serverProperties.projectsUrl}/${id}`;
     await this.httpq.delete(url);
     projectsList.considerDeleted(id);
   }
@@ -67,7 +66,7 @@ export class ProjectsService {
    * Организация, а соответственно и название БД есть на сервере.
    */
   async doWorkImport(tasks: TaskImport[], internalName: string, workspaceName: string): Promise<Process> {
-    const url = `${await this.serverProp.apiUrl}/${internalName}/import`;
+    const url = `${await serverProperties.apiUrl}/${internalName}/import`;
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workspaceName,

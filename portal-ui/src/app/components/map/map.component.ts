@@ -17,7 +17,8 @@ import { OpenLayersService } from '../../services/open-layer/open-layers.service
 import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { ProjectsService } from '../../services/crg/projects.service';
-import { WfsFeatureCollection, WfsService } from '../../services/geoserver/wfs.service';
+import { getFeaturesByXmlFilter, getFeatures } from '../../services/geoserver/wfs.service';
+import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
 
@@ -49,7 +50,6 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
               private projectsService: ProjectsService,
-              private wfsService: WfsService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) { }
 
@@ -159,7 +159,7 @@ export class MapComponent implements OnInit, OnDestroy {
   private async showFeaturesInfo(coordinate: [number, number]) {
     const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();
 
-    if (visibleLayersComplexName.length > 0) {
+    if (visibleLayersComplexName.length) {
       const buffer = this.openLayers.getBufferByCoordinates(coordinate);
 
       // Формируем xml для запроса к WFS
@@ -167,11 +167,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.openLayers.drawPolygon(buffer.getCoordinates());
 
-      const fCollection: WfsFeatureCollection = await this.wfsService.getFeaturesByXmlFilter(xml);
+      const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
 
       this.openLayers.clearDraft();
 
-      if (fCollection.features && fCollection.features.length > 0) {
+      if (fCollection.features && fCollection.features.length) {
         this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
           data: {
             features: fCollection.features,
@@ -221,7 +221,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
           // Позиционируемся на первом из загруженных слоев
           if (layers.length > 0) {
-            this.wfsService.getFeatures(layers[0].complexName)
+            getFeatures(layers[0].complexName)
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((fCollection: WfsFeatureCollection) => {
                   if (fCollection && fCollection.bbox) {

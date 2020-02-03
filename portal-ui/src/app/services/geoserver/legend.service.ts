@@ -1,7 +1,8 @@
-import {Observable} from 'rxjs';
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {ServerPropertiesService} from '../server-properties.service';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { serverProperties } from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,8 @@ export class LegendService {
   private width = '40';
   private height = '20';
 
-  constructor(private http: HttpClient,
-              private serverProp: ServerPropertiesService) {
-    this.serverProp.geoServerUrl.then((geoServerUrl) => {
+  constructor(private http: HttpClient) {
+    serverProperties.geoServerUrl.then((geoServerUrl) => {
       this._baseUrl = geoServerUrl + '/wms';
     });
   }
@@ -41,5 +41,4 @@ export class LegendService {
 
     return this.http.get(this._baseUrl, {responseType: 'blob', params: params});
   }
-
 }

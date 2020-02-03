@@ -1,18 +1,21 @@
-import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatMenuTrigger} from '@angular/material/menu';
-import {forkJoin, Observable, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
-import {ExportService} from '../../services/crg/export.service';
-import {LegendService} from '../../services/geoserver/legend.service';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {cn} from '../../services/util/cn';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
-import {StylesService} from '../../services/geoserver/styles.service';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { ExportService } from '../../services/crg/export.service';
+import { LegendService } from '../../services/geoserver/legend.service';
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { cn } from '../../services/util/cn';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { EditFeatureMode } from '../edit-feature/edit-feature.component';
+import { StylesService } from '../../services/geoserver/styles.service';
 import { getEnvironment } from '../../services/environment';
+import { ViewFeaturesData } from '../view-features/view-features.component';
+import { DataSchemaService } from '../../services/crg/data-schema.service';
 
 interface Rule {
   name: string;
@@ -76,7 +79,8 @@ export class LayerListItemComponent implements OnDestroy {
               private dialog: MatDialog,
               private openLayers: OpenLayersService,
               private stylesService: StylesService,
-              private layersService: LayersService) {
+              private layersService: LayersService,
+              private dataSchemaService: DataSchemaService) {
     this.getEnv();
   }
 
@@ -126,6 +130,20 @@ export class LayerListItemComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  addFeature () {
+    const emptyFeature = this.dataSchemaService.getEmptyFeature(this.layer);
+
+    this.sideBarManager.do({
+      target: SidebarType.FEATURES, action: ActionType.OPEN,
+      data: {
+        features: [emptyFeature],
+        mode: EditFeatureMode.single,
+        layer: this.layer,
+        isNew: true
+      } as ViewFeaturesData
+    });
   }
 
   private async getEnv () {

@@ -1,12 +1,12 @@
-import * as _ from 'lodash';
-import {NGXLogger} from 'ngx-logger';
-import {Injectable} from '@angular/core';
-import {StringUtil} from './util/StringUtil';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {LocalStorageService} from './local-storage.service';
-import {filter, publishReplay, refCount} from 'rxjs/operators';
-import {IWsMessage, WsService} from './ws.service';
-import {ProcessType} from './crg/models';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter, publishReplay, refCount } from 'rxjs/operators';
+import { remove } from 'lodash';
+
+import { generateRandomId } from './util/stringUtil';
+import { LocalStorageService } from './local-storage.service';
+import { IWsMessage, WsService } from './ws.service';
+import { ProcessType } from './crg/models';
 
 /**
  * Сервис обработки и хранения событий.
@@ -27,8 +27,7 @@ export class EventService {
       refCount()
     );
 
-  constructor(private logger: NGXLogger,
-              private wsService: WsService,
+  constructor(private wsService: WsService,
               private storageService: LocalStorageService) {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
@@ -55,7 +54,7 @@ export class EventService {
    */
   delete(id: string) {
     const events = this._events$.getValue();
-    _.remove(events, (event: IEvent) => event.id === id);
+    remove(events, (event: IEvent) => event.id === id);
 
     this.update(events);
   }
@@ -65,7 +64,7 @@ export class EventService {
    * @param wsMessage Сообщение от сервера
    */
   private handleMessage(wsMessage: IWsMessage) {
-    const newEvent: IEvent = {id: StringUtil.generateRandomId(), payload: wsMessage, type: wsMessage.type};
+    const newEvent: IEvent = {id: generateRandomId(), payload: wsMessage, type: wsMessage.type};
     const events = this._events$.getValue();
 
     const sameEvent = this.findSameEvent(wsMessage, events);

@@ -1,5 +1,4 @@
 import {Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {EventService, IEvent} from '../../services/event.service';
@@ -18,8 +17,7 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private eventService: EventService,
+  constructor(private eventService: EventService,
               private sideBarManager: SideBarManager) {
 
   }

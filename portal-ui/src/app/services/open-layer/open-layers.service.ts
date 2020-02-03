@@ -1,30 +1,33 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {Map, View} from 'ol';
-import XYZ from 'ol/source/XYZ';
+import { EventEmitter, Injectable } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
+import { Map, View } from 'ol';
+import { MultiPolygon } from 'ol/geom';
+import { ImageWMS, OSM } from 'ol/source';
+import { get as getProjection } from 'ol/proj';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { getTopLeft, getWidth } from 'ol/extent';
+import { Coordinate } from 'ol/coordinate';
+import { Fill, Stroke, Style } from 'ol/style.js';
 import Feature from 'ol/Feature';
+import ImageWrapper from 'ol/Image';
+import Layer from 'ol/layer/Layer';
 import LayerType from 'ol/LayerType';
-import {MultiPolygon} from 'ol/geom';
-import {NGXLogger} from 'ngx-logger';
+import Tile from 'ol/Tile';
+import GeometryType from 'ol/geom/GeometryType';
 import TileLayer from 'ol/layer/Tile';
 import BaseLayer from 'ol/layer/Base';
-import {ImageWMS, OSM} from 'ol/source';
 import ImageLayer from 'ol/layer/Image';
-import {MapperUtil} from './MapperUtil';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import {Fill, Stroke, Style} from 'ol/style.js';
-import GeometryType from 'ol/geom/GeometryType';
-import {defaults as defaultControls, ScaleLine} from 'ol/control';
-import {WfsFeature} from '../geoserver/wfs.service';
-import {TokenStorageService} from '../token-storage.service';
-import {UsedGeometryType} from './GeometryType';
-import {getEnvironment} from '../environment';
-import {ServerPropertiesService} from '../server-properties.service';
-import {getTopLeft, getWidth} from 'ol/extent';
-import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import WMTS from 'ol/source/WMTS';
-import {get as getProjection} from 'ol/proj';
-import Layer from 'ol/layer/Layer';
+import XYZ from 'ol/source/XYZ';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
+
+import { MapperUtil } from './MapperUtil';
+import { WfsFeature } from '../geoserver/wfs-models';
+import { getEnvironment } from '../environment';
+import { serverProperties } from '../server-properties.service';
+import { TokenStorageService } from '../token-storage.service';
 
 export let BEARER_TOKEN = '';
 
@@ -46,7 +49,7 @@ export interface CrgWmsParams {
 })
 export class OpenLayersService {
 
-  mapClick$ = new EventEmitter<number[]>();
+  mapClick$ = new EventEmitter<Coordinate>();
 
   private currentTileSource: TileSource;
 
@@ -73,9 +76,8 @@ export class OpenLayersService {
   private defaultOpacity = 0.7;
 
   constructor(private logger: NGXLogger,
-              private tokenStorage: TokenStorageService,
-              private serverProp: ServerPropertiesService) {
-    BEARER_TOKEN = tokenStorage.getAccessToken();
+              private tokenStorage: TokenStorageService) {
+    BEARER_TOKEN = this.tokenStorage.getAccessToken();
 
     this.setupTileSources();
   }
@@ -88,7 +90,7 @@ export class OpenLayersService {
     this.view = new View({
       center: this.defaultViewPoint,
       zoom: this.defaultZoomValue,
-      minZoom: 5,
+      minZoom: 3,
       maxZoom: 19
     });
 
@@ -142,7 +144,7 @@ export class OpenLayersService {
 
     const imageLayer = new ImageLayer({
       source: new ImageWMS({
-        url: await this.serverProp.wmsUrl,
+        url: await serverProperties.wmsUrl,
         params: params,
         imageLoadFunction: this.crgImageLoadFunction,
         ratio: 1,
@@ -253,10 +255,13 @@ export class OpenLayersService {
     this.paintFeature(wfsFeature);
   }
 
-  drawPolygon(coordinates) {
-    const feature = {
-      geometry: {type: UsedGeometryType.MULTIPOLYGON, coordinates: coordinates},
-      type: '',
+  drawPolygon(coordinates: Coordinate[][][]) {
+    const feature: WfsFeature = {
+      type: 'Feature',
+      geometry: {
+        type: GeometryType.MULTI_POLYGON,
+        coordinates: coordinates
+      },
       id: '',
       geometry_name: '',
       properties: ''
@@ -265,7 +270,7 @@ export class OpenLayersService {
     this.paintFeature(feature);
   }
 
-  fitToBbox(bbox: any, padding: [number, number, number, number]) {
+  fitToBbox(bbox: number[], padding: [number, number, number, number]) {
     this._map
         .getView()
         .fit(bbox, {padding: padding}); // constrainResolution Ломает view на слоях с геометрией Point
@@ -394,7 +399,7 @@ export class OpenLayersService {
         title: 'Ортофотоплан WMTS',
         source: new WMTS({
           tileLoadFunction: this.crgImageLoadFunction,
-          urls: [await this.serverProp.wmtsUrl],
+          urls: [await serverProperties.wmtsUrl],
           tileGrid: new WMTSTileGrid({
             origin: getTopLeft(projectionExtent),
             resolutions: resolutions,
@@ -449,7 +454,7 @@ export class OpenLayersService {
       }
   }
 
-  private crgImageLoadFunction(tile, src) {
+  private crgImageLoadFunction(tile: Tile | ImageWrapper, src: string) {
     const client = new XMLHttpRequest();
 
     client.open('GET', src);
@@ -459,16 +464,17 @@ export class OpenLayersService {
     client.onload = function () {
       const arrayBufferView = new Uint8Array(this.response);
       const blob = new Blob([arrayBufferView], { type: 'image/vnd.jpeg-png8' });
-      const urlCreator = window.URL || (window as any).webkitURL;
 
-      tile.getImage().src = urlCreator.createObjectURL(blob);
+      // Ошибка в типах openlayers
+      // @ts-ignore
+      (tile.getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
     };
 
     client.send();
   }
 
   /**
-   * Все слоя типа 'IMAGE'
+   * Все слои типа 'IMAGE'
    */
   private getImageLayers(): BaseLayer[] {
     return this._map
@@ -481,5 +487,4 @@ export class OpenLayersService {
                .getLayers().getArray()
                .find(bLayer => bLayer.getType() === LayerType.TILE);
   }
-
 }

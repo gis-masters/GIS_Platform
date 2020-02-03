@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { Button as BaseButton } from '@material-ui/core';
 import { ButtonProps as BaseButtonProps } from '@material-ui/core/Button/Button';
+import { cn } from '@bem-react/classname';
 
 import { services } from '../../services/services';
 
 import '!style-loader!css-loader!sass-loader!./Button.scss';
+
+const cnButton = cn('Button');
 
 interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
@@ -20,6 +23,7 @@ export class Button extends React.Component<ButtonProps> {
   render () {
     const extendedProps: ButtonProps = {
       ...this.props,
+      className: cnButton(null, [this.props.className]),
       href: this.props.routerLink || this.props.href,
       onClick: this.onClickHandler
     };

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Dropzone from 'react-dropzone'
-import { Button, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { cn } from '@bem-react/classname';
 
 import { Loading } from '../../Loading/Loading';
+import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./DataImport-Dropzone.scss';
 

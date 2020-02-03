@@ -1,9 +1,9 @@
 import { Feature } from 'ol';
 import Geometry from 'ol/geom/Geometry';
+import GeometryType from 'ol/geom/GeometryType';
 import { MultiLineString, MultiPolygon, Point } from 'ol/geom';
 
-import { WfsFeature, WfsGeometry } from '../geoserver/wfs.service';
-import { UsedGeometryType } from './GeometryType';
+import { WfsFeature, WfsGeometry } from '../geoserver/wfs-models';
 import { Toast } from '../../components/Toast/Toast';
 
 export class MapperUtil {
@@ -15,13 +15,13 @@ export class MapperUtil {
       if (!supressError) {
         Toast.error({
           message: 'Ошибка отображения объекта',
-          details: `id: ${wfsFeature.id}. Нет геометрии`
+          details: `ID: ${wfsFeature.id}.
+                    Нет геометрии.`
         });
       }
 
       return;
     }
-
     return new Feature({
       geometry: this.mapFwsGeometryToGeometry(wfsFeature.geometry)
     });
@@ -30,22 +30,22 @@ export class MapperUtil {
   /**
    * Из {@link WfsGeometry} формируем OpenLayer {@link Geometry}
    */
-  public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry): Geometry | undefined {
+  public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry): Geometry | undefined | void {
     if (!wfsGeometry) {
-      Toast.error({message: 'Некорректная геометрия'});
+      Toast.error('Некорректная геометрия');
 
       return;
     }
 
     switch (wfsGeometry.type) {
-      case UsedGeometryType.POINT:
+      case GeometryType.POINT:
         return new Point(wfsGeometry.coordinates);
-      case UsedGeometryType.MULTIPOLYGON:
+      case GeometryType.MULTI_POLYGON:
         return new MultiPolygon(wfsGeometry.coordinates);
-      case UsedGeometryType.MULTILINE_STRING:
+      case GeometryType.MULTI_LINE_STRING:
         return new MultiLineString(wfsGeometry.coordinates);
       default:
-        Toast.error({message: `Not supported geometry type: ${wfsGeometry.type}`});
+        Toast.error(`Not supported geometry type: ${wfsGeometry.type}`);
     }
   }
 }

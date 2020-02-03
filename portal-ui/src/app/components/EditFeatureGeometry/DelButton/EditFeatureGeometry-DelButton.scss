@@ -1,0 +1,10 @@
+.EditFeatureGeometry-DelButton.EditFeatureGeometry-DelButton {
+  transition: opacity 0.3s;
+
+  opacity: var(--EditFeatureGeometryDelButtonOpacity);
+  color: var(--danger);
+
+  &:focus {
+    opacity: 1;
+  }
+}

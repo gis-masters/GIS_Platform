@@ -4,12 +4,22 @@ import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 
 import { TokenStorageService, JwtToken } from './token-storage.service';
-import { ServerPropertiesService } from './server-properties.service';
+import { serverProperties } from './server-properties.service';
 import { HttpQueue } from './util/HttpQueue';
 
 export interface AuthCredentials {
   username: string;
   password: string;
+}
+
+export interface RegData {
+  company: string;
+  contactPhone: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  password_: string;
 }
 
 @Injectable({providedIn: 'root'})
@@ -19,7 +29,6 @@ export class AuthService {
   constructor(private httpq: HttpQueue,
               private router: Router,
               private tokenStorage: TokenStorageService,
-              private serverProperties: ServerPropertiesService,
               private logger: NGXLogger) {
     const jwtToken = this.tokenStorage.getToken();
     if (jwtToken) {
@@ -38,7 +47,7 @@ export class AuthService {
     });
 
     const options = {withCredentials: true, headers: headers};
-    const url = await this.serverProperties.authServerUrl;
+    const url = await serverProperties.authServerUrl;
 
     return this.httpq.post<JwtToken>(url, params.toString(), options);
   }
@@ -68,7 +77,7 @@ export class AuthService {
         password: regData.password
       }
     };
-    const url = await this.serverProperties.organizationsUrl;
+    const url = await serverProperties.organizationsUrl;
 
     return this.httpq.post(url + '/init', payload);
   }
@@ -80,14 +89,4 @@ export class AuthService {
   set authenticated(value: boolean) {
     this._authenticated = value;
   }
-}
-
-export interface RegData {
-  company: string;
-  contactPhone: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  password_: string;
 }

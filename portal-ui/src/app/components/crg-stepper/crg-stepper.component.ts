@@ -1,10 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject} from 'rxjs';
-import {Router, ActivatedRoute} from '@angular/router';
-import {takeUntil} from 'rxjs/operators';
-import {ProjectsService} from '../../services/crg/projects.service';
-import {CommunicationService} from '../../services/communication.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { ProjectsService } from '../../services/crg/projects.service';
+import { CommunicationService } from '../../services/communication.service';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { route } from '../../stores/Route.store';
 import { fromMobx } from '../../services/util/fromMobx';
 
@@ -27,7 +28,7 @@ export class CrgStepperComponent implements OnDestroy, OnInit {
               private projectService: ProjectsService) { }
 
   ngOnInit () {
-    fromMobx<number>(route.data.step)
+    fromMobx<number>(() => route.data.step)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(step => this.activeStep = step);
   }

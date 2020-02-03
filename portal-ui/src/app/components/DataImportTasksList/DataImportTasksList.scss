@@ -61,5 +61,9 @@
 
     opacity: 0.2;
     color: var(--danger);
+
+    &:focus {
+      opacity: 1;
+    }
   }
 }

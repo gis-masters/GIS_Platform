@@ -4,83 +4,10 @@ import { HttpParams } from '@angular/common/http';
 import { HttpQueue } from '../util/HttpQueue';
 import { ValidationError } from '../util/FeaturePropertyValidators';
 import { ValidationWsMsg, WsService } from '../ws.service';
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 import { CrgLayer } from '../geoserver/layers.service';
-import { LocalStorageService } from '../local-storage.service';
 import { ProcessStatus } from './models';
 import { ProjectsService } from './projects.service';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class ValidationService {
-
-  constructor(private httpq: HttpQueue,
-              private wsService: WsService,
-              private projectsService: ProjectsService,
-              private storageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) { }
-
-  /**
-   * Провалидировать слоя.
-   * @param crgLayers Слоя на валидацию.
-   */
-  async initValidation(crgLayers: CrgLayer[]): Promise<ValidationWsMsg> {
-    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
-
-    const payload = {
-      wsUiId: this.wsService.getId(),
-      layers: layerNames
-    };
-
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation';
-
-    return this.httpq
-               .post<ValidationWsMsg>(url, JSON.stringify(payload),
-                     {headers: {'Content-Type': 'application/json'}});
-  }
-
-  /**
-   * Выборка результатов валидации.
-   */
-  async getValidationResults(layerName: string, page: number, size: number, sortBy: string,
-                       sortDirection: string): Promise<ValidationResultsResponse> {
-    const params = new HttpParams()
-      .set('layerName', layerName)
-      .set('page', page ? String(page) : '0')
-      .set('size', page ? String(size) : '25')
-      .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
-
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation';
-
-    return this.httpq
-               .get<ValidationResultsResponse>(url,
-                 {headers: {'Content-Type': 'application/json'}, params: params});
-  }
-
-  /**
-   * Получить краткую статистику по слоям
-   * @param crgLayers Слои
-   */
-  async getShortInfo(crgLayers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
-    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
-
-    const payload = {
-      wsUiId: this.wsService.getId(),
-      layers: layerNames
-    };
-
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await this.serverProp.apiUrl) + '/' + internalName + '/validation/short';
-
-    return this.httpq
-               .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),
-                 {headers: {'Content-Type': 'application/json'}});
-  }
-
-}
 
 export interface ValidationResultsResponse {
   validated: boolean;
@@ -111,4 +38,74 @@ export interface ViolationItem {
   name: string;
   value: string;
   errorTypes: string[];
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ValidationService {
+
+  constructor(private httpq: HttpQueue,
+              private wsService: WsService,
+              private projectsService: ProjectsService) { }
+
+  /**
+   * Провалидировать слоя.
+   * @param crgLayers Слоя на валидацию.
+   */
+  async initValidation(crgLayers: CrgLayer[]): Promise<ValidationWsMsg> {
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
+
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      layers: layerNames
+    };
+
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation';
+
+    return this.httpq
+               .post<ValidationWsMsg>(url, JSON.stringify(payload),
+                     {headers: {'Content-Type': 'application/json'}});
+  }
+
+  /**
+   * Выборка результатов валидации.
+   */
+  async getValidationResults(layerName: string, page: number, size: number, sortBy: string,
+                       sortDirection: string): Promise<ValidationResultsResponse> {
+    const params = new HttpParams()
+      .set('layerName', layerName)
+      .set('page', page ? String(page) : '0')
+      .set('size', page ? String(size) : '25')
+      .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
+
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation';
+
+    return this.httpq
+               .get<ValidationResultsResponse>(url,
+                 {headers: {'Content-Type': 'application/json'}, params: params});
+  }
+
+  /**
+   * Получить краткую статистику по слоям
+   * @param crgLayers Слои
+   */
+  async getShortInfo(crgLayers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
+
+    const payload = {
+      wsUiId: this.wsService.getId(),
+      layers: layerNames
+    };
+
+    const { internalName } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation/short';
+
+    return this.httpq
+               .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),
+                 {headers: {'Content-Type': 'application/json'}});
+  }
+
 }

@@ -1,11 +1,6 @@
-import {Injectable} from '@angular/core';
-
 import { getEnvironment } from './environment';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ServerPropertiesService {
+class ServerProperties {
   private waiting: Promise<void>;
   private _host: string;
   private _port: number;
@@ -139,4 +134,14 @@ export class ServerPropertiesService {
 
     return this.waiting;
   }
+
+  private static _instance: ServerProperties;
+
+  private constructor() { }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 }
+
+export const serverProperties = ServerProperties.instance;

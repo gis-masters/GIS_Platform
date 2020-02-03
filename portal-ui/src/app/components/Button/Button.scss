@@ -1,19 +1,25 @@
-.MuiButton-outlined.MuiButton-outlined {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-}
+.Button {
+  &.MuiButton-root {
+    text-transform: none;
 
-.MuiButton-root.MuiButton-root {
-  text-transform: none;
-}
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
 
-.MuiButton-root.MuiButton-root:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
+    &:focus {
+      outline: none;
+    }
+  }
 
-.MuiButton-contained.MuiButton-contained {
-  background-color: white;
-}
+  &.MuiButton-outlined {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
 
-.MuiButton-contained.MuiButton-contained:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  &.MuiButton-contained {
+    background-color: white;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
 }

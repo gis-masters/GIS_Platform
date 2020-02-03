@@ -42,7 +42,8 @@
   </div>
 
   <div *ngIf="isEditMode">
-    <crg-edit-feature [data]="editFeatureData" (closeMe)="switchMode()"></crg-edit-feature>
+    <crg-edit-feature [data]="editFeatureData" (closeMe)="switchMode()" (delete)="deleteHandler($event)">
+    </crg-edit-feature>
   </div>
 
 </div>

@@ -1,8 +1,3 @@
-import * as _ from 'lodash';
-import {BehaviorSubject, combineLatest, from, Observable, of, Subject} from 'rxjs';
-import {DatatableComponent, TableColumn} from '@swimlane/ngx-datatable';
-import {catchError, concatMap, debounceTime, filter, flatMap, map, takeUntil} from 'rxjs/operators';
-import {CrgLayer, LayersService} from '../../services/geoserver/layers.service';
 import {
   AfterViewInit,
   Component,
@@ -13,26 +8,33 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {DataSchemaService, PropertySchema} from '../../services/crg/data-schema.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
-import {CrgModels, FilterEvent, Pageable, Sortable} from '../../services/crg/models';
-import {WfsFeature, WfsFeatureCollection, WfsService} from '../../services/geoserver/wfs.service';
-import {MatDialog} from '@angular/material/dialog';
-import {ProjectsService} from '../../services/crg/projects.service';
-import {EditFeatureMode} from '../edit-feature/edit-feature.component';
-import {ValueTitleProjection} from '../../services/geoserver/projections';
-import {AttributeTableViewSettings, ViewMode} from './attribute.settings';
-import {ViewFeaturesData} from '../view-features/view-features.component';
-import {CommunicationService} from '../../services/communication.service';
-import {Project} from '../../stores/ProjectsList.store';
-import {TransformFeatureService} from '../../services/geoserver/transform-feature.service';
-import {CopyFeaturesDialogComponent} from '../dialogs/copy-features-dialog/copy-features-dialog.component';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../dialogs/confirm-dialog/confirm-dialog.component';
-import {getEnvironment} from '../../services/environment';
-import {Toast} from '../Toast/Toast';
-import {NGXLogger} from 'ngx-logger';
-import {BatchModel} from '../../services/crg/batch-model';
+import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
+import { catchError, concatMap, debounceTime, filter, flatMap, map, takeUntil } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { MatDialog } from '@angular/material/dialog';
+import { NGXLogger } from 'ngx-logger';
+
+import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { DataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
+import { getFeatures } from '../../services/geoserver/wfs.service';
+import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
+import { ProjectsService } from '../../services/crg/projects.service';
+import { EditFeatureMode } from '../edit-feature/edit-feature.component';
+import { ValueTitleProjection } from '../../services/geoserver/projections';
+import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
+import { ViewFeaturesData } from '../view-features/view-features.component';
+import { CommunicationService } from '../../services/communication.service';
+import { Project } from '../../stores/ProjectsList.store';
+import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
+import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { getEnvironment } from '../../services/environment';
+import { Toast } from '../Toast/Toast';
+import { BatchModel } from '../../services/crg/batch-model';
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -83,7 +85,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private project: Project;
 
   constructor(private sideBarManager: SideBarManager,
-              private wfsService: WfsService,
               private tFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
@@ -117,7 +118,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const layerChanged = changes['layer'];
+    const layerChanged = changes.layer;
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
       this.requestModel$.next({page: {pageSize: 25, offset: 0}});
@@ -137,7 +138,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   updateTable(requestModel?: CrgModels) {
     this.loading = true;
     this.showPercent = false;
-    this.wfsService.getFeatures(this.layer.complexName, requestModel)
+    getFeatures(this.layer.complexName, requestModel)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((fCollection: WfsFeatureCollection) => {
           if (fCollection) {
@@ -274,12 +275,12 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     this.isSelectAll = !this.isSelectAll;
     if (this.isSelectAll) {
       const currentRequestModel = this.requestModel$.getValue();
-      const clonedRequestModel: CrgModels = _.cloneDeep(currentRequestModel);
+      const clonedRequestModel: CrgModels = cloneDeep(currentRequestModel);
       clonedRequestModel.page = undefined;
 
       this.loading = true;
       this.showPercent = false;
-      this.wfsService.getFeatures(this.layer.complexName, clonedRequestModel)
+      getFeatures(this.layer.complexName, clonedRequestModel)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(fCollection => {
             this.attributeTable.selected = fCollection.features;
@@ -293,7 +294,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  private checkSelectionEmptiness(selected) {
+  private checkSelectionEmptiness(selected: any[]) {
     if (!selected.length) {
       Toast.warn('Нет выделенных объектов');
       return true;
@@ -309,7 +310,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
 
     // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
-    const clonedFeatures: WfsFeature[] = JSON.parse(JSON.stringify(selected));
+    const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.name + '.' + feature.id;
     });
@@ -605,7 +606,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     return result;
   }
 
-  private isSuitableLayersExist(suitableLayers) {
+  private isSuitableLayersExist(suitableLayers: CrgLayer[]) {
     if (!!suitableLayers.length) {
       return true;
     } else {

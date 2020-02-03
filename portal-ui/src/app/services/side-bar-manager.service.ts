@@ -23,6 +23,8 @@ export enum SidebarType {
   ATTRIBUTES = 'ATTRIBUTES',  // Панель отображения атрибутов фичи(слоя)
 }
 
+type CurrentState = { [key: string]: ActionType };
+
 /**
  * Сервис с логикой показа всплывающих окон
  */
@@ -31,7 +33,7 @@ export enum SidebarType {
 })
 export class SideBarManager {
 
-  currentState$: BehaviorSubject<{}> = new BehaviorSubject<{}>({
+  currentState$: BehaviorSubject<CurrentState> = new BehaviorSubject<CurrentState>({
     'INFO': ActionType.CLOSE,
     'LAYERS': ActionType.CLOSE,
     'FEATURES': ActionType.CLOSE,

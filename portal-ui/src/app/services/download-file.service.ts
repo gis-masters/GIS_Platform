@@ -1,19 +1,18 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { HttpQueue } from './util/HttpQueue';
-import {ServerPropertiesService} from './server-properties.service';
+import { serverProperties } from './server-properties.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DownloadFileService {
 
-  constructor(private httpq: HttpQueue,
-              private propertiesService: ServerPropertiesService) {}
+  constructor(private httpq: HttpQueue) { }
 
   async download(fileName: string): Promise<any> {
-    const exportUrl = await this.propertiesService.exportUrl;
+    const exportUrl = await serverProperties.exportUrl;
 
-    return this.httpq.get(exportUrl + '/' + fileName, {responseType: 'blob'});
+    return this.httpq.get(exportUrl + '/' + fileName, { responseType: 'blob' });
   }
 }

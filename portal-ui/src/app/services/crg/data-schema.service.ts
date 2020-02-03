@@ -4,11 +4,14 @@ import { NGXLogger } from 'ngx-logger';
 
 import { HttpQueue } from '../util/HttpQueue';
 import { ValueTitleProjection } from '../geoserver/projections';
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 import { CrgLayer } from '../geoserver/layers.service';
 import { FeatureUtil } from '../util/FeatureUtil';
-import {ImportLayerItem} from '../geoserver/import/models';
-import {BugObject} from './validation.service';
+import { ImportLayerItem } from '../geoserver/import/models';
+import { BugObject } from './validation.service';
+import { getEmptyGeometry } from '../geoserver/wfs.service';
+import { WfsFeature, CoordinateEdited } from '../geoserver/wfs-models';
+import { normalizeGeometryType } from '../util/stringUtil';
 
 
 export class FeatureXsdDefinition {
@@ -83,20 +86,18 @@ export class DataSchemaService {
   private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 
   constructor(private httpq: HttpQueue,
-              private logger: NGXLogger,
-              private serverProp: ServerPropertiesService) {
+              private logger: NGXLogger) {
   }
 
   getFeaturesSchemas(): Observable<FeatureXsdDefinition> {
     if (this.featuresXsdDefinition.schemas && this.featuresXsdDefinition.schemas.length) {
-      this.logger.info('this.featureDescriptions: ', this.featuresXsdDefinition);
       return of(this.featuresXsdDefinition);
     } else {
       // Пустой список подразумевает выборку всего
       const payload: [] = [];
 
       return defer(async () => {
-        const url = await this.serverProp.schemaUrl;
+        const url = await serverProperties.schemaUrl;
         const response = await this.httpq.post<FeatureDescription[]>(url, payload);
 
         if (response) {
@@ -115,15 +116,15 @@ export class DataSchemaService {
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
-  public getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
+  getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
     if (!layerName) {
       return;
     }
 
     let byFullCompare: FeatureDescription;
-    this.featuresXsdDefinition.schemas.forEach((feature: FeatureDescription) => {
-      if (feature.name.toLowerCase() === layerName.toLowerCase()) {
-        byFullCompare = feature;
+    this.featuresXsdDefinition.schemas.forEach((featureDescription: FeatureDescription) => {
+      if (featureDescription.name && featureDescription.name.toLowerCase() === layerName.toLowerCase()) {
+        byFullCompare = featureDescription;
       }
     });
 
@@ -131,8 +132,8 @@ export class DataSchemaService {
       return byFullCompare;
     } else {
       const fDescription = this.featuresXsdDefinition.schemas
-        .find((feature: FeatureDescription) => {
-          return feature.name.toLowerCase().includes(layerName.toLowerCase());
+        .find((featureDescription: FeatureDescription) => {
+          return featureDescription.name && featureDescription.name.toLowerCase().includes(layerName.toLowerCase());
         });
 
       return fDescription ? fDescription : undefined;
@@ -144,7 +145,7 @@ export class DataSchemaService {
    * Метод опирается на название и геометрию слоя.
    * @param layer Слой
    */
-  public getFeatureDescriptionByLayer(layer: ImportLayerItem): FeatureDescription | undefined {
+  getFeatureDescriptionByLayer(layer: ImportLayerItem): FeatureDescription | undefined {
     if (!layer) {
       return;
     }
@@ -172,7 +173,7 @@ export class DataSchemaService {
    *
    * @return The new array of {@link CrgLayer}.
    */
-  public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
+  getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
     return layers
       .filter((layer: CrgLayer) => baseLayer.complexName !== layer.complexName)
       .filter((layer: CrgLayer) => baseLayer.geometry === layer.geometry);
@@ -234,41 +235,52 @@ export class DataSchemaService {
     });
   }
 
+  getEmptyFeature (layer: CrgLayer): WfsFeature<CoordinateEdited> {
+    const schema: FeatureDescription = this.getFeatureSchemaByName(layer.name);
+    const properties = schema.properties.reduce((acc: {[key: string]: null}, propertySchema) => {
+      acc[propertySchema.name.toLowerCase()] = null;
+      return acc;
+    }, {});
+
+    return {
+      type: 'Feature',
+      id: layer.name, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+      geometry: getEmptyGeometry(normalizeGeometryType(layer.geometry)),
+      geometry_name: 'shape', // TODO нужно добавить в схему и брать оттуда
+      properties: properties
+    };
+  }
+
   /**
    * По присланному с сервера типу ошибки сформируем его короткое и неточное описание, выводимое пользователю,
    * в выпадающем списке в таблице с ошибками.
    * @param errorTypes Тип ошибки
    */
   getErrorsDescription(errorTypes: string[]): string[] {
-    const result: string[] = [];
-
-    errorTypes.forEach(error => {
+    return errorTypes.map(error => {
       if (error === 'enumeration') {
-        result.push('Значение не соответствует справочному');
+        return 'Значение не соответствует справочному';
       } else if (error.toLowerCase().includes('notDoubleType'.toLowerCase())) {
-        result.push('Значение не является дробным числом');
+        return 'Значение не является дробным числом';
       } else if (error.toLowerCase().includes('notLongType'.toLowerCase())) {
-        result.push('Значение не является целым числом');
+        return 'Значение не является целым числом';
       } else if (error.toLowerCase().includes('maxInclusive'.toLowerCase())) {
-        result.push('Значение превышает допустимый максимум');
+        return 'Значение превышает допустимый максимум';
       } else if (error.toLowerCase().includes('maxLength'.toLowerCase())) {
-        result.push('Строка превышает допустимую длинну');
+        return 'Строка превышает допустимую длинну';
       } else if (error.toLowerCase().includes('minInclusive'.toLowerCase())) {
-        result.push('Значение менее допустимого');
+        return 'Значение менее допустимого';
       } else if (error.toLowerCase().includes('minLength'.toLowerCase())) {
-        result.push('Строка слишком короткая');
+        return 'Строка слишком короткая';
       } else if (error.toLowerCase().includes('pattern'.toLowerCase())) {
-        result.push('Строка не соответствует паттерну');
+        return 'Строка не соответствует паттерну';
       } else if (error.toLowerCase().includes('required'.toLowerCase())) {
-        result.push('Параметр обязателен к заполнению');
+        return 'Параметр обязателен к заполнению';
       } else if (error.toLowerCase().includes('totalDigits'.toLowerCase())) {
-        result.push('Превышено допустимое кол-в знаков');
+        return 'Превышено допустимое кол-в знаков';
       } else {
-        result.push(error);
+        return error;
       }
     });
-
-    return result;
   }
-
 }

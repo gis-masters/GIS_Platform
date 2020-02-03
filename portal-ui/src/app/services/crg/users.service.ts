@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpQueue } from '../util/HttpQueue';
-import { ServerPropertiesService } from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 
 export interface UserInfoModel {
   userName: string;
@@ -13,11 +13,9 @@ export interface UserInfoModel {
   providedIn: 'root'
 })
 export class UsersService {
-  constructor(private httpq: HttpQueue,
-              private serverProp: ServerPropertiesService) { }
+  constructor(private httpq: HttpQueue) { }
 
   async getInfo(): Promise<UserInfoModel> {
-    return this.httpq
-               .get<UserInfoModel>((await this.serverProp.usersUrl) + '/current');
+    return this.httpq.get<UserInfoModel>((await serverProperties.usersUrl) + '/current');
   }
 }

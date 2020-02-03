@@ -28,8 +28,8 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
 
     this.value = JSON.parse(props.field.value);
 
-    this.openPopup = this.openPopup.bind(this);
-    this.closePopup = this.closePopup.bind(this);
+    this.openDialog = this.openDialog.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
   }
 
   render () {
@@ -37,7 +37,7 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
 
     return (
       <div className={className}>
-        <PseudoLink onClick={this.openPopup}>
+        <PseudoLink onClick={this.openDialog}>
           {this.value.text}
         </PseudoLink>
         <Dialog open={this.isOpen}  PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}>
@@ -45,7 +45,7 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
             <HtmlContent content={this.content} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.closePopup} variant='outlined'>
+            <Button onClick={this.closeDialog} variant='outlined'>
               Закрыть
             </Button>
           </DialogActions>
@@ -80,13 +80,13 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
   }
 
   @action
-  private openPopup () {
+  private openDialog () {
     this.isOpen = true;
     this.fetchContent();
   }
 
   @action
-  private closePopup () {
+  private closeDialog () {
     this.isOpen = false;
     location.hash = '';
   }

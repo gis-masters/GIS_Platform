@@ -5,7 +5,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { HttpQueue } from '../../util/HttpQueue';
 import { GeoUtil } from '../../util/GeoUtil';
 import { LocalStorageService } from '../../local-storage.service';
-import { ServerPropertiesService } from '../../server-properties.service';
+import { serverProperties } from '../../server-properties.service';
 import {
   ImportLayer,
   ImportTaskResponse,
@@ -42,8 +42,7 @@ export class ImportService {
 
   constructor(private http: HttpClient,
               private httpq: HttpQueue,
-              private localStorageService: LocalStorageService,
-              private serverProp: ServerPropertiesService) { }
+              private localStorageService: LocalStorageService) { }
 
   async fetchCurrentImport (importId: string) {
     currentImport.fit({ scratch: await this.getById(importId) });
@@ -125,7 +124,7 @@ export class ImportService {
   }
 
   private async getImportUrl (): Promise<string> {
-    return (await this.serverProp.geoServerUrl) + '/rest/imports';
+    return (await serverProperties.geoServerUrl) + '/rest/imports';
   }
 
   private async uploadTasks(url: string, file: File) {

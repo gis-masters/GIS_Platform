@@ -1,12 +1,14 @@
 export type Platform = 'conv' | 'simf';
 
+export interface EnvironmentServer {
+  host: string;
+  port: number;
+}
+
 export interface Environment {
   platform: Platform;
   production: boolean;
-  server: {
-    host: string;
-    port: number;
-  };
+  server: EnvironmentServer;
   ws_port: number;
   scratchWorkspaceName: string;
 }

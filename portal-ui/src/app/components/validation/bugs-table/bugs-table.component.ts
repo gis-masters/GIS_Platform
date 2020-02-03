@@ -1,20 +1,22 @@
-import {of, Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-import {takeUntil} from 'rxjs/operators';
-import {merge} from 'rxjs/internal/observable/merge';
-import { MatPaginator } from '@angular/material/paginator';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatSort } from '@angular/material/sort';
-import {switchMap} from 'rxjs/internal/operators/switchMap';
-import {startWith} from 'rxjs/internal/operators/startWith';
-import {CrgLayer} from '../../../services/geoserver/layers.service';
-import {CommunicationService} from '../../../services/communication.service';
-import {DataSchemaService} from '../../../services/crg/data-schema.service';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {WfsFeature, WfsService} from '../../../services/geoserver/wfs.service';
-import {OpenLayersService} from '../../../services/open-layer/open-layers.service';
-import {BugObject, ValidationResultsResponse, ValidationService} from '../../../services/crg/validation.service';
-import {AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
-import {ProcessStatus} from '../../../services/crg/models';
+import { MatPaginator } from '@angular/material/paginator';
+import { of, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { merge } from 'rxjs/internal/observable/merge';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { startWith } from 'rxjs/internal/operators/startWith';
+import { NGXLogger } from 'ngx-logger';
+
+import { CrgLayer } from '../../../services/geoserver/layers.service';
+import { CommunicationService } from '../../../services/communication.service';
+import { DataSchemaService } from '../../../services/crg/data-schema.service';
+import { getFeatureById } from '../../../services/geoserver/wfs.service';
+import { WfsFeature } from '../../../services/geoserver/wfs-models';
+import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
+import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
+import { ProcessStatus } from '../../../services/crg/models';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -60,7 +62,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
               private schemaService: DataSchemaService,
-              private wfsService: WfsService,
               private openLayers: OpenLayersService,
               private validationService: ValidationService) {
   }
@@ -114,12 +115,11 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   async showObject(event: Event, objectId: string) {
     event.stopPropagation();
-    const wfsFeature: WfsFeature = await this.wfsService
-                        .getFeatureById(this.crgLayer.complexName, objectId);
+    const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
     this.openLayers.showFeature(wfsFeature);
   }
 
-  editObject(event, objectId: string) {
+  editObject(event: Event, objectId: string) {
     event.stopPropagation();
 
     this.communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);

@@ -1,4 +1,4 @@
-import {action, computed, observable} from 'mobx';
+import { observable, computed, action } from 'mobx';
 
 export interface Layer {
   id: string;

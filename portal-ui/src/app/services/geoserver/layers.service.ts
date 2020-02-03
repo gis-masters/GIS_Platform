@@ -1,17 +1,40 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {filter, flatMap, map, publishReplay, refCount, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { filter, flatMap, map, publishReplay, refCount, tap } from 'rxjs/operators';
 
-import {NameHrefProjection} from './projections';
-import {Project} from '../../stores/ProjectsList.store';
-import {Environment, getEnvironment} from '../environment';
-import {DataSchemaService, FeatureDescription} from '../crg/data-schema.service';
-import {ServerPropertiesService} from '../server-properties.service';
-import {LayerGroupService} from './layer-group.service';
-import {HttpQueue} from '../util/HttpQueue';
-import {GeometryType, StringUtil} from '../util/StringUtil';
-import {LAYERS_GROUP} from '../crg/models';
+import { NameHrefProjection } from './projections';
+import { Project } from '../../stores/ProjectsList.store';
+import { Environment, getEnvironment } from '../environment';
+import { DataSchemaService, FeatureDescription } from '../crg/data-schema.service';
+import { serverProperties } from '../server-properties.service';
+import { LayerGroupService } from './layer-group.service';
+import { HttpQueue } from '../util/HttpQueue';
+import { GeometryType, defineGeomType } from '../util/stringUtil';
+import { LAYERS_GROUP } from '../crg/models';
+
+export interface CrgLayer {
+  name: string;         // Like: functionalzone
+  complexName: string;  // Like: work_workspace:functionalzone
+  title: string;        // Like: Функциональные зоны
+  href: string;
+  schema: FeatureDescription;
+  geometry?: GeometryType | undefined;
+}
+
+export interface GeoLayer {
+  layers: {
+    layer: NameHrefProjection[]
+  };
+}
+
+export interface Layer {
+  name: string;
+  type: string;
+  defaultStyle: NameHrefProjection;
+  resource: any;
+  attribution: any;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -31,11 +54,10 @@ export class LayersService {
   constructor(private http: HttpClient,
               private httpq: HttpQueue,
               private schemaService: DataSchemaService,
-              private layerGroupService: LayerGroupService,
-              private serverProp: ServerPropertiesService) {
+              private layerGroupService: LayerGroupService) {
     this.getEnv();
     this.layers$.subscribe();
-    this.serverProp.geoServerUrl.then((geoServerUrl) => {
+    serverProperties.geoServerUrl.then((geoServerUrl) => {
       this.layersUrl = geoServerUrl + '/rest/layers';
     });
   }
@@ -62,7 +84,7 @@ export class LayersService {
   }
 
   /**
-   * Все слоя с геосервера в виде наименования и ссылки
+   * Все слои с геосервера в виде наименования и ссылки
    * (без scrath слоев)
    */
   getAllLayers(): Observable<NameHrefProjection[]> {
@@ -173,32 +195,9 @@ export class LayersService {
 
   private fillGeometry(layers: CrgLayer[]) {
     layers.forEach(layer => {
-      layer.geometry = StringUtil.defineGeomType(layer.name);
+      layer.geometry = defineGeomType(layer.name);
     });
 
     return layers;
   }
-}
-
-export interface CrgLayer {
-  name: string;         // Like: functionalzone
-  complexName: string;  // Like: work_workspace:functionalzone
-  title: string;        // Like: Функциональные зоны
-  href: string;
-  schema: FeatureDescription;
-  geometry?: GeometryType | undefined;
-}
-
-export interface GeoLayer {
-  layers: {
-    layer: NameHrefProjection[]
-  };
-}
-
-export interface Layer {
-  name: string;
-  type: string;
-  defaultStyle: NameHrefProjection;
-  resource: any;
-  attribution: any;
 }

@@ -1,14 +1,15 @@
-import {NGXLogger} from 'ngx-logger';
-import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
-import {StringUtil} from '../../../services/util/StringUtil';
-import {MatListOption, MatSelectionList} from '@angular/material/list';
-import {CrgLayer} from '../../../services/geoserver/layers.service';
-import {ValueTitleProjection} from '../../../services/geoserver/projections';
-import {CommunicationService} from '../../../services/communication.service';
-import {ExportService} from '../../../services/crg/export.service';
-import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {Process} from '../../../services/crg/models';
-import {Subject} from 'rxjs';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { NGXLogger } from 'ngx-logger';
+import { Subject } from 'rxjs';
+
+import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
+import { CrgLayer } from '../../../services/geoserver/layers.service';
+import { ValueTitleProjection } from '../../../services/geoserver/projections';
+import { CommunicationService } from '../../../services/communication.service';
+import { ExportService } from '../../../services/crg/export.service';
+import { ActionType, SideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { Process } from '../../../services/crg/models';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -100,7 +101,7 @@ export class ExportDialogComponent implements OnDestroy {
   }
 
   handleTitle(crgLayer: CrgLayer) {
-    return StringUtil.addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+    return addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
   }
 
   selectAll() {

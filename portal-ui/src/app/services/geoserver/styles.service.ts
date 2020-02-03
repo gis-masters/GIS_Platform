@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { HttpQueue } from '../util/HttpQueue';
-import {ServerPropertiesService} from '../server-properties.service';
+import { serverProperties } from '../server-properties.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StylesService {
-  constructor(private httpq: HttpQueue,
-              private serverProp: ServerPropertiesService) { }
+  constructor(private httpq: HttpQueue) { }
 
   /**
    * Get the style SLD definition body.
@@ -18,7 +17,7 @@ export class StylesService {
   async getStyleSld(complexStyleName: string): Promise<string> {
     const styleNameArr = complexStyleName.split(':');
     const styleName = styleNameArr.pop();
-    const geoServerUrl = await this.serverProp.geoServerUrl;
+    const geoServerUrl = await serverProperties.geoServerUrl;
     const workspacesUrl = geoServerUrl + '/rest/workspaces/';
     const workspaceName = styleNameArr[0];
     const url: string = workspaceName ?
