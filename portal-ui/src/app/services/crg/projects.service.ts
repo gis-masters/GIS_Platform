@@ -31,9 +31,13 @@ export class ProjectsService {
 
     const response = await this.httpq.get<CrgApiResponse>(url);
 
-    response._embedded.projects.forEach(project => this.handleLayers(project, baseUrl));
+    if (response._embedded) {
+      response._embedded.projects.forEach(project => this.handleLayers(project, baseUrl));
 
-    projectsList.setList(response._embedded.projects);
+      projectsList.setList(response._embedded.projects);
+    } else {
+      projectsList.setList([]);
+    }
   }
 
   async getById(id: string): Promise<Project> {
