@@ -74,7 +74,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       const workspaceName = crgLayer.complexName.split(':')[0];
 
       this.transformFeatureService
-          .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.name, newProperties)
+          .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.internalName, newProperties)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(response => {
             if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
@@ -110,7 +110,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       if (!!this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
       } else {
-        this.logger.warn('Not found rule by feature name: ', objectDto.crgLayer.name);
+        this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
       }
 
       this.openLayers.showFeature(wfsFeature);

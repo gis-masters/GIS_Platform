@@ -4,12 +4,12 @@ import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
-import { CrgLayer } from '../../../services/geoserver/layers.service';
 import { ValueTitleProjection } from '../../../services/geoserver/projections';
 import { CommunicationService } from '../../../services/communication.service';
 import { ExportService } from '../../../services/crg/export.service';
 import { ActionType, SideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
 import { Process } from '../../../services/crg/models';
+import {CrgLayer} from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -87,7 +87,7 @@ export class ExportDialogComponent implements OnDestroy {
   async initValidation() {
     this.isExportInited = true;
 
-    const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.name);
+    const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
     const process: Process = await this.exportService.export({
       layers: layerNames,
       docSchema: this.selectedDocSchema
@@ -101,7 +101,7 @@ export class ExportDialogComponent implements OnDestroy {
   }
 
   handleTitle(crgLayer: CrgLayer) {
-    return addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+    return addGeometryTypeToTitle(crgLayer.title, crgLayer.internalName);
   }
 
   selectAll() {

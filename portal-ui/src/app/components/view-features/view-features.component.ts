@@ -9,8 +9,8 @@ import { DataSchemaService } from '../../services/crg/data-schema.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { CrgLayer } from '../../services/geoserver/layers.service';
 import { getEnvironment } from '../../services/environment';
+import {CrgLayer} from '../../stores/ProjectsList.store';
 
 export interface ViewFeaturesData {
   features: WfsFeature[];

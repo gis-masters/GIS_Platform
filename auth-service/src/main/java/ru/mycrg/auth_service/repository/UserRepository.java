@@ -12,6 +12,8 @@ import ru.mycrg.auth_service.dto.UserProjection;
 
 import java.util.Optional;
 
+import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
+
 @RepositoryRestResource(collectionResourceRel = "users", path = "users", excerptProjection = UserProjection.class)
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
@@ -28,11 +30,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     Optional<User> findByEmail(@Param("email") String email);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Iterable<User> findAll();
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Optional<User> findById(Long aLong);
 
     // NOT Exported
@@ -44,22 +46,22 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     <S extends User> S save(S entity);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     <S extends User> Iterable<S> saveAll(Iterable<S> entities);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     boolean existsById(Long aLong);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     Iterable<User> findAllById(Iterable<Long> longs);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     long count();
 
@@ -68,12 +70,12 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     void delete(User entity);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     void deleteAll(Iterable<? extends User> entities);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     @RestResource(exported = false)
     void deleteAll();
 }

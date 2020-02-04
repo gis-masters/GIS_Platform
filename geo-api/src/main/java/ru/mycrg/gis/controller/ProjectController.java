@@ -29,22 +29,22 @@ public class ProjectController extends BaseController {
         this.exportService = exportService;
     }
 
-    @PostMapping("/{projectName}/import")
-    public ResponseEntity<Process> initImport(@PathVariable String projectName,
+    @PostMapping("/{projectId}/import")
+    public ResponseEntity<Process> initImport(@PathVariable long projectId,
                                               @Valid @RequestBody WorkImport workImport,
                                               Principal principal) {
-        Process process = importService.initProcess(projectName, workImport, principal);
+        Process process = importService.initProcess(DEFAULT_PROJECT_NAME + "_" + projectId, workImport, principal);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/{projectName}/export")
-    public ResponseEntity<Process> exportProjectLayers(@PathVariable String projectName,
+    @PostMapping("/{projectId}/export")
+    public ResponseEntity<Process> exportProjectLayers(@PathVariable long projectId,
                                                        @Valid @RequestBody ExportRequestModel requestModel,
                                                        Principal principal) {
-        log.debug("Request export layers. For project: {} Format: {}", projectName, requestModel.getFormat());
+        log.debug("Request export layers. For project: {} Format: {}", projectId, requestModel.getFormat());
 
-        Process process = exportService.export(projectName, requestModel, principal);
+        Process process = exportService.export(DEFAULT_PROJECT_NAME + "_" + projectId, requestModel, principal);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }

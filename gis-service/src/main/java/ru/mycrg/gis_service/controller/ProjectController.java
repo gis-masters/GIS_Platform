@@ -42,7 +42,7 @@ public class ProjectController {
     @GetMapping("/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public Resource<ProjectProjection> getProjectById(@PathVariable Long id, Authentication authentication) {
-        ProjectProjection project = projectService.findById(id, authentication);
+        ProjectProjection project = projectService.getProjectionById(id, authentication);
 
         return new Resource<>(project);
     }

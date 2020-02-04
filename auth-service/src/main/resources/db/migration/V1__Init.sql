@@ -60,8 +60,8 @@ ALTER TABLE public.authorities
 
 
 INSERT INTO public.users(email, enabled, name, password, sur_name, username, created_at, last_modified)
-VALUES ('d.alekseev@mycrg.ru', true, 'admin', '$2a$10$qux9ZvBIbaUrWHSLXzO2MOkhYzzeY1WPxmVRtjd0Xly0RPVEbAunW',
-        'fiz', 'admin@mail.ru', NOW(), NOW());
+    VALUES ('d.alekseev@mycrg.ru', true, 'admin', '$2a$10$qux9ZvBIbaUrWHSLXzO2MOkhYzzeY1WPxmVRtjd0Xly0RPVEbAunW',
+            'fiz', 'admin@mail.ru', NOW(), NOW());
 
 INSERT INTO public.authorities(authority, user_id)
-VALUES ('ADMIN', 1);
+    VALUES ('GLOBAL_ADMIN', 1);

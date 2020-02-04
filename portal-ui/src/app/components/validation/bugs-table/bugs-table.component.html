@@ -60,7 +60,7 @@
             <div class="example-element-detail"
                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
               <crg-violations-view [data]="element"
-                                   [layerName]="crgLayer.name"
+                                   [layerName]="crgLayer.internalName"
                                    style="width: 100%"></crg-violations-view>
             </div>
           </td>

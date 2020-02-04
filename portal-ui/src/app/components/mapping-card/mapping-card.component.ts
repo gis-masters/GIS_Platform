@@ -12,6 +12,7 @@ import {ImportLayerItem} from '../../services/geoserver/import/models';
 import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/crg/models';
 import {ImportDataHolderService, InputDataMetrics} from '../../services/geoserver/import/import-data-holder.service';
 import {FeatureUtil} from '../../services/util/FeatureUtil';
+import {ProjectsService} from '../../services/crg/projects.service';
 
 @Component({
   selector: 'crg-mapping-card',
@@ -40,11 +41,11 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
         .subscribe((metrics: InputDataMetrics) => this.metrics = metrics);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.propertySchemas.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.propertySchemas.push({name: AS_IS.name, title: AS_IS.title});
 
-    this.dataSchemaService.getFeaturesSchemas()
+    this.dataSchemaService.fetchAllSchemas()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
           if (featureXsdDefinition.schemas) {

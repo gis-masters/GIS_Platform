@@ -15,7 +15,7 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
-import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { LayersService } from '../../services/geoserver/layers.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { DataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
@@ -28,7 +28,7 @@ import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { ViewFeaturesData } from '../view-features/view-features.component';
 import { CommunicationService } from '../../services/communication.service';
-import { Project } from '../../stores/ProjectsList.store';
+import { CrgLayer, Project } from '../../stores/ProjectsList.store';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
@@ -312,7 +312,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
     const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
-      feature.id = this.layer.name + '.' + feature.id;
+      feature.id = this.layer.internalName + '.' + feature.id;
     });
     // Отсылка в сайдбар
     this.sideBarManager.do({
@@ -416,7 +416,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.name)),
+        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.internalName)),
         catchError(err => this.handleError(err)),
       ).subscribe(() => {
         i++;
@@ -438,11 +438,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.name)
+            this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.internalName)
           );
         }),
         concatMap(([features]) => {
-          return this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.name);
+          return this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.internalName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -465,7 +465,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.name)),
+        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.internalName)),
       ).subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);

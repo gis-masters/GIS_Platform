@@ -18,6 +18,7 @@ public class CrgProperties {
     private String rootUserPassword;
 
     private URL authServiceUrl;
+    private URL gisServiceUrl;
     private String geoserverHost;
     private String userServiceName;
 
@@ -32,6 +33,17 @@ public class CrgProperties {
 
     public void setAuthServiceUrl(URL authServiceUrl) {
         this.authServiceUrl = authServiceUrl;
+    }
+
+    public void setGisServiceUrl(URL gisServiceUrl) {
+        this.gisServiceUrl = gisServiceUrl;
+    }
+
+    @NotNull
+    public URL getGisServiceUrl() {
+        return Optional
+                .ofNullable(gisServiceUrl)
+                .orElseThrow(() -> new IllegalStateException("Not set gisServiceUrl"));
     }
 
     @NotNull

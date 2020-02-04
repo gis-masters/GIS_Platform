@@ -3,9 +3,9 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GmlDialogData} from '../components/export/export-dilog/export-dialog.component';
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 import {EditFeatureData} from '../components/edit-feature/edit-feature.component';
-import {CrgLayer} from './geoserver/layers.service';
 import {Sidebar} from './side-bar-manager.service';
 import {WfsFeature} from './geoserver/wfs-models';
+import {CrgLayer} from '../stores/ProjectsList.store';
 
 export interface ObjectDto {
   id: string;

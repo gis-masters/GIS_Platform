@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -57,21 +58,38 @@ public class ProjectService {
         return projects.map(project -> factory.createProjection(ProjectProjection.class, project));
     }
 
-    public ProjectProjection findById(Long id, Authentication authentication) {
-        Project project;
+    @NotNull
+    public Project getById(Long id, Authentication authentication) {
         if (isRoot(authentication)) {
-            project = projectRepository
+            return projectRepository
                     .findById(id)
-                    .orElseThrow(() -> new NotFoundException("Not found project"));
+                    .orElseThrow(() -> new NotFoundException("Not found project by id: " + id));
         } else {
             Long orgId = getOrganizationId(authentication);
 
-            project = projectRepository
+            return projectRepository
                     .findByIdAndOrganizationId(id, orgId)
-                    .orElseThrow(() -> new NotFoundException("Not found project"));
+                    .orElseThrow(() -> new NotFoundException("Not found project by id: " + id));
         }
+    }
 
-        return factory.createProjection(ProjectProjection.class, project);
+    public ProjectProjection getProjectionById(Long id, Authentication authentication) {
+        return factory.createProjection(ProjectProjection.class, getById(id, authentication));
+    }
+
+    @NotNull
+    public Project findByInternalName(String internalName, Authentication authentication) {
+        if (isRoot(authentication)) {
+            return projectRepository
+                    .findByInternalName(internalName)
+                    .orElseThrow(() -> new NotFoundException("Not found project by internalName: "+ internalName));
+        } else {
+            Long orgId = getOrganizationId(authentication);
+
+            return projectRepository
+                    .findByInternalNameAndOrganizationId(internalName, orgId)
+                    .orElseThrow(() -> new NotFoundException("Not found project by internalName: "+ internalName));
+        }
     }
 
     /**
@@ -142,5 +160,4 @@ public class ProjectService {
             throw new GisServiceException("Не удалось удалить проект на геосервере", e.getCause());
         }
     }
-
 }

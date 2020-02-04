@@ -18,6 +18,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static ru.mycrg.auth_service.config.Authorities.ORG_ADMIN;
+
 /**
  * CRUD сервис для работы с Организациями.
  */
@@ -65,7 +67,7 @@ public class OrganizationService {
         organizationRepository.save(newOrganization);
         // We use email as login
         newUser.setUsername(owner.getEmail());
-        newUser.addAuthority("GEOSERVER_ADMIN");
+        newUser.addAuthority(ORG_ADMIN);
 
         messageBus.sendOrgEvent(
                 new OrganizationInitializedEvent(

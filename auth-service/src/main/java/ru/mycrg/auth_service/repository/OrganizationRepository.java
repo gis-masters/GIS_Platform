@@ -12,21 +12,23 @@ import ru.mycrg.auth_service.entity.Organization;
 
 import java.util.Optional;
 
+import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
+
 @RepositoryRestResource(collectionResourceRel = "organizations",
                         path = "organizations",
                         excerptProjection = OrganizationProjection.class)
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Iterable<Organization> findAll();
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Page<Organization> findAll(Pageable pageable);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Iterable<Organization> findAll(Sort sort);
 
     @Override
@@ -36,7 +38,7 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
     <S extends Organization> S save(S entity);
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     void deleteById(Long aLong);
 
     // NOT Exported

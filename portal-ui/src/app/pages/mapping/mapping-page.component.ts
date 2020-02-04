@@ -1,21 +1,21 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {interval, Subject} from 'rxjs';
+import {NGXLogger} from 'ngx-logger';
+
 import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
-import {MatDialog} from '@angular/material/dialog';
-import {AlertDialogComponent} from '../../components/dialogs/alert-dialog/alert-dialog.component';
-import {interval, Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-
 import {LayersService} from '../../services/geoserver/layers.service';
 import {ImportService} from '../../services/geoserver/import/import.service';
 import {ProjectsService} from '../../services/crg/projects.service';
 import {Process, ProcessStatus} from '../../services/crg/models';
 import {OrganizationService} from '../../services/crg/organization.service';
 import {ImportLayer, ImportLayerItem} from '../../services/geoserver/import/models';
+import {AlertDialogComponent} from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 
 @Component({
@@ -102,7 +102,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     this.projectsService
-        .doWorkImport(workTasks, project.internalName, project.internalName)
+        .doWorkImport(workTasks, project.id, project.internalName)
         .then((crgProcess: Process) => {
 
           interval(this.CHECK_STATUS_INTERVAL)
@@ -116,11 +116,13 @@ export class MappingPageComponent implements OnInit, OnDestroy {
                 this.isImportFinished = true;
 
                 this.unsubscribe$.next();
+                this.projectsService.clearCurrent();
               } else if (response.status === ProcessStatus.ERROR) {
                 this.isWorkImportInited = false;
                 this.isImportFinished = false;
 
                 this.unsubscribe$.next();
+                this.projectsService.clearCurrent();
               }
             });
 
@@ -129,12 +131,15 @@ export class MappingPageComponent implements OnInit, OnDestroy {
             this.isWorkImportInited = false;
             this.isImportFinished = false;
 
+            this.projectsService.clearCurrent();
             this.unsubscribe$.next();
           }, this.WAIT_SERVER_RESPONSE_TIMER);
         }, errorResponse => {
           this.logger.info('ERROR: ', errorResponse);
 
           this.isWorkImportInited = false;
+
+          this.projectsService.clearCurrent();
         });
   }
 

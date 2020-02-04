@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
+import {NGXLogger} from 'ngx-logger';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot} from '@angular/router';
 
-import { getRoute } from '../services';
-import { TaskImport } from '../geoserver/import/taskImport';
-import { WsService } from '../ws.service';
-import { LayersService } from '../geoserver/layers.service';
-import { NameHrefProjection } from '../geoserver/projections';
-import { LocalStorageService } from '../local-storage.service';
-import { serverProperties } from '../server-properties.service';
-import { CrgApiResponse, Process } from './models';
-import { HttpQueue } from '../util/HttpQueue';
-import { projectsList, Project } from '../../stores/ProjectsList.store';
-import { NGXLogger } from 'ngx-logger';
+import {getRoute} from '../services';
+import {TaskImport} from '../geoserver/import/taskImport';
+import {WsService} from '../ws.service';
+import {LayersService} from '../geoserver/layers.service';
+import {LocalStorageService} from '../local-storage.service';
+import {serverProperties} from '../server-properties.service';
+import {CrgApiResponse, Process} from './models';
+import {HttpQueue} from '../util/HttpQueue';
+import {Project, projectsList} from '../../stores/ProjectsList.store';
+import {defineGeomType} from '../util/stringUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -27,21 +26,45 @@ export class ProjectsService {
               private storageService: LocalStorageService) { }
 
   async fetchProjects() {
+    const baseUrl = await serverProperties.geoServerUrl;
     const url = await serverProperties.projectsUrl;
 
     const response = await this.httpq.get<CrgApiResponse>(url);
-    let projectsWithLayers: Project[] = [];
-    if (response._embedded) {
-      projectsWithLayers = await this.fetchProjectsLayers(response._embedded.projects);
-    }
 
-    projectsList.setList(projectsWithLayers);
+    response._embedded.projects.forEach(project => this.handleLayers(project, baseUrl));
+
+    projectsList.setList(response._embedded.projects);
   }
 
   async getById(id: string): Promise<Project> {
+    const baseUrl = await serverProperties.geoServerUrl;
     const url = `${await serverProperties.projectsUrl}/${id}`;
 
-    return this.httpq.get<Project>(url);
+    return this.httpq.get<Project>(url).then(project => {
+      this.handleLayers(project, baseUrl);
+
+      return project;
+    });
+  }
+
+  clearCurrent() {
+    delete this.currentProject;
+  }
+
+  async getCurrent(route?: ActivatedRouteSnapshot): Promise<Project> {
+    route = route || getRoute().snapshot;
+    const projectId = route.params.projectId;
+
+    if (this.currentProject) {
+      const project = await this.currentProject;
+      if (String(project.id) === projectId) {
+        return project;
+      }
+    }
+
+    this.currentProject = this.getById(projectId);
+
+    return this.currentProject;
   }
 
   async create(name: string): Promise<Process> {
@@ -65,8 +88,8 @@ export class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  async doWorkImport(tasks: TaskImport[], internalName: string, workspaceName: string): Promise<Process> {
-    const url = `${await serverProperties.apiUrl}/${internalName}/import`;
+  async doWorkImport(tasks: TaskImport[], projectId: string, workspaceName: string): Promise<Process> {
+    const url = `${await serverProperties.apiUrl}/${projectId}/import`;
     const payload = {
       wsUiId: this.wsService.getId(),
       targetSchema: workspaceName,
@@ -80,55 +103,14 @@ export class ProjectsService {
     this.storageService.clearProject();
   }
 
-  async getCurrent(route?: ActivatedRouteSnapshot): Promise<Project> {
-    route = route || getRoute().snapshot;
-    const projectId = route.params.projectId;
-
-    if (this.currentProject) {
-      const project = await this.currentProject;
-      if (String(project.id) === projectId) {
-        return project;
-      }
-    }
-
-    this.currentProject = this.getById(projectId);
-
-    return this.currentProject;
-  }
-
-  private async fetchProjectsLayers(projects: Project[]): Promise<Project[]> {
-    if (!projects || projects.length === 0) {
-      return [];
-    }
-
-    return this.layerService
-      .getAllLayers()
-      .pipe(
-        map((layers: NameHrefProjection[]) => {
-          projects.forEach((project: Project) => project.layers.length = this.countLayers(project, layers));
-
-          return projects;
-        }),
-        catchError(err => {
-          this.logger.error('Cant get layers from geoserver: ', err);
-          return [];
-        })
-      ).toPromise();
-  }
-
-  private countLayers(project: Project, layers: NameHrefProjection[]): number {
-    let counter = 0;
-    layers.forEach((layer: NameHrefProjection) => {
-      const projectName = layer.name.split(':')[0];
-      if (projectName) {
-        if (project.internalName === projectName) {
-          counter++;
-        }
-      } else {
-        this.logger.warn('projects', 'Incorrect layer name');
-      }
+  private handleLayers(project: Project, baseUrl) {
+    project.layers.forEach(layer => {
+      layer.complexName = project.internalName + ':' + layer.internalName;
+      layer.href = baseUrl + '/rest/layers/' + layer.complexName;
+      layer.geometry = defineGeomType(layer.internalName);
     });
 
-    return counter;
+    project.layers.sort((a, b) => a.position - b.position);
   }
+
 }

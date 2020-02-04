@@ -9,7 +9,6 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
-import { CrgLayer } from '../../../services/geoserver/layers.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { DataSchemaService } from '../../../services/crg/data-schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
@@ -17,6 +16,7 @@ import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
 import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/crg/models';
+import {CrgLayer} from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -90,7 +90,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
           this.isLoadingResults = true;
           if (this.isActive) {
             return this.validationService
-                       .getValidationResults(this.crgLayer.name,
+                       .getValidationResults(this.crgLayer.internalName,
                                              this.paginator.pageIndex, this.paginator.pageSize,
                                              this.sort.active, this.sort.direction);
           } else {
@@ -108,7 +108,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   async getValidation() {
     const response: ValidationResultsResponse =
-      await this.validationService.getValidationResults(this.crgLayer.name, 0, this.defaultPageSize, '', 'asc');
+      await this.validationService.getValidationResults(this.crgLayer.internalName, 0, this.defaultPageSize, '', 'asc');
 
     this.handleResponse(response);
   }
@@ -129,7 +129,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (response) {
       this.data = response;
       this.data.results.forEach(bugObject => {
-        bugObject.title = this.schemaService.getClassIdAlias(this.crgLayer.name, bugObject);
+        bugObject.title = this.schemaService.getClassIdAlias(this.crgLayer.internalName, bugObject);
       });
 
       this.totalElements = response.total;

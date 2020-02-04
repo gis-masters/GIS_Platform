@@ -21,17 +21,17 @@
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       <div style="position: relative; top: 4px">
-                        <mat-icon *ngIf="commonInfo.get(layer.name)?.totalViolations > 0" style="color: tomato">error</mat-icon>
-                        <mat-icon *ngIf="!commonInfo.get(layer.name)?.validated" style="color: lightgrey">warning</mat-icon>
-                        <mat-icon *ngIf="isDone(layer.name)" style="color: forestgreen">done</mat-icon>
+                        <mat-icon *ngIf="commonInfo.get(layer.internalName)?.totalViolations > 0" style="color: tomato">error</mat-icon>
+                        <mat-icon *ngIf="!commonInfo.get(layer.internalName)?.validated" style="color: lightgrey">warning</mat-icon>
+                        <mat-icon *ngIf="isDone(layer.internalName)" style="color: forestgreen">done</mat-icon>
                       </div>
                       <span style="padding-left: 10px">{{layer.title}} ({{layer.geometry}})</span>
                     </mat-panel-title>
 
-                    <div class="float-right" *ngIf="!!commonInfo.get(layer.name)">
-                      <div *ngIf="commonInfo.get(layer.name)?.totalViolations">
+                    <div class="float-right" *ngIf="!!commonInfo.get(layer.internalName)">
+                      <div *ngIf="commonInfo.get(layer.internalName)?.totalViolations">
                         <mat-chip-list>
-                          <mat-chip style="color: tomato">{{commonInfo.get(layer.name)?.totalViolations}}</mat-chip>
+                          <mat-chip style="color: tomato">{{commonInfo.get(layer.internalName)?.totalViolations}}</mat-chip>
                         </mat-chip-list>
                       </div>
                     </div>

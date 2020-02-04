@@ -5,9 +5,9 @@ import { HttpQueue } from '../util/HttpQueue';
 import { ValidationError } from '../util/FeaturePropertyValidators';
 import { ValidationWsMsg, WsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
-import { CrgLayer } from '../geoserver/layers.service';
 import { ProcessStatus } from './models';
 import { ProjectsService } from './projects.service';
+import {CrgLayer} from "../../stores/ProjectsList.store";
 
 export interface ValidationResultsResponse {
   validated: boolean;
@@ -54,15 +54,15 @@ export class ValidationService {
    * @param crgLayers Слоя на валидацию.
    */
   async initValidation(crgLayers: CrgLayer[]): Promise<ValidationWsMsg> {
-    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
 
     const payload = {
       wsUiId: this.wsService.getId(),
       layers: layerNames
     };
 
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation';
+    const { id } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + id + '/validation';
 
     return this.httpq
                .post<ValidationWsMsg>(url, JSON.stringify(payload),
@@ -80,8 +80,8 @@ export class ValidationService {
       .set('size', page ? String(size) : '25')
       .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
 
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation';
+    const { id } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + id + '/validation';
 
     return this.httpq
                .get<ValidationResultsResponse>(url,
@@ -93,15 +93,15 @@ export class ValidationService {
    * @param crgLayers Слои
    */
   async getShortInfo(crgLayers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
-    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.name);
+    const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
 
     const payload = {
       wsUiId: this.wsService.getId(),
       layers: layerNames
     };
 
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + internalName + '/validation/short';
+    const { id } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + id + '/validation/short';
 
     return this.httpq
                .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),

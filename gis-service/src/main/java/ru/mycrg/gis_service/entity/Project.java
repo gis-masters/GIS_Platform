@@ -35,12 +35,7 @@ public class Project implements Identifiable<Long> {
     @Column(name = "last_modified")
     private @LastModifiedDate LocalDateTime lastModified;
 
-    @ManyToMany
-    @JoinTable(
-            name = "projects_layers",
-            joinColumns = {@JoinColumn(name = "project_id")},
-            inverseJoinColumns = {@JoinColumn(name = "layer_id")}
-    )
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<Layer> layers = new ArrayList<>();
 
     public Project() {}

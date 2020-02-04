@@ -95,7 +95,7 @@ export class TransformFeatureService {
                .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
   }
 
-  insertFeatures (featuresData: WfsFeature[], workspaceName: string, layerName: string) {
+  insertFeatures(featuresData: WfsFeature[], workspaceName: string, layerName: string) {
     const options: WriteTransactionOptions = {
       featureNS: workspaceName,
       featureType: layerName,

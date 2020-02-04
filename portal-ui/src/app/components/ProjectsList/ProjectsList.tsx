@@ -25,8 +25,8 @@ export class ProjectsList extends React.Component<{}> {
       this.enableCreation();
     }
     await services.provided;
-    const { dataSchemaService, projectsService } = services;
-    dataSchemaService.getFeaturesSchemas().subscribe();
+    const { projectsService } = services;
+
     await projectsService.fetchProjects();
   }
 

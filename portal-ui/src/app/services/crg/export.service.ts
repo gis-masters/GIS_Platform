@@ -37,8 +37,8 @@ export class ExportService {
               private projectsService: ProjectsService) { }
 
   async export(requestModel: ExportGmlRequest): Promise<Process> {
-    const { internalName } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + internalName + '/export';
+    const { id } = await this.projectsService.getCurrent();
+    const url = (await serverProperties.apiUrl) + '/' + id + '/export';
 
     const payload: ExportGmlRequest = requestModel;
     payload.wsUiId = this.wsService.getId();

@@ -43,6 +43,7 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
     private final CrgChainable<ImportMqTask> initialImportService;
 
     public ImportRequestHandler(InitialImportService initialImporter,
+                                GisServiceLayerHandler gisServiceLayerHandler,
                                 PostImportService postImporter,
                                 GeoserverFeatureTypeHandler featureTypeHandler,
                                 GeoserverStorageHandler storageHandler,
@@ -53,8 +54,9 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
         this.initialImportService = initialImporter;
 
         // Задаем цепочку отбработчиков
-        this.initialImportService.setHandlers(postImporter, null);
-        postImporter.setHandlers(storageHandler, initialImportService);
+        this.initialImportService.setHandlers(gisServiceLayerHandler, null);
+        gisServiceLayerHandler.setHandlers(postImporter, initialImportService);
+        postImporter.setHandlers(storageHandler, gisServiceLayerHandler);
         storageHandler.setHandlers(featureTypeHandler, postImporter);
         featureTypeHandler.setHandlers(styleHandler, storageHandler);
         styleHandler.setHandlers(importCleaner, featureTypeHandler);

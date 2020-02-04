@@ -2,8 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
-import { CrgLayer } from '../../../services/geoserver/layers.service';
 import { CommunicationService } from '../../../services/communication.service';
+import {CrgLayer} from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-validation-dialog',
@@ -36,7 +36,7 @@ export class ValidationDialogComponent {
   }
 
   handleTitle(crgLayer: CrgLayer) {
-    return addGeometryTypeToTitle(crgLayer.title, crgLayer.name);
+    return addGeometryTypeToTitle(crgLayer.title, crgLayer.internalName);
   }
 
   selectAll() {

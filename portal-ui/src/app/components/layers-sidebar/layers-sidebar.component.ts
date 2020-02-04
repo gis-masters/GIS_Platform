@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
 
-import {CrgLayer} from '../../services/geoserver/layers.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {OpenLayersService} from '../../services/open-layer/open-layers.service';
 import {cn} from '../../services/util/cn';
+import {CrgLayer} from '../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-layers-sidebar',

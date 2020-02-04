@@ -5,7 +5,7 @@ import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
 import { cn } from '../../services/util/cn';
-import { Project } from '../../stores/ProjectsList.store';
+import { CrgLayer, Project } from '../../stores/ProjectsList.store';
 import { WfsUtil } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';
@@ -14,13 +14,14 @@ import { CommunicationService } from '../../services/communication.service';
 import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
 
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
-import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { ProjectsService } from '../../services/crg/projects.service';
 import { getFeaturesByXmlFilter, getFeatures } from '../../services/geoserver/wfs.service';
 import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
+import { DataSchemaService } from '../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-map',
@@ -28,13 +29,12 @@ import { Toast } from '../Toast/Toast';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy {
-  currentProject: Project;
 
-  isAttrSidebarActive: boolean = false;
-  isBugReportSidebarActive: boolean = false;
-  isValidationDialogShow: boolean = false;
-  isGmlDialogShow: boolean = false;
-  isFeaturesSidebarActive: boolean = false;
+  isAttrSidebarActive = false;
+  isBugReportSidebarActive = false;
+  isValidationDialogShow = false;
+  isGmlDialogShow = false;
+  isFeaturesSidebarActive = false;
 
   viewFeaturesData: ViewFeaturesData;
   validationDialogData: ValidationDialogData;
@@ -50,13 +50,17 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
               private projectsService: ProjectsService,
+              private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) { }
 
-  ngOnInit () {
+  async ngOnInit() {
     this.openLayers.createMap();
 
-    this.fetchLayers();
+    const currentProject = await this.projectsService.getCurrent();
+    this.dataSchemaService.fetchSchemas(currentProject).subscribe(value => {
+      this.fetchLayers(currentProject);
+    });
 
     this.communicationService.validationDialog
         .pipe(takeUntil(this.unsubscribe$))
@@ -204,9 +208,8 @@ export class MapComponent implements OnInit, OnDestroy {
             sidebar.target === SidebarType.ATTRIBUTES;
   }
 
-  private async fetchLayers() {
-    this.currentProject = await this.projectsService.getCurrent();
-    this.layersService.fetchLayers(this.currentProject)
+  private async fetchLayers(currentProject: Project) {
+    this.layersService.fetchLayers(currentProject)
         .pipe(
           tap(layers => this.layers = layers),
           catchError(err => {
@@ -219,15 +222,9 @@ export class MapComponent implements OnInit, OnDestroy {
             (await this.openLayers.addLayerToMap(layer.complexName)).setZIndex(layers.length - index);
           });
 
-          // Позиционируемся на первом из загруженных слоев
-          if (layers.length > 0) {
-            getFeatures(layers[0].complexName)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe((fCollection: WfsFeatureCollection) => {
-                  if (fCollection && fCollection.bbox) {
-                    this.openLayers.fitToBbox(fCollection.bbox, [50, 50, 50, 50]);
-                  }
-                });
+          // Позиционируемся по BBOX проекта
+          if (currentProject.bbox) {
+            this.openLayers.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
           }
         });
   }

@@ -5,7 +5,7 @@ import { forkJoin, Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { CrgLayer, LayersService } from '../../services/geoserver/layers.service';
+import { LayersService } from '../../services/geoserver/layers.service';
 import { ExportService } from '../../services/crg/export.service';
 import { LegendService } from '../../services/geoserver/legend.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
@@ -16,6 +16,7 @@ import { StylesService } from '../../services/geoserver/styles.service';
 import { getEnvironment } from '../../services/environment';
 import { ViewFeaturesData } from '../view-features/view-features.component';
 import { DataSchemaService } from '../../services/crg/data-schema.service';
+import {CrgLayer} from '../../stores/ProjectsList.store';
 
 interface Rule {
   name: string;
@@ -39,7 +40,7 @@ export class LayerListItemComponent implements OnDestroy {
   @ViewChild(MatMenuTrigger, { static: false })
   contextMenu: MatMenuTrigger;
 
-  isSimf: boolean = false;
+  isSimf = false;
 
   contextMenuPosition: {x: string, y: string} = { x: '0px', y: '0px' };
 
@@ -49,7 +50,7 @@ export class LayerListItemComponent implements OnDestroy {
 
   open = false;
 
-  private legendLoaded: boolean = false;
+  private legendLoaded = false;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -100,7 +101,7 @@ export class LayerListItemComponent implements OnDestroy {
   }
 
   async export() {
-    await this.exportService.export({format: 'ESRI Shapefile', layers: [this.layer.name]});
+    await this.exportService.export({format: 'ESRI Shapefile', layers: [this.layer.internalName]});
     // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
     this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
   }
@@ -152,7 +153,7 @@ export class LayerListItemComponent implements OnDestroy {
   }
 
   private loadLegend () {
-    if (this.legendLoaded) return;
+    if (this.legendLoaded) { return; }
     this.legendLoaded = true;
 
     this.layersService.getFullLayer(this.layer).subscribe(async ({layer}) => {

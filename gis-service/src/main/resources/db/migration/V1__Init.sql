@@ -15,32 +15,25 @@ ALTER TABLE public.projects
 
 CREATE TABLE IF NOT EXISTS public.layers
 (
-    id            bigserial NOT NULL UNIQUE,
-    title         character varying(255),
-    internal_name character varying(255),
-    geometry_type character varying(20),
-    created_at    timestamp without time zone,
-    last_modified timestamp without time zone,
-    CONSTRAINT layers_pkey PRIMARY KEY (id)
+    id              bigserial NOT NULL UNIQUE,
+    title           character varying(255),
+    internal_name   character varying(255),
+    enabled         boolean,
+    position        integer,
+    transparency    integer,
+    max_zoom        integer,
+    min_zoom        integer,
+    style_name      character varying(100),
+    native_crs      character varying(255),
+    data_store_name character varying(100),
+    schema_id       character varying(100),
+    geometry_type   character varying(20),
+    created_at      timestamp without time zone,
+    last_modified   timestamp without time zone,
+    project_id      serial    not null,
+    CONSTRAINT layers_pkey PRIMARY KEY (id),
+    CONSTRAINT fkcqb7tlhbwy2abk71j80y20wq0 FOREIGN KEY (project_id) REFERENCES public.projects
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.layers
-    OWNER to postgres;
-
-CREATE TABLE IF NOT EXISTS public.projects_layers
-(
-    project_id integer NOT NULL,
-    layer_id   integer NOT NULL,
-    CONSTRAINT uk_ag03e2qfsggh4qxd93rfod6wk UNIQUE (layer_id),
-    CONSTRAINT fk13s2nps13mkswtwy8r6fuc3yky FOREIGN KEY (project_id)
-        REFERENCES public.projects (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fknk81fecnwa0ihx2d22p6dph3ih FOREIGN KEY (layer_id)
-        REFERENCES public.layers (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-) TABLESPACE pg_default;
-
-ALTER TABLE public.projects_layers
     OWNER to postgres;

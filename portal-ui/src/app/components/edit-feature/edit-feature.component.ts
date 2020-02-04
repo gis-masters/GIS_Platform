@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { from } from 'rxjs';
@@ -41,7 +33,7 @@ export interface EditFeatureData {
   isNew?: true;
 }
 
-type Properties = { [key: string]: any };
+interface Properties { [key: string]: any; }
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',
@@ -120,7 +112,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
       const currentData: EditFeatureData = dataChanged.currentValue;
 
       if (currentData.mode === EditFeatureMode.single) {
-        if(!this.data.isNew) {
+        if (!this.data.isNew) {
           this.openLayers.showFeature(currentData.feature);
         }
         this.isGeometryChanged = false;

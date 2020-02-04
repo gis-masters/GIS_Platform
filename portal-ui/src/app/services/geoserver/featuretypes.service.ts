@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { CrgLayer } from './layers.service';
 import { LocalStorageService } from '../local-storage.service';
 import { serverProperties } from '../server-properties.service';
 import { HttpQueue } from '../util/HttpQueue';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { ProjectsService } from '../crg/projects.service';
+import {CrgLayer} from '../../stores/ProjectsList.store';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class FeatureTypesService {
     const orgId = this.storageService.getOrgId();
     const workspaceName = currentProject.internalName;
     const storeName = 'database_' + orgId + '_store';
-    const url = `${this.featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${layer.name}`;
+    const url = `${this.featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${layer.internalName}`;
     const { featureType } = await this.httpq.get<{featureType: FeatureType}>(url);
 
     return featureType;

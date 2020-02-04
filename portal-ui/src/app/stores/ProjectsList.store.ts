@@ -1,11 +1,24 @@
 import { observable, computed, action } from 'mobx';
+import {FeatureDescription} from '../services/crg/data-schema.service';
+import {GeometryType} from '../services/util/stringUtil';
 
-export interface Layer {
+export interface CrgLayer {
   id: string;
   title: string;
   internalName: string;
-  order: number;
+  enabled: boolean;
+  position: number;
+  transparency: number;
+  zoom: number;
+  maxZoom: number;
+  minZoom: number;
   geometryType: string;
+  schemaId: string;
+
+  complexName?: string;
+  href?: string;
+  geometry?: GeometryType | undefined;
+  schema?: FeatureDescription;
 }
 
 export interface Project {
@@ -15,34 +28,25 @@ export interface Project {
   bbox: string;
   order: number;
   organizationId: number;
-  layers: Layer[];
+  layers: CrgLayer[];
   createdAt: string;
 }
 
 class ProjectsList {
 
-  @computed
-  get list (): Project[] {
-    return (this._list || []).filter(p => !this.deleted.includes(p.id));
-  }
+  private static _instance: ProjectsList;
+  @observable private _list?: Project[];
+  @observable private deleted: string[] = [];
 
-  @computed
-  get isLoaded (): boolean {
-    return Boolean(this._list);
+  private constructor() {
   }
-
-  private constructor() { }
 
   public static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  private static _instance: ProjectsList;
-  @observable private _list?: Project[];
-  @observable private deleted: string[] = [];
-
   @action
-  setList (list: Project[]) {
+  setList(list: Project[]) {
     this._list = list;
   }
 
@@ -50,6 +54,19 @@ class ProjectsList {
   considerDeleted(id: string) {
     this.deleted.push(id);
   }
+
+  @computed
+  get list(): Project[] {
+    return (this._list || [])
+      .filter(p => !this.deleted.includes(p.id))
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
+
+  @computed
+  get isLoaded(): boolean {
+    return Boolean(this._list);
+  }
+
 }
 
 export const projectsList = ProjectsList.instance;

@@ -3,7 +3,6 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
-import { CrgLayer } from '../../../services/geoserver/layers.service';
 import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
 import { CommunicationService, ObjectDto } from '../../../services/communication.service';
 import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
@@ -11,6 +10,7 @@ import {IWsMessage, ValidationWsMsg, WsService} from '../../../services/ws.servi
 import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
 import {ProcessStatus, ProcessType} from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
+import {CrgLayer} from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-report-sidebar',

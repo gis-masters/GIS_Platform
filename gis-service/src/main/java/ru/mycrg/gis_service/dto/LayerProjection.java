@@ -14,8 +14,19 @@ public interface LayerProjection {
 
     String getInternalName();
 
-    Integer getOrder();
+    boolean isEnabled();
+
+    Integer getPosition();
+
+    int getTransparency();
+
+    int getMaxZoom();
+
+    int getMinZoom();
 
     String getGeometryType();
 
+    String getNativeCRS();
+
+    String getSchemaId();
 }
