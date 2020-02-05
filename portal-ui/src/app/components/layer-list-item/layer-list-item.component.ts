@@ -126,6 +126,7 @@ export class LayerListItemComponent implements OnDestroy {
 
   toggleOpenness () {
     this.open = !this.open;
+    this.loadLegend();
   }
 
   ngOnDestroy(): void {

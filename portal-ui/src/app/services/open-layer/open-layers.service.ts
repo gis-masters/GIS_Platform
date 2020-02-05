@@ -28,6 +28,7 @@ import { WfsFeature } from '../geoserver/wfs-models';
 import { getEnvironment } from '../environment';
 import { serverProperties } from '../server-properties.service';
 import { TokenStorageService } from '../token-storage.service';
+import { CrgLayer } from '../../stores/ProjectsList.store';
 
 export let BEARER_TOKEN = '';
 
@@ -136,9 +137,9 @@ export class OpenLayersService {
     });
   }
 
-  async addLayerToMap(complexLayerName: string) {
+  async addLayerToMap(layer: CrgLayer) {
     const params: CrgWmsParams = {
-      LAYERS: complexLayerName,
+      LAYERS: layer.complexName,
       FORMAT: 'image/vnd.jpeg-png8'
     };
 
@@ -151,10 +152,10 @@ export class OpenLayersService {
         serverType: 'geoserver',
         crossOrigin: 'anonymous',
       }),
-      opacity: this.defaultOpacity
+      opacity: layer.transparency ? (layer.transparency / 100) : this.defaultOpacity
     });
 
-    imageLayer.setVisible(false);
+    imageLayer.setVisible(layer.enabled);
 
     this._map.addLayer(imageLayer);
 

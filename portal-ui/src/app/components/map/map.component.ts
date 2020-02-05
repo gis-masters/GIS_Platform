@@ -219,7 +219,7 @@ export class MapComponent implements OnInit, OnDestroy {
         )
         .subscribe((layers: CrgLayer[]) => {
           layers.forEach(async (layer, index) => {
-            (await this.openLayers.addLayerToMap(layer.complexName)).setZIndex(layers.length - index);
+            (await this.openLayers.addLayerToMap(layer)).setZIndex(layers.length - index);
           });
 
           // Позиционируемся по BBOX проекта
