@@ -235,5 +235,7 @@ services:
     depends_on:
       - geo-api
       - geoserver
+    volumes:
+      - /opt/reglaments:/usr/share/nginx/html/reglaments
     ports:
     - 80:80
