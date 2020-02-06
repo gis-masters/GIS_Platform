@@ -55,13 +55,13 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
                 "\t\"dataStoreName\": \"" + storeName + "\"\n" +
                 "}");
 
-        Request getStores = new Request.Builder()
+        Request createLayer = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + importTask.getUserToken())
                 .url(getLayersUrl(importTask))
                 .post(body)
                 .build();
 
-        try (Response response = httpClient.newCall(getStores).execute()) {
+        try (Response response = httpClient.newCall(createLayer).execute()) {
             if (!response.isSuccessful()) {
                 throw new ImportException(response.body().string());
             }

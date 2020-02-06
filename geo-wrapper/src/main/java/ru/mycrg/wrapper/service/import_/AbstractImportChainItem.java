@@ -24,7 +24,7 @@ public abstract class AbstractImportChainItem implements CrgChainable<ImportMqTa
 
     @Override
     public void rollback(ImportMqTask importTask) {
-        log.info("Rollback. Nothing to do on step: {}", this.getClass().getName());
+        log.info("Rollback. Nothing to do on the step: {}", this.getClass().getName());
 
         if (previousImporter != null) {
             previousImporter.rollback(importTask);

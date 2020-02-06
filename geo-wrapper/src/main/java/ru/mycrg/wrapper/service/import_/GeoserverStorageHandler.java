@@ -74,25 +74,4 @@ public class GeoserverStorageHandler extends AbstractImportChainItem {
                 .noneMatch(store -> store.getName().equals(projectName));
     }
 
-    @Override
-    public void rollback(ImportMqTask importTask) {
-        SchemaDto featureDescription = importTask.getFeatureDescription();
-
-        log.warn("Rollback. Geoserver storage: {}", featureDescription.getName());
-
-        String databaseName = importTask.getTargetResource().getDbName();
-        String projectName = importTask.getTargetResource().getSchemaName();
-        String storeName = databaseName + DEFAULT_STORE_POSTFIX;
-
-        try {
-            storageService.deleteStorage(projectName, storeName);
-        } catch (GeoserverClientException e) {
-            log.error("Не удалось удалить хранилище с геосервера: " + storeName, e);
-        } finally {
-            if (previousImporter != null) {
-                previousImporter.rollback(importTask);
-            }
-        }
-    }
-
 }

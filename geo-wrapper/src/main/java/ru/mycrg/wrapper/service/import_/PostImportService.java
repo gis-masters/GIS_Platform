@@ -15,9 +15,9 @@ import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
+import ru.mycrg.wrapper.service.util.StringDecoder;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
@@ -108,13 +108,14 @@ public class PostImportService extends AbstractImportChainItem {
 
         batch.forEach(item -> {
             HashMap<String, Object> params = new HashMap<>();
+            Map<String, Object> decodedItem = decodeStrings(item);
 
             if (fDescription.getCalcFiledFunction() != null) {
-                Object functionResult = scriptEngine.invokeFunction(item, fDescription.getCalcFiledFunction());
-                ((Map<String, Object>) functionResult).forEach((k, v) -> item.put(k, v.toString()));
+                Object functionResult = scriptEngine.invokeFunction(decodedItem, fDescription.getCalcFiledFunction());
+                ((Map<String, Object>) functionResult).forEach((k, v) -> decodedItem.put(k, v.toString()));
             }
 
-            item.forEach((key, value) -> {
+            decodedItem.forEach((key, value) -> {
                 // Добавим чтобы опираться не него при вставке
                 if (PRIMARY_KEY.equals(key)) {
                     params.put(key, value);
@@ -127,9 +128,7 @@ public class PostImportService extends AbstractImportChainItem {
                 } else {
                     // Декодируем строковые атрибуты
                     if (value instanceof String) {
-                        String decoded =
-                                new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-
+                        String decoded = StringDecoder.decode(String.valueOf(value));
                         if (decoded.contains("'")) {
                             decoded = decoded.replace("'", "''");
                         }
@@ -153,5 +152,23 @@ public class PostImportService extends AbstractImportChainItem {
         });
 
         return result;
+    }
+
+    private Map<String, Object> decodeStrings(Map<String, Object> item) {
+        Map<String, Object> decodedItem = new HashMap<>();
+        item.forEach((key, value) -> {
+            if (value instanceof String) {
+                String decoded = StringDecoder.decode(String.valueOf(value));
+                if (decoded.contains("'")) {
+                    decoded = decoded.replace("'", "''");
+                }
+
+                decodedItem.put(key, decoded);
+            } else {
+                decodedItem.put(key, value);
+            }
+        });
+
+        return decodedItem;
     }
 }
