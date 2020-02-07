@@ -37,10 +37,9 @@
                     </div>
                   </mat-expansion-panel-header>
 
-                  <div>
-                    <crg-bugs-table [crgLayer]="layer"
-                                    [step]="step" [index]="index + 1" [isActive]="isActive"></crg-bugs-table>
-                  </div>
+                  <crg-bugs-table *ngIf="isActive"
+                                  [crgLayer]="layer"
+                                  [step]="step" [index]="index + 1" [isActive]="isActive"></crg-bugs-table>
 
                   <mat-action-row style="padding: 0">
                     <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>

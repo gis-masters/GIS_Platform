@@ -123,10 +123,10 @@ export class OpenLayersService {
       ]
     });
 
-    // MAP EVENTS
-    this._map.on('postrender', () =>  {
+    this._map.on('movestart', () =>  {
       window.dispatchEvent(new Event('resize'));
     });
+
     this._map.on('singleclick', event =>  {
       if (event.coordinate) {
         this.mapClick$.emit(event.coordinate);

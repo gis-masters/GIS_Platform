@@ -97,6 +97,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   async ngAfterViewInit() {
+    window.dispatchEvent(new Event('resize'));
+
     this.project = await this.projectsService.getCurrent();
 
     this.requestModel$
@@ -130,6 +132,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   ngOnDestroy(): void {
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 0);
+
     this.openLayersService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
