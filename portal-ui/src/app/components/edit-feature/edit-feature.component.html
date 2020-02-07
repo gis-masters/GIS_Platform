@@ -40,7 +40,9 @@
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
         </mat-tab>
         <mat-tab label="Геометрия">
-          <crg-edit-feature-geometry [store]="editGeometryStore"></crg-edit-feature-geometry>
+          <ng-template matTabContent>
+            <crg-edit-feature-geometry [store]="editGeometryStore"></crg-edit-feature-geometry>
+          </ng-template>
         </mat-tab>
       </mat-tab-group>
     </ng-container>

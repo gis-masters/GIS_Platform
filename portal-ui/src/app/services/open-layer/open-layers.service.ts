@@ -289,22 +289,23 @@ export class OpenLayersService {
     return this.view.getResolution();
   }
 
-  getBufferByCoordinates(pos: [number, number]) {
-    pos[0] = Number(pos[0].toFixed(this.PRECISION));
-    pos[1] = Number(pos[1].toFixed(this.PRECISION));
+  getBufferByCoordinates(pos: Coordinate) {
+    const round = (n: number) => Number(n.toFixed(this.PRECISION));
+    const res = round((this.getResolution() * this.HIT_TOLERANCE));
+    pos = pos.map(round);
 
-    const res = Number(Number(this.getResolution() * this.HIT_TOLERANCE).toFixed(this.PRECISION));
+    const x1 = pos[0] + res / 2;
+    const x2 = x1 - res;
+    const y1 = pos[1] + res / 2;
+    const y2 = y1 - res;
 
-    // console.log('pos/res', pos, res);
-    const d = 2;
     const buffer = [[[
-      [pos[0] + (res / d),        pos[1] + (res / d)],
-      [pos[0] + (res / d) - res,  pos[1] + (res / d)],
-      [pos[0] + (res / d) - res,  pos[1] + (res / d) - res],
-      [pos[0] + (res / d),        pos[1] + (res / d) - res],
-      [pos[0] + (res / d),        pos[1] + (res / d)]
+      [x1, y1],
+      [x2, y1],
+      [x2, y2],
+      [x1, y2],
+      [x1, y1]
     ]]];
-    // console.log('buffer', buffer);
 
     return new MultiPolygon(buffer);
   }

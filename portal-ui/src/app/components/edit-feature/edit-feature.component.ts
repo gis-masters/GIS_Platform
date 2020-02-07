@@ -88,6 +88,16 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(changedGeometry => {
           this.changedGeometry = changedGeometry;
+
+          if (this.editGeometryStore.isValid) {
+            const feature = {
+              ...this.data.feature,
+              geometry: changedGeometry
+            };
+            this.openLayers.clearDraft();
+            this.openLayers.paintFeature(feature);
+            this.openLayers.showFeature(feature);
+          }
         });
 
     fromMobx(() => this.editGeometryStore.isValid)

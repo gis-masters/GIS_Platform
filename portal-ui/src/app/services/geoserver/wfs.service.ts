@@ -91,7 +91,7 @@ export const getFeaturesByXmlFilter = async (xml: string): Promise<WfsFeatureCol
 };
 
 export const isGeometryValid = (geometry: WfsGeometry): boolean => {
-  return !geometry.coordinates.flat(5).includes(NaN) && !hasUnclosedPolygons(geometry);
+  return isCoordinateValid(geometry.coordinates.flat(5)) && !hasUnclosedPolygons(geometry);
 };
 
 const hasUnclosedPolygons = (geometry: WfsGeometry): boolean => {

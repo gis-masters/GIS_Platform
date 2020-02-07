@@ -3,6 +3,7 @@ import { Subject, throwError } from 'rxjs';
 import { catchError, filter, takeUntil, tap } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
+import { Coordinate } from 'ol/coordinate';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer, Project } from '../../stores/ProjectsList.store';
@@ -160,7 +161,7 @@ export class MapComponent implements OnInit, OnDestroy {
   /**
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
-  private async showFeaturesInfo(coordinate: [number, number]) {
+  private async showFeaturesInfo(coordinate: Coordinate) {
     const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();
 
     if (visibleLayersComplexName.length) {
@@ -186,8 +187,6 @@ export class MapComponent implements OnInit, OnDestroy {
         fCollection.features.forEach(feature => {
           this.openLayers.paintFeature(feature);
         });
-
-        this.communicationService.selectedFeatures$.emit(fCollection.features);
       }
 
     } else {

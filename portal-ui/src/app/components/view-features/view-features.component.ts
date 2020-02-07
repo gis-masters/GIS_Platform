@@ -79,7 +79,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const dataChanged = changes['data'];
+    const dataChanged = changes.data;
     if (dataChanged && !dataChanged.isFirstChange()) {
       const currentValue = dataChanged.currentValue as ViewFeaturesData;
       if (currentValue && currentValue.features && currentValue.features.length === 1) {

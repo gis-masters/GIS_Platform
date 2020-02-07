@@ -4,7 +4,6 @@ import {GmlDialogData} from '../components/export/export-dilog/export-dialog.com
 import {ValidationDialogData} from '../components/validation/validation-dialog/validation-dialog.component';
 import {EditFeatureData} from '../components/edit-feature/edit-feature.component';
 import {Sidebar} from './side-bar-manager.service';
-import {WfsFeature} from './geoserver/wfs-models';
 import {CrgLayer} from '../stores/ProjectsList.store';
 
 export interface ObjectDto {
@@ -22,5 +21,4 @@ export class CommunicationService {
   @Output() gmlDialog = new EventEmitter<GmlDialogData>();
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
-  @Output() selectedFeatures$ = new EventEmitter<WfsFeature[]>();
 }
