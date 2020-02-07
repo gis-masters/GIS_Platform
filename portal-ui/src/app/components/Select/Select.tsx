@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormControl, Select as BaseSelect, InputLabel, MenuItem } from '@material-ui/core'
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';

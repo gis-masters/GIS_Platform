@@ -226,24 +226,27 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
     }
   }
 
-  deleteFeature () {
+  async deleteFeature () {
     const data: ConfirmDialogData = {
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
     };
     const { feature } = this.data;
     const [layerName, newId] = feature.id.split('.');
+    const { internalName } = await this.projectsService.getCurrent();
+
     this.dialog
         .open(ConfirmDialogComponent, { width: '400px', data: data })
         .afterClosed().pipe(filter(value => !!value))
-        .subscribe(async () => {
+        .subscribe(() => {
           this.transformFeatureService.deleteFeatures(
             [{ ...feature, id: newId }],
-            (await this.projectsService.getCurrent()).internalName,
+            internalName,
             layerName
           ).subscribe(() => {
             this.delete.emit(feature.id);
             this.close();
+            this.openLayers.refreshLayer(`${internalName}:${layerName}`);
           });
         });
   }
@@ -300,8 +303,11 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
           this.loadPercent = percent > 100 ? 100 : percent;
           this.isSaveInProgress = false;
           this.closeMe.emit(true);
-          Toast.success('Сохранено');
+          this.openLayers.refreshLayer(`${internalName}:${tableName}`);
+          this.openLayers.clearDraft();
 
+          Toast.success('Сохранено');
+          
           this.communicationService.featuresUpdate$.emit({
             feature: this.data.feature,
             featuresId: this.data.featuresId,

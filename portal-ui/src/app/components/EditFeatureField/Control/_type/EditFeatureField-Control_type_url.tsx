@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
@@ -9,6 +9,7 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
+import { services } from '../../../../services/services';
 
 import { EditFeaturesControlProps, cnEditFeatureFieldControl } from '../EditFeatureField-Control';
 
@@ -26,7 +27,12 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
   constructor (props: EditFeaturesControlProps) {
     super(props);
 
-    this.value = JSON.parse(props.field.value);
+    try {
+      this.value = JSON.parse(props.field.value);
+    } catch (e) {
+      this.value = { url: '', text: '' };
+      services.logger.warn('Incorrect url value: ', props.field.value);
+    }
 
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);

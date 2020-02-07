@@ -17,7 +17,7 @@ import { OpenLayersService } from '../../services/open-layer/open-layers.service
 import { LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { ProjectsService } from '../../services/crg/projects.service';
-import { getFeaturesByXmlFilter, getFeatures } from '../../services/geoserver/wfs.service';
+import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';

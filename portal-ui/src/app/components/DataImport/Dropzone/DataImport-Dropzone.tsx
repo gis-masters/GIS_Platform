@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Dropzone from 'react-dropzone'
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';

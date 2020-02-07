@@ -33,7 +33,6 @@ interface RuleWithLegend extends Rule {
   styleUrls: ['./layer-list-item.component.scss']
 })
 export class LayerListItemComponent implements OnDestroy {
-
   @Input() layer: CrgLayer;
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
 

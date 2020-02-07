@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { StorageKeys } from './storage-keys';
-import { LogModel } from './logger/fiz.logger';
 import { UserInfoModel } from './crg/users.service';
 
 @Injectable({
@@ -50,13 +49,5 @@ export class LocalStorageService {
     } else {
       console.warn('Не удалось получить инфо о пользователе');
     }
-  }
-
-  setLogModel(model: LogModel) {
-    this.saveByKey(StorageKeys.logModel, JSON.stringify(model));
-  }
-
-  getLogModel(): LogModel {
-    return JSON.parse(this.getByKey(StorageKeys.logModel)) as LogModel;
   }
 }

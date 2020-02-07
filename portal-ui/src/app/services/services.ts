@@ -1,5 +1,6 @@
 import { NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
 
 import { ImportService } from './geoserver/import/import.service';
 import { ProjectsService } from './crg/projects.service';
@@ -16,6 +17,7 @@ interface ServicesList {
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
+  logger: NGXLogger;
 }
 
 class Services implements ServicesList {
@@ -27,6 +29,7 @@ class Services implements ServicesList {
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
+  logger: NGXLogger;
 
   provided: Promise<void>;
 
@@ -47,6 +50,7 @@ class Services implements ServicesList {
     this.route = servicesList.route;
     this.router = servicesList.router;
     this.ngZone = servicesList.ngZone;
+    this.logger = servicesList.logger;
 
     this.onfullfilled();
   }

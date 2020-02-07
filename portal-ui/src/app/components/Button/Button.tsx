@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Button as BaseButton } from '@material-ui/core';
 import { ButtonProps as BaseButtonProps } from '@material-ui/core/Button/Button';
 import { cn } from '@bem-react/classname';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
 import { compose } from '@bem-react/core';

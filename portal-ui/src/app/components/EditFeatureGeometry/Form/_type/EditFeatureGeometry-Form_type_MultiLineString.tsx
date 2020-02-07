@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 import { cn } from '@bem-react/classname';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import GeometryType from 'ol/geom/GeometryType';
 import { cn } from '@bem-react/classname';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
 import { IClassNameProps } from '@bem-react/core'
@@ -11,6 +11,7 @@ import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryAddButton } from '../AddButton/EditFeatureGeometry-AddButton';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
+import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
 
 import '!style-loader!css-loader!sass-loader!../GroupFooter/EditFeatureGeometry-GroupFooter.scss';
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
@@ -48,6 +49,8 @@ export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometr
 
     return (
       <Tag className={className}>
+        <EditFeatureGeometryXY />
+
         {coordinates.map((coordinate, i) => {
           const isLast = i === coordinates.length - 1;
 
@@ -74,7 +77,7 @@ export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometr
           ) : null}
           
           <EditFeatureGeometryAddButton onClick={this.addHandler}>
-            Добавить точку
+            Добавить узел
           </EditFeatureGeometryAddButton>
         </div>
 

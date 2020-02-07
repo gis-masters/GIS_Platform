@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Toc, TocItem } from '../../stores/Help.store';

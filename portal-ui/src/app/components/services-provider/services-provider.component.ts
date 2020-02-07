@@ -1,5 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
 
 import { services } from '../../services/services';
 import { ImportService } from '../../services/geoserver/import/import.service';
@@ -20,7 +21,8 @@ export class ServicesProvider {
               private projectsService: ProjectsService,
               private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
-              private httpq: HttpQueue) {
+              private httpq: HttpQueue,
+              private logger: NGXLogger) {
     services.provide({
       importService: this.importService,
       projectsService: this.projectsService,
@@ -29,7 +31,8 @@ export class ServicesProvider {
       httpq: this.httpq,
       route: this.route,
       router: this.router,
-      ngZone: this.ngZone
+      ngZone: this.ngZone,
+      logger: this.logger
     });
   }
 }

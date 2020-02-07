@@ -34,7 +34,7 @@
   <div [ngClass]="isAttributeSidebarOpened? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
     <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
-    <ng-container  *ngIf="data.mode === 'single'  else editAttrsForm">
+    <ng-container *ngIf="data.mode === 'single' else editAttrsForm">
       <mat-tab-group>
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>

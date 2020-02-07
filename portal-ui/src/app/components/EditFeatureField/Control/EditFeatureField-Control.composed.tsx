@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { compose } from '@bem-react/core';
 
 import { EditFeatureFieldControl as Presenter } from './EditFeatureField-Control';
