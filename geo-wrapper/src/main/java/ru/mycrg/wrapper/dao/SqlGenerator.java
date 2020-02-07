@@ -142,7 +142,7 @@ public class SqlGenerator {
                 return attrDescription.getName() + " integer";
             case STRING:
                 Integer maxLength = attrDescription.getMaxLength();
-                if (maxLength == -1) {
+                if (maxLength < 255) {
                     maxLength = 255;
                 }
 
@@ -150,7 +150,7 @@ public class SqlGenerator {
             case DOUBLE:
                 return attrDescription.getName() + " numeric(38,8)";
             case URL:
-                return attrDescription.getName() + " character varying(254)";
+                return attrDescription.getName() + " character varying(255)";
             case GEOMETRY:
                 return "shape public.geometry";
             default:
