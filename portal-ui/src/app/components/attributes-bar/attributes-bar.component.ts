@@ -17,7 +17,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { LayersService } from '../../services/geoserver/layers.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
-import { DataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
@@ -88,7 +88,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private tFeatureService: TransformFeatureService,
               private projectsService: ProjectsService,
               private layersService: LayersService,
-              private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
               private logger: NGXLogger,
               private dialog: MatDialog,
@@ -338,7 +337,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
     this.layersService.layers$
         .pipe(
-          map(layers => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
+          map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
           flatMap(suitableLayers => this.openEditDialog('Копирование', suitableLayers)),
           takeUntil(this.unsubscribe$)
@@ -359,7 +358,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
     this.layersService.layers$
         .pipe(
-          map(layers => this.dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
+          map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
           flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           takeUntil(this.unsubscribe$)

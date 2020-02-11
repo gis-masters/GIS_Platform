@@ -1,0 +1,83 @@
+.FeaturesListItem {
+  position: relative;
+
+  display: grid;
+
+  padding: 7px 15px 7px 5px;
+
+  cursor: pointer;
+
+  grid-template: auto auto / 45px auto 100px;
+  grid-template-areas: 'id title button' 'id layer button';
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    content: '';
+    transition: background-color 0.15s;
+
+    background: rgba(0,0,0,0);
+  }
+
+  &:hover {
+    background: rgba(0,0,0,0.05);
+  }
+
+  &:active {
+    &::before {
+      background: rgba(0,0,0,0.05);
+    }
+  }
+
+  &-Id {
+    align-self: center;
+
+    width: 45px;
+
+    text-align: center;
+
+    color: var(--gray);
+
+    font-size: 12px;
+    line-height: 20px;
+
+    justify-self: center;
+    grid-area: id;
+  }
+
+  &-Title {
+    padding-bottom: 2px;
+
+    line-height: 1.1;
+
+    grid-area: title;;
+  }
+
+  &-Layer {
+    color: var(--gray);
+
+    font-size: 12px;
+    line-height: 1.1;
+
+    grid-area: layer;
+  }
+
+  & &-Button {
+    align-self: center;
+
+    opacity: 0;
+
+    grid-area: button;
+    justify-self: end;
+  }
+
+  &:hover &-Button,
+  & &-Button:focus {
+    opacity: 1;
+  }
+}

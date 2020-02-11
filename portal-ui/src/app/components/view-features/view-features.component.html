@@ -1,5 +1,5 @@
 <div [ngClass]="isAttributeSidebarOpened? 'crg-view-features-sidebar short-sidebar' : 'crg-view-features-sidebar full-sidebar'">
-  <div *ngIf="!isEditMode">
+  <div *ngIf="!isEditMode" class="content-list-mode">
     <div class="crg-sidebar-header">
       <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
       <mat-icon class="edit-icon fiz-border"
@@ -11,39 +11,12 @@
       Объекты
     </div>
 
-    <ng-container *ngIf="data?.features; else noFeatures">
-      <mat-nav-list role="list"
-                    [ngClass]="isAttributeSidebarOpened? 'feature-content scroll short-h' : 'feature-content scroll full-h'">
-        <mat-list-item role="listitem" *ngFor="let feature of viewFeatures; let index = index"
-                       (click)="highlightFeature(feature)"
-                       (dblclick)="selectFeature(feature)" style="height: 60px">
-          <div class="feature-info">
-            <div></div>
-            <div class="feature-id">ID: {{feature.id.split('.')[1]}}</div>
-            <div class="feature-alias">
-              {{ getTitle(feature) }}
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-nav-list>
-
-      <mat-paginator class="paginator-style" (page)="onPaging($event)"
-                     [length]="data?.features.length"
-                     [pageIndex]="pageInfo.count"
-                     [pageSize]="pageInfo.pageSize">
-      </mat-paginator>
-    </ng-container>
-
-    <ng-template #noFeatures>
-      <div class="col-12 text-center">
-        Объекты не выбраны
-      </div>
-    </ng-template>
+    <crg-features-list [features]="data?.features" (onItemSelect)="selectFeature($event)">
+    </crg-features-list>
   </div>
 
   <div *ngIf="isEditMode">
     <crg-edit-feature [data]="editFeatureData" (closeMe)="switchMode()" (delete)="deleteHandler($event)">
     </crg-edit-feature>
   </div>
-
 </div>

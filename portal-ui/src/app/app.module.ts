@@ -62,6 +62,7 @@ import {AlertDialogComponent} from './components/dialogs/alert-dialog/alert-dial
 import {WorkspaceComponent} from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
+import { FeaturesListComponent } from './components/features-list/features-list.component';
 
 import { configure } from 'mobx';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
@@ -107,7 +108,8 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     AlertDialogComponent,
     WorkspaceComponent,
     EditFeatureFieldComponent,
-    EditFeatureGeometryComponent
+    EditFeatureGeometryComponent,
+    FeaturesListComponent
   ],
   imports: [
     HttpClientModule,

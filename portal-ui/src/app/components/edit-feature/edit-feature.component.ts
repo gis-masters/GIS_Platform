@@ -13,7 +13,7 @@ import { CommunicationService } from '../../services/communication.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { DataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { getEnvironment } from '../../services/environment';
 import { BaseEdit } from '../edit-bug-object/base-edit';
@@ -66,7 +66,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager,
               private openLayers: OpenLayersService,
-              private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
     super();
     this.getEnv();
@@ -128,7 +127,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
         this.isGeometryChanged = false;
       }
 
-      this.featureDescription = this.dataSchemaService.getFeatureSchemaByName(currentData.feature.id.split('.')[0]);
+      this.featureDescription = dataSchemaService.getFeatureSchemaByName(currentData.feature.id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
       Object.keys(currentData.feature.properties)
@@ -138,7 +137,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
 
               let property: PropertySchema;
               if (this.featureDescription) {
-                property = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+                property = dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
               }
 
               if (property) {

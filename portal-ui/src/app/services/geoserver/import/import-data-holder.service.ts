@@ -1,12 +1,12 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
-import {ImportLayerItem, LayerAttribute} from './models';
+import { ImportLayerItem, LayerAttribute } from './models';
 import { Project } from '../../../stores/ProjectsList.store';
-import {MatchingPair, TaskImport} from './taskImport';
-import {DataSchemaService, PropertySchema} from '../../crg/data-schema.service';
-import {AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../crg/models';
-import {PropertiesComparatorService} from '../../properties-comparator.service';
-import {FeatureUtil} from '../../util/FeatureUtil';
+import { MatchingPair, TaskImport } from './taskImport';
+import { dataSchemaService, PropertySchema } from '../../crg/data-schema.service';
+import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../crg/models';
+import { PropertiesComparatorService } from '../../properties-comparator.service';
+import { FeatureUtil } from '../../util/FeatureUtil';
 
 export interface InputDataMetrics {
   all: number;
@@ -36,8 +36,7 @@ export class ImportDataHolderService {
 
   private _comparableLayers: ComparableLayersPair[] = [];
 
-  constructor(private dataSchemaService: DataSchemaService,
-              private propertyComparator: PropertiesComparatorService) {
+  constructor(private propertyComparator: PropertiesComparatorService) {
     this.comparableLayers$.subscribe((comparableLayersPairs: ComparableLayersPair[]) => {
       this.updateMetrics(comparableLayersPairs);
     });
@@ -59,7 +58,7 @@ export class ImportDataHolderService {
     const layerNativeName = importLayer.nativeName;
     const srs = importLayer.srs;
 
-    const featureDescription = this.dataSchemaService.getFeatureDescriptionByLayer(importLayer);
+    const featureDescription = dataSchemaService.getFeatureDescriptionByLayer(importLayer);
 
     const taskImport = new TaskImport(layerNativeName, srs);
     // Layer mapping
@@ -152,7 +151,7 @@ export class ImportDataHolderService {
         this.addAttributeMapping(layerNativeName, attr, AS_IS);
       });
     } else {
-      const featureSchema = this.dataSchemaService.getFeatureSchemaByName(featureSchemaName);
+      const featureSchema = dataSchemaService.getFeatureSchemaByName(featureSchemaName);
       if (featureSchema) {
         const propertySchemas = FeatureUtil.preparePropertySchema(featureSchema);
 

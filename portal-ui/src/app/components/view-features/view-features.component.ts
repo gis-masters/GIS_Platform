@@ -5,12 +5,12 @@ import { takeUntil } from 'rxjs/operators';
 
 import { Pageable } from '../../services/crg/models';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { dataSchemaService } from '../../services/crg/data-schema.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { getEnvironment } from '../../services/environment';
-import {CrgLayer} from '../../stores/ProjectsList.store';
+import { CrgLayer } from '../../stores/ProjectsList.store';
 
 export interface ViewFeaturesData {
   features: WfsFeature[];
@@ -47,7 +47,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private sideBarManager: SideBarManager,
-              private dataSchemaService: DataSchemaService,
               private openLayers: OpenLayersService) {
     this.getEnv();
   }
@@ -118,11 +117,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     };
   }
 
-  highlightFeature(feature: WfsFeature) {
-    this.openLayers.clearDraft();
-    this.openLayers.paintFeature(feature);
-  }
-
   closeMe() {
     this.openLayers.clearDraft();
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
@@ -186,7 +180,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       const { properties } = feature;
 
       let title = '';
-      const fDescription = this.dataSchemaService.getFeatureSchemaByName(featureName);
+      const fDescription = dataSchemaService.getFeatureSchemaByName(featureName);
       if (fDescription) {
         const iProperty = fDescription.properties.find(property => property.objectIdentityOnUi);
         if (!iProperty) { // By default from 'name'

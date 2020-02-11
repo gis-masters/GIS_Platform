@@ -22,7 +22,7 @@ import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
-import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { dataSchemaService } from '../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-map',
@@ -51,7 +51,6 @@ export class MapComponent implements OnInit, OnDestroy {
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
               private projectsService: ProjectsService,
-              private dataSchemaService: DataSchemaService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager) { }
 
@@ -59,7 +58,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.openLayers.createMap();
 
     const currentProject = await this.projectsService.getCurrent();
-    this.dataSchemaService.fetchSchemas(currentProject).subscribe(value => {
+    dataSchemaService.fetchSchemas(currentProject).subscribe(value => {
       this.fetchLayers(currentProject);
     });
 

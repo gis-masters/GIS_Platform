@@ -15,7 +15,7 @@ import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { StylesService } from '../../services/geoserver/styles.service';
 import { getEnvironment } from '../../services/environment';
 import { ViewFeaturesData } from '../view-features/view-features.component';
-import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { dataSchemaService } from '../../services/crg/data-schema.service';
 import {CrgLayer} from '../../stores/ProjectsList.store';
 
 interface Rule {
@@ -79,8 +79,7 @@ export class LayerListItemComponent implements OnDestroy {
               private dialog: MatDialog,
               private openLayers: OpenLayersService,
               private stylesService: StylesService,
-              private layersService: LayersService,
-              private dataSchemaService: DataSchemaService) {
+              private layersService: LayersService) {
     this.getEnv();
   }
 
@@ -134,7 +133,7 @@ export class LayerListItemComponent implements OnDestroy {
   }
 
   addFeature () {
-    const emptyFeature = this.dataSchemaService.getEmptyFeature(this.layer);
+    const emptyFeature = dataSchemaService.getEmptyFeature(this.layer);
 
     this.sideBarManager.do({
       target: SidebarType.FEATURES, action: ActionType.OPEN,

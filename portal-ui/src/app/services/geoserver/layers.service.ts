@@ -6,9 +6,17 @@ import { filter, map, publishReplay, refCount, tap } from 'rxjs/operators';
 import { NameHrefProjection } from './projections';
 import { CrgLayer, Project } from '../../stores/ProjectsList.store';
 import { Environment, getEnvironment } from '../environment';
-import { DataSchemaService } from '../crg/data-schema.service';
+import { dataSchemaService } from '../crg/data-schema.service';
 import { serverProperties } from '../server-properties.service';
 import { HttpQueue } from '../util/HttpQueue';
+
+export interface GeoserverLayer {
+  name: string;
+  type: string;
+  defaultStyle: NameHrefProjection;
+  resource: any;
+  attribution: any;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +34,7 @@ export class LayersService {
     );
 
   constructor(private http: HttpClient,
-              private httpq: HttpQueue,
-              private schemaService: DataSchemaService) {
+              private httpq: HttpQueue) {
     this.getEnv();
     this.layers$.subscribe();
     serverProperties.geoServerUrl.then((geoServerUrl) => {
@@ -75,18 +82,9 @@ export class LayersService {
 
   private mergeWithSchemas(layers: CrgLayer[]): CrgLayer[] {
     layers.forEach((layer: CrgLayer) => {
-      layer.schema = this.schemaService.getFeatureSchemaByName(layer.schemaId);
+      layer.schema = dataSchemaService.getFeatureSchemaByName(layer.schemaId);
     });
 
     return layers;
   }
-
-}
-
-export interface GeoserverLayer {
-  name: string;
-  type: string;
-  defaultStyle: NameHrefProjection;
-  resource: any;
-  attribution: any;
 }

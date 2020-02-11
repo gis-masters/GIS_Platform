@@ -4,16 +4,16 @@ import { NGXLogger } from 'ngx-logger';
 
 import { ImportService } from './geoserver/import/import.service';
 import { ProjectsService } from './crg/projects.service';
-import { DataSchemaService } from './crg/data-schema.service';
 import { CommunicationService } from './communication.service';
+import { OpenLayersService } from './open-layer/open-layers.service';
 import { HttpQueue } from './util/HttpQueue';
 
 interface ServicesList {
   importService: ImportService;
   httpq: HttpQueue;
   projectsService: ProjectsService;
-  dataSchemaService: DataSchemaService;
   communicationService: CommunicationService;
+  openLayersService: OpenLayersService;
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
@@ -24,8 +24,8 @@ class Services implements ServicesList {
   importService: ImportService;
   httpq: HttpQueue;
   projectsService: ProjectsService;
-  dataSchemaService: DataSchemaService;
   communicationService: CommunicationService;
+  openLayersService: OpenLayersService;
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
@@ -44,8 +44,8 @@ class Services implements ServicesList {
   provide (servicesList: ServicesList) {
     this.importService = servicesList.importService;
     this.projectsService = servicesList.projectsService;
-    this.dataSchemaService = servicesList.dataSchemaService;
     this.communicationService = servicesList.communicationService;
+    this.openLayersService = servicesList.openLayersService;
     this.httpq = servicesList.httpq;
     this.route = servicesList.route;
     this.router = servicesList.router;

@@ -1,8 +1,5 @@
-import { Injectable } from '@angular/core';
 import { Observable, of, defer } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
 
-import { HttpQueue } from '../util/HttpQueue';
 import { ValueTitleProjection } from '../geoserver/projections';
 import { serverProperties } from '../server-properties.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -11,7 +8,8 @@ import { WfsFeature, CoordinateEdited } from '../geoserver/wfs-models';
 import { normalizeGeometryType } from '../util/stringUtil';
 import { ImportLayerItem } from '../geoserver/import/models';
 import { BugObject } from './validation.service';
-import {CrgLayer, Project} from '../../stores/ProjectsList.store';
+import { CrgLayer, Project } from '../../stores/ProjectsList.store';
+import { services } from '../services';
 
 
 export class FeatureXsdDefinition {
@@ -78,15 +76,15 @@ export interface EditFeatureItem {
   isFgistpProperty: boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class DataSchemaService {
-
+class DataSchemaService {
   private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 
-  constructor(private httpq: HttpQueue,
-              private logger: NGXLogger) {
+  private static _instance: DataSchemaService;
+
+  private constructor() { }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
   }
 
   fetchAllSchemas(): Observable<FeatureXsdDefinition> {
@@ -275,18 +273,20 @@ export class DataSchemaService {
 
   private fetching(payload: string[]) {
     return defer(async () => {
+      await services.provided;
       const url = await serverProperties.schemaUrl;
-      const response = await this.httpq.post<FeatureDescription[]>(url, payload);
+      const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
       if (response) {
         this.featuresXsdDefinition.schemas = response;
       } else {
-        this.logger.warn('getFeaturesDefinition response is: ', response);
+        services.logger.warn('getFeaturesDefinition response is: ', response);
         this.featuresXsdDefinition = {schemas: []};
       }
 
       return this.featuresXsdDefinition;
     });
   }
-
 }
+
+export const dataSchemaService = DataSchemaService.instance;

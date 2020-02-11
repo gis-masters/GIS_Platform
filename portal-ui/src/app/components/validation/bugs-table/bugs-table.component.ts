@@ -10,13 +10,13 @@ import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
 import { CommunicationService } from '../../../services/communication.service';
-import { DataSchemaService } from '../../../services/crg/data-schema.service';
+import { dataSchemaService } from '../../../services/crg/data-schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
 import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/crg/models';
-import {CrgLayer} from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -61,7 +61,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private schemaService: DataSchemaService,
               private openLayers: OpenLayersService,
               private validationService: ValidationService) {
   }
@@ -129,7 +128,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     if (response) {
       this.data = response;
       this.data.results.forEach(bugObject => {
-        bugObject.title = this.schemaService.getClassIdAlias(this.crgLayer.internalName, bugObject);
+        bugObject.title = dataSchemaService.getClassIdAlias(this.crgLayer.internalName, bugObject);
       });
 
       this.totalElements = response.total;

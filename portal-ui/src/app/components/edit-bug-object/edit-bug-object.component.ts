@@ -9,7 +9,7 @@ import { OpenLayersService } from '../../services/open-layer/open-layers.service
 import { CommunicationService, ObjectDto } from '../../services/communication.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { DataSchemaService } from '../../services/crg/data-schema.service';
+import { dataSchemaService } from '../../services/crg/data-schema.service';
 import { FeatureUtil } from '../../services/util/FeatureUtil';
 import { BaseEdit } from './base-edit';
 import { Toast } from '../Toast/Toast';
@@ -34,7 +34,6 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
               private formBuilder: FormBuilder,
               private openLayers: OpenLayersService,
               private communicationService: CommunicationService,
-              private dataSchemaService: DataSchemaService,
               private transformFeatureService: TransformFeatureService) {
     super();
   }
@@ -131,7 +130,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const propertySchema = this.dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+      const propertySchema = dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
       if (propertySchema) {
 
         const formControl = new FormControl({value: currentValue, disabled: propertySchema.name === 'GLOBALID'}, {
