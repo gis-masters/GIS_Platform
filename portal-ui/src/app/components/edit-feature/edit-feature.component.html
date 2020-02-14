@@ -51,141 +51,142 @@
 
 <ng-template #editAttrsForm>
   <form class="example-form col-md-12" [formGroup]="editFeatureForm">
-    <div *ngFor="let editFeatureItem of editFeatureData">
-
-      <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
-        <crg-edit-feature-field type="url" [field]="editFeatureItem">
-        </crg-edit-feature-field>
-      </div>
-
-      <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">
-        <div class="col-6 px-0 edit-item-title">
-          <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-          <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+    <ng-container *ngFor="let editFeatureItem of editFeatureData">
+      <div *ngIf="!editFeatureItem.property?.hidden">
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
+          <crg-edit-feature-field type="url" [field]="editFeatureItem">
+          </crg-edit-feature-field>
         </div>
-        <div class="col-6 px-0">
-          <div class="input-group" *ngIf="!readOnly">
-            <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
-            <span class="input-group-text error-badge"
-                  *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
-              <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
-            </span>
 
-            <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
-              <span class="input-group-text multiple-edit-badge">
-                <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
-              </span>
-            </div>
-
-            <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
-              <span class="template-text">Оставить как есть</span>
-            </div>
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">
+            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
+                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
           </div>
-
-          <div *ngIf="readOnly" class="read-value">
-            {{editFeatureItem.value}}
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
-        <div class="col-6 px-0 edit-item-title">
-          <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-          <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
-        </div>
-        <div class="col-6 px-0">
-          <div class="input-group" *ngIf="!readOnly">
-            <input class="form-control" type="number" formControlName="{{editFeatureItem.name}}">
-            <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
-              <span class="input-group-text error-badge">
+          <div class="col-6 px-0">
+            <div class="input-group" *ngIf="!readOnly">
+              <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
+              <span class="input-group-text error-badge"
+                    *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
               </span>
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+                <span class="input-group-text multiple-edit-badge">
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
+                </span>
+              </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
             </div>
 
-            <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
-              <span class="input-group-text multiple-edit-badge">
-                <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
-              </span>
-            </div>
-
-            <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
-              <span class="template-text">Оставить как есть</span>
+            <div *ngIf="readOnly" class="read-value">
+              {{editFeatureItem.value}}
             </div>
           </div>
+        </div>
 
-          <div *ngIf="readOnly" class="read-value">
-            {{editFeatureItem.value}}
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">
+            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
+                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group" *ngIf="!readOnly">
+              <input class="form-control" type="number" formControlName="{{editFeatureItem.name}}">
+              <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                </span>
+              </div>
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+                <span class="input-group-text multiple-edit-badge">
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
+                </span>
+              </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
+            </div>
+
+            <div *ngIf="readOnly" class="read-value">
+              {{editFeatureItem.value}}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">
+            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
+                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group" *ngIf="!readOnly">
+              <input class="form-control" type="number" step="0.0001" formControlName="{{editFeatureItem.name}}">
+              <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                </span>
+              </div>
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+                <span class="input-group-text multiple-edit-badge">
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
+                </span>
+              </div>
+
+                <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                  <span class="template-text">Оставить как есть</span>
+                </div>
+              </div>
+
+            <div *ngIf="readOnly" class="read-value">
+              {{editFeatureItem.value}}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <div class="col-6 px-0">
+            <div class="input-group" *ngIf="!readOnly">
+              <select class="custom-select" formControlName="{{editFeatureItem.name}}">
+                <option [value]=""></option>
+                <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
+                        [value]="enumOption.value">
+                  {{enumOption.title}}
+                </option>
+              </select>
+              <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+                </span>
+              </div>
+
+              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+                <span class="input-group-text multiple-edit-badge">
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
+                </span>
+              </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
+            </div>
+
+            <div *ngIf="readOnly" class="read-value">
+              {{getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value)}}
+            </div>
           </div>
         </div>
       </div>
-
-      <div *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')" class="row fiz-edit-item">
-        <div class="col-6 px-0 edit-item-title">
-          <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-          <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
-        </div>
-        <div class="col-6 px-0">
-          <div class="input-group" *ngIf="!readOnly">
-            <input class="form-control" type="number" step="0.0001" formControlName="{{editFeatureItem.name}}">
-            <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
-              <span class="input-group-text error-badge">
-                <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
-              </span>
-            </div>
-
-            <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
-              <span class="input-group-text multiple-edit-badge">
-                <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
-              </span>
-            </div>
-
-            <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
-              <span class="template-text">Оставить как есть</span>
-            </div>
-          </div>
-
-          <div *ngIf="readOnly" class="read-value">
-            {{editFeatureItem.value}}
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
-        <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
-        <div class="col-6 px-0">
-          <div class="input-group" *ngIf="!readOnly">
-            <select class="custom-select" formControlName="{{editFeatureItem.name}}">
-              <option [value]=""></option>
-              <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
-                      [value]="enumOption.value">
-                {{enumOption.title}}
-              </option>
-            </select>
-            <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
-              <span class="input-group-text error-badge">
-                <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
-              </span>
-            </div>
-
-            <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
-              <span class="input-group-text multiple-edit-badge">
-                <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
-              </span>
-            </div>
-
-            <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
-              <span class="template-text">Оставить как есть</span>
-            </div>
-          </div>
-
-          <div *ngIf="readOnly" class="read-value">
-            {{getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value)}}
-          </div>
-        </div>
-      </div>
-    </div>
+    </ng-container>
   </form>
 </ng-template>
