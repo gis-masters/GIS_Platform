@@ -12,4 +12,13 @@
       border-bottom-color: var(--red);
     }
   }
+
+  &_disabled {
+    cursor: default;
+  }
+
+  &_disabled &-Inner {
+    color: var(--gray);
+    border-bottom: 1px var(--gray) dashed;
+  }
 }

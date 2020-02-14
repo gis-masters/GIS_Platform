@@ -6,14 +6,33 @@ import '!style-loader!css-loader!sass-loader!./PseudoLink.scss';
 const cnPseudoLink = cn('PseudoLink');
 
 interface PseudoLinkProps {
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
   className?: string;
+  disabled?: boolean;
 }
 
-export const PseudoLink: React.FC<PseudoLinkProps> = ({ className, onClick, children }) => (
-  <span className={cnPseudoLink(null, [className])} onClick={onClick}>
-    <span className={cnPseudoLink('Inner')}>
-      {children}
-    </span>
-  </span>
-);
+export class PseudoLink extends React.Component<PseudoLinkProps> {
+  constructor (props: PseudoLinkProps) {
+    super(props);
+
+    this.clickHandler = this.clickHandler.bind(this);
+  }
+
+  render () {
+    const { disabled, className, children } = this.props;
+
+    return (
+      <span className={cnPseudoLink({ disabled }, [className])} onClick={this.clickHandler}>
+        <span className={cnPseudoLink('Inner')}>
+          {children}
+        </span>
+      </span>
+    );
+  }
+
+  private clickHandler (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    if (!this.props.disabled) {
+      this.props.onClick(e);
+    }
+  }
+};

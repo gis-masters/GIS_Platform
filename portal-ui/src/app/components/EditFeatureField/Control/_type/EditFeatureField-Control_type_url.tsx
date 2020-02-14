@@ -17,12 +17,18 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url
 
 const cnEditFeatureField = cn('EditFeatureField');
 
+interface FieldTypeUrlValue {
+  url?: string;
+  text: string;
+  disabled?: boolean;
+}
+
 @observer
 class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControlProps> {
   @observable private isOpen = false;
   @observable private content = '';
   @observable private fetching = false;
-  value: { url: string; text: string; };
+  value: FieldTypeUrlValue;
 
   constructor (props: EditFeaturesControlProps) {
     super(props);
@@ -30,7 +36,7 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
     try {
       this.value = JSON.parse(props.field.value);
     } catch (e) {
-      this.value = { url: '', text: '' };
+      this.value = { text: '', disabled: true };
       services.logger.warn('Incorrect url value: ', props.field.value);
     }
 
@@ -39,12 +45,12 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
   }
 
   render () {
-    const { className } = this.props;
+    const { text, disabled } = this.value;
 
     return (
-      <div className={className}>
-        <PseudoLink onClick={this.openDialog}>
-          {this.value.text}
+      <div className={this.props.className}>
+        <PseudoLink onClick={this.openDialog} disabled={disabled}>
+          {text}
         </PseudoLink>
         <Dialog open={this.isOpen}  PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}>
           <DialogContent>
