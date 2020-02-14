@@ -2,7 +2,7 @@
   <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
     <div class="col-12" style="padding-left: 5px; padding-right: 5px">
 
-      <button *ngIf="!isSimf"
+      <button *ngIf="!readOnly"
               mat-stroked-button
               color="primary"
               (click)="editFeature()"
@@ -16,7 +16,7 @@
         Сохранить
       </button>
 
-      <button *ngIf="!isSimf"
+      <button *ngIf="!readOnly"
               class="del-button"
               mat-stroked-button
               color="error"
@@ -25,7 +25,7 @@
       </button>
 
       <button mat-stroked-button (click)="close()" class="float-right">
-        {{isSimf ? 'Закрыть' : 'Отмена'}}
+        {{readOnly ? 'Закрыть' : 'Отмена'}}
       </button>
 
     </div>
@@ -34,7 +34,7 @@
   <div [ngClass]="isAttributeSidebarOpened? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
     <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
-    <ng-container *ngIf="data.mode === 'single' else editAttrsForm">
+    <ng-container *ngIf="data.mode === 'single' && !readOnly else editAttrsForm">
       <mat-tab-group>
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
@@ -65,7 +65,7 @@
           <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
         </div>
         <div class="col-6 px-0">
-          <div class="input-group">
+          <div class="input-group" *ngIf="!readOnly">
             <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
             <span class="input-group-text error-badge"
                   *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
@@ -82,6 +82,10 @@
               <span class="template-text">Оставить как есть</span>
             </div>
           </div>
+
+          <div *ngIf="readOnly" class="read-value">
+            {{editFeatureItem.value}}
+          </div>
         </div>
       </div>
 
@@ -92,7 +96,7 @@
           <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
         </div>
         <div class="col-6 px-0">
-          <div class="input-group">
+          <div class="input-group" *ngIf="!readOnly">
             <input class="form-control" type="number" formControlName="{{editFeatureItem.name}}">
             <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
               <span class="input-group-text error-badge">
@@ -110,6 +114,10 @@
               <span class="template-text">Оставить как есть</span>
             </div>
           </div>
+
+          <div *ngIf="readOnly" class="read-value">
+            {{editFeatureItem.value}}
+          </div>
         </div>
       </div>
 
@@ -120,7 +128,7 @@
           <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
         </div>
         <div class="col-6 px-0">
-          <div class="input-group">
+          <div class="input-group" *ngIf="!readOnly">
             <input class="form-control" type="number" step="0.0001" formControlName="{{editFeatureItem.name}}">
             <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
               <span class="input-group-text error-badge">
@@ -138,13 +146,17 @@
               <span class="template-text">Оставить как есть</span>
             </div>
           </div>
+
+          <div *ngIf="readOnly" class="read-value">
+            {{editFeatureItem.value}}
+          </div>
         </div>
       </div>
 
       <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
         <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
         <div class="col-6 px-0">
-          <div class="input-group">
+          <div class="input-group" *ngIf="!readOnly">
             <select class="custom-select" formControlName="{{editFeatureItem.name}}">
               <option [value]=""></option>
               <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
@@ -167,7 +179,10 @@
             <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
               <span class="template-text">Оставить как есть</span>
             </div>
+          </div>
 
+          <div *ngIf="readOnly" class="read-value">
+            {{getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value)}}
           </div>
         </div>
       </div>

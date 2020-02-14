@@ -3,13 +3,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Pageable } from '../../services/crg/models';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { dataSchemaService } from '../../services/crg/data-schema.service';
 import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { getEnvironment } from '../../services/environment';
 import { CrgLayer } from '../../stores/ProjectsList.store';
 
 export interface ViewFeaturesData {
@@ -25,9 +22,7 @@ export interface ViewFeaturesData {
   styleUrls: ['./view-features.component.css']
 })
 export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
-
   @Input() data: ViewFeaturesData;
-
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   deletedFeaturesIds: string[] = [];
@@ -36,25 +31,16 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
   isSimf = false;
-
+  hasEditable: boolean;
   viewFeatures: WfsFeature[] = [];
-  pageInfo: Pageable = {
-    pageSize: 25,
-  };
-
-  private featureTitles: Map<string, string> = new Map<string, string>();
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private sideBarManager: SideBarManager,
-              private openLayers: OpenLayersService) {
-    this.getEnv();
-  }
+              private openLayers: OpenLayersService) { }
 
   ngOnInit(): void {
     this.showFeatures();
-
-    this.fillTitles(this.viewFeatures);
 
     if (this.data.mode === EditFeatureMode.multipleEdit) {
       this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
@@ -85,8 +71,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
         this.selectFeature(currentValue.features[0]);
       } else if (currentValue && currentValue.features && currentValue.features.length > 1) {
         this.showFeatures();
-
-        this.fillTitles(this.viewFeatures);
 
         if (currentValue.mode === EditFeatureMode.multipleEdit) {
           this.editFeatureData = this.prepareDataForMultipleEdit(currentValue.features);
@@ -130,36 +114,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  editFeatures() {
-    if (this.data.features.length === 1) {
-      this.selectFeature(this.data.features[0]);
-    } else {
-      this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
-      this.isEditMode = true;
-    }
-  }
-
-  onPaging(event: { pageIndex: number }) {
-    const start = this.pageInfo.pageSize * event.pageIndex;
-    this.viewFeatures = this.data.features.slice(start, start + this.pageInfo.pageSize);
-
-    this.fillTitles(this.viewFeatures);
-  }
-
-  getTitle(feature: WfsFeature): string {
-    return this.featureTitles.get(feature.id);
-  }
-
-  private showFeatures(page: number = 0) {
-    const start = this.pageInfo.pageSize * page;
-    this.viewFeatures = this.data.features
-                                 .filter(feature => !this.deletedFeaturesIds.includes(feature.id))
-                                 .slice(start, start + this.pageInfo.pageSize);
-  }
-
-  private async getEnv () {
-    const environment = await getEnvironment();
-    this.isSimf = environment.platform === 'simf';
+  private showFeatures() {
+    this.viewFeatures = this.data.features.filter(feature => !this.deletedFeaturesIds.includes(feature.id));
   }
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
@@ -172,29 +128,5 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       featuresId: listOfFeaturesId,
       total: features.length
     } as EditFeatureData;
-  }
-
-  private fillTitles(viewFeatures: WfsFeature[]) {
-    viewFeatures.forEach((feature: WfsFeature) => {
-      const featureName = feature.id.split('.')[0];
-      const { properties } = feature;
-
-      let title = '';
-      const fDescription = dataSchemaService.getFeatureSchemaByName(featureName);
-      if (fDescription) {
-        const iProperty = fDescription.properties.find(property => property.objectIdentityOnUi);
-        if (!iProperty) { // By default from 'name'
-          title = properties.name;
-        } else if (iProperty.valueType !== 'CHOICE') {
-          title = properties[iProperty.name.toLowerCase()];
-        } else if (iProperty.valueType === 'CHOICE' && iProperty.enumerations) {
-          const valueTitleProjection = iProperty.enumerations.find(item => item.value == properties[iProperty.name]);
-
-          title = valueTitleProjection ? valueTitleProjection.title : '';
-        }
-      }
-
-      this.featureTitles.set(feature.id, title);
-    });
   }
 }

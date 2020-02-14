@@ -11,14 +11,10 @@
   z-index: 100;
   top: 55px;
   left: calc(100% - 550px);
-  /*height: calc(100% - 55px);*/
 
   width: 550px;
 
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
@@ -33,10 +29,7 @@
   width: 550px;
   height: calc(100% - 55px);
 
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
@@ -50,16 +43,6 @@
 
 .crg-close-icon {
   float: right;
-
-  cursor: pointer;
-
-  color: grey;
-}
-
-.edit-icon {
-  float: right;
-
-  margin-right: 10px;
 
   cursor: pointer;
 

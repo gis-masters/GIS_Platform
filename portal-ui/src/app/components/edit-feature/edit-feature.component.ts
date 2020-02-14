@@ -15,7 +15,6 @@ import { TransformFeatureService } from '../../services/geoserver/transform-feat
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
-import { getEnvironment } from '../../services/environment';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { FeatureUtil } from '../../services/util/FeatureUtil';
 import { Toast } from '../Toast/Toast';
@@ -23,6 +22,7 @@ import { BatchModel } from '../../services/crg/batch-model';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { fromMobx } from '../../services/util/fromMobx';
+import { ValueTitleProjection } from '../../services/geoserver/projections';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -54,11 +54,14 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
-  isSimf = false;
   changedGeometry?: WfsGeometry;
   isGeometryValid = false;
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
+
+  get readOnly (): boolean {
+    return this.featureDescription.readOnly;
+  }
 
   constructor(private formBuilder: FormBuilder,
               private dialog: MatDialog,
@@ -68,7 +71,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
               private openLayers: OpenLayersService,
               private transformFeatureService: TransformFeatureService) {
     super();
-    this.getEnv();
   }
 
   ngOnInit(): void {
@@ -288,9 +290,9 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
     this.openLayers.clearDraft();
   }
 
-  private async getEnv () {
-    const environment = await getEnvironment();
-    this.isSimf = environment.platform === 'simf';
+  getEnumerationTitle (enumerations: ValueTitleProjection[], value: string | number): string {
+    const item = enumerations.find(item => String(item.value) === String(value));
+    return item && item.title;
   }
 
   private async batchUpdateFeatures(featuresId: string[], newProperties: Properties, geometry?: WfsGeometry) {

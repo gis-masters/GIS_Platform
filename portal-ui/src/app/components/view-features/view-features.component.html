@@ -2,16 +2,10 @@
   <div *ngIf="!isEditMode" class="content-list-mode">
     <div class="crg-sidebar-header">
       <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
-      <mat-icon class="edit-icon fiz-border"
-                (click)="editFeatures()"
-                matTooltip="Редактировать выделенные объекты"
-                *ngIf="!isSimf">
-        edit
-      </mat-icon>
       Объекты
     </div>
 
-    <crg-features-list [features]="data?.features" (onItemSelect)="selectFeature($event)">
+    <crg-features-list [features]="viewFeatures" (onItemSelect)="selectFeature($event)">
     </crg-features-list>
   </div>
 

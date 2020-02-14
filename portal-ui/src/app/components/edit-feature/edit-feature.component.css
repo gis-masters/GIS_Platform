@@ -18,7 +18,6 @@
 
 .edit-item-title {
   font-family: monospace;
-  /*font-weight: bold;*/
   line-height: 1.1;
 }
 
@@ -53,4 +52,15 @@
 
 .del-button {
   margin-left: 10px;
+}
+
+.read-value {
+  min-height: 38px;
+  padding: 10px;
+
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+
+  font-size: 14px;
+  line-height: 1.2;
 }

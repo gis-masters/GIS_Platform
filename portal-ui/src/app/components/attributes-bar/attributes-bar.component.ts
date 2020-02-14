@@ -32,9 +32,13 @@ import { CrgLayer, Project } from '../../stores/ProjectsList.store';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { getEnvironment } from '../../services/environment';
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
+
+export interface WfsFeatureView extends WfsFeature {
+  aliases?: {};
+  updated?: string;
+}
 
 @Component({
   selector: 'crg-attributes-bar',
@@ -51,8 +55,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   @ViewChild('customSelectAll', {static: true}) customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
-
-  isSimf = false;
 
   currentPositionFeature: WfsFeature;
   features: WfsFeatureView[] = [];
@@ -79,6 +81,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   loadPercent = 0;
   showPercent = true;
+  readOnly: boolean;
 
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -92,7 +95,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private logger: NGXLogger,
               private dialog: MatDialog,
               private openLayersService: OpenLayersService) {
-    this.getEnv();
   }
 
   async ngAfterViewInit() {
@@ -120,6 +122,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   ngOnChanges(changes: SimpleChanges): void {
     const layerChanged = changes.layer;
+    const layer = layerChanged.currentValue as CrgLayer;
+
+    this.readOnly = layer.schema.readOnly;
+
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
       this.requestModel$.next({page: {pageSize: 25, offset: 0}});
@@ -392,11 +398,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         });
   }
 
-  private async getEnv() {
-    const environment = await getEnvironment();
-    this.isSimf = environment.platform === 'simf';
-  }
-
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
     return this.dialog
                .open(CopyFeaturesDialogComponent, {
@@ -619,9 +620,4 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return false;
     }
   }
-}
-
-export interface WfsFeatureView extends WfsFeature {
-  aliases?: {};
-  updated?: string;
 }
