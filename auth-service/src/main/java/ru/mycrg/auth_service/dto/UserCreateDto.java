@@ -31,6 +31,7 @@ public class UserCreateDto {
     //    $                 # end-of-string
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
             message = "Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов")
+    @NotBlank
     private String password;
 
     public UserCreateDto() {

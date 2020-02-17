@@ -2,6 +2,7 @@ package ru.mycrg.mq_queue_contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.mycrg.mq_queue_contract.enums.ChoiceType;
+import ru.mycrg.mq_queue_contract.enums.ForeignKeyType;
 import ru.mycrg.mq_queue_contract.enums.Updateability;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
 
@@ -23,6 +24,7 @@ public class SimplePropertyDto {
     private boolean multiple;
     private ChoiceType choice;
     private ValueType valueType;
+    private ForeignKeyType foreignKeyType;
 
     private String whiteSpace;
     private String pattern;
@@ -243,6 +245,14 @@ public class SimplePropertyDto {
 
     public void setDisplayMode(String displayMode) {
         this.displayMode = displayMode;
+    }
+
+    public ForeignKeyType getForeignKeyType() {
+        return foreignKeyType;
+    }
+
+    public void setForeignKeyType(ForeignKeyType foreignKeyType) {
+        this.foreignKeyType = foreignKeyType;
     }
 
     @JsonIgnore

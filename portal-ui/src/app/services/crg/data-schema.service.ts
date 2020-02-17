@@ -43,6 +43,7 @@ export interface PropertySchema {
   updateability?: Updateability;
   choice?: any;
   valueType?: any;
+  foreignKeyType?: string;
 
   length?: number;
   minLength?: number;

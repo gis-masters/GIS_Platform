@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.enums.ForeignKeyType;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 
 import java.util.List;
@@ -138,8 +139,9 @@ public class SqlGenerator {
     private static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
         switch (attrDescription.getValueType()) {
             case INT:
-            case CHOICE:
                 return attrDescription.getName() + " integer";
+            case CHOICE:
+                return handleChoice(attrDescription);
             case STRING:
                 Integer maxLength = attrDescription.getMaxLength();
                 if (maxLength < 255) {
@@ -158,6 +160,27 @@ public class SqlGenerator {
         }
 
         return "";
+    }
+
+    @NotNull
+    private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
+        ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
+        if (foreignKeyType == null) {
+            log.warn("ForeignKeyType not set. Will be used string type");
+            return attrDescription.getName() + " character varying(255)";
+        }
+
+        switch (foreignKeyType) {
+            case STRING:
+                return attrDescription.getName() + " character varying(255)";
+            case INTEGER:
+                return attrDescription.getName() + " integer";
+            case LONG:
+                return attrDescription.getName() + " bigint";
+            default:
+                log.warn("Unknown foreignKeyType: {}. Will be used string type", foreignKeyType);
+                return attrDescription.getName() + " character varying(255)";
+        }
     }
 
     private static String defineSourceAttributeType(String binding) {
