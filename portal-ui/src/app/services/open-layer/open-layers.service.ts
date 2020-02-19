@@ -78,12 +78,12 @@ export class OpenLayersService {
 
   constructor(private logger: NGXLogger,
               private tokenStorage: TokenStorageService) {
-    BEARER_TOKEN = this.tokenStorage.getAccessToken();
-
     this.setupTileSources();
   }
 
   createMap() {
+    BEARER_TOKEN = this.tokenStorage.getAccessToken();
+
     this.draftSource = new VectorSource({
       features: []
     });
