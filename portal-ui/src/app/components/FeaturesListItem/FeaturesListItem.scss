@@ -7,7 +7,7 @@
 
   cursor: pointer;
 
-  grid-template: auto auto / 45px auto 100px;
+  grid-template: auto auto / 45px auto 50px;
   grid-template-areas: 'id title button' 'id layer button';
 
   &::before {

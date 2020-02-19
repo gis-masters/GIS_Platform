@@ -78,3 +78,7 @@ body {
 .page {
   overflow: auto;
 }
+
+button:focus {
+  outline: none;
+}

@@ -1,10 +1,11 @@
 import React from 'react';
 import { cn } from '@bem-react/classname';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { ChevronRight } from '@material-ui/icons';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { dataSchemaService } from '../../services/crg/data-schema.service';
 import { services } from '../../services/services';
-import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -60,13 +61,11 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
         <div className={cnFeaturesListItem('Layer')}>
           {this.layerTitle}
         </div>
-        <Button
-            className={cnFeaturesListItem('Button')}
-            color={'primary'}
-            variant={'outlined'}
-            onClick={this.selectIt}>
-          Открыть
-        </Button>
+        <Tooltip title='Перейти к объекту' enterDelay={800}>
+          <IconButton className={cnFeaturesListItem('Button')} color={'primary'} onClick={this.selectIt}>
+            <ChevronRight />
+          </IconButton>
+        </Tooltip>
       </div>
     );
   }
