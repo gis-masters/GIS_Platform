@@ -35,7 +35,7 @@ public class ProjectService {
     private final ProjectionFactory factory;
     private final ProjectRepository projectRepository;
 
-    private final String DEFAULT_PROJECT_NAME = "workspace";
+    public static final String DEFAULT_PROJECT_NAME = "workspace";
 
     public ProjectService(ProjectionFactory factory,
                           ProjectRepository projectRepository) {

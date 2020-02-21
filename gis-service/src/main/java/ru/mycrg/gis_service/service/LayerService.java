@@ -1,6 +1,8 @@
 package ru.mycrg.gis_service.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
+import static ru.mycrg.gis_service.service.ProjectService.DEFAULT_PROJECT_NAME;
 
 @Service
 @Transactional
 public class LayerService {
+
+    private static Logger log = LoggerFactory.getLogger(LayerService.class);
 
     private final ProjectionFactory factory;
     private final ProjectService projectService;
@@ -89,10 +94,18 @@ public class LayerService {
         layerRepository.delete(layer);
 
         try {
-            geoserverLayers.delete(layer.getInternalName(), getToken(authentication));
+            String complexLayerName = getComplexLayerName(layer, projectId);
+            log.debug("Delete from geoserver: {}", complexLayerName);
+
+            geoserverLayers.delete(complexLayerName, getToken(authentication));
         } catch (GeoserverClientException e) {
             throw new GisServiceException("Не удалось удалить слой с геосервера", e.getCause());
         }
+    }
+
+    @NotNull
+    private String getComplexLayerName(Layer layer, long projectId) {
+        return DEFAULT_PROJECT_NAME + "_" + projectId + ":" + layer.getInternalName();
     }
 
     @NotNull
