@@ -38,6 +38,9 @@ public class Project implements Identifiable<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<Layer> layers = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    private List<Group> groups = new ArrayList<>();
+
     public Project() {}
 
     public Project(String name, long organizationId) {
@@ -113,8 +116,19 @@ public class Project implements Identifiable<Long> {
         this.layers = layers;
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
     public void addLayer(Layer layer) {
         this.layers.add(layer);
     }
 
+    public void addGroup(Group group) {
+        this.groups.add(group);
+    }
 }

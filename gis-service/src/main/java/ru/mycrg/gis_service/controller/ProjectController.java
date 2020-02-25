@@ -49,13 +49,13 @@ public class ProjectController {
 
     @PostMapping
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<?> createProject(@Valid @RequestBody ProjectRequestDto projectDto,
-                                           Authentication authentication) {
+    public ResponseEntity<Void> createProject(@Valid @RequestBody ProjectRequestDto projectDto,
+                                              Authentication authentication) {
         Long organizationId = getOrganizationId(authentication);
 
         ProjectProjection project = projectService.create(organizationId, projectDto);
 
-        return new ResponseEntity(project, HttpStatus.ACCEPTED);
+        return new ResponseEntity(project, HttpStatus.CREATED);
     }
 
     @PutMapping("/{projectId}")
@@ -70,8 +70,8 @@ public class ProjectController {
 
     @DeleteMapping("/{projectId}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<?> deleteProject(@PathVariable long projectId,
-                                           Authentication authentication) {
+    public ResponseEntity<Void> deleteProject(@PathVariable long projectId,
+                                              Authentication authentication) {
         Long organizationId = getOrganizationId(authentication);
 
         projectService.delete(organizationId, projectId);

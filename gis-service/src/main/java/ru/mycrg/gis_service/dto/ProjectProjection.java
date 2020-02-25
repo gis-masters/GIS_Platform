@@ -23,8 +23,8 @@ public interface ProjectProjection {
 
     LocalDateTime getCreatedAt();
 
-    LocalDateTime getLastModified();
-
     List<LayerProjection> getLayers();
+
+    List<GroupProjection> getGroups();
 
 }

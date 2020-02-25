@@ -72,6 +72,13 @@
                 "with": "src/assets/config/environment.convStaging.json"
               }]
             },
+            "convLocal": {
+              "optimization": false,
+              "sourceMap": true,
+              "aot": false,
+              "buildOptimizer": false,
+              "extractCss": false
+            },
             "convDev": {
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
@@ -128,6 +135,9 @@
             },
             "convTest": {
               "browserTarget": "gis-portal:build:convTest"
+            },
+            "convLocal": {
+              "browserTarget": "gis-portal:build:convLocal"
             },
             "convDev": {
               "browserTarget": "gis-portal:build:convDev"

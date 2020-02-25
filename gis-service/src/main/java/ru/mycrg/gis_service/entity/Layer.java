@@ -62,6 +62,9 @@ public class Layer implements Identifiable<Long> {
     @ManyToOne
     private Project project;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Group group;
+
     public Layer() {
     }
 
@@ -209,5 +212,13 @@ public class Layer implements Identifiable<Long> {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

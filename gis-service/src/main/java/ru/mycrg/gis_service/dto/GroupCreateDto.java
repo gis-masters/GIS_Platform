@@ -4,25 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import ru.mycrg.gis_service.validators.CrgParentGroup;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LayerCreateDto {
+public class GroupCreateDto {
 
     @NotBlank
     @Length(min = 3, max = 255)
     private String title;
 
-    @NotBlank
-    private String internalName;
+    @CrgParentGroup
+    private Long parent;
 
-    @NotBlank
-    private String schemaId;
-
-    @NotBlank
-    private String dataStoreName;
+    @Max(Integer.MAX_VALUE)
+    private int position = -1;
 
 }

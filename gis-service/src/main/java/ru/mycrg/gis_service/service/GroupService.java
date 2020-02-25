@@ -1,0 +1,160 @@
+package ru.mycrg.gis_service.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.gis_service.dto.GroupCreateDto;
+import ru.mycrg.gis_service.dto.GroupProjection;
+import ru.mycrg.gis_service.dto.GroupUpdateDto;
+import ru.mycrg.gis_service.entity.Group;
+import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
+import ru.mycrg.gis_service.exceptions.NotFoundException;
+import ru.mycrg.gis_service.json.JsonPatcher;
+import ru.mycrg.gis_service.repository.GroupRepository;
+
+import javax.json.JsonMergePatch;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static ru.mycrg.gis_service.mappers.GroupMapper.groupMapper;
+
+@Service
+@Transactional
+public class GroupService {
+
+    private static Logger log = LoggerFactory.getLogger(GroupService.class);
+
+    private final ProjectionFactory projectionFactory;
+    private final ProjectService projectService;
+    private final GroupRepository groupRepository;
+    private final LayerService layerService;
+    private final JsonPatcher jsonPatcher;
+
+    public GroupService(GroupRepository groupRepository,
+                        ProjectService projectService,
+                        LayerService layerService,
+                        JsonPatcher jsonPatcher,
+                        ProjectionFactory projectionFactory) {
+        this.jsonPatcher = jsonPatcher;
+        this.projectService = projectService;
+        this.groupRepository = groupRepository;
+        this.layerService = layerService;
+        this.projectionFactory = projectionFactory;
+    }
+
+    public List<GroupProjection> getAll(long projectId, Authentication authentication) {
+        return getProjectGroups(projectId, authentication).stream()
+                .map(group -> projectionFactory.createProjection(GroupProjection.class, group))
+                .collect(Collectors.toList());
+    }
+
+    public GroupProjection create(long projectId, GroupCreateDto dto, Authentication authentication) {
+        Project project = projectService.getById(projectId, authentication);
+
+        checkParentGroup(null, dto.getParent(), project.getGroups());
+
+        Group group = new Group(dto);
+        group.setProject(project);
+
+        Group savedGroup = groupRepository.save(group);
+
+        return projectionFactory.createProjection(GroupProjection.class, savedGroup);
+    }
+
+    public GroupProjection findById(long projectId, long groupId, Authentication authentication) {
+        List<Group> groups = getProjectGroups(projectId, authentication);
+        Group group = getGroupById(groups, groupId);
+
+        return projectionFactory.createProjection(GroupProjection.class, group);
+    }
+
+    public void update(long projectId, long groupId, JsonMergePatch patchDto, Authentication authentication) {
+        List<Group> groups = getProjectGroups(projectId, authentication);
+        Group groupForUpdate = getGroupById(groups, groupId);
+
+        GroupUpdateDto groupDto = groupMapper.toDto(groupForUpdate);
+        GroupUpdateDto patchedGroup = jsonPatcher.mergePatch(patchDto, groupDto, GroupUpdateDto.class);
+
+        groupMapper.update(groupForUpdate, patchedGroup);
+
+        checkParentGroup(groupForUpdate.getId(), groupForUpdate.getParent(), groups);
+
+        groupForUpdate.setLastModified(LocalDateTime.now());
+
+        groupRepository.save(groupForUpdate);
+    }
+
+    public void delete(long projectId, long groupId, Authentication authentication) {
+        List<Group> groups = getProjectGroups(projectId, authentication);
+        Group group = getGroupById(groups, groupId);
+
+        LinkedList<Group> groupsForRemove = new LinkedList<>();
+        collectGroupsForRemove(groups, group, groupsForRemove);
+
+        groupsForRemove.descendingIterator().forEachRemaining(nextGroup -> {
+            log.debug("Remove group: {}", nextGroup.getId());
+
+            groupRepository.deleteGroupById(nextGroup.getId());
+
+            nextGroup.getProject()
+                    .getLayers().stream()
+                    .filter(layer -> layer.getGroup().getId().equals(nextGroup.getId()))
+                    .forEach(layer -> layerService.delete(layer, projectId, authentication));
+        });
+    }
+
+    /**
+     * The parent is the same project.
+     * Parent id is not own id.
+     */
+    public void checkParentGroup(Long ownId, Long parentId, List<Group> groups) {
+        if (ownId != null && ownId.equals(parentId)) {
+            throw new BadRequestException("parent: Родительская группа задана неверно");
+        }
+
+        if (parentId == null) {
+            return;
+        }
+
+        Optional<Group> parentGroup = groups.stream()
+                .filter(group -> group.getId().equals(parentId))
+                .findFirst();
+
+        if (!parentGroup.isPresent()) {
+            throw new BadRequestException("parent: Родительская группа задана неверно");
+        }
+    }
+
+    private void collectGroupsForRemove(List<Group> groups, Group currentGroup, LinkedList<Group> resultList) {
+        // Add current group
+        resultList.add(currentGroup);
+
+        // Add child group
+        groups.forEach(childGroup -> {
+            if (currentGroup.getId().equals(childGroup.getParent())) {
+                collectGroupsForRemove(groups, childGroup, resultList);
+            }
+        });
+    }
+
+    private List<Group> getProjectGroups(long projectId, Authentication authentication) {
+        return projectService
+                .getById(projectId, authentication)
+                .getGroups();
+    }
+
+    private Group getGroupById(List<Group> groups, Long groupId) {
+        return groups.stream()
+                .filter(g -> g.getId().equals(groupId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(groupId));
+    }
+
+}

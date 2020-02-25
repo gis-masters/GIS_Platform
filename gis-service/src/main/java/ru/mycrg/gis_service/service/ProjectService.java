@@ -58,38 +58,31 @@ public class ProjectService {
         return projects.map(project -> factory.createProjection(ProjectProjection.class, project));
     }
 
+    /**
+     * Retrieves an entity by their id.
+     *
+     * @param id             must not be null
+     * @param authentication Authenticated principal info, must not be null
+     * @return the entity with the given id.
+     * @throws NotFoundException if entity not exist or user not have permissions.
+     */
     @NotNull
-    public Project getById(Long id, Authentication authentication) {
+    public Project getById(@NotNull Long id, @NotNull Authentication authentication) {
         if (isRoot(authentication)) {
             return projectRepository
                     .findById(id)
-                    .orElseThrow(() -> new NotFoundException("Not found project by id: " + id));
+                    .orElseThrow(() -> new NotFoundException(id));
         } else {
             Long orgId = getOrganizationId(authentication);
 
             return projectRepository
                     .findByIdAndOrganizationId(id, orgId)
-                    .orElseThrow(() -> new NotFoundException("Not found project by id: " + id));
+                    .orElseThrow(() -> new NotFoundException(id));
         }
     }
 
     public ProjectProjection getProjectionById(Long id, Authentication authentication) {
         return factory.createProjection(ProjectProjection.class, getById(id, authentication));
-    }
-
-    @NotNull
-    public Project findByInternalName(String internalName, Authentication authentication) {
-        if (isRoot(authentication)) {
-            return projectRepository
-                    .findByInternalName(internalName)
-                    .orElseThrow(() -> new NotFoundException("Not found project by internalName: "+ internalName));
-        } else {
-            Long orgId = getOrganizationId(authentication);
-
-            return projectRepository
-                    .findByInternalNameAndOrganizationId(internalName, orgId)
-                    .orElseThrow(() -> new NotFoundException("Not found project by internalName: "+ internalName));
-        }
     }
 
     /**
@@ -105,13 +98,13 @@ public class ProjectService {
         if (isRoot(authentication)) {
             project = projectRepository
                     .findById(id)
-                    .orElseThrow(() -> new NotFoundException("Not found project"));
+                    .orElseThrow(() -> new NotFoundException(id));
         } else {
             Long orgId = getOrganizationId(authentication);
 
             project = projectRepository
                     .findByIdAndOrganizationId(id, orgId)
-                    .orElseThrow(() -> new NotFoundException("Not found project"));
+                    .orElseThrow(() -> new NotFoundException(id));
         }
 
         project.setName(projectName);
@@ -150,7 +143,7 @@ public class ProjectService {
     public void delete(Long orgId, Long projectId) {
         Project project = projectRepository
                 .findByIdAndOrganizationId(projectId, orgId)
-                .orElseThrow(() -> new NotFoundException("Not found project"));
+                .orElseThrow(() -> new NotFoundException(projectId));
 
         projectRepository.delete(project);
 

@@ -12,17 +12,21 @@ import ru.mycrg.geoserver_client.services.layers.LayersService;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
+import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
+import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.LayerRepository;
 
-import javax.validation.Valid;
+import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis_service.service.ProjectService.DEFAULT_PROJECT_NAME;
 
@@ -36,11 +40,14 @@ public class LayerService {
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
     private final LayersService geoserverLayers;
+    private final JsonPatcher jsonPatcher;
 
     public LayerService(ProjectionFactory factory,
+                        JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
                         ProjectService projectService) {
         this.factory = factory;
+        this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
 
@@ -54,12 +61,11 @@ public class LayerService {
     }
 
     public LayerProjection findById(long projectId, long layerId, Authentication authentication) {
-        return projectService
-                .getProjectionById(projectId, authentication)
-                .getLayers().stream()
-                .filter(layerProjection -> layerProjection.getId().equals(layerId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Not found layer by id: " + layerId));
+        List<Layer> layers = projectService.getById(projectId, authentication).getLayers();
+
+        Layer layer = findLayerById(layers, layerId);
+
+        return factory.createProjection(LayerProjection.class, layer);
     }
 
     public LayerProjection create(long projectId, LayerCreateDto dto, Authentication authentication) {
@@ -70,32 +76,29 @@ public class LayerService {
         return factory.createProjection(LayerProjection.class, layer);
     }
 
-    public void update(long projectId, long layerId, @Valid LayerUpdateDto dto, Authentication authentication) {
-        LayerProjection layerProjection = findById(projectId, layerId, authentication);
+    public void update(long projectId, long layerId, JsonMergePatch patchDto, Authentication authentication) {
+        Project project = projectService.getById(projectId, authentication);
+        Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
 
-        layerRepository
-                .findById(layerProjection.getId())
-                .ifPresent(layer -> {
-                    updateAttributes(layer, dto);
+        LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
+        LayerUpdateDto patchedLayer = jsonPatcher.mergePatch(patchDto, layerDto, LayerUpdateDto.class);
 
-                    layerRepository.save(layer);
-                });
+        layerMapper.update(layerForUpdate, patchedLayer);
+
+        updateGroup(layerForUpdate, patchedLayer, project.getGroups());
+
+        layerForUpdate.setLastModified(LocalDateTime.now());
+
+        layerRepository.save(layerForUpdate);
     }
 
-    public void delete(long projectId, long layerId, Authentication authentication) {
-        Project project = projectService.getById(projectId, authentication);
-        Layer layer = project.getLayers().stream()
-                .filter(l -> layerId == l.getId())
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Not found layer with id: " + layerId));
-
-        project.getLayers().remove(layer);
-
-        layerRepository.delete(layer);
-
+    public void delete(Layer layer, long projectId, Authentication authentication) {
         try {
             String complexLayerName = getComplexLayerName(layer, projectId);
-            log.debug("Delete from geoserver: {}", complexLayerName);
+
+            log.debug("Try delete layer: {}", complexLayerName);
+
+            layerRepository.deleteLayerById(layer.getId());
 
             geoserverLayers.delete(complexLayerName, getToken(authentication));
         } catch (GeoserverClientException e) {
@@ -106,6 +109,19 @@ public class LayerService {
     @NotNull
     private String getComplexLayerName(Layer layer, long projectId) {
         return DEFAULT_PROJECT_NAME + "_" + projectId + ":" + layer.getInternalName();
+    }
+
+    private void updateGroup(Layer layer, LayerUpdateDto dto, List<Group> groups) {
+        if (dto.getGroupId() != null) {
+            Group parentGroup = groups.stream()
+                    .filter(group -> group.getId().equals(dto.getGroupId()))
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException("groupId: Родительская группа задана неверно"));
+
+            layer.setGroup(parentGroup);
+        } else {
+            layer.setGroup(null);
+        }
     }
 
     @NotNull
@@ -120,27 +136,10 @@ public class LayerService {
         return layerRepository.save(newLayer);
     }
 
-    private void updateAttributes(Layer layer, LayerUpdateDto dto) {
-        if (dto.getTitle() != null) {
-            layer.setTitle(dto.getTitle());
-        }
-
-        if (dto.getStyleName() != null) {
-            layer.setStyleName(dto.getStyleName());
-        }
-
-        if (dto.getTransparency() != -1) {
-            layer.setTransparency(dto.getTransparency());
-        }
-
-        if (dto.getPosition() != -1) {
-            layer.setPosition(dto.getPosition());
-        }
-
-        if (dto.getEnabled() != null) {
-            layer.setEnabled(Boolean.parseBoolean(dto.getEnabled()));
-        }
-
-        layer.setLastModified(LocalDateTime.now());
+    private Layer findLayerById(List<Layer> layers, Long layerId) {
+        return layers.stream()
+                .filter(l -> layerId.equals(l.getId()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(layerId));
     }
 }

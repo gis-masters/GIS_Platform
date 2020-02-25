@@ -1,9 +1,16 @@
 package ru.mycrg.gis_service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectRequestDto {
 
     @NotBlank(message = "Забыли указать название проекта")
@@ -12,17 +19,4 @@ public class ProjectRequestDto {
             message = "Должно начинаться с буквы. Затем может содержать: буквы, цифры и символы .-_")
     private String projectName;
 
-    public ProjectRequestDto() {}
-
-    public ProjectRequestDto(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
 }
