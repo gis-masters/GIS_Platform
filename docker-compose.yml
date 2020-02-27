@@ -32,7 +32,7 @@ services:
   postgis:
     container_name: postgis
     image: $DOCKER_CRG_HOST/postgis:$POSTGIS_TAG
-    labels: 
+    labels:
       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5434?sslmode=disable\"],\"username\":\"$CRG_USER\",\"password\":\"$DB_PASS\"}]"
     restart: always
     ports:
@@ -40,9 +40,10 @@ services:
     volumes:
       - /opt/data/postgis:/var/lib/postgresql
     environment:
+      POSTGRES_DBNAME: crg_auth_service,crg_gis_service
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
-      ALLOW_IP_RANGE: 0.0.0.0/0
+      EXISTING_DATA_DIR: $IS_DATA_EXIST
 
   geoserver:
     container_name: geoserver
