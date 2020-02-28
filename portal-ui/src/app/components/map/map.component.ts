@@ -14,7 +14,7 @@ import { ViewFeaturesData } from '../../components/view-features/view-features.c
 import { CommunicationService } from '../../services/communication.service';
 import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
 
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { LayersService } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { ProjectsService } from '../../services/crg/projects.service';
@@ -47,7 +47,6 @@ export class MapComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor (private logger: NGXLogger,
-              private openLayers: OpenLayersService,
               private layersService: LayersService,
               private featureTypesService: FeatureTypesService,
               private projectsService: ProjectsService,
@@ -55,7 +54,7 @@ export class MapComponent implements OnInit, OnDestroy {
               private sideBarManager: SideBarManager) { }
 
   async ngOnInit() {
-    this.openLayers.createMap();
+    openLayersService.createMap();
 
     const currentProject = await this.projectsService.getCurrent();
     dataSchemaService.fetchSchemas(currentProject).subscribe(value => {
@@ -138,7 +137,7 @@ export class MapComponent implements OnInit, OnDestroy {
           }
         });
 
-    this.openLayers.mapClick$
+    openLayersService.mapClick$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
   }
@@ -154,7 +153,7 @@ export class MapComponent implements OnInit, OnDestroy {
     await this.featureTypesService.delete(fType);
     Toast.info('Удалено');
 
-    await this.openLayers.deleteLayerFromMap(layer.complexName);
+    await openLayersService.deleteLayerFromMap(layer.complexName);
   }
 
   /**
@@ -164,16 +163,16 @@ export class MapComponent implements OnInit, OnDestroy {
     const visibleLayersComplexName = this.getComplexNamesOfVisibleLayers();
 
     if (visibleLayersComplexName.length) {
-      const buffer = this.openLayers.getBufferByCoordinates(coordinate);
+      const buffer = openLayersService.getBufferByCoordinates(coordinate);
 
       // Формируем xml для запроса к WFS
       const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
 
-      this.openLayers.drawPolygon(buffer.getCoordinates());
+      openLayersService.drawPolygon(buffer.getCoordinates());
 
       const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
 
-      this.openLayers.clearDraft();
+      openLayersService.clearDraft();
 
       if (fCollection.features && fCollection.features.length) {
         this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.OPEN,
@@ -184,17 +183,16 @@ export class MapComponent implements OnInit, OnDestroy {
         });
 
         fCollection.features.forEach(feature => {
-          this.openLayers.paintFeature(feature);
+          openLayersService.paintFeature(feature);
         });
       }
-
     } else {
       this.logger.debug('No visible layers');
     }
   }
 
   private getComplexNamesOfVisibleLayers(): string[] {
-    return this.openLayers
+    return openLayersService
                .getVisibleLayers()
                .map(vrLayer => WfsUtil.getComplexLayerName(vrLayer))
                .filter(value => !!value);
@@ -217,12 +215,12 @@ export class MapComponent implements OnInit, OnDestroy {
         )
         .subscribe((layers: CrgLayer[]) => {
           layers.forEach(async (layer, index) => {
-            (await this.openLayers.addLayerToMap(layer)).setZIndex(layers.length - index);
+            (await openLayersService.addLayerToMap(layer)).setZIndex(layers.length - index);
           });
 
           // Позиционируемся по BBOX проекта
           if (currentProject.bbox) {
-            this.openLayers.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
+            openLayersService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
           }
         });
   }

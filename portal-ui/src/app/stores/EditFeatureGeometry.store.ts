@@ -59,13 +59,23 @@ export class EditFeatureGeometryStore {
     return this.isValid && !isEqual(this.resultGeometry, this.virginGeometry);
   }
 
+  @computed
+  get geometryType (): GeometryType {
+    return this.geometry && this.geometry.type;
+  }
+
   constructor () {
     this.setProjection(defaultProjection);
   }
 
   @action
-  setGeometry (geometry: WfsGeometry) {
+  initGeometry (geometry: WfsGeometry) {
     this.virginGeometry = geometry;
+    this.setGeometry(geometry);
+  }
+
+  @action
+  setGeometry (geometry: WfsGeometry) {
     this.geometry = this.transformGeometry(geometry, this.currentProjection.to);
   }
 
@@ -115,10 +125,10 @@ export class EditFeatureGeometryStore {
 
     if (geometryType === GeometryType.MULTI_POLYGON) {
       const newCoordinates = this.transformMultiSuperGroup(
-                                coordinates as Coordinate[][][],
-                                transformFunction,
-                                originGeometry && originGeometry.coordinates as Coordinate[][][],
-                                transformedOriginGeometry && transformedOriginGeometry.coordinates as Coordinate[][][]);
+                               coordinates as Coordinate[][][],
+                               transformFunction,
+                               originGeometry && originGeometry.coordinates as Coordinate[][][],
+                               transformedOriginGeometry && transformedOriginGeometry.coordinates as Coordinate[][][]);
 
       return {
         ...geometry,

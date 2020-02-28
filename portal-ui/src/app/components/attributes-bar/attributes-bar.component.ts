@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
 import { LayersService } from '../../services/geoserver/layers.service';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
@@ -93,8 +93,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
               private layersService: LayersService,
               private communicationService: CommunicationService,
               private logger: NGXLogger,
-              private dialog: MatDialog,
-              private openLayersService: OpenLayersService) {
+              private dialog: MatDialog) {
   }
 
   async ngAfterViewInit() {
@@ -131,7 +130,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       this.requestModel$.next({page: {pageSize: 25, offset: 0}});
 
       this.attributeTable.selected = [];
-      this.openLayersService.clearDraft();
+      openLayersService.clearDraft();
       this.updateTable({page: {pageSize: 25, offset: 0}});
     }
   }
@@ -141,7 +140,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       window.dispatchEvent(new Event('resize'));
     }, 0);
 
-    this.openLayersService.clearDraft();
+    openLayersService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -177,11 +176,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   showSelectedFeatures() {
     // Очищаем предыдущие
-    this.openLayersService.clearDraft();
+    openLayersService.clearDraft();
 
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      this.attributeTable.selected.forEach((feature: WfsFeature) => this.openLayersService.paintFeature(feature));
+      this.attributeTable.selected.forEach((feature: WfsFeature) => openLayersService.paintFeature(feature));
     }
 
     window.dispatchEvent(new Event('resize'));
@@ -235,7 +234,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   closeMe() {
-    this.openLayersService.clearDraft();
+    openLayersService.clearDraft();
     this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }
 
@@ -274,7 +273,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     if (event.type === 'dblclick') {
       this.currentPositionFeature = event.row;
 
-      this.openLayersService.showFeature(event.row);
+      openLayersService.showFeature(event.row);
     }
   }
 
@@ -301,7 +300,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           });
     } else {
       this.attributeTable.selected = [];
-      this.openLayersService.clearDraft();
+      openLayersService.clearDraft();
     }
   }
 

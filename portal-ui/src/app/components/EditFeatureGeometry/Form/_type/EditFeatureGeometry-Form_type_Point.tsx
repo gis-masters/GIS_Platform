@@ -17,13 +17,13 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
   }
 
   render () {
-    const { className } = this.props;
-    const geometry = this.props.geometry as WfsPointGeometry;
+    const { className, store } = this.props;
+    const geometry = store.geometry as WfsPointGeometry;
 
     return (
       <div className={cnEditFeatureGeometry('Form', [className])}>
         <EditFeatureGeometryXY />
-        <EditFeatureGeometryCoord val={geometry.coordinates} />
+        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} />
       </div>
     );
   }

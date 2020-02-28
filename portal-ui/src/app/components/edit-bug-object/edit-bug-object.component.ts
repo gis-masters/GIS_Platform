@@ -5,7 +5,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { CommunicationService, ObjectDto } from '../../services/communication.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
@@ -32,7 +32,6 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
-              private openLayers: OpenLayersService,
               private communicationService: CommunicationService,
               private transformFeatureService: TransformFeatureService) {
     super();
@@ -82,7 +81,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
               // Сразу провалидируем слой при успешном сохранении
               this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
-              this.openLayers.refreshLayer(this.data[0].crgLayer.complexName);
+              openLayersService.refreshLayer(this.data[0].crgLayer.complexName);
             } else {
               this.logger.warn('UpdateFeature response: ', response);
               Toast.warn('Не удалось сохранить');
@@ -94,7 +93,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   close() {
     this.closeMe.emit(true);
 
-    this.openLayers.clearDraft();
+    openLayersService.clearDraft();
   }
 
   private async handleObject(objectDto: ObjectDto) {
@@ -112,7 +111,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
       }
 
-      this.openLayers.showFeature(wfsFeature);
+      openLayersService.showFeature(wfsFeature);
     } catch (err) {
       this.isFeatureTypeLoaded = true;
     }

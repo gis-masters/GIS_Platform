@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
 
-import { TokenStorageService, JwtToken } from './token-storage.service';
+import { tokenStorageService, JwtToken } from './token-storage.service';
 import { serverProperties } from './server-properties.service';
 import { HttpQueue } from './util/HttpQueue';
 
@@ -27,11 +26,8 @@ export class AuthService {
   private _authenticated = false;
 
   constructor(private httpq: HttpQueue,
-              private router: Router,
-              private tokenStorage: TokenStorageService,
-              private logger: NGXLogger) {
-    const jwtToken = this.tokenStorage.getToken();
-    if (jwtToken) {
+              private router: Router) {
+    if (tokenStorageService.getToken()) {
       this._authenticated = true;
     }
   }
@@ -59,7 +55,7 @@ export class AuthService {
   }
 
   logout() {
-    this.tokenStorage.signOut();
+     tokenStorageService.signOut();
 
     this._authenticated = false;
     this.router.navigate(['/']);

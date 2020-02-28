@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {NGXLogger} from 'ngx-logger';
-import {Observable, throwError, defer} from 'rxjs';
-import {catchError, flatMap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, throwError, defer } from 'rxjs';
+import { catchError, flatMap  } from 'rxjs/operators';
 
-import {GeoUtil} from '../util/GeoUtil';
-import {AuthService} from '../auth.service';
-import {TokenStorageService} from '../token-storage.service';
+import { GeoUtil } from '../util/GeoUtil';
+import { AuthService } from '../auth.service';
+import { tokenStorageService } from '../token-storage.service';
 import { getEnvironment, Environment } from '../environment';
 
 @Injectable({
@@ -14,7 +14,6 @@ import { getEnvironment, Environment } from '../environment';
 })
 export class JwtInterceptorService implements HttpInterceptor {
   constructor(private logger: NGXLogger,
-              private tokenStorage: TokenStorageService,
               private authService: AuthService) {
   }
 
@@ -22,7 +21,7 @@ export class JwtInterceptorService implements HttpInterceptor {
     return defer(getEnvironment).pipe(
       flatMap((environment: Environment) => {
         if (this.authService.authenticated) {
-          const accessToken = this.tokenStorage.getAccessToken();
+          const accessToken = tokenStorageService.getAccessToken();
 
           if (!accessToken) {
             this.logger.warn('user authenticated but token empty!', accessToken);
@@ -39,7 +38,7 @@ export class JwtInterceptorService implements HttpInterceptor {
         return next.handle(request).pipe(
           catchError((errorResponse: HttpErrorResponse) => {
             if (errorResponse.status === 401) {
-              const refreshToken = this.tokenStorage.getRefreshToken();
+              const refreshToken = tokenStorageService.getRefreshToken();
               if (refreshToken) {
                 // TODO: попробовать получить аксесс токен по refreshToken (вместо логаута)
                 this.authService.logout();

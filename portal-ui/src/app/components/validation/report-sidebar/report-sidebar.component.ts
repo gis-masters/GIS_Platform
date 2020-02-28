@@ -3,14 +3,14 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
-import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { CommunicationService, ObjectDto } from '../../../services/communication.service';
-import {ValidationBrieflyInfo, ValidationService} from '../../../services/crg/validation.service';
-import {IWsMessage, ValidationWsMsg, WsService} from '../../../services/ws.service';
-import {ActionType, SideBarManager, SidebarType} from '../../../services/side-bar-manager.service';
-import {ProcessStatus, ProcessType} from '../../../services/crg/models';
+import { ValidationBrieflyInfo, ValidationService } from '../../../services/crg/validation.service';
+import { IWsMessage, ValidationWsMsg, WsService } from '../../../services/ws.service';
+import { ActionType, SideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { ProcessStatus, ProcessType } from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
-import {CrgLayer} from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -38,8 +38,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
               private wsService: WsService,
               private validationService: ValidationService,
               private sideBarManager: SideBarManager,
-              private communicationService: CommunicationService,
-              private openLayersService: OpenLayersService) {
+              private communicationService: CommunicationService) {
     this.communicationService
         .selectedForValidation
         .pipe(takeUntil(this.unsubscribe$))
@@ -111,7 +110,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   closeMe() {
-    this.openLayersService.clearDraft();
+    openLayersService.clearDraft();
     this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.CLOSE});
   }
 

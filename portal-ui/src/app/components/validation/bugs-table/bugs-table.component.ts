@@ -13,7 +13,7 @@ import { CommunicationService } from '../../../services/communication.service';
 import { dataSchemaService } from '../../../services/crg/data-schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
-import { OpenLayersService } from '../../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/crg/models';
 import { CrgLayer } from '../../../stores/ProjectsList.store';
@@ -61,7 +61,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   constructor(private logger: NGXLogger,
               private communicationService: CommunicationService,
-              private openLayers: OpenLayersService,
               private validationService: ValidationService) {
   }
 
@@ -115,7 +114,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   async showObject(event: Event, objectId: string) {
     event.stopPropagation();
     const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
-    this.openLayers.showFeature(wfsFeature);
+    openLayersService.showFeature(wfsFeature);
   }
 
   editObject(event: Event, objectId: string) {

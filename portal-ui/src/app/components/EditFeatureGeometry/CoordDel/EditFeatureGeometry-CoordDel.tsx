@@ -1,6 +1,6 @@
-import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import React, { Component } from 'react';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordDel.scss';
@@ -12,7 +12,7 @@ interface EditFeatureGeometryCoordDelProps {
   disabled: boolean;
 }
 
-export class EditFeatureGeometryCoordDel extends React.Component<EditFeatureGeometryCoordDelProps> {
+export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCoordDelProps> {
   constructor (props: EditFeatureGeometryCoordDelProps) {
     super(props);
 
@@ -23,10 +23,11 @@ export class EditFeatureGeometryCoordDel extends React.Component<EditFeatureGeom
     return (
       <IconButton className={cnEditFeatureGeometry('CoordDel')}
                   onClick={this.clickHandler}
-                  aria-label="delete"
                   size="small"
                   disabled={this.props.disabled}>
-        <DeleteIcon />
+        <Tooltip title='Удалить узел' enterDelay={800}>
+          <Delete />
+        </Tooltip>
       </IconButton>
     );
   }

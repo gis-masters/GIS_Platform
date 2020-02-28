@@ -26,8 +26,8 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
   }
 
   render () {
-    const { className } = this.props;
-    const geometry = this.props.geometry as WfsMultiPolygonGeometry;
+    const { className, store } = this.props;
+    const geometry = store.geometry as WfsMultiPolygonGeometry;
 
     return (
       <div className={className}>
@@ -36,6 +36,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
               geometryPart={geometryPart}
               minCoordsPerGroup={4}
               groupsMustBeClosed={true}
+              store={store}
               index={index}
               key={index}
           />
@@ -52,7 +53,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
 
   @action
   private addPolygonHandler () {
-    const geometry = this.props.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
+    const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
     geometry.coordinates.push([[['', ''], ['', ''], ['', ''], ['', '']]]);
   }
 }

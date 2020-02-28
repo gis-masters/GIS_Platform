@@ -5,7 +5,6 @@ import { NGXLogger } from 'ngx-logger';
 import { ImportService } from './geoserver/import/import.service';
 import { ProjectsService } from './crg/projects.service';
 import { CommunicationService } from './communication.service';
-import { OpenLayersService } from './open-layer/open-layers.service';
 import { HttpQueue } from './util/HttpQueue';
 
 interface ServicesList {
@@ -13,7 +12,6 @@ interface ServicesList {
   httpq: HttpQueue;
   projectsService: ProjectsService;
   communicationService: CommunicationService;
-  openLayersService: OpenLayersService;
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
@@ -25,7 +23,6 @@ class Services implements ServicesList {
   httpq: HttpQueue;
   projectsService: ProjectsService;
   communicationService: CommunicationService;
-  openLayersService: OpenLayersService;
   route: ActivatedRoute;
   router: Router;
   ngZone: NgZone;
@@ -45,7 +42,6 @@ class Services implements ServicesList {
     this.importService = servicesList.importService;
     this.projectsService = servicesList.projectsService;
     this.communicationService = servicesList.communicationService;
-    this.openLayersService = servicesList.openLayersService;
     this.httpq = servicesList.httpq;
     this.route = servicesList.route;
     this.router = servicesList.router;

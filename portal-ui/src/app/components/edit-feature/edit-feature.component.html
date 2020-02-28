@@ -60,9 +60,14 @@
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">
-            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+            <span *ngIf="!editFeatureItem.isFgistpProperty"
+                  style="color: grey"
+                  matTooltip="Данное свойство не соответствует приказу">
+              {{editFeatureItem.property?.title}}
+            </span>
+            <span *ngIf="editFeatureItem.isFgistpProperty">
+              {{editFeatureItem.property?.title}}
+            </span>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="!readOnly">

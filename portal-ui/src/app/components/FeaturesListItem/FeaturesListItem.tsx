@@ -5,7 +5,7 @@ import { ChevronRight } from '@material-ui/icons';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { dataSchemaService } from '../../services/crg/data-schema.service';
-import { services } from '../../services/services';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -71,7 +71,6 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
   }
 
   private highlightIt () {
-    const { openLayersService } = services;
     openLayersService.clearDraft();
     openLayersService.paintFeature(this.props.feature);
   }

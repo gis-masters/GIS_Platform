@@ -8,7 +8,7 @@ import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar
 import { LayersService } from '../../services/geoserver/layers.service';
 import { ExportService } from '../../services/crg/export.service';
 import { LegendService } from '../../services/geoserver/legend.service';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { cn } from '../../services/util/cn';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
@@ -54,11 +54,11 @@ export class LayerListItemComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   get visible (): boolean {
-    return this.openLayers.getLayerVisibility(this.layer.complexName);
+    return openLayersService.getLayerVisibility(this.layer.complexName);
   }
 
   set visible (visible: boolean) {
-    this.openLayers.setLayerVisibility(this.layer.complexName, visible);
+    openLayersService.setLayerVisibility(this.layer.complexName, visible);
     if (!visible) {
       this.open = false;
     }
@@ -66,18 +66,17 @@ export class LayerListItemComponent implements OnDestroy {
   }
 
   get opacity (): number {
-    return this.openLayers.getLayerOpacity(this.layer.complexName);
+    return openLayersService.getLayerOpacity(this.layer.complexName);
   }
 
   set opacity (opacity: number) {
-    this.openLayers.setLayerOpacity(this.layer.complexName, opacity);
+    openLayersService.setLayerOpacity(this.layer.complexName, opacity);
   }
 
   constructor(private legendService: LegendService,
               private exportService: ExportService,
               private sideBarManager: SideBarManager,
               private dialog: MatDialog,
-              private openLayers: OpenLayersService,
               private stylesService: StylesService,
               private layersService: LayersService) {
     this.getEnv();

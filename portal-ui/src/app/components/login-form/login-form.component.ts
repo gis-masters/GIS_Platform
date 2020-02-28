@@ -1,10 +1,10 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {Subject} from 'rxjs';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
-import {AuthService, AuthCredentials} from '../../services/auth.service';
-import {JwtToken, TokenStorageService} from '../../services/token-storage.service';
+import { AuthService, AuthCredentials } from '../../services/auth.service';
+import { JwtToken, tokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'crg-login-form',
@@ -27,7 +27,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private tokenStorage: TokenStorageService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -52,7 +51,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.authService.authenticate(credentials).then(
           (jwtToken: JwtToken) => {
             this.authService.authenticated = true;
-            this.tokenStorage.saveToken(jwtToken);
+            tokenStorageService.saveToken(jwtToken);
             this.router.navigateByUrl('/projects');
           },
           response => {

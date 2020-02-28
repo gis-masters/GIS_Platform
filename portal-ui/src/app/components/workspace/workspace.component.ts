@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { CommunicationService } from '../../services/communication.service';
-import { LocalStorageService } from '../../services/local-storage.service';
+import { localStorageService } from '../../services/local-storage.service';
 import { ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
 import { cn } from '../../services/util/cn';
 
@@ -21,7 +21,6 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private route: ActivatedRoute,
-              private storageService: LocalStorageService,
               private communicationService: CommunicationService) {
     this.communicationService.sidebarManager
         .pipe(
@@ -49,7 +48,7 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
         .subscribe(data => {
           const userModel = data['orgInfo'];
           if (userModel) {
-            this.storageService.saveUserModel(userModel);
+            localStorageService.saveUserModel(userModel);
           }
         });
   }

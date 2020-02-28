@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { from } from 'rxjs';
 import { concatMap, takeUntil, filter } from 'rxjs/operators';
+import { ModifyEvent } from 'ol/interaction/Modify';
+import GeometryType from 'ol/geom/GeometryType';
+import { Coordinate } from 'ol/coordinate';
+import { cloneDeep } from 'lodash';
 
 import {
   ConfirmDialogComponent,
@@ -10,7 +14,7 @@ import {
 } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { ProjectsService } from '../../services/crg/projects.service';
 import { CommunicationService } from '../../services/communication.service';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
@@ -45,8 +49,7 @@ export enum EditFeatureMode {
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit {
-
+export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
   @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
   @Output() delete = new EventEmitter<string>();
@@ -68,9 +71,10 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
               private projectsService: ProjectsService,
               private communicationService: CommunicationService,
               private sideBarManager: SideBarManager,
-              private openLayers: OpenLayersService,
               private transformFeatureService: TransformFeatureService) {
     super();
+
+    this.modifyHandler = this.modifyHandler.bind(this);
   }
 
   ngOnInit(): void {
@@ -95,9 +99,9 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
               ...this.data.feature,
               geometry: changedGeometry
             };
-            this.openLayers.clearDraft();
-            this.openLayers.paintFeature(feature);
-            this.openLayers.showFeature(feature);
+            openLayersService.clearDraft();
+            openLayersService.paintFeature(feature);
+            openLayersService.showFeature(feature);
           }
         });
 
@@ -112,10 +116,16 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
         .subscribe(isChanged => {
           this.isGeometryChanged = isChanged;
         });
+
+    openLayersService.enableDraftModification(this.modifyHandler);
+  }
+
+  ngOnDestroy () {
+    openLayersService.disableDraftModification(this.modifyHandler);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.editGeometryStore.setGeometry(this.data.feature.geometry);
+    this.editGeometryStore.initGeometry(this.data.feature.geometry);
 
     const dataChanged = changes.data;
     if (dataChanged) {
@@ -124,7 +134,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
 
       if (currentData.mode === EditFeatureMode.single) {
         if (!this.data.isNew) {
-          this.openLayers.showFeature(currentData.feature);
+          openLayersService.showFeature(currentData.feature);
         }
         this.isGeometryChanged = false;
       }
@@ -257,7 +267,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
           ).subscribe(() => {
             this.delete.emit(feature.id);
             this.close();
-            this.openLayers.refreshLayer(`${internalName}:${layerName}`);
+            openLayersService.refreshLayer(`${internalName}:${layerName}`);
           });
         });
   }
@@ -287,7 +297,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
   close() {
     this.closeMe.emit(true);
 
-    this.openLayers.clearDraft();
+    openLayersService.clearDraft();
   }
 
   getEnumerationTitle (enumerations: ValueTitleProjection[], value: string | number): string {
@@ -314,8 +324,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
           this.loadPercent = percent > 100 ? 100 : percent;
           this.isSaveInProgress = false;
           this.closeMe.emit(true);
-          this.openLayers.refreshLayer(`${internalName}:${tableName}`);
-          this.openLayers.clearDraft();
+          openLayersService.refreshLayer(`${internalName}:${tableName}`);
+          openLayersService.clearDraft();
 
           Toast.success('Сохранено');
           
@@ -330,5 +340,25 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit 
           this.loadPercent = percent > 100 ? 100 : percent;
         }
       });
+  }
+
+  private modifyHandler (e: ModifyEvent) {
+    const geometry = e.features.item(0).getGeometry();
+
+    // @ts-ignore
+    let coordinates = geometry.getCoordinates();
+
+    // openlayers как-то так округляет, что первая и последняя точка контура перестают совпадать
+    if (geometry.getType() === GeometryType.MULTI_POLYGON) {
+      coordinates = coordinates.map((polygon: Coordinate[][]) => polygon.map(ring => {
+        ring[ring.length - 1] = cloneDeep(ring[0]);
+        return ring;
+      }));
+    }
+
+    this.editGeometryStore.setGeometry({
+      ...this.editGeometryStore.geometry,
+      coordinates
+    });
   }
 }

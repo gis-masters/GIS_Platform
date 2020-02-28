@@ -1,11 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
+import GeometryType from 'ol/geom/GeometryType';
 import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { env } from '../../../stores/Env.store';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryGroup as GroupBase } from '../Group/EditFeatureGeometry-Group';
 import { withMultiple } from '../Group/_multiple/EditFeatureGeometry-Group_multiple';
@@ -20,6 +22,7 @@ interface EditFeatureGeometrySuperGroupProps {
   minCoordsPerGroup: number;
   groupsMustBeClosed?: boolean;
   index: number;
+  store: EditFeatureGeometryStore;
 }
 
 @observer
@@ -32,7 +35,7 @@ export class EditFeatureGeometrySuperGroup extends React.Component<EditFeatureGe
   }
 
   render () {
-    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed } = this.props;
+    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store } = this.props;
 
     return (
       <div className={cnEditFeatureGeometry('SuperGroup')}>
@@ -44,6 +47,7 @@ export class EditFeatureGeometrySuperGroup extends React.Component<EditFeatureGe
               canBeDeleted={coordinates.length > 1}
               onDelete={this.deleteGroupHandler}
               multiple={coordinates.length > 1}
+              store={store}
               index={i}
               key={i}
           />

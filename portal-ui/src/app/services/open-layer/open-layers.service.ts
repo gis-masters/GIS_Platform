@@ -1,5 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
+import { EventEmitter } from '@angular/core';
 import { Map, View } from 'ol';
 import { MultiPolygon } from 'ol/geom';
 import { ImageWMS, OSM } from 'ol/source';
@@ -22,13 +21,18 @@ import VectorSource from 'ol/source/Vector';
 import WMTS from 'ol/source/WMTS';
 import XYZ from 'ol/source/XYZ';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { Modify, Draw } from 'ol/interaction';
+import { ModifyEvent } from 'ol/interaction/Modify';
+import { DrawEvent } from 'ol/interaction/Draw';
+import MapBrowserEvent from 'ol/MapBrowserEvent';
 
 import { MapperUtil } from './MapperUtil';
 import { WfsFeature } from '../geoserver/wfs-models';
 import { getEnvironment } from '../environment';
 import { serverProperties } from '../server-properties.service';
-import { TokenStorageService } from '../token-storage.service';
+import { tokenStorageService } from '../token-storage.service';
 import { CrgLayer } from '../../stores/ProjectsList.store';
+import { services } from '../services';
 
 export let BEARER_TOKEN = '';
 
@@ -45,22 +49,19 @@ export interface CrgWmsParams {
   FORMAT?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class OpenLayersService {
-
+class OpenLayersService {
   mapClick$ = new EventEmitter<Coordinate>();
-
   private currentTileSource: TileSource;
-
   private tileSources: TileSource[];
-
   private _map: Map;
   private view: View;
   private tileLayer: TileLayer;
-
   private draftSource: VectorSource;
+  private draftSourceModify?: Modify;
+  private draftSourceDraw?: Draw;
+  private drawHandler: (e: DrawEvent) => void;
+  private isModifying = false;
+  private pickHandler: (e: MapBrowserEvent) => void;
 
   // Кол-во десятичных в координатах
   private PRECISION = 4;
@@ -76,17 +77,18 @@ export class OpenLayersService {
   private defaultViewPoint = [3844444, 5644444];
   private defaultOpacity = 0.7;
 
-  constructor(private logger: NGXLogger,
-              private tokenStorage: TokenStorageService) {
+  constructor() {
     this.setupTileSources();
   }
 
   createMap() {
-    BEARER_TOKEN = this.tokenStorage.getAccessToken();
+    BEARER_TOKEN = tokenStorageService.getAccessToken();
 
     this.draftSource = new VectorSource({
       features: []
     });
+
+    this.draftSourceModify = new Modify({ source: this.draftSource });
 
     this.view = new View({
       center: this.defaultViewPoint,
@@ -129,7 +131,9 @@ export class OpenLayersService {
 
     this._map.on('singleclick', event =>  {
       if (event.coordinate) {
-        this.mapClick$.emit(event.coordinate);
+        if (!this.isModifying){
+          this.mapClick$.emit(event.coordinate);
+        }
       } else {
         console.warn('No coordinate', event.coordinate);
         this.mapClick$.emit([0, 0]);
@@ -228,7 +232,7 @@ export class OpenLayersService {
     if (layer) {
       return layer;
     } else {
-      this.logger.warn('Not found layer: ', complexLayerName);
+      services.logger.warn('Not found layer: ', complexLayerName);
     }
   }
 
@@ -314,6 +318,57 @@ export class OpenLayersService {
     const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
     if (olFeature) {
       this.draftSource.addFeature(olFeature);
+    }
+  }
+
+  enableDraftModification (handler: (e: ModifyEvent) => void) {
+    this.isModifying = true;
+    this.draftSourceModify.on('modifyend', handler);
+    this._map.addInteraction(this.draftSourceModify);
+  }
+
+  disableDraftModification (handler: (e: ModifyEvent) => void) {
+    this.isModifying = false;
+    this.draftSourceModify.un('modifyend', handler);
+    this._map.removeInteraction(this.draftSourceModify);
+  }
+
+  draw (geometryType: GeometryType, handler: (e: DrawEvent) => void) {
+    this.draftSourceDraw = new Draw({
+      source: this.draftSource,
+      type: geometryType
+    });
+
+    this.drawHandler = (e: DrawEvent) => {
+      this.drawOff();
+      setTimeout(() => handler(e), 0);
+    }
+
+    this.draftSourceDraw.on('drawend', this.drawHandler);
+    this._map.addInteraction(this.draftSourceDraw);
+  }
+
+  drawOff () {
+    if (this.draftSourceDraw) {
+      this.draftSourceDraw.un('drawend', this.drawHandler);
+      this._map.removeInteraction(this.draftSourceDraw);
+      delete this.draftSourceDraw;
+    }
+  }
+
+  pickPoint (handler: (e: MapBrowserEvent) => void) {
+    this.pickHandler = (e) => {
+      handler(e);
+      this.pickingOff();
+    }
+
+    this._map.once('singleclick', this.pickHandler);
+  }
+
+  pickingOff () {
+    if (this.pickHandler) {
+      this._map.un('singleclick', this.pickHandler);
+      delete this.pickHandler;
     }
   }
 
@@ -424,7 +479,7 @@ export class OpenLayersService {
   private positionToFeature(wfsFeature: WfsFeature) {
     const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
-      this.logger.warn('Incorrect feature: ', wfsFeature);
+      services.logger.warn('Incorrect feature: ', wfsFeature);
       return;
     }
 
@@ -443,7 +498,7 @@ export class OpenLayersService {
         this.fitToBbox(geometry.getExtent(), [50, 650, 50, 50]);
         break;
       default:
-        this.logger.warn('Unsupported geometry type: ', geometry.getType());
+        services.logger.warn('Unsupported geometry type: ', geometry.getType());
     }
   }
 
@@ -489,4 +544,12 @@ export class OpenLayersService {
                .getLayers().getArray()
                .find(bLayer => bLayer.getType() === LayerType.TILE);
   }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private static _instance: OpenLayersService;
 }
+
+export const openLayersService = OpenLayersService.instance;

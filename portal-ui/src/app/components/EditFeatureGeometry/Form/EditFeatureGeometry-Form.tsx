@@ -3,13 +3,13 @@ import { IClassNameProps } from '@bem-react/core';
 import GeometryType from 'ol/geom/GeometryType';
 import { cn } from '@bem-react/classname';
 
-import { WfsGeometryEdited } from '../../../services/geoserver/wfs-models';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 export interface EditFeatureGeometryFormProps extends IClassNameProps {
   type: GeometryType;
-  geometry: WfsGeometryEdited;
+  store: EditFeatureGeometryStore;
 }
 
 export class EditFeatureGeometryForm extends React.Component<EditFeatureGeometryFormProps> {
@@ -17,7 +17,7 @@ export class EditFeatureGeometryForm extends React.Component<EditFeatureGeometry
     return (
       <div className={cnEditFeatureGeometry('Form')}>
         <div className={cnEditFeatureGeometry('Error')}>
-          Неподдерживаемый тип геометрии: {this.props.geometry.type}
+          Неподдерживаемый тип геометрии: {this.props.store.geometry.type}
         </div>
       </div>
     );

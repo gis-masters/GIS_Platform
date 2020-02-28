@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgLayer } from '../../stores/ProjectsList.store';
@@ -36,8 +36,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private sideBarManager: SideBarManager,
-              private openLayers: OpenLayersService) { }
+  constructor(private sideBarManager: SideBarManager) { }
 
   ngOnInit(): void {
     this.showFeatures();
@@ -102,7 +101,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   closeMe() {
-    this.openLayers.clearDraft();
+    openLayersService.clearDraft();
     this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
 

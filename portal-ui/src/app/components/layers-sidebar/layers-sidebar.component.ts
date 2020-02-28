@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {OpenLayersService} from '../../services/open-layer/open-layers.service';
-import {cn} from '../../services/util/cn';
-import {CrgLayer} from '../../stores/ProjectsList.store';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { cn } from '../../services/util/cn';
+import { CrgLayer } from '../../stores/ProjectsList.store';
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -17,8 +17,6 @@ export class LayersSidebarComponent implements OnInit {
   isOpen = true;
 
   cn = cn('layers-sidebar');
-
-  constructor(private openLayers: OpenLayersService) { }
 
   ngOnInit () {
     window.dispatchEvent(new Event('resize'));
@@ -42,7 +40,7 @@ export class LayersSidebarComponent implements OnInit {
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
 
     this.layers.forEach((layer, index) => {
-      this.openLayers.set_ZIndex(layer.complexName, this.layers.length - index);
+      openLayersService.set_ZIndex(layer.complexName, this.layers.length - index);
     });
   }
 

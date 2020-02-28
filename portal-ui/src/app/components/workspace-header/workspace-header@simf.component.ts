@@ -1,8 +1,7 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import {AuthService} from '../../services/auth.service';
-import {LocalStorageService} from '../../services/local-storage.service';
+import { AuthService } from '../../services/auth.service';
 
 import {WorkspaceHeader} from './workspace-header@common';
 
@@ -14,9 +13,7 @@ import {WorkspaceHeader} from './workspace-header@common';
 export class WorkspaceHeaderComponent extends WorkspaceHeader {
 
   constructor(protected route: ActivatedRoute,
-              protected storageService: LocalStorageService,
               protected authService: AuthService) {
-    super(authService, route, storageService);
+    super(authService, route);
   }
-
 }

@@ -7,7 +7,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { generateRandomId } from './util/stringUtil';
 import { BugObject } from './crg/validation.service';
-import { TokenStorageService } from './token-storage.service';
+import { tokenStorageService } from './token-storage.service';
 import { serverProperties } from './server-properties.service';
 import { ProcessType } from './crg/models';
 
@@ -59,8 +59,7 @@ export class WsService {
   private id = generateRandomId();
   private stompClient: CompatClient;
 
-  constructor(private logger: NGXLogger,
-              private storageService: TokenStorageService) {
+  constructor(private logger: NGXLogger) {
     this.logger.info('id: ', this.id);
 
     this.connect();
@@ -70,8 +69,8 @@ export class WsService {
     // TODO: CORS щишибка на websocket когда конектимся через 8100, попробую здесь напрямую к 8088. Или попробывать
     // добавить корс вебсокет секьюрити и на 8100
     const host = await serverProperties.host;
-    const wsPort = await serverProperties.wsPort;
-    const socket = new SockJS(host + ':' + wsPort + '/crg-ws-endpoint?access_token=' + this.storageService.getAccessToken());
+    const port = await serverProperties.wsPort;
+    const socket = new SockJS(`${host}:${port}/crg-ws-endpoint?access_token=${tokenStorageService.getAccessToken()}`);
 
     this.stompClient = Stomp.over(socket);
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
+import { TextFields } from '@material-ui/icons';
 
 import { Button } from '../../Button/Button';
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
@@ -35,12 +35,11 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
   render () {
     return (
       <>
-        <Button className={cnEditFeatureGeometry('AsText')}
-                color='primary'
-                onClick={this.openDialog}
-                startIcon={<EditIcon />}>
-          Как текст
-        </Button>
+        <Tooltip title='Как текст'>
+          <IconButton className={cnEditFeatureGeometry('AsText')} color='primary' onClick={this.openDialog}>
+            <TextFields />
+          </IconButton>
+        </Tooltip>
         <Dialog open={this.isOpen}
                 PaperProps={{ className: cnEditFeatureGeometry('AsTextDialog') }}
                 onKeyDown={this.keyHandler}>
@@ -80,6 +79,10 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
     this.setText(this.props.coordinates.map(coord => coord.join('\t')).join('\n'));
   }
 
+  private changeHandler (e: React.ChangeEvent<HTMLTextAreaElement>) {
+    this.setText(e.target.value);
+  }
+
   @action
   private setText (text: string) {
     this.text = text;
@@ -96,19 +99,15 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
     this.isOpen = false;
   }
 
-  private changeHandler (e: React.ChangeEvent<HTMLTextAreaElement>) {
-    this.setText(e.target.value);
-  }
-
   @action
   private save () {
     const { coordinates } = this.props;
     const newCoordinates = this.text
-                              .replace(/,/g,'.')
-                              .split('\n')
-                              .map(row => row.trim().replace(/\s+/g, ' '))
-                              .filter(row => row)
-                              .map(row => row.split(/\s/));
+                               .replace(/,/g,'.')
+                               .split('\n')
+                               .map(row => row.trim().replace(/\s+/g, ' '))
+                               .filter(row => row)
+                               .map(row => row.split(/\s/));
 
     coordinates.splice(0, coordinates.length, ...newCoordinates);
     this.closeDialog();

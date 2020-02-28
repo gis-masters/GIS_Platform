@@ -1,11 +1,10 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {filter, takeUntil} from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
 
-import {AuthService} from '../../services/auth.service';
-import {LocalStorageService} from '../../services/local-storage.service';
-import {EventService, IEvent} from '../../services/event.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import { AuthService } from '../../services/auth.service';
+import { EventService, IEvent } from '../../services/event.service';
+import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 
 import {WorkspaceHeader} from './workspace-header@common';
 
@@ -20,10 +19,9 @@ export class WorkspaceHeaderComponent extends WorkspaceHeader {
 
   constructor(protected route: ActivatedRoute,
               protected authService: AuthService,
-              protected storageService: LocalStorageService,
               private eventService: EventService,
               private sideBarManager: SideBarManager) {
-    super(authService, route, storageService);
+    super(authService, route);
 
     this.eventService
         .events$

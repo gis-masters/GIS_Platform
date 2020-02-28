@@ -1,11 +1,11 @@
-import {OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import {AuthService} from '../../services/auth.service';
-import {UserInfoModel} from '../../services/crg/users.service';
-import {LocalStorageService} from '../../services/local-storage.service';
+import { AuthService } from '../../services/auth.service';
+import { UserInfoModel } from '../../services/crg/users.service';
+import { localStorageService } from '../../services/local-storage.service';
 
 export class WorkspaceHeader implements OnDestroy, OnInit {
 
@@ -14,8 +14,7 @@ export class WorkspaceHeader implements OnDestroy, OnInit {
   unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(protected authService: AuthService,
-              protected route: ActivatedRoute,
-              protected storageService: LocalStorageService) { }
+              protected route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.data
@@ -24,7 +23,7 @@ export class WorkspaceHeader implements OnDestroy, OnInit {
           const userModel = data.orgInfo;
           if (userModel) {
             this.userModel = userModel;
-            this.storageService.saveUserModel(userModel);
+            localStorageService.saveUserModel(userModel);
           }
         });
   }

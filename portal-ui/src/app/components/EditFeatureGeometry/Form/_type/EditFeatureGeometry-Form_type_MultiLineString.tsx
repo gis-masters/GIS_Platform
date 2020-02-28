@@ -14,13 +14,15 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 class EditFeatureGeometryFormTypeMultiLineString extends EditFeatureGeometryForm {
   render () {
-    const geometry = this.props.geometry as WfsMultiLineStringGeometry;
+    const { store } = this.props;
+    const geometry = store.geometry as WfsMultiLineStringGeometry;
 
     return (
       <div className={this.props.className}>
         <EditFeatureGeometrySuperGroup
             geometryPart={geometry.coordinates}
             minCoordsPerGroup={2}
+            store={store}
             index={0}
         />
       </div>

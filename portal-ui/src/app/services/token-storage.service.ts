@@ -1,20 +1,21 @@
-import {Injectable} from '@angular/core';
-import {LocalStorageService} from './local-storage.service';
+import { localStorageService } from './local-storage.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TokenStorageService {
+export interface JwtToken {
+  token_type: string;
+  access_token: string;
+  refresh_token: string;
+  scope: string;
+  expires_in: number;
+}
+
+class TokenStorageService {
 
   private ACCESS_TOKEN_KEY = 'accessToken';
   private REFRESH_TOKEN_KEY = 'refreshToken';
   private JWT_TOKEN = 'jwtToken';
 
-  constructor(private storageService: LocalStorageService) {
-  }
-
   signOut() {
-    this.storageService.cleanUp();
+    localStorageService.cleanUp();
   }
 
   saveToken(jwtToken: JwtToken) {
@@ -24,28 +25,29 @@ export class TokenStorageService {
   }
 
   getToken(): JwtToken {
-    return JSON.parse(this.storageService.getByKey(this.JWT_TOKEN));
+    return JSON.parse(localStorageService.getByKey(this.JWT_TOKEN));
   }
 
   getAccessToken(): string {
-    return this.storageService.getByKey(this.ACCESS_TOKEN_KEY);
+    return localStorageService.getByKey(this.ACCESS_TOKEN_KEY);
   }
 
   getRefreshToken(): string {
-    return this.storageService.getByKey(this.REFRESH_TOKEN_KEY);
+    return localStorageService.getByKey(this.REFRESH_TOKEN_KEY);
   }
 
   private _save(key: string, token: string) {
-    this.storageService.clearByKey(key);
-    this.storageService.saveByKey(key, token);
+    localStorageService.clearByKey(key);
+    localStorageService.saveByKey(key, token);
   }
 
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private constructor() { }
+
+  private static _instance: TokenStorageService;
 }
 
-export interface JwtToken {
-  token_type: string;
-  access_token: string;
-  refresh_token: string;
-  scope: string;
-  expires_in: number;
-}
+export const tokenStorageService = TokenStorageService.instance;

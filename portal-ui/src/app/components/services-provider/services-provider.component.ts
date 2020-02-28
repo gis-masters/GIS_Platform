@@ -6,7 +6,6 @@ import { services } from '../../services/services';
 import { ImportService } from '../../services/geoserver/import/import.service';
 import { ProjectsService } from '../../services/crg/projects.service';
 import { CommunicationService } from '../../services/communication.service';
-import { OpenLayersService } from '../../services/open-layer/open-layers.service';
 import { HttpQueue } from '../../services/util/HttpQueue';
 
 @Component({
@@ -20,14 +19,12 @@ export class ServicesProvider {
               private importService: ImportService,
               private projectsService: ProjectsService,
               private communicationService: CommunicationService,
-              private openLayersService: OpenLayersService,
               private httpq: HttpQueue,
               private logger: NGXLogger) {
     services.provide({
       importService: this.importService,
       projectsService: this.projectsService,
       communicationService: this.communicationService,
-      openLayersService: this.openLayersService,
       httpq: this.httpq,
       route: this.route,
       router: this.router,

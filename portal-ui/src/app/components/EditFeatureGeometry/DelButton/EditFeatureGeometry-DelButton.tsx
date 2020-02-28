@@ -1,8 +1,7 @@
 import React from 'react';
 import { cn } from '@bem-react/classname';
-import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
-
-import { Button } from '../../Button/Button';
+import { DeleteSweep } from '@material-ui/icons';
+import { Tooltip, IconButton } from '@material-ui/core';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-DelButton.scss';
 
@@ -12,10 +11,10 @@ interface EditFeatureGeometryDelButtonProps {
   onClick: () => void;
 }
 
-export const EditFeatureGeometryDelButton: React.FC<EditFeatureGeometryDelButtonProps> = ({ onClick, children }) => (
-  <Button className={cnEditFeatureGeometry('DelButton')}
-          startIcon={<DeleteSweepIcon />}
-          onClick={onClick}>
-    {children}
-  </Button>
+export const EditFeatureGeometryDelButton: React.FC<EditFeatureGeometryDelButtonProps> = ({ onClick }) => (
+  <Tooltip title='Удалить контур/линию'>
+    <IconButton className={cnEditFeatureGeometry('DelButton')} onClick={onClick}>
+      <DeleteSweep />
+    </IconButton>
+  </Tooltip>
 );

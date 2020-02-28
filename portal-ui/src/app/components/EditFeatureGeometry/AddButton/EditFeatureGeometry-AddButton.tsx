@@ -4,6 +4,8 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 import { Button } from '../../Button/Button';
 
+import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-AddButton.scss';
+
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAddButtonProps {

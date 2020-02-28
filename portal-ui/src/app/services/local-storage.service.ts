@@ -1,15 +1,7 @@
-import { Injectable } from '@angular/core';
-
 import { StorageKeys } from './storage-keys';
 import { UserInfoModel } from './crg/users.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class LocalStorageService {
-
-  constructor() { }
-
+class LocalStorageService {
   cleanUp() {
     window.localStorage.clear();
   }
@@ -50,4 +42,14 @@ export class LocalStorageService {
       console.warn('Не удалось получить инфо о пользователе');
     }
   }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private constructor() { }
+
+  private static _instance: LocalStorageService;
 }
+
+export const localStorageService = LocalStorageService.instance;

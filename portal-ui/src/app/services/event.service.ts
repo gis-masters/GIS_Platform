@@ -4,7 +4,7 @@ import { filter, publishReplay, refCount } from 'rxjs/operators';
 import { remove } from 'lodash';
 
 import { generateRandomId } from './util/stringUtil';
-import { LocalStorageService } from './local-storage.service';
+import { localStorageService } from './local-storage.service';
 import { IWsMessage, WsService } from './ws.service';
 import { ProcessType } from './crg/models';
 
@@ -27,8 +27,7 @@ export class EventService {
       refCount()
     );
 
-  constructor(private wsService: WsService,
-              private storageService: LocalStorageService) {
+  constructor(private wsService: WsService) {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
       this._events$.next(savedEvents);
@@ -92,7 +91,7 @@ export class EventService {
   }
 
   private saveToLocalStorage(events: IEvent[]): void {
-    this.storageService.saveByKey(this.EVENTS_KEY, JSON.stringify(events));
+    localStorageService.saveByKey(this.EVENTS_KEY, JSON.stringify(events));
   }
 
   private getFromLocalStorage(): IEvent[] {

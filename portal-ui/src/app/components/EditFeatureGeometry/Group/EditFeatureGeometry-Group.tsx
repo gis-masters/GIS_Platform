@@ -1,24 +1,23 @@
-import React from 'react';
+import React, { Component, ComponentType, PropsWithChildren } from 'react';
 import { observer } from 'mobx-react';
-import { action } from 'mobx';
+import { computed, action } from 'mobx';
 import { IClassNameProps } from '@bem-react/core'
-import { cn } from '@bem-react/classname';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { transformDimension } from '../../../services/geoserver/wfs.service';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
-import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
-import { EditFeatureGeometryAddButton } from '../AddButton/EditFeatureGeometry-AddButton';
-import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
-import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
+import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
+import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeometry-GroupFooter';
+import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
+import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
+import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
+import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 
-import '!style-loader!css-loader!sass-loader!../GroupFooter/EditFeatureGeometry-GroupFooter.scss';
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
 
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
-
-export type ContainerProps = React.PropsWithChildren<IClassNameProps>;
+export type ContainerProps = PropsWithChildren<IClassNameProps>;
 
 export interface EditFeatureGeometryGroupProps extends IClassNameProps {
   coordinates: CoordinateEdited[];
@@ -26,15 +25,16 @@ export interface EditFeatureGeometryGroupProps extends IClassNameProps {
   mustBeClosed?: boolean;
   canBeDeleted: boolean;
   onDelete: (index: number) => void;
-  Container?: React.ComponentType<ContainerProps>;
+  Container?: ComponentType<ContainerProps>;
   multiple: boolean;
   index: number;
+  store: EditFeatureGeometryStore;
 }
 
 const Div = ((props: ContainerProps) => <div {...props} />);
 
 @observer
-export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometryGroupProps> {
+export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroupProps> {
   constructor (props: EditFeatureGeometryGroupProps) {
     super(props);
 
@@ -44,7 +44,7 @@ export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometr
   }
 
   render () {
-    const { coordinates, minCoordsCount, canBeDeleted, className, Container, mustBeClosed } = this.props;
+    const { coordinates, minCoordsCount, canBeDeleted, className, Container, mustBeClosed, store } = this.props;
     const Tag = Container || Div;
 
     return (
@@ -56,6 +56,7 @@ export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometr
 
           return (
             <EditFeatureGeometryCoord
+                store={store}
                 val={coordinate}
                 key={i}
                 index={i}
@@ -67,22 +68,19 @@ export class EditFeatureGeometryGroup extends React.Component<EditFeatureGeometr
           )
         })}
 
-        <div className={cnEditFeatureGeometry('GroupFooter')}>
+        <EditFeatureGeometryGroupFooter>
+          <EditFeatureGeometryAddNode onClick={this.addHandler} />
           <EditFeatureGeometryAsText coordinates={coordinates} />
-
-          {canBeDeleted ? (
-            <EditFeatureGeometryDelButton onClick={this.deleteGroupHandler}>
-              Удалить контур/линию
-            </EditFeatureGeometryDelButton>
-          ) : null}
-          
-          <EditFeatureGeometryAddButton onClick={this.addHandler}>
-            Добавить узел
-          </EditFeatureGeometryAddButton>
-        </div>
-
+          {this.empty ? <EditFeatureGeometryDraw coordinates={coordinates} store={store} /> : null}
+          {canBeDeleted ? <EditFeatureGeometryDelButton onClick={this.deleteGroupHandler} /> : null}
+        </EditFeatureGeometryGroupFooter>
       </Tag>
     );
+  }
+
+  @computed
+  private get empty () {
+    return !this.props.coordinates.flat(5).some(coord => coord);
   }
 
   @action

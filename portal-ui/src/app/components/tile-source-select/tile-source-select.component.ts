@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { OpenLayersService, TileSource } from '../../services/open-layer/open-layers.service';
+import { openLayersService, TileSource } from '../../services/open-layer/open-layers.service';
 
 @Component({
   selector: 'crg-tile-source-select',
@@ -13,18 +13,16 @@ export class TileSourceSelectComponent implements OnInit {
   @Input() class: string;
 
   get tileSources (): TileSource[] {
-    return this.openLayers.getTileSources();
+    return openLayersService.getTileSources();
   }
 
-  constructor (private openLayers: OpenLayersService) { }
-
   ngOnInit () {
-    this.selectedTileSource = this.openLayers.getCurrentTileSource();
+    this.selectedTileSource = openLayersService.getCurrentTileSource();
   }
 
   onChange () {
-    if (this.openLayers.getCurrentTileSource().name !== this.selectedTileSource.name) {
-      this.openLayers.setTileSource(this.selectedTileSource);
+    if (openLayersService.getCurrentTileSource().name !== this.selectedTileSource.name) {
+      openLayersService.setTileSource(this.selectedTileSource);
     }
   }
 }

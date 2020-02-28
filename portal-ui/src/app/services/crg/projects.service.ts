@@ -1,17 +1,15 @@
-import {NGXLogger} from 'ngx-logger';
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
-import {getRoute} from '../services';
-import {TaskImport} from '../geoserver/import/taskImport';
-import {WsService} from '../ws.service';
-import {LayersService} from '../geoserver/layers.service';
-import {LocalStorageService} from '../local-storage.service';
-import {serverProperties} from '../server-properties.service';
-import {CrgApiResponse, Process} from './models';
-import {HttpQueue} from '../util/HttpQueue';
-import {Project, projectsList} from '../../stores/ProjectsList.store';
-import {defineGeomType} from '../util/stringUtil';
+import { getRoute } from '../services';
+import { TaskImport } from '../geoserver/import/taskImport';
+import { WsService } from '../ws.service';
+import { localStorageService } from '../local-storage.service';
+import { serverProperties } from '../server-properties.service';
+import { CrgApiResponse, Process } from './models';
+import { HttpQueue } from '../util/HttpQueue';
+import { Project, projectsList } from '../../stores/ProjectsList.store';
+import { defineGeomType } from '../util/stringUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +18,7 @@ export class ProjectsService {
   private currentProject?: Promise<Project>;
 
   constructor(private httpq: HttpQueue,
-              private logger: NGXLogger,
-              private wsService: WsService,
-              private layerService: LayersService,
-              private storageService: LocalStorageService) { }
+              private wsService: WsService) { }
 
   async fetchProjects() {
     const baseUrl = await serverProperties.geoServerUrl;
@@ -104,10 +99,10 @@ export class ProjectsService {
   }
 
   changeProject() {
-    this.storageService.clearProject();
+    localStorageService.clearProject();
   }
 
-  private handleLayers(project: Project, baseUrl) {
+  private handleLayers(project: Project, baseUrl: string) {
     project.layers.forEach(layer => {
       layer.complexName = project.internalName + ':' + layer.internalName;
       layer.href = baseUrl + '/rest/layers/' + layer.complexName;
