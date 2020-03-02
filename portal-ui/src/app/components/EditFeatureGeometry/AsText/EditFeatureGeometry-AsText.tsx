@@ -3,7 +3,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
-import { TextFields } from '@material-ui/icons';
+import { ListAlt } from '@material-ui/icons';
 
 import { Button } from '../../Button/Button';
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
@@ -37,7 +37,7 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
       <>
         <Tooltip title='Как текст'>
           <IconButton className={cnEditFeatureGeometry('AsText')} color='primary' onClick={this.openDialog}>
-            <TextFields />
+            <ListAlt />
           </IconButton>
         </Tooltip>
         <Dialog open={this.isOpen}

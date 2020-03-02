@@ -13,6 +13,7 @@ import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeomet
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
+import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
@@ -72,6 +73,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
           <EditFeatureGeometryAddNode onClick={this.addHandler} />
           <EditFeatureGeometryAsText coordinates={coordinates} />
           {this.empty ? <EditFeatureGeometryDraw coordinates={coordinates} store={store} /> : null}
+          <EditFeatureGeometryCSV coordinates={coordinates} empty={this.empty} />
           {canBeDeleted ? <EditFeatureGeometryDelButton onClick={this.deleteGroupHandler} /> : null}
         </EditFeatureGeometryGroupFooter>
       </Tag>

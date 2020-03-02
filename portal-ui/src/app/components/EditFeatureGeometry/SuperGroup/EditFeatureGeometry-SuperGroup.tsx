@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
-import GeometryType from 'ol/geom/GeometryType';
 import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -64,7 +63,13 @@ export class EditFeatureGeometrySuperGroup extends React.Component<EditFeatureGe
 
   @action
   private addGroupHandler () {
-    this.props.geometryPart.push([['', ''], ['', '']]);
+    const group = [];
+
+    for (let i = 0; i < this.props.minCoordsPerGroup; i++) {
+      group.push(['', '']);
+    }
+
+    this.props.geometryPart.push(group);
   }
 
   @action
