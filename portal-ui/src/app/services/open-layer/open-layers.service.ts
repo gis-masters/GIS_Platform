@@ -6,7 +6,7 @@ import { get as getProjection } from 'ol/proj';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { getTopLeft, getWidth } from 'ol/extent';
 import { Coordinate } from 'ol/coordinate';
-import { Fill, Stroke, Style } from 'ol/style.js';
+import { Fill, Stroke, Circle, Style } from 'ol/style.js';
 import Feature from 'ol/Feature';
 import ImageWrapper from 'ol/Image';
 import Layer from 'ol/layer/Layer';
@@ -119,6 +119,12 @@ class OpenLayersService {
             stroke: new Stroke({
               color: '#ff0018',
               width: 2
+            }),
+            image: new Circle({
+              radius: 7,
+              fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.3)'
+              })
             })
           })
         })

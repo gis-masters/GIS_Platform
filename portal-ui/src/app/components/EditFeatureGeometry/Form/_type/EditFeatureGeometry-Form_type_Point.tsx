@@ -9,6 +9,8 @@ import { EditFeatureGeometryFormProps, EditFeatureGeometryForm } from '../EditFe
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 
+import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Point.scss';
+
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
