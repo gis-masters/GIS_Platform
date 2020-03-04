@@ -16,7 +16,7 @@
         Сохранить
       </button>
 
-      <button *ngIf="!readOnly"
+      <button *ngIf="!readOnly && !data.isNew"
               class="del-button"
               mat-stroked-button
               color="error"
