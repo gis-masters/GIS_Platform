@@ -12,6 +12,8 @@ import { EditFeatureGeometryGroup as GroupBase } from '../Group/EditFeatureGeome
 import { withMultiple } from '../Group/_multiple/EditFeatureGeometry-Group_multiple';
 import { EditFeatureGeometryAddButton } from '../AddButton/EditFeatureGeometry-AddButton';
 
+import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.scss';
+
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 const EditFeatureGeometryGroup = compose(withMultiple)(GroupBase);

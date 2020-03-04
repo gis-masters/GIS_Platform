@@ -8,6 +8,7 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgLayer } from '../../stores/ProjectsList.store';
+import { CommunicationService } from '../../services/communication.service';
 
 export interface ViewFeaturesData {
   features: WfsFeature[];
@@ -36,7 +37,8 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private sideBarManager: SideBarManager) { }
+  constructor(private sideBarManager: SideBarManager,
+              private communicationService: CommunicationService) { }
 
   ngOnInit(): void {
     this.showFeatures();
@@ -59,6 +61,12 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
           } else {
             this.isAttributeSidebarOpened = false;
           }
+        });
+
+    this.communicationService.featuresUpdate$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          this.closeMe();
         });
   }
 

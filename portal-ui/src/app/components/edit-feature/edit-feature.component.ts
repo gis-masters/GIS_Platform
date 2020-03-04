@@ -232,7 +232,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
               (await this.projectsService.getCurrent()).internalName,
               this.featureDescription.tableName
           ).subscribe(() => {
-            this.closeMe.emit(true);
+            this.close();
           });
         } else {
           this.batchUpdateFeatures(
@@ -335,7 +335,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
           openLayersService.clearDraft();
 
           Toast.success('Сохранено');
-          
+
           this.communicationService.featuresUpdate$.emit({
             feature: this.data.feature,
             featuresId: this.data.featuresId,
@@ -354,14 +354,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     // @ts-ignore
     let coordinates = geometry.getCoordinates();
-
-    // openlayers как-то так округляет, что первая и последняя точка контура перестают совпадать
-    if (geometry.getType() === GeometryType.MULTI_POLYGON) {
-      coordinates = coordinates.map((polygon: Coordinate[][]) => polygon.map(ring => {
-        ring[ring.length - 1] = cloneDeep(ring[0]);
-        return ring;
-      }));
-    }
 
     this.editGeometryStore.setGeometry({
       ...this.editGeometryStore.geometry,
