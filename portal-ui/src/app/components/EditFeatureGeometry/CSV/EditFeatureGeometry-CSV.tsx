@@ -5,6 +5,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { GetApp, Publish } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
+import { isEqual } from 'lodash';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 
@@ -15,6 +16,7 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 interface EditFeatureGeometryCSVProps {
   coordinates: CoordinateEdited[];
   empty: boolean;
+  mustBeClosed: boolean;
 }
 
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps>{
@@ -84,8 +86,13 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       throw new Error('Ошибка чтения CSV');
     }
 
+    const { coordinates, mustBeClosed } = this.props;
     const newCoordinates: CoordinateEdited[] = result.data.filter((point: CoordinateEdited) => point[0] && point[1]);
-    const { coordinates } = this.props;
+
+    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
+      newCoordinates.push(newCoordinates[0]);
+    }
+
     coordinates.splice(0, coordinates.length, ...newCoordinates);
   }
 

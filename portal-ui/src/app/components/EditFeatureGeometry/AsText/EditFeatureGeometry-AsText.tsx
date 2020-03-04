@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
 import { ListAlt } from '@material-ui/icons';
+import { isEqual } from 'lodash';
 
 import { Button } from '../../Button/Button';
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
@@ -15,6 +16,7 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAsTextProps {
   coordinates: CoordinateEdited[];
+  mustBeClosed: boolean;
 }
 
 @observer
@@ -36,7 +38,10 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
     return (
       <>
         <Tooltip title='Как текст'>
-          <IconButton className={cnEditFeatureGeometry('AsText')} color='primary' onClick={this.openDialog}>
+          <IconButton
+              className={cnEditFeatureGeometry('AsText')}
+              color={this.isOpen ? 'secondary' : 'primary'}
+              onClick={this.openDialog}>
             <ListAlt />
           </IconButton>
         </Tooltip>
@@ -101,13 +106,17 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
 
   @action
   private save () {
-    const { coordinates } = this.props;
+    const { coordinates, mustBeClosed } = this.props;
     const newCoordinates = this.text
                                .replace(/,/g,'.')
                                .split('\n')
                                .map(row => row.trim().replace(/\s+/g, ' '))
                                .filter(row => row)
                                .map(row => row.split(/\s/));
+
+    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
+      newCoordinates.push(newCoordinates[0]);
+    }
 
     coordinates.splice(0, coordinates.length, ...newCoordinates);
     this.closeDialog();

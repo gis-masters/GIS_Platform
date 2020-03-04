@@ -24,9 +24,10 @@ interface EditFeatureGeometryCoordProps {
   store: EditFeatureGeometryStore;
   val: CoordinateEdited;
   withControls?: true;
+  onChange?: (val: CoordinateEdited, i: number) => void;
   onDelete?: (index: number) => void;
   canBeDeleted?: boolean;
-  etalon?: Coordinate;
+  disabled?: boolean;
   index?: number;
 }
 
@@ -52,9 +53,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   render () {
-    const { val, withControls, index, canBeDeleted, etalon } = this.props;
-    const xNotClosed = etalon ? etalon[0] !== Number(val[0]) : false;
-    const yNotClosed = etalon ? etalon[1] !== Number(val[1]) : false;
+    const { val, withControls, index, canBeDeleted, disabled } = this.props;
 
     return (
       <div className={cnEditFeatureGeometry('Coord', { withControls, active: this.picking })}
@@ -68,17 +67,19 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         <TextField
             className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
             value={val[0]}
-            error={!isDimensionValid(val[0]) || xNotClosed}
+            error={!isDimensionValid(val[0])}
             onChange={this.changeXHandler}
             variant="outlined"
+            disabled={disabled}
         />
 
         <TextField
             className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
             value={val[1]}
-            error={!isDimensionValid(val[1]) || yNotClosed}
+            error={!isDimensionValid(val[1])}
             onChange={this.changeYHandler}
             variant="outlined"
+            disabled={disabled}
         />
 
         <EditFeatureGeometryCoordPick
@@ -86,10 +87,11 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
             onBlur={this.pickerBlurHandler}
             active={this.picking}
             btnRef={this.pickRef}
+            disabled={disabled}
         />
 
         {withControls ? (
-          <EditFeatureGeometryCoordDel onClick={this.deleteHandler} disabled={!canBeDeleted} />
+          <EditFeatureGeometryCoordDel onClick={this.deleteHandler} disabled={!canBeDeleted || disabled} />
         ) : null}
       </div>
     );
@@ -97,12 +99,16 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @action
   private changeXHandler (e: React.ChangeEvent<HTMLInputElement>) {
-    this.props.val[0] = e.target.value;
+    const { val, onChange, index } = this.props;
+    val[0] = e.target.value;
+    onChange(val, index);
   }
 
   @action
   private changeYHandler (e: React.ChangeEvent<HTMLInputElement>) {
-    this.props.val[1] = e.target.value;
+    const { val, onChange, index } = this.props;
+    val[1] = e.target.value;
+    onChange(val, index);
   }
 
   @action
@@ -141,7 +147,9 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @action
   private pickHandler (e: MapBrowserEvent) {
-    this.props.val.splice(0, 2, ...this.props.store.currentProjection.to(e.coordinate));
+    const { val, onChange, index } = this.props;
+    val.splice(0, 2, ...this.props.store.currentProjection.to(e.coordinate));
+    onChange(val, index);
     this.offPicking();
   }
 

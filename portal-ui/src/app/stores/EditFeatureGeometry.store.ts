@@ -1,5 +1,5 @@
 import { observable, computed, action } from 'mobx';
-import { isEqual } from 'lodash';
+import { isEqual, cloneDeep } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 
@@ -101,8 +101,8 @@ export class EditFeatureGeometryStore {
       const newCoordinates = this.transformCoordinate(
                                 coordinates as Coordinate,
                                 transformFunction,
-                                originGeometry && originGeometry.coordinates as Coordinate,
-                                transformedOriginGeometry && transformedOriginGeometry.coordinates as Coordinate);
+                                originGeometry && [originGeometry.coordinates] as Coordinate[],
+                                transformedOriginGeometry && [transformedOriginGeometry.coordinates] as Coordinate[]);
 
       return {
         ...geometry,
@@ -140,13 +140,14 @@ export class EditFeatureGeometryStore {
   private transformCoordinate (
             coordEdited: Coord,
             transformFunction: TransformFunction,
-            origin?: Coord,
-            transformedOrigin?: Coord
+            originGroup?: Coord[],
+            transformedOriginGroup?: Coord[]
           ): Coord {
     const coord = normalizeCoordinates(coordEdited) as Coordinate;
+    const originIndex = originGroup ? originGroup.findIndex(originCoord => isEqual(coord, originCoord)) : -1;
 
-    if (isEqual(coord, origin)) {
-      return transformedOrigin;
+    if (originIndex !== -1) {
+      return cloneDeep(transformedOriginGroup[originIndex]);
     }
 
     return isCoordinateValid(coord) ? transformFunction(coord) : coordEdited;
@@ -158,11 +159,11 @@ export class EditFeatureGeometryStore {
             origin?: Coord[],
             transformedOrigin?: Coord[]
           ): Coord[] {
-    return group.map((coord, i) => this.transformCoordinate(
+    return group.map(coord => this.transformCoordinate(
                                       coord,
                                       transformFunction,
-                                      origin && origin.length >= i - 1 && origin[i],
-                                      transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]));
+                                      origin,
+                                      transformedOrigin));
   }
 
   private transformSuperGroup (

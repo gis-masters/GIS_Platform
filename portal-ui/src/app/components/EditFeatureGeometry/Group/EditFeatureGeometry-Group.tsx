@@ -4,7 +4,6 @@ import { computed, action } from 'mobx';
 import { IClassNameProps } from '@bem-react/core'
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
-import { transformDimension } from '../../../services/geoserver/wfs.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
@@ -42,6 +41,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
     this.deleteHandler = this.deleteHandler.bind(this);
     this.addHandler = this.addHandler.bind(this);
     this.deleteGroupHandler = this.deleteGroupHandler.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
   }
 
   render () {
@@ -64,16 +64,17 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
                 onDelete={this.deleteHandler}
                 withControls={true}
                 canBeDeleted={coordinates.length > minCoordsCount}
-                etalon={isLast && mustBeClosed ? coordinates[0].map(transformDimension) : undefined}
+                disabled={isLast && mustBeClosed}
+                onChange={this.changeHandler}
             />
           )
         })}
 
         <EditFeatureGeometryGroupFooter>
           <EditFeatureGeometryAddNode onClick={this.addHandler} />
-          <EditFeatureGeometryAsText coordinates={coordinates} />
+          <EditFeatureGeometryAsText coordinates={coordinates} mustBeClosed={mustBeClosed} />
           {this.empty ? <EditFeatureGeometryDraw coordinates={coordinates} store={store} /> : null}
-          <EditFeatureGeometryCSV coordinates={coordinates} empty={this.empty} />
+          <EditFeatureGeometryCSV coordinates={coordinates} empty={this.empty} mustBeClosed={mustBeClosed} />
           {canBeDeleted ? <EditFeatureGeometryDelButton onClick={this.deleteGroupHandler} /> : null}
         </EditFeatureGeometryGroupFooter>
       </Tag>
@@ -87,16 +88,33 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
 
   @action
   private deleteHandler (i: number) {
-    this.props.coordinates.splice(i, 1);
+    const { mustBeClosed, coordinates } = this.props;
+
+    coordinates.splice(i, 1);
+
+    if (i === 0 && mustBeClosed) {
+      coordinates[coordinates.length - 1] = coordinates[0];
+    }
   }
 
   @action
   private addHandler () {
-    this.props.coordinates.push(['', '']);
+    const { coordinates, mustBeClosed } = this.props;
+    const where = coordinates.length - (mustBeClosed ? 1 : 0);
+    coordinates.splice(where, 0, ['', '']);
   }
 
   private deleteGroupHandler () {
     const { onDelete, index } = this.props;
     onDelete(index);
+  }
+
+  @action
+  private changeHandler (val: CoordinateEdited, i: number) {
+    const { mustBeClosed, coordinates } = this.props;
+
+    if (i === 0 && mustBeClosed) {
+      coordinates[coordinates.length - 1] = val;
+    }
   }
 }

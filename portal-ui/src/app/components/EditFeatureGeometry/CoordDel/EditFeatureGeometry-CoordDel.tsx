@@ -21,14 +21,17 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
 
   render () {
     return (
-      <IconButton className={cnEditFeatureGeometry('CoordDel')}
+      <Tooltip title='Удалить узел' enterDelay={800}>
+        <span>
+          <IconButton className={cnEditFeatureGeometry('CoordDel')}
                   onClick={this.clickHandler}
                   size="small"
                   disabled={this.props.disabled}>
-        <Tooltip title='Удалить узел' enterDelay={800}>
-          <Delete />
-        </Tooltip>
-      </IconButton>
+
+            <Delete />
+          </IconButton>
+        </span>
+      </Tooltip>
     );
   }
 

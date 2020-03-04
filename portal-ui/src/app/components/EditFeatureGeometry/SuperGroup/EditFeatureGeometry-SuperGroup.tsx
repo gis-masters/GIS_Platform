@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
 import { compose } from '@bem-react/core';
@@ -25,7 +25,7 @@ interface EditFeatureGeometrySuperGroupProps {
 }
 
 @observer
-export class EditFeatureGeometrySuperGroup extends React.Component<EditFeatureGeometrySuperGroupProps> {
+export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometrySuperGroupProps> {
   constructor (props: EditFeatureGeometrySuperGroupProps) {
     super(props);
 

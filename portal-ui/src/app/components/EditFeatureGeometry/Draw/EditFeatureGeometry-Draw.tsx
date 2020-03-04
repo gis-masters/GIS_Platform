@@ -39,8 +39,11 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   render () {
     return (
       <Tooltip title="Нарисовать на карте">
-        <IconButton className={cnEditFeatureGeometryDraw()} onClick={this.clickHandler}>
-          <Brush color={this.active ? 'action' : 'primary'} />
+        <IconButton
+            className={cnEditFeatureGeometryDraw()}
+            onClick={this.clickHandler}
+            color={this.active ? 'secondary' : 'primary'}>
+          <Brush />
         </IconButton>
       </Tooltip>
     );

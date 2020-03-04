@@ -12,22 +12,28 @@ interface EditFeatureGeometryCoordPickProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onBlur: (e: React.FocusEvent<HTMLButtonElement>) => void;
   btnRef: RefObject<HTMLButtonElement>;
+  disabled: boolean;
 }
 
 export const EditFeatureGeometryCoordPick: FC<EditFeatureGeometryCoordPickProps> = ({
   active,
   onClick,
   onBlur,
-  btnRef
+  btnRef,
+  disabled
 }) => (
   <Tooltip title='Указать на карте' enterDelay={800}>
-    <IconButton className={cnEditFeatureGeometry('CoordPick')}
-                onClick={onClick}
-                onBlur={onBlur}
-                aria-label="pick"
-                size="small"
-                ref={btnRef}>
-      <LocationSearching color={active ? 'action' : 'primary'} />
-    </IconButton>
+    <span>
+      <IconButton className={cnEditFeatureGeometry('CoordPick')}
+                  onClick={onClick}
+                  onBlur={onBlur}
+                  aria-label="pick"
+                  size="small"
+                  ref={btnRef}
+                  disabled={disabled}
+                  color={active ? 'secondary' : 'primary'}>
+        <LocationSearching />
+      </IconButton>
+    </span>
   </Tooltip>
 );
