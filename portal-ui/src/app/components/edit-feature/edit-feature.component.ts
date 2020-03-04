@@ -298,6 +298,13 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     this.closeMe.emit(true);
 
     openLayersService.clearDraft();
+
+    if (this.data.isNew) {
+      this.sideBarManager.do({
+        target: SidebarType.FEATURES,
+        action: ActionType.CLOSE
+      });
+    }
   }
 
   getEnumerationTitle (enumerations: ValueTitleProjection[], value: string | number): string {
