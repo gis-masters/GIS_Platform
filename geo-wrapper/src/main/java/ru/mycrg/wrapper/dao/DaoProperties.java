@@ -22,4 +22,5 @@ public class DaoProperties {
 
     public static final String NOT_IMPORT = "NotImport";
 
+    public static final String DEFAULT_GEOMETRY_COLUMN_NAME = "shape";
 }
