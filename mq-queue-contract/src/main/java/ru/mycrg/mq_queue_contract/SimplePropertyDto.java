@@ -30,7 +30,7 @@ public class SimplePropertyDto {
     private String pattern;
     private String patternDescription = "";
 
-    private String url;
+    private String dateFormat;
     private String displayMode;
 
     private int sequenceNumber;
@@ -231,12 +231,12 @@ public class SimplePropertyDto {
         this.objectIdentityOnUi = objectIdentityOnUi;
     }
 
-    public String getUrl() {
-        return url;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     public String getDisplayMode() {

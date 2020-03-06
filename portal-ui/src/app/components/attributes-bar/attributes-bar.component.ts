@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   AfterViewInit,
   Component,
@@ -34,6 +35,8 @@ import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/cop
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
+import { ValueType } from '../../services/util/FeaturePropertyValidators';
+
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -557,7 +560,12 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
     Object.keys(properties).forEach(property => {
       const simpleProperty = this.getSimpleProperty(property);
-      if (simpleProperty && simpleProperty.valueType === 'CHOICE') {
+
+      if (!simpleProperty) {
+        return;
+      }
+
+      if (simpleProperty.valueType === ValueType.CHOICE) {
         if (this.viewSettings.viewMode === ViewMode.internal) {
           resultObject[property] = properties[property];
         } else {
@@ -565,6 +573,12 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           if (valueTitle) {
             resultObject[property] = valueTitle;
           }
+        }
+      } else if (simpleProperty.valueType === ValueType.DATETIME) {
+        if (!simpleProperty.dateFormat) {
+          resultObject[property] = new Date(properties[property]).toLocaleDateString();
+        } else {
+          resultObject[property] = moment().locale('ru').format(simpleProperty.dateFormat);
         }
       } else {
         resultObject[property] = properties[property];

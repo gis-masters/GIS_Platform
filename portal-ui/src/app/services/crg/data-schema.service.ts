@@ -56,7 +56,7 @@ export interface PropertySchema {
   fractionDigits?: number;
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
-  url?: string;
+  dateFormat?: string;
   displayMode?: string;
 }
 

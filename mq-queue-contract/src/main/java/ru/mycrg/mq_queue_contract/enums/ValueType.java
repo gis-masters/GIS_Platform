@@ -7,5 +7,6 @@ public enum ValueType {
     DOUBLE,
     CHOICE,
     GEOMETRY,
-    URL
+    URL,
+    DATETIME
 }

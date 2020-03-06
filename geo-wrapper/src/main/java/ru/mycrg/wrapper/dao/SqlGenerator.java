@@ -155,6 +155,8 @@ public class SqlGenerator {
                 return attrDescription.getName() + " character varying(255)";
             case GEOMETRY:
                 return "shape public.geometry";
+            case DATETIME:
+                return attrDescription.getName() + " timestamp";
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueType());
         }
