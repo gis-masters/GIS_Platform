@@ -14,6 +14,7 @@ public class SchemaDto {
     private String calcFiledFunction = "";
     private String originName;
     private boolean readOnly;
+    private GeometryType geometryType;
 
     public SchemaDto() {}
 
@@ -93,4 +94,11 @@ public class SchemaDto {
         this.readOnly = readOnly;
     }
 
+    public GeometryType getGeometryType() {
+        return geometryType;
+    }
+
+    public void setGeometryType(GeometryType geometryType) {
+        this.geometryType = geometryType;
+    }
 }

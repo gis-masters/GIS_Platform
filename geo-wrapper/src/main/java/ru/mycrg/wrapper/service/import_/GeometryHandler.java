@@ -44,15 +44,15 @@ public class GeometryHandler extends AbstractImportChainItem {
             int invalidFeatures = geometryHelper.countInvalid(jdbcTemplate, targetSchemaName, targetTableName);
             if (invalidFeatures > 0) {
                 geometryHelper.makeValid(jdbcTemplate, targetSchemaName, targetTableName);
+                geometryHelper.convertGeometryCollectionTo(jdbcTemplate, targetSchemaName, targetTableName,
+                        importTask.getFeatureDescription().getGeometryType());
             }
 
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить исправление геометрии для: %s в: %s",
-                    importTask.printSource(),
-                    importTask.printTarget());
+            String msg = String.format("Не удалось выполнить исправление геометрии для: %s", importTask.printTarget());
 
             log.error(msg, e);
 

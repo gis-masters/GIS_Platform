@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.gis.service.data_schema.MapperUtil.mapToSchemaDto;
+
 /**
  * Сервис схемм данных.
  * Правила состоят из: <p>
@@ -129,8 +131,9 @@ public class DataSchemaService implements IDataSchemaHolder {
 
             dataSchemaRepository
                     .findAll()
-                    .forEach(featureDescription -> dataSchema.addSchema(
-                            MapperUtil.mapXsdRuleToFeatureDescriptionNew(featureDescription)));
+                    .forEach(fDescription -> {
+                        mapToSchemaDto(fDescription).ifPresent(schema -> dataSchema.addSchema(schema));
+                    });
 
             imposeCustomRules(dataSchema);
         }

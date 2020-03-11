@@ -11,6 +11,7 @@ import ru.mycrg.gis.entity.FeatureDescription;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class MapperUtil {
 
@@ -18,15 +19,16 @@ public class MapperUtil {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    public static SchemaDto mapXsdRuleToFeatureDescriptionNew(FeatureDescription featureDescription) {
+    public static Optional<SchemaDto> mapToSchemaDto(FeatureDescription featureDescription) {
         try {
             JsonNode classRule = featureDescription.getClassRule();
-            return mapper.readValue(classRule.toString(), SchemaDto.class);
+
+            return Optional.of(mapper.readValue(classRule.toString(), SchemaDto.class));
         } catch (IOException e) {
             log.warn("Failed convert JSON / Error: {}", e.getMessage());
         }
 
-        return new SchemaDto();
+        return Optional.empty();
     }
 
     public static JsonNode convertToJsonNode(Object object) {
