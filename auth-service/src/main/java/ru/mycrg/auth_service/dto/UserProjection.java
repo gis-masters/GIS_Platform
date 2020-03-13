@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.dto;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.auth_service.entity.User;
 
@@ -25,6 +24,4 @@ public interface UserProjection {
 
     Set<AuthorityProjection> getAuthorities();
 
-    @Value("#{target.getAuthorities().size()}")
-    int getAuthoritiesCount();
 }

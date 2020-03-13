@@ -1,10 +1,8 @@
 package ru.mycrg.auth_service.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.UserCreateDto;
-import ru.mycrg.auth_service.entity.User;
-import ru.mycrg.auth_service.repository.OrganizationRepository;
+import ru.mycrg.auth_service.dto.UserProjection;
+import ru.mycrg.auth_service.service.AuthorityService;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
@@ -22,7 +20,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
@@ -31,17 +28,13 @@ import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    @Autowired
-    private PagedResourcesAssembler<User> assembler;
+    private final AuthorityService authorityService;
+    private final UserService userService;
 
-    @Autowired
-    private EntityLinks links;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OrganizationRepository orgRepository;
+    public UserController(UserService userService, AuthorityService authorityService) {
+        this.userService = userService;
+        this.authorityService = authorityService;
+    }
 
     @GetMapping("/current")
     public ResponseEntity<UserInfoModel> getUserInfo(Principal principal) {
@@ -52,37 +45,31 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<?> getUsers(Pageable pageable, Authentication authentication) {
+    public ResponseEntity<Page<UserProjection>> getUsers(Pageable pageable, Authentication authentication) {
 
-        Page<User> users = userService.findAll(pageable, authentication);
+        Page<UserProjection> users = userService.findAll(pageable, authentication);
 
-        Link pageSelfLink = links.linkFor(User.class).withSelfRel();
-        PagedResources<?> pagedResources = assembler.toResource(users, this::toResource, pageSelfLink);
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public Resource<User> getUserById(@PathVariable Long id, Authentication authentication) {
+    public Resource<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
 
-        User user = userService.findById(id, authentication);
+        UserProjection userProjection = userService.findById(id, authentication);
 
-        Resource<User> resource = new Resource<>(user);
-        resource.add(linkTo(UserController.class).slash(user.getId()).withSelfRel());
-
-        return resource;
+        return new Resource<>(userProjection);
     }
 
     @PostMapping
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity createUser(@Valid @RequestBody UserCreateDto userCreateDto,
-                                     @RequestParam(name = "orgId", required = false) Long orgId,
-                                     Authentication authentication) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateDto userCreateDto,
+                                             @RequestParam(name = "orgId", required = false) Long orgId,
+                                             Authentication authentication) {
         Long organizationId;
         if (isRoot(authentication)) {
             if (orgId == null) {
-                return new ResponseEntity("Provide organization identifier as 'orgId'", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Provide organization identifier as 'orgId'", HttpStatus.BAD_REQUEST);
             } else {
                 organizationId = orgId;
             }
@@ -90,7 +77,7 @@ public class UserController {
             organizationId = getOrganizationId(authentication);
         }
 
-        User user = userService.create(userCreateDto, organizationId);
+        UserProjection user = userService.create(userCreateDto, organizationId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -101,7 +88,31 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity(headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(headers, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/{id}/roles/{authority}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> addRole(@PathVariable Long id,
+                                          @PathVariable String authority,
+                                          Authentication authentication) {
+        if (!authorityService.isAuthorityExist(authority)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not exist: " + authority);
+        }
+
+        userService.addAuthority(id, authority, authentication);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{id}/roles/{authority}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public HttpStatus removeRole(@PathVariable Long id,
+                                             @PathVariable String authority,
+                                             Authentication authentication) {
+        userService.removeAuthority(id, authority, authentication);
+
+        return HttpStatus.NO_CONTENT;
     }
 
     @DeleteMapping("/{id}")
@@ -109,13 +120,7 @@ public class UserController {
     public HttpStatus deleteUser(@PathVariable Long id, Authentication authentication) {
         userService.delete(id, authentication);
 
-        return HttpStatus.ACCEPTED;
-    }
-
-    private ResourceSupport toResource(User user) {
-        Link selfLink = links.linkForSingleResource(user).withSelfRel();
-
-        return new Resource<>(user, selfLink);
+        return HttpStatus.NO_CONTENT;
     }
 
 }

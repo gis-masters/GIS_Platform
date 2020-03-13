@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static ru.mycrg.auth_service.config.Authorities.ORG_ADMIN;
+import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
 
 /**
  * CRUD сервис для работы с Организациями.

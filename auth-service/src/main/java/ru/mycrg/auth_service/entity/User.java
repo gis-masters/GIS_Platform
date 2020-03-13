@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
@@ -11,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User implements Identifiable<Long> {
 
     @Id
@@ -22,7 +21,6 @@ public class User implements Identifiable<Long> {
     @Column
     private String username;
 
-    @JsonIgnore
     @Column
     private String password;
 
@@ -38,8 +36,7 @@ public class User implements Identifiable<Long> {
     @Column
     private String email;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Authorities> authorities = new HashSet<>();
 
     @ManyToMany
@@ -134,7 +131,14 @@ public class User implements Identifiable<Long> {
     }
 
     public void addAuthority(@NotNull String authority) {
-        this.authorities.add(new Authorities(authority, this));
+        this.authorities.add(new Authorities(authority.toUpperCase(), this));
+    }
+
+    public void removeAuthority(String authority) {
+        this.authorities.stream()
+                .filter(item -> authority.equalsIgnoreCase(item.getAuthority()))
+                .findFirst()
+                .ifPresent(item -> this.authorities.remove(item));
     }
 
     public Set<Organization> getOrganizations() {

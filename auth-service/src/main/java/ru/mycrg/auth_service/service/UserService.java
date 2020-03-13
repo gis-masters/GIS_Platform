@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.dto.UserCreateDto;
+import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exeptions.ConflictException;
@@ -27,9 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static ru.mycrg.auth_service.config.Authorities.VIEWER;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isGeoserverAdmin;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
+import static ru.mycrg.auth_service.service.AuthorityService.VIEWER;
 
 @Service
 @Transactional
@@ -40,13 +42,18 @@ public class UserService {
     private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
     private final MessageBus messageBus;
+    private final ProjectionFactory projectionFactory;
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
 
-    public UserService(UserRepository userRepository, MessageBus messageBus, OrganizationRepository orgRepository) {
+    public UserService(UserRepository userRepository,
+                       MessageBus messageBus,
+                       OrganizationRepository orgRepository,
+                       ProjectionFactory projectionFactory) {
         this.messageBus = messageBus;
         this.userRepository = userRepository;
         this.orgRepository = orgRepository;
+        this.projectionFactory = projectionFactory;
     }
 
     @NotNull
@@ -65,7 +72,7 @@ public class UserService {
         return new UserInfoModel(userName);
     }
 
-    public User create(UserCreateDto dto, Long orgId) {
+    public UserProjection create(UserCreateDto dto, Long orgId) {
         log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
@@ -98,7 +105,7 @@ public class UserService {
                         true)
         );
 
-        return savedUser;
+        return projectionFactory.createProjection(UserProjection.class, savedUser);
     }
 
     /**
@@ -109,9 +116,10 @@ public class UserService {
      * @param authentication Authenticated principal info
      */
     @NotNull
-    public Page<User> findAll(Pageable pageable, Authentication authentication) {
+    public Page<UserProjection> findAll(Pageable pageable, Authentication authentication) {
+        Page<User> users = new PageImpl<>(new ArrayList<>(), pageable, 0);
         if (isRoot(authentication)) {
-            return userRepository.findAll(pageable);
+            users = userRepository.findAll(pageable);
         } else if (isGeoserverAdmin(authentication)) {
             String ownerName = authentication.getName();
 
@@ -124,13 +132,13 @@ public class UserService {
                 Organization organization = organizations.iterator().next();
                 List<User> organizationUsers = new ArrayList<>(organization.getUsers());
 
-                return new PageImpl<>(organizationUsers, pageable, organizationUsers.size());
+                users = new PageImpl<>(organizationUsers, pageable, organizationUsers.size());
             } else {
-                return new PageImpl<>(new ArrayList<>(), pageable, 0);
+                users = new PageImpl<>(new ArrayList<>(), pageable, 0);
             }
-        } else {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
+
+        return users.map(user -> projectionFactory.createProjection(UserProjection.class, user));
     }
 
     /**
@@ -141,11 +149,10 @@ public class UserService {
      * @param id             User id
      * @param authentication Authenticated principal info
      */
-    public User findById(Long id, Authentication authentication) {
+    public UserProjection findById(Long id, Authentication authentication) {
+        Optional<User> oUser = Optional.empty();
         if (isRoot(authentication)) {
-            return userRepository
-                    .findById(id)
-                    .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+            oUser = userRepository.findById(id);
         } else if (isGeoserverAdmin(authentication)) {
             String ownerName = authentication.getName();
 
@@ -156,23 +163,49 @@ public class UserService {
             Set<Organization> organizations = owner.getOrganizations();
             Organization organization = organizations.iterator().next();
 
-            return organization
+            oUser = organization
                     .getUsers().stream()
-                    .filter(user -> user.getId().equals(id)).findFirst()
-                    .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+                    .filter(u -> u.getId().equals(id)).findFirst();
+        }
+
+        if (oUser.isPresent()) {
+            return projectionFactory.createProjection(UserProjection.class, oUser.get());
         } else {
             throw new NotFoundException("Пользователь не найден");
         }
     }
 
     public void delete(Long id, Authentication authentication) {
-        User user = findById(id, authentication);
+        UserProjection user = findById(id, authentication);
 
         log.debug("Try delete user: {}", user.getEmail());
 
         messageBus.sendUserEvent(new UserDeletedEvent(user.getUsername()));
 
-        userRepository.delete(user);
+        userRepository.deleteById(user.getId());
     }
 
+    public void addAuthority(Long id, String authority, Authentication authentication) {
+        UserProjection userProjection = findById(id, authentication);
+
+        if (!isUserHasAuthority(userProjection, authority)) {
+            userRepository.findById(userProjection.getId()).ifPresent(user -> user.addAuthority(authority));
+        }
+    }
+
+    public void removeAuthority(Long id, String authority, Authentication authentication) {
+        UserProjection userProjection = findById(id, authentication);
+
+        if (isUserHasAuthority(userProjection, authority)) {
+            userRepository.findById(userProjection.getId()).ifPresent(user -> user.removeAuthority(authority));
+        } else {
+            throw new NotFoundException("Role not assigned to user");
+        }
+    }
+
+    private boolean isUserHasAuthority(UserProjection userProjection, String authority) {
+        return userProjection
+                .getAuthorities().stream()
+                .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
+    }
 }

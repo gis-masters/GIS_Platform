@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import ru.mycrg.auth_service.config.Authorities;
 import ru.mycrg.auth_service.exeptions.ForbiddenException;
 
 import java.security.Principal;
@@ -15,16 +14,19 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+import static ru.mycrg.auth_service.service.AuthorityService.GLOBAL_ADMIN;
+import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
+
 public class CrgClaimsParser {
 
     private static final String CLAIM_ORGANIZATIONS = "organizations";
 
     public static boolean isRoot(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
+        return isUserHasAuthority(authentication, GLOBAL_ADMIN);
     }
 
     public static boolean isGeoserverAdmin(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.ORG_ADMIN);
+        return isUserHasAuthority(authentication, ORG_ADMIN);
     }
 
     private static boolean isUserHasAuthority(Authentication authentication, String authority) {
