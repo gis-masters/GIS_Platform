@@ -72,12 +72,11 @@ export class FeatureUtil {
     return propertySchemas;
   }
 
-  static calculateByFunction(featureObject, calcFunction: string): {[key: string]: string} {
-    let result;
+  static calculateByFunction<T>(featureObject: T, calcFunction: string): T {
+    let result = featureObject;
     try {
       const cFunction = new Function('obj', calcFunction);
-
-      result = cFunction(featureObject);
+      result = cFunction(featureObject) || featureObject;
     } catch (e) {
       throw Error('Ошибка при попытке просчитать атрибуты' + e);
     }
