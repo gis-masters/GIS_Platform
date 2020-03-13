@@ -5,8 +5,8 @@
 </crg-page-title>
 
 <crg-workspace>
-  <div class="container">
-  <crg-work-import-preview></crg-work-import-preview>
+  <div class="container" *ngIf="schemas.length">
+    <crg-work-import-preview></crg-work-import-preview>
 
     <mat-card class="crg-card">
       <mat-card-content class="crg-card-content">
@@ -32,7 +32,7 @@
             <div class="content-separator"></div>
           </div>
         <div class="col-9 crg-card-list scroll">
-            <crg-mapping-card [importLayer]="selectedLayer"></crg-mapping-card>
+            <crg-mapping-card [importLayer]="selectedLayer" [schemas]="schemas"></crg-mapping-card>
           </div>
         </div>
       </mat-card-content>
@@ -56,4 +56,6 @@
       </mat-card-footer>
     </mat-card>
   </div>
+
+  <crg-loading *ngIf="!schemas.length"></crg-loading>
 </crg-workspace>

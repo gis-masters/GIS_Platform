@@ -1,12 +1,9 @@
 import {NGXLogger} from 'ngx-logger';
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {
-  dataSchemaService,
   FeatureDescription,
-  FeatureXsdDefinition,
   PropertySchema
 } from '../../services/crg/data-schema.service';
-import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {ImportLayerItem} from '../../services/geoserver/import/models';
 import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/crg/models';
@@ -21,8 +18,8 @@ import {FeatureUtil} from '../../services/util/FeatureUtil';
 export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() importLayer: ImportLayerItem;
+  @Input() schemas: FeatureDescription[];
 
-  allFeatureDescriptions: FeatureDescription[] = [];
   featureDescriptions: FeatureDescription[] = [];
 
   propertySchemas: PropertySchema[] = [];
@@ -42,16 +39,6 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   async ngOnInit() {
     this.propertySchemas.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
     this.propertySchemas.push({name: AS_IS.name, title: AS_IS.title});
-
-    dataSchemaService.fetchAllSchemas()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((featureXsdDefinition: FeatureXsdDefinition) => {
-          if (featureXsdDefinition.schemas) {
-            this.allFeatureDescriptions = featureXsdDefinition.schemas;
-          } else {
-            this.logger.warn('Empty definition? ', featureXsdDefinition);
-          }
-        });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,7 +49,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
         this.selectedFeatureType = undefined;
 
-        const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.allFeatureDescriptions, newLayer);
+        const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.schemas, newLayer);
         const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
 
         this.featureDescriptions = [NOT_IMPORT_LAYER, IMPORT_LAYER_AS_IS, ...sortedByBestMatching];
@@ -109,7 +96,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   findDescription(tableName: string): FeatureDescription {
-    return this.allFeatureDescriptions.find((type: FeatureDescription) => type.tableName === tableName);
+    return this.schemas.find((type: FeatureDescription) => type.tableName === tableName);
   }
 
   openAttributes() {

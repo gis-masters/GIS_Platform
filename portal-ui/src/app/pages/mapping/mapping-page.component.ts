@@ -17,6 +17,7 @@ import {OrganizationService} from '../../services/crg/organization.service';
 import {ImportLayer, ImportLayerItem} from '../../services/geoserver/import/models';
 import {AlertDialogComponent} from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
+import {dataSchemaService, FeatureDescription, FeatureXsdDefinition} from '../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -35,6 +36,8 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   prevLink: string;
   nextLink: string;
 
+  schemas: FeatureDescription[] = [];
+
   private CHECK_STATUS_INTERVAL = 1000;
   private WAIT_SERVER_RESPONSE_TIMER = 120000;
 
@@ -48,9 +51,11 @@ export class MappingPageComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               private importData: ImportDataHolderService,
-              private logger: NGXLogger) { }
+              private logger: NGXLogger) {}
 
   async ngOnInit() {
+    this.schemas = (await dataSchemaService.fetchAllSchemas().toPromise()).schemas;
+
     const { projectId, importId } = this.route.snapshot.params;
     this.prevLink = `/projects/${projectId}/import/${importId}`;
     this.nextLink = `/projects/${projectId}/map`;
@@ -146,5 +151,4 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   isActive(comparablePair: ComparableLayersPair) {
     return this.selectedLayer ? this.selectedLayer.name === comparablePair.originalLayer.name : false;
   }
-
 }
