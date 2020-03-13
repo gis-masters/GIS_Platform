@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
@@ -10,6 +10,7 @@ import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
 import { services } from '../../../../services/services';
+import { Link } from '../../../Link/Link';
 
 import { EditFeaturesControlProps, cnEditFeatureFieldControl } from '../EditFeatureField-Control';
 
@@ -24,7 +25,7 @@ interface FieldTypeUrlValue {
 }
 
 @observer
-class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControlProps> {
+class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps> {
   @observable private isOpen = false;
   @observable private content = '';
   @observable private fetching = false;
@@ -45,24 +46,34 @@ class EditFeatureFieldControlTypeUrl extends React.Component<EditFeaturesControl
   }
 
   render () {
-    const { text, disabled } = this.value;
+    const { text, disabled, url } = this.value;
+    const { className, field } = this.props;
+    const inPopup = field.property.displayMode === 'in_popup';
 
     return (
-      <div className={this.props.className}>
-        <PseudoLink onClick={this.openDialog} disabled={disabled}>
-          {text}
-        </PseudoLink>
-        <Dialog open={this.isOpen}  PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}>
-          <DialogContent>
-            <HtmlContent content={this.content} />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.closeDialog} variant='outlined'>
-              Закрыть
-            </Button>
-          </DialogActions>
-          {this.content ? null : <Loading />}
-        </Dialog>
+      <div className={className}>
+        {inPopup ? (
+          <>
+            <PseudoLink onClick={this.openDialog} disabled={disabled}>
+              {text}
+            </PseudoLink>
+            <Dialog open={this.isOpen}  PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}>
+              <DialogContent>
+                <HtmlContent content={this.content} />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.closeDialog} variant='outlined'>
+                  Закрыть
+                </Button>
+              </DialogActions>
+              {this.content ? null : <Loading />}
+            </Dialog>
+          </>
+        ) : (
+          <Link url={url} target='_blank'>
+            {text}
+          </Link>
+        )}
       </div>
     );
   }

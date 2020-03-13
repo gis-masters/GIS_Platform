@@ -1,34 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { OpenInNew } from '@material-ui/icons';
+import { cn } from '@bem-react/classname';
 
 import { services } from '../../services/services';
+
+import '!style-loader!css-loader!sass-loader!./Link.scss';
+
+const cnLink = cn('Link');
 
 interface LinkProps {
   url: string;
   className?: string;
   children?: React.ReactChild;
+  target?: string;
 }
 
-export class Link extends React.Component<LinkProps> {
+export class Link extends Component<LinkProps> {
   constructor (props: LinkProps) {
     super(props);
     this.navigate = this.navigate.bind(this);
   }
 
   render () {
-    const { children, className, url } = this.props;
+    const { children, className, url, target } = this.props;
 
     return (
-      <a href={url} onClick={this.navigate} className={className}>
+      <a href={url} target={target} onClick={this.navigate} className={cnLink(null, [className])}>
+        {target === '_blank' ? <><OpenInNew className={cnLink('Icon')} />&nbsp;</> : null}
         {children}
       </a>
     );
   }
 
   private async navigate (e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    await services.provided;
-    services.ngZone.run(() => {
-      services.router.navigateByUrl(this.props.url);
-    });
+    const { url, target } = this.props;
+
+    if (!target) {
+      e.preventDefault();
+      await services.provided;
+      services.ngZone.run(() => {
+        services.router.navigateByUrl(url);
+      });
+    }
   }
 }

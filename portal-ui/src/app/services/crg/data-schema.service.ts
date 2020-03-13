@@ -57,7 +57,7 @@ export interface PropertySchema {
   allowedValues?: string[];
   enumerations?: ValueTitleProjection[];
   dateFormat?: string;
-  displayMode?: string;
+  displayMode?: 'in_popup';
 }
 
 export enum Updateability {
