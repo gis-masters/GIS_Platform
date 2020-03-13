@@ -115,13 +115,13 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private pick () {
     this.picking = true;
     openLayersService.pickPoint(this.pickHandler);
-    document.body.classList.add('global-picking');
+    document.body.classList.add('global-crosshair-cursor');
   }
 
   @action
   private offPicking () {
     this.picking = false;
-    document.body.classList.remove('global-picking');
+    document.body.classList.remove('global-crosshair-cursor');
     if (this.pickRef.current) this.pickRef.current.blur();
     openLayersService.pickingOff();
   }

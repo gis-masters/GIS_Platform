@@ -22,10 +22,8 @@ interface SelectProps extends IClassNameProps {
 }
 
 export const Select: React.FC<SelectProps> = ({ className, label, value, onChange, options }) => (
-  <FormControl variant="outlined" className={cnSelect(null, [className])}>
-    <InputLabel>
-      {label}
-    </InputLabel>
+  <FormControl className={cnSelect(null, [className])}>
+    {label ? <InputLabel>{label}</InputLabel> : null}
     <BaseSelect value={value} onChange={onChange}>
       {options.map((option, i) => <MenuItem {...option} key={i} />)}
     </BaseSelect>

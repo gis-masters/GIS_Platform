@@ -6,8 +6,10 @@ import { cn } from '@bem-react/classname';
 import { SupportedGeometryType } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 
-import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
+import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
+import { EditFeatureGeometryModify } from './Modify/EditFeatureGeometry-Modify';
 import { EditFeatureGeometryProjSel } from './ProjSel/EditFeatureGeometry-ProjSel';
+import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
 import '!style-loader!css-loader!sass-loader!./Error/EditFeatureGeometry-Error.scss';
@@ -40,7 +42,10 @@ export const EditFeatureGeometry = observer<FC<EditFeatureGeometryProps>>(({ sto
 
   return (
     <div className={cnEditFeatureGeometry()}>
-      <EditFeatureGeometryProjSel store={store} />
+      <EditFeatureGeometryHeader>
+        <EditFeatureGeometryModify store={store} />
+        <EditFeatureGeometryProjSel store={store} />
+      </EditFeatureGeometryHeader>
       <EditFeatureGeometryForm type={geometryType} store={store} />
     </div>
   );

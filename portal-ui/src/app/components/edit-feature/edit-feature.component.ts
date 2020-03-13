@@ -3,10 +3,6 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { from } from 'rxjs';
 import { concatMap, takeUntil, filter } from 'rxjs/operators';
-import { ModifyEvent } from 'ol/interaction/Modify';
-import GeometryType from 'ol/geom/GeometryType';
-import { Coordinate } from 'ol/coordinate';
-import { cloneDeep } from 'lodash';
 
 import {
   ConfirmDialogComponent,
@@ -73,8 +69,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
               private sideBarManager: SideBarManager,
               private transformFeatureService: TransformFeatureService) {
     super();
-
-    this.modifyHandler = this.modifyHandler.bind(this);
   }
 
   ngOnInit(): void {
@@ -116,12 +110,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         .subscribe(isChanged => {
           this.isGeometryChanged = isChanged;
         });
-
-    openLayersService.enableDraftModification(this.modifyHandler);
-  }
-
-  ngOnDestroy () {
-    openLayersService.disableDraftModification(this.modifyHandler);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -347,17 +335,5 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
           this.loadPercent = percent > 100 ? 100 : percent;
         }
       });
-  }
-
-  private modifyHandler (e: ModifyEvent) {
-    const geometry = e.features.item(0).getGeometry();
-
-    // @ts-ignore
-    let coordinates = geometry.getCoordinates();
-
-    this.editGeometryStore.setGeometry({
-      ...this.editGeometryStore.geometry,
-      coordinates
-    });
   }
 }

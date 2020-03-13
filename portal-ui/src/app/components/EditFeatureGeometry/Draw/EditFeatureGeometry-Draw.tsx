@@ -25,6 +25,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
   componentWillUnmount () {
     if (this.active) {
+      document.body.classList.remove('global-crosshair-cursor');
       openLayersService.drawOff();
     }
   }
@@ -42,7 +43,8 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
         <IconButton
             className={cnEditFeatureGeometryDraw()}
             onClick={this.clickHandler}
-            color={this.active ? 'secondary' : 'primary'}>
+            color={this.active ? 'secondary' : 'primary'}
+        >
           <Brush />
         </IconButton>
       </Tooltip>
@@ -73,8 +75,10 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private clickHandler () {
     this.active = !this.active;
     if (this.active) {
+      document.body.classList.add('global-crosshair-cursor');
       openLayersService.draw(this.geometryType, this.handleDraw);
     } else {
+      document.body.classList.remove('global-crosshair-cursor');
       openLayersService.drawOff();
     }
   }

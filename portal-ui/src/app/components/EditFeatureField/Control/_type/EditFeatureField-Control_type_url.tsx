@@ -37,7 +37,6 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
     try {
       this.value = JSON.parse(props.field.value);
     } catch (e) {
-      this.value = { text: '', disabled: true };
       services.logger.warn('Incorrect url value: ', props.field.value);
     }
 
@@ -46,6 +45,10 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   }
 
   render () {
+    if (!this.value) {
+      return null;
+    }
+
     const { text, disabled, url } = this.value;
     const { className, field } = this.props;
     const inPopup = field.property.displayMode === 'in_popup';

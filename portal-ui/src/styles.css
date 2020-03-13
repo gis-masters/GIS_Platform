@@ -82,3 +82,7 @@ body {
 button:focus {
   outline: none;
 }
+
+body.global-crosshair-cursor * {
+  cursor: crosshair;
+}

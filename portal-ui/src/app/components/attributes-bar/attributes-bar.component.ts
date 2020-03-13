@@ -555,8 +555,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  private fillAliases(properties: {}): {} {
-    const resultObject = {};
+  private fillAliases(properties: {[key: string]: any}): {} {
+    const resultObject: {[key: string]: any} = {};
 
     Object.keys(properties).forEach(property => {
       const simpleProperty = this.getSimpleProperty(property);
