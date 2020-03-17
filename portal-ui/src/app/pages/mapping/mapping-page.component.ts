@@ -1,23 +1,23 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {takeUntil} from 'rxjs/operators';
-import {MatDialog} from '@angular/material/dialog';
-import {interval, Subject} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { interval, Subject } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
 
 import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
-import {LayersService} from '../../services/geoserver/layers.service';
-import {ImportService} from '../../services/geoserver/import/import.service';
-import {ProjectsService} from '../../services/crg/projects.service';
-import {Process, ProcessStatus} from '../../services/crg/models';
-import {OrganizationService} from '../../services/crg/organization.service';
-import {ImportLayer, ImportLayerItem} from '../../services/geoserver/import/models';
-import {AlertDialogComponent} from '../../components/dialogs/alert-dialog/alert-dialog.component';
+import { LayersService } from '../../services/geoserver/layers.service';
+import { getAllImportLayers } from '../../services/geoserver/import/import.service';
+import { ProjectsService } from '../../services/crg/projects.service';
+import { Process, ProcessStatus } from '../../services/crg/models';
+import { OrganizationService } from '../../services/crg/organization.service';
+import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/models';
+import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
-import {dataSchemaService, FeatureDescription, FeatureXsdDefinition} from '../../services/crg/data-schema.service';
+import { dataSchemaService, FeatureDescription } from '../../services/crg/data-schema.service';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -25,14 +25,10 @@ import {dataSchemaService, FeatureDescription, FeatureXsdDefinition} from '../..
   styleUrls: ['./mapping-page.component.css']
 })
 export class MappingPageComponent implements OnInit, OnDestroy {
-
   selectedLayer: ImportLayerItem;
-
   isImportFinished = false;
   isWorkImportInited = false;
-
   comparableLayers: ComparableLayersPair[];
-
   prevLink: string;
   nextLink: string;
 
@@ -40,11 +36,9 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
   private CHECK_STATUS_INTERVAL = 1000;
   private WAIT_SERVER_RESPONSE_TIMER = 120000;
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private dialog: MatDialog,
-              private importService: ImportService,
               private projectsService: ProjectsService,
               private organizationService: OrganizationService,
               private layersService: LayersService,
@@ -65,18 +59,16 @@ export class MappingPageComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl(`/projects/${projectId}/import`);
     }
 
-    this.importData.project = await this.projectsService.getCurrent();
-    this.importService
-        .getAllImportLayers()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((importLayers: ImportLayer[]) => {
-          importLayers.map((importLayer: ImportLayer) => {
-            this.importData.createCompatiblePair(importLayer.layer as ImportLayerItem);
-          });
-        });
-
     this.importData.comparableLayers$.subscribe((comparableLayers: ComparableLayersPair[]) => {
       this.comparableLayers = comparableLayers;
+    });
+
+    this.importData.project = await this.projectsService.getCurrent();
+    
+    const importLayers = await getAllImportLayers();
+
+    importLayers.forEach((importLayer: ImportLayer) => {
+      this.importData.createCompatiblePair(importLayer.layer as ImportLayerItem);
     });
   }
 

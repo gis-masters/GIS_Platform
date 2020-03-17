@@ -1,4 +1,4 @@
-import { Observable, of, defer } from 'rxjs';
+import { Observable, defer } from 'rxjs';
 
 import { ValueTitleProjection } from '../geoserver/projections';
 import { serverProperties } from '../server-properties.service';

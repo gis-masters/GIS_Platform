@@ -2,13 +2,11 @@ import { NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 
-import { ImportService } from './geoserver/import/import.service';
 import { ProjectsService } from './crg/projects.service';
 import { CommunicationService } from './communication.service';
 import { HttpQueue } from './util/HttpQueue';
 
 interface ServicesList {
-  importService: ImportService;
   httpq: HttpQueue;
   projectsService: ProjectsService;
   communicationService: CommunicationService;
@@ -19,7 +17,6 @@ interface ServicesList {
 }
 
 class Services implements ServicesList {
-  importService: ImportService;
   httpq: HttpQueue;
   projectsService: ProjectsService;
   communicationService: CommunicationService;
@@ -39,7 +36,6 @@ class Services implements ServicesList {
   }
 
   provide (servicesList: ServicesList) {
-    this.importService = servicesList.importService;
     this.projectsService = servicesList.projectsService;
     this.communicationService = servicesList.communicationService;
     this.httpq = servicesList.httpq;

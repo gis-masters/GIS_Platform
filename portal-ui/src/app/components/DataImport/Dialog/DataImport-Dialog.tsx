@@ -8,6 +8,7 @@ import { Button } from '../../Button/Button';
 import { Loading } from '../../Loading/Loading';
 import { DataImportTasksList } from '../../DataImportTasksList/DataImportTasksList';
 import { services } from '../../../services/services';
+import { deleteTask } from '../../../services/geoserver/import/import.service';
 import { currentImport } from '../../../stores/CurrentImport.store';
 
 import '!style-loader!css-loader!sass-loader!./DataImport-Dialog.scss';
@@ -59,10 +60,10 @@ export class DataImportDialog extends React.Component<DataImportDialogProps> {
     this.busy = true;
     this.next()
   }
-  
+
   private async next () {
     await services.provided;
-    await Promise.all(currentImport.errorTasks.map(task => services.importService.deleteTask(task)));
+    await Promise.all(currentImport.errorTasks.map(task => deleteTask(task)));
     services.router.navigate([this.props.nextUrl], { replaceUrl: true });
   }
 }

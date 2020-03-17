@@ -5,8 +5,8 @@ import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogAc
 import DeleteIcon from '@material-ui/icons/Delete';
 import { cn } from '@bem-react/classname';
 
+import { deleteTask } from '../../../services/geoserver/import/import.service';
 import { Button } from '../../Button/Button';
-import { services } from '../../../services/services';
 import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
@@ -88,7 +88,7 @@ export class DataImportTasksListTask extends React.Component<DataImportTasksList
   private async deleteTask () {
     this.isDeleting = true;
     this.closeDeleteDialog();
-    await services.importService.deleteTask(this.props.task);
+    await deleteTask(this.props.task);
     this.props.onDeleteTask();
   }
 

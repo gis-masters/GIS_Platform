@@ -123,4 +123,3 @@ export const withTypeUrl = withBemMod<{}, EditFeaturesControlProps>(
   { type: 'url' },
   () => EditFeatureFieldControlTypeUrl
 );
-

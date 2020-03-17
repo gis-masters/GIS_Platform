@@ -4,6 +4,12 @@ import { observable, computed, action } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { services } from '../../services/services';
+import {
+  fetchCurrentImport,
+  initScratchImport,
+  checkImportStatus,
+  updateProgress
+} from '../../services/geoserver/import/import.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
@@ -49,7 +55,6 @@ export class DataImport extends React.Component<{}> {
     await services.provided;
 
     const urlImportId = route.params.importId;
-    const { importService } = services;
 
     if (urlImportId) {
       if (currentImport.id && currentImport.id !== urlImportId) {
@@ -57,7 +62,7 @@ export class DataImport extends React.Component<{}> {
       }
 
       try {
-        await importService.fetchCurrentImport(urlImportId);
+        await fetchCurrentImport(urlImportId);
         this.launchPolling();
       } catch (err) {
         this.reset();
@@ -136,10 +141,11 @@ export class DataImport extends React.Component<{}> {
 
   private start () {
     services.ngZone.run(async () => {
-      const { id } = await services.importService
-                                 .initScratchImport(currentImport.file);
-      services.router.navigate([`${this.importUrl}/${id}`]);
-      this.launchPolling();
+      const { id } = await initScratchImport(currentImport.file);
+      if (currentImport.file) { // if was not reseted
+        services.router.navigate([`${this.importUrl}/${id}`]);
+        this.launchPolling();
+      }
     });
   }
 
@@ -149,8 +155,6 @@ export class DataImport extends React.Component<{}> {
   }
 
   private async poll () {
-    const { importService } = services;
-
     if (currentImport.isFinished) {
       this.stopPolling();
     }
@@ -159,7 +163,7 @@ export class DataImport extends React.Component<{}> {
       return;
     }
 
-    await Promise.all([importService.checkImportStatus(), importService.updateProgress()]);
+    await Promise.all([checkImportStatus(), updateProgress()]);
 
     if (this.pollingOn) {
       this.pollTimeout = window.setTimeout(this.poll, this.pollingDelay);
