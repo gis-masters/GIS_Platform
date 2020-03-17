@@ -67,10 +67,10 @@ public class SqlGenerator {
         importTask
                 .getPairs().stream()
                 .filter(mPair -> AS_IS.equals(mPair.getTarget().getType()))
-                .filter(mPair -> !PRIMARY_KEY.equals(mPair.getTarget().getName().toLowerCase()))
+                .filter(mPair -> !PRIMARY_KEY.equalsIgnoreCase(mPair.getTarget().getName()))
                 .filter(mPair -> isNotExistInSchema(featureDescription.getProperties(), mPair.getTarget().getName()))
                 .forEach(mPair -> {
-                    if ("the_geom".equals(mPair.getSource().getName().toLowerCase())) {
+                    if ("the_geom".equalsIgnoreCase(mPair.getSource().getName())) {
                         createTableSql.append(", shape public.geometry");
                     } else {
                         createTableSql
@@ -128,7 +128,7 @@ public class SqlGenerator {
 
     private static boolean isNotExistInSchema(@NotNull List<SimplePropertyDto> properties, String attrName) {
         return properties.stream()
-                .noneMatch(propertyDto -> propertyDto.getName().toLowerCase().equals(attrName.toLowerCase()));
+                .noneMatch(propertyDto -> propertyDto.getName().equalsIgnoreCase(attrName));
     }
 
     private static boolean isGeometryExist(StringBuilder createTableSql) {
@@ -152,7 +152,7 @@ public class SqlGenerator {
             case DOUBLE:
                 return attrDescription.getName() + " numeric(38,8)";
             case URL:
-                return attrDescription.getName() + " character varying(255)";
+                return attrDescription.getName() + " text";
             case GEOMETRY:
                 return "shape public.geometry";
             case DATETIME:

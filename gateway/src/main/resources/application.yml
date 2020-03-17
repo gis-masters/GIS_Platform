@@ -42,6 +42,10 @@ zuul:
       path: /users/**
       url: http://auth-service:9000/users/
 
+    crg-auth-service-roles:
+      path: /roles/**
+      url: http://auth-service:9000/roles/
+
     crg-auth-service-organizations:
       path: /organizations/**
       url: http://auth-service:9000/organizations/
