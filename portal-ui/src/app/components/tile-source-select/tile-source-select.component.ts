@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { openLayersService, TileSource } from '../../services/open-layer/open-layers.service';
+import { baseMapsStore } from '../../stores/BaseMaps.store';
+import { CrgBaseMap } from '../../services/crg/base-maps.models';
+import {reaction} from 'mobx';
 
 @Component({
   selector: 'crg-tile-source-select',
@@ -8,21 +10,28 @@ import { openLayersService, TileSource } from '../../services/open-layer/open-la
   styleUrls: ['./tile-source-select.component.scss']
 })
 export class TileSourceSelectComponent implements OnInit {
-  selectedTileSource: TileSource;
+  selectedBaseMap: CrgBaseMap | undefined;
 
   @Input() class: string;
 
-  get tileSources (): TileSource[] {
-    return openLayersService.getTileSources();
-  }
-
   ngOnInit () {
-    this.selectedTileSource = openLayersService.getCurrentTileSource();
+    reaction(() => baseMapsStore.getCurrentBaseMap, baseMap => {
+      this.selectedBaseMap = baseMap;
+    });
   }
 
   onChange () {
-    if (openLayersService.getCurrentTileSource().name !== this.selectedTileSource.name) {
-      openLayersService.setTileSource(this.selectedTileSource);
+    if (!this.selectedBaseMap) {
+      return;
+    }
+
+    if (baseMapsStore.getCurrentBaseMap.name !== this.selectedBaseMap.name) {
+      baseMapsStore.setBaseMap(this.selectedBaseMap);
     }
   }
+
+  get tileSources (): CrgBaseMap[] {
+    return baseMapsStore.baseMaps();
+  }
+
 }

@@ -19,6 +19,7 @@
 
     <properties>
         <flyway.version>5.2.4</flyway.version>
+        <swagger.version>2.9.2</swagger.version>
     </properties>
 
     <dependencies>
@@ -102,6 +103,17 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>18.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
     </dependencies>
 

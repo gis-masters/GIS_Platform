@@ -12,6 +12,7 @@ class ServerProperties {
   private _apiUrl: string;
   private _organizationsUrl: string;
   private _usersUrl: string;
+  private _baseMaps: string;
   private _schemaUrl: string;
   private _exportUrl: string;
   private _wsUrl: string;
@@ -97,6 +98,12 @@ class ServerProperties {
     });
   }
 
+  get baseMapsUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._baseMaps;
+    });
+  }
+
   get projectsUrl(): Promise<string> {
     return this.getEnv().then(() => {
       return this._projectsUrl;
@@ -122,6 +129,7 @@ class ServerProperties {
     this._apiUrl = this._baseUrl + '/api';
     this._organizationsUrl = this._baseUrl + '/organizations';
     this._usersUrl = this._baseUrl + '/users';
+    this._baseMaps = this._baseUrl + '/api/data/basemaps';
     this._schemaUrl = this._baseUrl + '/schema';
     this._exportUrl = this._baseUrl + '/export';
     this._wsUrl = this._baseUrl + '/crg-ws-endpoint';

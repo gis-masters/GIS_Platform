@@ -27,4 +27,6 @@ public interface ProjectProjection {
 
     List<GroupProjection> getGroups();
 
+    List<BaseMapProjection> getBaseMaps();
+
 }

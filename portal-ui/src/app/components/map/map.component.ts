@@ -23,6 +23,7 @@ import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { ActionType, Sidebar, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
 import { dataSchemaService } from '../../services/crg/data-schema.service';
+import { baseMapsService } from '../../services/crg/base-maps.service';
 
 @Component({
   selector: 'crg-map',
@@ -54,9 +55,10 @@ export class MapComponent implements OnInit, OnDestroy {
               private sideBarManager: SideBarManager) { }
 
   async ngOnInit() {
-    openLayersService.createMap();
-
     const currentProject = await this.projectsService.getCurrent();
+
+    await baseMapsService.fetchAll(currentProject.baseMaps);
+    await openLayersService.createMap();
     dataSchemaService.fetchSchemas(currentProject).subscribe(value => {
       this.fetchLayers(currentProject);
     });

@@ -6,7 +6,9 @@ import org.springframework.hateoas.Identifiable;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="projects")
@@ -40,6 +42,14 @@ public class Project implements Identifiable<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<Group> groups = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "projects_basemaps",
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "basemap_id")}
+    )
+    private Set<BaseMap> baseMaps = new HashSet<>();
 
     public Project() {}
 
@@ -131,4 +141,17 @@ public class Project implements Identifiable<Long> {
     public void addGroup(Group group) {
         this.groups.add(group);
     }
+
+    public Set<BaseMap> getBaseMaps() {
+        return baseMaps;
+    }
+
+    public void setBaseMaps(Set<BaseMap> baseMaps) {
+        this.baseMaps = baseMaps;
+    }
+
+    public void addBaseMap(BaseMap baseMap) {
+        this.baseMaps.add(baseMap);
+    }
+
 }

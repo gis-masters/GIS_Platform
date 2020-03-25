@@ -1,12 +1,10 @@
-import { EventEmitter } from '@angular/core';
-import { Map, View } from 'ol';
-import { MultiPolygon } from 'ol/geom';
-import { ImageWMS, OSM } from 'ol/source';
-import { get as getProjection } from 'ol/proj';
-import { defaults as defaultControls, ScaleLine } from 'ol/control';
-import { getTopLeft, getWidth } from 'ol/extent';
-import { Coordinate } from 'ol/coordinate';
-import { Fill, Stroke, Circle, Style } from 'ol/style.js';
+import {EventEmitter} from '@angular/core';
+import {Map, View} from 'ol';
+import {MultiPolygon} from 'ol/geom';
+import {ImageWMS} from 'ol/source';
+import {defaults as defaultControls, ScaleLine} from 'ol/control';
+import {Coordinate} from 'ol/coordinate';
+import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 import Feature from 'ol/Feature';
 import ImageWrapper from 'ol/Image';
 import Layer from 'ol/layer/Layer';
@@ -18,30 +16,29 @@ import BaseLayer from 'ol/layer/Base';
 import ImageLayer from 'ol/layer/Image';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import WMTS from 'ol/source/WMTS';
-import XYZ from 'ol/source/XYZ';
-import WMTSTileGrid from 'ol/tilegrid/WMTS';
-import { Modify, Draw } from 'ol/interaction';
-import { ModifyEvent } from 'ol/interaction/Modify';
-import { DrawEvent } from 'ol/interaction/Draw';
+import {Draw, Modify} from 'ol/interaction';
+import {ModifyEvent} from 'ol/interaction/Modify';
+import {DrawEvent} from 'ol/interaction/Draw';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
+import TileImage from 'ol/source/TileImage';
+import { get as getProjection } from 'ol/proj';
+import OSM from 'ol/source/OSM';
+import XYZ from 'ol/source/XYZ';
+import WMTS from 'ol/source/WMTS';
+import {getTopLeft, getWidth} from 'ol/extent';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
-import { MapperUtil } from './MapperUtil';
-import { WfsFeature } from '../geoserver/wfs-models';
-import { getEnvironment } from '../environment';
-import { serverProperties } from '../server-properties.service';
-import { tokenStorageService } from '../token-storage.service';
-import { CrgLayer } from '../../stores/ProjectsList.store';
-import { services } from '../services';
+import {MapperUtil} from './MapperUtil';
+import {WfsFeature} from '../geoserver/wfs-models';
+import {serverProperties} from '../server-properties.service';
+import {tokenStorageService} from '../token-storage.service';
+import {CrgLayer} from '../../stores/ProjectsList.store';
+import {services} from '../services';
+import {reaction} from 'mobx';
+import {baseMapsStore} from '../../stores/BaseMaps.store';
+import {CrgBaseMap, SourceType} from '../crg/base-maps.models';
 
 export let BEARER_TOKEN = '';
-
-export interface TileSource {
-  name: string;
-  title: string;
-  source: XYZ;
-  thumbnail: string;
-}
 
 // WMS request parameters. At least a LAYERS param is required.
 export interface CrgWmsParams {
@@ -50,12 +47,34 @@ export interface CrgWmsParams {
 }
 
 class OpenLayersService {
+  private static _instance: OpenLayersService;
+
+  constructor() {
+    reaction(() => baseMapsStore.getCurrentBaseMap, currentBaseMap => {
+      if (currentBaseMap) {
+        const tileSource = this.prepareTileSource(currentBaseMap);
+        if (tileSource) {
+          this.baseMapLayer.setSource(tileSource);
+        } else {
+          this.baseMapLayer.setVisible(false);
+        }
+      } else {
+        this.baseMapLayer.setVisible(false);
+      }
+    });
+  }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   mapClick$ = new EventEmitter<Coordinate>();
-  private currentTileSource: TileSource;
-  private tileSources: TileSource[];
+
+  // Подлдожка
+  private baseMapLayer = new TileLayer();
+
   private _map: Map;
   private view: View;
-  private tileLayer: TileLayer;
   private draftSource: VectorSource;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
@@ -77,18 +96,14 @@ class OpenLayersService {
   private defaultViewPoint = [3844444, 5644444];
   private defaultOpacity = 0.7;
 
-  constructor() {
-    this.setupTileSources();
-  }
-
-  createMap() {
+  async createMap() {
     BEARER_TOKEN = tokenStorageService.getAccessToken();
 
     this.draftSource = new VectorSource({
       features: []
     });
 
-    this.draftSourceModify = new Modify({ source: this.draftSource });
+    this.draftSourceModify = new Modify({source: this.draftSource});
 
     this.view = new View({
       center: this.defaultViewPoint,
@@ -97,18 +112,14 @@ class OpenLayersService {
       maxZoom: 19
     });
 
-    this.tileLayer = new TileLayer({
-      source: this.currentTileSource.source
-    });
-
     this._map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
       controls: defaultControls().extend([
-          new ScaleLine()
+        new ScaleLine()
       ]),
       layers: [
-        this.tileLayer,
+        this.baseMapLayer,
         new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
@@ -131,13 +142,13 @@ class OpenLayersService {
       ]
     });
 
-    this._map.on('movestart', () =>  {
+    this._map.on('movestart', () => {
       window.dispatchEvent(new Event('resize'));
     });
 
-    this._map.on('singleclick', event =>  {
+    this._map.on('singleclick', event => {
       if (event.coordinate) {
-        if (!this.isModifying){
+        if (!this.isModifying) {
           this.mapClick$.emit(event.coordinate);
         }
       } else {
@@ -348,7 +359,7 @@ class OpenLayersService {
     this.drawHandler = (e: DrawEvent) => {
       this.drawOff();
       setTimeout(() => handler(e), 0);
-    }
+    };
 
     this.draftSourceDraw.on('drawend', this.drawHandler);
     this._map.addInteraction(this.draftSourceDraw);
@@ -366,7 +377,7 @@ class OpenLayersService {
     this.pickHandler = (e) => {
       handler(e);
       this.pickingOff();
-    }
+    };
 
     this._map.once('singleclick', this.pickHandler);
   }
@@ -375,110 +386,6 @@ class OpenLayersService {
     if (this.pickHandler) {
       this._map.un('singleclick', this.pickHandler);
       delete this.pickHandler;
-    }
-  }
-
-  /**
-   * Задать слой подложку.
-   *
-   * @param tileSource The source providing images divided into a tile grid.
-   */
-  setTileSource(tileSource: TileSource) {
-    this.currentTileSource = tileSource;
-
-    const substrate = this.getSubstrate();
-    if (tileSource.name === 'Empty') {
-      substrate.setVisible(false);
-    } else {
-      substrate.setVisible(true);
-      this.tileLayer.setSource(this.currentTileSource.source);
-    }
-  }
-
-  getCurrentTileSource(): TileSource {
-    return this.currentTileSource;
-  }
-
-  getTileSources(): TileSource[] {
-    return this.tileSources;
-  }
-
-  private async setupTileSources () {
-    const environment = await getEnvironment();
-
-    const projection = getProjection('EPSG:900913');
-    const projectionExtent = projection.getExtent();
-    const size = getWidth(projectionExtent) / 256;
-    const resolutions = new Array(21);
-    const matrixIds = new Array(21);
-    for (let z = 0; z < 21; ++z) {
-      // generate resolutions and matrixIds arrays for this WMTS
-      resolutions[z] = size / Math.pow(2, z);
-      matrixIds[z] = 'EPSG:900913:' + z;
-    }
-
-    this.tileSources = [
-      {
-        name: 'OSM',
-        title: 'Open street map',
-        source: new OSM(),
-        thumbnail: '/assets/images/thumbnail-osm.jpg'
-      },
-      {
-        name: 'ESRI',
-        title: 'ESRI',
-        source: new XYZ({
-          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-        }),
-        thumbnail: '/assets/images/thumbnail-esri.jpg'
-      },
-      {
-        name: 'Empty',
-        title: 'Без подложки',
-        source: new XYZ(),
-        thumbnail: '/assets/images/thumbnail-empty.jpg'
-      }
-    ];
-
-    if (environment.platform === 'conv') {
-      this.currentTileSource = this.getTileSource('OSM');
-    } else {
-      // {
-      //   name: 'SimfReg',
-      //   title: 'Ортофотоплан',
-      //   source: new TileWMS({
-      //     urls: [await this.serverProp.wmsUrl],
-      //     tileLoadFunction: this.crgImageLoadFunction,
-      //     params: {
-      //       LAYERS: 'substrate:T_42_6',
-      //       FORMAT: 'image/vnd.jpeg-png8'
-      //     }
-      //   }),
-      //   thumbnail: '/assets/images/thumbnail-our.jpg'
-      // },
-
-      this.tileSources.splice(2, 0, {
-        name: 'SimfRegWMTS',
-        title: 'Ортофотоплан WMTS',
-        source: new WMTS({
-          tileLoadFunction: this.crgImageLoadFunction,
-          urls: [await serverProperties.wmtsUrl],
-          tileGrid: new WMTSTileGrid({
-            origin: getTopLeft(projectionExtent),
-            resolutions: resolutions,
-            matrixIds: matrixIds
-          }),
-          style: 'default',
-          layer: 'substrate:T_42_6',
-          matrixSet: 'EPSG:900913',
-          format: 'image/png',
-          projection: projection,
-          wrapX: true
-        }),
-        thumbnail: '/assets/images/thumbnail-our.jpg'
-      });
-
-      this.currentTileSource = this.getTileSource('SimfRegWMTS');
     }
   }
 
@@ -506,15 +413,6 @@ class OpenLayersService {
       default:
         services.logger.warn('Unsupported geometry type: ', geometry.getType());
     }
-  }
-
-  private getTileSource(tileName: string) {
-      const foundSource = this.tileSources.find((tSource: TileSource) => tSource.name === tileName);
-      if (foundSource) {
-        return foundSource;
-      } else {
-        throw new Error('Not found tileSource by name: ' + tileName);
-      }
   }
 
   private crgImageLoadFunction(tile: Tile | ImageWrapper, src: string) {
@@ -545,17 +443,61 @@ class OpenLayersService {
                .filter((bLayer: BaseLayer) => bLayer.getType() === LayerType.IMAGE);
   }
 
-  private getSubstrate(): BaseLayer {
-    return this._map
-               .getLayers().getArray()
-               .find(bLayer => bLayer.getType() === LayerType.TILE);
+  private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
+    if (!baseMap.source || !baseMap.source.type) {
+      return undefined;
+    }
+
+    switch (baseMap.source.type) {
+      case SourceType.OSM:  return new OSM();
+      case SourceType.WMTS: return this.prepareWMTS(baseMap);
+      case SourceType.XYZ:
+        if (baseMap.source.url) {
+          return new XYZ({
+            url: baseMap.source.url
+          });
+        } else {
+          return new XYZ();
+        }
+      default:
+        return undefined;
+    }
   }
 
-  public static get instance() {
-    return this._instance || (this._instance = new this());
-  }
+  private prepareWMTS(baseMap: CrgBaseMap): WMTS {
+    try {
+      const { source, tileGrid } = baseMap;
 
-  private static _instance: OpenLayersService;
+      const projection = getProjection(source.projection);
+      const projectionExtent = projection.getExtent();
+      const size = getWidth(projectionExtent) / tileGrid.size;
+      const resolutions = new Array(tileGrid.resolution);
+      const matrixIds = new Array(tileGrid.matrixIds);
+      for (let z = 0; z < tileGrid.resolution; ++z) {
+        // generate resolutions and matrixIds arrays for this WMTS
+        resolutions[z] = size / Math.pow(2, z);
+        matrixIds[z] = source.projection + ':' + z;
+      }
+
+      return new WMTS({
+        tileLoadFunction: this.crgImageLoadFunction,
+        urls: [source.url],
+        tileGrid: new WMTSTileGrid({
+          origin: getTopLeft(projectionExtent),
+          resolutions: resolutions,
+          matrixIds: matrixIds
+        }),
+        style: source.style,
+        layer: source.layerName,
+        matrixSet: source.projection,
+        format: source.format,
+        projection: projection,
+        wrapX: true
+      });
+    } catch (e) {
+      return undefined;
+    }
+  }
 }
 
 export const openLayersService = OpenLayersService.instance;

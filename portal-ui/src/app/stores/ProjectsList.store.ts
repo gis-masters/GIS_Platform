@@ -1,6 +1,7 @@
 import { observable, computed, action } from 'mobx';
 import {FeatureDescription} from '../services/crg/data-schema.service';
 import {GeometryType} from '../services/util/stringUtil';
+import {CrgProjectBaseMap} from '../services/crg/base-maps.models';
 
 export interface CrgLayer {
   id: string;
@@ -30,6 +31,7 @@ export interface Project {
   organizationId: number;
   layers: CrgLayer[];
   createdAt: string;
+  baseMaps: CrgProjectBaseMap[];
 }
 
 class ProjectsList {
