@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
 @RequestMapping("/projects/{project_id}")
@@ -47,12 +48,12 @@ public class LayerController {
 
     @PostMapping("/layers")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> createLayer(@PathVariable(name = "project_id") long projectId,
-                                            @Valid @RequestBody LayerCreateDto dto,
-                                            Authentication authentication) {
+    public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
+                                                       @Valid @RequestBody LayerCreateDto dto,
+                                                       Authentication authentication) {
         LayerProjection layerProjection = layerService.create(projectId, dto, authentication);
 
-        return new ResponseEntity(layerProjection, HttpStatus.CREATED);
+        return new ResponseEntity<>(layerProjection, HttpStatus.CREATED);
     }
 
     @GetMapping("/layers/{layer_id}")
@@ -65,7 +66,7 @@ public class LayerController {
         return new Resource<>(layerProjection);
     }
 
-    @PatchMapping("/layers/{layer_id}")
+    @PatchMapping(path = "/layers/{layer_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public HttpStatus updateLayer(@PathVariable(name = "project_id") long projectId,
                                   @PathVariable(name = "layer_id") long layerId,

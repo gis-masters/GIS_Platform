@@ -11,4 +11,8 @@ public class Authorities {
     public static final String GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY =
             "hasAnyAuthority('" + GLOBAL_ADMIN + "', '" + ORG_ADMIN + "')";
 
+
+    public static final String HAS_ANY_ALLOWED_AUTHORITY =
+            "hasAnyAuthority('" + GLOBAL_ADMIN + "', '" + ORG_ADMIN + "', '" + EDITOR + "', '" + VIEWER + "')";
+
 }

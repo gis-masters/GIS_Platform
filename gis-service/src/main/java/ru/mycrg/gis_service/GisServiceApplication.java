@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import ru.mycrg.geoserver_client.AuthServiceInfo;
 import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClient;
@@ -14,6 +15,7 @@ import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.gis_service.config.CrgProperties;
 
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class GisServiceApplication {
 
     private static final Logger log = LoggerFactory.getLogger(GisServiceApplication.class);

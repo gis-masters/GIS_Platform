@@ -8,11 +8,11 @@
           [clearOnBackspace]="false"
           (click)="onChange()">
   <ng-template ng-label-tmp let-item="item">
-    <img [src]="item.thumbnail" class="tile-source-select__thumbnail" />
+    <img [src]="item.thumbnailUrn" class="tile-source-select__thumbnail" />
     {{item.title}}
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-      <img [src]="item.thumbnail" class="tile-source-select__thumbnail" />
+      <img [src]="item.thumbnailUrn" class="tile-source-select__thumbnail" />
       {{item.title}}
   </ng-template>
 </ng-select>

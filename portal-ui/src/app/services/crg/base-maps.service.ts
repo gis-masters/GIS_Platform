@@ -1,7 +1,10 @@
+import {HttpParams} from '@angular/common/http';
+
 import {serverProperties} from '../server-properties.service';
-import {CrgBaseMap, CrgProjectBaseMap} from './base-maps.models';
+import {CrgBaseMap, CrgProjectBaseMap, SourceType} from './base-maps.models';
 import {baseMapsStore} from '../../stores/BaseMaps.store';
 import {services} from '../services';
+import {CrgApiResponse} from './models';
 
 class BaseMapsService {
   private static _instance: BaseMapsService;
@@ -19,27 +22,45 @@ class BaseMapsService {
   async fetchAll(baseMaps: CrgProjectBaseMap[]) {
     await services.provided;
 
-    const baseMapIds = baseMaps.map(value => value.baseMapId);
-    const result = await services.httpq.post<CrgBaseMap[]>(await serverProperties.baseMapsUrl, baseMapIds);
+    let params = new HttpParams();
+    params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
 
-    if (result) {
-      this.modifyTitle(baseMaps, result);
+    const url = await serverProperties.baseMapsUrl + '/search/findByIdIn';
+    services.httpq.get<CrgApiResponse>(url, {params: params}).then(response => {
+      if (response._embedded) {
+        const crgBaseMaps = this.handleBaseMaps(baseMaps, response._embedded.basemaps);
 
-      baseMapsStore.initBaseMaps(result);
-    } else {
-      baseMapsStore.initBaseMaps([]);
-    }
+        baseMapsStore.initBaseMaps(crgBaseMaps);
+      } else {
+        baseMapsStore.initBaseMaps([]);
+      }
+    }, reason => {
+      console.error('Подложки не подготовлены?: ', reason);
+
+      const osmBaseMap = {title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM};
+      baseMapsStore.initBaseMaps([osmBaseMap]);
+    });
   }
 
-  private modifyTitle(projectBaseMaps: CrgProjectBaseMap[], baseMaps: CrgBaseMap[]) {
-    projectBaseMaps.forEach(projectBaseMap => {
-      if (projectBaseMap.title) {
-        const crgBaseMap = baseMaps.find(value => value.id === projectBaseMap.id);
-        if (crgBaseMap) {
-          crgBaseMap.title = projectBaseMap.title;
+  // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
+  private handleBaseMaps(projectBaseMaps: CrgProjectBaseMap[], baseMaps: CrgBaseMap[]): CrgBaseMap[] {
+    const result: CrgBaseMap[] = [];
+    projectBaseMaps
+      .sort((a, b) => a.position - b.position)
+      .forEach(projectBaseMap => {
+        const crgBaseMap = baseMaps.find(baseMap => baseMap.id === projectBaseMap.baseMapId);
+        if (projectBaseMap.title) {
+          if (crgBaseMap) {
+            crgBaseMap.title = projectBaseMap.title;
+          }
         }
-      }
-    });
+
+        if (crgBaseMap) {
+          result.push(crgBaseMap);
+        }
+      });
+
+    return result;
   }
 }
 

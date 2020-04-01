@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
-import ru.mycrg.gis_service.dto.GroupProjection;
-import ru.mycrg.gis_service.dto.GroupUpdateDto;
 import ru.mycrg.gis_service.entity.BaseMap;
-import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
@@ -52,9 +49,8 @@ public class BaseMapService {
 
     public void create(long projectId, BaseMapCreateDto dto, Authentication authentication) {
         Project project = projectService.getById(projectId, authentication);
-
         project.getBaseMaps().stream()
-                .filter(baseMap -> baseMap.getId().equals(dto.getBaseMapId()))
+                .filter(baseMap -> baseMap.getBaseMapId().equals(dto.getBaseMapId()))
                 .findFirst()
                 .ifPresent(baseMap -> {
                     throw new ConflictException("Basemap " + dto.getBaseMapId() + " already joined");

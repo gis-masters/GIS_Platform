@@ -1,13 +1,13 @@
 import {FeatureDescription, PropertySchema} from './data-schema.service';
-import {Project} from '../../stores/ProjectsList.store';
 
-export interface CrgApiProjects {
-  projects: Project[];
+export interface CrgApiLink {
+  href: string;
+  templated?: boolean;
 }
 
 export interface CrgApiResponse {
-  _embedded: CrgApiProjects;
-  _links: Sortable;
+  _embedded: any;
+  _links: CrgApiLink[];
   page: CrgApiPageable;
 }
 

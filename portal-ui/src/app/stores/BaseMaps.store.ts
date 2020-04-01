@@ -18,10 +18,8 @@ class BaseMaps {
   @action
   initBaseMaps(baseMaps: CrgBaseMap[]) {
     this._baseMaps = baseMaps;
-    this._baseMaps.sort((a, b) => a.position - b.position);
-
     if (baseMaps.length) {
-      this._currentBaseMap = this._baseMaps[0];
+      this._currentBaseMap = baseMaps[0];
     }
   }
 

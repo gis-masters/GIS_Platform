@@ -54,6 +54,7 @@ class OpenLayersService {
       if (currentBaseMap) {
         const tileSource = this.prepareTileSource(currentBaseMap);
         if (tileSource) {
+          this.baseMapLayer.setVisible(true);
           this.baseMapLayer.setSource(tileSource);
         } else {
           this.baseMapLayer.setVisible(false);
@@ -444,17 +445,17 @@ class OpenLayersService {
   }
 
   private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
-    if (!baseMap.source || !baseMap.source.type) {
+    if (!baseMap || !baseMap.type) {
       return undefined;
     }
 
-    switch (baseMap.source.type) {
+    switch (baseMap.type) {
       case SourceType.OSM:  return new OSM();
       case SourceType.WMTS: return this.prepareWMTS(baseMap);
       case SourceType.XYZ:
-        if (baseMap.source.url) {
+        if (baseMap.url) {
           return new XYZ({
-            url: baseMap.source.url
+            url: baseMap.url
           });
         } else {
           return new XYZ();
@@ -466,31 +467,29 @@ class OpenLayersService {
 
   private prepareWMTS(baseMap: CrgBaseMap): WMTS {
     try {
-      const { source, tileGrid } = baseMap;
-
-      const projection = getProjection(source.projection);
+      const projection = getProjection(baseMap.projection);
       const projectionExtent = projection.getExtent();
-      const size = getWidth(projectionExtent) / tileGrid.size;
-      const resolutions = new Array(tileGrid.resolution);
-      const matrixIds = new Array(tileGrid.matrixIds);
-      for (let z = 0; z < tileGrid.resolution; ++z) {
+      const size = getWidth(projectionExtent) / baseMap.size;
+      const resolutions = new Array(baseMap.resolution);
+      const matrixIds = new Array(baseMap.matrixIds);
+      for (let z = 0; z < baseMap.resolution; ++z) {
         // generate resolutions and matrixIds arrays for this WMTS
         resolutions[z] = size / Math.pow(2, z);
-        matrixIds[z] = source.projection + ':' + z;
+        matrixIds[z] = baseMap.projection + ':' + z;
       }
 
       return new WMTS({
         tileLoadFunction: this.crgImageLoadFunction,
-        urls: [source.url],
+        urls: [baseMap.url],
         tileGrid: new WMTSTileGrid({
           origin: getTopLeft(projectionExtent),
           resolutions: resolutions,
           matrixIds: matrixIds
         }),
-        style: source.style,
-        layer: source.layerName,
-        matrixSet: source.projection,
-        format: source.format,
+        style: baseMap.style,
+        layer: baseMap.layerName,
+        matrixSet: baseMap.projection,
+        format: baseMap.format,
         projection: projection,
         wrapX: true
       });

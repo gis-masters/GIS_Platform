@@ -26,7 +26,7 @@ export class ProjectsService {
 
     const response = await this.httpq.get<CrgApiResponse>(url);
 
-    if (response._embedded) {
+    if (response && response._embedded) {
       response._embedded.projects.forEach(project => this.handleLayers(project, baseUrl));
 
       projectsList.setList(response._embedded.projects);

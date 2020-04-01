@@ -42,8 +42,8 @@ public class BaseMapController {
     @GetMapping("/basemaps/{base_map_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<BaseMapProjection> getBaseMaps(@PathVariable(name = "project_id") long projectId,
-                                                               @PathVariable(name = "base_map_id") long baseMapId,
-                                                               Authentication authentication) {
+                                                         @PathVariable(name = "base_map_id") long baseMapId,
+                                                         Authentication authentication) {
         BaseMapProjection baseMap = baseMapService.findById(projectId, baseMapId, authentication);
 
         return ResponseEntity.ok(baseMap);
