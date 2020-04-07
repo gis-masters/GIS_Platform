@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -239,8 +240,8 @@ public class BaseDaoService {
 
             try {
                 jdbcTemplate.update(sqlUpdate);
-            } catch (Exception e) {
-                log.warn("Не удалось обновить строку: {}", item.values());
+            } catch (DataAccessException e) {
+                log.warn("Не удалось обновить строку: {}. Reason: {}", item.values(), e.getMessage());
             }
         });
     }

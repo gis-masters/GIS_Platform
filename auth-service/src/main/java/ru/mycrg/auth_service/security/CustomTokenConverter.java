@@ -45,7 +45,12 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
                         .map(org -> new IdNameProjection(org.getId(), org.getName()))
                         .collect(Collectors.toList());
 
+                List<IdNameProjection> usersGroups = user.getGroups().stream()
+                        .map(group -> new IdNameProjection(group.getId(), group.getName()))
+                        .collect(Collectors.toList());
+
                 additionalInfo.put("user_id", user.getId());
+                additionalInfo.put("groups", usersGroups);
                 additionalInfo.put("organizations", usersOrganizations);
             }
 

@@ -2,7 +2,6 @@ package ru.mycrg.auth_service.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,12 +10,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
-public class User implements Identifiable<Long> {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @Column
     private String username;
@@ -47,6 +46,14 @@ public class User implements Identifiable<Long> {
     )
     private Set<Organization> organizations = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "groups_users",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id")}
+    )
+    private Set<Group> groups = new HashSet<>();
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -65,12 +72,11 @@ public class User implements Identifiable<Long> {
         this.lastModified = LocalDateTime.now();
     }
 
-    @Override
     public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -163,5 +169,13 @@ public class User implements Identifiable<Long> {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 }

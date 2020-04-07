@@ -6,76 +6,28 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
-import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.dto.UserProjection;
+import ru.mycrg.auth_service.entity.User;
 
 import java.util.Optional;
 
-import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
-
-@RepositoryRestResource(collectionResourceRel = "users", path = "users", excerptProjection = UserProjection.class)
+@RepositoryRestResource(collectionResourceRel = "users",
+                        path = "users",
+                        excerptProjection = UserProjection.class)
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @Modifying
     @Query("UPDATE User u SET u.enabled = true, u.lastModified = CURRENT_TIMESTAMP WHERE u.username = :username")
+    @RestResource(exported = false)
     int activateUserByName(@Param("username") String username);
 
+    @RestResource(exported = false)
     void deleteByUsername(@Param("username") String userName);
 
-    @PreAuthorize("permitAll()")
+    @RestResource(exported = false)
     Optional<User> findByUsername(@Param("username") String userName);
 
-    @PreAuthorize("permitAll()")
+    @RestResource(exported = false)
     Optional<User> findByEmail(@Param("email") String email);
 
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    Iterable<User> findAll();
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    Optional<User> findById(Long aLong);
-
-    // NOT Exported
-    @Override
-    void deleteById(Long aLong);
-
-    @Override
-    @RestResource(exported = false)
-    <S extends User> S save(S entity);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    <S extends User> Iterable<S> saveAll(Iterable<S> entities);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    boolean existsById(Long aLong);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    Iterable<User> findAllById(Iterable<Long> longs);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    long count();
-
-    @Override
-    @RestResource(exported = false)
-    void delete(User entity);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    void deleteAll(Iterable<? extends User> entities);
-
-    @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
-    @RestResource(exported = false)
-    void deleteAll();
 }

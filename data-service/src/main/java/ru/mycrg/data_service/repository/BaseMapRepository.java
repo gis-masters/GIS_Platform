@@ -11,9 +11,9 @@ import ru.mycrg.data_service.entity.BaseMap;
 
 import java.util.Collection;
 
-import static ru.mycrg.data_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.data_service.config.Authorities.HAS_ANY_AUTHORITY;
 
-@PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+@PreAuthorize(HAS_ANY_AUTHORITY)
 @RepositoryRestResource(collectionResourceRel = "basemaps",
                         path = "basemaps",
                         excerptProjection = BaseMapProjection.class)

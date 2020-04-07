@@ -16,6 +16,7 @@ import ru.mycrg.gis_service.service.ProjectService;
 import javax.validation.Valid;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
 
 @RestController
@@ -32,7 +33,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<?> getProjects(Pageable pageable, Authentication authentication) {
         Page<ProjectProjection> projects = projectService.findAll(pageable, authentication);
 
@@ -40,7 +41,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<ProjectProjection> getProjectById(@PathVariable Long id, Authentication authentication) {
         ProjectProjection project = projectService.getProjectionById(id, authentication);
 

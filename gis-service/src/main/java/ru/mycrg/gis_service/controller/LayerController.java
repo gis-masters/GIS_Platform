@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -38,7 +39,7 @@ public class LayerController {
     }
 
     @GetMapping("/layers")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "project_id") long projectId,
                                                            Authentication authentication) {
         List<LayerProjection> layers = layerService.findAll(projectId, authentication);
@@ -57,7 +58,7 @@ public class LayerController {
     }
 
     @GetMapping("/layers/{layer_id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
                                                   @PathVariable(name = "layer_id") long layerId,
                                                   Authentication authentication) {

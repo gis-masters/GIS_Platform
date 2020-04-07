@@ -8,7 +8,7 @@ public class Authorities {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @Column(name = "authority")
     private String authority;
@@ -23,11 +23,11 @@ public class Authorities {
         this.user = user;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,4 +46,5 @@ public class Authorities {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

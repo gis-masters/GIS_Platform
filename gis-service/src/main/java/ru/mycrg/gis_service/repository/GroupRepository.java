@@ -10,7 +10,6 @@ import ru.mycrg.gis_service.entity.Group;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
-@PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
 @RepositoryRestResource(exported = false)
 public interface GroupRepository extends PagingAndSortingRepository<Group, Long> {
 

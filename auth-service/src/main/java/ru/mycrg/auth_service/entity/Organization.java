@@ -1,19 +1,20 @@
 package ru.mycrg.auth_service.entity;
 
-import org.springframework.hateoas.Identifiable;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "organizations")
-public class Organization implements Identifiable<Long> {
+public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @Column
     private String name;
@@ -32,23 +33,35 @@ public class Organization implements Identifiable<Long> {
     )
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
+    private Set<Group> groups = new HashSet<>();
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_modified")
+    private @LastModifiedDate
+    LocalDateTime lastModified;
+
     public Organization() {}
 
     public Organization(String name, String phone) {
         this.name = name;
         this.phone = phone;
+
+        this.createdAt = LocalDateTime.now();
+        this.lastModified = LocalDateTime.now();
     }
 
     public void addUser(User user) {
         users.add(user);
     }
 
-    @Override
     public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,5 +95,29 @@ public class Organization implements Identifiable<Long> {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 }

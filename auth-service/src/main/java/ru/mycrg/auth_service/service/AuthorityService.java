@@ -13,10 +13,9 @@ public class AuthorityService {
     public static final String GLOBAL_ADMIN = "GLOBAL_ADMIN";
 
     public static final String ORG_ADMIN = "ORG_ADMIN";
-    public static final String EDITOR = "EDITOR";
-    public static final String VIEWER = "VIEWER";
+    public static final String USER = "USER";
 
-    private List<String> builtInAuthorities = Arrays.asList(ORG_ADMIN, EDITOR, VIEWER);
+    private List<String> builtInAuthorities = Arrays.asList(ORG_ADMIN, USER);
 
     public AuthorityService() {
     }

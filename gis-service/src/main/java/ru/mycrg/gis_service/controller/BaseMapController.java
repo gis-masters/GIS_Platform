@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -31,7 +32,7 @@ public class BaseMapController {
     }
 
     @GetMapping("/basemaps")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<BaseMapProjection>> getBaseMaps(@PathVariable(name = "project_id") long projectId,
                                                                Authentication authentication) {
         List<BaseMapProjection> baseMaps = baseMapService.getAll(projectId, authentication);
@@ -40,7 +41,7 @@ public class BaseMapController {
     }
 
     @GetMapping("/basemaps/{base_map_id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<BaseMapProjection> getBaseMaps(@PathVariable(name = "project_id") long projectId,
                                                          @PathVariable(name = "base_map_id") long baseMapId,
                                                          Authentication authentication) {

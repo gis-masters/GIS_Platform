@@ -31,7 +31,7 @@ import java.util.Set;
 
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isGeoserverAdmin;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
-import static ru.mycrg.auth_service.service.AuthorityService.VIEWER;
+import static ru.mycrg.auth_service.service.AuthorityService.USER;
 
 @Service
 @Transactional
@@ -91,7 +91,7 @@ public class UserService {
                 dto.getEmail()
         );
         newUser.setUsername(dto.getEmail());
-        newUser.addAuthority(VIEWER);
+        newUser.addAuthority(USER);
         newUser.setEnabled(true);
 
         User savedUser = userRepository.save(newUser);

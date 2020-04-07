@@ -1,7 +1,6 @@
 package ru.mycrg.auth_service.config;
 
-import static ru.mycrg.auth_service.service.AuthorityService.GLOBAL_ADMIN;
-import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
+import static ru.mycrg.auth_service.service.AuthorityService.*;
 
 public class Authorities {
 

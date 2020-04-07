@@ -2,6 +2,7 @@ package ru.mycrg.wrapper.service.util;
 
 import org.jetbrains.annotations.NotNull;
 
+import static java.lang.Character.UnicodeBlock.LATIN_1_SUPPLEMENT;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -14,9 +15,20 @@ public class StringDecoder {
             return text;
         }
 
-        return Character.UnicodeBlock.of(chars[0]).toString().contains("LATIN_1")
-                ? new String(text.getBytes(ISO_8859_1), UTF_8)
-                : text;
+        if (isNeedDecode(chars)) {
+            return new String(text.getBytes(ISO_8859_1), UTF_8);
+        }
+
+        return text;
     }
 
+    private static boolean isNeedDecode(char[] chars) {
+        for (int i = 0; i < chars.length; i++) {
+            if (LATIN_1_SUPPLEMENT.equals(Character.UnicodeBlock.of(chars[i]))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

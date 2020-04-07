@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -32,7 +33,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<GroupProjection>> getGroups(@PathVariable(name = "project_id") long projectId,
                                                            Authentication authentication) {
         List<GroupProjection> groups = groupService.getAll(projectId, authentication);
@@ -51,7 +52,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups/{group_id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<GroupProjection> getGroupById(@PathVariable(name = "project_id") long projectId,
                                                   @PathVariable(name = "group_id") long groupId,
                                                   Authentication authentication) {

@@ -2,12 +2,15 @@ package ru.mycrg.auth_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.UserCreateDto;
@@ -16,6 +19,7 @@ import ru.mycrg.auth_service.service.AuthorityService;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
@@ -24,44 +28,53 @@ import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AU
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
 
-@RestController
-@RequestMapping(value = "/users")
+@RepositoryRestController
 public class UserController {
 
-    private final AuthorityService authorityService;
-    private final UserService userService;
+    @Inject
+    private LocalValidatorFactoryBean validator;
 
-    public UserController(UserService userService, AuthorityService authorityService) {
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
+    }
+
+    private final UserService userService;
+    private final AuthorityService authorityService;
+    private final PagedResourcesAssembler<UserProjection> assembler;
+
+    public UserController(UserService userService,
+                          AuthorityService authorityService,
+                          PagedResourcesAssembler<UserProjection> assembler) {
+        this.assembler = assembler;
         this.userService = userService;
         this.authorityService = authorityService;
     }
 
-    @GetMapping("/current")
+    @GetMapping("/users/current")
     public ResponseEntity<UserInfoModel> getUserInfo(Principal principal) {
         String userName = principal.getName();
 
         return ResponseEntity.ok(userService.getCurrent(userName));
     }
 
-    @GetMapping
+    @GetMapping("/users")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Page<UserProjection>> getUsers(Pageable pageable, Authentication authentication) {
+    public ResponseEntity<Object> getUsers(Pageable p, Authentication authentication) {
+        Page<UserProjection> users = userService.findAll(p, authentication);
 
-        Page<UserProjection> users = userService.findAll(pageable, authentication);
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(assembler.toResource(users));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public Resource<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
-
+    public ResponseEntity<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
         UserProjection userProjection = userService.findById(id, authentication);
 
-        return new Resource<>(userProjection);
+        return ResponseEntity.ok(userProjection);
     }
 
-    @PostMapping
+    @PostMapping("/users")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateDto userCreateDto,
                                              @RequestParam(name = "orgId", required = false) Long orgId,
@@ -91,13 +104,21 @@ public class UserController {
         return new ResponseEntity<>(headers, HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/{id}/roles/{authority}")
+    @DeleteMapping("/users/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> addRole(@PathVariable Long id,
-                                          @PathVariable String authority,
-                                          Authentication authentication) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id, Authentication authentication) {
+        userService.delete(id, authentication);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/users/{id}/roles/{authority}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> addAuthority(@PathVariable Long id,
+                                               @PathVariable String authority,
+                                               Authentication authentication) {
         if (!authorityService.isAuthorityExist(authority)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not exist: " + authority);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authority not exist: " + authority);
         }
 
         userService.addAuthority(id, authority, authentication);
@@ -105,22 +126,20 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}/roles/{authority}")
+    @DeleteMapping("/users/{id}/roles/{authority}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus removeRole(@PathVariable Long id,
-                                             @PathVariable String authority,
-                                             Authentication authentication) {
+    public ResponseEntity<Object> removeAuthority(@PathVariable Long id,
+                                                  @PathVariable String authority,
+                                                  Authentication authentication) {
         userService.removeAuthority(id, authority, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus deleteUser(@PathVariable Long id, Authentication authentication) {
-        userService.delete(id, authentication);
-
-        return HttpStatus.NO_CONTENT;
+    @ResponseBody
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUsers(@PathVariable String id) {
+        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }

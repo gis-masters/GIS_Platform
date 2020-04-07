@@ -3,6 +3,7 @@ package ru.mycrg.auth_service.dto;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.auth_service.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Projection(
@@ -24,4 +25,5 @@ public interface UserProjection {
 
     Set<AuthorityProjection> getAuthorities();
 
+    LocalDateTime getCreatedAt();
 }

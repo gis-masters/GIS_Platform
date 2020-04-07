@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
-@PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
 @RepositoryRestResource(exported = false)
 public interface BaseMapRepository extends PagingAndSortingRepository<BaseMap, Long> {
 
