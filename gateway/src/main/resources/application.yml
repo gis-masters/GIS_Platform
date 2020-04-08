@@ -38,6 +38,10 @@ zuul:
       path: /oauth/token/**
       service-id: http://auth-service:9000/oauth/token
 
+    crg-auth-service-groups:
+      path: /groups/**
+      url: http://auth-service:9000/groups/
+
     crg-auth-service-users:
       path: /users/**
       url: http://auth-service:9000/users/
