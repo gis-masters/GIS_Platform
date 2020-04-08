@@ -54,7 +54,7 @@ services:
     volumes:
       - /opt/data/geoserver:/opt/geoserver/data_dir
       - /opt/gwc_storage:/opt/gwc_storage
-      - /opt/spacial_data:/opt/spacial_data
+      - /opt/spatial_data:/opt/spatial_data
     environment:
       APM_URL: ${APM_URL}
       GEOSERVER_ADMIN_PASSWORD: $GEOSERVER_PASSWORD
