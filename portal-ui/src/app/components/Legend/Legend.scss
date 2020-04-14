@@ -1,0 +1,25 @@
+.Legend {
+  margin-left: -4px;
+
+  &-Rule {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 3px;
+  }
+
+  &-Pic {
+    width: 40px;
+    height: 20px;
+    margin-right: 7px;
+  }
+
+  &-Title {
+    flex-grow: 1;
+
+    color: var(--grey);
+
+    font-size: 11px;
+    line-height: 1;
+  }
+}

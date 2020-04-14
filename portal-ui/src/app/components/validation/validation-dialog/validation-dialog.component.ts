@@ -2,8 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
-import { CommunicationService } from '../../../services/communication.service';
-import {CrgLayer} from '../../../stores/ProjectsList.store';
+import { communicationService } from '../../../services/communication.service';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-validation-dialog',
@@ -19,9 +19,6 @@ export class ValidationDialogComponent {
 
   isAllSelected: boolean;
 
-  constructor(private communicationService: CommunicationService) {
-  }
-
   onChange() {
     this.isAllSelected = this.data.layers.length == this.layers.selectedOptions.selected.length;
 
@@ -30,9 +27,9 @@ export class ValidationDialogComponent {
 
   initValidation() {
     this.filterTerm = '';
-    this.communicationService.validationDialog.emit({show: false, layers: null});
+    communicationService.validationDialog.emit({show: false, layers: null});
 
-    this.communicationService.selectedForValidation.emit(this.selectedLayers);
+    communicationService.selectedForValidation.emit(this.selectedLayers);
   }
 
   handleTitle(crgLayer: CrgLayer) {

@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent, createRef } from 'react';
 import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { GetApp, Publish } from '@material-ui/icons';
+import { Archive, Unarchive } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual } from 'lodash';
@@ -38,7 +38,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
               className={cnEditFeatureGeometry('CSV', { do: 'import' })}
               color='primary'
               onClick={this.importClickHandler}>
-            <GetApp />
+            <Archive />
           </IconButton>
         </Tooltip>
 
@@ -49,7 +49,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
                 color='primary'
                 disabled={this.props.empty}
                 onClick={this.exportClickHandler}>
-              <Publish />
+              <Unarchive />
             </IconButton>
           </span>
         </Tooltip>

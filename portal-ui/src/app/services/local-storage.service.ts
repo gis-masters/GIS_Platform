@@ -2,6 +2,14 @@ import { StorageKeys } from './storage-keys';
 import { UserInfoModel } from './crg/users.service';
 
 class LocalStorageService {
+  private static _instance: LocalStorageService;
+
+  private constructor() { }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   cleanUp() {
     window.localStorage.clear();
   }
@@ -16,10 +24,6 @@ class LocalStorageService {
 
   clearByKey(key: string): any {
     return localStorage.removeItem(key);
-  }
-
-  clearProject(): void {
-    this.clearByKey(StorageKeys.projectKey);
   }
 
   getOrgId(): number | undefined {
@@ -42,14 +46,6 @@ class LocalStorageService {
       console.warn('Не удалось получить инфо о пользователе');
     }
   }
-
-  public static get instance() {
-    return this._instance || (this._instance = new this());
-  }
-
-  private constructor() { }
-
-  private static _instance: LocalStorageService;
 }
 
 export const localStorageService = LocalStorageService.instance;

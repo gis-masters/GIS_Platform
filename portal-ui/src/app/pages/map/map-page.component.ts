@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ProjectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/crg/projects.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 @Component({
   selector: 'crg-map-page',
@@ -9,10 +10,8 @@ import { ProjectsService } from '../../services/crg/projects.service';
 export class MapPageComponent implements OnInit {
   projectName: string;
 
-  constructor (private projectsService: ProjectsService) { }
-
   async ngOnInit() {
-    const project = await this.projectsService.getCurrent();
-    this.projectName = project.name;
+    await projectsService.fetchCurrent();
+    this.projectName = currentProject.name;
   }
 }

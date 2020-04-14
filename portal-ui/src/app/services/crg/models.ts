@@ -1,4 +1,6 @@
-import {FeatureDescription, PropertySchema} from './data-schema.service';
+import GeometryType from 'ol/geom/GeometryType';
+
+import { FeatureDescription, PropertySchema } from './data-schema.service';
 
 export interface CrgApiLink {
   href: string;
@@ -97,26 +99,20 @@ export const NOT_IMPORT = {
   name: ImportTargetType.NOT_IMPORT,
 };
 
-export const IMPORT_LAYER_AS_IS = {
+export const IMPORT_LAYER_AS_IS: FeatureDescription = {
   name: 'IMPORT_LAYER_AS_IS',
   title: 'Импортировать как есть',
   description: '',
   tableName: 'IMPORT_LAYER_AS_IS',
+  geometryType: GeometryType.POINT,
   properties: []
-} as FeatureDescription;
+};
 
-export const NOT_IMPORT_LAYER = {
+export const NOT_IMPORT_LAYER: FeatureDescription = {
   name: 'NOT_IMPORT_LAYER',
   title: 'Не импортировать',
   description: '',
   tableName: 'NOT_IMPORT_LAYER',
+  geometryType: GeometryType.POINT,
   properties: []
-} as FeatureDescription;
-
-export const LAYERS_GROUP = {
-  name: 'Group',
-  title: 'Группа слоёв',
-  description: '',
-  tableName: '',
-  properties: []
-} as FeatureDescription;
+};

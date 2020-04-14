@@ -28,7 +28,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {EditBugObjectComponent} from './components/edit-bug-object/edit-bug-object.component';
 import {MappingCardComponent} from './components/mapping-card/mapping-card.component';
 import {MappingPairComponent} from './components/mapping-pair/mapping-pair.component';
-import {LayerListItemComponent} from './components/layer-list-item/layer-list-item.component';
 import {BugsTableComponent} from './components/validation/bugs-table/bugs-table.component';
 import {ReportSidebarComponent} from './components/validation/report-sidebar/report-sidebar.component';
 import {ViolationsViewComponent} from './components/validation/violations-view/violations-view.component';
@@ -63,6 +62,7 @@ import {WorkspaceComponent} from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { FeaturesListComponent } from './components/features-list/features-list.component';
+import { LayersTreeComponent } from './components/layers-tree/layers-tree.component';
 
 import { configure } from 'mobx';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
@@ -73,7 +73,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     AppComponent,
     HeaderComponent,
     MappingCardComponent,
-    LayerListItemComponent,
     MappingPairComponent,
     BugsTableComponent,
     ReportSidebarComponent,
@@ -109,7 +108,9 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     WorkspaceComponent,
     EditFeatureFieldComponent,
     EditFeatureGeometryComponent,
-    FeaturesListComponent
+    FeaturesListComponent,
+    EditFeatureGeometryComponent,
+    LayersTreeComponent,
   ],
   imports: [
     HttpClientModule,

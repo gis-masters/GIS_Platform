@@ -16,27 +16,27 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
-import { LayersService } from '../../services/geoserver/layers.service';
+import { layersService } from '../../services/geoserver/layers.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
-import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
-import { ProjectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/crg/projects.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { ViewFeaturesData } from '../view-features/view-features.component';
-import { CommunicationService } from '../../services/communication.service';
-import { CrgLayer, Project } from '../../stores/ProjectsList.store';
+import { communicationService } from '../../services/communication.service';
+import { CrgLayer, Project } from '../../services/crg/projects.models';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
-
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -90,11 +90,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private unsubscribe$: Subject<void> = new Subject<void>();
   private project: Project;
 
-  constructor(private sideBarManager: SideBarManager,
-              private tFeatureService: TransformFeatureService,
-              private projectsService: ProjectsService,
-              private layersService: LayersService,
-              private communicationService: CommunicationService,
+  constructor(private tFeatureService: TransformFeatureService,
               private logger: NGXLogger,
               private dialog: MatDialog) {
   }
@@ -102,7 +98,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   async ngAfterViewInit() {
     window.dispatchEvent(new Event('resize'));
 
-    this.project = await this.projectsService.getCurrent();
+    await projectsService.fetchCurrent();
 
     this.requestModel$
         .pipe(
@@ -113,7 +109,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           this.updateTable(requestModel);
         });
 
-    this.communicationService.featuresUpdate$
+    communicationService.featuresUpdate$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(() => {
           // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
@@ -126,7 +122,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     const layerChanged = changes.layer;
     const layer = layerChanged.currentValue as CrgLayer;
 
-    this.readOnly = layer.schema.readOnly;
+    this.readOnly = layer.schema && layer.schema.readOnly;
 
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
@@ -238,7 +234,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   closeMe() {
     openLayersService.clearDraft();
-    this.sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
+    sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }
 
   onFilterChange(filterEvent: FilterEvent) {
@@ -328,7 +324,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       feature.id = this.layer.internalName + '.' + feature.id;
     });
     // Отсылка в сайдбар
-    this.sideBarManager.do({
+    sideBarManager.do({
       target: SidebarType.FEATURES, action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
@@ -343,7 +339,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    this.layersService.layers$
+    layersService.layers$
         .pipe(
           map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
@@ -364,7 +360,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    this.layersService.layers$
+    layersService.layers$
         .pipe(
           map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
           filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),

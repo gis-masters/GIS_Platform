@@ -4,13 +4,13 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
-import { CommunicationService, ObjectDto } from '../../../services/communication.service';
+import { communicationService, ObjectDto } from '../../../services/communication.service';
 import { ValidationBrieflyInfo, ValidationService } from '../../../services/crg/validation.service';
-import { IWsMessage, ValidationWsMsg, WsService } from '../../../services/ws.service';
-import { ActionType, SideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { ProcessStatus, ProcessType } from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
-import { CrgLayer } from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -35,25 +35,22 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
-              private wsService: WsService,
-              private validationService: ValidationService,
-              private sideBarManager: SideBarManager,
-              private communicationService: CommunicationService) {
-    this.communicationService
+              private validationService: ValidationService) {
+    communicationService
         .selectedForValidation
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: CrgLayer[]) => this.initValidation(data));
   }
 
-  ngOnInit() {
-    this.communicationService.editView
+  async ngOnInit() {
+    communicationService.editView
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((objects: ObjectDto[]) => {
           this.isEditMode = true;
           this.objectsToEdit = objects;
         });
 
-    this.wsService.messages$
+    wsService.messages$
         .pipe(
           filter(value => !!value),
           filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
@@ -111,13 +108,13 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   closeMe() {
     openLayersService.clearDraft();
-    this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.CLOSE});
+    sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.CLOSE});
   }
 
   reValidate() {
     if (this.layers && this.layers.length > 0) {
       const copy = Object.assign([], this.layers);
-      this.communicationService.validationDialog.emit({show: true, layers: copy});
+      communicationService.validationDialog.emit({show: true, layers: copy});
     } else {
       this.logger.info('Не подгружены слоя');
     }

@@ -3,11 +3,12 @@ import { HttpParams } from '@angular/common/http';
 
 import { HttpQueue } from '../util/HttpQueue';
 import { ValidationError } from '../util/FeaturePropertyValidators';
-import { ValidationWsMsg, WsService } from '../ws.service';
+import { ValidationWsMsg, wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
 import { ProcessStatus } from './models';
-import { ProjectsService } from './projects.service';
-import {CrgLayer} from "../../stores/ProjectsList.store";
+import { projectsService } from './projects.service';
+import { CrgLayer } from "../crg/projects.models";
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface ValidationResultsResponse {
   validated: boolean;
@@ -45,9 +46,7 @@ export interface ViolationItem {
 })
 export class ValidationService {
 
-  constructor(private httpq: HttpQueue,
-              private wsService: WsService,
-              private projectsService: ProjectsService) { }
+  constructor(private httpq: HttpQueue) { }
 
   /**
    * Провалидировать слоя.
@@ -57,12 +56,11 @@ export class ValidationService {
     const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
 
     const payload = {
-      wsUiId: this.wsService.getId(),
+      wsUiId: wsService.getId(),
       layers: layerNames
     };
 
-    const { id } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + id + '/validation';
+    const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation`;
 
     return this.httpq
                .post<ValidationWsMsg>(url, JSON.stringify(payload),
@@ -78,10 +76,9 @@ export class ValidationService {
       .set('layerName', layerName)
       .set('page', page ? String(page) : '0')
       .set('size', page ? String(size) : '25')
-      .set('sort_by', sortBy.length > 0 ? (sortBy + '.' + sortDirection) : '');
+      .set('sort_by', sortBy.length > 0 ? (`${sortBy}.${sortDirection}`) : '');
 
-    const { id } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + id + '/validation';
+    const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation`;
 
     return this.httpq
                .get<ValidationResultsResponse>(url,
@@ -96,12 +93,11 @@ export class ValidationService {
     const layerNames = crgLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
 
     const payload = {
-      wsUiId: this.wsService.getId(),
+      wsUiId: wsService.getId(),
       layers: layerNames
     };
 
-    const { id } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + id + '/validation/short';
+    const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation/short`;
 
     return this.httpq
                .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),

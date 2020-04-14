@@ -1,42 +1,40 @@
-import {EventEmitter} from '@angular/core';
-import {Map, View} from 'ol';
-import {MultiPolygon} from 'ol/geom';
-import {ImageWMS} from 'ol/source';
-import {defaults as defaultControls, ScaleLine} from 'ol/control';
-import {Coordinate} from 'ol/coordinate';
-import {Circle, Fill, Stroke, Style} from 'ol/style.js';
+import { EventEmitter } from '@angular/core';
+import { reaction } from 'mobx';
+import { Map, View, MapBrowserEvent } from 'ol';
+import { MultiPolygon } from 'ol/geom';
+import GeometryType from 'ol/geom/GeometryType';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { Coordinate } from 'ol/coordinate';
+import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Feature from 'ol/Feature';
 import ImageWrapper from 'ol/Image';
-import Layer from 'ol/layer/Layer';
 import LayerType from 'ol/LayerType';
 import Tile from 'ol/Tile';
-import GeometryType from 'ol/geom/GeometryType';
-import TileLayer from 'ol/layer/Tile';
+import { Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer, Layer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
-import ImageLayer from 'ol/layer/Image';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import {Draw, Modify} from 'ol/interaction';
-import {ModifyEvent} from 'ol/interaction/Modify';
-import {DrawEvent} from 'ol/interaction/Draw';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
-import TileImage from 'ol/source/TileImage';
+import { Draw, Modify } from 'ol/interaction';
+import { ModifyEvent } from 'ol/interaction/Modify';
+import { DrawEvent } from 'ol/interaction/Draw';
 import { get as getProjection } from 'ol/proj';
-import OSM from 'ol/source/OSM';
-import XYZ from 'ol/source/XYZ';
-import WMTS from 'ol/source/WMTS';
-import {getTopLeft, getWidth} from 'ol/extent';
+import { getTopLeft, getWidth } from 'ol/extent';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { Vector as VectorSource, TileImage, ImageWMS, WMTS, XYZ, OSM } from 'ol/source';
 
-import {MapperUtil} from './MapperUtil';
-import {WfsFeature} from '../geoserver/wfs-models';
-import {serverProperties} from '../server-properties.service';
-import {tokenStorageService} from '../token-storage.service';
-import {CrgLayer} from '../../stores/ProjectsList.store';
-import {services} from '../services';
-import {reaction} from 'mobx';
-import {baseMapsStore} from '../../stores/BaseMaps.store';
-import {CrgBaseMap, SourceType} from '../crg/base-maps.models';
+import { MapperUtil } from './MapperUtil';
+import { WfsFeature } from '../geoserver/wfs-models';
+import { serverProperties } from '../server-properties.service';
+import { CrgLayer, TreeItem } from '../../services/crg/projects.models';
+import { services } from '../services';
+import { tokenStorageService } from '../token-storage.service';
+import { baseMapsStore } from '../../stores/BaseMaps.store';
+import { CrgBaseMap, SourceType } from '../crg/base-maps.models';
+
+export interface TileSource {
+  name: string;
+  title: string;
+  source: XYZ;
+  thumbnail: string;
+}
 
 export let BEARER_TOKEN = '';
 
@@ -95,7 +93,6 @@ class OpenLayersService {
   // Default view options
   private defaultZoomValue = 9;
   private defaultViewPoint = [3844444, 5644444];
-  private defaultOpacity = 0.7;
 
   async createMap() {
     BEARER_TOKEN = tokenStorageService.getAccessToken();
@@ -159,29 +156,56 @@ class OpenLayersService {
     });
   }
 
-  async addLayerToMap(layer: CrgLayer) {
-    const params: CrgWmsParams = {
-      LAYERS: layer.complexName,
-      FORMAT: 'image/vnd.jpeg-png8'
-    };
-
-    const imageLayer = new ImageLayer({
-      source: new ImageWMS({
-        url: await serverProperties.wmsUrl,
-        params: params,
-        imageLoadFunction: this.crgImageLoadFunction,
-        ratio: 1,
-        serverType: 'geoserver',
-        crossOrigin: 'anonymous',
-      }),
-      opacity: layer.transparency ? (layer.transparency / 100) : this.defaultOpacity
+  async showItems(items: TreeItem<CrgLayer>[][]) {
+    this.getImageLayers().forEach(layer => {
+      layer.setVisible(false);
     });
 
-    imageLayer.setVisible(layer.enabled);
+    items.forEach((batch, i) => {
+      const { actualTransparency } = batch[0];
 
-    this._map.addLayer(imageLayer);
+      this.addLayersToMap(
+        batch.map(item => item.payload).reverse(),
+        items.length - i,
+        actualTransparency / 100
+      );
+    });
+  }
 
-    return imageLayer;
+  private async addLayersToMap(layers: CrgLayer[], zIndex: number, opacity: number) {
+    const resultName = this.calcLayerName(layers);
+
+    const layerOnMap = this.getLayerByName(resultName);
+    if (layerOnMap) {
+      layerOnMap.setVisible(true);
+      layerOnMap.setOpacity(opacity);
+      layerOnMap.setZIndex(zIndex);
+    } else {
+      const params: CrgWmsParams = {
+        LAYERS: resultName,
+        FORMAT: 'image/vnd.jpeg-png8'
+      };
+
+      const imageLayer = new ImageLayer({
+        source: new ImageWMS({
+          url: await serverProperties.wmsUrl,
+          params: params,
+          imageLoadFunction: this.crgImageLoadFunction,
+          ratio: 1,
+          serverType: 'geoserver',
+          crossOrigin: 'anonymous',
+        }),
+        visible: true,
+        opacity,
+        zIndex
+      });
+
+      this._map.addLayer(imageLayer);
+    }
+  }
+
+  private calcLayerName(layers: CrgLayer[]) {
+    return layers.map(layer => layer.complexName).join(',');
   }
 
   async deleteLayerFromMap(complexLayerName: string) {
@@ -249,8 +273,6 @@ class OpenLayersService {
 
     if (layer) {
       return layer;
-    } else {
-      services.logger.warn('Not found layer: ', complexLayerName);
     }
   }
 
@@ -266,6 +288,11 @@ class OpenLayersService {
   // Очистить карту от слоя, который отображал объект.
   clearDraft() {
     this.draftSource.clear();
+  }
+
+  // Очистить карту от всех слоёв.
+  clearMap() {
+    this.getImageLayers().forEach(layer => this._map.removeLayer(layer));
   }
 
   /**
@@ -297,14 +324,6 @@ class OpenLayersService {
     this._map
         .getView()
         .fit(bbox, {padding: padding}); // constrainResolution Ломает view на слоях с геометрией Point
-  }
-
-  /**
-   * Возвращает видимые слоя. (Без подложки: TILE)
-   */
-  getVisibleLayers(): BaseLayer[] {
-    return this.getImageLayers()
-               .filter((bLayer: BaseLayer) => bLayer.getVisible());
   }
 
   getResolution() {
@@ -416,23 +435,13 @@ class OpenLayersService {
     }
   }
 
-  private crgImageLoadFunction(tile: Tile | ImageWrapper, src: string) {
-    const client = new XMLHttpRequest();
+  private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
+    const response = await services.httpq.get<Blob>(url, {responseType: 'blob'});
 
-    client.open('GET', src);
-    client.responseType = 'arraybuffer';
-    client.setRequestHeader('Authorization', 'Bearer ' + BEARER_TOKEN);
+    const blob = new Blob([response], { type: 'image/vnd.jpeg-png8' });
 
-    client.onload = function () {
-      const arrayBufferView = new Uint8Array(this.response);
-      const blob = new Blob([arrayBufferView], { type: 'image/vnd.jpeg-png8' });
-
-      // Ошибка в типах openlayers
-      // @ts-ignore
-      (tile.getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
-    };
-
-    client.send();
+    // @ts-ignore Ошибка в типах openlayers
+    (tile.getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
   }
 
   /**

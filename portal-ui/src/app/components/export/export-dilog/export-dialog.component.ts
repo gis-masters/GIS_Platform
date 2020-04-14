@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
 import { ValueTitleProjection } from '../../../services/geoserver/projections';
-import { CommunicationService } from '../../../services/communication.service';
-import { ExportService } from '../../../services/crg/export.service';
-import { ActionType, SideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { communicationService } from '../../../services/communication.service';
+import { exportService } from '../../../services/crg/export.service';
+import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { Process } from '../../../services/crg/models';
-import {CrgLayer} from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -67,10 +67,7 @@ export class ExportDialogComponent implements OnDestroy {
   private isExportInited = false;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private sideBarManager: SideBarManager,
-              private communicationService: CommunicationService,
-              private exportService: ExportService) {
+  constructor(private logger: NGXLogger) {
   }
 
   onChange(selectionList: MatSelectionList) {
@@ -88,7 +85,7 @@ export class ExportDialogComponent implements OnDestroy {
     this.isExportInited = true;
 
     const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
-    const process: Process = await this.exportService.export({
+    const process: Process = await exportService.export({
       layers: layerNames,
       docSchema: this.selectedDocSchema
     });
@@ -96,8 +93,8 @@ export class ExportDialogComponent implements OnDestroy {
     this.logger.info('export to GML response', process);
     this.isExportInited = false;
 
-    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
-    this.communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
+    sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
+    communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
   }
 
   handleTitle(crgLayer: CrgLayer) {

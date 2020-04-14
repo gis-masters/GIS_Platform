@@ -1,33 +1,40 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { reaction } from 'mobx';
 
 import { getRoute } from '../services';
 import { TaskImport } from '../geoserver/import/taskImport';
-import { WsService } from '../ws.service';
-import { localStorageService } from '../local-storage.service';
+import { wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
 import { CrgApiResponse, Process } from './models';
-import { HttpQueue } from '../util/HttpQueue';
-import { Project, projectsList } from '../../stores/ProjectsList.store';
-import { defineGeomType } from '../util/stringUtil';
+import { projectsList } from '../../stores/ProjectsList.store';
+import { Project } from './projects.models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { route } from '../../stores/Route.store';
+import { dataSchemaService } from './data-schema.service';
+import { services } from '../services';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ProjectsService {
-  private currentProject?: Promise<Project>;
+class ProjectsService {
+  private static _instance: ProjectsService;
+  private fetchingCurrentProject?: Promise<Project>;
 
-  constructor(private httpq: HttpQueue,
-              private wsService: WsService) { }
+  private constructor () {
+    reaction(() => route.params && route.params.projectId, async (id) => {
+      this.fetchCurrent(Number(id));
+    });
+  }
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   async fetchProjects() {
+    await services.provided;
     const baseUrl = await serverProperties.geoServerUrl;
     const url = await serverProperties.projectsUrl;
 
-    const response = await this.httpq.get<CrgApiResponse>(url);
+    const response = await services.httpq.get<CrgApiResponse>(url);
 
     if (response && response._embedded) {
-      response._embedded.projects.forEach(project => this.handleLayers(project, baseUrl));
+      response._embedded.projects.forEach(async (project: Project) => await this.handleLayers(project, baseUrl));
 
       projectsList.setList(response._embedded.projects);
     } else {
@@ -35,50 +42,66 @@ export class ProjectsService {
     }
   }
 
-  async getById(id: string): Promise<Project> {
+  async getById(id: number): Promise<Project> {
+    await services.provided;
     const baseUrl = await serverProperties.geoServerUrl;
     const url = `${await serverProperties.projectsUrl}/${id}`;
+    const project = await services.httpq.get<Project>(url);
 
-    return this.httpq.get<Project>(url).then(project => {
-      this.handleLayers(project, baseUrl);
+    await this.handleLayers(project, baseUrl);
 
-      return project;
-    });
+    return project;
   }
 
   clearCurrent() {
-    delete this.currentProject;
+    currentProject.setProject(null);
+    delete this.fetchingCurrentProject;
   }
 
-  async getCurrent(route?: ActivatedRouteSnapshot): Promise<Project> {
-    route = route || getRoute().snapshot;
-    const projectId = route.params.projectId;
-
-    if (this.currentProject) {
-      const project = await this.currentProject;
-      if (String(project.id) === projectId) {
-        return project;
-      }
+  async fetchCurrent(id?: number) {
+    if (!id) {
+      id = Number(getRoute().snapshot.params.projectId);
     }
 
-    this.currentProject = this.getById(projectId);
+    if (!id) {
+      this.clearCurrent();
+      return;
+    }
 
-    return this.currentProject;
+    if (currentProject.id === id) {
+      return;
+    }
+
+    if (!this.fetchingCurrentProject) {
+      this.fetchingCurrentProject = this.getById(id);
+    }
+
+    const project = await this.fetchingCurrentProject;
+
+    if (project.id === id) {
+      currentProject.setProject(project);
+    } else {
+      delete this.fetchingCurrentProject;
+      await this.fetchCurrent(id);
+    }
+
   }
 
   async create(name: string): Promise<Process> {
+    await services.provided;
     const url = await serverProperties.projectsUrl;
 
     const payload = {
       'projectName': name
     };
 
-    return this.httpq.post<Process>(url, payload);
+    return services.httpq.post<Process>(url, payload);
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
+    await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
-    await this.httpq.delete(url);
+    await services.httpq.delete(url);
     projectsList.considerDeleted(id);
   }
 
@@ -87,29 +110,28 @@ export class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  async doWorkImport(tasks: TaskImport[], projectId: string, workspaceName: string): Promise<Process> {
+  async doWorkImport(tasks: TaskImport[], projectId: number, workspaceName: string): Promise<Process> {
+    await services.provided;
     const url = `${await serverProperties.apiUrl}/${projectId}/import`;
     const payload = {
-      wsUiId: this.wsService.getId(),
+      wsUiId: wsService.getId(),
       targetSchema: workspaceName,
       importTasks: tasks
     };
 
-    return this.httpq.post<Process>(url, payload);
+    return services.httpq.post<Process>(url, payload);
   }
 
-  changeProject() {
-    localStorageService.clearProject();
-  }
+  private async handleLayers(project: Project, baseUrl: string) {
+    await dataSchemaService.fetchSchemas(project);
 
-  private handleLayers(project: Project, baseUrl: string) {
     project.layers.forEach(layer => {
       layer.complexName = project.internalName + ':' + layer.internalName;
       layer.href = baseUrl + '/rest/layers/' + layer.complexName;
-      layer.geometry = defineGeomType(layer.internalName);
+      layer.schema = dataSchemaService.getFeatureSchemaByName(layer.schemaId);
+      layer.geometryType = layer.schema && layer.schema.geometryType;
     });
-
-    project.layers.sort((a, b) => a.position - b.position);
   }
-
 }
+
+export const projectsService = ProjectsService.instance;

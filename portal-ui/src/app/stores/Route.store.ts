@@ -33,7 +33,7 @@ class Route {
     this.queryParamMap = route.queryParamMap;
   }
 
-  private constructor() {
+  private constructor () {
     this.subscribe();
   }
 
@@ -58,4 +58,4 @@ class Route {
   }
 }
 
-export const route = Route.instance;
+export let route = Route.instance;

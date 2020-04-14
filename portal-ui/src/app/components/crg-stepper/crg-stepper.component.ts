@@ -3,9 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ProjectsService } from '../../services/crg/projects.service';
-import { CommunicationService } from '../../services/communication.service';
-import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { communicationService } from '../../services/communication.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { route } from '../../stores/Route.store';
 import { fromMobx } from '../../services/util/fromMobx';
 
@@ -22,10 +21,7 @@ export class CrgStepperComponent implements OnDestroy, OnInit {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private router: Router,
-              private route: ActivatedRoute,
-              private sideBarManager: SideBarManager,
-              private communicationService: CommunicationService,
-              private projectService: ProjectsService) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit () {
     fromMobx<number>(() => route.data.step)
@@ -43,22 +39,20 @@ export class CrgStepperComponent implements OnDestroy, OnInit {
 
     if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
       if (selectedStep === 1) {
-        this.projectService.changeProject();
-
         this.router.navigate(['/projects']);
-        this.sideBarManager.closeAll();
+        sideBarManager.closeAll();
       }
       if (selectedStep === 2) {
         this.router.navigate([`/projects/${projectId}/import`]);
-        this.sideBarManager.closeAll();
+        sideBarManager.closeAll();
       }
       if (selectedStep === 3) {
         this.router.navigate([`/projects/${projectId}/map`]);
-        this.sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
+        sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
       }
       if (selectedStep === 4) {
         this.router.navigate([`/projects/${projectId}/map`]);
-        this.communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
+        communicationService.gmlDialog.emit({action: ActionType.OPEN, layers: undefined});
       }
     }
   }

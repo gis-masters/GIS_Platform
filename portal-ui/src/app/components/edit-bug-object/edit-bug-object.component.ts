@@ -6,7 +6,7 @@ import { NGXLogger } from 'ngx-logger';
 import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { CommunicationService, ObjectDto } from '../../services/communication.service';
+import { communicationService, ObjectDto } from '../../services/communication.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { dataSchemaService } from '../../services/crg/data-schema.service';
@@ -32,7 +32,6 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   constructor(private logger: NGXLogger,
               private formBuilder: FormBuilder,
-              private communicationService: CommunicationService,
               private transformFeatureService: TransformFeatureService) {
     super();
   }
@@ -80,7 +79,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
               Toast.success('Сохранено');
 
               // Сразу провалидируем слой при успешном сохранении
-              this.communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
+              communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
               openLayersService.refreshLayer(this.data[0].crgLayer.complexName);
             } else {
               this.logger.warn('UpdateFeature response: ', response);

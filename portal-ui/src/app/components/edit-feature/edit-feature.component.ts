@@ -8,11 +8,11 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogData
 } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { ProjectsService } from '../../services/crg/projects.service';
-import { CommunicationService } from '../../services/communication.service';
+import { projectsService } from '../../services/crg/projects.service';
+import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
-import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { BaseEdit } from '../edit-bug-object/base-edit';
@@ -23,6 +23,7 @@ import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { ValueTitleProjection } from '../../services/geoserver/projections';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface EditFeatureData {
   feature: WfsFeature;   // Шаблонная фича
@@ -64,15 +65,12 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
   constructor(private formBuilder: FormBuilder,
               private dialog: MatDialog,
-              private projectsService: ProjectsService,
-              private communicationService: CommunicationService,
-              private sideBarManager: SideBarManager,
               private transformFeatureService: TransformFeatureService) {
     super();
   }
 
   ngOnInit(): void {
-    this.sideBarManager.currentState$
+    sideBarManager.currentState$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
           const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
@@ -217,7 +215,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         if (this.data.isNew) {
           this.transformFeatureService.insertFeatures(
               [{ ...this.data.feature, properties: newProperties, geometry: this.changedGeometry }],
-              (await this.projectsService.getCurrent()).internalName,
+              currentProject.internalName,
               this.featureDescription.tableName
           ).subscribe(() => {
             this.close();
@@ -242,7 +240,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     };
     const { feature } = this.data;
     const [layerName, newId] = feature.id.split('.');
-    const { internalName } = await this.projectsService.getCurrent();
+    const { internalName } = currentProject;
 
     this.dialog
         .open(ConfirmDialogComponent, { width: '400px', data: data })
@@ -288,7 +286,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     openLayersService.clearDraft();
 
     if (this.data.isNew) {
-      this.sideBarManager.do({
+      sideBarManager.do({
         target: SidebarType.FEATURES,
         action: ActionType.CLOSE
       });
@@ -301,7 +299,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   private async batchUpdateFeatures(featuresId: string[], newProperties: Properties, geometry?: WfsGeometry) {
-    const { internalName } = await this.projectsService.getCurrent();
+    const { internalName } = currentProject;
     const { tableName } = this.featureDescription;
 
     const batchModel = new BatchModel(featuresId);
@@ -324,7 +322,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
           Toast.success('Сохранено');
 
-          this.communicationService.featuresUpdate$.emit({
+          communicationService.featuresUpdate$.emit({
             feature: this.data.feature,
             featuresId: this.data.featuresId,
             total: this.data.total,

@@ -1,47 +1,13 @@
 import { observable, computed, action } from 'mobx';
-import {FeatureDescription} from '../services/crg/data-schema.service';
-import {GeometryType} from '../services/util/stringUtil';
-import {CrgProjectBaseMap} from '../services/crg/base-maps.models';
 
-export interface CrgLayer {
-  id: string;
-  title: string;
-  internalName: string;
-  enabled: boolean;
-  position: number;
-  transparency: number;
-  zoom: number;
-  maxZoom: number;
-  minZoom: number;
-  geometryType: string;
-  schemaId: string;
-
-  complexName?: string;
-  href?: string;
-  geometry?: GeometryType | undefined;
-  schema?: FeatureDescription;
-}
-
-export interface Project {
-  id: string;
-  name: string;
-  internalName: string;
-  bbox: string;
-  order: number;
-  organizationId: number;
-  layers: CrgLayer[];
-  createdAt: string;
-  baseMaps: CrgProjectBaseMap[];
-}
+import { Project } from '../services/crg/projects.models';
 
 class ProjectsList {
-
   private static _instance: ProjectsList;
   @observable private _list?: Project[];
-  @observable private deleted: string[] = [];
+  @observable private deleted: number[] = [];
 
-  private constructor() {
-  }
+  private constructor() { }
 
   public static get instance() {
     return this._instance || (this._instance = new this());
@@ -53,7 +19,7 @@ class ProjectsList {
   }
 
   @action
-  considerDeleted(id: string) {
+  considerDeleted(id: number) {
     this.deleted.push(id);
   }
 
@@ -68,7 +34,6 @@ class ProjectsList {
   get isLoaded(): boolean {
     return Boolean(this._list);
   }
-
 }
 
 export const projectsList = ProjectsList.instance;

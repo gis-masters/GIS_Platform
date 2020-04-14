@@ -71,13 +71,13 @@ public class LayerController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public HttpStatus updateLayer(@PathVariable(name = "project_id") long projectId,
                                   @PathVariable(name = "layer_id") long layerId,
-                                  @Valid @RequestBody JsonMergePatch patchDto,
+                                  @RequestBody JsonMergePatch patchDto,
                                   Authentication authentication) {
         log.debug("update layer: {} To: {}", layerId, patchDto.toJsonValue());
 
         layerService.update(projectId, layerId, patchDto, authentication);
 
-        return HttpStatus.OK;
+        return HttpStatus.NO_CONTENT;
     }
 
     @DeleteMapping("/layers/{layer_id}")

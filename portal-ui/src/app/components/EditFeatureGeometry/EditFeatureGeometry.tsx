@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import GeometryType from 'ol/geom/GeometryType';
 import { cn } from '@bem-react/classname';
 
-import { SupportedGeometryType } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
@@ -19,12 +18,6 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 interface EditFeatureGeometryProps {
   store: EditFeatureGeometryStore;
 }
-
-const supportedGeometryTypes: GeometryType[] & SupportedGeometryType[] = [
-  GeometryType.POINT,
-  GeometryType.MULTI_LINE_STRING,
-  GeometryType.MULTI_POLYGON
-];
 
 export const EditFeatureGeometry = observer<FC<EditFeatureGeometryProps>>(({ store }) => {
   if (!(store && store.geometry)) {

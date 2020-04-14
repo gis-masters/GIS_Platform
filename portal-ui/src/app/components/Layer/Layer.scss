@@ -1,0 +1,12 @@
+.Layer {
+  --LayerCardBackground: rgba(0,0,0,0.17);
+  --LayerHovered: 0;
+
+  &_visible {
+    --LayerCardBackground: rgba(0,0,0,0.1);
+  }
+
+  &:hover {
+    --LayerHovered: 1;
+  }
+}

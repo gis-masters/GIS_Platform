@@ -1,0 +1,9 @@
+.LayersTree-Item {
+  transition: opacity 0.3s;
+
+  opacity: 0.6;
+
+  &_visible {
+    opacity: 1;
+  }
+}

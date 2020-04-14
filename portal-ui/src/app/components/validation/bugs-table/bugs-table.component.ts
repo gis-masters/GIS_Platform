@@ -9,14 +9,14 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
-import { CommunicationService } from '../../../services/communication.service';
+import { communicationService } from '../../../services/communication.service';
 import { dataSchemaService } from '../../../services/crg/data-schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/crg/models';
-import { CrgLayer } from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-bugs-table',
@@ -60,7 +60,6 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger,
-              private communicationService: CommunicationService,
               private validationService: ValidationService) {
   }
 
@@ -120,7 +119,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   editObject(event: Event, objectId: string) {
     event.stopPropagation();
 
-    this.communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);
+    communicationService.editView.emit([{id: objectId, crgLayer: this.crgLayer}]);
   }
 
   private handleResponse(response: ValidationResultsResponse) {

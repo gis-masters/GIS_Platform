@@ -1,7 +1,9 @@
-import {GeoUtil} from './GeoUtil';
-import {ImportTaskResponse} from '../geoserver/import/models';
-import {FeatureDescription} from '../crg/data-schema.service';
-import {FeatureUtil} from './FeatureUtil';
+import GeometryType from 'ol/geom/GeometryType';
+
+import { GeoUtil } from './GeoUtil';
+import { ImportTaskResponse } from '../geoserver/import/models';
+import { FeatureDescription } from '../crg/data-schema.service';
+import { FeatureUtil } from './FeatureUtil';
 
 describe('GeoUtil test', () => {
 
@@ -50,6 +52,7 @@ describe('GeoUtil test', () => {
       name: 'SomeName',
       title: '',
       description: '',
+      geometryType: GeometryType.POINT,
       properties: [{
         name: 'geometry',
         title: '',
@@ -67,6 +70,7 @@ describe('GeoUtil test', () => {
       name: 'SomeName',
       title: '',
       description: '',
+      geometryType: GeometryType.MULTI_LINE_STRING,
       properties: [{
         name: 'geometry',
         title: '',
@@ -84,6 +88,7 @@ describe('GeoUtil test', () => {
       name: 'SomeName',
       title: '',
       description: '',
+      geometryType: GeometryType.MULTI_POLYGON,
       properties: [{
         name: 'geometry',
         title: '',
@@ -100,6 +105,7 @@ describe('GeoUtil test', () => {
       name: 'SomeName',
       title: '',
       description: '',
+      geometryType: GeometryType.MULTI_POLYGON,
       properties: [{
         name: 'geometry',
         title: '',

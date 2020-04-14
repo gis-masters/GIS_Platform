@@ -9,14 +9,14 @@ import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
-import { LayersService } from '../../services/geoserver/layers.service';
 import { getAllImportLayers } from '../../services/geoserver/import/import.service';
-import { ProjectsService } from '../../services/crg/projects.service';
+import { projectsService } from '../../services/crg/projects.service';
 import { Process, ProcessStatus } from '../../services/crg/models';
 import { OrganizationService } from '../../services/crg/organization.service';
 import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/models';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { dataSchemaService, FeatureDescription } from '../../services/crg/data-schema.service';
 
 @Component({
@@ -39,16 +39,14 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private dialog: MatDialog,
-              private projectsService: ProjectsService,
               private organizationService: OrganizationService,
-              private layersService: LayersService,
               private router: Router,
               private route: ActivatedRoute,
               private importData: ImportDataHolderService,
               private logger: NGXLogger) {}
 
   async ngOnInit() {
-    this.schemas = (await dataSchemaService.fetchAllSchemas().toPromise()).schemas;
+    this.schemas = await dataSchemaService.fetchAllSchemas();
 
     const { projectId, importId } = this.route.snapshot.params;
     this.prevLink = `/projects/${projectId}/import/${importId}`;
@@ -62,8 +60,6 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.importData.comparableLayers$.subscribe((comparableLayers: ComparableLayersPair[]) => {
       this.comparableLayers = comparableLayers;
     });
-
-    this.importData.project = await this.projectsService.getCurrent();
     
     const importLayers = await getAllImportLayers();
 
@@ -84,7 +80,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.selectedLayer = comparableLayersPair.originalLayer;
   }
 
-  startWorkImport() {
+  async startWorkImport () {
     if (!this.importData.isWorkImportReady) {
       this.dialog.open(AlertDialogComponent, {data: {message: 'Есть не обработанные слои'}});
 
@@ -94,12 +90,13 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.isWorkImportInited = true;
 
     const workTasks = this.importData.getWorkTasks();
-    const project = this.importData.project;
+    
+     await projectsService.fetchCurrent();
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
-    this.projectsService
-        .doWorkImport(workTasks, project.id, project.internalName)
+    projectsService
+        .doWorkImport(workTasks, currentProject.id, currentProject.internalName)
         .then((crgProcess: Process) => {
 
           interval(this.CHECK_STATUS_INTERVAL)
@@ -107,19 +104,19 @@ export class MappingPageComponent implements OnInit, OnDestroy {
             .subscribe(async () => {
               const response: Process = await this.organizationService.getProcessById(crgProcess.id);
               if (response.status === ProcessStatus.DONE) {
-                this.layersService.fetchLayers(project);
+                // this.layersService.fetchLayers(project);
 
                 this.isWorkImportInited = false;
                 this.isImportFinished = true;
 
                 this.unsubscribe$.next();
-                this.projectsService.clearCurrent();
+                projectsService.clearCurrent();
               } else if (response.status === ProcessStatus.ERROR) {
                 this.isWorkImportInited = false;
                 this.isImportFinished = false;
 
                 this.unsubscribe$.next();
-                this.projectsService.clearCurrent();
+                projectsService.clearCurrent();
               }
             });
 
@@ -128,7 +125,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
             this.isWorkImportInited = false;
             this.isImportFinished = false;
 
-            this.projectsService.clearCurrent();
+            projectsService.clearCurrent();
             this.unsubscribe$.next();
           }, this.WAIT_SERVER_RESPONSE_TIMER);
         }, errorResponse => {
@@ -136,7 +133,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
           this.isWorkImportInited = false;
 
-          this.projectsService.clearCurrent();
+          projectsService.clearCurrent();
         });
   }
 

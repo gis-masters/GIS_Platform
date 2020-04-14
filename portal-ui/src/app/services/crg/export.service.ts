@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-
-import { HttpQueue } from '../util/HttpQueue';
 import { Process } from './models';
 import { serverProperties } from '../server-properties.service';
-import { WsService } from '../ws.service';
-import { ProjectsService } from './projects.service';
+import { wsService } from '../ws.service';
+import { projectsService } from './projects.service';
+import { services } from '../services';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface ExportGmlRequest {
   layers: string[];
@@ -28,25 +27,27 @@ export interface ExportGmlRequest {
   format?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ExportService {
-  constructor(private httpq: HttpQueue,
-              private wsService: WsService,
-              private projectsService: ProjectsService) { }
+class ExportService {
+  private static _instance: ExportService;
+
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private constructor() { }
 
   async export(requestModel: ExportGmlRequest): Promise<Process> {
-    const { id } = await this.projectsService.getCurrent();
-    const url = (await serverProperties.apiUrl) + '/' + id + '/export';
-
+    await projectsService.fetchCurrent();
+    const url = `${await serverProperties.apiUrl}/${currentProject.id}/export`;
     const payload: ExportGmlRequest = requestModel;
-    payload.wsUiId = this.wsService.getId();
+    payload.wsUiId = wsService.getId();
 
-    return this.httpq.post<Process>(
+    return services.httpq.post<Process>(
         url,
         JSON.stringify(payload),
         { headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
+
+export const exportService = ExportService.instance;

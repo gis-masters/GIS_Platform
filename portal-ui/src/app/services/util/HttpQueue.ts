@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 interface Task {
-  method: 'get' | 'post' | 'delete';
+  method: 'get' | 'post' | 'delete' | 'patch';
   url: string;
   body?: any | null,
   options?: Options;
@@ -35,21 +35,30 @@ export class HttpQueue {
 
   get <T>(url: string, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({method: 'get', url: url, options, resolve, reject})
+      this.queue.push({method: 'get', url, options, resolve, reject})
+      this.tick();
+    });
+  }
+
+  patch <T>(url: string, body: any, options?: Options): Promise<T> {
+    return new Promise((resolve, reject) => {
+      options = options || {};
+      const headers = new HttpHeaders({ 'Content-type': 'application/merge-patch+json' });
+      this.queue.push({ method: 'patch', url, body, options: ({ headers, ...options }), resolve, reject });
       this.tick();
     });
   }
 
   post <T>(url: string, body: any | null, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({ method: 'post', url: url, body, options, resolve, reject });
+      this.queue.push({ method: 'post', url, body, options, resolve, reject });
       this.tick();
     });
   }
 
   delete <T>(url: string): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({method: 'delete', url: url, resolve, reject})
+      this.queue.push({method: 'delete', url, resolve, reject})
       this.tick();
     });
   }

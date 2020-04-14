@@ -1,7 +1,7 @@
-import {NGXLogger} from 'ngx-logger';
-import {Injectable} from '@angular/core';
-import {CommunicationService} from './communication.service';
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+
+import { services } from './services';
+import { communicationService } from './communication.service';
 
 export interface Sidebar {
   action: ActionType;
@@ -28,11 +28,7 @@ type CurrentState = { [key: string]: ActionType };
 /**
  * Сервис с логикой показа всплывающих окон
  */
-@Injectable({
-  providedIn: 'root'
-})
-export class SideBarManager {
-
+class SideBarManager {
   currentState$: BehaviorSubject<CurrentState> = new BehaviorSubject<CurrentState>({
     'INFO': ActionType.CLOSE,
     'LAYERS': ActionType.CLOSE,
@@ -41,9 +37,13 @@ export class SideBarManager {
     'ATTRIBUTES': ActionType.CLOSE,
   });
 
-  constructor(private logger: NGXLogger,
-              private communicationService: CommunicationService) {
+  static get instance() {
+    return this._instance || (this._instance = new this());
   }
+
+  private static _instance: SideBarManager;
+
+  constructor() { }
 
   do(sidebar: Sidebar) {
     if (sidebar.target === SidebarType.LAYERS) {
@@ -76,7 +76,7 @@ export class SideBarManager {
       this.emit(SidebarType.INFO, ActionType.CLOSE);
       this.emit(SidebarType.BUG_REPORT, ActionType.CLOSE);
     } else {
-      this.logger.warn('Not supported sidebar type: ', sidebar.target);
+      services.logger.warn('Not supported sidebar type: ', sidebar.target);
     }
   }
 
@@ -88,7 +88,9 @@ export class SideBarManager {
   }
 
   private emit(target: SidebarType, action: ActionType, data?: any) {
-    this.communicationService.sidebarManager
+    communicationService.sidebarManager
         .emit({target: target, action: action, data: data});
   }
 }
+
+export const sideBarManager = SideBarManager.instance;

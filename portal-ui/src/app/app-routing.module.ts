@@ -1,26 +1,26 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
-import {LoginPageComponent} from './pages/login/login-page.component';
-import {AboutComponent} from './pages/about/about.component';
-import {MapPageComponent} from './pages/map/map-page.component';
-import {HomePageComponent} from './pages/home/home-page.component';
-import {RegisterComponent} from './pages/register/register.component';
-import {RecoveryComponent} from './pages/recovery/recovery.component';
-import {ProjectsPageComponent} from './pages/projects/projects-page.component';
-import {ImportPageComponent} from './pages/import/import-page.component';
-import {MappingPageComponent} from './pages/mapping/mapping-page.component';
+import { LoginPageComponent } from './pages/login/login-page.component';
+import { AboutComponent } from './pages/about/about.component';
+import { MapPageComponent } from './pages/map/map-page.component';
+import { HomePageComponent } from './pages/home/home-page.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { RecoveryComponent } from './pages/recovery/recovery.component';
+import { ProjectsPageComponent } from './pages/projects/projects-page.component';
+import { ImportPageComponent } from './pages/import/import-page.component';
+import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 
-import {AuthGuardService} from './services/auth-guard.service';
-import {WorkflowGuardService} from './services/workflow-guard.service';
-import {OrganizationInfoResolver} from './services/resolvers/project-resolver.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { WorkflowGuardService } from './services/workflow-guard.service';
+import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
 
 const routes: Routes = [
-  {path: '', component: HomePageComponent},
-  {path: 'login', component: LoginPageComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'recovery', component: RecoveryComponent},
-  {path: 'about', component: AboutComponent},
+  { path: '', component: HomePageComponent },
+  { path: 'login', component: LoginPageComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'recovery', component: RecoveryComponent },
+  { path: 'about', component: AboutComponent },
   {
     path: 'projects',
     component: ProjectsPageComponent,
@@ -90,7 +90,7 @@ const routes: Routes = [
       }
     ]
   },
-  {path: '**', redirectTo: ''}
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

@@ -1,8 +1,8 @@
-import {Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {EventService, IEvent} from '../../services/event.service';
-import {ActionType, SideBarManager, SidebarType} from '../../services/side-bar-manager.service';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { EventService, IEvent } from '../../services/event.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 
 @Component({
   selector: 'crg-info-sidebar',
@@ -17,8 +17,7 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private eventService: EventService,
-              private sideBarManager: SideBarManager) {
+  constructor(private eventService: EventService) {
 
   }
 
@@ -39,6 +38,6 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
   }
 
   closeMe() {
-    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.CLOSE});
+    sideBarManager.do({target: SidebarType.INFO, action: ActionType.CLOSE});
   }
 }

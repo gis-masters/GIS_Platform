@@ -1,6 +1,6 @@
-import {NGXLogger} from 'ngx-logger';
-import {Component, OnInit} from '@angular/core';
-import {CommunicationService} from '../../services/communication.service';
+import { NGXLogger } from 'ngx-logger';
+import { Component, OnInit } from '@angular/core';
+import { communicationService } from '../../services/communication.service';
 
 @Component({
   selector: 'crg-layer-objects',
@@ -20,8 +20,7 @@ export class LayerObjectsComponent implements OnInit {
 
   vResults = [];
 
-  constructor(private logger: NGXLogger,
-              private communicationService: CommunicationService) {
+  constructor(private logger: NGXLogger) {
     this.logger.info('LayerObjectsComponent constructor');
   }
 
@@ -31,6 +30,6 @@ export class LayerObjectsComponent implements OnInit {
   gotoObject(rowData) {
     this.logger.info('gotoObject: ', rowData);
 
-    // this.communicationService.gotoObject.emit(rowData['objectId']);
+    // communicationService.gotoObject.emit(rowData['objectId']);
   }
 }

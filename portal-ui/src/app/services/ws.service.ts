@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
 import * as SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
-import { NGXLogger } from 'ngx-logger';
 
 import { generateRandomId } from './util/stringUtil';
 import { BugObject } from './crg/validation.service';
@@ -41,27 +39,27 @@ export interface ValidationWsMsg {
   empty?: boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class WsService {
-
+class WsService {
+  private static _instance: WsService;
   private _wsMsg$: BehaviorSubject<IWsMessage> = new BehaviorSubject<IWsMessage>(undefined);
-  public messages$: Observable<IWsMessage> = this._wsMsg$.asObservable()
+
+  messages$: Observable<IWsMessage> = this._wsMsg$.asObservable()
     .pipe(
       // компоненты при подписке должны видеть одно последнее значение в потоке
       publishReplay(1),
       refCount()
     );
 
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   disabled = true;
 
   private id = generateRandomId();
   private stompClient: CompatClient;
 
-  constructor(private logger: NGXLogger) {
-    this.logger.info('id: ', this.id);
-
+  private constructor() {
     this.connect();
   }
 
@@ -74,26 +72,21 @@ export class WsService {
 
     this.stompClient = Stomp.over(socket);
 
-    const _this = this;
-    this.stompClient.connect({}, function () {
-      _this.setConnected(true);
-      _this.stompClient.subscribe('/topic/' + _this.id + '/**', function (data) {
-        // console.log('+ - +', JSON.parse(data.body));
-
-        _this._wsMsg$.next(JSON.parse(data.body));
+    this.stompClient.connect({}, () => {
+      this.setConnected(true);
+      this.stompClient.subscribe('/topic/' + this.id + '/**', (data) => {
+        this._wsMsg$.next(JSON.parse(data.body));
       });
     });
   }
 
   setConnected(connected: boolean) {
     this.disabled = !connected;
-
-    if (connected) {
-      this.logger.info('connected');
-    }
   }
 
   getId(): string {
     return this.id;
   }
 }
+
+export const wsService = WsService.instance;

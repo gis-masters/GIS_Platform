@@ -6,9 +6,9 @@ import { takeUntil } from 'rxjs/operators';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
-import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { CrgLayer } from '../../stores/ProjectsList.store';
-import { CommunicationService } from '../../services/communication.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { communicationService } from '../../services/communication.service';
 
 export interface ViewFeaturesData {
   features: WfsFeature[];
@@ -37,9 +37,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private sideBarManager: SideBarManager,
-              private communicationService: CommunicationService) { }
-
   ngOnInit(): void {
     this.showFeatures();
 
@@ -52,7 +49,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       }
     }
 
-    this.sideBarManager.currentState$
+    sideBarManager.currentState$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
           const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
@@ -63,7 +60,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
           }
         });
 
-    this.communicationService.featuresUpdate$
+    communicationService.featuresUpdate$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(() => {
           this.closeMe();
@@ -110,7 +107,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   closeMe() {
     openLayersService.clearDraft();
-    this.sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
+    sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
 
   deleteHandler (id: string) {

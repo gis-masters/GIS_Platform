@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { cn } from '../../services/util/cn';
-import { CrgLayer } from '../../stores/ProjectsList.store';
+import { CrgLayer } from '../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-layers-sidebar',

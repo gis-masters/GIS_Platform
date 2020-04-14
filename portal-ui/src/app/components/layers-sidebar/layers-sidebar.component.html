@@ -7,28 +7,8 @@
     </crg-tile-source-select>
 
     <div [class]="cn('content', ['scroll'])">
-
-      <div [class]="cn('list')"
-          *ngIf="layers; else layersLoading"
-          cdkDropList
-          (cdkDropListDropped)="drop($event)">
-        <crg-layer-list-item *ngFor="let layer of layers"
-                            [layer]="layer"
-                            cdkDrag
-                            (deleteLayer)="onDeleteLayer(layer)">
-          <mat-icon cdkDragHandle>
-            drag_handle
-          </mat-icon>
-        </crg-layer-list-item>
-      </div>
+      <crg-layers-tree></crg-layers-tree>
     </div>
 
   </div>
 </div>
-
-<ng-template #layersLoading>
-  <div [class]="cn('loading')">
-    Загрузка слоев...
-    <mat-progress-bar mode="query"></mat-progress-bar>
-  </div>
-</ng-template>

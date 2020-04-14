@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { projectsList } from '../../stores/ProjectsList.store';
-import { services } from '../../services/services';
+import { projectsService } from '../../services/crg/projects.service';
 import { getEnvironment } from '../../services/environment';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 
@@ -24,8 +24,6 @@ export class ProjectsList extends React.Component<{}> {
     if (platform !== 'simf') {
       this.enableCreation();
     }
-    await services.provided;
-    const { projectsService } = services;
 
     await projectsService.fetchProjects();
   }

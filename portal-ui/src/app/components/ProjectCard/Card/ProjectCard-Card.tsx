@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
-import { Project } from '../../../stores/ProjectsList.store';
-import { services } from '../../../services/services';
+import { projectsService } from '../../../services/crg/projects.service';
+import { Project } from '../../../services/crg/projects.models';
 import { getEnvironment } from '../../../services/environment';
 import { Link } from '../../Link/Link';
 import { Button } from '../../Button/Button';
@@ -102,7 +102,7 @@ export class ProjectCardCard extends React.Component<ProjectCardCardProps> {
   }
 
   private async deleteProject () {
-    await services.projectsService.delete(this.props.project.id);
+    await projectsService.delete(this.props.project.id);
     this.closeDeleteDialog();
   }
 }

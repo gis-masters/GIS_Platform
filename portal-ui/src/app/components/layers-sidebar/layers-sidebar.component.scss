@@ -33,6 +33,9 @@
     right: 0;
     bottom: 0;
 
+    display: flex;
+    flex-direction: column;
+
     width: 400px;
   }
 
@@ -109,9 +112,10 @@
   }
 
   &__content {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-grow: 1;
 
-    max-height: calc(100% - 70px);
     padding: 20px 0;
   }
 

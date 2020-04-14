@@ -20,7 +20,7 @@ export const HelpPopup: React.FC<HelpPopupProps> = ({ items, onSelect, onClose }
     <div className={cnHelpPopup('Title')}>
       Справка:
     </div>
-    
+
     <HelpToc items={items} onSelect={onSelect} />
 
     <div className={cnHelpPopup('Actions')}>

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 import { cn } from '@bem-react/classname';
 
-import { services } from '../../../services/services';
+import { projectsService } from '../../../services/crg/projects.service';
 import { Button } from '../../Button/Button';
 import { Loading } from '../../Loading/Loading';
 
@@ -91,8 +91,8 @@ export class ProjectCardForm extends React.Component<ProjectCardFormProps> {
     this.setBusy(true);
 
     try {
-      await services.projectsService.create(this.newProjectName);
-      await services.projectsService.fetchProjects();
+      await projectsService.create(this.newProjectName);
+      await projectsService.fetchProjects();
 
       this.setBusy(false);
       this.props.onCancel();

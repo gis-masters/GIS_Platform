@@ -5,7 +5,7 @@ import { remove } from 'lodash';
 
 import { generateRandomId } from './util/stringUtil';
 import { localStorageService } from './local-storage.service';
-import { IWsMessage, WsService } from './ws.service';
+import { IWsMessage, wsService } from './ws.service';
 import { ProcessType } from './crg/models';
 
 /**
@@ -27,14 +27,14 @@ export class EventService {
       refCount()
     );
 
-  constructor(private wsService: WsService) {
+  constructor() {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
       this._events$.next(savedEvents);
     }
 
     // Не буду тут заморачиваться с отписками потому как этот сервис живет постоянно
-    this.wsService.messages$
+    wsService.messages$
         .pipe(
           filter(value => !!value),
           filter((msg: IWsMessage) => this.isAllowedMessageType(msg)),

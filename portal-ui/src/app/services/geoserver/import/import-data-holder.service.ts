@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { ImportLayerItem, LayerAttribute } from './models';
-import { Project } from '../../../stores/ProjectsList.store';
 import { MatchingPair, TaskImport } from './taskImport';
 import { dataSchemaService, PropertySchema } from '../../crg/data-schema.service';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../crg/models';
@@ -31,8 +30,6 @@ export interface ComparableLayersPair {
 export class ImportDataHolderService {
   metrics$ = new EventEmitter<InputDataMetrics>();
   comparableLayers$ = new EventEmitter<ComparableLayersPair[]>();
-
-  project: Project;
 
   private _comparableLayers: ComparableLayersPair[] = [];
 

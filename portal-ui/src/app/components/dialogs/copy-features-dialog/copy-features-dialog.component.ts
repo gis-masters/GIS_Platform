@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
-import {CrgLayer} from '../../../stores/ProjectsList.store';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-copy-features-dialog',

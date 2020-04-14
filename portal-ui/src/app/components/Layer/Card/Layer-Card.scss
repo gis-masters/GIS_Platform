@@ -1,0 +1,16 @@
+.Layer-Card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 40px;
+  padding: 5px 10px 5px 15px;
+
+  cursor: default;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: var(--LayerCardBackground);
+  }
+}

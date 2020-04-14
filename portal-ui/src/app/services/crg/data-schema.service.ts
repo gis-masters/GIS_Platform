@@ -1,14 +1,11 @@
-import { Observable, defer } from 'rxjs';
-
 import { ValueTitleProjection } from '../geoserver/projections';
 import { serverProperties } from '../server-properties.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEmptyGeometry } from '../geoserver/wfs.service';
-import { WfsFeature, CoordinateEdited } from '../geoserver/wfs-models';
-import { normalizeGeometryType } from '../util/stringUtil';
+import { WfsFeature, CoordinateEdited, SupportedGeometryType } from '../geoserver/wfs-models';
 import { ImportLayerItem } from '../geoserver/import/models';
 import { BugObject } from './validation.service';
-import { CrgLayer, Project } from '../../stores/ProjectsList.store';
+import { CrgLayer, Project } from '../../services/crg/projects.models';
 import { services } from '../services';
 
 
@@ -22,10 +19,11 @@ export interface FeatureDescription {
   description: string;
   properties: PropertySchema[];
   tableName: string;
+  geometryType: SupportedGeometryType;
   customRuleFunction?: any;
   matchingCounter?: number;
   calcFiledFunction?: string;
-  readOnly: boolean;
+  readOnly?: boolean;
 }
 
 export interface PropertySchema {
@@ -78,24 +76,27 @@ export interface EditFeatureItem {
 }
 
 class DataSchemaService {
-  private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
-
   private static _instance: DataSchemaService;
+
+  private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
 
   private constructor() { }
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  fetchAllSchemas(): Observable<FeatureXsdDefinition> {
+  fetchAllSchemas(): Promise<FeatureDescription[]> {
     return this.fetching([]);
   }
 
-  fetchSchemas(currentProject: Project): Observable<FeatureXsdDefinition> {
-    const payload: string[] = currentProject.layers.map(layer => {
-      return layer.internalName;
-    });
+  fetchSchemas(currentProject: Project): Promise<FeatureDescription[]> {
+    let payload: string[] = [];
+    if (currentProject.layers) {
+      payload = currentProject.layers.map(layer => {
+        return layer.internalName;
+      });
+    }
 
     return this.fetching(payload);
   }
@@ -104,7 +105,7 @@ class DataSchemaService {
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
-  public getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
+  getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
     if (!layerName) {
       return;
     }
@@ -164,7 +165,7 @@ class DataSchemaService {
   public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
     return layers
       .filter((layer: CrgLayer) => baseLayer.complexName !== layer.complexName)
-      .filter((layer: CrgLayer) => baseLayer.geometry === layer.geometry);
+      .filter((layer: CrgLayer) => baseLayer.geometryType === layer.geometryType);
   }
 
   getClassIdAlias(layerName: string, bugObject: BugObject) {
@@ -224,7 +225,7 @@ class DataSchemaService {
   }
 
   getEmptyFeature (layer: CrgLayer): WfsFeature<CoordinateEdited> {
-    const { geometry, internalName, schema } = layer;
+    const { geometryType, internalName, schema } = layer;
     const properties = schema.properties.reduce((acc: {[key: string]: null}, propertySchema) => {
       acc[propertySchema.name.toLowerCase()] = null;
       return acc;
@@ -233,7 +234,7 @@ class DataSchemaService {
     return {
       type: 'Feature',
       id: internalName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
-      geometry: getEmptyGeometry(normalizeGeometryType(geometry)),
+      geometry: getEmptyGeometry(geometryType),
       geometry_name: 'shape', // TODO нужно добавить в схему и брать оттуда
       properties: properties
     };
@@ -272,21 +273,19 @@ class DataSchemaService {
     });
   }
 
-  private fetching(payload: string[]) {
-    return defer(async () => {
-      await services.provided;
-      const url = await serverProperties.schemaUrl;
-      const response = await services.httpq.post<FeatureDescription[]>(url, payload);
+  private async fetching(payload: string[]): Promise<FeatureDescription[]> {
+    await services.provided;
+    const url = await serverProperties.schemaUrl;
+    const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
-      if (response) {
-        this.featuresXsdDefinition.schemas = response;
-      } else {
-        services.logger.warn('getFeaturesDefinition response is: ', response);
-        this.featuresXsdDefinition = {schemas: []};
-      }
+    if (response) {
+      this.featuresXsdDefinition.schemas = response;
+    } else {
+      services.logger.warn('getFeaturesDefinition response is: ', response);
+      this.featuresXsdDefinition = {schemas: []};
+    }
 
-      return this.featuresXsdDefinition;
-    });
+    return this.featuresXsdDefinition.schemas;
   }
 }
 

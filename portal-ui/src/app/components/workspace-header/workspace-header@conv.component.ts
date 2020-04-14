@@ -4,9 +4,9 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import { EventService, IEvent } from '../../services/event.service';
-import { ActionType, SideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 
-import {WorkspaceHeader} from './workspace-header@common';
+import { WorkspaceHeader } from './workspace-header@common';
 
 @Component({
   selector: 'crg-workspace-header',
@@ -19,8 +19,7 @@ export class WorkspaceHeaderComponent extends WorkspaceHeader {
 
   constructor(protected route: ActivatedRoute,
               protected authService: AuthService,
-              private eventService: EventService,
-              private sideBarManager: SideBarManager) {
+              private eventService: EventService) {
     super(authService, route);
 
     this.eventService
@@ -32,6 +31,6 @@ export class WorkspaceHeaderComponent extends WorkspaceHeader {
   }
 
   notification() {
-    this.sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
+    sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
   }
 }

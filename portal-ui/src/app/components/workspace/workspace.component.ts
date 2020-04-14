@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { CommunicationService } from '../../services/communication.service';
+import { communicationService } from '../../services/communication.service';
 import { localStorageService } from '../../services/local-storage.service';
 import { ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
 import { cn } from '../../services/util/cn';
@@ -20,9 +20,8 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private route: ActivatedRoute,
-              private communicationService: CommunicationService) {
-    this.communicationService.sidebarManager
+  constructor(private route: ActivatedRoute) {
+    communicationService.sidebarManager
         .pipe(
           filter((data: Sidebar) => data.target === SidebarType.INFO),
           takeUntil(this.unsubscribe$)

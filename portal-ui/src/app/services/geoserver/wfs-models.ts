@@ -5,6 +5,12 @@ export type CoordinateEdited = (number | string)[];
 
 export type SupportedGeometryType = GeometryType.POINT | GeometryType.MULTI_LINE_STRING | GeometryType.MULTI_POLYGON;
 
+export const supportedGeometryTypes: GeometryType[] & SupportedGeometryType[] = [
+  GeometryType.POINT,
+  GeometryType.MULTI_LINE_STRING,
+  GeometryType.MULTI_POLYGON
+];
+
 interface GeoJSONObject {
   type: string;
   bbox?: number[];

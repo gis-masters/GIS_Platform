@@ -1,7 +1,9 @@
 package ru.mycrg.gis_service.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.gis_service.entity.Layer;
@@ -13,7 +15,10 @@ public interface LayerMapper {
 
     Layer toEntity(LayerUpdateDto updateDto);
 
-    LayerUpdateDto toDto(Layer group);
+    @Mappings({
+            @Mapping(target = "groupId", source = "layer.group.id")
+    })
+    LayerUpdateDto toDto(Layer layer);
 
     void update(@MappingTarget Layer layer, LayerUpdateDto updateDto);
 }

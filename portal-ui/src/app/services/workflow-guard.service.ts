@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 
-import { ProjectsService } from './crg/projects.service';
+import { currentProject } from '../stores/CurrentProject.store';
+import { projectsService } from './crg/projects.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkflowGuardService implements CanActivate {
   constructor(private logger: NGXLogger,
-              private projectsService: ProjectsService,
               private router: Router) { }
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {
-      const project = await this.projectsService.getCurrent(route);
-      if (project) {
+      const id = route.params && route.params.projectId;
+      await projectsService.fetchCurrent(id && Number(id));
+
+      if (currentProject.id) {
         return true;
       } else {
         this.router.navigateByUrl('/projects');
