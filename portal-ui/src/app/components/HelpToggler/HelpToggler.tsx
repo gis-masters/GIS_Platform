@@ -30,7 +30,6 @@ export class HelpToggler extends React.Component<{}> {
   @observable private popupOpen = false;
   @observable private dialogOpen = false;
   @observable private selectedItem?: TocItem;
-  @observable private key: string;
   private helpPart: HelpPart;
   private ref = React.createRef<HTMLButtonElement>();
 
@@ -42,15 +41,6 @@ export class HelpToggler extends React.Component<{}> {
     this.togglePopupOpen = this.togglePopupOpen.bind(this);
     this.toggleDialogOpen = this.toggleDialogOpen.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-  }
-
-  async componentDidMount () {
-    await this.helpPart.inited;
-    this.setKey();
-    const wasClosed = localStorage.getItem(this.key);
-    if (!wasClosed) {
-      this.togglePopupOpen();
-    }
   }
 
   render () {
@@ -97,16 +87,8 @@ export class HelpToggler extends React.Component<{}> {
   }
 
   @action
-  private setKey () {
-    this.key = 'help-popup__' + this.helpPart.path.join('/');
-  }
-
-  @action
   private togglePopupOpen () {
     this.popupOpen = !this.popupOpen;
-    if (!this.popupOpen) {
-      localStorage.setItem(this.key, '1');
-    }
   }
 
   @action
