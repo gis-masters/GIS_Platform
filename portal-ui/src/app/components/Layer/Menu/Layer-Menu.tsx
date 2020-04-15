@@ -94,7 +94,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && !readOnly && !this.isSimf && (
+          {!isGroup && !this.isSimf && (
             <MenuItem onClick={this.openDeleteDialog}>
               <ListItemIcon>
                 <Delete />
