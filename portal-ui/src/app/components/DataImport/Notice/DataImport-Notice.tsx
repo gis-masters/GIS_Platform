@@ -19,5 +19,6 @@ export const DataImportNotice = () => (
         WGS84 Web Mercator.
       </li>
     </ul>
+    Имена файлов в архиве не должны содержать кириллические символы.
   </div>
 );
