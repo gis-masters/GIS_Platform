@@ -72,11 +72,12 @@ export class FeatureUtil {
     return propertySchemas;
   }
 
-  static calculateByFunction<T>(featureObject: T, calcFunction: string): T {
-    let result = featureObject;
+  static calculateByFunction<T>(featureObject: T, calcFunction: string): Partial<T> {
+    let result = {};
+
     try {
       const cFunction = new Function('obj', calcFunction);
-      result = cFunction(featureObject) || featureObject;
+      result = cFunction(featureObject) || result;
     } catch (e) {
       throw Error('Ошибка при попытке просчитать атрибуты' + e);
     }
