@@ -35,7 +35,6 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   schemas: FeatureDescription[] = [];
 
   private CHECK_STATUS_INTERVAL = 1000;
-  private WAIT_SERVER_RESPONSE_TIMER = 120000;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private dialog: MatDialog,
@@ -119,15 +118,6 @@ export class MappingPageComponent implements OnInit, OnDestroy {
                 projectsService.clearCurrent();
               }
             });
-
-          // Прибьем проверку статуса если она зятянулась
-          const waitTimer = setTimeout(() => {
-            this.isWorkImportInited = false;
-            this.isImportFinished = false;
-
-            projectsService.clearCurrent();
-            this.unsubscribe$.next();
-          }, this.WAIT_SERVER_RESPONSE_TIMER);
         }, errorResponse => {
           this.logger.info('ERROR: ', errorResponse);
 
