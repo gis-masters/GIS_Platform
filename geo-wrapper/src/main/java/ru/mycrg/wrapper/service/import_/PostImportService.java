@@ -126,14 +126,8 @@ public class PostImportService extends AbstractImportChainItem {
                         params.put(key, UUID.randomUUID());
                     }
                 } else {
-                    // Декодируем строковые атрибуты
                     if (value instanceof String) {
-                        String decoded = StringDecoder.decode(String.valueOf(value));
-                        if (decoded.contains("'")) {
-                            decoded = decoded.replace("'", "''");
-                        }
-
-                        params.put(key, decoded);
+                        params.put(key, value);
                     } else if (value instanceof Integer) {
                         // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
                         if ((Integer) value == 0) {
