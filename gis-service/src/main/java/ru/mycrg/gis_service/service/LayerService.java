@@ -7,7 +7,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.services.layers.LayersService;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
@@ -93,16 +93,20 @@ public class LayerService {
     }
 
     public void delete(Layer layer, long projectId, Authentication authentication) {
-        try {
-            String complexLayerName = getComplexLayerName(layer, projectId);
+        String complexLayerName = getComplexLayerName(layer, projectId);
 
-            log.debug("Try delete layer: {}", complexLayerName);
+        log.debug("Try delete layer: {}", complexLayerName);
 
-            layerRepository.deleteLayerById(layer.getId());
+        layerRepository.deleteLayerById(layer.getId());
 
-            geoserverLayers.delete(complexLayerName, getToken(authentication));
-        } catch (GeoserverClientException e) {
-            throw new GisServiceException("Не удалось удалить слой с геосервера", e.getCause());
+        GeoserverClientResponse response = geoserverLayers.delete(complexLayerName, getToken(authentication));
+        if (!response.isSuccessful()) {
+            if (response.isNotFound()) {
+                log.warn("Layer not exist on geoserver");
+            } else {
+                log.debug("Geoserver response: {}", response.toString());
+                throw new GisServiceException("Не удалось удалить слой с геосервера. " + response.getMsg());
+            }
         }
     }
 

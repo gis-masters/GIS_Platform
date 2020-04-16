@@ -9,4 +9,8 @@ public class GisServiceException extends RuntimeException {
 	public GisServiceException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
+
+	public GisServiceException(String msg) {
+		super(msg);
+	}
 }

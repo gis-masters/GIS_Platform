@@ -3,6 +3,7 @@ package ru.mycrg.geoserver_client.services.feature_types;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
@@ -11,9 +12,8 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
     @Override
-    public void create(String workspaceName, String dataStoreName, String featureName, String jwtToken, Integer srs)
-            throws GeoserverClientException {
-
+    public GeoserverClientResponse create(String workspaceName, String dataStoreName, String featureName,
+                                          String jwtToken, Integer srs) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
                 "{\"featureType\": " +
                     "{" +
@@ -33,7 +33,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .post(body)
                 .build();
 
-        doRequest(request, "create FeatureType");
+        return doRequest(request);
     }
 
     @Override

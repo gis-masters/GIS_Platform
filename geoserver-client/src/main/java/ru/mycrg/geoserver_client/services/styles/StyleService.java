@@ -2,6 +2,7 @@ package ru.mycrg.geoserver_client.services.styles;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
@@ -15,8 +16,9 @@ public class StyleService extends GeoServerBaseService {
      * @param complexLayerName Название слоя
      * @param styleName        Название стиля
      * @throws GeoserverClientException
+     * @return
      */
-    public void associate(String complexLayerName, String styleName)
+    public GeoserverClientResponse associate(String complexLayerName, String styleName)
             throws GeoserverClientException {
 
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
@@ -38,7 +40,7 @@ public class StyleService extends GeoServerBaseService {
                 .post(body)
                 .build();
 
-        doRequest(request, "associate style");
+        return doRequest(request);
     }
 
 }

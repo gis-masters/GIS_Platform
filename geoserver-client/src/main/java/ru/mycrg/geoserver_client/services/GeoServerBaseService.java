@@ -6,12 +6,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.geoserver_client.DbInfo;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 import ru.mycrg.oauth_client.OAuthClientException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class GeoServerBaseService {
@@ -23,13 +25,11 @@ public class GeoServerBaseService {
     protected final OkHttpClient httpClient = new OkHttpClient();
     protected final ObjectMapper mapper = new ObjectMapper();
 
-    protected void doRequest(Request request, String msg) throws GeoserverClientException {
+    protected GeoserverClientResponse doRequest(Request request) {
         try (Response response = httpClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new GeoserverClientException(msg, response.message());
-            }
-        } catch (Exception e) {
-            throw new GeoserverClientException("Geoserver error" , e.getMessage());
+            return new GeoserverClientResponse(response);
+        } catch (IOException e) {
+            return new GeoserverClientResponse(e.getMessage());
         }
     }
 

@@ -5,6 +5,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
+import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 import java.util.HashMap;
@@ -139,7 +141,7 @@ public class RulesService extends GeoServerBaseService {
         return oldRules;
     }
 
-    private void createRule(String rule, String role) throws Exception {
+    private GeoserverClientResponse createRule(String rule, String role) throws GeoserverClientException {
         RequestBody body = RequestBody.create(XML_MEDIA_TYPE,
                 "<rules>\n" +
                         "   <rule resource=\"" + rule + "\">" + role + "</rule>\n" +
@@ -151,20 +153,21 @@ public class RulesService extends GeoServerBaseService {
                 .post(body)
                 .build();
 
-        doRequest(request, "addLayersRule");
+        return doRequest(request);
     }
 
-    private void updateRestRoles(Map<String, String> newRules) throws Exception {
+    private GeoserverClientResponse updateRestRoles(Map<String, String> newRules) throws GeoserverClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
                 .put(body)
                 .build();
-        doRequest(setRestRoles, "updateRestRoles");
+
+        return doRequest(setRestRoles);
     }
 
-    private void updateServiceRoles(Map<String, String> newRules) throws Exception {
+    private GeoserverClientResponse updateServiceRoles(Map<String, String> newRules) throws GeoserverClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
 
         Request setServiceRoles = new Request.Builder()
@@ -173,10 +176,10 @@ public class RulesService extends GeoServerBaseService {
                 .put(body)
                 .build();
 
-        doRequest(setServiceRoles, "updateServiceRoles");
+        return doRequest(setServiceRoles);
     }
 
-    private void createServiceRoles(Map<String, String> rule) throws Exception {
+    private GeoserverClientResponse createServiceRoles(Map<String, String> rule) throws GeoserverClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(rule).toString());
 
         Request request = new Request.Builder()
@@ -185,16 +188,17 @@ public class RulesService extends GeoServerBaseService {
                 .post(body)
                 .build();
 
-        doRequest(request, "createServiceRoles");
+        return doRequest(request);
     }
 
-    private void updateLayersRoles(Map<String, String> newRules) throws Exception {
+    private GeoserverClientResponse updateLayersRoles(Map<String, String> newRules) throws GeoserverClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
         Request setRestRoles = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + getRootAccessToken())
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .put(body)
                 .build();
-        doRequest(setRestRoles, "updateLayersRoles");
+
+        return doRequest(setRestRoles);
     }
 }

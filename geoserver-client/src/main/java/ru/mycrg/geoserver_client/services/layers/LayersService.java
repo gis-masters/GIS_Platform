@@ -1,12 +1,12 @@
 package ru.mycrg.geoserver_client.services.layers;
 
 import okhttp3.Request;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 public class LayersService extends GeoServerBaseService {
 
-    public void delete(String layerName, String jwtToken) throws GeoserverClientException {
+    public GeoserverClientResponse delete(String layerName, String jwtToken) {
         String url = getGeoserverRestUrl()
                 .append("/layers/")
                 .append(layerName)
@@ -18,6 +18,6 @@ public class LayersService extends GeoServerBaseService {
                 .delete()
                 .build();
 
-        doRequest(request, "Delete layer: " + layerName);
+        return doRequest(request);
     }
 }
