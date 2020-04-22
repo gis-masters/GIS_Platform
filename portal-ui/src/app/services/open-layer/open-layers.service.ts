@@ -436,12 +436,14 @@ class OpenLayersService {
   }
 
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    const response = await services.httpq.get<Blob>(url, {responseType: 'blob'});
-
-    const blob = new Blob([response], { type: 'image/vnd.jpeg-png8' });
-
-    // @ts-ignore Ошибка в типах openlayers
-    (tile.getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
+    let data;
+    try {
+      data = await services.httpq.get<Blob>(url, { responseType: 'blob' });
+    } catch (errorResponse) {
+      data = errorResponse.error;
+    }
+    const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
+    ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
   }
 
   /**

@@ -29,7 +29,7 @@ interface Options {
 export class HttpQueue {
   private executing: number;
   private queue: Task[] = [];
-  private maxParallel: number = 4;
+  private maxParallel: number = 6;
 
   constructor (private http: HttpClient) { }
 
