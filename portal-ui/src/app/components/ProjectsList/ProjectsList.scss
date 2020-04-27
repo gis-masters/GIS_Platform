@@ -1,28 +1,26 @@
 .ProjectsList {
-  display: flex;
+  display: grid;
   overflow: auto;
-  flex-wrap: wrap;
+  justify-content: center;
 
-  max-width: 1200px;
   max-height: calc(100% - 60px);
-  margin: 0 auto;
-  padding: 0 45px;
+  margin: -36px 0 0;
+  padding: 30px 45px 20px;
 
-  @media(max-width: 600px) {
-    justify-content: center;
+  grid-template-columns: repeat(var(--ProjectsListColumns), minmax(310px, 410px));
+  --ProjectsListColumns: 3;
+
+  @media(max-width: 970px) {
+    --ProjectsListColumns: 2;
+  }
+
+  @media(max-width: 670px) {
+    --ProjectsListColumns: 1;
   }
 
   &-Card {
-    width: calc(33.33% - 10px);
+    min-width: 300px;
+    max-width: 400px;
     margin: 0 5px 10px;
-
-    @media(max-width: 900px) {
-      width: calc(50% - 10px);
-    }
-
-    @media(max-width: 600px) {
-      width: 100%;
-      margin: 0 0 10px;
-    }
   }
 }

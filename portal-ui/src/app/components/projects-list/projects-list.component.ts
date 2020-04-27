@@ -12,7 +12,8 @@ import { ProjectsList } from '../ProjectsList/ProjectsList';
 
 @Component({
   selector: 'crg-projects-list',
-  template: '<div #react></div>'
+  template: '<div class="projects-list" #react></div>',
+  styleUrls: ['./projects-list.component.scss']
 })
 export class ProjectsListComponent implements OnDestroy, OnInit {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;

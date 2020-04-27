@@ -15,7 +15,7 @@ import '!style-loader!css-loader!sass-loader!./ProjectsList.scss';
 const cnProjectsList = cn('ProjectsList');
 
 @observer
-export class ProjectsList extends React.Component<{}> {
+export class ProjectsList extends React.Component {
   @observable
   private isCreationEnabled = false;
 

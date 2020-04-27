@@ -1,4 +1,5 @@
 import { reaction } from 'mobx';
+import { HttpParams } from '@angular/common/http';
 
 import { getRoute } from '../services';
 import { TaskImport } from '../geoserver/import/taskImport';
@@ -30,8 +31,9 @@ class ProjectsService {
     await services.provided;
     const baseUrl = await serverProperties.geoServerUrl;
     const url = await serverProperties.projectsUrl;
+    const params = new HttpParams().set('size', '1000')
 
-    const response = await services.httpq.get<CrgApiResponse>(url);
+    const response = await services.httpq.get<CrgApiResponse>(url, { params });
 
     if (response && response._embedded) {
       response._embedded.projects.forEach(async (project: Project) => await this.handleLayers(project, baseUrl));
