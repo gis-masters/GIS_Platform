@@ -5,7 +5,7 @@ import { LocationSearching } from '@material-ui/icons';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordPick.scss';
 
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
+const cnEditFeatureGeometryCoordPick = cn('EditFeatureGeometry', 'CoordPick');
 
 interface EditFeatureGeometryCoordPickProps {
   active: boolean;
@@ -24,14 +24,14 @@ export const EditFeatureGeometryCoordPick: FC<EditFeatureGeometryCoordPickProps>
 }) => (
   <Tooltip title='Указать на карте' enterDelay={800}>
     <span>
-      <IconButton className={cnEditFeatureGeometry('CoordPick')}
+      <IconButton className={cnEditFeatureGeometryCoordPick()}
                   onClick={onClick}
                   onBlur={onBlur}
                   aria-label="pick"
                   size="small"
                   ref={btnRef}
                   disabled={disabled}
-                  color={active ? 'secondary' : 'primary'}>
+                  color={active ? 'secondary' : 'default'}>
         <LocationSearching />
       </IconButton>
     </span>

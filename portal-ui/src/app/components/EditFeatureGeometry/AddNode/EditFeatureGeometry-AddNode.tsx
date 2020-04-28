@@ -8,7 +8,7 @@ interface EditFeatureGeometryAddNodeProps {
 
 export const EditFeatureGeometryAddNode: FC<EditFeatureGeometryAddNodeProps> = ({ onClick }) => (
   <Tooltip title='Добавить узел'>
-    <IconButton color='primary' onClick={onClick}>
+    <IconButton onClick={onClick}>
       <AddCircleOutline />
     </IconButton>
   </Tooltip>

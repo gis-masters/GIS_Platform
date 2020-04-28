@@ -1,0 +1,27 @@
+import React, { FC, RefObject } from 'react';
+import { Coordinate } from 'ol/coordinate';
+import { cn } from '@bem-react/classname';
+
+import { Paper } from '@material-ui/core';
+
+import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
+import { EditFeatureGeometryCopy } from '../Copy/EditFeatureGeometry-Copy';
+
+import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroupControls.scss';
+
+const cnEditFeatureGeometryViewGroupControls = cn('EditFeatureGeometry', 'ViewGroupControls');
+
+interface EditFeatureGeometryViewGroupControlsProps {
+  coordinates: Coordinate[];
+  tableRef: RefObject<HTMLTableElement>;
+}
+
+export const EditFeatureGeometryViewGroupControls: FC<EditFeatureGeometryViewGroupControlsProps> = ({
+  coordinates,
+  tableRef
+}) => (
+  <Paper className={cnEditFeatureGeometryViewGroupControls()} square>
+    <EditFeatureGeometryCopy coordinates={coordinates} tableRef={tableRef} />
+    <EditFeatureGeometryCSV coordinates={coordinates} readOnly />
+  </Paper>
+);

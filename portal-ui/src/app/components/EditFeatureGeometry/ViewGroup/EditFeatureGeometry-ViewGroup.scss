@@ -1,0 +1,15 @@
+.EditFeatureGeometry-ViewGroup.EditFeatureGeometry-ViewGroup {
+  position: relative;
+
+  display: inline-block;
+  overflow: visible;
+
+  width: auto;
+  margin: 15px;
+
+  --EditFeatureGeometryViewGroupHovered: 0;
+
+  &:hover {
+    --EditFeatureGeometryViewGroupHovered: 1;
+  }
+}

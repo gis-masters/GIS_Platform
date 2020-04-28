@@ -2,7 +2,6 @@ import React, { Component, createRef } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
-import { Coordinate } from 'ol/coordinate';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import { cn } from '@bem-react/classname';
 

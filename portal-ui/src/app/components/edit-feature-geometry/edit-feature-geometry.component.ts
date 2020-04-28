@@ -20,6 +20,7 @@ import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store
 })
 export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChanges {
   @Input() store: EditFeatureGeometryStore;
+  @Input() readOnly: boolean;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
   ngOnInit () {
@@ -35,7 +36,7 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    const reactElement = createElement(EditFeatureGeometry, { store: this.store });
+    const reactElement = createElement(EditFeatureGeometry, { store: this.store, readOnly: this.readOnly });
     render(reactElement, this.ref.nativeElement);
   }
 }

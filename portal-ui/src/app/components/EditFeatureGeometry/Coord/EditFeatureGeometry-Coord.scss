@@ -9,8 +9,6 @@
 
   transition: background-color 0.3s;
 
-  --EditFeatureGeometryCoordButtonOpacity: 0.2;
-
   &::before {
     position: absolute;
     top: calc(50% - 3px);
@@ -27,14 +25,8 @@
     background: var(--blue);
   }
 
-  &:hover {
-    --EditFeatureGeometryCoordButtonOpacity: 1;
-  }
-
   &_active {
     background: var(--light);
-
-    --EditFeatureGeometryCoordButtonOpacity: 1;
 
     &::before {
       opacity: 0.8;

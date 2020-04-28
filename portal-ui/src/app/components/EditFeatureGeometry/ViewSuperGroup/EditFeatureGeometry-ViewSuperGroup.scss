@@ -1,0 +1,8 @@
+.EditFeatureGeometry-ViewSuperGroup {
+  &:not(:first-child) {
+    margin-top: 15px;
+    padding-top: 15px;
+
+    border-top: 3px var(--secondary) solid;
+  }
+}

@@ -40,7 +40,7 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
         <Tooltip title='Как текст'>
           <IconButton
               className={cnEditFeatureGeometry('AsText')}
-              color={this.isOpen ? 'secondary' : 'primary'}
+              color={this.isOpen ? 'secondary' : 'default'}
               onClick={this.openDialog}>
             <ListAlt />
           </IconButton>

@@ -11,12 +11,13 @@ import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
+const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');
 
 interface EditFeatureGeometryCSVProps {
   coordinates: CoordinateEdited[];
-  empty: boolean;
-  mustBeClosed: boolean;
+  empty?: boolean;
+  mustBeClosed?: boolean;
+  readOnly?: boolean;
 }
 
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps>{
@@ -31,23 +32,23 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   }
 
   render () {
+    const { readOnly, empty } = this.props;
+
     return (
       <>
-        <Tooltip title='Импорт координат из CSV'>
+        {!readOnly && <Tooltip title='Импорт координат линии/контура из CSV'>
           <IconButton
-              className={cnEditFeatureGeometry('CSV', { do: 'import' })}
-              color='primary'
+              className={cnEditFeatureGeometryCSV({ do: 'import' })}
               onClick={this.importClickHandler}>
             <Archive />
           </IconButton>
-        </Tooltip>
+        </Tooltip>}
 
-        <Tooltip title='Экспорт координат в CSV'>
+        <Tooltip title='Экспорт координат линии/контура в CSV'>
           <span>
             <IconButton
-                className={cnEditFeatureGeometry('CSV', { do: 'export' })}
-                color='primary'
-                disabled={this.props.empty}
+                className={cnEditFeatureGeometryCSV({ do: 'export' })}
+                disabled={empty}
                 onClick={this.exportClickHandler}>
               <Unarchive />
             </IconButton>

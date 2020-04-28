@@ -3,7 +3,6 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
 
 import {
   WfsMultiPolygonGeometry,
@@ -11,11 +10,13 @@ import {
 } from '../../../../services/geoserver/wfs-models';
 import { env } from '../../../../stores/Env.store';
 
-import { EditFeatureGeometryFormProps, EditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
+import {
+  EditFeatureGeometryFormProps,
+  EditFeatureGeometryForm,
+  cnEditFeatureGeometryForm
+} from '../EditFeatureGeometry-Form';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
-
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
@@ -30,7 +31,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
     const geometry = store.geometry as WfsMultiPolygonGeometry;
 
     return (
-      <div className={className}>
+      <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
         {geometry.coordinates.map((geometryPart, index) => (
           <EditFeatureGeometrySuperGroup
               geometryPart={geometryPart}
@@ -59,7 +60,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
 }
 
 export const withTypeMultiPolygon = withBemMod<EditFeatureGeometryFormProps>(
-  cnEditFeatureGeometry('Form'),
+  cnEditFeatureGeometryForm(),
   { type: GeometryType.MULTI_POLYGON },
   () => props => <EditFeatureGeometryFormTypeMultiPolygon {...props} />
 );

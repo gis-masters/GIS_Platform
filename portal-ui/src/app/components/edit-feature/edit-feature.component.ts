@@ -8,7 +8,6 @@ import {
   ConfirmDialogComponent,
   ConfirmDialogData
 } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { projectsService } from '../../services/crg/projects.service';
 import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
@@ -30,7 +29,7 @@ export interface EditFeatureData {
   mode: EditFeatureMode;
   featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
   total?: number;
-  properties?: {};
+  properties?: {[key: string]: any};
   isNew?: true;
 }
 

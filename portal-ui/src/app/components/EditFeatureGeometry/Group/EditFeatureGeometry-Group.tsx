@@ -2,6 +2,7 @@ import React, { Component, ComponentType, PropsWithChildren } from 'react';
 import { observer } from 'mobx-react';
 import { computed, action } from 'mobx';
 import { IClassNameProps } from '@bem-react/core'
+import { cn } from '@bem-react/classname';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -16,6 +17,8 @@ import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
+
+export const cnEditFeatureGeometryGroup = cn('EditFeatureGeometry', 'Group');
 
 export type ContainerProps = PropsWithChildren<IClassNameProps>;
 
@@ -49,7 +52,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
     const Tag = Container || Div;
 
     return (
-      <Tag className={className}>
+      <Tag className={cnEditFeatureGeometryGroup(null, [className])}>
         <EditFeatureGeometryXY />
 
         {coordinates.map((coordinate, i) => {

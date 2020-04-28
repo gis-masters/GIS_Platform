@@ -43,7 +43,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
         <IconButton
             className={cnEditFeatureGeometryDraw()}
             onClick={this.clickHandler}
-            color={this.active ? 'secondary' : 'primary'}
+            color={this.active ? 'secondary' : 'default'}
         >
           <Brush />
         </IconButton>

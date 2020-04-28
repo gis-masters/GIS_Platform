@@ -1,24 +1,25 @@
 import React from 'react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
 
 import {
   WfsMultiLineStringGeometry
 } from '../../../../services/geoserver/wfs-models';
 
-import { EditFeatureGeometryFormProps, EditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
+import {
+  EditFeatureGeometryFormProps,
+  EditFeatureGeometryForm,
+  cnEditFeatureGeometryForm
+} from '../EditFeatureGeometry-Form';
 
 class EditFeatureGeometryFormTypeMultiLineString extends EditFeatureGeometryForm {
   render () {
-    const { store } = this.props;
+    const { store, className } = this.props;
     const geometry = store.geometry as WfsMultiLineStringGeometry;
 
     return (
-      <div className={this.props.className}>
+      <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
         <EditFeatureGeometrySuperGroup
             geometryPart={geometry.coordinates}
             minCoordsPerGroup={2}
@@ -31,7 +32,7 @@ class EditFeatureGeometryFormTypeMultiLineString extends EditFeatureGeometryForm
 }
 
 export const withTypeMultiLineString = withBemMod<EditFeatureGeometryFormProps>(
-  cnEditFeatureGeometry('Form'),
+  cnEditFeatureGeometryForm(),
   { type: GeometryType.MULTI_LINE_STRING },
   () => props => <EditFeatureGeometryFormTypeMultiLineString {...props} />
 );

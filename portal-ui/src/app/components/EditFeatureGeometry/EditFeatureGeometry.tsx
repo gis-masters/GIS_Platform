@@ -5,27 +5,29 @@ import { cn } from '@bem-react/classname';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 
+import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
 import { EditFeatureGeometryModify } from './Modify/EditFeatureGeometry-Modify';
 import { EditFeatureGeometryProjSel } from './ProjSel/EditFeatureGeometry-ProjSel';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
+import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
-import '!style-loader!css-loader!sass-loader!./Error/EditFeatureGeometry-Error.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryProps {
   store: EditFeatureGeometryStore;
+  readOnly: boolean;
 }
 
-export const EditFeatureGeometry = observer<FC<EditFeatureGeometryProps>>(({ store }) => {
+export const EditFeatureGeometry = observer<FC<EditFeatureGeometryProps>>(({ store, readOnly }) => {
   if (!(store && store.geometry)) {
     return (
       <div className={cnEditFeatureGeometry()}>
-        <div className={cnEditFeatureGeometry('Error')}>
+        <EditFeatureGeometryError>
           Отсутствует геометрия.
-        </div>
+        </EditFeatureGeometryError>
       </div>
     );
   }
@@ -36,10 +38,11 @@ export const EditFeatureGeometry = observer<FC<EditFeatureGeometryProps>>(({ sto
   return (
     <div className={cnEditFeatureGeometry()}>
       <EditFeatureGeometryHeader>
-        <EditFeatureGeometryModify store={store} />
+        {!readOnly && <EditFeatureGeometryModify store={store} />}
         <EditFeatureGeometryProjSel store={store} />
       </EditFeatureGeometryHeader>
-      <EditFeatureGeometryForm type={geometryType} store={store} />
+      {!readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
+      {readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
     </div>
   );
 });

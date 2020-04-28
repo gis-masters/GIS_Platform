@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordDel.scss';
 
-const cnEditFeatureGeometry = cn('EditFeatureGeometry');
+const cnEditFeatureGeometryCoordDel = cn('EditFeatureGeometry', 'CoordDel');
 
 interface EditFeatureGeometryCoordDelProps {
   onClick: () => void;
@@ -23,7 +23,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
     return (
       <Tooltip title='Удалить узел' enterDelay={800}>
         <span>
-          <IconButton className={cnEditFeatureGeometry('CoordDel')}
+          <IconButton className={cnEditFeatureGeometryCoordDel()}
                   onClick={this.clickHandler}
                   size="small"
                   disabled={this.props.disabled}>
