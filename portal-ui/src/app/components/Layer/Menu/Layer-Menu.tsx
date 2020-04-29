@@ -170,6 +170,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private deleteLayer () {
     layersService.deleteLayer(this.props.entity as CrgLayer);
     this.closeDeleteDialog();
+    sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }
 
   @action
