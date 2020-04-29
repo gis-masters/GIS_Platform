@@ -132,7 +132,7 @@ class CurrentProject implements Project {
     const { payload: payloadA, isGroup: aGroup } = a;
     const { payload: payloadB, isGroup: bGroup } = b;
 
-    return (Number(bGroup) - Number(aGroup)) || (payloadA.position - payloadB.position) || payloadA.id - payloadB.id;
+    return (payloadA.position - payloadB.position) || (payloadA.id - payloadB.id) || (Number(bGroup) - Number(aGroup));
   }
 
   private sortCommonAncestorsChildren (a: TreeItem, b: TreeItem, depth?: number): number {
