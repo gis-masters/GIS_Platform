@@ -13,7 +13,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.auth_service.dto.GroupCreateDto;
 import ru.mycrg.auth_service.dto.GroupProjection;
-import ru.mycrg.auth_service.service.AuthorityService;
 import ru.mycrg.auth_service.service.GroupService;
 
 import javax.inject.Inject;
@@ -34,14 +33,11 @@ public class GroupController {
     }
 
     private final GroupService groupService;
-    private final AuthorityService authorityService;
     private final PagedResourcesAssembler<GroupProjection> assembler;
 
-    public GroupController(AuthorityService authorityService,
-                           PagedResourcesAssembler<GroupProjection> assembler,
+    public GroupController(PagedResourcesAssembler<GroupProjection> assembler,
                            GroupService groupService) {
         this.assembler = assembler;
-        this.authorityService = authorityService;
         this.groupService = groupService;
     }
 

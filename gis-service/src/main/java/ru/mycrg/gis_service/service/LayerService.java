@@ -135,6 +135,11 @@ public class LayerService {
         }
 
         Layer newLayer = new Layer(dto);
+
+        String projectName = DEFAULT_PROJECT_NAME + "_" + project.getId();
+        String dataSourceUri = "/schemas/" + projectName + "/tables/" + dto.getInternalName();
+
+        newLayer.setDataSourceUri(dataSourceUri);
         newLayer.setProject(project);
 
         return layerRepository.save(newLayer);

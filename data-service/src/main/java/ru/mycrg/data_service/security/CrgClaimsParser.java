@@ -17,7 +17,9 @@ import java.util.Optional;
 
 public class CrgClaimsParser {
 
+    private static final String CLAIM_USER_ID = "user_id";
     private static final String CLAIM_ORGANIZATIONS = "organizations";
+    private static final String CLAIM_GROUPS = "groups";
 
     public static boolean isRoot(Authentication authentication) {
         return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
@@ -34,9 +36,7 @@ public class CrgClaimsParser {
         long orgId = 0;
 
         try {
-            Object details = ((OAuth2Authentication) principal).getDetails();
-            Map<String, Object> decodedDetails =
-                    (Map<String, Object>) ((OAuth2AuthenticationDetails) details).getDecodedDetails();
+            Map<String, Object> decodedDetails = decode(principal);
 
             Optional<Object> oOrganization = getValue(decodedDetails, CLAIM_ORGANIZATIONS);
             if (oOrganization.isPresent()) {
@@ -51,6 +51,41 @@ public class CrgClaimsParser {
         }
 
         return orgId;
+    }
+
+    @NotNull
+    public static UserDetails getUserDetails(Principal principal) {
+        UserDetails userDetails = new UserDetails();
+
+        try {
+            Map<String, Object> decodedDetails = decode(principal);
+
+            getValue(decodedDetails, CLAIM_USER_ID)
+                    .ifPresent(o -> {
+                        userDetails.setUserId(Long.valueOf(String.valueOf(o)));
+                    });
+
+            getValue(decodedDetails, CLAIM_GROUPS)
+                    .ifPresent(groups -> {
+                        ((ArrayList) groups).forEach(data -> {
+                            getValue((Map<String, Object>) data, "id")
+                                    .ifPresent(o -> {
+                                        userDetails.addGroupId(Long.valueOf(String.valueOf(o)));
+                                    });
+                        });
+                    });
+        } catch (Exception e) {
+            throw new ForbiddenException("Incorrect group claims");
+        }
+
+        return userDetails;
+    }
+
+    private static Map<String, Object> decode(Principal principal) {
+        var authentication = (OAuth2Authentication) principal;
+        var details = (OAuth2AuthenticationDetails) authentication.getDetails();
+
+        return (Map<String, Object>) details.getDecodedDetails();
     }
 
     private static Optional<Object> getValue(Map<String, Object> data, String target) {

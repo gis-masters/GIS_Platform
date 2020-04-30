@@ -50,7 +50,7 @@ public class Layer implements Identifiable<Long> {
     private String schemaId;
 
     @Column
-    private String geometryType;
+    private String dataSourceUri;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -108,14 +108,6 @@ public class Layer implements Identifiable<Long> {
 
     public void setInternalName(String internalName) {
         this.internalName = internalName;
-    }
-
-    public String getGeometryType() {
-        return geometryType;
-    }
-
-    public void setGeometryType(String geometryType) {
-        this.geometryType = geometryType;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -212,6 +204,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public String getDataSourceUri() {
+        return dataSourceUri;
+    }
+
+    public void setDataSourceUri(String dataSourceUri) {
+        this.dataSourceUri = dataSourceUri;
     }
 
     public Group getGroup() {
