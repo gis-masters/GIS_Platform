@@ -20,10 +20,10 @@ import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.gis_service.mappers.GroupMapper.groupMapper;
+import static ru.mycrg.gis_service.service.GroupValidator.isInvalidGroupRelation;
 
 @Service
 @Transactional
@@ -58,9 +58,11 @@ public class GroupService {
     public GroupProjection create(long projectId, GroupCreateDto dto, Authentication authentication) {
         Project project = projectService.getById(projectId, authentication);
 
-        checkParentGroup(null, dto.getParent(), project.getGroups());
-
         Group group = new Group(dto);
+        if (isInvalidGroupRelation(group, project.getGroups())) {
+            throw new BadRequestException("parent: Родительская группа задана неверно");
+        }
+
         group.setProject(project);
 
         Group savedGroup = groupRepository.save(group);
@@ -84,7 +86,9 @@ public class GroupService {
 
         groupMapper.update(groupForUpdate, patchedGroup);
 
-        checkParentGroup(groupForUpdate.getId(), groupForUpdate.getParent(), groups);
+        if (isInvalidGroupRelation(groupForUpdate, groups)) {
+            throw new BadRequestException("parent: Родительская группа задана неверно");
+        }
 
         groupForUpdate.setLastModified(LocalDateTime.now());
 
@@ -108,28 +112,6 @@ public class GroupService {
                     .filter(layer -> layer.getGroup().getId().equals(nextGroup.getId()))
                     .forEach(layer -> layerService.delete(layer, projectId, authentication));
         });
-    }
-
-    /**
-     * The parent is the same project.
-     * Parent id is not own id.
-     */
-    public void checkParentGroup(Long ownId, Long parentId, List<Group> groups) {
-        if (ownId != null && ownId.equals(parentId)) {
-            throw new BadRequestException("parent: Родительская группа задана неверно");
-        }
-
-        if (parentId == null) {
-            return;
-        }
-
-        Optional<Group> parentGroup = groups.stream()
-                .filter(group -> group.getId().equals(parentId))
-                .findFirst();
-
-        if (!parentGroup.isPresent()) {
-            throw new BadRequestException("parent: Родительская группа задана неверно");
-        }
     }
 
     private void collectGroupsForRemove(List<Group> groups, Group currentGroup, LinkedList<Group> resultList) {
