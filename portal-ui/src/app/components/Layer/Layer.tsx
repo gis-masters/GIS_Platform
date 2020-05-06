@@ -5,7 +5,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayer, CrgGroup } from '../../services/crg/projects.models';
-import { supportedGeometryTypes, SupportedGeometryType } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
