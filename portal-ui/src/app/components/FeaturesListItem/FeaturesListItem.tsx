@@ -71,11 +71,11 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
   }
 
   private highlightIt () {
-    openLayersService.clearDraft();
-    openLayersService.paintFeature(this.props.feature);
+    openLayersService.highlightFeature(this.props.feature);
   }
 
   private selectIt () {
+    openLayersService.positionToFeature(this.props.feature);
     this.props.onSelect(this.props.feature);
   }
 }

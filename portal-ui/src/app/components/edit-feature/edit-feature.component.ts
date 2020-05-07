@@ -90,9 +90,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
               ...this.data.feature,
               geometry: changedGeometry
             };
-            openLayersService.clearDraft();
-            openLayersService.paintFeature(feature);
-            openLayersService.showFeature(feature);
+            openLayersService.highlightFeature(feature);
           }
         });
 
@@ -119,7 +117,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
       if (currentData.mode === EditFeatureMode.single) {
         if (!this.data.isNew) {
-          openLayersService.showFeature(currentData.feature);
+          openLayersService.highlightFeature(currentData.feature);
         }
         this.isGeometryChanged = false;
       }
@@ -332,5 +330,9 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
           this.loadPercent = percent > 100 ? 100 : percent;
         }
       });
+  }
+
+  zoomToFeature(feature: WfsFeature) {
+    openLayersService.positionToFeature(feature);
   }
 }

@@ -173,7 +173,7 @@ export class MapComponent implements OnInit, OnDestroy {
       // Формируем xml для запроса к WFS
       const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
 
-      openLayersService.drawPolygon(buffer.getCoordinates());
+      openLayersService.showSelectionMarker(buffer.getCoordinates());
 
       const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
 

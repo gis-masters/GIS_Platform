@@ -296,16 +296,14 @@ class OpenLayersService {
   }
 
   /**
-   * позиционируемся и подсвечиваем.
+   * Подсвечивает обьект. (очищает черновой слой)
    */
-  showFeature(wfsFeature: WfsFeature) {
-    this.positionToFeature(wfsFeature);
-
+  highlightFeature(wfsFeature: WfsFeature) {
     this.clearDraft();
     this.paintFeature(wfsFeature);
   }
 
-  drawPolygon(coordinates: Coordinate[][][]) {
+  showSelectionMarker(coordinates: Coordinate[][][]) {
     const feature: WfsFeature = {
       type: 'Feature',
       geometry: {
@@ -409,7 +407,7 @@ class OpenLayersService {
     }
   }
 
-  private positionToFeature(wfsFeature: WfsFeature) {
+  public positionToFeature(wfsFeature: WfsFeature) {
     const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);

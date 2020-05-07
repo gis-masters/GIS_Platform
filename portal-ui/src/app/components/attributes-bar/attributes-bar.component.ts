@@ -272,7 +272,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     if (event.type === 'dblclick') {
       this.currentPositionFeature = event.row;
 
-      openLayersService.showFeature(event.row);
+      openLayersService.highlightFeature(event.row);
+      openLayersService.positionToFeature(event.row);
     }
   }
 
