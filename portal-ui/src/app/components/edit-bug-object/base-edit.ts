@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { EditFeatureItem, FeatureDescription } from '../../services/crg/data-schema.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
+type Properties = { [key: string]: string };
+
 export class BaseEdit implements OnDestroy {
   editFeatureForm: FormGroup;
   editFeatureData: EditFeatureItem[] = [];
@@ -18,20 +20,12 @@ export class BaseEdit implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  getActualValuesFromForm(propCopy): {[key: string]: string} {
-    const newProperties: {[key: string]: string} = {};
+  getActualValuesFromForm(): Properties {
+    return this.getDirtyAndValidProperties().reduce((newProperties: Properties, item) => {
+      newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
 
-    // Сохраняем только те свойства что были затронуты пользователем и валидны
-    // Можно заморочится и смотреть что данные не просто затронуты но и не изменились
-    const dirtyProperties: EditFeatureItem[] = this.getDirtyAndValidProperties();
-    if (dirtyProperties) {
-      dirtyProperties.forEach((item: EditFeatureItem) => {
-        newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
-        propCopy[item.name] = this.editFeatureForm.controls[item.name].value;
-      });
-    }
-
-    return newProperties;
+      return newProperties;
+    }, {});
   }
 
   getDirtyAndValidProperties(): EditFeatureItem[] {
@@ -63,5 +57,4 @@ export class BaseEdit implements OnDestroy {
         }
       });
   }
-
 }

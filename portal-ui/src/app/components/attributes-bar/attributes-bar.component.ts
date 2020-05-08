@@ -36,7 +36,6 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-di
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
-import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -447,7 +446,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           );
         }),
         concatMap(([features]) => {
-          return this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.internalName);
+          const featureIds = features.map((feature) => feature.id)
+
+          return this.tFeatureService.deleteFeatures(featureIds, this.project.internalName, this.layer.internalName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -470,7 +471,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.deleteFeatures(features, this.project.internalName, this.layer.internalName)),
+        concatMap(features => {
+          const featureIds = features.map((feature) => feature.id)
+
+          return this.tFeatureService.deleteFeatures(featureIds, this.project.internalName, this.layer.internalName);
+        }),
       ).subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);

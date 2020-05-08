@@ -99,7 +99,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     this.isEditMode = true;
     this.isSingleEdit = true;
     this.editFeatureData = {
-      feature: feature,
+      features: [feature],
       mode: EditFeatureMode.single,
       isNew: this.data.isNew
     };
@@ -123,13 +123,9 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
-    const templateFeature: WfsFeature = features[0];
-    const listOfFeaturesId = features.map((feature: WfsFeature) => feature.id);
-
     return {
-      feature: templateFeature,
+      features,
       mode: EditFeatureMode.multipleEdit,
-      featuresId: listOfFeaturesId,
       total: features.length
     } as EditFeatureData;
   }

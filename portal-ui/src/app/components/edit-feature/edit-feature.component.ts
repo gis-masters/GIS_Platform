@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { from } from 'rxjs';
-import { concatMap, takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 
 import {
   ConfirmDialogComponent,
@@ -15,7 +14,6 @@ import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar
 import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { BaseEdit } from '../edit-bug-object/base-edit';
-import { FeatureUtil } from '../../services/util/FeatureUtil';
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
@@ -25,9 +23,8 @@ import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface EditFeatureData {
-  feature: WfsFeature;   // Шаблонная фича
+  features: WfsFeature[];
   mode: EditFeatureMode;
-  featuresId?: string[]; // Идентификаторы фич (заполняется в режиме множественного редактирования)
   total?: number;
   properties?: {[key: string]: any};
   isNew?: true;
@@ -87,7 +84,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
           if (this.editGeometryStore.isValid) {
             const feature = {
-              ...this.data.feature,
+              ...this.data.features[0],
               geometry: changedGeometry
             };
             openLayersService.highlightFeature(feature);
@@ -108,7 +105,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.editGeometryStore.initGeometry(this.data.feature.geometry);
+    this.editGeometryStore.initGeometry(this.data.features[0].geometry);
 
     const dataChanged = changes.data;
     if (dataChanged) {
@@ -117,18 +114,18 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
       if (currentData.mode === EditFeatureMode.single) {
         if (!this.data.isNew) {
-          openLayersService.highlightFeature(currentData.feature);
+          openLayersService.highlightFeature(currentData.features[0]);
         }
         this.isGeometryChanged = false;
       }
 
-      this.featureDescription = dataSchemaService.getFeatureSchemaByName(currentData.feature.id.split('.')[0]);
+      this.featureDescription = dataSchemaService.getFeatureSchemaByName(currentData.features[0].id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
 
-      Object.keys(currentData.feature.properties)
+      Object.keys(currentData.features[0].properties)
             .filter(key => key !== 'bbox')
             .forEach(key => {
-              const currentValue = currentData.feature.properties[key];
+              const currentValue = currentData.features[0].properties[key];
 
               let property: PropertySchema;
               if (this.featureDescription) {
@@ -187,7 +184,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       this.data = currentData;
 
       setTimeout(() => {
-        this.validateCustomRules(currentData.feature.properties);
+        this.validateCustomRules(currentData.features[0].properties);
       }, 22);
     }
   }
@@ -199,34 +196,21 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     this.isSaveInProgress = true;
 
-    if (this.data && this.data.feature && this.data.feature.properties) {
-      const propCopy = { ...this.data.feature.properties };
-      const newProperties = this.getActualValuesFromForm(propCopy);
+    const newProperties = this.getActualValuesFromForm();
 
-      if (this.data.mode === EditFeatureMode.single) {
-        const calcAttributes = FeatureUtil.calculateByFunction(propCopy, this.featureDescription.calcFiledFunction);
-        Object.keys(calcAttributes).forEach(key => {
-          newProperties[key] = calcAttributes[key];
-        });
-
-        if (this.data.isNew) {
-          this.transformFeatureService.insertFeatures(
-              [{ ...this.data.feature, properties: newProperties, geometry: this.changedGeometry }],
-              currentProject.internalName,
-              this.featureDescription.tableName
-          ).subscribe(() => {
-            this.close();
-          });
-        } else {
-          this.batchUpdateFeatures(
-              [this.data.feature.id],
-              newProperties,
-              this.isGeometryChanged ? this.changedGeometry : undefined
-          );
-        }
-      } else {
-        this.batchUpdateFeatures(this.data.featuresId, newProperties);
-      }
+    if (this.data.isNew) {
+      this.transformFeatureService.insertFeatures(
+          [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
+          currentProject.internalName,
+          this.featureDescription.tableName
+      ).subscribe(() => {
+        this.close();
+      });
+    } else {
+      this.batchUpdateFeatures(
+            this.data.features,
+            newProperties,
+            this.isGeometryChanged ? this.changedGeometry : undefined);
     }
   }
 
@@ -235,8 +219,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
     };
-    const { feature } = this.data;
-    const [layerName, newId] = feature.id.split('.');
+    const { features } = this.data;
+    const [layerName, newId] = features[0].id.split('.');
     const { internalName } = currentProject;
 
     this.dialog
@@ -244,11 +228,11 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         .afterClosed().pipe(filter(value => !!value))
         .subscribe(() => {
           this.transformFeatureService.deleteFeatures(
-            [{ ...feature, id: newId }],
+            [newId],
             internalName,
             layerName
           ).subscribe(() => {
-            this.delete.emit(feature.id);
+            this.delete.emit(features[0].id);
             this.close();
             openLayersService.refreshLayer(`${internalName}:${layerName}`);
           });
@@ -295,41 +279,38 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     return item && item.title;
   }
 
-  private async batchUpdateFeatures(featuresId: string[], newProperties: Properties, geometry?: WfsGeometry) {
+  private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
     const { internalName } = currentProject;
     const { tableName } = this.featureDescription;
 
-    const batchModel = new BatchModel(featuresId);
+    const batchModel = new BatchModel(features);
+    let percent = 0;
 
-    let i = 0;
-    from(batchModel.batches)
-      .pipe(
-        concatMap(features => this.transformFeatureService
-                                      .updateFeatures(features, internalName, tableName, newProperties, geometry)),
-        takeUntil(this.unsubscribe$)
-      ).subscribe(() => {
-        i++;
-        const percent = Math.ceil(batchModel.percentOfOneBatch * i);
-        if (i >= batchModel.totalBatches) {
-          this.loadPercent = percent > 100 ? 100 : percent;
-          this.isSaveInProgress = false;
-          this.closeMe.emit(true);
-          openLayersService.refreshLayer(`${internalName}:${tableName}`);
-          openLayersService.clearDraft();
+    for (let i = 0; i < batchModel.totalBatches; i++) {
+      await this.transformFeatureService.updateFeatures(
+                                            batchModel.batches[i],
+                                            internalName,
+                                            this.featureDescription,
+                                            newProperties,
+                                            geometry);
+      percent = Math.ceil(batchModel.percentOfOneBatch * i);
+      this.loadPercent = percent > 100 ? 100 : percent;
+    }
 
-          Toast.success('Сохранено');
+    this.loadPercent = percent > 100 ? 100 : percent;
+    this.isSaveInProgress = false;
+    this.closeMe.emit(true);
+    openLayersService.refreshLayer(`${internalName}:${tableName}`);
+    openLayersService.clearDraft();
 
-          communicationService.featuresUpdate$.emit({
-            feature: this.data.feature,
-            featuresId: this.data.featuresId,
-            total: this.data.total,
-            mode: EditFeatureMode.multipleEdit,
-            properties: newProperties
-          });
-        } else {
-          this.loadPercent = percent > 100 ? 100 : percent;
-        }
-      });
+    Toast.success('Сохранено');
+
+    communicationService.featuresUpdate$.emit({
+      features: this.data.features,
+      total: this.data.total,
+      mode: EditFeatureMode.multipleEdit,
+      properties: newProperties
+    });
   }
 
   zoomToFeature(feature: WfsFeature) {

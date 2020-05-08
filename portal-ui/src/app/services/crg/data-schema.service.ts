@@ -8,7 +8,6 @@ import { BugObject } from './validation.service';
 import { CrgLayer, Project } from '../../services/crg/projects.models';
 import { services } from '../services';
 
-
 export class FeatureXsdDefinition {
   schemas: FeatureDescription[] = [];
 }

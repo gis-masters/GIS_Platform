@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
 import { getFeatureById } from '../../services/geoserver/wfs.service';
@@ -57,35 +56,27 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
     }
   }
 
-  editFeature() {
+  async editFeature() {
     if (this.wfsFeature && this.wfsFeature.properties) {
-      const propCopy = Object.assign({}, this.wfsFeature.properties);
-      const newProperties = this.getActualValuesFromForm(propCopy);
-
-      const calcAttributes = FeatureUtil.calculateByFunction(propCopy, this.featureDescription.calcFiledFunction);
-      Object.keys(calcAttributes).forEach(key => {
-        newProperties[key] = calcAttributes[key];
-      });
-
       const crgLayer = this.object.crgLayer;
       const workspaceName = crgLayer.complexName.split(':')[0];
 
-      this.transformFeatureService
-          .updateFeature(this.wfsFeature.id, workspaceName, crgLayer.internalName, newProperties)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(response => {
-            if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
-              this.closeMe.emit(true);
-              Toast.success('Сохранено');
+      const response = await this.transformFeatureService.updateFeatures(
+                                                                    [this.wfsFeature],
+                                                                    workspaceName,
+                                                                    this.featureDescription,
+                                                                    this.getActualValuesFromForm());
+      if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
+        this.closeMe.emit(true);
+        Toast.success('Сохранено');
 
-              // Сразу провалидируем слой при успешном сохранении
-              communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
-              openLayersService.refreshLayer(this.data[0].crgLayer.complexName);
-            } else {
-              this.logger.warn('UpdateFeature response: ', response);
-              Toast.warn('Не удалось сохранить');
-            }
-          });
+        // Сразу провалидируем слой при успешном сохранении
+        communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
+        openLayersService.refreshLayer(this.data[0].crgLayer.complexName);
+      } else {
+        this.logger.warn('UpdateFeature response: ', response);
+        Toast.warn('Не удалось сохранить');
+      }
     }
   }
 

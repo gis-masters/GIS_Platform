@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash';
+import { sortBy, cloneDeep } from 'lodash';
 
 import { ValueType } from './FeaturePropertyValidators';
 import { FeatureDescription, PropertySchema } from '../crg/data-schema.service';
@@ -77,9 +77,9 @@ export class FeatureUtil {
 
     try {
       const cFunction = new Function('obj', calcFunction);
-      result = cFunction(featureObject) || result;
+      result = cFunction(cloneDeep(featureObject)) || result;
     } catch (e) {
-      throw Error('Ошибка при попытке просчитать атрибуты' + e);
+      throw Error('Ошибка при попытке просчитать атрибуты: ' + e);
     }
 
     return result;

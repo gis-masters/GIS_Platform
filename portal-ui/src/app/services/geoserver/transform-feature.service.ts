@@ -9,6 +9,9 @@ import { NGXLogger } from 'ngx-logger';
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { WfsFeature, WfsGeometry } from './wfs-models';
 import { serverProperties } from '../server-properties.service';
+import { FeatureDescription } from '../crg/data-schema.service';
+import { HttpQueue } from '../util/HttpQueue';
+import { FeatureUtil } from '../util/FeatureUtil';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -22,49 +25,32 @@ type Properties = { [key: string]: any };
   providedIn: 'root'
 })
 export class TransformFeatureService {
-
   private wfsUrl: string;
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
 
   constructor(private logger: NGXLogger,
-              private http: HttpClient) {
+              private http: HttpClient,
+              private httpq: HttpQueue) {
     serverProperties.geoServerUrl.then((geoServerUrl) => {
       this.wfsUrl = geoServerUrl + '/wfs';
     });
   }
 
-  updateFeature(featureId: string, workspaceName: string, layerName: string, newProperties: Properties) {
-    const options = {
-      featureNS: 'castyl_for_remove',
-      featureType: layerName,
-      featurePrefix: workspaceName,
-      nativeElements: []
-    } as WriteTransactionOptions;
+  updateFeatures(
+          features: WfsFeature[],
+          workspace: string,
+          schema: FeatureDescription,
+          newProperties: Properties,
+          geometry?: WfsGeometry
+  ): Promise<string> {
+    const featuresForUpdate: Feature[] = features.map(feature => {
+      const calculated = FeatureUtil.calculateByFunction(
+                                        { ...feature.properties, ...newProperties },
+                                        schema.calcFiledFunction);
 
-    const featureClone = new Feature(newProperties);
-    featureClone.setId(featureId);
-
-    const node = this.getNode(TransactionType.UPDATE, [featureClone], options);
-    const payload = this.xs.serializeToString(node)
-                           .replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
-
-    return this.http
-               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
-  }
-
-  updateFeatures(featuresId: string[], workspaceName: string, layerName: string, newProperties: Properties, geometry?: WfsGeometry) {
-    const options = {
-      featureNS: 'castyl_for_remove',
-      featureType: layerName,
-      featurePrefix: workspaceName,
-      nativeElements: [],
-      gmlOptions: {srsName: 'EPSG:3857'}
-    } as WriteTransactionOptions;
-
-    const featuresForUpdate: Feature[] = featuresId.map(featureId => {
-      const feature = new Feature(newProperties);
-      feature.setId(featureId);
+      const newFeature = new Feature({ ...newProperties, ...calculated });
+      newFeature.setId(feature.id);
 
       if (geometry) {
         let geom: Geometry;
@@ -78,21 +64,25 @@ export class TransformFeatureService {
           geom = new MultiPolygon(geometry.coordinates);
         }
 
-        feature.setGeometry(geom);
+        newFeature.setGeometry(geom);
       }
 
-      return feature;
+      return newFeature;
     });
 
-    let payload = this.xs.serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options));
+    const options: WriteTransactionOptions = {
+      featureNS: 'castyl_for_remove',
+      featureType: schema.tableName,
+      featurePrefix: workspace,
+      nativeElements: [],
+      gmlOptions: { srsName: 'EPSG:3857' }
+    };
 
-    Object.keys(featuresId).forEach(featureId => {
-      payload = payload.replace('xmlns:' + workspaceName + '="castyl_for_remove"', '')
-                       .replace('<Name>geometry</Name>', '<Name>shape</Name>');
-    });
+    let payload = this.xs.serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
+                          .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
+                          .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
-    return this.http
-               .post(this.wfsUrl, payload, {headers: {'Content-Type': 'text/xml'}, responseType: 'text'});
+    return this.httpq.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
   insertFeatures(featuresData: WfsFeature[], workspaceName: string, layerName: string) {
@@ -118,27 +108,23 @@ export class TransformFeatureService {
     return this.http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  deleteFeatures(features: WfsFeature[], workspaceName: string, layerName: string) {
+  deleteFeatures(featureIds: string[], workspace: string, layerName: string) {
     const options = {
       featureNS: 'castyl_for_remove',
       featureType: layerName,
-      featurePrefix: workspaceName,
+      featurePrefix: workspace,
       nativeElements: []
     } as WriteTransactionOptions;
 
-    const featuresToDelete: Feature[] = [];
-    features.forEach(feature => {
-      const newFeatures = new Feature();
-      newFeatures.setId(feature.id);
+    const featuresToDelete = featureIds.map((id) => {
+      const newFeature = new Feature();
+      newFeature.setId(id);
 
-      featuresToDelete.push(newFeatures);
+      return newFeature;
     });
 
-    let payload = this.xs.serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options));
-
-    featuresToDelete.forEach(() => {
-      payload = payload.replace('xmlns:' + workspaceName + '="castyl_for_remove"', '');
-    });
+    let payload = this.xs.serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
+                                        .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
 
     return this.http.post(
         this.wfsUrl,
