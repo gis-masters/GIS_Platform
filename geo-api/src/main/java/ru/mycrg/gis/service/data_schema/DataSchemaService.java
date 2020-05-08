@@ -48,7 +48,16 @@ public class DataSchemaService implements IDataSchemaHolder {
         } else {
             return dataSchema
                     .getSchemas().stream()
-                    .filter(fDescription -> featureNames.contains(fDescription.getName()))
+                    .filter(fDescription -> {
+                        String name = fDescription.getName();
+                        if (name == null) {
+                            log.warn("broken schema: {}", fDescription);
+
+                            return false;
+                        }
+
+                        return featureNames.contains(name);
+                    })
                     .collect(Collectors.toList());
         }
     }

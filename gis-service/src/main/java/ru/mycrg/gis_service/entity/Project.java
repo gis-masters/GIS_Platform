@@ -31,6 +31,9 @@ public class Project implements Identifiable<Long> {
     @Column
     private String bbox;
 
+    @Column
+    private boolean isDefault;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -116,6 +119,14 @@ public class Project implements Identifiable<Long> {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 
     public List<Layer> getLayers() {

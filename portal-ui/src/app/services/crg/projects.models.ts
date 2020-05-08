@@ -34,7 +34,7 @@ export interface CrgGroup extends CrgEntity {
   expanded: boolean;
 }
 
-export interface TreeItem<T=(CrgLayer | CrgGroup)> {
+export interface TreeItem<T = (CrgLayer | CrgGroup)> {
   id: number;
   payload: T;
   isGroup: boolean;
@@ -49,6 +49,7 @@ export interface Project {
   name: string;
   internalName: string;
   bbox: string;
+  default: boolean;
   order: number;
   organizationId: number;
   layers: CrgLayer[];

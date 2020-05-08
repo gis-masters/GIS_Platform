@@ -21,6 +21,8 @@ public interface ProjectProjection {
 
     String getBbox();
 
+    boolean isDefault();
+
     LocalDateTime getCreatedAt();
 
     List<LayerProjection> getLayers();

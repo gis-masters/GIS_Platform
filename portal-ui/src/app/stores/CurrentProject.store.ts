@@ -6,6 +6,9 @@ import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
 const MAX_LAYERS_IN_BATCH = 100;
 
 class CurrentProject implements Project {
+
+  private static _instance: CurrentProject;
+
   @observable bbox: string;
   @observable createdAt: string;
   @observable groups: CrgGroup[];
@@ -16,8 +19,7 @@ class CurrentProject implements Project {
   @observable order: number;
   @observable organizationId: number;
   @observable baseMaps: CrgProjectBaseMap[];
-
-  private static _instance: CurrentProject;
+  @observable default: boolean;
 
   private constructor() {
     this.sorter = this.sorter.bind(this);
@@ -71,18 +73,18 @@ class CurrentProject implements Project {
                 if (!acc.length) {
                   return [[item]];
                 }
-                
+
                 const lastBatch = acc[acc.length - 1];
                 const lastTransparency = lastBatch[lastBatch.length - 1].actualTransparency;
-                
+
                 if (item.actualTransparency === lastTransparency && lastBatch.length < MAX_LAYERS_IN_BATCH) {
                   lastBatch.push(item);
                 } else {
                   acc.push([item]);
                 }
-                
+
                 return acc;
-              }, [])
+              }, []);
   }
 
   @action

@@ -13,6 +13,7 @@ import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
+import { ProjectsGuardService } from './services/projects-guard.service';
 import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
 
 const routes: Routes = [
@@ -21,6 +22,18 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'recovery', component: RecoveryComponent },
   { path: 'about', component: AboutComponent },
+  {
+    path: 'projects/default',
+    component: ProjectsPageComponent,
+    canActivate: [ AuthGuardService, ProjectsGuardService ],
+    resolve: {
+      orgInfo: OrganizationInfoResolver
+    },
+    data: {
+      step: 1,
+      helpPage: 'projects'
+    }
+  },
   {
     path: 'projects',
     component: ProjectsPageComponent,
@@ -96,7 +109,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [AuthGuardService, WorkflowGuardService]
+  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService]
 })
 export class AppRoutingModule { }
 

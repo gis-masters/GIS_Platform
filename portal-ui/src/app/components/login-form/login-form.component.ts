@@ -52,7 +52,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           (jwtToken: JwtToken) => {
             this.authService.authenticated = true;
             tokenStorageService.saveToken(jwtToken);
-            this.router.navigateByUrl('/projects');
+            this.router.navigateByUrl('/projects/default');
           },
           response => {
             this.authService.authenticated = false;

@@ -31,7 +31,7 @@ class ProjectsService {
     await services.provided;
     const baseUrl = await serverProperties.geoServerUrl;
     const url = await serverProperties.projectsUrl;
-    const params = new HttpParams().set('size', '1000')
+    const params = new HttpParams().set('size', '1000');
 
     const response = await services.httpq.get<CrgApiResponse>(url, { params });
 
