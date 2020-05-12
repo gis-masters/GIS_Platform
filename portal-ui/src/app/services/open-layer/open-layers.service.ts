@@ -132,7 +132,7 @@ class OpenLayersService {
             image: new Circle({
               radius: 7,
               fill: new Fill({
-                color: 'rgba(255, 255, 255, 0.3)'
+                color: 'rgba(255, 55, 55, 0.8)'
               })
             })
           })
@@ -277,12 +277,8 @@ class OpenLayersService {
   }
 
   // Принудительный рефреш
-  refreshLayer(complexLayerName: string) {
-    const layerByName = this.getLayerByName(complexLayerName) as Layer;
-
-    if (layerByName) {
-      layerByName.getSource().refresh();
-    }
+  refreshLayers() {
+    this.getImageLayers().forEach(layer => (layer as Layer).getSource().refresh());
   }
 
   // Очистить карту от слоя, который отображал объект.

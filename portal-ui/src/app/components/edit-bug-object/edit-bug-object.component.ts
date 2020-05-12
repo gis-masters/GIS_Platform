@@ -72,7 +72,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
         // Сразу провалидируем слой при успешном сохранении
         communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
-        openLayersService.refreshLayer(this.data[0].crgLayer.complexName);
+        openLayersService.refreshLayers();
       } else {
         this.logger.warn('UpdateFeature response: ', response);
         Toast.warn('Не удалось сохранить');

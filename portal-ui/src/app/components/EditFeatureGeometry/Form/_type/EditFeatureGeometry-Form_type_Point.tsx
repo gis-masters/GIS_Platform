@@ -2,7 +2,7 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 import GeometryType from 'ol/geom/GeometryType';
 
-import { WfsPointGeometry } from '../../../../services/geoserver/wfs-models';
+import { WfsPointGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs-models';
 
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
@@ -17,6 +17,8 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Poi
 class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
   constructor (props: EditFeatureGeometryFormProps) {
     super(props);
+
+    this.changeHandler = this.changeHandler.bind(this);
   }
 
   render () {
@@ -26,9 +28,13 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
     return (
       <div className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryXY />
-        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} />
+        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} onChange={this.changeHandler} />
       </div>
     );
+  }
+
+  private changeHandler (val: CoordinateEdited) {
+    this.props.store.geometry.coordinates = val;
   }
 }
 

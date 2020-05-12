@@ -234,7 +234,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
           ).subscribe(() => {
             this.delete.emit(features[0].id);
             this.close();
-            openLayersService.refreshLayer(`${internalName}:${layerName}`);
+            openLayersService.refreshLayers();
           });
         });
   }
@@ -300,7 +300,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     this.loadPercent = percent > 100 ? 100 : percent;
     this.isSaveInProgress = false;
     this.closeMe.emit(true);
-    openLayersService.refreshLayer(`${internalName}:${tableName}`);
+    openLayersService.refreshLayers();
     openLayersService.clearDraft();
 
     Toast.success('Сохранено');
