@@ -2,13 +2,11 @@
   <div id="fiz-openLayer-map" [class]="cn('map')"></div>
 
   <crg-layers-sidebar [class]="cn('bar', {dir: 'left'})"
-                      [layers]="layers"
                       (deleteLayer)="deleteLayer($event)">
   </crg-layers-sidebar>
 
   <crg-report-sidebar [class]="cn('bar', {dir: 'right'})"
-                      [isActive]="isBugReportSidebarActive"
-                      [layers]="layers">
+                      [isActive]="isBugReportSidebarActive">
   </crg-report-sidebar>
 
   <crg-view-features [class]="cn('bar', {dir: 'right'})"
@@ -32,6 +30,5 @@
 <p-dialog header="Экспорт"
           [style]="{width: '450px', height: '500px'}"
           [(visible)]="isGmlDialogShow">
-  <crg-export-dialog [layers]="gmlDialogData">
-  </crg-export-dialog>
+  <crg-export-dialog></crg-export-dialog>
 </p-dialog>

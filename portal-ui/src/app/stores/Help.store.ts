@@ -14,6 +14,8 @@ export interface TocItem {
 export type Toc = TocItem[];
 
 class Help {
+  private static _instance: Help;
+
   @observable toc: Toc = [];
   @observable tocLoaded = false;
 
@@ -27,8 +29,6 @@ class Help {
   setItemContent (content: string, item: TocItem) {
     item.content = content;
   }
-
-  private static _instance: Help;
 
   private constructor() { }
 

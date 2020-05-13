@@ -11,7 +11,7 @@ import {
 export interface ImportInfo {
   file?: File;
   scratch?: ScratchImport;
-  fullTasks?: {[key: number]:ImportTaskFull};
+  fullTasks?: {[key: number]: ImportTaskFull};
   progress?: ImportTaskProgress;
   error?: boolean;
 }
@@ -51,9 +51,11 @@ const taskPendingCodes = [
 ];
 
 class CurrentImport implements ImportInfo {
+  private static _instance: CurrentImport;
+
   @observable file?: File;
   @observable scratch?: ScratchImport;
-  @observable fullTasks: {[key: number]:ImportTaskFull} = {};
+  @observable fullTasks: {[key: number]: ImportTaskFull} = {};
   @observable progress?: ImportTaskProgress;
   @observable error?: boolean;
 
@@ -178,8 +180,6 @@ class CurrentImport implements ImportInfo {
       return 'Неопределенный статус';
     }
   }
-
-  private static _instance: CurrentImport;
 
   private constructor() { }
 

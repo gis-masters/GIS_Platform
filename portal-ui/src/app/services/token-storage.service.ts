@@ -9,6 +9,7 @@ export interface JwtToken {
 }
 
 class TokenStorageService {
+  private static _instance: TokenStorageService;
 
   private ACCESS_TOKEN_KEY = 'accessToken';
   private REFRESH_TOKEN_KEY = 'refreshToken';
@@ -47,7 +48,6 @@ class TokenStorageService {
 
   private constructor() { }
 
-  private static _instance: TokenStorageService;
 }
 
 export const tokenStorageService = TokenStorageService.instance;

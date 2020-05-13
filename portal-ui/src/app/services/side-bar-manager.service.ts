@@ -29,6 +29,8 @@ type CurrentState = { [key: string]: ActionType };
  * Сервис с логикой показа всплывающих окон
  */
 class SideBarManager {
+  private static _instance: SideBarManager;
+
   currentState$: BehaviorSubject<CurrentState> = new BehaviorSubject<CurrentState>({
     'INFO': ActionType.CLOSE,
     'LAYERS': ActionType.CLOSE,
@@ -40,8 +42,6 @@ class SideBarManager {
   static get instance() {
     return this._instance || (this._instance = new this());
   }
-
-  private static _instance: SideBarManager;
 
   constructor() { }
 

@@ -11,6 +11,7 @@ import { sideBarManager, ActionType, SidebarType } from '../../../services/side-
 import { ProcessStatus, ProcessType } from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
 import { CrgLayer } from '../../../services/crg/projects.models';
+import { currentProject } from '../../../stores/CurrentProject.store';
 
 @Component({
   selector: 'crg-report-sidebar',
@@ -20,7 +21,8 @@ import { CrgLayer } from '../../../services/crg/projects.models';
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() isActive: boolean;
-  @Input() layers: CrgLayer[];
+
+  layers: CrgLayer[];
 
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
 
@@ -40,6 +42,8 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
         .selectedForValidation
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: CrgLayer[]) => this.initValidation(data));
+
+    this.layers = currentProject.layers;
   }
 
   async ngOnInit() {
@@ -60,6 +64,8 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.layers = currentProject.layers;
+
     this.commonProgress = 0;
     const isActiveChange = changes['isActive'];
     const layersChange = changes['layers'];

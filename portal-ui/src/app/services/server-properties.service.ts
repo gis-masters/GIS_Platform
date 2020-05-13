@@ -1,6 +1,8 @@
 import { getEnvironment } from './environment';
 
 class ServerProperties {
+  private static _instance: ServerProperties;
+
   private waiting: Promise<void>;
   private _host: string;
   private _port: number;
@@ -142,8 +144,6 @@ class ServerProperties {
 
     return this.waiting;
   }
-
-  private static _instance: ServerProperties;
 
   private constructor() { }
 

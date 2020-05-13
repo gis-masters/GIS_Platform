@@ -39,8 +39,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   viewFeaturesData: ViewFeaturesData;
   validationDialogData: ValidationDialogData;
-  layers: CrgLayer[];
-  gmlDialogData: CrgLayer[];
   selectedLayer: CrgLayer;
   cn = cn('map');
 
@@ -83,14 +81,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     communicationService.gmlDialog
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: GmlDialogData) => {
-          if (data.action === ActionType.CLOSE) {
-            this.isGmlDialogShow = false;
-          } else {
-            this.isGmlDialogShow = true;
-            this.gmlDialogData = this.layers;
-          }
-        });
+        .subscribe((data: GmlDialogData) => this.isGmlDialogShow = data.action !== ActionType.CLOSE);
 
     communicationService.sidebarManager
         .pipe(

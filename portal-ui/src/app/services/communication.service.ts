@@ -12,14 +12,14 @@ export interface ObjectDto {
 }
 
 class CommunicationService {
+  private static _instance: CommunicationService;
+
   @Output() sidebarManager = new EventEmitter<Sidebar>();
   @Output() validationDialog = new EventEmitter<ValidationDialogData>();
   @Output() selectedForValidation = new EventEmitter<CrgLayer[]>();
   @Output() gmlDialog = new EventEmitter<GmlDialogData>();
   @Output() editView = new EventEmitter<ObjectDto[]>();
   @Output() featuresUpdate$ = new EventEmitter<EditFeatureData>();
-
-  private static _instance: CommunicationService;
 
   static get instance() {
     return this._instance || (this._instance = new this());

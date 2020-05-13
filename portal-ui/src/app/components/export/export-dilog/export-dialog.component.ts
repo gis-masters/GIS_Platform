@@ -10,6 +10,7 @@ import { exportService } from '../../../services/crg/export.service';
 import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { Process } from '../../../services/crg/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
+import { currentProject } from '../../../stores/CurrentProject.store';
 
 @Component({
   selector: 'crg-export-dialog',
@@ -18,7 +19,8 @@ import { CrgLayer } from '../../../services/crg/projects.models';
 })
 export class ExportDialogComponent implements OnDestroy {
   @ViewChild(MatSelectionList, { static: false }) list: MatSelectionList;
-  @Input() layers: CrgLayer[];
+
+  layers: CrgLayer[];
 
   isAllSelected: boolean;
 
@@ -68,6 +70,7 @@ export class ExportDialogComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger) {
+    this.layers = currentProject.layers;
   }
 
   onChange(selectionList: MatSelectionList) {

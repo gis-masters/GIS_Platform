@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { cn } from '../../services/util/cn';
-import { CrgLayer } from '../../services/crg/projects.models';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {cn} from '../../services/util/cn';
+import {CrgLayer} from '../../services/crg/projects.models';
 
 @Component({
   selector: 'crg-layers-sidebar',
@@ -11,7 +8,6 @@ import { CrgLayer } from '../../services/crg/projects.models';
   styleUrls: ['./layers-sidebar.component.scss']
 })
 export class LayersSidebarComponent implements OnInit {
-  @Input() layers: CrgLayer[];
   @Output() deleteLayer = new EventEmitter<CrgLayer>();
 
   isOpen = true;
@@ -34,14 +30,6 @@ export class LayersSidebarComponent implements OnInit {
     setTimeout(() => {
       clearInterval(interval);
     }, animDuration);
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
-
-    this.layers.forEach((layer, index) => {
-      openLayersService.set_ZIndex(layer.complexName, this.layers.length - index);
-    });
   }
 
   onDeleteLayer (layer: CrgLayer) {

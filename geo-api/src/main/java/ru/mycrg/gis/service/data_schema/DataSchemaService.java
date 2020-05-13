@@ -49,14 +49,13 @@ public class DataSchemaService implements IDataSchemaHolder {
             return dataSchema
                     .getSchemas().stream()
                     .filter(fDescription -> {
-                        String name = fDescription.getName();
-                        if (name == null) {
+                        if (fDescription == null || fDescription.getName() == null) {
                             log.warn("broken schema: {}", fDescription);
 
                             return false;
                         }
 
-                        return featureNames.contains(name);
+                        return featureNames.contains(fDescription.getName());
                     })
                     .collect(Collectors.toList());
         }
@@ -125,12 +124,12 @@ public class DataSchemaService implements IDataSchemaHolder {
                     String className = customRule.getClassName();
 
                     dataSchema.getSchemas()
-                              .stream()
-                              .filter(featureDescription -> className.equals(featureDescription.getName()))
-                              .forEach(featureDescription -> {
-                                  featureDescription.setCustomRuleFunction(customRule.getClassRule());
-                                  featureDescription.setCalcFiledFunction(customRule.getCalculatedFields());
-                              });
+                            .stream()
+                            .filter(featureDescription -> className.equals(featureDescription.getName()))
+                            .forEach(featureDescription -> {
+                                featureDescription.setCustomRuleFunction(customRule.getClassRule());
+                                featureDescription.setCalcFiledFunction(customRule.getCalculatedFields());
+                            });
                 });
     }
 
