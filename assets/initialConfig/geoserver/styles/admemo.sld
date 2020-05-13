@@ -6,14 +6,14 @@
       <se:Name>AdmeMO</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60102030100</se:Name>
+          <se:Name>60102030101</se:Name>
           <se:Description>
             <se:Title>Муниципальный район существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030100</ogc:Literal>
+              <ogc:Literal>60102030101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -26,14 +26,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030100</se:Name>
+          <se:Name>60102030102</se:Name>
           <se:Description>
             <se:Title>Муниципальный район планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030100</ogc:Literal>
+              <ogc:Literal>60102030102</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -47,14 +47,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030200</se:Name>
+          <se:Name>60102030201</se:Name>
           <se:Description>
             <se:Title>Городской округ существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030200</ogc:Literal>
+              <ogc:Literal>60102030201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -67,14 +67,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030200</se:Name>
+          <se:Name>60102030202</se:Name>
           <se:Description>
             <se:Title>Городской округ планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030200</ogc:Literal>
+              <ogc:Literal>60102030202</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -88,14 +88,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030300</se:Name>
+          <se:Name>60102030301</se:Name>
           <se:Description>
             <se:Title>Городской округ с внутригородским делением существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030300</ogc:Literal>
+              <ogc:Literal>60102030301</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -108,14 +108,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030300</se:Name>
+          <se:Name>60102030302</se:Name>
           <se:Description>
             <se:Title>Городской округ с внутригородским делением планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030300</ogc:Literal>
+              <ogc:Literal>60102030302</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -129,14 +129,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030400</se:Name>
+          <se:Name>60102030401</se:Name>
           <se:Description>
-            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения существующий</se:Title>
+            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030400</ogc:Literal>
+              <ogc:Literal>60102030401</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -149,14 +149,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030400</se:Name>
+          <se:Name>60102030402</se:Name>
           <se:Description>
-            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения планируемый</se:Title>
+            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения планируемая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030400</ogc:Literal>
+              <ogc:Literal>60102030402</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -170,14 +170,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030500</se:Name>
+          <se:Name>60102030501</se:Name>
           <se:Description>
             <se:Title>Внутригородской район существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030500</ogc:Literal>
+              <ogc:Literal>60102030501</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -190,14 +190,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030500</se:Name>
+          <se:Name>60102030502</se:Name>
           <se:Description>
             <se:Title>Внутригородской район планируемый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030500</ogc:Literal>
+              <ogc:Literal>60102030502</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -211,14 +211,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030600</se:Name>
+          <se:Name>60102030601</se:Name>
           <se:Description>
-            <se:Title>Городское поселение существующий</se:Title>
+            <se:Title>Городское поселение существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030600</ogc:Literal>
+              <ogc:Literal>60102030601</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -231,14 +231,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030600</se:Name>
+          <se:Name>60102030602</se:Name>
           <se:Description>
-            <se:Title>Городское поселение планируемый</se:Title>
+            <se:Title>Городское поселение планируемое</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030600</ogc:Literal>
+              <ogc:Literal>60102030602</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -252,14 +252,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030700</se:Name>
+          <se:Name>60102030701</se:Name>
           <se:Description>
-            <se:Title>Сельское поселение существующий</se:Title>
+            <se:Title>Сельское поселение существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030700</ogc:Literal>
+              <ogc:Literal>60102030701</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -272,14 +272,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60102030700</se:Name>
+          <se:Name>60102030702</se:Name>
           <se:Description>
-            <se:Title>Сельское поселение планируемый</se:Title>
+            <se:Title>Сельское поселение планируемое</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102030700</ogc:Literal>
+              <ogc:Literal>60102030702</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

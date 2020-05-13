@@ -6,9 +6,9 @@
       <se:Name>Health</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение существующая и строящящаяся</se:Name>
+          <se:Name>60201040101</se:Name>
           <se:Description>
-            <se:Title>60201040101</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая</se:Name>
+          <se:Name>60201040102</se:Name>
           <se:Description>
-            <se:Title>60201040102</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая к реконструкции</se:Name>
+          <se:Name>60201040103</se:Name>
           <se:Description>
-            <se:Title>60201040103</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая к ликвидации</se:Name>
+          <se:Name>60201040104</se:Name>
           <se:Description>
-            <se:Title>60201040104</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара существующая и строящящаяся</se:Name>
+          <se:Name>60201040201</se:Name>
           <se:Description>
-            <se:Title>60201040201</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая</se:Name>
+          <se:Name>60201040202</se:Name>
           <se:Description>
-            <se:Title>60201040202</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая к реконструкции</se:Name>
+          <se:Name>60201040203</se:Name>
           <se:Description>
-            <se:Title>60201040203</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая к ликвидации</se:Name>
+          <se:Name>60201040204</se:Name>
           <se:Description>
-            <se:Title>60201040204</se:Title>
+            <se:Title>Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация особого типа существующая и строящящаяся</se:Name>
+          <se:Name>60201040301</se:Name>
           <se:Description>
-            <se:Title>60201040301</se:Title>
+            <se:Title>Медицинская организация особого типа существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация особого типа планируемая</se:Name>
+          <se:Name>60201040302</se:Name>
           <se:Description>
-            <se:Title>60201040302</se:Title>
+            <se:Title>Медицинская организация особого типа планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация особого типа планируемая к реконструкции</se:Name>
+          <se:Name>60201040303</se:Name>
           <se:Description>
-            <se:Title>60201040303</se:Title>
+            <se:Title>Медицинская организация особого типа планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация особого типа планируемая к ликвидации</se:Name>
+          <se:Name>60201040304</se:Name>
           <se:Description>
-            <se:Title>60201040304</se:Title>
+            <se:Title>Медицинская организация особого типа планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека существующая и строящящаяся</se:Name>
+          <se:Name>60201040401</se:Name>
           <se:Description>
-            <se:Title>60201040401</se:Title>
+            <se:Title>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая</se:Name>
+          <se:Name>60201040402</se:Name>
           <se:Description>
-            <se:Title>60201040402</se:Title>
+            <se:Title>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая к реконструкции</se:Name>
+          <se:Name>60201040403</se:Name>
           <se:Description>
-            <se:Title>60201040403</se:Title>
+            <se:Title>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая к ликвидации</se:Name>
+          <se:Name>60201040404</se:Name>
           <se:Description>
-            <se:Title>60201040404</se:Title>
+            <se:Title>Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Клиники научных и научно-исследовательских организаций, организаций профессионального образования существующие и строящящиеся</se:Name>
+          <se:Name>60201040501</se:Name>
           <se:Description>
-            <se:Title>60201040501</se:Title>
+            <se:Title>Клиники научных и научно-исследовательских организаций, организаций профессионального образования существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые</se:Name>
+          <se:Name>60201040502</se:Name>
           <se:Description>
-            <se:Title>60201040502</se:Title>
+            <se:Title>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые к реконструкции</se:Name>
+          <se:Name>60201040503</se:Name>
           <se:Description>
-            <se:Title>60201040503</se:Title>
+            <se:Title>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые к ликвидации</se:Name>
+          <se:Name>60201040504</se:Name>
           <se:Description>
-            <se:Title>60201040504</se:Title>
+            <se:Title>Клиники научных и научно-исследовательских организаций, организаций профессионального образования планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь существующее и строящящееся</se:Name>
+          <se:Name>60201040601</se:Name>
           <se:Description>
-            <se:Title>60201040601</se:Title>
+            <se:Title>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое</se:Name>
+          <se:Name>60201040602</se:Name>
           <se:Description>
-            <se:Title>60201040602</se:Title>
+            <se:Title>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое к реконструкции</se:Name>
+          <se:Name>60201040603</se:Name>
           <se:Description>
-            <se:Title>60201040603</se:Title>
+            <se:Title>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое к ликвидации</se:Name>
+          <se:Name>60201040604</se:Name>
           <se:Description>
-            <se:Title>60201040604</se:Title>
+            <se:Title>Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -492,9 +492,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение существующая и строящящаяся</se:Name>
+          <se:Name>60201040701</se:Name>
           <se:Description>
-            <se:Title>60201040701</se:Title>
+            <se:Title>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -512,9 +512,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая</se:Name>
+          <se:Name>60201040702</se:Name>
           <se:Description>
-            <se:Title>60201040702</se:Title>
+            <se:Title>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -533,9 +533,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая к реконструкции</se:Name>
+          <se:Name>60201040703</se:Name>
           <se:Description>
-            <se:Title>60201040703</se:Title>
+            <se:Title>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -553,9 +553,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая к ликвидации</se:Name>
+          <se:Name>60201040704</se:Name>
           <se:Description>
-            <se:Title>60201040704</se:Title>
+            <se:Title>Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -573,9 +573,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аптечная организация существующая и строящящаяся</se:Name>
+          <se:Name>60201040801</se:Name>
           <se:Description>
-            <se:Title>60201040801</se:Title>
+            <se:Title>Аптечная организация существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -593,9 +593,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аптечная организация планируемая</se:Name>
+          <se:Name>60201040802</se:Name>
           <se:Description>
-            <se:Title>60201040802</se:Title>
+            <se:Title>Аптечная организация планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -614,9 +614,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аптечная организация планируемая к реконструкции</se:Name>
+          <se:Name>60201040803</se:Name>
           <se:Description>
-            <se:Title>60201040803</se:Title>
+            <se:Title>Аптечная организация планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -634,9 +634,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аптечная организация планируемая к ликвидации</se:Name>
+          <se:Name>60201040804</se:Name>
           <se:Description>
-            <se:Title>60201040804</se:Title>
+            <se:Title>Аптечная организация планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

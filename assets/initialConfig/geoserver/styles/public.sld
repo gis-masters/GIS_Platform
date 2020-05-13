@@ -6,9 +6,9 @@
       <se:Name>Public</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Тематический парк существующий и строящийся</se:Name>
+          <se:Name>60201090101</se:Name>
           <se:Description>
-            <se:Title>60201090101</se:Title>
+            <se:Title>Тематический парк существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тематический парк планируемый</se:Name>
+          <se:Name>60201090102</se:Name>
           <se:Description>
-            <se:Title>60201090102</se:Title>
+            <se:Title>Тематический парк планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тематический парк планируемый к реконструкции</se:Name>
+          <se:Name>60201090103</se:Name>
           <se:Description>
-            <se:Title>60201090103</se:Title>
+            <se:Title>Тематический парк планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тематический парк планируемый к ликвидации</se:Name>
+          <se:Name>60201090104</se:Name>
           <se:Description>
-            <se:Title>60201090104</se:Title>
+            <se:Title>Тематический парк планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Парк культуры и отдыха существующий и строящийся</se:Name>
+          <se:Name>60201090201</se:Name>
           <se:Description>
-            <se:Title>60201090201</se:Title>
+            <se:Title>Парк культуры и отдыха существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Парк культуры и отдыха планируемый</se:Name>
+          <se:Name>60201090202</se:Name>
           <se:Description>
-            <se:Title>60201090202</se:Title>
+            <se:Title>Парк культуры и отдыха планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Парк культуры и отдыха планируемый к реконструкции</se:Name>
+          <se:Name>60201090203</se:Name>
           <se:Description>
-            <se:Title>60201090203</se:Title>
+            <se:Title>Парк культуры и отдыха планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Парк культуры и отдыха планируемый к ликвидации</se:Name>
+          <se:Name>60201090204</se:Name>
           <se:Description>
-            <se:Title>60201090204</se:Title>
+            <se:Title>Парк культуры и отдыха планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходная зона существующая и строящаяся</se:Name>
+          <se:Name>60201090301</se:Name>
           <se:Description>
-            <se:Title>60201090301</se:Title>
+            <se:Title>Пешеходная зона существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходная зона планируемая</se:Name>
+          <se:Name>60201090302</se:Name>
           <se:Description>
-            <se:Title>60201090302</se:Title>
+            <se:Title>Пешеходная зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходная зона планируемая к реконструкции</se:Name>
+          <se:Name>60201090303</se:Name>
           <se:Description>
-            <se:Title>60201090303</se:Title>
+            <se:Title>Пешеходная зона планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходная зона планируемая к ликвидации</se:Name>
+          <se:Name>60201090304</se:Name>
           <se:Description>
-            <se:Title>60201090304</se:Title>
+            <se:Title>Пешеходная зона планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Благоустроенный пляж, место массовой околоводной рекреации существующий и строящийся</se:Name>
+          <se:Name>60201090401</se:Name>
           <se:Description>
-            <se:Title>60201090401</se:Title>
+            <se:Title>Благоустроенный пляж, место массовой околоводной рекреации существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Благоустроенный пляж, место массовой околоводной рекреации планируемый</se:Name>
+          <se:Name>60201090402</se:Name>
           <se:Description>
-            <se:Title>60201090402</se:Title>
+            <se:Title>Благоустроенный пляж, место массовой околоводной рекреации планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Благоустроенный пляж, место массовой околоводной рекреации планируемый к реконструкции</se:Name>
+          <se:Name>60201090403</se:Name>
           <se:Description>
-            <se:Title>60201090403</se:Title>
+            <se:Title>Благоустроенный пляж, место массовой околоводной рекреации планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Благоустроенный пляж, место массовой околоводной рекреации планируемый к ликвидации</se:Name>
+          <se:Name>60201090404</se:Name>
           <se:Description>
-            <se:Title>60201090404</se:Title>
+            <se:Title>Благоустроенный пляж, место массовой околоводной рекреации планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

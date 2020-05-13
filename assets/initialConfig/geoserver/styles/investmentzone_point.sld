@@ -4,14 +4,14 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>InvestmentZone</se:Name>
+		<se:Name>Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности</se:Name>
 		<UserStyle>
 			<se:Name>InvestmentZone</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
 					<se:Name>70401010011</se:Name>
 					<se:Description>
-						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая или строящаяся федерального значения</se:Title>
+						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -53,7 +53,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401010021</se:Name>
 					<se:Description>
-						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая или строящаяся регионального значения</se:Title>
+						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -95,7 +95,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401010031</se:Name>
 					<se:Description>
-						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР)  существующая или строящаяся местного значения</se:Title>
+						<se:Title>Территория опережающего социально-экономического развития (ТОСЭР)  существующая местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -137,7 +137,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401020011</se:Name>
 					<se:Description>
-						<se:Title>Зона территориального развития (ЗТР) существующая или строящаяся федерального значения</se:Title>
+						<se:Title>Зона территориального развития (ЗТР) существующая федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -179,7 +179,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401020021</se:Name>
 					<se:Description>
-						<se:Title>Зона территориального развития (ЗТР) существующая или строящаяся регионального значения</se:Title>
+						<se:Title>Зона территориального развития (ЗТР) существующая регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -221,7 +221,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401020031</se:Name>
 					<se:Description>
-						<se:Title>Зона территориального развития (ЗТР) существующая или строящаяся местного значения</se:Title>
+						<se:Title>Зона территориального развития (ЗТР) существующая местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -263,7 +263,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401030011</se:Name>
 					<se:Description>
-						<se:Title>Промышленный (индустриальный) парк существующий или строящийся федерального значения</se:Title>
+						<se:Title>Промышленный (индустриальный) парк существующий федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -305,7 +305,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401030021</se:Name>
 					<se:Description>
-						<se:Title>Промышленный (индустриальный) парк существующий или строящийся регионального значения</se:Title>
+						<se:Title>Промышленный (индустриальный) парк существующий регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -347,7 +347,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401030031</se:Name>
 					<se:Description>
-						<se:Title>Промышленный (индустриальный) парк существующий или строящийся местного значения</se:Title>
+						<se:Title>Промышленный (индустриальный) парк существующий местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -389,7 +389,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401040011</se:Name>
 					<se:Description>
-						<se:Title>Инновационный территориальный кластер существующий или строящийся федерального значения</se:Title>
+						<se:Title>Инновационный территориальный кластер существующий федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -431,7 +431,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401040021</se:Name>
 					<se:Description>
-						<se:Title>Инновационный территориальный кластер существующий или строящийся регионального значения</se:Title>
+						<se:Title>Инновационный территориальный кластер существующий регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -473,7 +473,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401040031</se:Name>
 					<se:Description>
-						<se:Title>Инновационный территориальный кластер существующий или строящийся местного значения</se:Title>
+						<se:Title>Инновационный территориальный кластер существующий местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -515,7 +515,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401050011</se:Name>
 					<se:Description>
-						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая или строящаяся федерального значения</se:Title>
+						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -557,7 +557,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401050021</se:Name>
 					<se:Description>
-						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая или строящаяся регионального значения</se:Title>
+						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -599,7 +599,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70401050031</se:Name>
 					<se:Description>
-						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая или строящаяся местного значения</se:Title>
+						<se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>

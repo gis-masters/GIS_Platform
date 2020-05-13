@@ -6,9 +6,9 @@
       <se:Name>SewerFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Очистные сооружения (КОС) существующие и строящиеся</se:Name>
+          <se:Name>60204130101</se:Name>
           <se:Description>
-            <se:Title>60204130101</se:Title>
+            <se:Title>Очистные сооружения (КОС) существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения (КОС) планируемые</se:Name>
+          <se:Name>60204130102</se:Name>
           <se:Description>
-            <se:Title>60204130102</se:Title>
+            <se:Title>Очистные сооружения (КОС) планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения (КОС) планируемые к реконструкции</se:Name>
+          <se:Name>60204130103</se:Name>
           <se:Description>
-            <se:Title>60204130103</se:Title>
+            <se:Title>Очистные сооружения (КОС) планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения (КОС) планируемые к ликвидации</se:Name>
+          <se:Name>60204130104</se:Name>
           <se:Description>
-            <se:Title>60204130104</se:Title>
+            <se:Title>Очистные сооружения (КОС) планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения дождевой канализации существующие и строящиеся</se:Name>
+          <se:Name>60204130201</se:Name>
           <se:Description>
-            <se:Title>60204130201</se:Title>
+            <se:Title>Очистные сооружения дождевой канализации существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения дождевой канализации планируемые</se:Name>
+          <se:Name>60204130202</se:Name>
           <se:Description>
-            <se:Title>60204130202</se:Title>
+            <se:Title>Очистные сооружения дождевой канализации планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения дождевой канализации планируемые к реконструкции</se:Name>
+          <se:Name>60204130203</se:Name>
           <se:Description>
-            <se:Title>60204130203</se:Title>
+            <se:Title>Очистные сооружения дождевой канализации планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Очистные сооружения дождевой канализации планируемые к ликвидации</se:Name>
+          <se:Name>60204130204</se:Name>
           <se:Description>
-            <se:Title>60204130204</se:Title>
+            <se:Title>Очистные сооружения дождевой канализации планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Канализационная насосная станция (КНС) существующая и строящаяся</se:Name>
+          <se:Name>60204130301</se:Name>
           <se:Description>
-            <se:Title>60204130301</se:Title>
+            <se:Title>Канализационная насосная станция (КНС) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Канализационная насосная станция (КНС) планируемая</se:Name>
+          <se:Name>60204130302</se:Name>
           <se:Description>
-            <se:Title>60204130302</se:Title>
+            <se:Title>Канализационная насосная станция (КНС) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Канализационная насосная станция (КНС) планируемая к реконструкции</se:Name>
+          <se:Name>60204130303</se:Name>
           <se:Description>
-            <se:Title>60204130303</se:Title>
+            <se:Title>Канализационная насосная станция (КНС) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Канализационная насосная станция (КНС) планируемая к ликвидации</se:Name>
+          <se:Name>60204130304</se:Name>
           <se:Description>
-            <se:Title>60204130304</se:Title>
+            <se:Title>Канализационная насосная станция (КНС) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Насосная станция дождевой канализации (НСДК) существующая и строящаяся</se:Name>
+          <se:Name>60204130501</se:Name>
           <se:Description>
-            <se:Title>60204130501</se:Title>
+            <se:Title>Насосная станция дождевой канализации (НСДК) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Насосная станция дождевой канализации (НСДК) планируемая</se:Name>
+          <se:Name>60204130502</se:Name>
           <se:Description>
-            <se:Title>60204130502</se:Title>
+            <se:Title>Насосная станция дождевой канализации (НСДК) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Насосная станция дождевой канализации (НСДК) планируемая к реконструкции</se:Name>
+          <se:Name>60204130503</se:Name>
           <se:Description>
-            <se:Title>60204130503</se:Title>
+            <se:Title>Насосная станция дождевой канализации (НСДК) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Насосная станция дождевой канализации (НСДК) планируемая к ликвидации</se:Name>
+          <se:Name>60204130504</se:Name>
           <se:Description>
-            <se:Title>60204130504</se:Title>
+            <se:Title>Насосная станция дождевой канализации (НСДК) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Снегоплавильный, снегоприемный пункт существующий и строящийся</se:Name>
+          <se:Name>60204130601</se:Name>
           <se:Description>
-            <se:Title>60204130601</se:Title>
+            <se:Title>Снегоплавильный, снегоприемный пункт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Снегоплавильный, снегоприемный пункт планируемый</se:Name>
+          <se:Name>60204130602</se:Name>
           <se:Description>
-            <se:Title>60204130602</se:Title>
+            <se:Title>Снегоплавильный, снегоприемный пункт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Снегоплавильный, снегоприемный пункт планируемый к реконструкции</se:Name>
+          <se:Name>60204130603</se:Name>
           <se:Description>
-            <se:Title>60204130603</se:Title>
+            <se:Title>Снегоплавильный, снегоприемный пункт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Снегоплавильный, снегоприемный пункт планируемый к ликвидации</se:Name>
+          <se:Name>60204130604</se:Name>
           <se:Description>
-            <se:Title>60204130604</se:Title>
+            <se:Title>Снегоплавильный, снегоприемный пункт планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

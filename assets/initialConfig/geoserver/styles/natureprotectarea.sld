@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60501010101</se:Name>
           <se:Description>
-            <se:Title>Государственный природный заповедник, в том числе биосферный существующий и строящийся</se:Title>
+            <se:Title>Государственный природный заповедник, в том числе биосферный существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -97,7 +97,7 @@
         <se:Rule>
           <se:Name>60501010201</se:Name>
           <se:Description>
-            <se:Title>Национальный парк существующий и строящийся</se:Title>
+            <se:Title>Национальный парк существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -186,7 +186,7 @@
         <se:Rule>
           <se:Name>60501010301</se:Name>
           <se:Description>
-            <se:Title>Природный парк существующий и строящийся</se:Title>
+            <se:Title>Природный парк существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -259,7 +259,7 @@
         <se:Rule>
           <se:Name>60501010401</se:Name>
           <se:Description>
-            <se:Title>Государственный природный заказник существующий и строящийся</se:Title>
+            <se:Title>Государственный природный заказник существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -332,7 +332,7 @@
         <se:Rule>
           <se:Name>60501010501</se:Name>
           <se:Description>
-            <se:Title>Памятник природы существующий и строящийся</se:Title>
+            <se:Title>Памятник природы существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -438,7 +438,7 @@
         <se:Rule>
           <se:Name>60501010601</se:Name>
           <se:Description>
-            <se:Title>Дендрологический парк, ботанический сад существующий и строящийся</se:Title>
+            <se:Title>Дендрологический парк, ботанический сад существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -560,7 +560,7 @@
         <se:Rule>
           <se:Name>60501010701</se:Name>
           <se:Description>
-            <se:Title>Иные особо охраняемые природные территории существующий и строящийся</se:Title>
+            <se:Title>Иные особо охраняемые природные территории существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -604,7 +604,7 @@
         <se:Rule>
           <se:Name>60501010702</se:Name>
           <se:Description>
-            <se:Title>Иные особо охраняемые природные территории планируемый к размещению</se:Title>
+            <se:Title>Иные особо охраняемые природные территории планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

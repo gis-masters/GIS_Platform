@@ -6,7 +6,7 @@
       <se:Name>EngProtectionZone</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Охранная зона нефтепроводов существующая</se:Name>
+          <se:Name>60301050101</se:Name>
           <se:Description>
             <se:Title>Охранная зона нефтепроводов существующая</se:Title>
           </se:Description>
@@ -32,9 +32,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона нефтепроводов планируемая</se:Name>
+          <se:Name>60301050102</se:Name>
           <se:Description>
-            <se:Title>Охранная зона нефтепроводов планируемая</se:Title>
+            <se:Title>Охранная зона нефтепроводов планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -59,7 +59,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона газопроводов и систем газоснабжения существующая</se:Name>
+          <se:Name>60301050201</se:Name>
           <se:Description>
             <se:Title>Охранная зона газопроводов и систем газоснабжения существующая</se:Title>
           </se:Description>
@@ -85,9 +85,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона газопроводов и систем газоснабжения  планируемая</se:Name>
+          <se:Name>60301050202</se:Name>
           <se:Description>
-            <se:Title>Охранная зона газопроводов и систем газоснабжения  планируемая</se:Title>
+            <se:Title>Охранная зона газопроводов и систем газоснабжения  планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -112,7 +112,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона объектов электросетевого хозяйства (вдоль линий электропередачи, вокруг подстанций) существующая</se:Name>
+          <se:Name>60301050301</se:Name>
           <se:Description>
             <se:Title>Охранная зона объектов электросетевого хозяйства (вдоль линий электропередачи, вокруг подстанций) существующая</se:Title>
           </se:Description>
@@ -138,9 +138,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона объектов электросетевого хозяйства (вдоль линий электропередачи, вокруг подстанций)  планируемая</se:Name>
+          <se:Name>60301050302</se:Name>
           <se:Description>
-            <se:Title>Охранная зона объектов электросетевого хозяйства (вдоль линий электропередачи, вокруг подстанций)  планируемая</se:Title>
+            <se:Title>Охранная зона объектов электросетевого хозяйства (вдоль линий электропередачи, вокруг подстанций)  планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -165,7 +165,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона линий и сооружений связи существующая</se:Name>
+          <se:Name>60301050401</se:Name>
           <se:Description>
             <se:Title>Охранная зона линий и сооружений связи существующая</se:Title>
           </se:Description>
@@ -191,9 +191,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона линий и сооружений связи планируемая</se:Name>
+          <se:Name>60301050402</se:Name>
           <se:Description>
-            <se:Title>Охранная зона линий и сооружений связи планируемая</se:Title>
+            <se:Title>Охранная зона линий и сооружений связи планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -218,7 +218,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона гидроэнергетических объектов существующая</se:Name>
+          <se:Name>60301050501</se:Name>
           <se:Description>
             <se:Title>Охранная зона гидроэнергетических объектов существующая</se:Title>
           </se:Description>
@@ -244,9 +244,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона гидроэнергетических объектов планируемая</se:Name>
+          <se:Name>60301050502</se:Name>
           <se:Description>
-            <se:Title>Охранная зона гидроэнергетических объектов планируемая</se:Title>
+            <se:Title>Охранная зона гидроэнергетических объектов планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -271,7 +271,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона тепловых сетей существующая</se:Name>
+          <se:Name>60301050601</se:Name>
           <se:Description>
             <se:Title>Охранная зона тепловых сетей существующая</se:Title>
           </se:Description>
@@ -297,9 +297,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона тепловых сетей планируемая</se:Name>
+          <se:Name>60301050602</se:Name>
           <se:Description>
-            <se:Title>Охранная зона тепловых сетей планируемая</se:Title>
+            <se:Title>Охранная зона тепловых сетей планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -324,7 +324,7 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона канализационных сетей и сооружений существующая</se:Name>
+          <se:Name>60301050701</se:Name>
           <se:Description>
             <se:Title>Охранная зона канализационных сетей и сооружений существующая</se:Title>
           </se:Description>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Охранная зона канализационных сетей и сооружений планируемая</se:Name>
+          <se:Name>60301050702</se:Name>
           <se:Description>
-            <se:Title>Охранная зона канализационных сетей и сооружений планируемая</se:Title>
+            <se:Title>Охранная зона канализационных сетей и сооружений планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

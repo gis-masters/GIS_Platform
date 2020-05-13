@@ -6,9 +6,9 @@
       <se:Name>Prison</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Объект ФСИН России существующий и строящийся</se:Name>
+          <se:Name>60205010101</se:Name>
           <se:Description>
-            <se:Title>60205010101</se:Title>
+            <se:Title>Объект ФСИН России существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект ФСИН России планируемый</se:Name>
+          <se:Name>60205010102</se:Name>
           <se:Description>
-            <se:Title>60205010102</se:Title>
+            <se:Title>Объект ФСИН России планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект ФСИН России планируемый к реконструкции</se:Name>
+          <se:Name>60205010103</se:Name>
           <se:Description>
-            <se:Title>60205010103</se:Title>
+            <se:Title>Объект ФСИН России планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект ФСИН России планируемый к ликвидации</se:Name>
+          <se:Name>60205010104</se:Name>
           <se:Description>
-            <se:Title>60205010104</se:Title>
+            <se:Title>Объект ФСИН России планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

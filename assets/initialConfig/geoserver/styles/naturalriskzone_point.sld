@@ -4,19 +4,19 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>NaturalRiskZone</se:Name>
+		<se:Name>Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера</se:Name>
 		<UserStyle>
 			<se:Name>NaturalRiskZone</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
-					<se:Name>60601010100</se:Name>
+					<se:Name>60601010101</se:Name>
 					<se:Description>
 						<se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601010100</ogc:Literal>
+							<ogc:Literal>60601010101</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -30,14 +30,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601010200</se:Name>
+					<se:Name>60601010201</se:Name>
 					<se:Description>
 						<se:Title>Территории, подверженные опасным геологическим процессам</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601010200</ogc:Literal>
+							<ogc:Literal>60601010201</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -51,14 +51,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601010300</se:Name>
+					<se:Name>60601010301</se:Name>
 					<se:Description>
 						<se:Title>Территории, подверженные опасным гидрологическим процессам</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601010300</ogc:Literal>
+							<ogc:Literal>60601010301</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -72,14 +72,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60601010400</se:Name>
+					<se:Name>60601010401</se:Name>
 					<se:Description>
 						<se:Title>Территории, подверженные опасным метеорологическим процессам</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60601010400</ogc:Literal>
+							<ogc:Literal>60601010401</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>

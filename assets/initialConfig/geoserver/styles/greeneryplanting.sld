@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>70501010001</se:Name>
           <se:Description>
-            <se:Title>Лесопарковая зона существующая и строящаяся</se:Title>
+            <se:Title>Лесопарковая зона существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -100,7 +100,7 @@
         <se:Rule>
           <se:Name>70501020001</se:Name>
           <se:Description>
-            <se:Title>Зеленая зона существующая и строящаяся</se:Title>
+            <se:Title>Зеленая зона существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -186,7 +186,7 @@
         <se:Rule>
           <se:Name>70501030001</se:Name>
           <se:Description>
-            <se:Title>Озелененные территории общего пользования существующие и строящиеся</se:Title>
+            <se:Title>Озелененные территории общего пользования существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -272,7 +272,7 @@
         <se:Rule>
           <se:Name>70501040001</se:Name>
           <se:Description>
-            <se:Title>Озелененные территории ограниченного пользования существующие и строящиеся</se:Title>
+            <se:Title>Озелененные территории ограниченного пользования существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -358,7 +358,7 @@
         <se:Rule>
           <se:Name>70501050001</se:Name>
           <se:Description>
-            <se:Title>Озелененные территории специального назначения существующие и строящиеся</se:Title>
+            <se:Title>Озелененные территории специального назначения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -444,7 +444,7 @@
         <se:Rule>
           <se:Name>70501060001</se:Name>
           <se:Description>
-            <se:Title>Иные озелененные территории в соответствии с региональным законодательством и актами местного самоуправления существующие и строящиеся</se:Title>
+            <se:Title>Иные озелененные территории в соответствии с региональным законодательством и актами местного самоуправления существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

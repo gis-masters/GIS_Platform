@@ -6,9 +6,9 @@
       <se:Name>RailwayFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Железнодорожная станция существующая и строящаяся</se:Name>
+          <se:Name>60203020101</se:Name>
           <se:Description>
-            <se:Title>60203020101</se:Title>
+            <se:Title>Железнодорожная станция существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожная станция планируемая</se:Name>
+          <se:Name>60203020102</se:Name>
           <se:Description>
-            <se:Title>60203020102</se:Title>
+            <se:Title>Железнодорожная станция планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожная станция планируемая к реконструкции</se:Name>
+          <se:Name>60203020103</se:Name>
           <se:Description>
-            <se:Title>60203020103</se:Title>
+            <se:Title>Железнодорожная станция планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный вокзал существующий и строящийся</se:Name>
+          <se:Name>60203020201</se:Name>
           <se:Description>
-            <se:Title>60203020201</se:Title>
+            <se:Title>Железнодорожный вокзал существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный вокзал планируемый</se:Name>
+          <se:Name>60203020202</se:Name>
           <se:Description>
-            <se:Title>60203020202</se:Title>
+            <se:Title>Железнодорожный вокзал планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -108,9 +108,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный вокзал планируемый к реконструкции</se:Name>
+          <se:Name>60203020203</se:Name>
           <se:Description>
-            <se:Title>60203020203</se:Title>
+            <se:Title>Железнодорожный вокзал планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожное депо существующее и строящееся</se:Name>
+          <se:Name>60203020301</se:Name>
           <se:Description>
-            <se:Title>60203020301</se:Title>
+            <se:Title>Железнодорожное депо существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожное депо планируемое</se:Name>
+          <se:Name>60203020302</se:Name>
           <se:Description>
-            <se:Title>60203020302</se:Title>
+            <se:Title>Железнодорожное депо планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -169,9 +169,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожное депо планируемое к реконструкции</se:Name>
+          <se:Name>60203020303</se:Name>
           <se:Description>
-            <se:Title>60203020303</se:Title>
+            <se:Title>Железнодорожное депо планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -189,9 +189,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Остановочный пассажирский железнодорожный пункт существующий и строящийся</se:Name>
+          <se:Name>60203020401</se:Name>
           <se:Description>
-            <se:Title>60203020401</se:Title>
+            <se:Title>Остановочный пассажирский железнодорожный пункт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Остановочный пассажирский железнодорожный пункт планируемый</se:Name>
+          <se:Name>60203020402</se:Name>
           <se:Description>
-            <se:Title>60203020402</se:Title>
+            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -230,9 +230,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции</se:Name>
+          <se:Name>60203020403</se:Name>
           <se:Description>
-            <se:Title>60203020403</se:Title>
+            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -250,9 +250,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты железнодорожного транспорта существующие и строящиеся</se:Name>
+          <se:Name>60203020501</se:Name>
           <se:Description>
-            <se:Title>60203020501</se:Title>
+            <se:Title>Иные объекты железнодорожного транспорта существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -270,9 +270,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты железнодорожного транспорта планируемые</se:Name>
+          <se:Name>60203020502</se:Name>
           <se:Description>
-            <se:Title>60203020502</se:Title>
+            <se:Title>Иные объекты железнодорожного транспорта планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -291,9 +291,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты железнодорожного транспорта планируемые к реконструкции</se:Name>
+          <se:Name>60203020503</se:Name>
           <se:Description>
-            <se:Title>60203020503</se:Title>
+            <se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

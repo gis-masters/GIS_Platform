@@ -6,14 +6,14 @@
       <se:Name>ProtectionZone</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60301160100</se:Name>
+          <se:Name>60301160101</se:Name>
           <se:Description>
             <se:Title>Зона охраняемого объекта существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160100</ogc:Literal>
+              <ogc:Literal>60301160101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -50,14 +50,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160100</se:Name>
+          <se:Name>60301160102</se:Name>
           <se:Description>
-            <se:Title>Зона охраняемого объекта планируемая</se:Title>
+            <se:Title>Зона охраняемого объекта планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160100</ogc:Literal>
+              <ogc:Literal>60301160102</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -95,14 +95,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160200</se:Name>
+          <se:Name>60301160201</se:Name>
           <se:Description>
             <se:Title>Пограничная зона существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160200</ogc:Literal>
+              <ogc:Literal>60301160201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -131,14 +131,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160200</se:Name>
+          <se:Name>60301160202</se:Name>
           <se:Description>
-            <se:Title>Пограничная зона планируемая</se:Title>
+            <se:Title>Пограничная зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160200</ogc:Literal>
+              <ogc:Literal>60301160202</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -168,14 +168,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160300</se:Name>
+          <se:Name>60301160301</se:Name>
           <se:Description>
             <se:Title>Пятикилометровая полоса местности вдоль Государственной границы существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160300</ogc:Literal>
+              <ogc:Literal>60301160301</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -204,14 +204,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160300</se:Name>
+          <se:Name>60301160302</se:Name>
           <se:Description>
-            <se:Title>Пятикилометровая полоса местности вдоль Государственной границы планируемая</se:Title>
+            <se:Title>Пятикилометровая полоса местности вдоль Государственной границы планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160300</ogc:Literal>
+              <ogc:Literal>60301160302</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -241,14 +241,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160400</se:Name>
+          <se:Name>60301160401</se:Name>
           <se:Description>
             <se:Title>Иная охраняемая зона существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160400</ogc:Literal>
+              <ogc:Literal>60301160401</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -285,14 +285,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301160400</se:Name>
+          <se:Name>60301160402</se:Name>
           <se:Description>
-            <se:Title>Иная охраняемая зона планируемая</se:Title>
+            <se:Title>Иная охраняемая зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301160400</ogc:Literal>
+              <ogc:Literal>60301160402</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

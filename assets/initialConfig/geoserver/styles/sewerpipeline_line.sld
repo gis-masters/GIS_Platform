@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204140101</se:Name>
           <se:Description>
-            <se:Title>Канализация самотечная существующая и строящаяся</se:Title>
+            <se:Title>Канализация самотечная существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,7 +188,7 @@
         <se:Rule>
           <se:Name>60204140201</se:Name>
           <se:Description>
-            <se:Title>Канализация напорная существующая и строящаяся</se:Title>
+            <se:Title>Канализация напорная существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -368,7 +368,7 @@
         <se:Rule>
           <se:Name>60204140301</se:Name>
           <se:Description>
-            <se:Title>Канализация дождевая напорная существующая и строящаяся</se:Title>
+            <se:Title>Канализация дождевая напорная существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -548,7 +548,7 @@
         <se:Rule>
           <se:Name>60204140401</se:Name>
           <se:Description>
-            <se:Title>Канализация дождевая самотечная закрытая существующая и строящаяся</se:Title>
+            <se:Title>Канализация дождевая самотечная закрытая существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -728,7 +728,7 @@
         <se:Rule>
           <se:Name>60204140501</se:Name>
           <se:Description>
-            <se:Title>Канализация дождевая самотечная открытая существующая и строящаяся</se:Title>
+            <se:Title>Канализация дождевая самотечная открытая существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -908,7 +908,7 @@
         <se:Rule>
           <se:Name>60204140601</se:Name>
           <se:Description>
-            <se:Title>Дренаж существующий и строящийся</se:Title>
+            <se:Title>Дренаж существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1088,7 +1088,7 @@
         <se:Rule>
           <se:Name>60204140701</se:Name>
           <se:Description>
-            <se:Title>Выпуски и ливнеотводы существующие и строящиеся</se:Title>
+            <se:Title>Выпуски и ливнеотводы существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

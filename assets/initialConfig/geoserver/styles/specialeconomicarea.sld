@@ -44,7 +44,7 @@
         <se:Rule>
           <se:Name>60701010102</se:Name>
           <se:Description>
-            <se:Title>Промышленно-производственная экономическая зона планируемая</se:Title>
+            <se:Title>Промышленно-производственная экономическая зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -117,7 +117,7 @@
         <se:Rule>
           <se:Name>60701010202</se:Name>
           <se:Description>
-            <se:Title>Технико-внедренческая экономическая зона планируемая</se:Title>
+            <se:Title>Технико-внедренческая экономическая зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -190,7 +190,7 @@
         <se:Rule>
           <se:Name>60701010302</se:Name>
           <se:Description>
-            <se:Title>Туристско-рекреационная особая экономическая зона планируемая</se:Title>
+            <se:Title>Туристско-рекреационная особая экономическая зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -263,7 +263,7 @@
         <se:Rule>
           <se:Name>60701010402</se:Name>
           <se:Description>
-            <se:Title>Портовая особая экономическая зона планируемая</se:Title>
+            <se:Title>Портовая особая экономическая зона планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

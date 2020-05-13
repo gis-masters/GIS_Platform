@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60201080101</se:Name>
           <se:Description>
-            <se:Title>Административное здание существующее и строящееся</se:Title>
+            <se:Title>Административное здание существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -28,7 +28,7 @@
         <se:Rule>
           <se:Name>60201080102</se:Name>
           <se:Description>
-            <se:Title>Административное здание планируемое</se:Title>
+            <se:Title>Административное здание планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -89,7 +89,7 @@
         <se:Rule>
           <se:Name>60201080201</se:Name>
           <se:Description>
-            <se:Title>Объект проведения гражданских обрядов существующий строящийся</se:Title>
+            <se:Title>Объект проведения гражданских обрядов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -109,7 +109,7 @@
         <se:Rule>
           <se:Name>60201080202</se:Name>
           <se:Description>
-            <se:Title>Объект проведения гражданских обрядов планируемый</se:Title>
+            <se:Title>Объект проведения гражданских обрядов планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -170,7 +170,7 @@
         <se:Rule>
           <se:Name>60201080301</se:Name>
           <se:Description>
-            <se:Title>Объект религиозной организации (объединения) существующий строящийся</se:Title>
+            <se:Title>Объект религиозной организации (объединения) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -190,7 +190,7 @@
         <se:Rule>
           <se:Name>60201080302</se:Name>
           <se:Description>
-            <se:Title>Объект религиозной организации (объединения) планируемый</se:Title>
+            <se:Title>Объект религиозной организации (объединения) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -251,7 +251,7 @@
         <se:Rule>
           <se:Name>60201080401</se:Name>
           <se:Description>
-            <se:Title>Объекты торговли, общественного питания существующие строящиеся</se:Title>
+            <se:Title>Объекты торговли, общественного питания существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -271,7 +271,7 @@
         <se:Rule>
           <se:Name>60201080402</se:Name>
           <se:Description>
-            <se:Title>Объекты торговли, общественного питания планируемые</se:Title>
+            <se:Title>Объекты торговли, общественного питания планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -332,7 +332,7 @@
         <se:Rule>
           <se:Name>60201080501</se:Name>
           <se:Description>
-            <se:Title>Непроизводственный объект по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг существующий строящиийся</se:Title>
+            <se:Title>Непроизводственный объект по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -352,7 +352,7 @@
         <se:Rule>
           <se:Name>60201080502</se:Name>
           <se:Description>
-            <se:Title>Непроизводственный объект по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг планируемый</se:Title>
+            <se:Title>Непроизводственный объект по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -413,7 +413,7 @@
         <se:Rule>
           <se:Name>60201080601</se:Name>
           <se:Description>
-            <se:Title>Непроизводственные объекты коммунально-бытового обслуживания и предоставления персональных услуг существующие строящииеся</se:Title>
+            <se:Title>Непроизводственные объекты коммунально-бытового обслуживания и предоставления персональных услуг существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -433,7 +433,7 @@
         <se:Rule>
           <se:Name>60201080602</se:Name>
           <se:Description>
-            <se:Title>Непроизводственные объекты коммунально-бытового обслуживания и предоставления персональных услуг планируемые</se:Title>
+            <se:Title>Непроизводственные объекты коммунально-бытового обслуживания и предоставления персональных услуг планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -494,7 +494,7 @@
         <se:Rule>
           <se:Name>60201080701</se:Name>
           <se:Description>
-            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект существующая строящаяся</se:Title>
+            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект существующый</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -514,7 +514,7 @@
         <se:Rule>
           <se:Name>60201080702</se:Name>
           <se:Description>
-            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемая</se:Title>
+            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -535,7 +535,7 @@
         <se:Rule>
           <se:Name>60201080703</se:Name>
           <se:Description>
-            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемая к реконструкции</se:Title>
+            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -555,7 +555,7 @@
         <se:Rule>
           <se:Name>60201080704</se:Name>
           <se:Description>
-            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемая к ликвидации</se:Title>
+            <se:Title>Ветеринарная лечебница, питомник животных, кинологический центр, иной подобный объект планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

@@ -6,9 +6,9 @@
       <se:Name>TransportObj</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Мостовое сооружение существующее и строящееся</se:Name>
+          <se:Name>60203160101</se:Name>
           <se:Description>
-            <se:Title>60203160101</se:Title>
+            <se:Title>Мостовое сооружение существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Мостовое сооружение планируемое</se:Name>
+          <se:Name>60203160102</se:Name>
           <se:Description>
-            <se:Title>60203160102</se:Title>
+            <se:Title>Мостовое сооружение планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Мостовое сооружение планируемое к реконструкции</se:Name>
+          <se:Name>60203160103</se:Name>
           <se:Description>
-            <se:Title>60203160103</se:Title>
+            <se:Title>Мостовое сооружение планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Мостовое сооружение планируемое к ликвидации</se:Name>
+          <se:Name>60203160104</se:Name>
           <se:Description>
-            <se:Title>60203160104</se:Title>
+            <se:Title>Мостовое сооружение планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортная развязка в разных уровнях существующая и строящаяся</se:Name>
+          <se:Name>60203160201</se:Name>
           <se:Description>
-            <se:Title>60203160201</se:Title>
+            <se:Title>Транспортная развязка в разных уровнях существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортная развязка в разных уровнях планируемая</se:Name>
+          <se:Name>60203160202</se:Name>
           <se:Description>
-            <se:Title>60203160202</se:Title>
+            <se:Title>Транспортная развязка в разных уровнях планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортная развязка в разных уровнях планируемая к реконструкции</se:Name>
+          <se:Name>60203160203</se:Name>
           <se:Description>
-            <se:Title>60203160203</se:Title>
+            <se:Title>Транспортная развязка в разных уровнях планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортная развязка в разных уровнях планируемая к ликвидации</se:Name>
+          <se:Name>60203160204</se:Name>
           <se:Description>
-            <se:Title>60203160204</se:Title>
+            <se:Title>Транспортная развязка в разных уровнях планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тоннель существующий и строящийся</se:Name>
+          <se:Name>60203160301</se:Name>
           <se:Description>
-            <se:Title>60203160301</se:Title>
+            <se:Title>Тоннель существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тоннель планируемый</se:Name>
+          <se:Name>60203160302</se:Name>
           <se:Description>
-            <se:Title>60203160302</se:Title>
+            <se:Title>Тоннель планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тоннель планируемый к реконструкции</se:Name>
+          <se:Name>60203160303</se:Name>
           <se:Description>
-            <se:Title>60203160303</se:Title>
+            <se:Title>Тоннель планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тоннель планируемый к ликвидации</se:Name>
+          <se:Name>60203160304</se:Name>
           <se:Description>
-            <se:Title>60203160304</se:Title>
+            <se:Title>Тоннель планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходный переход в разных уровнях существующий и строящийся</se:Name>
+          <se:Name>60203160401</se:Name>
           <se:Description>
-            <se:Title>60203160401</se:Title>
+            <se:Title>Пешеходный переход в разных уровнях существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходный переход в разных уровнях планируемый</se:Name>
+          <se:Name>60203160402</se:Name>
           <se:Description>
-            <se:Title>60203160402</se:Title>
+            <se:Title>Пешеходный переход в разных уровнях планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходный переход в разных уровнях планируемый к реконструкции</se:Name>
+          <se:Name>60203160403</se:Name>
           <se:Description>
-            <se:Title>60203160403</se:Title>
+            <se:Title>Пешеходный переход в разных уровнях планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пешеходный переход в разных уровнях планируемый к ликвидации</se:Name>
+          <se:Name>60203160404</se:Name>
           <se:Description>
-            <se:Title>60203160404</se:Title>
+            <se:Title>Пешеходный переход в разных уровнях планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный переезд существующий и строящийся</se:Name>
+          <se:Name>60203160501</se:Name>
           <se:Description>
-            <se:Title>60203160501</se:Title>
+            <se:Title>Железнодорожный переезд существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный переезд планируемый</se:Name>
+          <se:Name>60203160502</se:Name>
           <se:Description>
-            <se:Title>60203160502</se:Title>
+            <se:Title>Железнодорожный переезд планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Железнодорожный переезд планируемый к реконструкции</se:Name>
+          <se:Name>60203160503</se:Name>
           <se:Description>
-            <se:Title>60203160503</se:Title>
+            <se:Title>Железнодорожный переезд планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Саморегулируемое пересечение в одном уровне существующее и строящееся</se:Name>
+          <se:Name>60203160601</se:Name>
           <se:Description>
-            <se:Title>60203160601</se:Title>
+            <se:Title>Саморегулируемое пересечение в одном уровне существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Саморегулируемое пересечение в одном уровне планируемое</se:Name>
+          <se:Name>60203160602</se:Name>
           <se:Description>
-            <se:Title>60203160602</se:Title>
+            <se:Title>Саморегулируемое пересечение в одном уровне планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -432,9 +432,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Саморегулируемое пересечение в одном уровне планируемое к реконструкции</se:Name>
+          <se:Name>60203160603</se:Name>
           <se:Description>
-            <se:Title>60203160603</se:Title>
+            <se:Title>Саморегулируемое пересечение в одном уровне планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Саморегулируемое пересечение в одном уровне планируемое к ликвидации</se:Name>
+          <se:Name>60203160604</se:Name>
           <se:Description>
-            <se:Title>60203160604</se:Title>
+            <se:Title>Саморегулируемое пересечение в одном уровне планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

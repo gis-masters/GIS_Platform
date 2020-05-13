@@ -6,14 +6,14 @@
       <se:Name>TechnoRiskArea</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60601020100</se:Name>
+          <se:Name>60601020101</se:Name>
           <se:Description>
-            <se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера существующие и строящиеся</se:Title>
+            <se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60601020100</ogc:Literal>
+              <ogc:Literal>60601020101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -42,14 +42,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60601020100</se:Name>
+          <se:Name>60601020201</se:Name>
           <se:Description>
-            <se:Title>Зона, подверженная риску радиоактивного загрязнения существующие и строящиеся</se:Title>
+            <se:Title>Зона, подверженная риску радиоактивного загрязнения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60601020200</ogc:Literal>
+              <ogc:Literal>60601020201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -94,14 +94,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60601020300</se:Name>
+          <se:Name>60601020301</se:Name>
           <se:Description>
-            <se:Title>Зона, подверженная риску химического заражения существующие и строящиеся</se:Title>
+            <se:Title>Зона, подверженная риску химического заражения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60601020300</ogc:Literal>
+              <ogc:Literal>60601020301</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -146,14 +146,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60601020400</se:Name>
+          <se:Name>60601020401</se:Name>
           <se:Description>
-            <se:Title>Зона возможного катастрофического затопления (при аварии на гидродинамически опасном объекте) существующие и строящиеся</se:Title>
+            <se:Title>Зона возможного катастрофического затопления (при аварии на гидродинамически опасном объекте) существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60601020400</ogc:Literal>
+              <ogc:Literal>60601020401</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

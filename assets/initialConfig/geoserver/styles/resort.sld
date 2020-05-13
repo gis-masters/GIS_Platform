@@ -6,9 +6,9 @@
       <se:Name>Resort</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Объект санаторно-курортного назначения существующий и строящийся</se:Name>
+          <se:Name>60201070101</se:Name>
           <se:Description>
-            <se:Title>60201070101</se:Title>
+            <se:Title>Объект санаторно-курортного назначения существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект санаторно-курортного назначения планируемый</se:Name>
+          <se:Name>60201070102</se:Name>
           <se:Description>
-            <se:Title>60201070102</se:Title>
+            <se:Title>Объект санаторно-курортного назначения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект санаторно-курортного назначения планируемый к реконструкции</se:Name>
+          <se:Name>60201070103</se:Name>
           <se:Description>
-            <se:Title>60201070103</se:Title>
+            <se:Title>Объект санаторно-курортного назначения планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект санаторно-курортного назначения планируемый к ликвидации</se:Name>
+          <se:Name>60201070104</se:Name>
           <se:Description>
-            <se:Title>60201070104</se:Title>
+            <se:Title>Объект санаторно-курортного назначения планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

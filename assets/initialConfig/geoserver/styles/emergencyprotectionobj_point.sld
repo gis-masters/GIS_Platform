@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>EmergencyProtectionObj</se:Name>
+		<se:Name>Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций</se:Name>
 		<UserStyle>
 			<se:Name>EmergencyProtectionObj</se:Name>
 			<se:FeatureTypeStyle>
@@ -751,7 +751,7 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602050203334</ogc:Literal>
+							<ogc:Literal>60205020334</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>

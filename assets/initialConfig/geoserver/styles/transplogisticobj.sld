@@ -6,9 +6,9 @@
       <se:Name>TranspLogisticObj</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Транспортно-логистический центр существующий и строящийся</se:Name>
+          <se:Name>60203060101</se:Name>
           <se:Description>
-            <se:Title>60203060101</se:Title>
+            <se:Title>Транспортно-логистический центр существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-логистический центр планируемый</se:Name>
+          <se:Name>60203060102</se:Name>
           <se:Description>
-            <se:Title>60203060102</se:Title>
+            <se:Title>Транспортно-логистический центр планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-логистический центр планируемый к реконструкции</se:Name>
+          <se:Name>60203060103</se:Name>
           <se:Description>
-            <se:Title>60203060103</se:Title>
+            <se:Title>Транспортно-логистический центр планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-логистический центр планируемый к ликвидации</se:Name>
+          <se:Name>60203060104</se:Name>
           <se:Description>
-            <se:Title>60203060104</se:Title>
+            <se:Title>Транспортно-логистический центр планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-пересадочный узел существующий и строящийся</se:Name>
+          <se:Name>60203060201</se:Name>
           <se:Description>
-            <se:Title>60203060201</se:Title>
+            <se:Title>Транспортно-пересадочный узел существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-пересадочный узел планируемый</se:Name>
+          <se:Name>60203060202</se:Name>
           <se:Description>
-            <se:Title>60203060202</se:Title>
+            <se:Title>Транспортно-пересадочный узел планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-пересадочный узел планируемый к реконструкции</se:Name>
+          <se:Name>60203060203</se:Name>
           <se:Description>
-            <se:Title>60203060203</se:Title>
+            <se:Title>Транспортно-пересадочный узел планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Транспортно-пересадочный узел планируемый к ликвидации</se:Name>
+          <se:Name>60203060204</se:Name>
           <se:Description>
-            <se:Title>60203060204</se:Title>
+            <se:Title>Транспортно-пересадочный узел планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

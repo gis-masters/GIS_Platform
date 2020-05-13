@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60203030101</se:Name>
           <se:Description>
-            <se:Title>Автомобильные дороги федерального значения существующию и строящиеся</se:Title>
+            <se:Title>Автомобильные дороги федерального значения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -131,7 +131,7 @@
         <se:Rule>
           <se:Name>60203030201</se:Name>
           <se:Description>
-            <se:Title>Автомобильные дороги регионального или межмуниципального значения существующию и строящиеся</se:Title>
+            <se:Title>Автомобильные дороги регионального или межмуниципального значения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -254,7 +254,7 @@
         <se:Rule>
           <se:Name>60203030301</se:Name>
           <se:Description>
-            <se:Title>Автомобильные дороги местного значения существующию и строящиеся</se:Title>
+            <se:Title>Автомобильные дороги местного значения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -377,7 +377,7 @@
         <se:Rule>
           <se:Name>60203030401</se:Name>
           <se:Description>
-            <se:Title>Частные автомобильные дороги существующию и строящиеся</se:Title>
+            <se:Title>Частные автомобильные дороги существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

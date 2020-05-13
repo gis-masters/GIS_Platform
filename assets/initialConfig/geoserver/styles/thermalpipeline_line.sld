@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204100101</se:Name>
           <se:Description>
-            <se:Title>Теплопровод магистральный существующий и строящийся</se:Title>
+            <se:Title>Теплопровод магистральный существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -116,7 +116,7 @@
         <se:Rule>
           <se:Name>60204100201</se:Name>
           <se:Description>
-            <se:Title>Теплопровод распределительный (квартальный) существующий и строящийся</se:Title>
+            <se:Title>Теплопровод распределительный (квартальный) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

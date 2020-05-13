@@ -6,9 +6,9 @@
       <se:Name>TelecomFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Автоматическая телефонная станция существующая и строящаяся</se:Name>
+          <se:Name>60204150101</se:Name>
           <se:Description>
-            <se:Title>60204150101</se:Title>
+            <se:Title>Автоматическая телефонная станция существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автоматическая телефонная станция планируемая</se:Name>
+          <se:Name>60204150102</se:Name>
           <se:Description>
-            <se:Title>60204150102</se:Title>
+            <se:Title>Автоматическая телефонная станция планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автоматическая телефонная станция планируемая к реконструкции</se:Name>
+          <se:Name>60204150103</se:Name>
           <se:Description>
-            <se:Title>60204150103</se:Title>
+            <se:Title>Автоматическая телефонная станция планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автоматическая телефонная станция планируемая к ликвидации</se:Name>
+          <se:Name>60204150104</se:Name>
           <se:Description>
-            <se:Title>60204150104</se:Title>
+            <se:Title>Автоматическая телефонная станция планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Земная станция существующая и строящаяся</se:Name>
+          <se:Name>60204150201</se:Name>
           <se:Description>
-            <se:Title>60204150201</se:Title>
+            <se:Title>Земная станция существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Земная станция планируемая</se:Name>
+          <se:Name>60204150202</se:Name>
           <se:Description>
-            <se:Title>60204150202</se:Title>
+            <se:Title>Земная станция планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Земная станция планируемая к реконструкции</se:Name>
+          <se:Name>60204150203</se:Name>
           <se:Description>
-            <se:Title>60204150203</se:Title>
+            <se:Title>Земная станция планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Земная станция планируемая к ликвидации</se:Name>
+          <se:Name>60204150204</se:Name>
           <se:Description>
-            <se:Title>60204150204</se:Title>
+            <se:Title>Земная станция планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный центр существующий и строящийся</se:Name>
+          <se:Name>60204150301</se:Name>
           <se:Description>
-            <se:Title>60204150301</se:Title>
+            <se:Title>Телевизионный центр существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный центр планируемый</se:Name>
+          <se:Name>60204150302</se:Name>
           <se:Description>
-            <se:Title>60204150302</se:Title>
+            <se:Title>Телевизионный центр планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный центр планируемый к реконструкции</se:Name>
+          <se:Name>60204150303</se:Name>
           <se:Description>
-            <se:Title>60204150303</se:Title>
+            <se:Title>Телевизионный центр планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный центр планируемый к ликвидации</se:Name>
+          <se:Name>60204150304</se:Name>
           <se:Description>
-            <se:Title>60204150304</se:Title>
+            <se:Title>Телевизионный центр планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный ретранслятор существующий и строящийся</se:Name>
+          <se:Name>60204150401</se:Name>
           <se:Description>
-            <se:Title>60204150401</se:Title>
+            <se:Title>Телевизионный ретранслятор существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный ретранслятор планируемый</se:Name>
+          <se:Name>60204150402</se:Name>
           <se:Description>
-            <se:Title>60204150402</se:Title>
+            <se:Title>Телевизионный ретранслятор планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный ретранслятор планируемый к реконструкции</se:Name>
+          <se:Name>60204150403</se:Name>
           <se:Description>
-            <se:Title>60204150403</se:Title>
+            <se:Title>Телевизионный ретранслятор планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Телевизионный ретранслятор планируемый к ликвидации</se:Name>
+          <se:Name>60204150404</se:Name>
           <se:Description>
-            <se:Title>60204150404</se:Title>
+            <se:Title>Телевизионный ретранслятор планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наземная станция (радиосвязи) существующая и строящаяся</se:Name>
+          <se:Name>60204150501</se:Name>
           <se:Description>
-            <se:Title>60204150501</se:Title>
+            <se:Title>Наземная станция (радиосвязи) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наземная станция (радиосвязи) планируемая</se:Name>
+          <se:Name>60204150502</se:Name>
           <se:Description>
-            <se:Title>60204150502</se:Title>
+            <se:Title>Наземная станция (радиосвязи) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наземная станция (радиосвязи) планируемая к реконструкции</se:Name>
+          <se:Name>60204150503</se:Name>
           <se:Description>
-            <se:Title>60204150503</se:Title>
+            <se:Title>Наземная станция (радиосвязи) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наземная станция (радиосвязи) планируемая к ликвидации</se:Name>
+          <se:Name>60204150504</se:Name>
           <se:Description>
-            <se:Title>60204150504</se:Title>
+            <se:Title>Наземная станция (радиосвязи) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Базовая станция существующая и строящаяся</se:Name>
+          <se:Name>60204150601</se:Name>
           <se:Description>
-            <se:Title>60204150601</se:Title>
+            <se:Title>Базовая станция существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Базовая станция планируемая</se:Name>
+          <se:Name>60204150602</se:Name>
           <se:Description>
-            <se:Title>60204150602</se:Title>
+            <se:Title>Базовая станция планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Базовая станция планируемая к реконструкции</se:Name>
+          <se:Name>60204150603</se:Name>
           <se:Description>
-            <se:Title>60204150603</se:Title>
+            <se:Title>Базовая станция планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Базовая станция планируемая к ликвидации</se:Name>
+          <se:Name>60204150604</se:Name>
           <se:Description>
-            <se:Title>60204150604</se:Title>
+            <se:Title>Базовая станция планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -492,9 +492,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Узел связи оконечно-транзитный (сети передачи данных) существующий и строящийся</se:Name>
+          <se:Name>60204150701</se:Name>
           <se:Description>
-            <se:Title>60204150701</se:Title>
+            <se:Title>Узел связи оконечно-транзитный (сети передачи данных) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -512,9 +512,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Узел связи оконечно-транзитный (сети передачи данных) планируемый</se:Name>
+          <se:Name>60204150702</se:Name>
           <se:Description>
-            <se:Title>60204150702</se:Title>
+            <se:Title>Узел связи оконечно-транзитный (сети передачи данных) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -533,9 +533,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Узел связи оконечно-транзитный (сети передачи данных) планируемый к реконструкции</se:Name>
+          <se:Name>60204150703</se:Name>
           <se:Description>
-            <se:Title>60204150703</se:Title>
+            <se:Title>Узел связи оконечно-транзитный (сети передачи данных) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -553,9 +553,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Узел связи оконечно-транзитный (сети передачи данных) планируемый к ликвидации</se:Name>
+          <se:Name>60204150704</se:Name>
           <se:Description>
-            <se:Title>60204150704</se:Title>
+            <se:Title>Узел связи оконечно-транзитный (сети передачи данных) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -573,9 +573,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт коллективного доступа существующий и строящийся</se:Name>
+          <se:Name>60204150801</se:Name>
           <se:Description>
-            <se:Title>60204150801</se:Title>
+            <se:Title>Пункт коллективного доступа существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -593,9 +593,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт коллективного доступа планируемый</se:Name>
+          <se:Name>60204150802</se:Name>
           <se:Description>
-            <se:Title>60204150802</se:Title>
+            <se:Title>Пункт коллективного доступа планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -614,9 +614,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт коллективного доступа планируемый к реконструкции</se:Name>
+          <se:Name>60204150803</se:Name>
           <se:Description>
-            <se:Title>60204150803</se:Title>
+            <se:Title>Пункт коллективного доступа планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -634,9 +634,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт коллективного доступа планируемый к ликвидации</se:Name>
+          <se:Name>60204150804</se:Name>
           <se:Description>
-            <se:Title>60204150804</se:Title>
+            <se:Title>Пункт коллективного доступа планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -654,9 +654,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объекты почтовой связи существующие и строящиеся</se:Name>
+          <se:Name>60204150901</se:Name>
           <se:Description>
-            <se:Title>60204150901</se:Title>
+            <se:Title>Объекты почтовой связи существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -674,9 +674,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объекты почтовой связи планируемые</se:Name>
+          <se:Name>60204150902</se:Name>
           <se:Description>
-            <se:Title>60204150902</se:Title>
+            <se:Title>Объекты почтовой связи планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -695,9 +695,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объекты почтовой связи планируемые к реконструкции</se:Name>
+          <se:Name>60204150903</se:Name>
           <se:Description>
-            <se:Title>60204150903</se:Title>
+            <se:Title>Объекты почтовой связи планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -715,9 +715,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объекты почтовой связи планируемые к ликвидации</se:Name>
+          <se:Name>60204150904</se:Name>
           <se:Description>
-            <se:Title>60204150904</se:Title>
+            <se:Title>Объекты почтовой связи планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -735,9 +735,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт оказаний услуг телеграфной связи существующий и строящийся</se:Name>
+          <se:Name>60204151001</se:Name>
           <se:Description>
-            <se:Title>60204151001</se:Title>
+            <se:Title>Пункт оказаний услуг телеграфной связи существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -755,9 +755,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт оказаний услуг телеграфной связи планируемый</se:Name>
+          <se:Name>60204151002</se:Name>
           <se:Description>
-            <se:Title>60204151002</se:Title>
+            <se:Title>Пункт оказаний услуг телеграфной связи планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -776,9 +776,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт оказаний услуг телеграфной связи планируемый к реконструкции</se:Name>
+          <se:Name>60204151003</se:Name>
           <se:Description>
-            <se:Title>60204151003</se:Title>
+            <se:Title>Пункт оказаний услуг телеграфной связи планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -796,9 +796,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт оказаний услуг телеграфной связи планируемый к ликвидации</se:Name>
+          <se:Name>60204151004</se:Name>
           <se:Description>
-            <se:Title>60204151004</se:Title>
+            <se:Title>Пункт оказаний услуг телеграфной связи планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -816,9 +816,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иной объект связи для непосредственного обслуживания населения существующий и строящийся</se:Name>
+          <se:Name>60204151101</se:Name>
           <se:Description>
-            <se:Title>60204151101</se:Title>
+            <se:Title>Иной объект связи для непосредственного обслуживания населения существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -836,9 +836,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иной объект связи для непосредственного обслуживания населения планируемый</se:Name>
+          <se:Name>60204151102</se:Name>
           <se:Description>
-            <se:Title>60204151102</se:Title>
+            <se:Title>Иной объект связи для непосредственного обслуживания населения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -857,9 +857,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иной объект связи для непосредственного обслуживания населения планируемый к реконструкции</se:Name>
+          <se:Name>60204151103</se:Name>
           <se:Description>
-            <se:Title>60204151103</se:Title>
+            <se:Title>Иной объект связи для непосредственного обслуживания населения планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -877,9 +877,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иной объект связи для непосредственного обслуживания населения планируемый к ликвидации</se:Name>
+          <se:Name>60204151104</se:Name>
           <se:Description>
-            <se:Title>60204151104</se:Title>
+            <se:Title>Иной объект связи для непосредственного обслуживания населения планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

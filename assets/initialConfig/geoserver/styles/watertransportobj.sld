@@ -6,9 +6,9 @@
       <se:Name>WaterTransportObj</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Морской порт и (или) морской терминал существующий и строящийся</se:Name>
+          <se:Name>60203130101</se:Name>
           <se:Description>
-            <se:Title>60203130101</se:Title>
+            <se:Title>Морской порт и (или) морской терминал существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Морской порт и (или) морской терминал планируемый</se:Name>
+          <se:Name>60203130102</se:Name>
           <se:Description>
-            <se:Title>60203130102</se:Title>
+            <se:Title>Морской порт и (или) морской терминал планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Морской порт и (или) морской терминал планируемый к реконструкции</se:Name>
+          <se:Name>60203130103</se:Name>
           <se:Description>
-            <se:Title>60203130103</se:Title>
+            <se:Title>Морской порт и (или) морской терминал планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий и строящийся</se:Name>
+          <se:Name>60203130201</se:Name>
           <se:Description>
-            <se:Title>60203130201</se:Title>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый</se:Name>
+          <se:Name>60203130202</se:Name>
           <se:Description>
-            <se:Title>60203130202</se:Title>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -108,9 +108,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции</se:Name>
+          <se:Name>60203130203</se:Name>
           <se:Description>
-            <se:Title>60203130203</se:Title>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Речной порт существующий и строящийся</se:Name>
+          <se:Name>60203130301</se:Name>
           <se:Description>
-            <se:Title>60203130301</se:Title>
+            <se:Title>Речной порт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Речной порт планируемый</se:Name>
+          <se:Name>60203130302</se:Name>
           <se:Description>
-            <se:Title>60203130302</se:Title>
+            <se:Title>Речной порт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -169,9 +169,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Речной порт планируемый к реконструкции</se:Name>
+          <se:Name>60203130303</se:Name>
           <se:Description>
-            <se:Title>60203130303</se:Title>
+            <se:Title>Речной порт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -189,9 +189,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект инфраструктуры внутренних водных путей существующий и строящийся</se:Name>
+          <se:Name>60203130401</se:Name>
           <se:Description>
-            <se:Title>60203130401</se:Title>
+            <se:Title>Объект инфраструктуры внутренних водных путей существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект инфраструктуры внутренних водных путей планируемый</se:Name>
+          <se:Name>60203130402</se:Name>
           <se:Description>
-            <se:Title>60203130402</se:Title>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -230,9 +230,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект инфраструктуры внутренних водных путей планируемый к реконструкции</se:Name>
+          <se:Name>60203130403</se:Name>
           <se:Description>
-            <se:Title>60203130403</se:Title>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -250,9 +250,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Причал существующий и строящийся</se:Name>
+          <se:Name>60203130501</se:Name>
           <se:Description>
-            <se:Title>60203130501</se:Title>
+            <se:Title>Причал существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -270,9 +270,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Причал планируемый</se:Name>
+          <se:Name>60203130502</se:Name>
           <se:Description>
-            <se:Title>60203130502</se:Title>
+            <se:Title>Причал планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -291,9 +291,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Причал планируемый к реконструкции</se:Name>
+          <se:Name>60203130503</se:Name>
           <se:Description>
-            <se:Title>60203130503</se:Title>
+            <se:Title>Причал планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -311,9 +311,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Причал планируемый к ликвидации</se:Name>
+          <se:Name>60203130504</se:Name>
           <se:Description>
-            <se:Title>60203130504</se:Title>
+            <se:Title>Причал планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -331,9 +331,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Паромная переправа существующая и строящаяся</se:Name>
+          <se:Name>60203130601</se:Name>
           <se:Description>
-            <se:Title>60203130601</se:Title>
+            <se:Title>Паромная переправа существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -351,9 +351,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Паромная переправа планируемая</se:Name>
+          <se:Name>60203130602</se:Name>
           <se:Description>
-            <se:Title>60203130602</se:Title>
+            <se:Title>Паромная переправа планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -372,9 +372,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Паромная переправа планируемая к реконструкции</se:Name>
+          <se:Name>60203130603</se:Name>
           <se:Description>
-            <se:Title>60203130603</se:Title>
+            <se:Title>Паромная переправа планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -392,9 +392,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Паромная переправа планируемая к ликвидации</se:Name>
+          <se:Name>60203130604</se:Name>
           <se:Description>
-            <se:Title>60203130604</se:Title>
+            <se:Title>Паромная переправа планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -412,9 +412,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
        <se:Rule>
-          <se:Name>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее и строящееся</se:Name>
+          <se:Name>60203130701</se:Name>
           <se:Description>
-            <se:Title>60203130701</se:Title>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -432,9 +432,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое</se:Name>
+          <se:Name>60203130702</se:Name>
           <se:Description>
-            <se:Title>60203130702</se:Title>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -453,9 +453,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции</se:Name>
+          <se:Name>60203130703</se:Name>
           <se:Description>
-            <se:Title>60203130703</se:Title>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -473,9 +473,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации</se:Name>
+          <se:Name>60203130704</se:Name>
           <se:Description>
-            <se:Title>60203130704</se:Title>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -493,9 +493,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Судоходные гидротехнические сооружения внутренних водных путей существующие и строящиеся</se:Name>
+          <se:Name>60203130801</se:Name>
           <se:Description>
-            <se:Title>60203130801</se:Title>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -513,9 +513,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Судоходные гидротехнические сооружения внутренних водных путей планируемые</se:Name>
+          <se:Name>60203130802</se:Name>
           <se:Description>
-            <se:Title>60203130802</se:Title>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -534,9 +534,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции</se:Name>
+          <se:Name>60203130803</se:Name>
           <se:Description>
-            <se:Title>60203130803</se:Title>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -554,9 +554,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наплавной мост существующий и строящийся</se:Name>
+          <se:Name>60203130901</se:Name>
           <se:Description>
-            <se:Title>60203130901</se:Title>
+            <se:Title>Наплавной мост существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -574,9 +574,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наплавной мост планируемый</se:Name>
+          <se:Name>60203130902</se:Name>
           <se:Description>
-            <se:Title>60203130902</se:Title>
+            <se:Title>Наплавной мост планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -595,9 +595,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Наплавной мост планируемый к реконструкции</se:Name>
+          <se:Name>60203130903</se:Name>
           <se:Description>
-            <se:Title>60203130903</se:Title>
+            <se:Title>Наплавной мост планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

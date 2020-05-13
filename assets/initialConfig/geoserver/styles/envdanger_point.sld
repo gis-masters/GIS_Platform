@@ -4,19 +4,19 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>EnvDanger</se:Name>
+		<se:Name>Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации</se:Name>
 		<UserStyle>
 			<se:Name>EnvDanger</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
-					<se:Name>70503010000</se:Name>
+					<se:Name>70503010001</se:Name>
 					<se:Description>
 						<se:Title>Объекты накопленного вреда окружающей среде</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>70503010000</ogc:Literal>
+							<ogc:Literal>70503010001</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -30,14 +30,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>70503020000</se:Name>
+					<se:Name>70503020001</se:Name>
 					<se:Description>
 						<se:Title>Водные объекты, подлежащие реабилитации</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>70503020000</ogc:Literal>
+							<ogc:Literal>70503020001</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>

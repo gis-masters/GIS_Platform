@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204030101</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 1150 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 1150 кВ существующие/se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -260,7 +260,7 @@
         <se:Rule>
           <se:Name>60204030201</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 800 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 800 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -512,7 +512,7 @@
         <se:Rule>
           <se:Name>60204030301</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 750 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 750 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -764,7 +764,7 @@
         <se:Rule>
           <se:Name>60204030401</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 600 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 600 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1016,7 +1016,7 @@
         <se:Rule>
           <se:Name>60204030501</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 500 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 500 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1268,7 +1268,7 @@
         <se:Rule>
           <se:Name>60204030601</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 400 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 400 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1520,7 +1520,7 @@
         <se:Rule>
           <se:Name>60204030701</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 330 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 330 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1772,7 +1772,7 @@
         <se:Rule>
           <se:Name>60204030801</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 300 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 300 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -2024,7 +2024,7 @@
         <se:Rule>
           <se:Name>60204030901</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 220 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 220 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -2276,7 +2276,7 @@
         <se:Rule>
           <se:Name>60204031001</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 150 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 150 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -2528,7 +2528,7 @@
         <se:Rule>
           <se:Name>60204031101</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 110 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 110 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -2780,7 +2780,7 @@
         <se:Rule>
           <se:Name>60204031201</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 60 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 60 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -3032,7 +3032,7 @@
         <se:Rule>
           <se:Name>60204031301</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 35 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 35 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -3284,7 +3284,7 @@
         <se:Rule>
           <se:Name>60204031401</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 20 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 20 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -3536,7 +3536,7 @@
         <se:Rule>
           <se:Name>60204031501</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 10 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 10 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -3788,7 +3788,7 @@
         <se:Rule>
           <se:Name>60204031601</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 6 кВ существующие и строящиеся</se:Title>
+            <se:Title>Линии электропередачи 6 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

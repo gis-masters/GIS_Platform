@@ -52,7 +52,7 @@
         <se:Rule>
           <se:Name>70502010002</se:Name>
           <se:Description>
-            <se:Title>Лесопарковый зеленый пояс планируемый</se:Title>
+            <se:Title>Лесопарковый зеленый пояс планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

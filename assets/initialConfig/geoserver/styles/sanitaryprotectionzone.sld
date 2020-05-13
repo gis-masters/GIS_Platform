@@ -6,14 +6,14 @@
       <se:Name>SanitaryProtectionZone</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60301010100</se:Name>
+          <se:Name>60301010101</se:Name>
           <se:Description>
             <se:Title>Санитарно-защитная зона предприятий, сооружений и иных объектов существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301010100</ogc:Literal>
+              <ogc:Literal>60301010101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -51,14 +51,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301010100</se:Name>
+          <se:Name>60301010102</se:Name>
           <se:Description>
-            <se:Title>Санитарно-защитная зона предприятий, сооружений и иных объектов планируемая</se:Title>
+            <se:Title>Санитарно-защитная зона предприятий, сооружений и иных объектов планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301010100</ogc:Literal>
+              <ogc:Literal>60301010102</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -97,14 +97,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301010200</se:Name>
+          <se:Name>60301010201</se:Name>
           <se:Description>
             <se:Title>Санитарно-защитная зона радиационных объектов существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301010200</ogc:Literal>
+              <ogc:Literal>60301010201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -142,14 +142,14 @@
            </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60301010200</se:Name>
+          <se:Name>60301010202</se:Name>
           <se:Description>
-            <se:Title>Санитарно-защитная зона радиационных объектов планируемая</se:Title>
+            <se:Title>Санитарно-защитная зона радиационных объектов планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60301010200</ogc:Literal>
+              <ogc:Literal>60301010202</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

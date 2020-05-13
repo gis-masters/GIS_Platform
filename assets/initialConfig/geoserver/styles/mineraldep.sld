@@ -6,14 +6,14 @@
       <se:Name>MineralDep</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60901020100</se:Name>
+          <se:Name>60901020101</se:Name>
           <se:Description>
-            <se:Title>Месторождения нефти и газа существующее и строящееся</se:Title>
+            <se:Title>Месторождения нефти и газа</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020100</ogc:Literal>
+              <ogc:Literal>60901020101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -37,14 +37,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020200</se:Name>
+          <se:Name>60901020201</se:Name>
           <se:Description>
-            <se:Title>Месторождения угля и горючих сланцев существующее и строящееся</se:Title>
+            <se:Title>Месторождения угля и горючих сланцев</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020200</ogc:Literal>
+              <ogc:Literal>60901020201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -68,14 +68,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020300</se:Name>
+          <se:Name>60901020301</se:Name>
           <se:Description>
-            <se:Title>Месторождения торфа и сапропеля существующее и строящееся</se:Title>
+            <se:Title>Месторождения торфа и сапропеля</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020300</ogc:Literal>
+              <ogc:Literal>60901020301</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -99,14 +99,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020400</se:Name>
+          <se:Name>60901020401</se:Name>
           <se:Description>
-            <se:Title>Месторождения металлических полезных ископаемых существующее и строящееся</se:Title>
+            <se:Title>Месторождения металлических полезных ископаемых</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020400</ogc:Literal>
+              <ogc:Literal>60901020401</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -130,14 +130,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020500</se:Name>
+          <se:Name>60901020501</se:Name>
           <se:Description>
-            <se:Title>Месторождения неметаллических полезных ископаемых существующее и строящееся</se:Title>
+            <se:Title>Месторождения неметаллических полезных ископаемых</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020500</ogc:Literal>
+              <ogc:Literal>60901020501</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -161,14 +161,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020600</se:Name>
+          <se:Name>60901020601</se:Name>
           <se:Description>
-            <se:Title>Месторождения гидроминерального сырья существующее и строящееся</se:Title>
+            <se:Title>Месторождения гидроминерального сырья</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020600</ogc:Literal>
+              <ogc:Literal>60901020601</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>
@@ -192,14 +192,14 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>60901020700</se:Name>
+          <se:Name>60901020701</se:Name>
           <se:Description>
-            <se:Title>Месторождения подземных вод существующее и строящееся</se:Title>
+            <se:Title>Месторождения подземных вод</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60901020700</ogc:Literal>
+              <ogc:Literal>60901020701</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

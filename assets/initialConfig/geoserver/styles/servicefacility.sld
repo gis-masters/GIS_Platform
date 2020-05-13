@@ -6,9 +6,9 @@
       <se:Name>ServiceFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Объект, связанный с производственной деятельностью существующий и строящийся</se:Name>
+          <se:Name>60202030101</se:Name>
           <se:Description>
-            <se:Title>60202030101</se:Title>
+            <se:Title>Объект, связанный с производственной деятельностью существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект, связанный с производственной деятельностью планируемый</se:Name>
+          <se:Name>60202030102</se:Name>
           <se:Description>
-            <se:Title>60202030102</se:Title>
+            <se:Title>Объект, связанный с производственной деятельностью планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект, связанный с производственной деятельностью планируемый к реконструкции</se:Name>
+          <se:Name>60202030103</se:Name>
           <se:Description>
-            <se:Title>60202030103</se:Title>
+            <se:Title>Объект, связанный с производственной деятельностью планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект, связанный с производственной деятельностью планируемый к ликвидации</se:Name>
+          <se:Name>60202030104</se:Name>
           <se:Description>
-            <se:Title>60202030104</se:Title>
+            <se:Title>Объект, связанный с производственной деятельностью планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

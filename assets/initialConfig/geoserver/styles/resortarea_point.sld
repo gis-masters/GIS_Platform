@@ -4,14 +4,14 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>ResortArea</se:Name>
+		<se:Name>Лечебно-оздоровительные местности и курорты</se:Name>
 		<UserStyle>
 			<se:Name>ResortArea</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
 					<se:Name>70301010011</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и строящиеся федерального значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт существующие федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -32,7 +32,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70301010012</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и планируемые к размещению федерального значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт планируемые к размещению федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -53,7 +53,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70301010013</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и планируемые к реконструкции федерального значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт планируемые к реконструкции федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -74,7 +74,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70301010014</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и планируемые к ликвидации федерального значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт планируемые к ликвидации федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -95,7 +95,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70301010021</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и строящиеся регионального значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт существующие регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -179,7 +179,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>70301010031</se:Name>
 					<se:Description>
-						<se:Title>Лечебно-оздоровительная местность или курорт существующие и строящиеся местного значения</se:Title>
+						<se:Title>Лечебно-оздоровительная местность или курорт существующие местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>

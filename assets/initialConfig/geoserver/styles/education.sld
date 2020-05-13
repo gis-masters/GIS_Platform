@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60201010101</se:Name>
           <se:Description>
-            <se:Title>Дошкольная образовательная организация существующая и строящаяся</se:Title>
+            <se:Title>Дошкольная образовательная организация существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемая</se:Name>
+          <se:Name>60201010102</se:Name>
           <se:Description>
-            <se:Title>60201010102</se:Title>
+            <se:Title>Дошкольная образовательная организация планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемая к реконструкции</se:Name>
+          <se:Name>60201010103</se:Name>
           <se:Description>
-            <se:Title>60201010103</se:Title>
+            <se:Title>Дошкольная образовательная организация планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемая к ликвидации</se:Name>
+          <se:Name>60201010104</se:Name>
           <se:Description>
-            <se:Title>60201010104</se:Title>
+            <se:Title>Дошкольная образовательная организация планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Общеобразовательная организация существующая и строящаяся</se:Name>
+          <se:Name>60201010201</se:Name>
           <se:Description>
-            <se:Title>60201010201</se:Title>
+            <se:Title>Общеобразовательная организация существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Общеобразовательная организация планируемая</se:Name>
+          <se:Name>60201010202</se:Name>
           <se:Description>
-            <se:Title>60201010202</se:Title>
+            <se:Title>Общеобразовательная организация планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Общеобразовательная организация планируемая к реконструкции</se:Name>
+          <se:Name>60201010203</se:Name>
           <se:Description>
-            <se:Title>60201010203</se:Title>
+            <se:Title>Общеобразовательная организация планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Общеобразовательная организация планируемая к ликвидации</se:Name>
+          <se:Name>60201010204</se:Name>
           <se:Description>
-            <se:Title>60201010204</se:Title>
+            <se:Title>Общеобразовательная организация планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация дополнительного образования существующая и строящаяся</se:Name>
+          <se:Name>60201010301</se:Name>
           <se:Description>
-            <se:Title>60201010301</se:Title>
+            <se:Title>Организация дополнительного образования существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация дополнительного образования планируемая</se:Name>
+          <se:Name>60201010302</se:Name>
           <se:Description>
-            <se:Title>60201010302</se:Title>
+            <se:Title>Организация дополнительного образования планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация дополнительного образования планируемая к реконструкции</se:Name>
+          <se:Name>60201010303</se:Name>
           <se:Description>
-            <se:Title>60201010303</se:Title>
+            <se:Title>Организация дополнительного образования планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация дополнительного образования планируемая к ликвидации</se:Name>
+          <se:Name>60201010304</se:Name>
           <se:Description>
-            <se:Title>60201010304</se:Title>
+            <se:Title>Организация дополнительного образования планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация, реализующая программы профессионального и высшего образования существующая и строящаяся</se:Name>
+          <se:Name>60201010401</se:Name>
           <se:Description>
-            <se:Title>60201010401</se:Title>
+            <se:Title>Организация, реализующая программы профессионального и высшего образования существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация, реализующая программы профессионального и высшего образования планируемая</se:Name>
+          <se:Name>60201010402</se:Name>
           <se:Description>
-            <se:Title>60201010402</se:Title>
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация, реализующая программы профессионального и высшего образования планируемая к реконструкции</se:Name>
+          <se:Name>60201010403</se:Name>
           <se:Description>
-            <se:Title>60201010403</se:Title>
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организация, реализующая программы профессионального и высшего образования планируемая к ликвидации</se:Name>
+          <se:Name>60201010404</se:Name>
           <se:Description>
-            <se:Title>60201010404</se:Title>
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением существующее и строящееся</se:Name>
+          <se:Name>60201010501</se:Name>
           <se:Description>
-            <se:Title>60201010501</se:Title>
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемое</se:Name>
+          <se:Name>60201010502</se:Name>
           <se:Description>
-            <se:Title>60201010502</se:Title>
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемое к реконструкции</se:Name>
+          <se:Name>60201010503</se:Name>
           <se:Description>
-            <se:Title>60201010503</se:Title>
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Дошкольная образовательная организация планируемое к ликвидации</se:Name>
+          <se:Name>60201010504</se:Name>
           <se:Description>
-            <se:Title>60201010504</se:Title>
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Научная организация и ее структурные подразделения существующая и строящаяся</se:Name>
+          <se:Name>60201010601</se:Name>
           <se:Description>
-            <se:Title>60201010601</se:Title>
+            <se:Title>Научная организация и ее структурные подразделения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Научная организация и ее структурные подразделения планируемая</se:Name>
+          <se:Name>60201010602</se:Name>
           <se:Description>
-            <se:Title>60201010602</se:Title>
+            <se:Title>Научная организация и ее структурные подразделения планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Научная организация и ее структурные подразделения планируемая к реконструкции</se:Name>
+          <se:Name>60201010603</se:Name>
           <se:Description>
-            <se:Title>60201010603</se:Title>
+            <se:Title>Научная организация и ее структурные подразделения планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Научная организация и ее структурные подразделения планируемая к ликвидации</se:Name>
+          <se:Name>60201010604</se:Name>
           <se:Description>
-            <se:Title>60201010604</se:Title>
+            <se:Title>Научная организация и ее структурные подразделения планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

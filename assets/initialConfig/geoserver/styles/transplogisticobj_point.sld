@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>TranspLogisticObj</se:Name>
+		<se:Name>Комплексные объекты транспортной инфраструктуры</se:Name>
 		<UserStyle>
 			<se:Name>TranspLogisticObj</se:Name>
 			<se:FeatureTypeStyle>

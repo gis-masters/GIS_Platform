@@ -6,9 +6,9 @@
       <se:Name>WildlifeProtection</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Центры реабилитации животных существующие и строящиеся</se:Name>
+          <se:Name>60205050101</se:Name>
           <se:Description>
-            <se:Title>60205050101</se:Title>
+            <se:Title>Центры реабилитации животных существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центры реабилитации животных планируемые</se:Name>
+          <se:Name>60205050102</se:Name>
           <se:Description>
-            <se:Title>60205050102</se:Title>
+            <se:Title>Центры реабилитации животных планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центры реабилитации животных планируемые к реконструкции</se:Name>
+          <se:Name>60205050103</se:Name>
           <se:Description>
-            <se:Title>60205050103</se:Title>
+            <se:Title>Центры реабилитации животных планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центры реабилитации животных планируемые к ликвидации</se:Name>
+          <se:Name>60205050104</se:Name>
           <se:Description>
-            <se:Title>60205050104</se:Title>
+            <se:Title>Центры реабилитации животных планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Зверопереходы (экодуки) существующие и строящиеся</se:Name>
+          <se:Name>60205050201</se:Name>
           <se:Description>
-            <se:Title>60205050201</se:Title>
+            <se:Title>Зверопереходы (экодуки) существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Зверопереходы (экодуки) планируемые</se:Name>
+          <se:Name>60205050202</se:Name>
           <se:Description>
-            <se:Title>60205050202</se:Title>
+            <se:Title>Зверопереходы (экодуки) планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Зверопереходы (экодуки) планируемые к реконструкции</se:Name>
+          <se:Name>60205050203</se:Name>
           <se:Description>
-            <se:Title>60205050203</se:Title>
+            <se:Title>Зверопереходы (экодуки) планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Зверопереходы (экодуки) планируемые к ликвидации</se:Name>
+          <se:Name>60205050204</se:Name>
           <se:Description>
-            <se:Title>60205050204</se:Title>
+            <se:Title>Зверопереходы (экодуки) планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

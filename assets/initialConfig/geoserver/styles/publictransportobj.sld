@@ -6,9 +6,9 @@
       <se:Name>PublicTransportObj</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Автовокзал существующий и строящийся</se:Name>
+          <se:Name>60203070101</se:Name>
           <se:Description>
-            <se:Title>60203070101</se:Title>
+            <se:Title>Автовокзал существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автовокзал планируемый</se:Name>
+          <se:Name>60203070102</se:Name>
           <se:Description>
-            <se:Title>60203070102</se:Title>
+            <se:Title>Автовокзал планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автовокзал планируемый к реконструкции</se:Name>
+          <se:Name>60203070103</se:Name>
           <se:Description>
-            <se:Title>60203070103</se:Title>
+            <se:Title>Автовокзал планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автовокзал планируемый к ликвидации</se:Name>
+          <se:Name>60203070104</se:Name>
           <se:Description>
-            <se:Title>60203070104</se:Title>
+            <se:Title>Автовокзал планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автостанция существующая и строящаяся</se:Name>
+          <se:Name>60203070201</se:Name>
           <se:Description>
-            <se:Title>60203070201</se:Title>
+            <se:Title>Автостанция существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автостанция планируемая</se:Name>
+          <se:Name>60203070202</se:Name>
           <se:Description>
-            <se:Title>60203070202</se:Title>
+            <se:Title>Автостанция планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автостанция планируемая к реконструкции</se:Name>
+          <se:Name>60203070203</se:Name>
           <se:Description>
-            <se:Title>60203070203</se:Title>
+            <se:Title>Автостанция планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Автостанция планируемая к ликвидации</se:Name>
+          <se:Name>60203070204</se:Name>
           <se:Description>
-            <se:Title>60203070204</se:Title>
+            <se:Title>Автостанция планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

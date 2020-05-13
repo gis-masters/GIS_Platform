@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>PublicTransportStops</se:Name>
+		<se:Name>Остановочные пункты общественного пассажирского транспорта</se:Name>
 		<UserStyle>
 			<se:Name>PublicTransportStops</se:Name>
 			<se:FeatureTypeStyle>
@@ -583,13 +583,13 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203110314</ogc:Literal>
+							<ogc:Literal>60203110321</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/06_PublicTransportStops/60203110314.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/06_PublicTransportStops/60203110321.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -1061,7 +1061,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203110522</se:Name>
 					<se:Description>
-						<se:Title>Станция подвесной канатной дороги транспортной планиуемая к размещению регионального значения</se:Title>
+						<se:Title>Станция подвесной канатной дороги транспортной планируемая к размещению регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -1082,7 +1082,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203110523</se:Name>
 					<se:Description>
-						<se:Title>Станция подвесной канатной дороги транспортной планиуемая к реконструкции регионального значения</se:Title>
+						<se:Title>Станция подвесной канатной дороги транспортной планируемая к реконструкции регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
@@ -1103,7 +1103,7 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203110524</se:Name>
 					<se:Description>
-						<se:Title>Станция подвесной канатной дороги транспортной планиуемая к ликвидации регионального значения</se:Title>
+						<se:Title>Станция подвесной канатной дороги транспортной планируемая к ликвидации регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>

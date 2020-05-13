@@ -6,9 +6,9 @@
       <se:Name>OtherObject</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством существующие и строящиеся</se:Name>
+          <se:Name>60205060101</se:Name>
           <se:Description>
-            <se:Title>60205060101</se:Title>
+            <se:Title>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые</se:Name>
+          <se:Name>60205060102</se:Name>
           <se:Description>
-            <se:Title>60205060102</se:Title>
+            <se:Title>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые к реконструкции</se:Name>
+          <se:Name>60205060103</se:Name>
           <se:Description>
-            <se:Title>60205060103</se:Title>
+            <se:Title>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые к ликвидации</se:Name>
+          <se:Name>60205060104</se:Name>
           <se:Description>
-            <se:Title>60205060104</se:Title>
+            <se:Title>Иные объекты регионального значения, объекты местного значения, установленные в соответствии с законодательством планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

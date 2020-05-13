@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60203050101</se:Name>
           <se:Description>
-            <se:Title>Поселковая дорога существующая и строящаяся</se:Title>
+            <se:Title>Поселковая дорога существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -131,7 +131,7 @@
         <se:Rule>
           <se:Name>60203050201</se:Name>
           <se:Description>
-            <se:Title>Главная улица существующая и строящаяся</se:Title>
+            <se:Title>Главная улица существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -254,7 +254,7 @@
         <se:Rule>
           <se:Name>60203050301</se:Name>
           <se:Description>
-            <se:Title>Улица в жилой застройке существующая и строящаяся</se:Title>
+            <se:Title>Улица в жилой застройке существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -377,7 +377,7 @@
         <se:Rule>
           <se:Name>60203050401</se:Name>
           <se:Description>
-            <se:Title>Хозяйственный проезд, скотопрогон существующий и строящийся</se:Title>
+            <se:Title>Хозяйственный проезд, скотопрогон существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

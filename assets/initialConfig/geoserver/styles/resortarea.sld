@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>70301010001</se:Name>
           <se:Description>
-            <se:Title>Лечебно-оздоровительная местность или курорт существующая и строящаяся</se:Title>
+            <se:Title>Лечебно-оздоровительная местность или курорт существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

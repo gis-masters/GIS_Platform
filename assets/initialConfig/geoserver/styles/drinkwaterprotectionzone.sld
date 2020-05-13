@@ -53,7 +53,7 @@
         <se:Rule>
           <se:Name>60301080102</se:Name>
           <se:Description>
-            <se:Title>Первый пояс зоны санитарной охраны источника водоснабжения планируемый</se:Title>
+            <se:Title>Первый пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -143,7 +143,7 @@
         <se:Rule>
           <se:Name>60301080202</se:Name>
           <se:Description>
-            <se:Title>Второй пояс зоны санитарной охраны источника водоснабжения планируемый</se:Title>
+            <se:Title>Второй пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -233,7 +233,7 @@
         <se:Rule>
           <se:Name>60301080302</se:Name>
           <se:Description>
-            <se:Title>Третий пояс зоны санитарной охраны источника водоснабжения планируемый</se:Title>
+            <se:Title>Третий пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -323,7 +323,7 @@
         <se:Rule>
           <se:Name>60301080402</se:Name>
           <se:Description>
-            <se:Title>Санитарно-защитная полоса водоводов планируемая</se:Title>
+            <se:Title>Санитарно-защитная полоса водоводов планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

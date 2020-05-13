@@ -6,9 +6,9 @@
       <se:Name>WasteFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Объект размещения отходов существующий и строящийся</se:Name>
+          <se:Name>60202040101</se:Name>
           <se:Description>
-            <se:Title>60202040101</se:Title>
+            <se:Title>Объект размещения отходов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект размещения отходов планируемый</se:Name>
+          <se:Name>60202040102</se:Name>
           <se:Description>
-            <se:Title>60202040102</se:Title>
+            <se:Title>Объект размещения отходов планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект размещения отходов планируемый к реконструкции</se:Name>
+          <se:Name>60202040103</se:Name>
           <se:Description>
-            <se:Title>60202040103</se:Title>
+            <se:Title>Объект размещения отходов планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект размещения отходов планируемый к ликвидации</se:Name>
+          <se:Name>60202040104</se:Name>
           <se:Description>
-            <se:Title>60202040104</se:Title>
+            <se:Title>Объект размещения отходов планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект по обработке, утилизации, обезвреживанию отходов существующий и строящийся</se:Name>
+          <se:Name>60202040201</se:Name>
           <se:Description>
-            <se:Title>60202040201</se:Title>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект по обработке, утилизации, обезвреживанию отходов планируемый</se:Name>
+          <se:Name>60202040202</se:Name>
           <se:Description>
-            <se:Title>60202040202</se:Title>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции</se:Name>
+          <se:Name>60202040203</se:Name>
           <se:Description>
-            <se:Title>60202040203</se:Title>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации</se:Name>
+          <se:Name>60202040204</se:Name>
           <se:Description>
-            <se:Title>60202040204</se:Title>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект утилизации, уничтожения биологических отходов существующий и строящийся</se:Name>
+          <se:Name>60202040301</se:Name>
           <se:Description>
-            <se:Title>60202040301</se:Title>
+            <se:Title>Объект утилизации, уничтожения биологических отходов существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект утилизации, уничтожения биологических отходов планируемый</se:Name>
+          <se:Name>60202040302</se:Name>
           <se:Description>
-            <se:Title>60202040302</se:Title>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции</se:Name>
+          <se:Name>60202040303</se:Name>
           <se:Description>
-            <se:Title>60202040303</se:Title>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации</se:Name>
+          <se:Name>60202040304</se:Name>
           <se:Description>
-            <se:Title>60202040304</se:Title>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект обращения с радиоактивными отходами существующий и строящийся</se:Name>
+          <se:Name>60202040401</se:Name>
           <se:Description>
-            <se:Title>60202040401</se:Title>
+            <se:Title>Объект обращения с радиоактивными отходами существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект обращения с радиоактивными отходами планируемый</se:Name>
+          <se:Name>60202040402</se:Name>
           <se:Description>
-            <se:Title>60202040402</se:Title>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект обращения с радиоактивными отходами планируемый к реконструкции</se:Name>
+          <se:Name>60202040403</se:Name>
           <se:Description>
-            <se:Title>60202040403</se:Title>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект обращения с радиоактивными отходами планируемый к ликвидации</se:Name>
+          <se:Name>60202040404</se:Name>
           <se:Description>
-            <se:Title>60202040404</se:Title>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Места несанкционированного размещения отходов производства и потребления существующий и строящийся</se:Name>
+          <se:Name>60202040501</se:Name>
           <se:Description>
-            <se:Title>60202040501</se:Title>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Места несанкционированного размещения отходов производства и потребления планируемый к ликвидации</se:Name>
+          <se:Name>60202040504</se:Name>
           <se:Description>
-            <se:Title>60202040504</se:Title>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -370,9 +370,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты обращения с отходами существующий и строящийся</se:Name>
+          <se:Name>60202040601</se:Name>
           <se:Description>
-            <se:Title>60202040601</se:Title>
+            <se:Title>Иные объекты обращения с отходами существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -390,9 +390,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты обращения с отходами планируемый</se:Name>
+          <se:Name>60202040602</se:Name>
           <se:Description>
-            <se:Title>60202040602</se:Title>
+            <se:Title>Иные объекты обращения с отходами планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты обращения с отходами планируемый к реконструкции</se:Name>
+          <se:Name>60202040603</se:Name>
           <se:Description>
-            <se:Title>60202040603</se:Title>
+            <se:Title>Иные объекты обращения с отходами планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Иные объекты обращения с отходами планируемый к ликвидации</se:Name>
+          <se:Name>60202040604</se:Name>
           <se:Description>
-            <se:Title>60202040604</se:Title>
+            <se:Title>Иные объекты обращения с отходами планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

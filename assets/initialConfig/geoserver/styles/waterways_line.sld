@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60203140101</se:Name>
           <se:Description>
-            <se:Title>Внутренний водный путь существующий и строящийся</se:Title>
+            <se:Title>Внутренний водный путь существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -49,7 +49,7 @@
         <se:Rule>
           <se:Name>60203140201</se:Name>
           <se:Description>
-            <se:Title>Корабельные фарватеры существующие и строящиеся</se:Title>
+            <se:Title>Корабельные фарватеры существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

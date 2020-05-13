@@ -6,9 +6,9 @@
       <se:Name>AirTransportObj</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Международный аэропорт существующий и строящийся</se:Name>
+          <se:Name>60203120101</se:Name>
           <se:Description>
-            <se:Title>60203120101</se:Title>
+            <se:Title>Международный аэропорт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Международный аэропорт планируемый</se:Name>
+          <se:Name>60203120102</se:Name>
           <se:Description>
-            <se:Title>60203120102</se:Title>
+            <se:Title>Международный аэропорт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Международный аэропорт планируемый к реконструкции</se:Name>
+          <se:Name>60203120103</se:Name>
           <se:Description>
-            <se:Title>60203120103</se:Title>
+            <se:Title>Международный аэропорт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Международный аэропорт планируемый к ликвидации</se:Name>
+          <se:Name>60203120104</se:Name>
           <se:Description>
-            <se:Title>60203120104</se:Title>
+            <se:Title>Международный аэропорт планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэропорт существующий и строящийся</se:Name>
+          <se:Name>60203120201</se:Name>
           <se:Description>
-            <se:Title>60203120201</se:Title>
+            <se:Title>Аэропорт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэропорт планируемый</se:Name>
+          <se:Name>60203120202</se:Name>
           <se:Description>
-            <se:Title>60203120202</se:Title>
+            <se:Title>Аэропорт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэропорт планируемый к реконструкции</se:Name>
+          <se:Name>60203120203</se:Name>
           <se:Description>
-            <se:Title>60203120203</se:Title>
+            <se:Title>Аэропорт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэропорт планируемый к ликвидации</se:Name>
+          <se:Name>60203120204</se:Name>
           <se:Description>
-            <se:Title>60203120204</se:Title>
+            <se:Title>Аэропорт планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэродром существующий и строящийся</se:Name>
+          <se:Name>60203120301</se:Name>
           <se:Description>
-            <se:Title>60203120301</se:Title>
+            <se:Title>Аэродром существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэродром планируемый</se:Name>
+          <se:Name>60203120302</se:Name>
           <se:Description>
-            <se:Title>60203120302</se:Title>
+            <se:Title>Аэродром планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэродром планируемый к реконструкции</se:Name>
+          <se:Name>60203120303</se:Name>
           <se:Description>
-            <se:Title>60203120303</se:Title>
+            <se:Title>Аэродром планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Аэродром планируемый к ликвидации</se:Name>
+          <se:Name>60203120304</se:Name>
           <se:Description>
-            <se:Title>60203120304</se:Title>
+            <se:Title>Аэродром планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вертодром существующий и строящийся</se:Name>
+          <se:Name>60203120401</se:Name>
           <se:Description>
-            <se:Title>60203120401</se:Title>
+            <se:Title>Вертодром существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вертодром планируемый</se:Name>
+          <se:Name>60203120402</se:Name>
           <se:Description>
-            <se:Title>60203120402</se:Title>
+            <se:Title>Вертодром планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вертодром планируемый к реконструкции</se:Name>
+          <se:Name>60203120403</se:Name>
           <se:Description>
-            <se:Title>60203120403</se:Title>
+            <se:Title>Вертодром планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вертодром планируемый к ликвидации</se:Name>
+          <se:Name>60203120404</se:Name>
           <se:Description>
-            <se:Title>60203120404</se:Title>
+            <se:Title>Вертодром планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Посадочная площадка существующая и строящаяся</se:Name>
+          <se:Name>60203120501</se:Name>
           <se:Description>
-            <se:Title>60203120501</se:Title>
+            <se:Title>Посадочная площадка существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Посадочная площадка планируемая</se:Name>
+          <se:Name>60203120502</se:Name>
           <se:Description>
-            <se:Title>60203120502</se:Title>
+            <se:Title>Посадочная площадка планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Посадочная площадка планируемая к реконструкции</se:Name>
+          <se:Name>60203120503</se:Name>
           <se:Description>
-            <se:Title>60203120503</se:Title>
+            <se:Title>Посадочная площадка планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Посадочная площадка планируемая к ликвидации</se:Name>
+          <se:Name>60203120504</se:Name>
           <se:Description>
-            <se:Title>60203120504</se:Title>
+            <se:Title>Посадочная площадка планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) существующий и строящийся</se:Name>
+          <se:Name>60203120601</se:Name>
           <se:Description>
-            <se:Title>60203120601</se:Title>
+            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый</se:Name>
+          <se:Name>60203120602</se:Name>
           <se:Description>
-            <se:Title>60203120602</se:Title>
+            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к реконструкции</se:Name>
+          <se:Name>60203120603</se:Name>
           <se:Description>
-            <se:Title>60203120603</se:Title>
+            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к ликвидации</se:Name>
+          <se:Name>60203120604</se:Name>
           <se:Description>
-            <se:Title>60203120604</se:Title>
+            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

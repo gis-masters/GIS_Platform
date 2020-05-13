@@ -6,9 +6,9 @@
       <se:Name>ThermalFacility</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Источник тепловой энергии существующий и строящийся</se:Name>
+          <se:Name>60204090101</se:Name>
           <se:Description>
-            <se:Title>60204090101</se:Title>
+            <se:Title>Источник тепловой энергии существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Источник тепловой энергии планируемый</se:Name>
+          <se:Name>60204090102</se:Name>
           <se:Description>
-            <se:Title>60204090102</se:Title>
+            <se:Title>Источник тепловой энергии планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Источник тепловой энергии планируемый к реконструкции</se:Name>
+          <se:Name>60204090103</se:Name>
           <se:Description>
-            <se:Title>60204090103</se:Title>
+            <se:Title>Источник тепловой энергии планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Источник тепловой энергии планируемый к ликвидации</se:Name>
+          <se:Name>60204090104</se:Name>
           <se:Description>
-            <se:Title>60204090104</se:Title>
+            <se:Title>Источник тепловой энергии планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центральный тепловой пункт (ЦТП) существующий и строящийся</se:Name>
+          <se:Name>60204090201</se:Name>
           <se:Description>
-            <se:Title>60204090201</se:Title>
+            <se:Title>Центральный тепловой пункт (ЦТП) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центральный тепловой пункт (ЦТП) планируемый</se:Name>
+          <se:Name>60204090202</se:Name>
           <se:Description>
-            <se:Title>60204090202</se:Title>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центральный тепловой пункт (ЦТП) планируемый к реконструкции</se:Name>
+          <se:Name>60204090203</se:Name>
           <se:Description>
-            <se:Title>60204090203</se:Title>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Центральный тепловой пункт (ЦТП) планируемый к ликвидации</se:Name>
+          <se:Name>60204090204</se:Name>
           <se:Description>
-            <se:Title>60204090204</se:Title>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Индивидуальный тепловой пункт (ИТП) существующий и строящийся</se:Name>
+          <se:Name>60204090301</se:Name>
           <se:Description>
-            <se:Title>60204090301</se:Title>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Индивидуальный тепловой пункт (ИТП) планируемый</se:Name>
+          <se:Name>60204090302</se:Name>
           <se:Description>
-            <se:Title>60204090302</se:Title>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции</se:Name>
+          <se:Name>60204090303</se:Name>
           <se:Description>
-            <se:Title>60204090303</se:Title>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации</se:Name>
+          <se:Name>60204090304</se:Name>
           <se:Description>
-            <se:Title>60204090304</se:Title>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тепловая перекачивающая насосная станция (ТПНС) существующий и строящийся</se:Name>
+          <se:Name>60204090401</se:Name>
           <se:Description>
-            <se:Title>60204090401</se:Title>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тепловая перекачивающая насосная станция (ТПНС) планируемый</se:Name>
+          <se:Name>60204090402</se:Name>
           <se:Description>
-            <se:Title>60204090402</se:Title>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тепловая перекачивающая насосная станция (ТПНС) планируемый к реконструкции</se:Name>
+          <se:Name>60204090403</se:Name>
           <se:Description>
-            <se:Title>60204090403</se:Title>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тепловая перекачивающая насосная станция (ТПНС) планируемый к ликвидации</se:Name>
+          <se:Name>60204090404</se:Name>
           <se:Description>
-            <se:Title>60204090404</se:Title>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

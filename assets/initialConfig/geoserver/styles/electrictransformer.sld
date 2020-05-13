@@ -6,9 +6,9 @@
       <se:Name>ElectricTransformer</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Электрическая подстанция 1150 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020101</se:Name>
           <se:Description>
-            <se:Title>60204020101</se:Title>
+            <se:Title>Электрическая подстанция 1150 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 1150 кВ планируемая</se:Name>
+          <se:Name>60204020102</se:Name>
           <se:Description>
-            <se:Title>60204020102</se:Title>
+            <se:Title>Электрическая подстанция 1150 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 1150 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020103</se:Name>
           <se:Description>
-            <se:Title>60204020103</se:Title>
+            <se:Title>Электрическая подстанция 1150 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 1150 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020104</se:Name>
           <se:Description>
-            <se:Title>60204020104</se:Title>
+            <se:Title>Электрическая подстанция 1150 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 800 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020201</se:Name>
           <se:Description>
-            <se:Title>60204020201</se:Title>
+            <se:Title>Электрическая подстанция 800 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 800 кВ планируемая</se:Name>
+          <se:Name>60204020202</se:Name>
           <se:Description>
-            <se:Title>60204020202</se:Title>
+            <se:Title>Электрическая подстанция 800 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 800 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020203</se:Name>
           <se:Description>
-            <se:Title>60204020203</se:Title>
+            <se:Title>Электрическая подстанция 800 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 800 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020204</se:Name>
           <se:Description>
-            <se:Title>60204020204</se:Title>
+            <se:Title>Электрическая подстанция 800 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 750 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020301</se:Name>
           <se:Description>
-            <se:Title>60204020301</se:Title>
+            <se:Title>Электрическая подстанция 750 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 750 кВ планируемая</se:Name>
+          <se:Name>60204020302</se:Name>
           <se:Description>
-            <se:Title>60204020302</se:Title>
+            <se:Title>Электрическая подстанция 750 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 750 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020303</se:Name>
           <se:Description>
-            <se:Title>60204020303</se:Title>
+            <se:Title>Электрическая подстанция 750 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 750 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020304</se:Name>
           <se:Description>
-            <se:Title>60204020304</se:Title>
+            <se:Title>Электрическая подстанция 750 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 600 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020401</se:Name>
           <se:Description>
-            <se:Title>60204020401</se:Title>
+            <se:Title>Электрическая подстанция 600 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 600 кВ планируемая</se:Name>
+          <se:Name>60204020402</se:Name>
           <se:Description>
-            <se:Title>60204020402</se:Title>
+            <se:Title>Электрическая подстанция 600 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 600 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020403</se:Name>
           <se:Description>
-            <se:Title>60204020403</se:Title>
+            <se:Title>Электрическая подстанция 600 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 600 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020404</se:Name>
           <se:Description>
-            <se:Title>60204020404</se:Title>
+            <se:Title>Электрическая подстанция 600 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 500 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020501</se:Name>
           <se:Description>
-            <se:Title>60204020501</se:Title>
+            <se:Title>Электрическая подстанция 500 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 500 кВ планируемая</se:Name>
+          <se:Name>60204020502</se:Name>
           <se:Description>
-            <se:Title>60204020502</se:Title>
+            <se:Title>Электрическая подстанция 500 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 500 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020503</se:Name>
           <se:Description>
-            <se:Title>60204020503</se:Title>
+            <se:Title>Электрическая подстанция 500 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 500 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020504</se:Name>
           <se:Description>
-            <se:Title>60204020504</se:Title>
+            <se:Title>Электрическая подстанция 500 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020601</se:Name>
           <se:Description>
-            <se:Title>60204020601</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ планируемая</se:Name>
+          <se:Name>60204020602</se:Name>
           <se:Description>
-            <se:Title>60204020602</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020603</se:Name>
           <se:Description>
-            <se:Title>60204020603</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020604</se:Name>
           <se:Description>
-            <se:Title>60204020604</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -492,9 +492,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 330 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020701</se:Name>
           <se:Description>
-            <se:Title>60204020701</se:Title>
+            <se:Title>Электрическая подстанция 330 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -512,9 +512,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 330 кВ планируемая</se:Name>
+          <se:Name>60204020702</se:Name>
           <se:Description>
-            <se:Title>60204020702</se:Title>
+            <se:Title>Электрическая подстанция 330 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -533,9 +533,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 330 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020703</se:Name>
           <se:Description>
-            <se:Title>60204020703</se:Title>
+            <se:Title>Электрическая подстанция 330 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -553,9 +553,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 330 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020704</se:Name>
           <se:Description>
-            <se:Title>60204020704</se:Title>
+            <se:Title>Электрическая подстанция 330 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -573,9 +573,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 300 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020801</se:Name>
           <se:Description>
-            <se:Title>60204020801</se:Title>
+            <se:Title>Электрическая подстанция 300 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -593,9 +593,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 300 кВ планируемая</se:Name>
+          <se:Name>60204020802</se:Name>
           <se:Description>
-            <se:Title>60204020802</se:Title>
+            <se:Title>Электрическая подстанция 300 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -614,9 +614,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 300 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020803</se:Name>
           <se:Description>
-            <se:Title>60204020803</se:Title>
+            <se:Title>Электрическая подстанция 300 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -634,9 +634,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 300 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020804</se:Name>
           <se:Description>
-            <se:Title>60204020804</se:Title>
+            <se:Title>Электрическая подстанция 300 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -654,9 +654,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 220 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204020901</se:Name>
           <se:Description>
-            <se:Title>60204020901</se:Title>
+            <se:Title>Электрическая подстанция 220 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -674,9 +674,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 220 кВ планируемая</se:Name>
+          <se:Name>60204020902</se:Name>
           <se:Description>
-            <se:Title>60204020902</se:Title>
+            <se:Title>Электрическая подстанция 220 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -695,9 +695,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 220 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204020903</se:Name>
           <se:Description>
-            <se:Title>60204020903</se:Title>
+            <se:Title>Электрическая подстанция 220 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -715,9 +715,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 220 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204020904</se:Name>
           <se:Description>
-            <se:Title>60204020904</se:Title>
+            <se:Title>Электрическая подстанция 220 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -735,9 +735,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 150 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021001</se:Name>
           <se:Description>
-            <se:Title>60204021001</se:Title>
+            <se:Title>Электрическая подстанция 150 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -755,9 +755,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 150 кВ планируемая</se:Name>
+          <se:Name>60204021002</se:Name>
           <se:Description>
-            <se:Title>60204021002</se:Title>
+            <se:Title>Электрическая подстанция 150 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -776,9 +776,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 150 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021003</se:Name>
           <se:Description>
-            <se:Title>60204021003</se:Title>
+            <se:Title>Электрическая подстанция 150 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -796,9 +796,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 150 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021004</se:Name>
           <se:Description>
-            <se:Title>60204021004</se:Title>
+            <se:Title>Электрическая подстанция 150 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -816,9 +816,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 110 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021101</se:Name>
           <se:Description>
-            <se:Title>60204021101</se:Title>
+            <se:Title>Электрическая подстанция 110 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -836,9 +836,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 110 кВ планируемая</se:Name>
+          <se:Name>60204021102</se:Name>
           <se:Description>
-            <se:Title>60204021102</se:Title>
+            <se:Title>Электрическая подстанция 110 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -857,9 +857,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 110 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021103</se:Name>
           <se:Description>
-            <se:Title>60204021103</se:Title>
+            <se:Title>Электрическая подстанция 110 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -877,9 +877,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 110 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021104</se:Name>
           <se:Description>
-            <se:Title>60204021104</se:Title>
+            <se:Title>Электрическая подстанция 110 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -897,9 +897,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 60 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021201</se:Name>
           <se:Description>
-            <se:Title>60204021201</se:Title>
+            <se:Title>Электрическая подстанция 60 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -917,9 +917,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 60 кВ планируемая</se:Name>
+          <se:Name>60204021202</se:Name>
           <se:Description>
-            <se:Title>60204021202</se:Title>
+            <se:Title>Электрическая подстанция 60 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -938,9 +938,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 60 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021203</se:Name>
           <se:Description>
-            <se:Title>60204021203</se:Title>
+            <se:Title>Электрическая подстанция 60 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -958,9 +958,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 60 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021204</se:Name>
           <se:Description>
-            <se:Title>60204021204</se:Title>
+            <se:Title>Электрическая подстанция 60 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -978,9 +978,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 35 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021301</se:Name>
           <se:Description>
-            <se:Title>60204021301</se:Title>
+            <se:Title>Электрическая подстанция 35 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -998,9 +998,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 35 кВ планируемая</se:Name>
+          <se:Name>60204021302</se:Name>
           <se:Description>
-            <se:Title>60204021302</se:Title>
+            <se:Title>Электрическая подстанция 35 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1019,9 +1019,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 35 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021303</se:Name>
           <se:Description>
-            <se:Title>60204021303</se:Title>
+            <se:Title>Электрическая подстанция 35 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1039,9 +1039,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 35 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021304</se:Name>
           <se:Description>
-            <se:Title>60204021304</se:Title>
+            <se:Title>Электрическая подстанция 35 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1059,9 +1059,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 20 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021401</se:Name>
           <se:Description>
-            <se:Title>60204021401</se:Title>
+            <se:Title>Электрическая подстанция 20 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1079,9 +1079,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 20 кВ планируемая</se:Name>
+          <se:Name>60204021402</se:Name>
           <se:Description>
-            <se:Title>60204021402</se:Title>
+            <se:Title>Электрическая подстанция 20 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1100,9 +1100,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 20 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021403</se:Name>
           <se:Description>
-            <se:Title>60204021403</se:Title>
+            <se:Title>Электрическая подстанция 20 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1120,9 +1120,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 20 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021404</se:Name>
           <se:Description>
-            <se:Title>60204021404</se:Title>
+            <se:Title>Электрическая подстанция 20 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1140,9 +1140,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 10 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021501</se:Name>
           <se:Description>
-            <se:Title>60204021501</se:Title>
+            <se:Title>Электрическая подстанция 10 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1160,9 +1160,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 10 кВ планируемая</se:Name>
+          <se:Name>60204021502</se:Name>
           <se:Description>
-            <se:Title>60204021502</se:Title>
+            <se:Title>Электрическая подстанция 10 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1181,9 +1181,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 10 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021503</se:Name>
           <se:Description>
-            <se:Title>60204021503</se:Title>
+            <se:Title>Электрическая подстанция 10 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1201,9 +1201,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 10 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021504</se:Name>
           <se:Description>
-            <se:Title>60204021504</se:Title>
+            <se:Title>Электрическая подстанция 10 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1221,9 +1221,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 6 кВ существующая и строящаяся</se:Name>
+          <se:Name>60204021601</se:Name>
           <se:Description>
-            <se:Title>60204021601</se:Title>
+            <se:Title>Электрическая подстанция 6 кВ существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1241,9 +1241,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 6 кВ планируемая</se:Name>
+          <se:Name>60204021602</se:Name>
           <se:Description>
-            <se:Title>60204021602</se:Title>
+            <se:Title>Электрическая подстанция 6 кВ планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1262,9 +1262,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 6 кВ планируемая к реконструкции</se:Name>
+          <se:Name>60204021603</se:Name>
           <se:Description>
-            <se:Title>60204021603</se:Title>
+            <se:Title>Электрическая подстанция 6 кВ планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1282,9 +1282,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 6 кВ планируемая к ликвидации</se:Name>
+          <se:Name>60204021604</se:Name>
           <se:Description>
-            <se:Title>60204021604</se:Title>
+            <se:Title>Электрическая подстанция 6 кВ планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1302,9 +1302,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Трансформаторная подстанция (ТП) существующая и строящаяся</se:Name>
+          <se:Name>60204021701</se:Name>
           <se:Description>
-            <se:Title>60204021701</se:Title>
+            <se:Title>Трансформаторная подстанция (ТП) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1322,9 +1322,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Трансформаторная подстанция (ТП) планируемая</se:Name>
+          <se:Name>60204021702</se:Name>
           <se:Description>
-            <se:Title>60204021702</se:Title>
+            <se:Title>Трансформаторная подстанция (ТП) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1343,9 +1343,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Трансформаторная подстанция (ТП) планируемая к реконструкции</se:Name>
+          <se:Name>60204021703</se:Name>
           <se:Description>
-            <se:Title>60204021703</se:Title>
+            <se:Title>Трансформаторная подстанция (ТП) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1363,9 +1363,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Трансформаторная подстанция (ТП) планируемая к ликвидации</se:Name>
+          <se:Name>60204021704</se:Name>
           <se:Description>
-            <se:Title>60204021704</se:Title>
+            <se:Title>Трансформаторная подстанция (ТП) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1383,9 +1383,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Распределительный пункт (РП) существующий и строящийся</se:Name>
+          <se:Name>60204021801</se:Name>
           <se:Description>
-            <se:Title>60204021801</se:Title>
+            <se:Title>Распределительный пункт (РП) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1403,9 +1403,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Распределительный пункт (РП) планируемый</se:Name>
+          <se:Name>60204021802</se:Name>
           <se:Description>
-            <se:Title>60204021802</se:Title>
+            <se:Title>Распределительный пункт (РП) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1424,9 +1424,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Распределительный пункт (РП) планируемый к реконструкции</se:Name>
+          <se:Name>60204021803</se:Name>
           <se:Description>
-            <se:Title>60204021803</se:Title>
+            <se:Title>Распределительный пункт (РП) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1444,9 +1444,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Распределительный пункт (РП) планируемый к ликвидации</se:Name>
+          <se:Name>60204021804</se:Name>
           <se:Description>
-            <se:Title>60204021804</se:Title>
+            <se:Title>Распределительный пункт (РП) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1464,9 +1464,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ преобразовательная существующая и строящаяся</se:Name>
+          <se:Name>60204022101</se:Name>
           <se:Description>
-            <se:Title>60204022101</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ преобразовательная существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1484,9 +1484,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ преобразовательная планируемая</se:Name>
+          <se:Name>60204022102</se:Name>
           <se:Description>
-            <se:Title>60204022102</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ преобразовательная планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1505,9 +1505,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ преобразовательная планируемая к реконструкции</se:Name>
+          <se:Name>60204022103</se:Name>
           <se:Description>
-            <se:Title>60204022103</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ преобразовательная планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1525,9 +1525,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Электрическая подстанция 400 кВ преобразовательная планируемая к ликвидации</se:Name>
+          <se:Name>60204022104</se:Name>
           <se:Description>
-            <se:Title>60204022104</se:Title>
+            <se:Title>Электрическая подстанция 400 кВ преобразовательная планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1545,9 +1545,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тяговая подстанция (железной дороги) существующая и строящаяся</se:Name>
+          <se:Name>60204022201</se:Name>
           <se:Description>
-            <se:Title>60204022201</se:Title>
+            <se:Title>Тяговая подстанция (железной дороги) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1565,9 +1565,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тяговая подстанция (железной дороги) планируемая</se:Name>
+          <se:Name>60204022202</se:Name>
           <se:Description>
-            <se:Title>60204022202</se:Title>
+            <se:Title>Тяговая подстанция (железной дороги) планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1586,9 +1586,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тяговая подстанция (железной дороги) планируемая к реконструкции</se:Name>
+          <se:Name>60204022203</se:Name>
           <se:Description>
-            <se:Title>60204022203</se:Title>
+            <se:Title>Тяговая подстанция (железной дороги) планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1606,9 +1606,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Тяговая подстанция (железной дороги) планируемая к ликвидации</se:Name>
+          <se:Name>60204022204</se:Name>
           <se:Description>
-            <se:Title>60204022204</se:Title>
+            <se:Title>Тяговая подстанция (железной дороги) планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1626,9 +1626,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Переключательный пункт существующий и строящийся</se:Name>
+          <se:Name>60204022301</se:Name>
           <se:Description>
-            <se:Title>60204022301</se:Title>
+            <se:Title>Переключательный пункт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1646,9 +1646,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Переключательный пункт планируемый</se:Name>
+          <se:Name>60204022302</se:Name>
           <se:Description>
-            <se:Title>60204022302</se:Title>
+            <se:Title>Переключательный пункт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1667,9 +1667,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Переключательный пункт планируемый к реконструкции</se:Name>
+          <se:Name>60204022303</se:Name>
           <se:Description>
-            <se:Title>60204022303</se:Title>
+            <se:Title>Переключательный пункт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1687,9 +1687,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Переключательный пункт планируемый к ликвидации</se:Name>
+          <se:Name>60204022304</se:Name>
           <se:Description>
-            <se:Title>60204022304</se:Title>
+            <se:Title>Переключательный пункт планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1707,9 +1707,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вставка постоянного тока существующая и строящаяся</se:Name>
+          <se:Name>60204022401</se:Name>
           <se:Description>
-            <se:Title>60204022401</se:Title>
+            <se:Title>Вставка постоянного тока существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1727,9 +1727,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вставка постоянного тока планируемая</se:Name>
+          <se:Name>60204022402</se:Name>
           <se:Description>
-            <se:Title>60204022402</se:Title>
+            <se:Title>Вставка постоянного тока планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1748,9 +1748,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вставка постоянного тока планируемая к реконструкции</se:Name>
+          <se:Name>60204022403</se:Name>
           <se:Description>
-            <se:Title>60204022403</se:Title>
+            <se:Title>Вставка постоянного тока планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1768,9 +1768,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Вставка постоянного тока планируемая к ликвидации</se:Name>
+          <se:Name>60204022404</se:Name>
           <se:Description>
-            <se:Title>60204022404</se:Title>
+            <se:Title>Вставка постоянного тока планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1788,9 +1788,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Соединительный пункт существующий и строящийся</se:Name>
+          <se:Name>60204022501</se:Name>
           <se:Description>
-            <se:Title>60204022501</se:Title>
+            <se:Title>Соединительный пункт существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1808,9 +1808,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Соединительный пункт планируемый</se:Name>
+          <se:Name>60204022502</se:Name>
           <se:Description>
-            <se:Title>60204022502</se:Title>
+            <se:Title>Соединительный пункт планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1829,9 +1829,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Соединительный пункт планируемый к реконструкции</se:Name>
+          <se:Name>60204022503</se:Name>
           <se:Description>
-            <se:Title>60204022503</se:Title>
+            <se:Title>Соединительный пункт планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1849,9 +1849,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Соединительный пункт планируемый к ликвидации</se:Name>
+          <se:Name>60204022504</se:Name>
           <se:Description>
-            <se:Title>60204022504</se:Title>
+            <se:Title>Соединительный пункт планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

@@ -6,9 +6,9 @@
       <se:Name>Manufacturing</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Предприятие добывающей промышленности (кроме угледобывающей промышленности) существующее и строящееся</se:Name>
+          <se:Name>60202010101</se:Name>
           <se:Description>
-            <se:Title>60202010101</se:Title>
+            <se:Title>Предприятие добывающей промышленности (кроме угледобывающей промышленности) существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое</se:Name>
+          <se:Name>60202010102</se:Name>
           <se:Description>
-            <se:Title>60202010102</se:Title>
+            <se:Title>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое к реконструкции</se:Name>
+          <se:Name>60202010103</se:Name>
           <se:Description>
-            <se:Title>60202010103</se:Title>
+            <se:Title>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое к ликвидации</se:Name>
+          <se:Name>60202010104</se:Name>
           <se:Description>
-            <se:Title>60202010104</se:Title>
+            <se:Title>Предприятие добывающей промышленности (кроме угледобывающей промышленности) планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие нефтеперерабатывающей, коксохимической промышленности существующее и строящееся</se:Name>
+          <se:Name>60202010201</se:Name>
           <se:Description>
-            <se:Title>60202010201</se:Title>
+            <se:Title>Предприятие нефтеперерабатывающей, коксохимической промышленности существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое</se:Name>
+          <se:Name>60202010202</se:Name>
           <se:Description>
-            <se:Title>60202010202</se:Title>
+            <se:Title>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое к реконструкции</se:Name>
+          <se:Name>60202010203</se:Name>
           <se:Description>
-            <se:Title>60202010203</se:Title>
+            <se:Title>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое к ликвидации</se:Name>
+          <se:Name>60202010204</se:Name>
           <se:Description>
-            <se:Title>60202010204</se:Title>
+            <se:Title>Предприятие нефтеперерабатывающей, коксохимической промышленности планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие существующее и строящееся</se:Name>
+          <se:Name>60202010301</se:Name>
           <se:Description>
-            <se:Title>60202010301</se:Title>
+            <se:Title>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое</se:Name>
+          <se:Name>60202010302</se:Name>
           <se:Description>
-            <se:Title>60202010302</se:Title>
+            <se:Title>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое к реконструкции</se:Name>
+          <se:Name>60202010303</se:Name>
           <se:Description>
-            <se:Title>60202010303</se:Title>
+            <se:Title>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое к ликвидации</se:Name>
+          <se:Name>60202010304</se:Name>
           <se:Description>
-            <se:Title>60202010304</se:Title>
+            <se:Title>Предприятие химической, целлюлозно-бумажной, фармацевтической промышленности, полиграфическое предприятие планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие металлургии (в том числе цветной металлургии), металлообработки существующее и строящееся</se:Name>
+          <se:Name>60202010401</se:Name>
           <se:Description>
-            <se:Title>60202010401</se:Title>
+            <se:Title>Предприятие металлургии (в том числе цветной металлургии), металлообработки существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое</se:Name>
+          <se:Name>60202010402</se:Name>
           <se:Description>
-            <se:Title>60202010402</se:Title>
+            <se:Title>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое к реконструкции</se:Name>
+          <se:Name>60202010403</se:Name>
           <se:Description>
-            <se:Title>60202010403</se:Title>
+            <se:Title>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое к ликвидации</se:Name>
+          <se:Name>60202010404</se:Name>
           <se:Description>
-            <se:Title>60202010404</se:Title>
+            <se:Title>Предприятие металлургии (в том числе цветной металлургии), металлообработки планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -330,9 +330,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие машиностроения существующее и строящееся</se:Name>
+          <se:Name>60202010501</se:Name>
           <se:Description>
-            <se:Title>60202010501</se:Title>
+            <se:Title>Предприятие машиностроения существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -350,9 +350,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие машиностроения планируемое</se:Name>
+          <se:Name>60202010502</se:Name>
           <se:Description>
-            <se:Title>60202010502</se:Title>
+            <se:Title>Предприятие машиностроения планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -371,9 +371,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие машиностроения планируемое к реконструкции</se:Name>
+          <se:Name>60202010503</se:Name>
           <se:Description>
-            <se:Title>60202010503</se:Title>
+            <se:Title>Предприятие машиностроения планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -391,9 +391,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие машиностроения планируемое к ликвидации</se:Name>
+          <se:Name>60202010504</se:Name>
           <se:Description>
-            <se:Title>60202010504</se:Title>
+            <se:Title>Предприятие машиностроения планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -411,9 +411,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции существующее и строящееся</se:Name>
+          <se:Name>60202010601</se:Name>
           <se:Description>
-            <se:Title>60202010601</se:Title>
+            <se:Title>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -431,9 +431,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое</se:Name>
+          <se:Name>60202010602</se:Name>
           <se:Description>
-            <se:Title>60202010602</se:Title>
+            <se:Title>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -452,9 +452,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое к реконструкции</se:Name>
+          <se:Name>60202010603</se:Name>
           <se:Description>
-            <se:Title>60202010603</se:Title>
+            <se:Title>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,9 +472,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое к ликвидации</se:Name>
+          <se:Name>60202010604</se:Name>
           <se:Description>
-            <se:Title>60202010604</se:Title>
+            <se:Title>Предприятие строительной промышленности, по выпуску неметаллической минеральной продукции планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -492,9 +492,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие по обработке древесины, производству изделий из дерева существующее и строящееся</se:Name>
+          <se:Name>60202010701</se:Name>
           <se:Description>
-            <se:Title>60202010701</se:Title>
+            <se:Title>Предприятие по обработке древесины, производству изделий из дерева существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -512,9 +512,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие по обработке древесины, производству изделий из дерева планируемое</se:Name>
+          <se:Name>60202010702</se:Name>
           <se:Description>
-            <se:Title>60202010702</se:Title>
+            <se:Title>Предприятие по обработке древесины, производству изделий из дерева планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -533,9 +533,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие по обработке древесины, производству изделий из дерева планируемое к реконструкции</se:Name>
+          <se:Name>60202010703</se:Name>
           <se:Description>
-            <se:Title>60202010703</se:Title>
+            <se:Title>Предприятие по обработке древесины, производству изделий из дерева планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -553,9 +553,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие по обработке древесины, производству изделий из дерева планируемое к ликвидации</se:Name>
+          <se:Name>60202010704</se:Name>
           <se:Description>
-            <se:Title>60202010704</se:Title>
+            <se:Title>Предприятие по обработке древесины, производству изделий из дерева планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -573,9 +573,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие текстильной, легкой промышленности существующее и строящееся</se:Name>
+          <se:Name>60202010801</se:Name>
           <se:Description>
-            <se:Title>60202010801</se:Title>
+            <se:Title>Предприятие текстильной, легкой промышленности существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -593,9 +593,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие текстильной, легкой промышленности планируемое</se:Name>
+          <se:Name>60202010802</se:Name>
           <se:Description>
-            <se:Title>60202010802</se:Title>
+            <se:Title>Предприятие текстильной, легкой промышленности планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -614,9 +614,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие текстильной, легкой промышленности планируемое к реконструкции</se:Name>
+          <se:Name>60202010803</se:Name>
           <se:Description>
-            <se:Title>60202010803</se:Title>
+            <se:Title>Предприятие текстильной, легкой промышленности планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -634,9 +634,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие текстильной, легкой промышленности планируемое к ликвидации</se:Name>
+          <se:Name>60202010804</se:Name>
           <se:Description>
-            <se:Title>60202010804</se:Title>
+            <se:Title>Предприятие текстильной, легкой промышленности планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -654,9 +654,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие микробиологической, пищевой, пищевкусовой промышленности существующее и строящееся</se:Name>
+          <se:Name>60202010901</se:Name>
           <se:Description>
-            <se:Title>60202010901</se:Title>
+            <se:Title>Предприятие микробиологической, пищевой, пищевкусовой промышленности существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -674,9 +674,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое</se:Name>
+          <se:Name>60202010902</se:Name>
           <se:Description>
-            <se:Title>60202010902</se:Title>
+            <se:Title>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -695,9 +695,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое к реконструкции</se:Name>
+          <se:Name>60202010903</se:Name>
           <se:Description>
-            <se:Title>60202010903</se:Title>
+            <se:Title>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -715,9 +715,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое к ликвидации</se:Name>
+          <se:Name>60202010904</se:Name>
           <se:Description>
-            <se:Title>60202010904</se:Title>
+            <se:Title>Предприятие микробиологической, пищевой, пищевкусовой промышленности планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -735,9 +735,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие обрабатывающей промышленности иной специализации существующее и строящееся</se:Name>
+          <se:Name>60202011001</se:Name>
           <se:Description>
-            <se:Title>60202011001</se:Title>
+            <se:Title>Предприятие обрабатывающей промышленности иной специализации существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -755,9 +755,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие обрабатывающей промышленности иной специализации планируемое</se:Name>
+          <se:Name>60202011002</se:Name>
           <se:Description>
-            <se:Title>60202011002</se:Title>
+            <se:Title>Предприятие обрабатывающей промышленности иной специализации планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -776,9 +776,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие обрабатывающей промышленности иной специализации планируемое к реконструкции</se:Name>
+          <se:Name>60202011003</se:Name>
           <se:Description>
-            <se:Title>60202011003</se:Title>
+            <se:Title>Предприятие обрабатывающей промышленности иной специализации планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -796,9 +796,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие обрабатывающей промышленности иной специализации планируемое к ликвидации</se:Name>
+          <se:Name>60202011004</se:Name>
           <se:Description>
-            <se:Title>60202011004</se:Title>
+            <se:Title>Предприятие обрабатывающей промышленности иной специализации планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -816,9 +816,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие угледобывающей промышленности существующее и строящееся</se:Name>
+          <se:Name>60202011101</se:Name>
           <se:Description>
-            <se:Title>60202011101</se:Title>
+            <se:Title>Предприятие угледобывающей промышленности существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -836,9 +836,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие угледобывающей промышленности планируемое</se:Name>
+          <se:Name>60202011102</se:Name>
           <se:Description>
-            <se:Title>60202011102</se:Title>
+            <se:Title>Предприятие угледобывающей промышленности планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -857,9 +857,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие угледобывающей промышленности планируемое к реконструкции</se:Name>
+          <se:Name>60202011103</se:Name>
           <se:Description>
-            <se:Title>60202011103</se:Title>
+            <se:Title>Предприятие угледобывающей промышленности планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -877,9 +877,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Предприятие угледобывающей промышленности планируемое к ликвидации</se:Name>
+          <se:Name>60202011104</se:Name>
           <se:Description>
-            <se:Title>60202011104</se:Title>
+            <se:Title>Предприятие угледобывающей промышленности планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

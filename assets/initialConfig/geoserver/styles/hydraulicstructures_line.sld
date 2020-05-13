@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204170101</se:Name>
           <se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие и строящиеся</se:Title>
+            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -235,7 +235,7 @@
         <se:Rule>
           <se:Name>60204170201</se:Name>
           <se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие и строящиеся</se:Title>
+            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -462,7 +462,7 @@
         <se:Rule>
           <se:Name>60204170301</se:Name>
           <se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения существующие и строящиеся</se:Title>
+            <se:Title>Водозаборные гидротехнические сооружения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -689,7 +689,7 @@
         <se:Rule>
           <se:Name>60204170401</se:Name>
           <se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения существующие и строящиеся</se:Title>
+            <se:Title>Водопроводящие гидротехнические сооружения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -916,7 +916,7 @@
         <se:Rule>
           <se:Name>60204170501</se:Name>
           <se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения существующие и строящиеся</se:Title>
+            <se:Title>Регуляционные и выправительные гидротехнические сооружения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1143,7 +1143,7 @@
         <se:Rule>
           <se:Name>60204170601</se:Name>
           <se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения существующие и строящиеся</se:Title>
+            <se:Title>Гидротехнические сооружения специального назначения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

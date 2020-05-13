@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60203010101</se:Name>
           <se:Description>
-            <se:Title>Железнодорожный путь общего пользования существующий и строящийся</se:Title>
+            <se:Title>Железнодорожный путь общего пользования существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -149,7 +149,7 @@
         <se:Rule>
           <se:Name>60203010201</se:Name>
           <se:Description>
-            <se:Title>Железнодорожный путь необщего пользования существующий и строящийся</se:Title>
+            <se:Title>Железнодорожный путь необщего пользования существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

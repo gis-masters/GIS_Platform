@@ -6,9 +6,9 @@
       <se:Name>Social</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Стационарные организации социального обслуживания существующая и строящаяся</se:Name>
+          <se:Name>60201050101</se:Name>
           <se:Description>
-            <se:Title>60201050101</se:Title>
+            <se:Title>Стационарные организации социального обслуживания существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарные организации социального обслуживания планируемая</se:Name>
+          <se:Name>60201050102</se:Name>
           <se:Description>
-            <se:Title>60201050102</se:Title>
+            <se:Title>Стационарные организации социального обслуживания планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарные организации социального обслуживания планируемая к реконструкции</se:Name>
+          <se:Name>60201050103</se:Name>
           <se:Description>
-            <se:Title>60201050103</se:Title>
+            <se:Title>Стационарные организации социального обслуживания планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарные организации социального обслуживания планируемая к ликвидации</se:Name>
+          <se:Name>60201050104</se:Name>
           <se:Description>
-            <se:Title>60201050104</se:Title>
+            <se:Title>Стационарные организации социального обслуживания планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие и строящиеся</se:Name>
+          <se:Name>60201050201</se:Name>
           <se:Description>
-            <se:Title>60201050201</se:Title>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые</se:Name>
+          <se:Name>60201050202</se:Name>
           <se:Description>
-            <se:Title>60201050202</se:Title>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции</se:Name>
+          <se:Name>60201050203</se:Name>
           <se:Description>
-            <se:Title>60201050203</se:Title>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации</se:Name>
+          <se:Name>60201050204</se:Name>
           <se:Description>
-            <se:Title>60201050204</se:Title>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -168,9 +168,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) социального обслуживания на дому существующие и строящиеся</se:Name>
+          <se:Name>60201050301</se:Name>
           <se:Description>
-            <se:Title>60201050301</se:Title>
+            <se:Title>Организации (отделения) социального обслуживания на дому существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -188,9 +188,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) социального обслуживания на дому планируемые</se:Name>
+          <se:Name>60201050302</se:Name>
           <se:Description>
-            <se:Title>60201050302</se:Title>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) социального обслуживания на дому планируемые к реконструкции</se:Name>
+          <se:Name>60201050303</se:Name>
           <se:Description>
-            <se:Title>60201050303</se:Title>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -229,9 +229,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) социального обслуживания на дому планируемые к ликвидации</se:Name>
+          <se:Name>60201050304</se:Name>
           <se:Description>
-            <se:Title>60201050304</se:Title>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -249,9 +249,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие и строящиеся</se:Name>
+          <se:Name>60201050401</se:Name>
           <se:Description>
-            <se:Title>60201050401</se:Title>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -269,9 +269,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые</se:Name>
+          <se:Name>60201050402</se:Name>
           <se:Description>
-            <se:Title>60201050402</se:Title>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -290,9 +290,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции</se:Name>
+          <se:Name>60201050403</se:Name>
           <se:Description>
-            <se:Title>60201050403</se:Title>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -310,9 +310,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации</se:Name>
+          <se:Name>60201050404</se:Name>
           <se:Description>
-            <se:Title>60201050404</se:Title>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

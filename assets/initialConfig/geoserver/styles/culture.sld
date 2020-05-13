@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60201020101</se:Name>
           <se:Description>
-            <se:Title>Объект культурно-просветительного назначения существующий и строящийся</se:Title>
+            <se:Title>Объект культурно-просветительного назначения существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -28,7 +28,7 @@
         <se:Rule>
           <se:Name>60201020102</se:Name>
           <se:Description>
-            <se:Title>Объект культурно-просветительного назначения планируемый</se:Title>
+            <se:Title>Объект культурно-просветительного назначения планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -89,7 +89,7 @@
         <se:Rule>
           <se:Name>60201020201</se:Name>
           <se:Description>
-            <se:Title>Объект культурно-досугового (клубного) типа существующий и строящийся</se:Title>
+            <se:Title>Объект культурно-досугового (клубного) типа существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -109,7 +109,7 @@
         <se:Rule>
           <se:Name>60201020202</se:Name>
           <se:Description>
-            <se:Title>Объект культурно-досугового (клубного) типа планируемый</se:Title>
+            <se:Title>Объект культурно-досугового (клубного) типа планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -170,7 +170,7 @@
         <se:Rule>
           <se:Name>60201020301</se:Name>
           <se:Description>
-            <se:Title>Зрелищная организация существующий и строящийся</se:Title>
+            <se:Title>Зрелищная организация существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -190,7 +190,7 @@
         <se:Rule>
           <se:Name>60201020302</se:Name>
           <se:Description>
-            <se:Title>Зрелищная организация планируемый</se:Title>
+            <se:Title>Зрелищная организация планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -211,7 +211,7 @@
         <se:Rule>
           <se:Name>60201020303</se:Name>
           <se:Description>
-            <se:Title>Зрелищная организация планируемый к реконструкции</se:Title>
+            <se:Title>Зрелищная организация планируемая к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -231,7 +231,7 @@
         <se:Rule>
           <se:Name>60201020304</se:Name>
           <se:Description>
-            <se:Title>Зрелищная организация планируемый к ликвидации</se:Title>
+            <se:Title>Зрелищная организация планируемая к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

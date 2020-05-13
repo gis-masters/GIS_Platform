@@ -6,9 +6,9 @@
       <se:Name>CustomControl</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Пункт пропуска через Государственную границу существующий и строящийся</se:Name>
+          <se:Name>60203150101</se:Name>
           <se:Description>
-            <se:Title>60203150101</se:Title>
+            <se:Title>Пункт пропуска через Государственную границу существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт пропуска через Государственную границу планируемый</se:Name>
+          <se:Name>60203150102</se:Name>
           <se:Description>
-            <se:Title>60203150102</se:Title>
+            <se:Title>Пункт пропуска через Государственную границу планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Пункт пропуска через Государственную границу планируемый к реконструкции</se:Name>
+          <se:Name>60203150103</se:Name>
           <se:Description>
-            <se:Title>60203150103</se:Title>
+            <se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

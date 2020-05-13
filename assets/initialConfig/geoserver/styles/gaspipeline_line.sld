@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204060101</se:Name>
           <se:Description>
-            <se:Title>Газопровод распределительный высокого давления существующий и строящийся</se:Title>
+            <se:Title>Газопровод распределительный высокого давления существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -129,7 +129,7 @@
         <se:Rule>
           <se:Name>60204060201</se:Name>
           <se:Description>
-            <se:Title>Газопровод распределительный среднего давления существующий и строящийся</se:Title>
+            <se:Title>Газопровод распределительный среднего давления существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -262,7 +262,7 @@
         <se:Rule>
           <se:Name>60204060301</se:Name>
           <se:Description>
-            <se:Title>Газопровод распределительный низкого давления существующий и строящийся</se:Title>
+            <se:Title>Газопровод распределительный низкого давления существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -395,7 +395,7 @@
         <se:Rule>
           <se:Name>60204060401</se:Name>
           <se:Description>
-            <se:Title>Газопровод промысловый (газопровод подключения) существующий и строящийся</se:Title>
+            <se:Title>Газопровод промысловый (газопровод подключения) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -528,7 +528,7 @@
         <se:Rule>
           <se:Name>60204060501</se:Name>
           <se:Description>
-            <se:Title>Газопровод соединительный (газопровод-перемычка) существующий и строящийся</se:Title>
+            <se:Title>Газопровод соединительный (газопровод-перемычка) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -661,7 +661,7 @@
         <se:Rule>
           <se:Name>60204060601</se:Name>
           <se:Description>
-            <se:Title>Конденсато-продукто-этанолопровод существующий и строящийся</se:Title>
+            <se:Title>Конденсато-продукто-этанолопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -794,7 +794,7 @@
         <se:Rule>
           <se:Name>60204060701</se:Name>
           <se:Description>
-            <se:Title>Этиленопровод существующий и строящийся</se:Title>
+            <se:Title>Этиленопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

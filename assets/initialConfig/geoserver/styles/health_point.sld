@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>Health</se:Name>
+		<se:Name>Объекты здравоохранения</se:Name>
 		<UserStyle>
 			<se:Name>Health</se:Name>
 			<se:FeatureTypeStyle>
@@ -184,7 +184,7 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602010401312</ogc:Literal>
+							<ogc:Literal>60201040131</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -205,7 +205,7 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602010401312</ogc:Literal>
+							<ogc:Literal>60201040132</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -226,7 +226,7 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602010401313</ogc:Literal>
+							<ogc:Literal>60201040133</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -247,7 +247,7 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602010401314</ogc:Literal>
+							<ogc:Literal>60201040134</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -1912,7 +1912,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/01_Oks_social/04_Health/602010408223svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/01_Oks_social/04_Health/60201040823.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>

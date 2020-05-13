@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204120101</se:Name>
           <se:Description>
-            <se:Title>Водовод существующий и строящийся</se:Title>
+            <se:Title>Водовод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -116,7 +116,7 @@
         <se:Rule>
           <se:Name>60204120201</se:Name>
           <se:Description>
-            <se:Title>Водопровод существующий и строящийся</se:Title>
+            <se:Title>Водопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -308,7 +308,7 @@
         <se:Rule>
           <se:Name>60204120301</se:Name>
           <se:Description>
-            <se:Title>Технический водопровод существующий и строящийся</se:Title>
+            <se:Title>Технический водопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

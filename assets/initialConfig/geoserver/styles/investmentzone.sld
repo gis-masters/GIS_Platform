@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>70401010001</se:Name>
           <se:Description>
-            <se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая и строящаяся</se:Title>
+            <se:Title>Территория опережающего социально-экономического развития (ТОСЭР) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -124,7 +124,7 @@
         <se:Rule>
           <se:Name>70401020001</se:Name>
           <se:Description>
-            <se:Title>Зона территориального развития (ЗТР) существующая и строящаяся</se:Title>
+            <se:Title>Зона территориального развития (ЗТР) существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -240,7 +240,7 @@
         <se:Rule>
           <se:Name>70401030001</se:Name>
           <se:Description>
-            <se:Title>Промышленный (индустриальный) парк существующий и строящийся</se:Title>
+            <se:Title>Промышленный (индустриальный) парк существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -356,7 +356,7 @@
         <se:Rule>
           <se:Name>70401040001</se:Name>
           <se:Description>
-            <se:Title>Инновационный территориальный кластер существующий и строящийся</se:Title>
+            <se:Title>Инновационный территориальный кластер существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -472,7 +472,7 @@
         <se:Rule>
           <se:Name>70401050001</se:Name>
           <se:Description>
-            <se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая и строящаяся</se:Title>
+            <se:Title>Иная зона с действием особых финансовых или нефинансовых механизмов поддержки инвестиционной и инновационной деятельности существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

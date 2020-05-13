@@ -6,14 +6,14 @@
       <se:Name>HistoricSettlement</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60402010000</se:Name>
+          <se:Name>60402010001</se:Name>
           <se:Description>
-            <se:Title>Граница территории исторического поселения существующая и строящаяся</se:Title>
+            <se:Title>Граница территории исторического поселения существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60402010000</ogc:Literal>
+              <ogc:Literal>60402010001</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204180101</se:Name>
           <se:Description>
-            <se:Title>Сооружения существующие и строящиеся</se:Title>
+            <se:Title>Сооружения существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -135,7 +135,7 @@
         <se:Rule>
           <se:Name>60204180201</se:Name>
           <se:Description>
-            <se:Title>Сооружения противоселевые существующие и строящиеся</se:Title>
+            <se:Title>Сооружения противоселевые существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -262,7 +262,7 @@
         <se:Rule>
           <se:Name>60204180301</se:Name>
           <se:Description>
-            <se:Title>Сооружения противолавинные существующие и строящиеся</se:Title>
+            <se:Title>Сооружения противолавинные существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -389,7 +389,7 @@
         <se:Rule>
           <se:Name>60204180401</se:Name>
           <se:Description>
-            <se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек существующие и строящиеся</se:Title>
+            <se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -545,7 +545,7 @@
         <se:Rule>
           <se:Name>60204180501</se:Name>
           <se:Description>
-            <se:Title>Сооружения для защиты от затопления и подтопления существующие и строящиеся</se:Title>
+            <se:Title>Сооружения для защиты от затопления и подтопления существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

@@ -53,7 +53,7 @@
         <se:Rule>
           <se:Name>60301030102</se:Name>
           <se:Description>
-            <se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья планируемый</se:Title>
+            <se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -144,7 +144,7 @@
         <se:Rule>
           <se:Name>60301030202</se:Name>
           <se:Description>
-            <se:Title>Санитарный разрыв компрессорных установок планируемый</se:Title>
+            <se:Title>Санитарный разрыв компрессорных установок планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -235,7 +235,7 @@
         <se:Rule>
           <se:Name>60301030302</se:Name>
           <se:Description>
-            <se:Title>Санитарный разрыв линий электропередачи планируемый</se:Title>
+            <se:Title>Санитарный разрыв линий электропередачи планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>Sport</se:Name>
+		<se:Name>Объекты физической культуры и массового спорта</se:Name>
 		<UserStyle>
 			<se:Name>Sport</se:Name>
 			<se:FeatureTypeStyle>
@@ -114,7 +114,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011222</se:Name>
+					<se:Name>60201030122</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к размещению регионального значения</se:Title>
 					</se:Description>
@@ -135,7 +135,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011223</se:Name>
+					<se:Name>60201030123</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к реконструкции регионального значения</se:Title>
 					</se:Description>
@@ -156,7 +156,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011224</se:Name>
+					<se:Name>60201030124</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к ликвидации регионального значения</se:Title>
 					</se:Description>
@@ -177,7 +177,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011231</se:Name>
+					<se:Name>60201030131</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) существующий местного значения</se:Title>
 					</se:Description>
@@ -198,7 +198,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011232</se:Name>
+					<se:Name>60201030132</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к размещению местного значения</se:Title>
 					</se:Description>
@@ -219,7 +219,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011233</se:Name>
+					<se:Name>60201030133</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к реконструкции местного значения</se:Title>
 					</se:Description>
@@ -240,7 +240,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>6020103011234</se:Name>
+					<se:Name>60201030134</se:Name>
 					<se:Description>
 						<se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс) планируемый к ликвидации местного значения</se:Title>
 					</se:Description>

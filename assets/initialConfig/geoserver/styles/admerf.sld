@@ -6,14 +6,14 @@
       <se:Name>AdmeRF</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>60102010000</se:Name>
+          <se:Name>60102010001</se:Name>
           <se:Description>
             <se:Title>Территория Российской Федерации существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
               <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60102010000</ogc:Literal>
+              <ogc:Literal>60102010001</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PolygonSymbolizer>

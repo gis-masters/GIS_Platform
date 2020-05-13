@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204040101</se:Name>
           <se:Description>
-            <se:Title>Магистральный нефтепровод существующий и строящийся</se:Title>
+            <se:Title>Магистральный нефтепровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -129,7 +129,7 @@
         <se:Rule>
           <se:Name>60204040201</se:Name>
           <se:Description>
-            <se:Title>Магистральный продуктопровод существующий и строящийся</se:Title>
+            <se:Title>Магистральный продуктопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -316,7 +316,7 @@
         <se:Rule>
           <se:Name>60204040301</se:Name>
           <se:Description>
-            <se:Title>Магистральный газопровод существующий и строящийся</se:Title>
+            <se:Title>Магистральный газопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -449,7 +449,7 @@
         <se:Rule>
           <se:Name>60204040401</se:Name>
           <se:Description>
-            <se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа существующий и строящийся</se:Title>
+            <se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

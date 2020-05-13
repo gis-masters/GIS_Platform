@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60203100101</se:Name>
           <se:Description>
-            <se:Title>Линия метрополитена существующая и строящаящаяся</se:Title>
+            <se:Title>Линия метрополитена существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -237,7 +237,7 @@
         <se:Rule>
           <se:Name>60203100201</se:Name>
           <se:Description>
-            <se:Title>Линия монорельсового транспорта существующая и строящаящаяся</se:Title>
+            <se:Title>Линия монорельсового транспорта существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -436,7 +436,7 @@
         <se:Rule>
           <se:Name>60203100301</se:Name>
           <se:Description>
-            <se:Title>Подвесная канатная дорога транспортная существующая и строящаящаяся)</se:Title>
+            <se:Title>Подвесная канатная дорога транспортная существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -721,7 +721,7 @@
         <se:Rule>
           <se:Name>60203100401</se:Name>
           <se:Description>
-            <se:Title>Фуникулер транспортный существующий и строящийся</se:Title>
+            <se:Title>Фуникулер транспортный существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -866,7 +866,7 @@
         <se:Rule>
           <se:Name>60203100501</se:Name>
           <se:Description>
-            <se:Title>Линия внутригородского железнодорожного транспорта существующая и строящаящаяся</se:Title>
+            <se:Title>Линия внутригородского железнодорожного транспорта существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -999,7 +999,7 @@
         <se:Rule>
           <se:Name>60203100601</se:Name>
           <se:Description>
-            <se:Title>Трамвайная линия существующая и строящаящаяся</se:Title>
+            <se:Title>Трамвайная линия существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1188,7 +1188,7 @@
         <se:Rule>
           <se:Name>60203100701</se:Name>
           <se:Description>
-            <se:Title>Линия скоростного трамвая существующая и строящаящаяся</se:Title>
+            <se:Title>Линия скоростного трамвая существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1377,7 +1377,7 @@
         <se:Rule>
           <se:Name>60203100801</se:Name>
           <se:Description>
-            <se:Title>Автобусная линия существующая и строящаящаяся</se:Title>
+            <se:Title>Автобусная линия существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -1418,7 +1418,7 @@
         <se:Rule>
           <se:Name>60203100901</se:Name>
           <se:Description>
-            <se:Title>Троллейбусная линия существующая и строящаящаяся</se:Title>
+            <se:Title>Троллейбусная линия существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

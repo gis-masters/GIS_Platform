@@ -30,7 +30,7 @@
         <se:Rule>
           <se:Name>70201010002</se:Name>
           <se:Description>
-            <se:Title>Земли населенных пунктов планируемые</se:Title>
+            <se:Title>Земли населенных пунктов планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -89,7 +89,7 @@
         <se:Rule>
           <se:Name>70201020002</se:Name>
           <se:Description>
-            <se:Title>Земли сельскохозяйственного назначения  планируемые</se:Title>
+            <se:Title>Земли сельскохозяйственного назначения  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,7 +148,7 @@
         <se:Rule>
           <se:Name>70201030002</se:Name>
           <se:Description>
-            <se:Title>Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения  планируемые</se:Title>
+            <se:Title>Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -207,7 +207,7 @@
         <se:Rule>
           <se:Name>70201040002</se:Name>
           <se:Description>
-            <se:Title>Земли особо охраняемых территорий и объектов  планируемые</se:Title>
+            <se:Title>Земли особо охраняемых территорий и объектов  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -264,9 +264,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Земли лесного фонда  планируемые</se:Name>
+          <se:Name>70201050002</se:Name>
           <se:Description>
-            <se:Title>Земли лесного фонда  планируемые</se:Title>
+            <se:Title>Земли лесного фонда  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -325,7 +325,7 @@
         <se:Rule>
           <se:Name>70201060002</se:Name>
           <se:Description>
-            <se:Title>Земли водного фонда  планируемые</se:Title>
+            <se:Title>Земли водного фонда  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -384,7 +384,7 @@
         <se:Rule>
           <se:Name>70201070002</se:Name>
           <se:Description>
-            <se:Title>Земли запаса  планируемые</se:Title>
+            <se:Title>Земли запаса  планируемые к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

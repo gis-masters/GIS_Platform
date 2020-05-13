@@ -8,7 +8,7 @@
 		<se:Rule>
           <se:Name>60204080101</se:Name>
           <se:Description>
-            <se:Title>Нефтепровод подводящий (промысловый) существующий и строящийся</se:Title>
+            <se:Title>Нефтепровод подводящий (промысловый) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -141,7 +141,7 @@
         <se:Rule>
           <se:Name>60204080201</se:Name>
           <se:Description>
-            <se:Title>Нефтепровод прочий существующий и строящийся</se:Title>
+            <se:Title>Нефтепровод прочий существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -274,7 +274,7 @@
         <se:Rule>
           <se:Name>60204080301</se:Name>
           <se:Description>
-            <se:Title>Продуктопровод существующий и строящийся</se:Title>
+            <se:Title>Продуктопровод существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

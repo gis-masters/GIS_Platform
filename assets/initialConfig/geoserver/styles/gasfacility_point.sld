@@ -4,7 +4,7 @@ xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSche
 xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
 xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
-		<se:Name>GasFacility</se:Name>
+		<se:Name>Объекты добычи и транспортировки газа</se:Name>
 		<UserStyle>
 			<se:Name>GasFacility</se:Name>
 			<se:FeatureTypeStyle>
@@ -2466,20 +2466,20 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>602040510312</se:Name>
+					<se:Name>60204051032</se:Name>
 					<se:Description>
 						<se:Title>Завод по стабилизации конденсата планируемый к размещению местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040510312</ogc:Literal>
+							<ogc:Literal>60204051032</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/602040510312.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/60204051032.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -2487,20 +2487,20 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>602040510313</se:Name>
+					<se:Name>60204051033</se:Name>
 					<se:Description>
 						<se:Title>Завод по стабилизации конденсата планируемый к реконструкции местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040510313</ogc:Literal>
+							<ogc:Literal>60204051033</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/602040510313.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/60204051033.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -2508,20 +2508,20 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>602040510314</se:Name>
+					<se:Name>60204051034</se:Name>
 					<se:Description>
 						<se:Title>Завод по стабилизации конденсата планируемый к ликвидации местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040510314</ogc:Literal>
+							<ogc:Literal>60204051034</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/602040510314.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/60204051034.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -3943,13 +3943,13 @@ xmlns:se="http://www.opengis.net/se">
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051623</ogc:Literal>
+							<ogc:Literal>60204051624</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/60204051623.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/03_GasFacility/60204051624.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>

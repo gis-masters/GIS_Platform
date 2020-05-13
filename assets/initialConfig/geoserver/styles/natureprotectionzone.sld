@@ -72,7 +72,7 @@
         <se:Rule>
           <se:Name>60301060102</se:Name>
           <se:Description>
-            <se:Title>Охранная зона особо охраняемых природных территорий планируемая</se:Title>
+            <se:Title>Охранная зона особо охраняемых природных территорий планируемая к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

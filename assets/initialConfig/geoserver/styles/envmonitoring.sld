@@ -6,9 +6,9 @@
       <se:Name>EnvMonitoring</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий и строящийся</se:Name>
+          <se:Name>60205040101</se:Name>
           <se:Description>
-            <se:Title>60205040101</se:Title>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый</se:Name>
+          <se:Name>60205040102</se:Name>
           <se:Description>
-            <se:Title>60205040102</se:Title>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции</se:Name>
+          <se:Name>60205040103</se:Name>
           <se:Description>
-            <se:Title>60205040103</se:Title>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации</se:Name>
+          <se:Name>60205040104</se:Name>
           <se:Description>
-            <se:Title>60205040104</se:Title>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

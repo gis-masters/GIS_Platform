@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204160101</se:Name>
           <se:Description>
-            <se:Title>Линия связи существующая и строящаяся</se:Title>
+            <se:Title>Линия связи существующая</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -200,7 +200,7 @@
         <se:Rule>
           <se:Name>60204160201</se:Name>
           <se:Description>
-            <se:Title>Линейно-кабельное сооружение связи существующее и строящаеся</se:Title>
+            <se:Title>Линейно-кабельное сооружение связи существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

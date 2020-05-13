@@ -6,9 +6,9 @@
       <se:Name>Cemetery</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Кладбище существующее и строящееся</se:Name>
+          <se:Name>60205030101</se:Name>
           <se:Description>
-            <se:Title>60205030101</se:Title>
+            <se:Title>Кладбище существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Кладбище планируемое</se:Name>
+          <se:Name>60205030102</se:Name>
           <se:Description>
-            <se:Title>60205030102</se:Title>
+            <se:Title>Кладбище планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Кладбище планируемое к реконструкции</se:Name>
+          <se:Name>60205030103</se:Name>
           <se:Description>
-            <se:Title>60205030103</se:Title>
+            <se:Title>Кладбище планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Воинское кладбище, военное мемориальное кладбище существующее и строящееся</se:Name>
+          <se:Name>60205030201</se:Name>
           <se:Description>
-            <se:Title>60205030201</se:Title>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Воинское кладбище, военное мемориальное кладбище планируемое</se:Name>
+          <se:Name>60205030202</se:Name>
           <se:Description>
-            <se:Title>60205030202</se:Title>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -108,9 +108,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции</se:Name>
+          <se:Name>60205030203</se:Name>
           <se:Description>
-            <se:Title>60205030203</se:Title>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Крематорий существующий и строящийся</se:Name>
+          <se:Name>60205030301</se:Name>
           <se:Description>
-            <se:Title>60205030301</se:Title>
+            <se:Title>Крематорий существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Крематорий планируемый</se:Name>
+          <se:Name>60205030302</se:Name>
           <se:Description>
-            <se:Title>60205030302</se:Title>
+            <se:Title>Крематорий планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -169,9 +169,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Крематорий планируемый к реконструкции</se:Name>
+          <se:Name>60205030303</se:Name>
           <se:Description>
-            <se:Title>60205030303</se:Title>
+            <se:Title>Крематорий планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -189,9 +189,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Историческое кладбище существующее и строящееся</se:Name>
+          <se:Name>60205030401</se:Name>
           <se:Description>
-            <se:Title>60205030401</se:Title>
+            <se:Title>Историческое кладбище существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -209,9 +209,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Историческое кладбище планируемое к реконструкции</se:Name>
+          <se:Name>60205030403</se:Name>
           <se:Description>
-            <se:Title>60205030403</se:Title>
+            <se:Title>Историческое кладбище планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

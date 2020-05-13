@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>70602010001</se:Name>
           <se:Description>
-            <se:Title>Море или его отдельная часть (пролив, залив, в том числе бухта, лиман и др.) существующая</se:Title>
+            <se:Title>Море или его отдельная часть (пролив, залив, в том числе бухта, лиман и др.) существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -33,7 +33,7 @@
         <se:Rule>
           <se:Name>70602010002</se:Name>
           <se:Description>
-            <se:Title>Море или его отдельная часть (пролив, залив, в том числе бухта, лиман и др.) планируемое</se:Title>
+            <se:Title>Море или его отдельная часть (пролив, залив, в том числе бухта, лиман и др.) планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -84,7 +84,7 @@
         <se:Rule>
           <se:Name>70602020002</se:Name>
           <se:Description>
-            <se:Title>Водоток (река, ручей, канал) планируемый</se:Title>
+            <se:Title>Водоток (река, ручей, канал) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -135,7 +135,7 @@
         <se:Rule>
           <se:Name>70602030002</se:Name>
           <se:Description>
-            <se:Title>Водоем (озеро, пруд, обводненный карьер, водохранилище) планируемый</se:Title>
+            <se:Title>Водоем (озеро, пруд, обводненный карьер, водохранилище) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -161,7 +161,7 @@
         <se:Rule>
           <se:Name>70602040001</se:Name>
           <se:Description>
-            <se:Title>Болото существующее</se:Title>
+            <se:Title>Болото</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -197,7 +197,7 @@
         <se:Rule>
           <se:Name>70602060001</se:Name>
           <se:Description>
-            <se:Title>Ледник, снежник существующий</se:Title>
+            <se:Title>Ледник, снежник</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

@@ -6,9 +6,9 @@
       <se:Name>Sport</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) существующий и строящийся</se:Name>
+          <se:Name>60201030101</se:Name>
           <se:Description>
-            <se:Title>60201030101</se:Title>
+            <se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) существующий</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -26,9 +26,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый</se:Name>
+          <se:Name>60201030102</se:Name>
           <se:Description>
-            <se:Title>60201030102</se:Title>
+            <se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -47,9 +47,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый к реконструкции</se:Name>
+          <se:Name>60201030103</se:Name>
           <se:Description>
-            <se:Title>60201030103</se:Title>
+            <se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -67,9 +67,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый к ликвидации</se:Name>
+          <se:Name>60201030104</se:Name>
           <se:Description>
-            <se:Title>60201030104</se:Title>
+            <se:Title>Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т.ч. физкультурно-оздоровительный комплекс) планируемый к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -87,9 +87,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Спортивное сооружение существующее и строящееся</se:Name>
+          <se:Name>60201030201</se:Name>
           <se:Description>
-            <se:Title>60201030201</se:Title>
+            <se:Title>Спортивное сооружение существующее</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -107,9 +107,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Спортивное сооружение планируемое</se:Name>
+          <se:Name>60201030202</se:Name>
           <se:Description>
-            <se:Title>60201030202</se:Title>
+            <se:Title>Спортивное сооружение планируемое к размещению</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -128,9 +128,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Спортивное сооружение планируемое к реконструкции</se:Name>
+          <se:Name>60201030203</se:Name>
           <se:Description>
-            <se:Title>60201030203</se:Title>
+            <se:Title>Спортивное сооружение планируемое к реконструкции</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
@@ -148,9 +148,9 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>Спортивное сооружение планируемое к ликвидации</se:Name>
+          <se:Name>60201030204</se:Name>
           <se:Description>
-            <se:Title>60201030204</se:Title>
+            <se:Title>Спортивное сооружение планируемое к ликвидации</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
