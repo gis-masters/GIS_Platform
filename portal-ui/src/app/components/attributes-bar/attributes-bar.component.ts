@@ -407,7 +407,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
                    objects: this.attributeTable.selected,
                  }
                })
-               .afterClosed();
+               .afterClosed()
+               .pipe(filter(value => !!value));
   }
 
   private prepareBatchProcess(selectedFeatures: WfsFeature[]): BatchModel<WfsFeature> {

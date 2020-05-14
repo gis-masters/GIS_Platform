@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>{{data.title}} {{data.objects.length}} объекта(ов)</h2>
 
 <mat-dialog-content class="dialog-content">
-    <ng-container *ngIf="data.layers.length > 0; else noLayers">
-      <label>Выбирите слой</label>
+    <ng-container *ngIf="data.layers.length; else noLayers">
+      <label>Выберите слой</label>
       <mat-select class="form-control" [(ngModel)]="selectedLayer">
         <mat-option *ngFor="let layer of data.layers" [value]="layer">
           {{layer.title}}
