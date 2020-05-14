@@ -1,7 +1,5 @@
 import { HttpParams } from '@angular/common/http';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, publishReplay, refCount } from 'rxjs/operators';
 
 import { NameHrefProjection } from './projections';
 import { serverProperties } from '../server-properties.service';
@@ -19,21 +17,9 @@ export interface GeoserverLayer {
 
 class LayersService {
   private static _instance: LayersService;
-  private _layers$: BehaviorSubject<CrgLayer[]> = new BehaviorSubject<CrgLayer[]>(undefined);
-  public layers$: Observable<CrgLayer[]> = this._layers$.asObservable()
-    .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
-      publishReplay(1),
-      refCount(),
-      filter(data => !!data)
-    );
 
   static get instance() {
     return this._instance || (this._instance = new this());
-  }
-
-  private constructor() {
-    this.layers$.subscribe();
   }
 
   async deleteLayer(layer: CrgLayer) {

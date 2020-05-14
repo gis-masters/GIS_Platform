@@ -154,19 +154,6 @@ class DataSchemaService {
     return this.getFeatureSchemaByName(layerName);
   }
 
-  /**
-   * Для базового слоя из переданного списка слоев возвращает подходящие по геометрии. (Кроме самого себя)
-   * @param baseLayer Базовый слой.
-   * @param layers    Исходный список слоев.
-   *
-   * @return The new array of {@link CrgLayer}.
-   */
-  public getSuitableByGeometryLayers(baseLayer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
-    return layers
-      .filter((layer: CrgLayer) => baseLayer.complexName !== layer.complexName)
-      .filter((layer: CrgLayer) => baseLayer.geometryType === layer.geometryType);
-  }
-
   getClassIdAlias(layerName: string, bugObject: BugObject) {
     const featureSchema = this.getFeatureSchemaByName(layerName);
     if (!featureSchema) {

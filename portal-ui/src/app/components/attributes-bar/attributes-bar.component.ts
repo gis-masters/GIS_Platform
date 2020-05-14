@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {
   AfterViewInit,
   Component,
@@ -9,16 +8,16 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
+import moment from 'moment';
 import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
-import { catchError, concatMap, debounceTime, filter, flatMap, map, takeUntil } from 'rxjs/operators';
+import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
-import { layersService } from '../../services/geoserver/layers.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { PropertySchema } from '../../services/crg/data-schema.service';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
@@ -29,13 +28,14 @@ import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { ViewFeaturesData } from '../view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
-import { CrgLayer, Project } from '../../services/crg/projects.models';
+import { CrgLayer } from '../../services/crg/projects.models';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -87,7 +87,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private project: Project;
 
   constructor(private tFeatureService: TransformFeatureService,
               private logger: NGXLogger,
@@ -312,7 +311,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  private editFeatures() {
+  editFeatures() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
@@ -333,47 +332,45 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     });
   }
 
-  private copyObjects() {
+  copyObjects() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
-    layersService.layers$
+    const layers = this.getSuitableLayers(this.layer, currentProject.layers);
+    if (this.isSuitableLayersExist(layers)) {
+      this.openEditDialog('Копирование', layers)
         .pipe(
-          map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
-          filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
-          flatMap(suitableLayers => this.openEditDialog('Копирование', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
-
           this.batchInsertFeatures(selectedLayer, batchModel);
-
-          this.attributeTable.selected = [];
         });
+
+        this.attributeTable.selected = [];
+    }
   }
 
-  private moveObjects() {
+  moveObjects() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
-    layersService.layers$
+    const layers = this.getSuitableLayers(this.layer, currentProject.layers);
+    if (this.isSuitableLayersExist(layers)) {
+      this.openEditDialog('Перемещение', layers)
         .pipe(
-          map(layers => dataSchemaService.getSuitableByGeometryLayers(this.layer, layers)),
-          filter(suitableLayers => this.isSuitableLayersExist(suitableLayers)),
-          flatMap(suitableLayers => this.openEditDialog('Перемещение', suitableLayers)),
           takeUntil(this.unsubscribe$)
         ).subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
-
           this.batchReplaceFeatures(selectedLayer, batchModel);
         });
+    }
   }
 
-  private deleteObjects() {
+  deleteObjects() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
@@ -394,6 +391,14 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
           this.attributeTable.selected = [];
         });
+  }
+
+  private getSuitableLayers(layer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
+    return layers.filter(({ complexName, schema, geometryType }) => {
+      const readOnly = schema && schema.readOnly;
+
+      return (layer.complexName !== complexName) && (layer.geometryType === geometryType) && !readOnly;
+    });
   }
 
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
@@ -420,7 +425,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.internalName)),
+        concatMap(features => this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName)),
         catchError(err => this.handleError(err)),
       ).subscribe(() => {
         i++;
@@ -442,13 +447,13 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, this.project.internalName, selectedLayer.internalName)
+            this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName)
           );
         }),
         concatMap(([features]) => {
           const featureIds = features.map((feature) => feature.id)
 
-          return this.tFeatureService.deleteFeatures(featureIds, this.project.internalName, this.layer.internalName);
+          return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -474,7 +479,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           const featureIds = features.map((feature) => feature.id)
 
-          return this.tFeatureService.deleteFeatures(featureIds, this.project.internalName, this.layer.internalName);
+          return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
         }),
       ).subscribe(() => {
         i++;
@@ -482,7 +487,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         if (i >= batchModel.totalBatches) {
           this.loadPercent = percent > 100 ? 100 : percent;
           this.loading = false;
+
           Toast.info('Объекты удалены');
+          openLayersService.clearDraft();
+          openLayersService.refreshLayers();
 
           this.updateTable(this.requestModel$.getValue());
         } else {
