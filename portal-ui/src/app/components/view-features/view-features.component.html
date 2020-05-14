@@ -5,7 +5,10 @@
       Объекты
     </div>
 
-    <crg-features-list [features]="viewFeatures" (onItemSelect)="selectFeature($event)">
+    <crg-features-list
+        [features]="viewFeatures"
+        (onItemSelect)="selectFeature($event)"
+        (onItemHighlight)="highlightFeature($event)">
     </crg-features-list>
   </div>
 

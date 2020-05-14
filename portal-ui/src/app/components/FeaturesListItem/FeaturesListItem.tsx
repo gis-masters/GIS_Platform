@@ -1,11 +1,11 @@
 import React from 'react';
 import { cn } from '@bem-react/classname';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
 
+import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { dataSchemaService } from '../../services/crg/data-schema.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { ArrowForward } from '@material-ui/icons';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -14,6 +14,8 @@ const cnFeaturesListItem = cn('FeaturesListItem');
 interface FeaturesListItemProps {
   feature: WfsFeature;
   onSelect: (item: WfsFeature) => void;
+  onHighlight: (item: WfsFeature) => void;
+  highlighted: boolean;
 }
 
 export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
@@ -45,15 +47,18 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
       }
     }
 
-    this.highlightIt = this.highlightIt.bind(this);
     this.selectIt = this.selectIt.bind(this);
+    this.highlightIt = this.highlightIt.bind(this);
+    this.zoomHandler = this.zoomHandler.bind(this);
   }
 
   render () {
+    const { feature, highlighted } = this.props;
+
     return (
-      <div className={cnFeaturesListItem()} onClick={this.highlightIt} onDoubleClick={this.selectIt}>
-        <div className={cnFeaturesListItem('Id')}>
-          {this.props.feature.id.split('.')[1]}
+      <div className={cnFeaturesListItem({ highlighted })}>
+        <div className={cnFeaturesListItem('Id')} onDoubleClick={this.selectIt} onClick={this.highlightIt}>
+          {feature.id.split('.')[1]}
         </div>
         <div className={cnFeaturesListItem('Title')}>
           {this.title}
@@ -61,21 +66,30 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
         <div className={cnFeaturesListItem('Layer')}>
           {this.layerTitle}
         </div>
-        <Tooltip title='Перейти к объекту' enterDelay={800}>
-          <IconButton className={cnFeaturesListItem('Button')} color={'primary'} onClick={this.selectIt}>
-            <ChevronRight />
-          </IconButton>
-        </Tooltip>
+        <div className={cnFeaturesListItem('Buttons')}>
+          <ZoomToFeature feature={feature} onClick={this.zoomHandler} />
+          <Tooltip title='Открыть'>
+            <IconButton onClick={this.selectIt}>
+              <ArrowForward />
+            </IconButton>
+          </Tooltip>
+        </div>
       </div>
     );
   }
 
-  private highlightIt () {
-    openLayersService.highlightFeature(this.props.feature);
+  private selectIt () {
+    const { onSelect, feature, onHighlight } = this.props;
+    onSelect(feature);
+    onHighlight(feature);
   }
 
-  private selectIt () {
-    openLayersService.positionToFeature(this.props.feature);
-    this.props.onSelect(this.props.feature);
+  private highlightIt () {
+    const { feature, highlighted, onHighlight } = this.props;
+    onHighlight(highlighted ? null : feature);
+  }
+
+  private zoomHandler () {
+    this.props.onHighlight(this.props.feature);
   }
 }

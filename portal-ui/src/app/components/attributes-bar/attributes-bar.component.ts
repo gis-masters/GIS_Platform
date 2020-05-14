@@ -172,12 +172,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   }
 
   showSelectedFeatures() {
-    // Очищаем предыдущие
-    openLayersService.clearDraft();
-
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      this.attributeTable.selected.forEach((feature: WfsFeature) => openLayersService.paintFeature(feature));
+      openLayersService.highlightFeature(this.attributeTable.selected);
     }
 
     window.dispatchEvent(new Event('resize'));

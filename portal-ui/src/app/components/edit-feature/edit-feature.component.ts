@@ -56,7 +56,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   editGeometryStore = new EditFeatureGeometryStore();
 
   get readOnly (): boolean {
-    return this.featureDescription.readOnly;
+    return this.featureDescription && this.featureDescription.readOnly;
   }
 
   constructor(private formBuilder: FormBuilder,
@@ -281,7 +281,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
   private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
     const { internalName } = currentProject;
-    const { tableName } = this.featureDescription;
 
     const batchModel = new BatchModel(features);
     let percent = 0;
@@ -311,9 +310,5 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       mode: EditFeatureMode.multipleEdit,
       properties: newProperties
     });
-  }
-
-  zoomToFeature(feature: WfsFeature) {
-    openLayersService.positionToFeature(feature);
   }
 }

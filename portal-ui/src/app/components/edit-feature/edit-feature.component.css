@@ -70,11 +70,9 @@
   max-height: 100%;
 }
 
-.zoom-to-button {
-  z-index: 1000;
-  cursor: pointer;
-  color: dimgray;
+.zoom-to-feature {
   position: absolute;
-  right: 0px;
-  margin-top: 4px;
+  z-index: 2;
+  top: 46px;
+  right: 0;
 }

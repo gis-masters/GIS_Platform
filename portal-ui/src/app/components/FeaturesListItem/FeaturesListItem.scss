@@ -3,12 +3,12 @@
 
   display: grid;
 
-  padding: 7px 15px 7px 5px;
+  padding: 7px 5px 7px 5px;
 
-  cursor: pointer;
+  transition: background-color 0.15s;
 
-  grid-template: auto auto / 45px auto 50px;
-  grid-template-areas: 'id title button' 'id layer button';
+  grid-template: auto auto / 45px auto 100px;
+  grid-template-areas: 'id title buttons' 'id layer buttons';
 
   &::before {
     position: absolute;
@@ -34,6 +34,11 @@
     }
   }
 
+  &_highlighted,
+  &_highlighted:hover {
+    background: rgba(100,0,100,0.1);
+  }
+
   &-Id {
     align-self: center;
 
@@ -48,6 +53,16 @@
 
     justify-self: center;
     grid-area: id;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      content: '';
+    }
   }
 
   &-Title {
@@ -67,17 +82,20 @@
     grid-area: layer;
   }
 
-  & &-Button {
+  & &-Buttons {
     align-self: center;
 
-    opacity: 0;
+    transition: opacity 0.15s;
 
-    grid-area: button;
+    opacity: 0.2;
+
+    grid-area: buttons;
     justify-self: end;
   }
 
-  &:hover &-Button,
-  & &-Button:focus {
+  &:hover &-Buttons,
+  &_highlighted &-Buttons,
+  & &-Buttons:focus {
     opacity: 1;
   }
 }

@@ -294,9 +294,14 @@ class OpenLayersService {
   /**
    * Подсвечивает обьект. (очищает черновой слой)
    */
-  highlightFeature(wfsFeature: WfsFeature) {
+  highlightFeature(features: WfsFeature | WfsFeature[]) {
+    features = [].concat(features);
+
     this.clearDraft();
-    this.paintFeature(wfsFeature);
+
+    features.forEach(feature => {
+      this.paintFeature(feature);
+    });
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {
@@ -311,7 +316,18 @@ class OpenLayersService {
       properties: ''
     };
 
-    this.paintFeature(feature);
+    const olFeature = MapperUtil.mapWfsFeatureToFeature(feature);
+    if (olFeature) {
+      this.draftSource.addFeature(olFeature);
+
+      setTimeout(() => {
+        try {
+          this.draftSource.removeFeature(olFeature);
+        } catch (e) {
+
+        }
+      }, 500);
+    }
   }
 
   fitToBbox(bbox: number[], padding: [number, number, number, number]) {
@@ -343,13 +359,6 @@ class OpenLayersService {
     ]]];
 
     return new MultiPolygon(buffer);
-  }
-
-  paintFeature(wfsFeature: WfsFeature) {
-    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
-    if (olFeature) {
-      this.draftSource.addFeature(olFeature);
-    }
   }
 
   enableDraftModification (handler: (e: ModifyEvent) => void) {
@@ -403,7 +412,7 @@ class OpenLayersService {
     }
   }
 
-  public positionToFeature(wfsFeature: WfsFeature) {
+  positionToFeature(wfsFeature: WfsFeature) {
     const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);
@@ -426,6 +435,13 @@ class OpenLayersService {
         break;
       default:
         services.logger.warn('Unsupported geometry type: ', geometry.getType());
+    }
+  }
+
+  private paintFeature(wfsFeature: WfsFeature) {
+    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
+    if (olFeature) {
+      this.draftSource.addFeature(olFeature);
     }
   }
 

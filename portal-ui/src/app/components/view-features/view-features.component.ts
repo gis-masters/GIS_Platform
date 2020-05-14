@@ -35,6 +35,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   hasEditable: boolean;
   viewFeatures: WfsFeature[] = [];
 
+  private highlightAllFeaturesTimeout: number;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
@@ -63,6 +64,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     communicationService.featuresUpdate$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(() => {
+
           this.closeMe();
         });
   }
@@ -93,6 +95,11 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   switchMode() {
     this.isEditMode = !this.isEditMode;
+    if (!this.isEditMode) {
+      setTimeout(() => {
+        this.highlightFeature();
+      }, 0);
+    }
   }
 
   selectFeature(feature: WfsFeature) {
@@ -105,7 +112,19 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     };
   }
 
-  closeMe() {
+  highlightFeature(feature?: WfsFeature | null) {
+    if (feature) {
+      clearTimeout(this.highlightAllFeaturesTimeout);
+      openLayersService.highlightFeature(feature);
+    } else {
+      this.highlightAllFeaturesTimeout = window.setTimeout(() => {
+        openLayersService.highlightFeature(this.viewFeatures);
+      }, 100);
+    }
+  }
+
+  closeMe () {
+    this.viewFeatures = [];
     openLayersService.clearDraft();
     sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
   }
@@ -120,6 +139,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private showFeatures() {
     this.viewFeatures = this.data.features.filter(feature => !this.deletedFeaturesIds.includes(feature.id));
+    this.highlightFeature();
   }
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {

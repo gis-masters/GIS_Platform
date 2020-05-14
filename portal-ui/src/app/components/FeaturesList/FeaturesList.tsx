@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { observable, action } from 'mobx';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
@@ -13,18 +15,43 @@ const cnFeaturesList = cn('FeaturesList');
 interface FeaturesListProps {
   features?: WfsFeature[];
   onItemSelect: (item: WfsFeature) => void;
+  onItemHighlight: (item: WfsFeature | null) => void;
+
 }
 
-export const FeaturesList: React.FC<FeaturesListProps> = ({ features, onItemSelect }) => (
-  <div className={cnFeaturesList()}>
-    {features && features.length ?
-        features.map(feature => (
-            <FeaturesListItem
-                feature={feature}
-                key={feature.id}
-                onSelect={onItemSelect}
-            />
-        )) :
-        <FeaturesListEmpty />}
-  </div>
-);
+@observer
+export class FeaturesList extends Component<FeaturesListProps> {
+  @observable private highlightedFeatureId: string | null = null;
+
+  constructor (props: FeaturesListProps) {
+    super(props);
+
+    this.handleItemHighlight = this.handleItemHighlight.bind(this);
+  }
+
+  render () {
+    const { features, onItemSelect } = this.props;
+
+    return (
+      <div className={cnFeaturesList()}>
+        {features && features.length ?
+            features.map(feature => (
+                <FeaturesListItem
+                    feature={feature}
+                    highlighted={feature.id === this.highlightedFeatureId}
+                    onSelect={onItemSelect}
+                    onHighlight={this.handleItemHighlight}
+                    key={feature.id}
+                />
+            )) :
+            <FeaturesListEmpty />}
+      </div>
+    );
+  }
+
+  @action
+  private handleItemHighlight (feature: WfsFeature | null) {
+    this.props.onItemHighlight(feature);
+    this.highlightedFeatureId = feature && feature.id;
+  }
+}

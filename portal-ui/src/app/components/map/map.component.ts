@@ -168,8 +168,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
       const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
 
-      openLayersService.clearDraft();
-
       if (fCollection.features && fCollection.features.length) {
         sideBarManager.do({
           target: SidebarType.FEATURES, action: ActionType.OPEN,
@@ -179,9 +177,7 @@ export class MapComponent implements OnInit, OnDestroy {
           } as ViewFeaturesData
         });
 
-        fCollection.features.forEach(feature => {
-          openLayersService.paintFeature(feature);
-        });
+        openLayersService.highlightFeature(fCollection.features);
       }
     } else {
       this.logger.debug('No visible layers');

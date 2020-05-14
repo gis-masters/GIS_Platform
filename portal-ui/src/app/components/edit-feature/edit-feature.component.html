@@ -48,10 +48,8 @@
       </mat-tab-group>
     </ng-container>
 
-    <button class="zoom-to-button" mat-icon-button (click)="zoomToFeature(data.feature)"
-            matTooltip="Перейти к объекту">
-      <mat-icon>zoom_out_map</mat-icon>
-    </button>
+    <crg-zoom-to-feature class="zoom-to-feature" [feature]="data.features[0]" *ngIf="data.mode === 'single' && !data.isNew">
+    </crg-zoom-to-feature>
   </div>
 </div>
 

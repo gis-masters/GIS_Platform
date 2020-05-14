@@ -24,10 +24,12 @@ export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() features: WfsFeature[];
   @Input() layerTitle: string;
   @Output() onItemSelect = new EventEmitter<WfsFeature>();
+  @Output() onItemHighlight = new EventEmitter<WfsFeature>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
   constructor () {
     this.itemSelectHandler = this.itemSelectHandler.bind(this);
+    this.itemHighlightHandler = this.itemHighlightHandler.bind(this);
   }
 
   ngOnInit () {
@@ -45,7 +47,8 @@ export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
   private renderReactElement() {
     const reactElement = createElement(FeaturesList, {
       features: this.features,
-      onItemSelect: this.itemSelectHandler
+      onItemSelect: this.itemSelectHandler,
+      onItemHighlight: this.itemHighlightHandler
     });
 
     render(reactElement, this.ref.nativeElement);
@@ -53,5 +56,9 @@ export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
 
   private itemSelectHandler (item: WfsFeature) {
     this.onItemSelect.emit(item);
+  }
+
+  private itemHighlightHandler (item: WfsFeature) {
+    this.onItemHighlight.emit(item);
   }
 }
