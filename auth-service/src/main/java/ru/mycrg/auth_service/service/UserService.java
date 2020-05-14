@@ -102,7 +102,8 @@ public class UserService {
                 new UserCreatedEvent(
                         savedUser.getUsername(),
                         dto.getPassword(),
-                        true)
+                        true,
+                        "admin_" + orgId)
         );
 
         return projectionFactory.createProjection(UserProjection.class, savedUser);

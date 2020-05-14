@@ -32,6 +32,7 @@ public class CreateUserRequestHandler implements IUserRequestHandler {
             log.debug("userCreatedEvent. {}", event.getLogin());
 
             usersAndRolesService.createUser(event.getLogin(), event.getPassword());
+            usersAndRolesService.associateUserWithRole(event.getLogin(), event.getRole());
 
             mqSender.sendUserEvent(new UserProvisioningSucceedEvent(mqEvent));
         } catch (Exception e) {
