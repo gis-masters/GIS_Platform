@@ -15,7 +15,7 @@ export class BaseEdit implements OnDestroy {
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

@@ -283,7 +283,7 @@ class OpenLayersService {
 
   // Очистить карту от слоя, который отображал объект.
   clearDraft() {
-    this.draftSource.clear();
+    this.draftSource.clear(true);
   }
 
   // Очистить карту от всех слоёв.
@@ -295,13 +295,8 @@ class OpenLayersService {
    * Подсвечивает обьект. (очищает черновой слой)
    */
   highlightFeature(features: WfsFeature | WfsFeature[]) {
-    features = [].concat(features);
-
     this.clearDraft();
-
-    features.forEach(feature => {
-      this.paintFeature(feature);
-    });
+    this.paintFeatures([].concat(features));
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {
@@ -438,11 +433,9 @@ class OpenLayersService {
     }
   }
 
-  private paintFeature(wfsFeature: WfsFeature) {
-    const olFeature = MapperUtil.mapWfsFeatureToFeature(wfsFeature);
-    if (olFeature) {
-      this.draftSource.addFeature(olFeature);
-    }
+  private paintFeatures(wfsFeatures: WfsFeature[]) {
+    const olFeatures = wfsFeatures.map(feature => MapperUtil.mapWfsFeatureToFeature(feature));
+    this.draftSource.addFeatures(olFeatures);
   }
 
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
