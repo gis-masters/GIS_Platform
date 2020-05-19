@@ -12,4 +12,4 @@ echo "2" > ${GEOSERVER_DATA_DIR}/migrationVersion
 echo "${TAB}Done V2__AddJsonLogger"
 echo
 
-#Run Next migration
+./V3__AddProjections/run.sh

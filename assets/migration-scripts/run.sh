@@ -11,6 +11,10 @@ if [[ currentMigration -eq 1 ]]; then
 
     ./V2__AddJsonLogger/run.sh
 elif [[ currentMigration -eq 2 ]]; then
+    echo "  Last completed migration: 'V2__AddJsonLogger'";
+
+    ./V3__AddProjections/run.sh
+elif [[ currentMigration -eq 3 ]]; then
     echo -e "  All migration completed";
 else
     echo -e "  No migrations yet"
