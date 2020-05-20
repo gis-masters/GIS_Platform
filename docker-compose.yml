@@ -44,6 +44,9 @@ services:
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
       EXISTING_DATA_DIR: $IS_DATA_EXIST
+      MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-314}
+      SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-2GB}
+      WAL_LEVEL: ${POSTGRES_WAL_LEVEL:-logical}
 
   geoserver:
     container_name: geoserver
