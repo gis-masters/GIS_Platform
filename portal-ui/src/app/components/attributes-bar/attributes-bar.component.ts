@@ -344,8 +344,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           const batchModel = this.prepareBatchProcess(selected);
           this.batchInsertFeatures(selectedLayer, batchModel);
         });
-
-        this.attributeTable.selected = [];
     }
   }
 
@@ -383,9 +381,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         .afterClosed().pipe(filter(value => !!value))
         .subscribe(() => {
           const batchModel = this.prepareBatchProcess(selected);
-
           this.batchDeleteFeatures(batchModel);
-
           this.attributeTable.selected = [];
         });
   }
@@ -432,6 +428,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           this.loadPercent = percent > 100 ? 100 : percent;
           this.loading = false;
           Toast.info('Объекты скопированы');
+          this.attributeTable.selected = [];
+          this.updateTable(this.requestModel$.getValue());
+          openLayersService.clearDraft();
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
