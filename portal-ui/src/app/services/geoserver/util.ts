@@ -36,15 +36,13 @@ export class Util {
       filterString = filterString + this.parseFilter(filterEvent);
     });
 
-    // console.log('CQL: ', filterString);
-
     return filterString;
   }
 
   private static parseFilter(filterEvent: FilterEvent): string {
-    // name LIKE %some%
+    // name ILIKE %some%
     if (filterEvent.property.valueType === 'STRING') {
-      return filterEvent.property.name.toLowerCase() + ' LIKE \'%' + filterEvent.value + '%\'';
+      return filterEvent.property.name.toLowerCase() + ' ILIKE \'%' + filterEvent.value + '%\'';
     }
 
     // area BETWEEN n AND n+1

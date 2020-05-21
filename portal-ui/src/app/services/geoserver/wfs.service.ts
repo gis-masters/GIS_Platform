@@ -9,22 +9,10 @@ import {
   WfsFeature,
   WfsFeatureCollection,
   CoordinateEdited,
-  WfsGeometry,
-  WfsGeometryEdited
+  WfsGeometry
 } from './wfs-models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
-
-export interface GeoserverJSONException {
-  version: string;
-  exceptions: ExceptionItem[];
-}
-
-export interface ExceptionItem {
-  code: string;
-  locator: string;
-  text: string;
-}
 
 type Coord = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
@@ -108,13 +96,6 @@ export const isCoordinateValid = (coord: Coordinate): boolean => {
 
 export const isDimensionValid = (dimension: string | number): boolean => {
   return !isNaN(transformDimension(dimension));
-};
-
-export const normalizeGeometry = (geometry: WfsGeometryEdited): WfsGeometry => {
-  return {
-    ...geometry,
-    coordinates: normalizeCoordinates(geometry.coordinates)
-  } as WfsGeometry;
 };
 
 export const normalizeCoordinates = (coord: CoordEdited | string | number): Coord | number => {
