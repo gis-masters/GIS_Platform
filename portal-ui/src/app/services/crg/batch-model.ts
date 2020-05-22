@@ -1,5 +1,6 @@
-export class BatchModel<T> {
+import { chunk } from 'lodash';
 
+export class BatchModel<T> {
   batches: T[][] = [];
   totalBatches: number;
   percentOfOneBatch: number;
@@ -7,22 +8,8 @@ export class BatchModel<T> {
   private BATCH_SIZE = 200;
 
   constructor (objects: T[]) {
-    this.totalBatches = Math.ceil(objects.length / this.BATCH_SIZE);
+    this.batches = chunk(objects, this.BATCH_SIZE);
+    this.totalBatches = this.batches.length;
     this.percentOfOneBatch = 100 / this.totalBatches;
-    this.batches = this.splitListToParts(objects, this.totalBatches);
-  }
-
-  splitListToParts(arr: T[], n: number): T[][] {
-    const plen = Math.ceil(arr.length / n);
-
-    return arr.reduce(function (p, c, i) {
-      if (i % plen === 0) {
-        p.push([]);
-      }
-
-      p[p.length - 1][i] = c;
-
-      return p;
-    }, []);
   }
 }

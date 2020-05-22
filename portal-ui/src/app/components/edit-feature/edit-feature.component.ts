@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { takeUntil, filter, first } from 'rxjs/operators';
 
 import {
@@ -54,6 +55,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   isGeometryValid = false;
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
+  private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
   get readOnly (): boolean {
     return this.featureDescription && this.featureDescription.readOnly;
@@ -63,37 +65,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
               private dialog: MatDialog,
               private transformFeatureService: TransformFeatureService) {
     super();
-
-    fromMobx(() => this.editGeometryStore.geometry, false)
-      .pipe(first())
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        fromMobx(() => this.editGeometryStore.resultGeometry)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(changedGeometry => {
-              this.changedGeometry = changedGeometry;
-
-              if (this.editGeometryStore.isValid) {
-                const feature = {
-                  ...this.data.features[0],
-                  geometry: changedGeometry
-                };
-                openLayersService.highlightFeature(feature);
-              }
-            });
-
-        fromMobx(() => this.editGeometryStore.isValid)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(isValid => {
-              this.isGeometryValid = isValid;
-            });
-
-        fromMobx(() => this.editGeometryStore.isChanged)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(isChanged => {
-              this.isGeometryChanged = isChanged;
-            });
-      });
   }
 
   ngOnInit(): void {
@@ -110,7 +81,50 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.unsubscribeFromMobx$.next();
+    delete this.changedGeometry;
+    this.isGeometryValid = false;
+    this.isGeometryChanged = false;
     this.editGeometryStore.initGeometry(this.data.features[0].geometry);
+
+    if (!this.readOnly) {
+      fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
+        .pipe(first())
+        .pipe(takeUntil(this.unsubscribe$))
+        .pipe(takeUntil(this.unsubscribeFromMobx$))
+        .subscribe(() => {
+          fromMobx(() => this.editGeometryStore.resultGeometry)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(changedGeometry => {
+                this.changedGeometry = changedGeometry;
+
+                if (this.editGeometryStore.isValid) {
+                  const feature = {
+                    ...this.data.features[0],
+                    geometry: changedGeometry
+                  };
+                  openLayersService.highlightFeature(feature);
+                } else {
+                  openLayersService.clearDraft();
+                }
+              });
+
+          fromMobx(() => this.editGeometryStore.isValid)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(isValid => {
+                this.isGeometryValid = isValid;
+              });
+
+          fromMobx(() => this.editGeometryStore.isChanged)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(isChanged => {
+                this.isGeometryChanged = isChanged;
+              });
+        });
+    }
 
     const dataChanged = changes.data;
     if (dataChanged) {

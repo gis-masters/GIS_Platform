@@ -283,7 +283,9 @@ class OpenLayersService {
 
   // Очистить карту от слоя, который отображал объект.
   clearDraft() {
-    this.draftSource.clear(true);
+    const collection = this.draftSource.getFeaturesCollection();
+    const count = collection ? collection.getLength() : 0;
+    this.draftSource.clear(count > 10);
   }
 
   // Очистить карту от всех слоёв.

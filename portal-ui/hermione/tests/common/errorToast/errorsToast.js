@@ -45,6 +45,7 @@ describe('common: Нотификация пользователя при неп�
 
     await toast.clickMoar();
     await toast.waitForDetails();
+    await toast.mockErrorFile();
     await toast.assertSelfie();
     await toast.clickMoar();
     await toast.waitForDetailsHidden();

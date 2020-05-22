@@ -5,7 +5,8 @@ module.exports = class Toast extends Block {
     container: '.Toast',
     moar: '.Toast-Moar',
     details: '.Toast-Details',
-    file: '.Toast-File'
+    fileName: '.Toast-Source',
+    fileNums: '.Toast-FileNums'
   }
 
   clickMoar () {
@@ -16,8 +17,15 @@ module.exports = class Toast extends Block {
 
   produceError () {
     return this.browser.execute(() => {
-      setTimeout(()=>{ window.nonexistentFunction(); }, 1000);
+      setTimeout(()=>{ window.notexistFunction(); }, 1000);
     });
+  }
+
+  async mockErrorFile () {
+    await this.browser.execute(({ fileName, fileNums }) => {
+      document.querySelector(fileName).innerText = '/fakeFileName.js';
+      document.querySelector(fileNums).innerText = '13:13';
+    }, this._elements);
   }
 
   async waitForVisible () {
@@ -40,8 +48,8 @@ module.exports = class Toast extends Block {
   }
 
   assertSelfie () {
-    const { container, file } = this._elements;
+    const { container } = this._elements;
 
-    return this.browser.assertView('plain', container, {ignoreElements: [file]});
+    return this.browser.assertView('plain', container);
   }
 };

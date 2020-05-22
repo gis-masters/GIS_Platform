@@ -169,13 +169,17 @@ export class MapComponent implements OnInit, OnDestroy {
       const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
 
       if (fCollection.features && fCollection.features.length) {
-        sideBarManager.do({
-          target: SidebarType.FEATURES, action: ActionType.OPEN,
-          data: {
-            features: fCollection.features,
-            mode: EditFeatureMode.single
-          } as ViewFeaturesData
-        });
+        sideBarManager.do({ target: SidebarType.FEATURES, action: ActionType.CLOSE });
+
+        setTimeout(() => {
+          sideBarManager.do({
+            target: SidebarType.FEATURES, action: ActionType.OPEN,
+            data: {
+              features: fCollection.features,
+              mode: EditFeatureMode.single
+            } as ViewFeaturesData
+          });
+        }, 0);
 
         openLayersService.highlightFeature(fCollection.features);
       }

@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: space-between;
 
+  height: calc(var(--EditFeatureGeometryCoordHeight) * 1px);
   padding: 3px 0;
 
   transition: background-color 0.3s;
