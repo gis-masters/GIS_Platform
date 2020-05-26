@@ -33,4 +33,8 @@ public class LayerUpdateDto {
     @CrgParentGroup
     private Long groupId;
 
+    @NotBlank
+    @Length(min = 6, max = 255)
+    private String nativeCRS;
+
 }

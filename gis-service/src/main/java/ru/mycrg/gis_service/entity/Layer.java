@@ -74,6 +74,7 @@ public class Layer implements Identifiable<Long> {
         schemaId = dto.getSchemaId();
         styleName = dto.getInternalName();
         dataStoreName = dto.getDataStoreName();
+        nativeCRS = dto.getNativeCRS();
 
         enabled = false;
         position = 0;

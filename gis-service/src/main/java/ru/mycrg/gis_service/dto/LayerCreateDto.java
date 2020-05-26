@@ -17,12 +17,19 @@ public class LayerCreateDto {
     private String title;
 
     @NotBlank
+    @Length(min = 3, max = 255)
     private String internalName;
 
     @NotBlank
+    @Length(min = 3, max = 100)
     private String schemaId;
 
     @NotBlank
+    @Length(min = 3, max = 100)
     private String dataStoreName;
+
+    @NotBlank
+    @Length(min = 6, max = 255)
+    private String nativeCRS;
 
 }

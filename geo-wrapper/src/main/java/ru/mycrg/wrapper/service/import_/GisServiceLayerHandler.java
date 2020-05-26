@@ -5,6 +5,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,18 +43,21 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
         SchemaDto featureDescription = importTask.getFeatureDescription();
         String layerName = featureDescription.getName();
+        String title = featureDescription.getTitle() == null ? layerName : featureDescription.getTitle();
 
         log.debug("Add layer {} to crg-gis-service", layerName);
 
         String databaseName = importTask.getTargetResource().getDbName();
         String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\n" +
-                "\t\"title\": \"" + featureDescription.getTitle() + "\",\n" +
-                "\t\"internalName\": \"" + layerName + "\",\n" +
-                "\t\"schemaId\": \"" + layerName + "\",\n" +
-                "\t\"dataStoreName\": \"" + storeName + "\"\n" +
-                "}");
+        final JSONObject json = new JSONObject();
+        json.put("title", title);
+        json.put("internalName", layerName);
+        json.put("schemaId", layerName);
+        json.put("dataStoreName", storeName);
+        json.put("nativeCRS", "EPSG:" + importTask.getSrs());
+
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json.toString());
 
         Request createLayer = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + importTask.getUserToken())
