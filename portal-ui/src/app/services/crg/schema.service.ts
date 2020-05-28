@@ -1,15 +1,15 @@
-import { debounce, Cancelable } from 'lodash';
+import {debounce, Cancelable} from 'lodash';
 
-import { ValueTitleProjection } from '../geoserver/projections';
-import { serverProperties } from '../server-properties.service';
-import { FeatureUtil } from '../util/FeatureUtil';
-import { getEmptyGeometry } from '../geoserver/wfs.service';
-import { WfsFeature, CoordinateEdited, SupportedGeometryType } from '../geoserver/wfs-models';
-import { ImportLayerItem } from '../geoserver/import/models';
-import { BugObject } from './validation.service';
-import { CrgLayer } from '../crg/projects.models';
-import { services } from '../services';
-import { currentProject } from '../../stores/CurrentProject.store';
+import {ValueTitleProjection} from '../geoserver/projections';
+import {serverProperties} from '../server-properties.service';
+import {FeatureUtil} from '../util/FeatureUtil';
+import {getEmptyGeometry} from '../geoserver/wfs.service';
+import {WfsFeature, CoordinateEdited, SupportedGeometryType} from '../geoserver/wfs-models';
+import {ImportLayerItem} from '../geoserver/import/models';
+import {BugObject} from './validation.service';
+import {CrgLayer} from '../crg/projects.models';
+import {services} from '../services';
+import {currentProject} from '../../stores/CurrentProject.store';
 
 export interface FeatureDescription {
   name: string;
@@ -90,7 +90,7 @@ class SchemaService {
     return this._instance || (this._instance = new this());
   }
 
-  getSchema (name: string): Promise<FeatureDescription> {
+  getSchema(name: string): Promise<FeatureDescription> {
     if (!this.schemas[name]) {
       this.schemas[name] = new Promise(resolve => {
         this.schemasResolvers[name] = resolve;
@@ -102,13 +102,13 @@ class SchemaService {
     return this.schemas[name];
   }
 
-  async getCurrentProjectSchemas (): Promise<FeatureDescription[]> {
+  async getCurrentProjectSchemas(): Promise<FeatureDescription[]> {
     const names = currentProject.layers.map(layer => layer.schemaId);
 
     return Promise.all(names.map(this.getSchema));
   }
 
-  async getAllSchemas (): Promise<FeatureDescription[]> {
+  async getAllSchemas(): Promise<FeatureDescription[]> {
     if (!this.fetchingAllSchemas) {
       this.fetchingAllSchemas = this.fetch(true);
     }
@@ -122,7 +122,7 @@ class SchemaService {
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
- async getSchemaByLayerName(layerName: string, global?: boolean): Promise<FeatureDescription | undefined> {
+  async getSchemaByLayerName(layerName: string, global?: boolean): Promise<FeatureDescription | undefined> {
     if (!layerName) {
       return;
     }
@@ -130,7 +130,7 @@ class SchemaService {
     const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
 
     return schemas.find(schema => schema.name.toLowerCase() === layerName.toLowerCase()) ||
-           schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()));
+      schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()));
   }
 
   /**
@@ -180,16 +180,16 @@ class SchemaService {
   /**
    * По наименованию фичи, попытаемся найти алиас в ее свойствах.
    * Если алиас найти не удалось просто вернем код.
-   * @param layerName Наименование фичи
+   * @param layer Наименование фичи
    * @param propertyName код свойства
    */
   async getPropertyAlias(layer: CrgLayer, propertyName: string): Promise<string> {
     const schema = await this.getSchema(layer.schemaId);
-    
+
     if (schema) {
-      const property = schema.properties.find(property => property.name.toLowerCase() === propertyName.toLowerCase());
+      const property = schema.properties.find(prop => prop.name.toLowerCase() === propertyName.toLowerCase());
       if (property) {
-        return property.title
+        return property.title;
       }
     }
 
@@ -197,20 +197,20 @@ class SchemaService {
   }
 
   /**
-   * Ищем свойство, среди тех что есть в XSD схеме.
+   * Ищем свойство, среди тех что есть в схеме.
    *
    * @param key Наименование свойства, полученное из "фичи" геосервера
-   * @param propertySchemas Свойства полученные из XSD схемы.
+   * @param propertySchemas Свойства полученные из схемы.
    */
   getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
-    return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
+    return propertySchemas.find(({name}) => name.toLowerCase() === key.toLowerCase());
   }
 
-  async getEmptyFeature (layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
-    const { internalName, schemaId } = layer;
+  async getEmptyFeature(layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
+    const {internalName, schemaId} = layer;
     const schema = await this.getSchema(schemaId);
 
-    const properties = schema.properties.reduce((acc: {[key: string]: null}, propertySchema) => {
+    const properties = schema.properties.reduce((acc: { [key: string]: null }, propertySchema) => {
       acc[propertySchema.name.toLowerCase()] = null;
       return acc;
     }, {});
@@ -264,7 +264,7 @@ class SchemaService {
     const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
     if (!response) {
-      services.logger.error(`Geting schemas ${JSON.stringify(payload)} response is: `, response);
+      services.logger.error(`Getting schemas ${JSON.stringify(payload)} response is: `, response);
       return;
     }
 

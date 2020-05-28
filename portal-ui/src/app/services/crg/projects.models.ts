@@ -1,4 +1,7 @@
+import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
+import { UserPermission } from '../util/permissions';
+import { FeatureDescription } from './schema.service';
 
 interface CrgEntity {
   id: number;
@@ -13,16 +16,26 @@ interface BaseCrgLayer extends CrgEntity {
   internalName: string;
   maxZoom: number;
   minZoom: number;
+  styleName: string;
+  nativeCRS: string;
   schemaId: string;
+  complexName: string;
   groupId?: number;
 }
 
 // extended on ui
 export interface CrgLayer extends BaseCrgLayer {
-  complexName?: string;
-  href?: string;
+  geometryType?: SupportedGeometryType;
+  schema?: FeatureDescription;
   legend?: RuleWithLegend[];
   legendIsFetching?: boolean;
+  sourceData?: CrgSource;
+}
+
+export interface CrgSource {
+  name: string;
+  permission: UserPermission;
+  valid: boolean;
 }
 
 export interface CrgGroup extends CrgEntity {

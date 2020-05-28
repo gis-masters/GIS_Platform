@@ -61,8 +61,8 @@ zuul:
 
     # DATA SERVICE
     crg-data-service-projects:
-      path: /api/data/basemaps/**
-      url: http://crg-data-service:8084/basemaps/
+      path: /api/data/**
+      url: http://crg-data-service:8084/
 
     # API SERVICE
     api-common:

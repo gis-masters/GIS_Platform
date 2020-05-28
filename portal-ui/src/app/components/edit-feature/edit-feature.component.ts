@@ -22,12 +22,15 @@ import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store
 import { fromMobx } from '../../services/util/fromMobx';
 import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { isUpdateAllowed, isDeleteAllowed } from '../../services/util/permissions';
 
 export interface EditFeatureData {
+  layer: CrgLayer;
   features: WfsFeature[];
   mode: EditFeatureMode;
   total?: number;
-  properties?: {[key: string]: any};
+  properties?: { [key: string]: any };
   isNew?: true;
 }
 
@@ -57,10 +60,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
-  get readOnly (): boolean {
-    return this.featureDescription && this.featureDescription.readOnly;
-  }
-
   constructor(private formBuilder: FormBuilder,
               private dialog: MatDialog,
               private transformFeatureService: TransformFeatureService) {
@@ -87,7 +86,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     this.isGeometryChanged = false;
     this.editGeometryStore.initGeometry(this.data.features[0].geometry);
 
-    if (!this.readOnly) {
+    if (!this.isUpdateAllowed()) {
       fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
         .pipe(first())
         .pipe(takeUntil(this.unsubscribe$))
@@ -140,6 +139,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
       this.editFeatureForm = this.formBuilder.group({});
       this.featureDescription = await schemaService.getSchemaByLayerName(currentData.features[0].id.split('.')[0]);
+
+      currentData.layer = currentProject.layers.find(layer => layer.schemaId === this.featureDescription.name);
 
       Object.keys(currentData.features[0].properties)
             .filter(key => key !== 'bbox')
@@ -208,8 +209,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     }
   }
 
-  async editFeature () {
-    if (this.editFeatureForm.pristine && !this.isGeometryChanged || !this.isGeometryValid) {
+  async editFeature() {
+    if (this.editFeatureForm.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
       return;
     }
 
@@ -219,21 +220,21 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     if (this.data.isNew) {
       this.transformFeatureService.insertFeatures(
-          [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
-          currentProject.internalName,
-          this.featureDescription.tableName
+        [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
+        currentProject.internalName,
+        this.featureDescription.tableName
       ).subscribe(() => {
         this.close();
       });
     } else {
       this.batchUpdateFeatures(
-            this.data.features,
-            newProperties,
-            this.isGeometryChanged ? this.changedGeometry : undefined);
+        this.data.features,
+        newProperties,
+        this.isGeometryChanged ? this.changedGeometry : undefined);
     }
   }
 
-  async deleteFeature () {
+  async deleteFeature() {
     const data: ConfirmDialogData = {
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
@@ -293,9 +294,17 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     }
   }
 
-  getEnumerationTitle (enumerations: ValueTitleProjection[], value: string | number): string {
-    const item = enumerations.find(item => String(item.value) === String(value));
+  getEnumerationTitle(enumerations: ValueTitleProjection[], value: string | number): string {
+    const item = enumerations.find(i => String(i.value) === String(value));
     return item && item.title;
+  }
+
+  isUpdateAllowed() {
+    return isUpdateAllowed(this.data.layer);
+  }
+
+  isDeletionAllowed() {
+    return isDeleteAllowed(this.data.layer);
   }
 
   private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
@@ -306,11 +315,11 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     for (let i = 0; i < batchModel.totalBatches; i++) {
       await this.transformFeatureService.updateFeatures(
-                                            batchModel.batches[i],
-                                            internalName,
-                                            this.featureDescription,
-                                            newProperties,
-                                            geometry);
+        batchModel.batches[i],
+        internalName,
+        this.featureDescription,
+        newProperties,
+        geometry);
       percent = Math.ceil(batchModel.percentOfOneBatch * i);
       this.loadPercent = percent > 100 ? 100 : percent;
     }
@@ -324,6 +333,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     Toast.success('Сохранено');
 
     communicationService.featuresUpdate$.emit({
+      layer: this.data.layer,
       features: this.data.features,
       total: this.data.total,
       mode: EditFeatureMode.multipleEdit,

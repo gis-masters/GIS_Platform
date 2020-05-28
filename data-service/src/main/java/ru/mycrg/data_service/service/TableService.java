@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.TablesDDL;
+import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.dto.TableDto;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import ru.mycrg.data_service.security.UserDetails;
 import java.util.List;
 
 import static ru.mycrg.data_service.security.CrgClaimsParser.getUserDetails;
+import static ru.mycrg.data_service.security.CrgClaimsParser.isOrganizationAdmin;
 import static ru.mycrg.data_service.service.ResourceIdentifier.makeIdentifier;
 
 @Service
@@ -49,9 +51,13 @@ public class TableService {
             throw new NotFoundException("No found layer: " + resourceIdentifier);
         }
 
-        UserDetails userDetails = getUserDetails(authentication);
-
         TableDto tableDto = new TableDto(tableName);
+        if (isOrganizationAdmin(authentication)) {
+            tableDto.setPermission(Roles.OWNER.toString());
+            return tableDto;
+        }
+
+        UserDetails userDetails = getUserDetails(authentication);
 
         permissionsService
                 .identifyPermission(userDetails, resourceIdentifier)

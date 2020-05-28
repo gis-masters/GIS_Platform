@@ -27,28 +27,6 @@ class LayersService {
     currentProject.deleteLayer(layer);
   }
 
-  /**
-   * Получить полную информацию о слое
-   * @param layer Простое предствление слоя
-   */
-  async getFullLayer(layer: CrgLayer): Promise<GeoserverLayer> {
-    return (await services.httpq.get<{ layer: GeoserverLayer }>(layer.href)).layer;
-  }
-
-  async updateLayerOrGroup <T extends (CrgLayer | CrgGroup)>(item: T, patch: Partial<T>, isGroup: boolean) {
-    await services.provided;
-    const backup = cloneDeep(item);
-    const path = isGroup ? 'groups' : 'layers';
-    currentProject.patch(item, patch);
-
-    try {
-      const url = `${await serverProperties.projectsUrl}/${currentProject.id}/${path}/${item.id}`;
-      await services.httpq.patch(url, patch);
-    } catch (err) {
-      currentProject.patch(item, backup);
-    }
-  }
-
   async loadLayerLegend (layer: CrgLayer) {
     if (layer.legend || layer.legendIsFetching) {
       return;
@@ -56,8 +34,7 @@ class LayersService {
 
     currentProject.patch(layer, { legendIsFetching: true });
 
-    const fullLayer = await layersService.getFullLayer(layer);
-    const styleSld: string = await this.getStyleSld(fullLayer.defaultStyle.name);
+    const styleSld: string = await this.getStyleSld(layer.styleName);
     const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
     const rules: Rule[] = Array.from(xmlDoc.querySelectorAll('Rule'))
       .filter(rule => rule.querySelector('Name') && rule.querySelector('Title'))

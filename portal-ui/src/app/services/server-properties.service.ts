@@ -10,11 +10,11 @@ class ServerProperties {
   private _baseUrl: string;
   private _geoServerUrl: string;
   private _authServerUrl: string;
+  private _dataServerUrl: string;
   private _projectsUrl: string;
   private _apiUrl: string;
   private _organizationsUrl: string;
   private _usersUrl: string;
-  private _baseMaps: string;
   private _schemaUrl: string;
   private _exportUrl: string;
   private _wsUrl: string;
@@ -70,6 +70,12 @@ class ServerProperties {
     });
   }
 
+  get dataServerUrl(): Promise<string> {
+    return this.getEnv().then(() => {
+      return this._dataServerUrl;
+    });
+  }
+
   get organizationsUrl(): Promise<string> {
     return this.getEnv().then(() => {
       return this._organizationsUrl;
@@ -100,12 +106,6 @@ class ServerProperties {
     });
   }
 
-  get baseMapsUrl(): Promise<string> {
-    return this.getEnv().then(() => {
-      return this._baseMaps;
-    });
-  }
-
   get projectsUrl(): Promise<string> {
     return this.getEnv().then(() => {
       return this._projectsUrl;
@@ -127,11 +127,11 @@ class ServerProperties {
     this._baseUrl = this._host + ':' + this._port;
     this._geoServerUrl = this._baseUrl + '/geoserver';
     this._authServerUrl = this._baseUrl + '/oauth/token';
+    this._dataServerUrl = this._baseUrl + '/api/data';
     this._projectsUrl = this._baseUrl + '/projects';
     this._apiUrl = this._baseUrl + '/api';
     this._organizationsUrl = this._baseUrl + '/organizations';
     this._usersUrl = this._baseUrl + '/users';
-    this._baseMaps = this._baseUrl + '/api/data/basemaps';
     this._schemaUrl = this._baseUrl + '/schema';
     this._exportUrl = this._baseUrl + '/export';
     this._wsUrl = this._baseUrl + '/crg-ws-endpoint';

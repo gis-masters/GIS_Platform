@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, computed, action } from 'mobx';
+import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Menu,
@@ -12,12 +12,12 @@ import {
 } from '@material-ui/core';
 import { ListAlt, AddCircle, Unarchive, Delete } from '@material-ui/icons';
 
-import { env } from '../../../stores/Env.store';
 import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { CrgLayer, CrgGroup } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { layersService } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
+import { isReadAllowed, isCreateAllowed, isExportAllowed, isDeleteAllowed } from '../../../services/util/permissions';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
 import { ViewFeaturesData } from '../../view-features/view-features.component';
 import { Button } from '../../Button/Button';
@@ -37,12 +37,11 @@ interface LayerMenuProps {
 @observer
 export class LayerMenu extends Component<LayerMenuProps> {
   @observable private deleteDialogOpen = false;
-  @observable private readOnly = true;
 
   constructor (props: LayerMenuProps) {
     super(props);
 
-    this.fetchReadOnly();
+    this.fetchSchema();
 
     this.openAttributeTable = this.openAttributeTable.bind(this);
     this.addFeature = this.addFeature.bind(this);
@@ -69,7 +68,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!isGroup && (
+          {!isGroup && isReadAllowed(entity as CrgLayer) && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -78,7 +77,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && !this.readOnly && (
+          {!isGroup && isCreateAllowed(entity as CrgLayer) && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -87,7 +86,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && !this.isSimf && (
+          {!isGroup && isExportAllowed(entity as CrgLayer) && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />
@@ -96,7 +95,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && !this.isSimf && (
+          {!isGroup && isDeleteAllowed(entity as CrgLayer) && (
             <MenuItem onClick={this.openDeleteDialog}>
               <ListItemIcon>
                 <Delete />
@@ -125,11 +124,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
     );
   }
 
-  @computed
-  private get isSimf (): boolean {
-    return env.platform === 'simf';
-  }
-
   private openAttributeTable () {
     const { entity, onClose } = this.props;
 
@@ -142,25 +136,14 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  private async fetchReadOnly () {
+  private async fetchSchema() {
     const { entity, isGroup } = this.props;
 
     if (isGroup) {
       return;
     }
 
-    const schema = await schemaService.getSchema((entity as CrgLayer).schemaId);
-
-    if (!schema) {
-      return;
-    }
-
-    this.setReadOnly(schema.readOnly);
-  }
-
-  @action
-  private setReadOnly (readOnly: boolean) {
-    this.readOnly = readOnly;
+    return await schemaService.getSchema((entity as CrgLayer).schemaId);
   }
 
   private async addFeature () {
@@ -197,7 +180,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action
-  private openDeleteDialog () {
+  openDeleteDialog () {
     this.deleteDialogOpen = true;
     this.props.onClose();
   }

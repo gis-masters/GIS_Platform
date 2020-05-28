@@ -1,22 +1,22 @@
-import { reaction } from 'mobx';
-import { HttpParams } from '@angular/common/http';
+import {reaction} from 'mobx';
+import {HttpParams} from '@angular/common/http';
 
-import { getRoute } from '../services';
-import { TaskImport } from '../geoserver/import/taskImport';
-import { wsService } from '../ws.service';
-import { serverProperties } from '../server-properties.service';
-import { CrgApiResponse, Process } from './models';
-import { projectsList } from '../../stores/ProjectsList.store';
-import { Project } from './projects.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { route } from '../../stores/Route.store';
-import { services } from '../services';
+import {getRoute, services} from '../services';
+import {TaskImport} from '../geoserver/import/taskImport';
+import {wsService} from '../ws.service';
+import {serverProperties} from '../server-properties.service';
+import {CrgApiResponse, Process} from './models';
+import {projectsList} from '../../stores/ProjectsList.store';
+import {Project} from './projects.models';
+import {currentProject} from '../../stores/CurrentProject.store';
+import {route} from '../../stores/Route.store';
+import {dataService} from './data.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
   private fetchingCurrentProject?: Promise<Project>;
 
-  private constructor () {
+  private constructor() {
     reaction(() => route.params && route.params.projectId, async (id) => {
       this.fetchCurrent(Number(id));
     });
@@ -28,30 +28,16 @@ class ProjectsService {
 
   async fetchProjects() {
     await services.provided;
-    const baseUrl = await serverProperties.geoServerUrl;
     const url = await serverProperties.projectsUrl;
     const params = new HttpParams().set('size', '1000');
 
-    const response = await services.httpq.get<CrgApiResponse>(url, { params });
+    const response = await services.httpq.get<CrgApiResponse>(url, {params});
 
     if (response && response._embedded) {
-      response._embedded.projects.forEach(async (project: Project) => await this.handleLayers(project, baseUrl));
-
       projectsList.setList(response._embedded.projects);
     } else {
       projectsList.setList([]);
     }
-  }
-
-  async getById(id: number): Promise<Project> {
-    await services.provided;
-    const baseUrl = await serverProperties.geoServerUrl;
-    const url = `${await serverProperties.projectsUrl}/${id}`;
-    const project = await services.httpq.get<Project>(url);
-
-    this.handleLayers(project, baseUrl);
-
-    return project;
   }
 
   clearCurrent() {
@@ -85,7 +71,6 @@ class ProjectsService {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
     }
-
   }
 
   async create(name: string): Promise<Process> {
@@ -123,11 +108,20 @@ class ProjectsService {
     return services.httpq.post<Process>(url, payload);
   }
 
-  private handleLayers(project: Project, baseUrl: string) {
-    project.layers.forEach(layer => {
-      layer.complexName = project.internalName + ':' + layer.internalName;
-      layer.href = baseUrl + '/rest/layers/' + layer.complexName;
-    });
+  private async getById(id: number): Promise<Project> {
+    await services.provided;
+    const url = `${await serverProperties.projectsUrl}/${id}`;
+    const project = await services.httpq.get<Project>(url);
+
+    await this.handleLayers(project);
+
+    return project;
+  }
+
+  private async handleLayers(project: Project) {
+    for (const layer of project.layers) {
+      layer.sourceData = await dataService.getSourceInfo('workspace_' + project.id, layer.internalName);
+    }
   }
 }
 

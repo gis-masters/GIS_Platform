@@ -25,10 +25,8 @@ public class CrgClaimsParser {
         return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
     }
 
-    private static boolean isUserHasAuthority(Authentication authentication, String authority) {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        return authorities.contains(new SimpleGrantedAuthority(authority));
+    public static boolean isOrganizationAdmin(Authentication authentication) {
+        return isUserHasAuthority(authentication, Authorities.ORG_ADMIN);
     }
 
     @NotNull
@@ -47,7 +45,7 @@ public class CrgClaimsParser {
                 }
             }
         } catch (Exception e) {
-            throw new ForbiddenException("Incorrect organization claims");
+            throw new ForbiddenException("Incorrect organization claims: " + e.getMessage());
         }
 
         return orgId;
@@ -96,6 +94,12 @@ public class CrgClaimsParser {
         }
 
         return Optional.empty();
+    }
+
+    private static boolean isUserHasAuthority(Authentication authentication, String authority) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        return authorities.contains(new SimpleGrantedAuthority(authority));
     }
 
 }

@@ -25,7 +25,7 @@ class BaseMapsService {
     let params = new HttpParams();
     params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
 
-    const url = await serverProperties.baseMapsUrl + '/search/findByIdIn';
+    const url = await serverProperties.dataServerUrl + '/basemaps/search/findByIdIn';
     services.httpq.get<CrgApiResponse>(url, {params: params}).then(response => {
       if (response._embedded) {
         const crgBaseMaps = this.handleBaseMaps(baseMaps, response._embedded.basemaps);

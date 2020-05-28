@@ -1,21 +1,8 @@
-import { default as TrueGeometryType } from 'ol/geom/GeometryType';
-
 export enum GeometryType {
   POLYGON = 'polygon',
   LINE = 'line',
   POINT = 'point',
 }
-
-export const normalizeGeometryType = (stupidGeometryType: GeometryType): TrueGeometryType => {
-  switch (stupidGeometryType) {
-    case GeometryType.POLYGON:
-      return TrueGeometryType.MULTI_POLYGON;
-    case GeometryType.LINE:
-      return TrueGeometryType.MULTI_LINE_STRING;
-    case GeometryType.POINT:
-      return TrueGeometryType.POINT;
-  }
-};
 
 export const generateRandomId = () => Math.random().toString(36).substring(2, 8);
 

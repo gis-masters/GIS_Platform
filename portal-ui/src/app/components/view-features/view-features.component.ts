@@ -13,7 +13,7 @@ import { communicationService } from '../../services/communication.service';
 export interface ViewFeaturesData {
   features: WfsFeature[];
   mode: EditFeatureMode;
-  layer?: CrgLayer;
+  layer: CrgLayer;
   isNew?: true;
 }
 
@@ -31,8 +31,6 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   isSingleEdit = true;
   isAttributeSidebarOpened = false;
   editFeatureData: EditFeatureData;
-  isSimf = false;
-  hasEditable: boolean;
   viewFeatures: WfsFeature[] = [];
 
   private highlightAllFeaturesTimeout: number;
@@ -106,6 +104,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     this.isEditMode = true;
     this.isSingleEdit = true;
     this.editFeatureData = {
+      layer: this.data.layer,
       features: [feature],
       mode: EditFeatureMode.single,
       isNew: this.data.isNew
@@ -144,6 +143,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
 
   private prepareDataForMultipleEdit(features: WfsFeature[]): EditFeatureData {
     return {
+      layer: this.data.layer,
       features,
       mode: EditFeatureMode.multipleEdit,
       total: features.length

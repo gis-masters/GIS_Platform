@@ -25,11 +25,16 @@ public interface LayerProjection {
 
     int getMinZoom();
 
+    String getStyleName();
+
     String getNativeCRS();
 
     String getSchemaId();
 
     String getDataSourceUri();
+
+    @Value("#{target.project.internalName + ':' + target.internalName}")
+    String getComplexName();
 
     @Value("#{target.group != null ? target.group.id : null}")
     Long getGroupId();

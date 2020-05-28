@@ -2,6 +2,7 @@ import { action, computed, observable } from 'mobx';
 
 import { CrgGroup, CrgLayer, Project, TreeItem } from '../services/crg/projects.models';
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
+import { isReadAllowed } from '../services/util/permissions';
 
 const MAX_LAYERS_IN_BATCH = 100;
 
@@ -69,6 +70,7 @@ class CurrentProject implements Project {
   get visibleLayers(): TreeItem<CrgLayer>[][] {
     return this.tree
               .filter(item => item.visible && !item.isGroup)
+              .filter(item => isReadAllowed(item.payload as CrgLayer))
               .reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
                 if (!acc.length) {
                   return [[item]];

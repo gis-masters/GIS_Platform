@@ -36,6 +36,7 @@ import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { isUpdateAllowed, isDeleteAllowed } from '../../services/util/permissions';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -83,7 +84,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   loadPercent = 0;
   showPercent = true;
-  readOnly: boolean;
 
   private schema: FeatureDescription;
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
@@ -121,7 +121,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     const layerChanged = changes.layer;
     const layer = layerChanged.currentValue as CrgLayer;
     this.schema = await schemaService.getSchema(layer.schemaId);
-    this.readOnly = this.schema && this.schema.readOnly;
 
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
@@ -297,15 +296,6 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  private checkSelectionEmptiness(selected: any[]) {
-    if (!selected.length) {
-      Toast.warn('Нет выделенных объектов');
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   editFeatures() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
@@ -384,18 +374,37 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         });
   }
 
+  isUpdateAllowed() {
+    return isUpdateAllowed(this.layer);
+  }
+
+  isDeletionAllowed() {
+    return isDeleteAllowed(this.layer);
+  }
+
+  private checkSelectionEmptiness(selected: any[]) {
+    if (!selected.length) {
+      Toast.warn('Нет выделенных объектов');
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
     const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
     const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
 
-    return layers.filter(({ complexName }, i) => {
+    return layers.filter((layer, i) => {
       if (!schemas[i]) {
         return false;
       }
 
-      const { readOnly, geometryType } = schemas[i];
+      const { geometryType } = schemas[i];
 
-      return (currentLayer.complexName !== complexName) && (currentSchema.geometryType === geometryType) && !readOnly;
+      return (currentLayer.complexName !== layer.complexName) &&
+             (currentSchema.geometryType === geometryType) &&
+             isUpdateAllowed(layer);
     });
   }
 
@@ -453,7 +462,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           );
         }),
         concatMap(([features]) => {
-          const featureIds = features.map((feature) => feature.id)
+          const featureIds = features.map((feature) => feature.id);
 
           return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
         }),
@@ -479,7 +488,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     from(batchModel.batches)
       .pipe(
         concatMap(features => {
-          const featureIds = features.map((feature) => feature.id)
+          const featureIds = features.map((feature) => feature.id);
 
           return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
         }),
