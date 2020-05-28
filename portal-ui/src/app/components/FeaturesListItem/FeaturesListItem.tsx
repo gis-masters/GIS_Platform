@@ -1,9 +1,11 @@
 import React from 'react';
+import { observable, action } from 'mobx';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { dataSchemaService } from '../../services/crg/data-schema.service';
+import { schemaService } from '../../services/crg/schema.service';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ArrowForward } from '@material-ui/icons';
 
@@ -18,34 +20,15 @@ interface FeaturesListItemProps {
   highlighted: boolean;
 }
 
+@observer
 export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
-  private title = '';
-  private layerTitle = '';
+  @observable private title = '';
+  @observable private layerTitle = '';
 
   constructor (props: FeaturesListItemProps) {
     super(props);
 
-    const { id, properties } = this.props.feature;
-    const featureName = id.split('.')[0];
-    const schema = dataSchemaService.getFeatureSchemaByName(featureName);
-
-    if (schema) {
-      this.layerTitle = schema.title;
-
-      const property = schema.properties.find(property => property.objectIdentityOnUi);
-
-      if (property) {
-        const { name, enumerations, valueType } = property;
-        if (valueType !== 'CHOICE') {
-          this.title = properties[name.toLowerCase()];
-        } else if (enumerations) {
-          const valueTitleProjection = enumerations.find(item => item.value == properties[name]);
-          this.title = valueTitleProjection ? valueTitleProjection.title : '';
-        }
-      } else {
-        this.title = properties.name;
-      }
-    }
+    this.fetchSchema();
 
     this.selectIt = this.selectIt.bind(this);
     this.highlightIt = this.highlightIt.bind(this);
@@ -76,6 +59,38 @@ export class FeaturesListItem extends React.Component<FeaturesListItemProps> {
         </div>
       </div>
     );
+  }
+
+  private async fetchSchema () {
+    const { id, properties } = this.props.feature;
+    const featureName = id.split('.')[0];
+    const schema = await schemaService.getSchemaByLayerName(featureName);
+
+    if (schema) {
+      let title = '';
+
+      const property = schema.properties.find(property => property.objectIdentityOnUi);
+
+      if (property) {
+        const { name, enumerations, valueType } = property;
+        if (valueType !== 'CHOICE') {
+          title = properties[name.toLowerCase()];
+        } else if (enumerations) {
+          const valueTitleProjection = enumerations.find(item => item.value == properties[name]);
+          title = valueTitleProjection ? valueTitleProjection.title : '';
+        }
+      } else {
+        title = properties.name;
+      }
+
+      this.setTitles(title, schema.title);
+    }
+  }
+
+  @action
+  private setTitles (title: string, layerTitle: string) {
+    this.title = title;
+    this.layerTitle = layerTitle;
   }
 
   private selectIt () {

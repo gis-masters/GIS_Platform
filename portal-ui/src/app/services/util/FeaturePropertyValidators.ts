@@ -1,7 +1,8 @@
-import {isEmpty} from 'validate.js';
-import {PropertySchema} from '../crg/data-schema.service';
-import {ValueTitleProjection} from '../geoserver/projections';
-import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { isEmpty } from 'validate.js';
+
+import { PropertySchema } from '../crg/schema.service';
+import { ValueTitleProjection } from '../geoserver/projections';
 
 // Править в соответствии с ru/mycrg/common/enums/ValueType.java
 export enum ValueType {

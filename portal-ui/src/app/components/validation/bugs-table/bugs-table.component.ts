@@ -10,7 +10,7 @@ import { startWith } from 'rxjs/internal/operators/startWith';
 import { NGXLogger } from 'ngx-logger';
 
 import { communicationService } from '../../../services/communication.service';
-import { dataSchemaService } from '../../../services/crg/data-schema.service';
+import { schemaService } from '../../../services/crg/schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
@@ -125,8 +125,8 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   private handleResponse(response: ValidationResultsResponse) {
     if (response) {
       this.data = response;
-      this.data.results.forEach(bugObject => {
-        bugObject.title = dataSchemaService.getClassIdAlias(this.crgLayer.internalName, bugObject);
+      this.data.results.forEach(async bugObject => {
+        bugObject.title = await schemaService.getClassIdAlias(this.crgLayer, bugObject);
       });
 
       this.totalElements = response.total;

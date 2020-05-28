@@ -12,7 +12,7 @@ import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
-import { dataSchemaService, PropertySchema } from '../../services/crg/data-schema.service';
+import { schemaService, PropertySchema } from '../../services/crg/schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
@@ -80,7 +80,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges) {
     this.unsubscribeFromMobx$.next();
     delete this.changedGeometry;
     this.isGeometryValid = false;
@@ -138,8 +138,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         this.isGeometryChanged = false;
       }
 
-      this.featureDescription = dataSchemaService.getFeatureSchemaByName(currentData.features[0].id.split('.')[0]);
       this.editFeatureForm = this.formBuilder.group({});
+      this.featureDescription = await schemaService.getSchemaByLayerName(currentData.features[0].id.split('.')[0]);
 
       Object.keys(currentData.features[0].properties)
             .filter(key => key !== 'bbox')
@@ -148,7 +148,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
               let property: PropertySchema;
               if (this.featureDescription) {
-                property = dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+                property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
               }
 
               if (property) {

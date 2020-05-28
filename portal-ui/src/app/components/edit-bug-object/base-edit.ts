@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditFeatureItem, FeatureDescription } from '../../services/crg/data-schema.service';
+import { EditFeatureItem, FeatureDescription } from '../../services/crg/schema.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
 type Properties = { [key: string]: string };

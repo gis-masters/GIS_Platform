@@ -5,7 +5,7 @@
 </crg-page-title>
 
 <crg-workspace>
-  <div class="container" *ngIf="schemas.length">
+  <div class="container" *ngIf="schemas">
     <crg-work-import-preview></crg-work-import-preview>
 
     <mat-card class="crg-card">
@@ -57,5 +57,5 @@
     </mat-card>
   </div>
 
-  <crg-loading *ngIf="!schemas.length"></crg-loading>
+  <crg-loading *ngIf="!schemas"></crg-loading>
 </crg-workspace>

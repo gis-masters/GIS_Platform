@@ -10,7 +10,6 @@ import { projectsList } from '../../stores/ProjectsList.store';
 import { Project } from './projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
-import { dataSchemaService } from './data-schema.service';
 import { services } from '../services';
 
 class ProjectsService {
@@ -50,7 +49,7 @@ class ProjectsService {
     const url = `${await serverProperties.projectsUrl}/${id}`;
     const project = await services.httpq.get<Project>(url);
 
-    await this.handleLayers(project, baseUrl);
+    this.handleLayers(project, baseUrl);
 
     return project;
   }
@@ -124,14 +123,10 @@ class ProjectsService {
     return services.httpq.post<Process>(url, payload);
   }
 
-  private async handleLayers(project: Project, baseUrl: string) {
-    await dataSchemaService.fetchSchemas(project);
-
+  private handleLayers(project: Project, baseUrl: string) {
     project.layers.forEach(layer => {
       layer.complexName = project.internalName + ':' + layer.internalName;
       layer.href = baseUrl + '/rest/layers/' + layer.complexName;
-      layer.schema = dataSchemaService.getFeatureSchemaByName(layer.schemaId);
-      layer.geometryType = layer.schema && layer.schema.geometryType;
     });
   }
 }

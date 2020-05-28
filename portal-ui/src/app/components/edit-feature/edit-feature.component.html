@@ -11,7 +11,7 @@
               matBadgePosition="after"
               matBadgeColor="accent"
               matTooltip="{{getTooltip()}}"
-              [disabled]="editFeatureForm.pristine && !isGeometryChanged || !isGeometryValid">
+              [disabled]="editFeatureForm?.pristine && !isGeometryChanged || !isGeometryValid">
         <mat-icon *ngIf="data.mode === 'multipleEdit'">list</mat-icon>
         Сохранить
       </button>

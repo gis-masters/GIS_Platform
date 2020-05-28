@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
-import { dataSchemaService, PropertySchema } from '../../crg/data-schema.service';
+import { schemaService, FeatureDescription, PropertySchema } from '../../crg/schema.service';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../crg/models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
@@ -51,11 +51,11 @@ export class ImportDataHolderService {
    * Импортированному слою подбирается схема данных.
    * @param importLayer Импортированыый слой
    */
-  createCompatiblePair(importLayer: ImportLayerItem) {
+  async createCompatiblePair(importLayer: ImportLayerItem) {
     const layerNativeName = importLayer.nativeName;
     const srs = importLayer.srs;
 
-    const featureDescription = dataSchemaService.getFeatureDescriptionByLayer(importLayer);
+    const featureDescription = await schemaService.getSchemaByLayer(importLayer);
 
     const taskImport = new TaskImport(layerNativeName, srs);
     // Layer mapping
@@ -135,29 +135,26 @@ export class ImportDataHolderService {
    * @param layerNativeName   Название импортированного слоя.
    * @param featureSchemaName Название схемы данных
    */
-  setFeatureSchema(layerNativeName: string, featureSchemaName: string) {
+  setFeatureSchema(layerNativeName: string, schema: FeatureDescription) {
     const layerPair = this.findCompatiblePair(layerNativeName);
     layerPair.targetLayer.workTableName = layerNativeName;
     layerPair.targetLayer.pairs = [];
-    layerPair.targetLayer.schemaName = featureSchemaName;
+    layerPair.targetLayer.schemaName = schema.name;
     layerPair.isDisabled = false;
 
     // Attributes mapping
-    if (IMPORT_LAYER_AS_IS.tableName === featureSchemaName) {
+    if (IMPORT_LAYER_AS_IS.name === schema.name) {
       layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
         this.addAttributeMapping(layerNativeName, attr, AS_IS);
       });
     } else {
-      const featureSchema = dataSchemaService.getFeatureSchemaByName(featureSchemaName);
-      if (featureSchema) {
-        const propertySchemas = FeatureUtil.preparePropertySchema(featureSchema);
+      const propertySchemas = FeatureUtil.preparePropertySchema(schema);
 
-        layerPair.targetLayer.pairs = [];
-        layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
-          const bestProperty = this.propertyComparator.compare(attr, propertySchemas);
-          this.addAttributeMapping(layerNativeName, attr, bestProperty);
-        });
-      }
+      layerPair.targetLayer.pairs = [];
+      layerPair.originalLayer.attributes.forEach((attr: LayerAttribute) => {
+        const bestProperty = this.propertyComparator.compare(attr, propertySchemas);
+        this.addAttributeMapping(layerNativeName, attr, bestProperty);
+      });
     }
 
     this.comparableLayers$.emit(this._comparableLayers);

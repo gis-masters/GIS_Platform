@@ -9,7 +9,7 @@ import { NGXLogger } from 'ngx-logger';
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { WfsFeature, WfsGeometry } from './wfs-models';
 import { serverProperties } from '../server-properties.service';
-import { FeatureDescription } from '../crg/data-schema.service';
+import { FeatureDescription } from '../crg/schema.service';
 import { HttpQueue } from '../util/HttpQueue';
 import { FeatureUtil } from '../util/FeatureUtil';
 

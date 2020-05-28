@@ -5,7 +5,8 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayer, CrgGroup } from '../../services/crg/projects.models';
-import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes, SupportedGeometryType } from '../../services/geoserver/wfs-models';
+import { schemaService } from '../../services/crg/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
@@ -31,16 +32,21 @@ export interface LayerProps extends IClassNameProps {
   onEyeClick: () => void;
 }
 
+type IconType = SupportedGeometryType | 'group' | 'unknown';
+
 @observer
 export class Layer extends Component<LayerProps> {
   @observable private _open = false;
   @observable private menuOpen = false;
   @observable private menuX = 0;
   @observable private menuY = 0;
+  @observable private iconType: IconType = 'unknown';
   private menuAnchor?: HTMLElement;
 
   constructor (props: LayerProps) {
     super(props);
+
+    this.fetchIconType();
 
     this.handleOpen = this.handleOpen.bind(this);
     this.handleBurgerClick = this.handleBurgerClick.bind(this);
@@ -52,10 +58,6 @@ export class Layer extends Component<LayerProps> {
     const { className, data, isGroup, depth, onEyeClick, visible } = this.props;
     const { title, enabled } = data;
     const { expanded } = data as CrgGroup;
-    const geometryType = (data as CrgLayer).geometryType;
-    const iconType = (isGroup ? 'group' : (
-      supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown'
-    ));
 
     return (
       <div className={cnLayer({ open: this.open, group: isGroup, visible }, [className])}>
@@ -64,7 +66,7 @@ export class Layer extends Component<LayerProps> {
           <LayerEye enabled={enabled} onClick={onEyeClick} />
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} />
-          <LayerIcon type={iconType} expanded={expanded} />
+          <LayerIcon type={this.iconType} expanded={expanded} />
           <LayerTitle>
             {title}
           </LayerTitle>
@@ -89,10 +91,26 @@ export class Layer extends Component<LayerProps> {
   }
 
   @computed
-  get open () {
+  private get open () {
     const { isGroup, data } = this.props;
 
     return isGroup ? (data as CrgGroup).expanded : this._open;
+  }
+
+  private async fetchIconType () {
+    const { data, isGroup } = this.props;
+
+    if (isGroup) {
+      this.setIconType('group');
+    } else {
+      const { geometryType } = await schemaService.getSchema((data as CrgLayer).schemaId);
+      this.setIconType(supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown');
+    }
+  }
+
+  @action
+  private setIconType (iconType: IconType) {
+    this.iconType = iconType;
   }
 
   @action

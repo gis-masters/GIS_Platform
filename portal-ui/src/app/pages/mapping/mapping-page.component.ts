@@ -17,7 +17,7 @@ import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/mo
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { dataSchemaService, FeatureDescription } from '../../services/crg/data-schema.service';
+import { schemaService, FeatureDescription } from '../../services/crg/schema.service';
 
 @Component({
   selector: 'crg-mapping-page',
@@ -32,7 +32,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   prevLink: string;
   nextLink: string;
 
-  schemas: FeatureDescription[] = [];
+  schemas?: FeatureDescription[];
 
   private CHECK_STATUS_INTERVAL = 1000;
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -45,7 +45,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
               private logger: NGXLogger) {}
 
   async ngOnInit() {
-    this.schemas = await dataSchemaService.fetchAllSchemas();
+    this.schemas = await schemaService.getAllSchemas();
 
     const { projectId, importId } = this.route.snapshot.params;
     this.prevLink = `/projects/${projectId}/import/${importId}`;

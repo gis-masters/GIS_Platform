@@ -1,5 +1,3 @@
-import { FeatureDescription } from './data-schema.service';
-import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
 
 interface CrgEntity {
@@ -23,8 +21,6 @@ interface BaseCrgLayer extends CrgEntity {
 export interface CrgLayer extends BaseCrgLayer {
   complexName?: string;
   href?: string;
-  geometryType?: SupportedGeometryType;
-  schema?: FeatureDescription;
   legend?: RuleWithLegend[];
   legendIsFetching?: boolean;
 }

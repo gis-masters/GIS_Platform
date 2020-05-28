@@ -146,7 +146,7 @@ class OpenLayersService {
 
     this._map.on('singleclick', event => {
       if (event.coordinate) {
-        if (!this.isModifying) {
+        if (!this.isModifying && !this.draftSourceDraw) {
           this.mapClick$.emit(event.coordinate);
         }
       } else {

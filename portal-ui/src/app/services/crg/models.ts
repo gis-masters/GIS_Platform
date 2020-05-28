@@ -1,6 +1,6 @@
 import GeometryType from 'ol/geom/GeometryType';
 
-import { FeatureDescription, PropertySchema } from './data-schema.service';
+import { FeatureDescription, PropertySchema } from './schema.service';
 
 export interface CrgApiLink {
   href: string;

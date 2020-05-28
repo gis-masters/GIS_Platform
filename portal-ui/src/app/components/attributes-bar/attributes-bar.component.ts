@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { PropertySchema } from '../../services/crg/data-schema.service';
+import { schemaService, FeatureDescription, PropertySchema } from '../../services/crg/schema.service';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
@@ -85,6 +85,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   showPercent = true;
   readOnly: boolean;
 
+  private schema: FeatureDescription;
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -116,11 +117,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges) {
     const layerChanged = changes.layer;
     const layer = layerChanged.currentValue as CrgLayer;
-
-    this.readOnly = layer.schema && layer.schema.readOnly;
+    this.schema = await schemaService.getSchema(layer.schemaId);
+    this.readOnly = this.schema && this.schema.readOnly;
 
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
@@ -219,11 +220,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    if (this.layer.schema) {
-      return this.layer.schema.properties
-                 .find((property: PropertySchema) => property.name.toLowerCase() === name.toLowerCase());
-    } else {
-      return undefined;
+    if (this.schema) {
+      return this.schema.properties.find(property => property.name.toLowerCase() === name.toLowerCase());
     }
   }
 
@@ -329,13 +327,13 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     });
   }
 
-  copyObjects() {
+  async copyObjects() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
-    const layers = this.getSuitableLayers(this.layer, currentProject.layers);
+    const layers = await this.getSuitableLayers(this.layer, currentProject.layers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Копирование', layers)
         .pipe(
@@ -347,13 +345,13 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  moveObjects() {
+  async moveObjects() {
     const { selected } = this.attributeTable;
     if (this.checkSelectionEmptiness(selected)) {
       return;
     }
 
-    const layers = this.getSuitableLayers(this.layer, currentProject.layers);
+    const layers = await this.getSuitableLayers(this.layer, currentProject.layers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Перемещение', layers)
         .pipe(
@@ -386,11 +384,18 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         });
   }
 
-  private getSuitableLayers(layer: CrgLayer, layers: CrgLayer[]): CrgLayer[] {
-    return layers.filter(({ complexName, schema, geometryType }) => {
-      const readOnly = schema && schema.readOnly;
+  private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
+    const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
+    const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
 
-      return (layer.complexName !== complexName) && (layer.geometryType === geometryType) && !readOnly;
+    return layers.filter(({ complexName }, i) => {
+      if (!schemas[i]) {
+        return false;
+      }
+
+      const { readOnly, geometryType } = schemas[i];
+
+      return (currentLayer.complexName !== complexName) && (currentSchema.geometryType === geometryType) && !readOnly;
     });
   }
 

@@ -3,7 +3,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@an
 import {
   FeatureDescription,
   PropertySchema
-} from '../../services/crg/data-schema.service';
+} from '../../services/crg/schema.service';
 import {Subject} from 'rxjs';
 import {ImportLayerItem} from '../../services/geoserver/import/models';
 import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/crg/models';
@@ -83,13 +83,13 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   featureTypeChanged(selectedTableName: string) {
     if (selectedTableName === IMPORT_LAYER_AS_IS.name) {
-      this.importData.setFeatureSchema(this.importLayer.nativeName, IMPORT_LAYER_AS_IS.tableName);
+      this.importData.setFeatureSchema(this.importLayer.nativeName, IMPORT_LAYER_AS_IS);
     } else if (selectedTableName === NOT_IMPORT_LAYER.name) {
       this.importData.deleteMapping(this.importLayer.nativeName);
     } else {
       const featureDescription = this.findDescription(selectedTableName);
 
-      this.importData.setFeatureSchema(this.importLayer.nativeName, featureDescription.tableName);
+      this.importData.setFeatureSchema(this.importLayer.nativeName, featureDescription);
 
       this.propertySchemas = FeatureUtil.preparePropertySchema(featureDescription);
     }
@@ -104,5 +104,4 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
              this.selectedFeatureType !== 'NOT_IMPORT_LAYER' &&
              this.selectedFeatureType !== 'IMPORT_LAYER_AS_IS';
   }
-
 }

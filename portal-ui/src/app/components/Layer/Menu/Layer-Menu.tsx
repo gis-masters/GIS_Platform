@@ -15,7 +15,7 @@ import { ListAlt, AddCircle, Unarchive, Delete } from '@material-ui/icons';
 import { env } from '../../../stores/Env.store';
 import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { CrgLayer, CrgGroup } from '../../../services/crg/projects.models';
-import { dataSchemaService } from '../../../services/crg/data-schema.service';
+import { schemaService } from '../../../services/crg/schema.service';
 import { layersService } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
@@ -37,9 +37,12 @@ interface LayerMenuProps {
 @observer
 export class LayerMenu extends Component<LayerMenuProps> {
   @observable private deleteDialogOpen = false;
+  @observable private readOnly = true;
 
   constructor (props: LayerMenuProps) {
     super(props);
+
+    this.fetchReadOnly();
 
     this.openAttributeTable = this.openAttributeTable.bind(this);
     this.addFeature = this.addFeature.bind(this);
@@ -52,7 +55,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   render () {
     const { open, x, y, onClose, anchor, entity, isGroup } = this.props;
-    const readOnly = (entity as CrgLayer).schema && (entity as CrgLayer).schema.readOnly;
 
     return (
       <>
@@ -76,7 +78,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && !readOnly && (
+          {!isGroup && !this.readOnly && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -140,9 +142,30 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  private addFeature () {
+  private async fetchReadOnly () {
+    const { entity, isGroup } = this.props;
+
+    if (isGroup) {
+      return;
+    }
+
+    const schema = await schemaService.getSchema((entity as CrgLayer).schemaId);
+
+    if (!schema) {
+      return;
+    }
+
+    this.setReadOnly(schema.readOnly);
+  }
+
+  @action
+  private setReadOnly (readOnly: boolean) {
+    this.readOnly = readOnly;
+  }
+
+  private async addFeature () {
     const { entity, onClose } = this.props;
-    const emptyFeature = dataSchemaService.getEmptyFeature(entity as CrgLayer);
+    const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
 
     sideBarManager.do({
       target: SidebarType.FEATURES, action: ActionType.OPEN,
@@ -174,7 +197,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action
-  openDeleteDialog () {
+  private openDeleteDialog () {
     this.deleteDialogOpen = true;
     this.props.onClose();
   }

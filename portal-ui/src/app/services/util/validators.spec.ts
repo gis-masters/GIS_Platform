@@ -1,10 +1,10 @@
-import {PropertySchema} from '../crg/data-schema.service';
-import {FeaturePropertyValidators, ValueType} from './FeaturePropertyValidators';
-import {FormControl} from '@angular/forms';
-import {ValueTitleProjection} from '../geoserver/projections';
+import { FormControl } from '@angular/forms';
+
+import { PropertySchema } from '../crg/schema.service';
+import { FeaturePropertyValidators, ValueType } from './FeaturePropertyValidators';
+import { ValueTitleProjection } from '../geoserver/projections';
 
 describe('Property validation test', () => {
-
   it('should validate required', () => {
     const requiredProperty: PropertySchema = {
       name: 'requiredProperty',
@@ -333,5 +333,4 @@ describe('Property validation test', () => {
     expect(false).toEqual(totalDigitsPropertyNotValid.valid);
     expect(false).toEqual(requiredAndUndefined.valid);
   });
-
 });

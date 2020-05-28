@@ -8,8 +8,7 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { communicationService, ObjectDto } from '../../services/communication.service';
 import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { dataSchemaService } from '../../services/crg/data-schema.service';
-import { FeatureUtil } from '../../services/util/FeatureUtil';
+import { schemaService } from '../../services/crg/schema.service';
 import { BaseEdit } from './base-edit';
 import { Toast } from '../Toast/Toast';
 
@@ -93,7 +92,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.isFeatureTypeLoaded = true;
 
       this.wfsFeature = wfsFeature;
-      this.featureDescription = objectDto.crgLayer.schema;
+      this.featureDescription = await schemaService.getSchema(objectDto.crgLayer.schemaId);
 
       if (!!this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
@@ -119,7 +118,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const propertySchema = dataSchemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+      const propertySchema = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
       if (propertySchema) {
 
         const formControl = new FormControl({value: currentValue, disabled: propertySchema.name === 'GLOBALID'}, {

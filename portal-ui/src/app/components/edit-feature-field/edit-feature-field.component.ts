@@ -10,7 +10,7 @@ import {
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { EditFeatureItem, FieldType } from '../../services/crg/data-schema.service';
+import { EditFeatureItem, FieldType } from '../../services/crg/schema.service';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 
 @Component({

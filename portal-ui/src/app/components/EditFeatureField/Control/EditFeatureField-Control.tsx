@@ -2,7 +2,7 @@ import React from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { FieldType, EditFeatureItem } from '../../../services/crg/data-schema.service';
+import { FieldType, EditFeatureItem } from '../../../services/crg/schema.service';
 
 export const cnEditFeatureFieldControl = cn('EditFeatureField', 'Control');
 

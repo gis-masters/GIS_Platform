@@ -10,6 +10,7 @@ import {
   checkImportStatus,
   updateProgress
 } from '../../services/geoserver/import/import.service';
+import { schemaService } from '../../services/crg/schema.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
@@ -43,6 +44,9 @@ export class DataImport extends React.Component<{}> {
 
   constructor (props: {}) {
     super(props);
+
+    // прогреем схемы, понадобятся на следующем шаге
+    schemaService.getAllSchemas();
 
     this.fileDropHandler = this.fileDropHandler.bind(this);
     this.reset = this.reset.bind(this);

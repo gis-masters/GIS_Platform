@@ -1,3 +1,5 @@
+import { debounce, Cancelable } from 'lodash';
+
 import { ValueTitleProjection } from '../geoserver/projections';
 import { serverProperties } from '../server-properties.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -5,12 +7,9 @@ import { getEmptyGeometry } from '../geoserver/wfs.service';
 import { WfsFeature, CoordinateEdited, SupportedGeometryType } from '../geoserver/wfs-models';
 import { ImportLayerItem } from '../geoserver/import/models';
 import { BugObject } from './validation.service';
-import { CrgLayer, Project } from '../../services/crg/projects.models';
+import { CrgLayer } from '../crg/projects.models';
 import { services } from '../services';
-
-export class FeatureXsdDefinition {
-  schemas: FeatureDescription[] = [];
-}
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface FeatureDescription {
   name: string;
@@ -74,58 +73,64 @@ export interface EditFeatureItem {
   isFgistpProperty: boolean;
 }
 
-class DataSchemaService {
-  private static _instance: DataSchemaService;
+class SchemaService {
+  private static _instance: SchemaService;
+  private schemas: { [key: string]: Promise<FeatureDescription> } = {};
+  private schemasResolvers: { [key: string]: (value?: FeatureDescription) => void } = {};
+  private fetchingPool: string[] = [];
+  private fetchingAllSchemas?: Promise<void>;
+  private debouncedFetch: ((fetchAll?: boolean) => Promise<void>) & Cancelable;
 
-  private featuresXsdDefinition: FeatureXsdDefinition = new FeatureXsdDefinition();
-
-  private constructor() { }
+  private constructor() {
+    this.debouncedFetch = debounce(this.fetch, 20);
+    this.getSchema = this.getSchema.bind(this);
+  }
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  fetchAllSchemas(): Promise<FeatureDescription[]> {
-    return this.fetching([]);
-  }
-
-  fetchSchemas(currentProject: Project): Promise<FeatureDescription[]> {
-    let payload: string[] = [];
-    if (currentProject.layers) {
-      payload = currentProject.layers.map(layer => {
-        return layer.internalName;
+  getSchema (name: string): Promise<FeatureDescription> {
+    if (!this.schemas[name]) {
+      this.schemas[name] = new Promise(resolve => {
+        this.schemasResolvers[name] = resolve;
       });
+      this.fetchingPool.push(name);
+      this.debouncedFetch();
     }
 
-    return this.fetching(payload);
+    return this.schemas[name];
+  }
+
+  async getCurrentProjectSchemas (): Promise<FeatureDescription[]> {
+    const names = currentProject.layers.map(layer => layer.schemaId);
+
+    return Promise.all(names.map(this.getSchema));
+  }
+
+  async getAllSchemas (): Promise<FeatureDescription[]> {
+    if (!this.fetchingAllSchemas) {
+      this.fetchingAllSchemas = this.fetch(true);
+    }
+
+    await this.fetchingAllSchemas;
+
+    return Promise.all(Object.values(this.schemas));
   }
 
   /**
    * Возвращает описание фичи.
    * @param layerName Название слоя
    */
-  getFeatureSchemaByName(layerName: string): FeatureDescription | undefined {
+ async getSchemaByLayerName(layerName: string, global?: boolean): Promise<FeatureDescription | undefined> {
     if (!layerName) {
       return;
     }
 
-    let byFullCompare: FeatureDescription;
-    this.featuresXsdDefinition.schemas.forEach((featureDescription: FeatureDescription) => {
-      if (featureDescription.name && featureDescription.name.toLowerCase() === layerName.toLowerCase()) {
-        byFullCompare = featureDescription;
-      }
-    });
+    const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
 
-    if (byFullCompare) {
-      return byFullCompare;
-    } else {
-      const fDescription = this.featuresXsdDefinition.schemas
-        .find((featureDescription: FeatureDescription) => {
-          return featureDescription.name && featureDescription.name.toLowerCase().includes(layerName.toLowerCase());
-        });
-
-      return fDescription ? fDescription : undefined;
-    }
+    return schemas.find(schema => schema.name.toLowerCase() === layerName.toLowerCase()) ||
+           schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()));
   }
 
   /**
@@ -133,34 +138,33 @@ class DataSchemaService {
    * Метод опирается на название и геометрию слоя.
    * @param layer Слой
    */
-  getFeatureDescriptionByLayer(layer: ImportLayerItem): FeatureDescription | undefined {
-    if (!layer) {
-      return;
-    }
-
-    let layerName = layer.originalName.toLowerCase();
+  async getSchemaByLayer(layer: ImportLayerItem): Promise<FeatureDescription | undefined> {
+    const layerName = layer.originalName.toLowerCase();
+    let layerNameWithGeomType: string;
 
     const geometryName = FeatureUtil.getLayerGeometry(layer);
     if (geometryName.includes('MultiLineString')) {
       if (!layerName.includes('_line')) {
-        layerName += '_line';
+        layerNameWithGeomType = layerName + '_line';
       }
     } else if (geometryName.includes('Point')) {
       if (!layerName.includes('_point')) {
-        layerName += '_point';
+        layerNameWithGeomType = layerName + '_point';
       }
     }
 
-    return this.getFeatureSchemaByName(layerName);
+    return await this.getSchemaByLayerName(layerNameWithGeomType, true) ||
+           await this.getSchemaByLayerName(layerName, true);
   }
 
-  getClassIdAlias(layerName: string, bugObject: BugObject) {
-    const featureSchema = this.getFeatureSchemaByName(layerName);
-    if (!featureSchema) {
+  async getClassIdAlias(layer: CrgLayer, bugObject: BugObject): Promise<string> {
+    const schema = await this.getSchema(layer.schemaId);
+
+    if (!schema) {
       return '';
     }
 
-    return featureSchema.properties
+    return schema.properties
       .filter((simpleProperty: PropertySchema) => simpleProperty.enumerations)
       .reduce((val: string, simpleProperty: PropertySchema) => {
         return simpleProperty.enumerations.reduce((title: string, item: ValueTitleProjection) => {
@@ -179,23 +183,17 @@ class DataSchemaService {
    * @param layerName Наименование фичи
    * @param propertyName код свойства
    */
-  getPropertyAlias(layerName: string, propertyName: string) {
-    let result;
-    const featureSchema = this.getFeatureSchemaByName(layerName);
-    if (featureSchema) {
-      featureSchema.properties
-        .forEach((simpleProperty: PropertySchema) => {
-          if (simpleProperty.name.toLowerCase() === propertyName.toLowerCase()) {
-            result = simpleProperty.title;
-          }
-        });
+  async getPropertyAlias(layer: CrgLayer, propertyName: string): Promise<string> {
+    const schema = await this.getSchema(layer.schemaId);
+    
+    if (schema) {
+      const property = schema.properties.find(property => property.name.toLowerCase() === propertyName.toLowerCase());
+      if (property) {
+        return property.title
+      }
     }
 
-    if (!result) {
-      return propertyName;
-    } else {
-      return result;
-    }
+    return propertyName;
   }
 
   /**
@@ -205,13 +203,13 @@ class DataSchemaService {
    * @param propertySchemas Свойства полученные из XSD схемы.
    */
   getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
-    return propertySchemas.find((propertySchema: PropertySchema) => {
-      return propertySchema.name.toLowerCase() === key.toLowerCase();
-    });
+    return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
   }
 
-  getEmptyFeature (layer: CrgLayer): WfsFeature<CoordinateEdited> {
-    const { geometryType, internalName, schema } = layer;
+  async getEmptyFeature (layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
+    const { internalName, schemaId } = layer;
+    const schema = await this.getSchema(schemaId);
+
     const properties = schema.properties.reduce((acc: {[key: string]: null}, propertySchema) => {
       acc[propertySchema.name.toLowerCase()] = null;
       return acc;
@@ -220,9 +218,9 @@ class DataSchemaService {
     return {
       type: 'Feature',
       id: internalName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
-      geometry: getEmptyGeometry(geometryType),
+      geometry: getEmptyGeometry(schema.geometryType),
       geometry_name: 'shape', // TODO нужно добавить в схему и брать оттуда
-      properties: properties
+      properties
     };
   }
 
@@ -259,20 +257,29 @@ class DataSchemaService {
     });
   }
 
-  private async fetching(payload: string[]): Promise<FeatureDescription[]> {
+  private async fetch(fetchAll?: boolean): Promise<void> {
+    const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     await services.provided;
     const url = await serverProperties.schemaUrl;
     const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
-    if (response) {
-      this.featuresXsdDefinition.schemas = response;
-    } else {
-      services.logger.warn('getFeaturesDefinition response is: ', response);
-      this.featuresXsdDefinition = {schemas: []};
+    if (!response) {
+      services.logger.error(`Geting schemas ${JSON.stringify(payload)} response is: `, response);
+      return;
     }
 
-    return this.featuresXsdDefinition.schemas;
+    response.forEach(schema => {
+      const { name } = schema;
+      if (this.schemasResolvers[name]) {
+        this.schemasResolvers[name](schema);
+        delete this.schemasResolvers[name];
+      } else if (!this.schemas[name]) {
+        this.schemas[name] = new Promise(resolve => {
+          resolve(schema);
+        });
+      }
+    });
   }
 }
 
-export const dataSchemaService = DataSchemaService.instance;
+export const schemaService = SchemaService.instance;

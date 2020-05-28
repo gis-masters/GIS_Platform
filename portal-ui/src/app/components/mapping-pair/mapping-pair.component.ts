@@ -1,12 +1,13 @@
-import {GeoUtil} from '../../services/util/GeoUtil';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {PropertySchema} from '../../services/crg/data-schema.service';
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {PropertiesComparatorService} from '../../services/properties-comparator.service';
-import {LayerAttribute} from '../../services/geoserver/import/models';
-import {ImportDataHolderService} from '../../services/geoserver/import/import-data-holder.service';
-import {MatchingPair} from '../../services/geoserver/import/taskImport';
-import {ImportTargetType, NOT_IMPORT, AS_IS} from '../../services/crg/models';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { GeoUtil } from '../../services/util/GeoUtil';
+import { PropertySchema } from '../../services/crg/schema.service';
+import { PropertiesComparatorService } from '../../services/properties-comparator.service';
+import { LayerAttribute } from '../../services/geoserver/import/models';
+import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
+import { MatchingPair } from '../../services/geoserver/import/taskImport';
+import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/crg/models';
 
 @Component({
   selector: 'crg-mapping-pair',

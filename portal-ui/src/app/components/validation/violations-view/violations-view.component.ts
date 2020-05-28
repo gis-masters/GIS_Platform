@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { BugObject, ViolationItem } from '../../../services/crg/validation.service';
-import { dataSchemaService } from '../../../services/crg/data-schema.service';
-import { ValidationError } from '../../../services/util/FeaturePropertyValidators';
+import { BugObject } from '../../../services/crg/validation.service';
+import { schemaService } from '../../../services/crg/schema.service';
+import { CrgLayer } from '../../../services/crg/projects.models';
 
 interface ViolationViewItem {
   propertyName: string;
@@ -16,21 +16,21 @@ interface ViolationViewItem {
 })
 export class ViolationsViewComponent implements OnInit {
   @Input() data: BugObject;
-  @Input() layerName: string;
+  @Input() layer: CrgLayer;
 
   violationItems: ViolationViewItem[] = [];
 
   ngOnInit() {
-    this.data.propertyViolations.forEach((value: ViolationItem) => {
+    this.data.propertyViolations.forEach(async value => {
       this.violationItems.push({
-        errors: dataSchemaService.getErrorsDescription(value.errorTypes),
-        propertyName: dataSchemaService.getPropertyAlias(this.layerName, value.name)
+        errors: schemaService.getErrorsDescription(value.errorTypes),
+        propertyName: await schemaService.getPropertyAlias(this.layer, value.name)
       });
     });
 
-    this.data.objectViolations.forEach((validationError: ValidationError) => {
+    this.data.objectViolations.forEach(async validationError => {
       this.violationItems.push({
-        propertyName: dataSchemaService.getPropertyAlias(this.layerName, validationError.attribute),
+        propertyName: await schemaService.getPropertyAlias(this.layer, validationError.attribute),
         errors: [validationError.error]
       });
     });
