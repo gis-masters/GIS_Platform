@@ -58,9 +58,6 @@ export class ProjectCardCard extends React.Component<ProjectCardCardProps> {
           <div className={cnProjectCard('Name')}>
             {project.name}
           </div>
-          <div className={cnProjectCard('Info')}>
-            Слоев загружено: {project.layers.length}
-          </div>
         </div>
 
         <Link className={cnProjectCard('Footer')} url={this.url}>

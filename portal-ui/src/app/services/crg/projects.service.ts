@@ -11,6 +11,7 @@ import {Project} from './projects.models';
 import {currentProject} from '../../stores/CurrentProject.store';
 import {route} from '../../stores/Route.store';
 import {dataService} from './data.service';
+import {isReadAllowed} from '../util/permissions';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -122,6 +123,8 @@ class ProjectsService {
     for (const layer of project.layers) {
       layer.sourceData = await dataService.getSourceInfo('workspace_' + project.id, layer.internalName);
     }
+
+    project.layers = project.layers.filter(layer => isReadAllowed(layer));
   }
 }
 
