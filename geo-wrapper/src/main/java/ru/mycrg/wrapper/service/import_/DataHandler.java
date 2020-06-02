@@ -1,0 +1,105 @@
+package ru.mycrg.wrapper.service.import_;
+
+import org.springframework.stereotype.Service;
+import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.mq_queue_contract.SimplePropertyDto;
+import ru.mycrg.mq_queue_contract.ValueTitleProjection;
+import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.wrapper.service.util.CrgScriptEngine;
+import ru.mycrg.wrapper.service.util.StringDecoder;
+
+import java.math.BigDecimal;
+import java.util.*;
+
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
+
+@Service
+public class DataHandler {
+
+    private final CrgScriptEngine scriptEngine;
+
+    public DataHandler(CrgScriptEngine scriptEngine) {
+        this.scriptEngine = scriptEngine;
+    }
+
+    /**
+     * Обработка подразумевает <br>
+     * Перекодировку строк (Импорт плагин геосервера кодирует в ISO_8859_1) <br>
+     * Добавление globalid всем обьектам у которых его нет <br>
+     * Просчет калькулируемых полей <br>
+     * Установка в null тех значений которые были изковерканы shape форматом
+     *
+     * @param dbRow  Строка из БД.
+     * @param schema Схема данных
+     * @return возвращает только те данные что были изменены
+     */
+    public Map<String, Object> handle(Map<String, Object> dbRow, SchemaDto schema) {
+        Map<String, Object> decodedRow = decodeStrings(dbRow);
+        decodedRow.remove("crg_b_geometry");
+
+        if (schema.getCalcFiledFunction() != null) {
+            Object functionResult = scriptEngine.invokeFunction(decodedRow, schema.getCalcFiledFunction());
+            ((Map<String, Object>) functionResult).forEach((k, v) -> decodedRow.put(k, v.toString()));
+        }
+
+        decodedRow.forEach((key, value) -> {
+            if (GLOBAL_ID.equals(key)) {
+                String valueAsString = (String) value;
+                if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
+                    decodedRow.put(key, UUID.randomUUID());
+                }
+            }
+
+            if (value instanceof String) {
+                Optional<SimplePropertyDto> oProperty = getPropertyByName(schema.getProperties(), key);
+                if (oProperty.isPresent() &&
+                        oProperty.get().getValueType().equals(ValueType.CHOICE) &&
+                        isNotValueExist(oProperty.get().getEnumerations(), (String) value)) {
+                    decodedRow.put(key, NULL_MARKER);
+                }
+            } else if (value instanceof Integer) {
+                // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
+                if ((Integer) value == 0) {
+                    decodedRow.put(key, NULL_MARKER);
+                }
+            } else if (value instanceof BigDecimal) {
+                // Все атрибуты типа double, у которых значение 0,00 должны быть заменены на null
+                if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
+                    decodedRow.put(key, NULL_MARKER);
+                }
+            }
+        });
+
+        decodedRow.computeIfAbsent(PRIMARY_KEY, k -> UUID.randomUUID());
+        decodedRow.computeIfAbsent(GLOBAL_ID, k -> UUID.randomUUID());
+
+        return decodedRow;
+    }
+
+    private boolean isNotValueExist(List<ValueTitleProjection> enumerations, String value) {
+        return enumerations.stream().noneMatch(projection -> projection.getValue().equals(value));
+    }
+
+    private Map<String, Object> decodeStrings(Map<String, Object> item) {
+        Map<String, Object> decodedItem = new HashMap<>();
+        item.forEach((key, value) -> {
+            if (value instanceof String) {
+                String decoded = StringDecoder.decode(String.valueOf(value));
+                if (decoded.contains("'")) {
+                    decoded = decoded.replace("'", "''");
+                }
+
+                decodedItem.put(key, decoded);
+            } else {
+                decodedItem.put(key, value);
+            }
+        });
+
+        return decodedItem;
+    }
+
+    private static Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String name) {
+        return properties.stream().filter(sProp -> sProp.getName().equalsIgnoreCase(name)).findFirst();
+    }
+
+}

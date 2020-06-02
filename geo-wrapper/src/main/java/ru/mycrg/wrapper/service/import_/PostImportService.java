@@ -6,22 +6,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DaoProperties;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.util.CrgScriptEngine;
-import ru.mycrg.wrapper.service.util.StringDecoder;
 
-import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
-import static ru.mycrg.wrapper.dao.DaoProperties.*;
+import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 
 @Service
 public class PostImportService extends AbstractImportChainItem {
@@ -29,16 +27,16 @@ public class PostImportService extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(PostImportService.class);
 
     private final MqSender mqSender;
-    private final CrgScriptEngine scriptEngine;
+    private final DataHandler dataHandler;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public PostImportService(BaseDaoService baseDaoService,
-                             CrgScriptEngine scriptEngine,
+                             DataHandler dataHandler,
                              MqSender mqSender,
                              DatasourceFactory datasourceFactory) {
         this.mqSender = mqSender;
-        this.scriptEngine = scriptEngine;
+        this.dataHandler = dataHandler;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
@@ -67,10 +65,13 @@ public class PostImportService extends AbstractImportChainItem {
                 }
 
                 // Обрабатываем
-                List<Map<String, Object>> touchedParams = handleBatch(batch, fDescription);
+                List<Map<String, Object>> handledBatch = batch.stream()
+                        // .stream().parallel()
+                        .map(dbRow -> dataHandler.handle(dbRow, fDescription))
+                        .collect(Collectors.toList());
 
                 // Сохраняем
-                baseDaoService.updateBatch(jdbcTemplate, resProjection, touchedParams);
+                baseDaoService.updateBatch(jdbcTemplate, resProjection, handledBatch);
 
                 offset++;
 
@@ -92,77 +93,5 @@ public class PostImportService extends AbstractImportChainItem {
                 previousImporter.rollback(importTask);
             }
         }
-    }
-
-    /**
-     * Импорт плагин геосервера кодирует в ISO_8859_1. Поэтому есть необходимость разкодировать обратно
-     * Попутно есть желание проставить globalid всем обьектам у которых его нет
-     *
-     * @param batch        Пачка строк из БД
-     * @param fDescription Описание фичи
-     * @return В результате обработки верну такую же структуру данных но с колонками которые были затронуты в ходе
-     * обработки, дабы не обновлять то что не изменилось.
-     */
-    private List<Map<String, Object>> handleBatch(List<Map<String, Object>> batch, SchemaDto fDescription) {
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        batch.forEach(item -> {
-            HashMap<String, Object> params = new HashMap<>();
-            Map<String, Object> decodedItem = decodeStrings(item);
-
-            if (fDescription.getCalcFiledFunction() != null) {
-                Object functionResult = scriptEngine.invokeFunction(decodedItem, fDescription.getCalcFiledFunction());
-                ((Map<String, Object>) functionResult).forEach((k, v) -> decodedItem.put(k, v.toString()));
-            }
-
-            decodedItem.forEach((key, value) -> {
-                // Добавим чтобы опираться не него при вставке
-                if (PRIMARY_KEY.equals(key)) {
-                    params.put(key, value);
-                } else if (GLOBAL_ID.equals(key)) {
-                    // Генерируем globalid если его нет
-                    String valueAsString = (String) value;
-                    if (valueAsString == null || valueAsString.equals("{00000000-0000-0000-0000-000000000000}")) {
-                        params.put(key, UUID.randomUUID());
-                    }
-                } else {
-                    if (value instanceof String) {
-                        params.put(key, value);
-                    } else if (value instanceof Integer) {
-                        // Все атрибуты типа int, у которых значение 0 должны быть заменены на null
-                        if ((Integer) value == 0) {
-                            params.put(key, DaoProperties.NULL_MARKER);
-                        }
-                    } else if (value instanceof BigDecimal) {
-                        // Все атрибуты типа double, у которых значение 0,00 должны быть заменены на null
-                        if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
-                            params.put(key, DaoProperties.NULL_MARKER);
-                        }
-                    }
-                }
-            });
-
-            result.add(params);
-        });
-
-        return result;
-    }
-
-    private Map<String, Object> decodeStrings(Map<String, Object> item) {
-        Map<String, Object> decodedItem = new HashMap<>();
-        item.forEach((key, value) -> {
-            if (value instanceof String) {
-                String decoded = StringDecoder.decode(String.valueOf(value));
-                if (decoded.contains("'")) {
-                    decoded = decoded.replace("'", "''");
-                }
-
-                decodedItem.put(key, decoded);
-            } else {
-                decodedItem.put(key, value);
-            }
-        });
-
-        return decodedItem;
     }
 }
