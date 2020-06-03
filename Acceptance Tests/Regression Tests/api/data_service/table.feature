@@ -8,19 +8,19 @@ Feature: Получение инфы о таблице
   Scenario: Проверка доступа к ненастроенному ресурсу
     Given Существует схема "workspace_1" и таблица "some_table" для которой НЕ настроены пермишены
     And наш пользователь имеет любые роли
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then запрос оклоняется с 403 статус кодом
 
   Scenario: Проверка доступа к груупе
     Given Существует схема "workspace_1" и таблица "some_table" для которой настроены пермишены: на группу с id: 1
     And наш пользователь НЕ принадлежит это группе
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then запрос оклоняется с 403 статус кодом
 
   Scenario: Проверка прав на группу
     Given Существует схема "workspace_1" и таблица "some_table" для которой настроены пермишены: на группу с id: 1 и ролью: "VIEWER"
     And наш пользователь принадлежит это группе
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then сервер отвечает 200 с телом описывающим ресурс и включая "permission": "VIEWER"
 
   Scenario: Проверка комбинации прав на группу и пользователя
@@ -28,7 +28,7 @@ Feature: Получение инфы о таблице
           для группы с id: 1 установлена роль: "VIEWER"
           для пользователя с id: 2 установлена роль: "CONTRIBUTOR"
     And наш пользователь принадлежит этой группе и имеет id: 2
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then сервер отвечает 200 с телом описывающим ресурс и включая "permission": "CONTRIBUTOR"
 
   Scenario: Проверка комбинации прав на группу и пользователя
@@ -36,7 +36,7 @@ Feature: Получение инфы о таблице
           для группы с id: 1 установлена роль: "VIEWER"
           для пользователя с id: 2 установлена роль: "CONTRIBUTOR"
     And наш пользователь принадлежит этой группе НО имеет id: 314
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then сервер отвечает 200 с телом описывающим ресурс и включая "permission": "VIEWER"
 
   Scenario: Проверка комбинации прав на группу и пользователя
@@ -44,12 +44,12 @@ Feature: Получение инфы о таблице
           для группы с id: 1 установлена роль: "VIEWER"
           для пользователя с id: 2 установлена роль: "CONTRIBUTOR"
     And наш пользователь НЕ принадлежит этой группе и имеет id: 2
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then сервер отвечает 200 с телом описывающим ресурс и включая "permission": "CONTRIBUTOR"
 
   Scenario: Проверка комбинации прав на группу и пользователя
     Given Существует схема "workspace_1" и таблица "some_table" для которой настроены пермишены:
           для пользователя с id: 2 установлена роль: "OWNER"
     And наш пользователь принадлежит группе с id: 2 и имеет id: 111
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables/some_table"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables/some_table"
     Then запрос оклоняется с 403 статус кодом

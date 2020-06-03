@@ -31,8 +31,6 @@ import static ru.mycrg.data_service.service.ResourceIdentifier.makeIdentifier;
 @Transactional
 public class PermissionsService {
 
-    public static final String USER = "user";
-    public static final String GROUP = "group";
     public static final int RESOURCES_PER_PERMISSION_LIMIT = 100;
 
     private final ProjectionFactory projectionFactory;
@@ -125,10 +123,10 @@ public class PermissionsService {
     }
 
     public Optional<String> identifyPermission(UserDetails uDetails, String rIdentifier) {
-        return permissionsRepository.getRole(uDetails.getUserId(), USER, rIdentifier, TABLE.toString())
-                .or(() -> permissionsRepository.getRole(uDetails.getUserId(), GROUP, rIdentifier, TABLE.toString()))
-                .or(() -> permissionsRepository.getRole(uDetails.getUserId(), USER, rIdentifier, SCHEMA.toString()))
-                .or(() -> permissionsRepository.getRole(uDetails.getUserId(), GROUP, rIdentifier, SCHEMA.toString()));
+        return permissionsRepository.getRoleForUser(uDetails.getUserId(), rIdentifier, TABLE.toString())
+                .or(() -> permissionsRepository.getRoleForGroups(uDetails.getGroups(), rIdentifier, TABLE.toString()))
+                .or(() -> permissionsRepository.getRoleForUser(uDetails.getUserId(), rIdentifier, SCHEMA.toString()))
+                .or(() -> permissionsRepository.getRoleForGroups(uDetails.getGroups(), rIdentifier, SCHEMA.toString()));
     }
 
     private void joinResource(Permission permission, String identifier) {

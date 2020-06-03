@@ -3,17 +3,17 @@ Feature: Выборка списка таблиц
   Scenario: Права не настроены
     Given Существует схема "workspace_1" для которой НЕ настроены пермишены
     And наш пользователь имеет любые роли
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables"
     Then сервер отвечает 200 с пустым постраничным списком
 
   Scenario: Предоставлены права на таблицу
     Given Существует схема "workspace_1" со множеством таблиц. Для одной из них: "test_table" настроены пермишены для пользователя с id: 2
     And наш пользователь с id: 2
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables"
     Then сервер отвечает 200 с постраничным списком в котором присутствует описание таблицы "test_table"
 
   Scenario: Проверка доступа когда права предоставлены не нам
     Given Существует схема "workspace_1" со множеством таблиц. Для одной из них: "test_table" настроены пермишены для пользователя с id: 2
     And наш пользователь с id: 1
-    When Посылая GET запрос на: "/api/schemas/workspace_1/tables"
+    When Посылая GET запрос на: "/api/data/schemas/workspace_1/tables"
     Then сервер отвечает 200 с пустым постраничным списком

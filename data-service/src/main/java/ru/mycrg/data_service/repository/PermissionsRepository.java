@@ -55,10 +55,18 @@ public interface PermissionsRepository extends PagingAndSortingRepository<Permis
     @RestResource(exported = false)
     @Query("SELECT p.role FROM Permission as p " +
             "INNER JOIN p.resources as r " +
-            "WHERE p.principalType = :principalType AND p.principalId = :principalId " +
+            "WHERE p.principalType = 'user' AND p.principalId = :principalId " +
             "AND r.type = :type AND r.identifier = :identifier")
-    Optional<String> getRole(@Param("principalId") Long principalId, @Param("principalType") String principalType,
-                             @Param("identifier") String identifier, @Param("type") String type);
+    Optional<String> getRoleForUser(@Param("principalId") Long principalId,
+                                    @Param("identifier") String identifier, @Param("type") String type);
+
+    @RestResource(exported = false)
+    @Query("SELECT p.role FROM Permission as p " +
+            "INNER JOIN p.resources as r " +
+            "WHERE p.principalType = 'group' AND p.principalId IN (:groups)" +
+            "AND r.type = :type AND r.identifier = :identifier")
+    Optional<String> getRoleForGroups(@Param("groups") List<Long> groups,
+                                      @Param("identifier") String identifier, @Param("type") String type);
 
 }
 

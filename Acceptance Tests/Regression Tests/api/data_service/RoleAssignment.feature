@@ -9,11 +9,11 @@ Feature: Настройка прав доступа к ресурсам "data" �
 
   Scenario: Добавление роли
     Given Существует схема "workspace_1" но таблица "some_table" отсутствует
-    When Попытка добавить любые ограниченичя: "/api/schemas/workspace_1/tables/some_table/roleAssignment"
+    When Попытка добавить любые ограниченичя: "/api/data/schemas/workspace_1/tables/some_table/roleAssignment"
     Then приводит к 404 т.к. ресурса нет
     And
     Given Существует схема "workspace_1" в ней таблица "electricpowerstation"
-    When Выполнить POST запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
+    When Выполнить POST запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
           с телом:
           {
             "role": "VIEWER",
@@ -23,7 +23,7 @@ Feature: Настройка прав доступа к ресурсам "data" �
     Then Сервер отвечает 200 с телом созданной сущности
     And
     When Выполняя повторный запрос на создание тех же ограничений.
-          POST запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
+          POST запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
           с телом:
           {
             "role": "VIEWER",
@@ -61,12 +61,12 @@ Feature: Настройка прав доступа к ресурсам "data" �
 
   Scenario: Получение пермишенов
     Given Для схемы "workspace_1" таблице "electricpowerstation" заданы пермишены
-    When Выполнить GET запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
+    When Выполнить GET запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
     Then Сервер отвечает 200 с постраничным списком обьектов
 
   Scenario: Удаление всех пермишенов
     Given Для схемы "workspace_1" таблицы "electricpowerstation" заданы пермишены
-    When Выполнить DELETE запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
+    When Выполнить DELETE запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment"
     Then Сервер отвечает 204
     And
     When на повторное выполнение запроса
@@ -74,12 +74,12 @@ Feature: Настройка прав доступа к ресурсам "data" �
 
   Scenario: Удаление пермишена с ид 1
     Given Для схемы "workspace_1" таблицы "electricpowerstation" заданы пермишены
-    When Выполнить DELETE запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment/1"
+    When Выполнить DELETE запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment/1"
     Then Сервер отвечает 204
 
   Scenario: Удаление не существующего пермишена
     Given Для схемы "workspace_1" таблицы "electricpowerstation" не задано пермишенов
-    When Выполнить DELETE запрос на эндпоинт: "/api/schemas/workspace_1/tables/electricpowerstation/roleAssignment/1"
+    When Выполнить DELETE запрос на эндпоинт: "/api/data/schemas/workspace_1/tables/electricpowerstation/roleAssignment/1"
     Then Сервер отвечает 404
 
   Scenario: Обновление пермишенов не поддерживается
