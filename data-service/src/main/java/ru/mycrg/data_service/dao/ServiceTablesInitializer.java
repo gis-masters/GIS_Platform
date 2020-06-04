@@ -7,6 +7,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DATA_SCHEMA_NAME;
+
 @Log4j2
 @Service
 public class ServiceTablesInitializer {
@@ -14,14 +16,12 @@ public class ServiceTablesInitializer {
     @Autowired
     private Environment environment;
 
-    private String schemaName = "data";
-
     public ServiceTablesInitializer() {
     }
 
     public void initialize(JdbcTemplate jdbcTemplate) {
-        String dbUser = environment.getProperty("spring.datasource.username");
-        String createSchema = "CREATE SCHEMA IF NOT EXISTS " + schemaName + " AUTHORIZATION " + dbUser;
+        String dbUser = environment.getRequiredProperty("spring.datasource.username");
+        String createSchema = "CREATE SCHEMA IF NOT EXISTS " + DATA_SCHEMA_NAME + " AUTHORIZATION " + dbUser;
         String permissionsTable = "CREATE TABLE IF NOT EXISTS data.permissions " +
                 "(id             bigserial NOT NULL," +
                 " principal_type character varying(50)," +

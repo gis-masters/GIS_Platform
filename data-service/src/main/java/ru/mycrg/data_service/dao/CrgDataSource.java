@@ -1,13 +1,17 @@
 package ru.mycrg.data_service.dao;
 
 import lombok.extern.java.Log;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
@@ -30,9 +34,17 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         Long orgId = getOrganizationId(httpServletRequest.getUserPrincipal());
-        String dbName = DEFAULT_DB_NAME + orgId;
+        String dbName = orgId < 1 ? INITIAL_DB_NAME : DEFAULT_DB_NAME + orgId;
 
-        return getDataSource(dbName).getConnection();
+        if (dataSources.containsKey(dbName)) {
+            return dataSources.get(dbName).getConnection();
+        } else {
+            HikariDataSource newDataSource = getDataSource(dbName);
+
+            dataSources.put(dbName, newDataSource);
+
+            return newDataSource.getConnection();
+        }
     }
 
     @Override
@@ -74,5 +86,4 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return dataSource.isWrapperFor(iface);
     }
-
 }

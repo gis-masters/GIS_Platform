@@ -31,8 +31,6 @@ public class CrgClaimsParser {
 
     @NotNull
     public static Long getOrganizationId(Principal principal) {
-        long orgId = 0;
-
         try {
             Map<String, Object> decodedDetails = decode(principal);
 
@@ -40,15 +38,14 @@ public class CrgClaimsParser {
             if (oOrganization.isPresent()) {
                 Map<String, Object> firstOrg = (Map<String, Object>) ((ArrayList) oOrganization.get()).get(0);
                 Optional<Object> oValue = getValue(firstOrg, "id");
-                if (oValue.isPresent()) {
-                    orgId = ((Integer) oValue.get()).longValue();
-                }
+
+                return oValue.map(o -> ((Integer) o).longValue()).orElse(-1L);
+            } else {
+                return -1L;
             }
         } catch (Exception e) {
-            throw new ForbiddenException("Incorrect organization claims: " + e.getMessage());
+            return -1L;
         }
-
-        return orgId;
     }
 
     @NotNull

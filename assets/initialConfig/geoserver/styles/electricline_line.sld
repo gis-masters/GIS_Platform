@@ -8,7 +8,7 @@
         <se:Rule>
           <se:Name>60204030101</se:Name>
           <se:Description>
-            <se:Title>Линии электропередачи 1150 кВ существующие/se:Title>
+            <se:Title>Линии электропередачи 1150 кВ существующие</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>

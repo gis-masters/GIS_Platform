@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -8,48 +9,72 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
+@Log4j2
 @Service
 public class CrgDataSourcesPool {
 
-    static final String DEFAULT_DB_NAME = "database_";
-    static final String DATA_SCHEMA_NAME = "data";
+    public static final String DEFAULT_DB_NAME = "database_";
+    public static final String DATA_SCHEMA_NAME = "data";
+    public static final String INITIAL_SCHEMA_NAME = "public";
+    public static final String INITIAL_DB_NAME = "crg_data_service";
+
+    private static final int HIKARI_POOL_SIZE = 3;
 
     final Map<String, HikariDataSource> dataSources = new HashMap<>();
 
     @Autowired
     Environment environment;
 
-    HikariDataSource getDataSource(String dbName) {
+    public HikariDataSource getNotPoolableDataSource(String dbName, String schemaName) {
+        return getDataSource(dbName, schemaName, 1);
+    }
+
+    public HikariDataSource getDataSource(String dbName) {
         if (dataSources.containsKey(dbName)) {
             return dataSources.get(dbName);
         } else {
-            HikariDataSource newDataSource = new HikariDataSource();
-            newDataSource.setJdbcUrl(getConnectionUrl(dbName));
-            newDataSource.setSchema(DATA_SCHEMA_NAME);
-            newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-            newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-            newDataSource.setMaximumPoolSize(3);
+            HikariDataSource dataSource = getDataSource(dbName, DATA_SCHEMA_NAME, HIKARI_POOL_SIZE);
 
-            dataSources.put(dbName, newDataSource);
+            dataSources.put(dbName, dataSource);
 
-            return newDataSource;
+            return dataSource;
         }
     }
 
-    HikariDataSource getInitialDataSource() {
-        HikariDataSource newDataSource = new HikariDataSource();
-        newDataSource.setJdbcUrl(environment.getProperty("spring.datasource.url"));
-        newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-        newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-        newDataSource.setMaximumPoolSize(3);
+    public HikariDataSource getInitialDataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setJdbcUrl(environment.getProperty("spring.datasource.url"));
+        dataSource.setUsername(getInitialUser());
+        dataSource.setPassword(getInitialPassword());
+        dataSource.setMaximumPoolSize(HIKARI_POOL_SIZE);
 
-        return newDataSource;
+        return dataSource;
     }
 
-    String getConnectionUrl(String dbName) {
-        String envUri = Objects.requireNonNull(environment.getProperty("spring.datasource.url"));
+    public String getInitialUser() {
+        return environment.getRequiredProperty("spring.datasource.username");
+    }
+
+    public String getInitialPassword() {
+        return environment.getRequiredProperty("spring.datasource.password");
+    }
+
+    private HikariDataSource getDataSource(String dbName, String schemaName, int poolSize) {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setJdbcUrl(getConnectionUrl(dbName));
+        dataSource.setSchema(schemaName);
+        dataSource.setUsername(getInitialUser());
+        dataSource.setPassword(getInitialPassword());
+        dataSource.setMaximumPoolSize(poolSize);
+
+        return dataSource;
+    }
+
+    private String getConnectionUrl(String dbName) {
+        String envUri = environment.getRequiredProperty("spring.datasource.url");
         String source = "jdbc:";
 
         URI defaultUri = URI.create(envUri.substring(source.length()));
@@ -59,5 +84,4 @@ public class CrgDataSourcesPool {
                 defaultUri.getHost() + ":" + defaultUri.getPort() +
                 "/" + dbName;
     }
-
 }

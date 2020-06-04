@@ -2,23 +2,35 @@ package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.service.BaseMapsService;
+
+import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DATA_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
 
 @Log4j2
 @Service
-public class CrgMigrationHandler extends CrgDataSourcesPool {
+public class CrgMigrationHandler {
 
-    @Autowired
-    private ServiceTablesInitializer serviceTablesInitializer;
+    private final CrgDataSourcesPool crgDataSourcesPool;
+    private final BaseMapsService baseMapsService;
+    private final ServiceTablesInitializer serviceTablesInitializer;
+
+    public CrgMigrationHandler(ServiceTablesInitializer serviceTablesInitializer,
+                               CrgDataSourcesPool crgDataSourcesPool,
+                               BaseMapsService baseMapsService) {
+        this.baseMapsService = baseMapsService;
+        this.crgDataSourcesPool = crgDataSourcesPool;
+        this.serviceTablesInitializer = serviceTablesInitializer;
+    }
 
     public void handle() {
         try {
             log.info("Handle migrations");
 
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(getInitialDataSource());
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(crgDataSourcesPool.getInitialDataSource());
 
             String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" + DEFAULT_DB_NAME + "%'";
 
@@ -30,19 +42,15 @@ public class CrgMigrationHandler extends CrgDataSourcesPool {
         }
     }
 
-    private void initMigration(String dbName) {
+    public void initMigration(String dbName) {
         log.debug("Initialize service tables for: {}", dbName);
 
-        HikariDataSource tempDataSource = new HikariDataSource();
-        tempDataSource.setJdbcUrl(getConnectionUrl(dbName));
-        tempDataSource.setSchema(DATA_SCHEMA_NAME);
-        tempDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-        tempDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-        tempDataSource.setMaximumPoolSize(1);
+        HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(tempDataSource);
 
         serviceTablesInitializer.initialize(jdbcTemplate);
+        baseMapsService.initDefault(jdbcTemplate);
 
         tempDataSource.close();
     }

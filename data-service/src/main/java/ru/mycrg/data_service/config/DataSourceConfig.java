@@ -1,11 +1,11 @@
 package ru.mycrg.data_service.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import ru.mycrg.data_service.dao.CrgDataSource;
+import ru.mycrg.data_service.dao.CrgDataSourcesPool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -14,20 +14,15 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
 
     @Autowired
-    private Environment environment;
+    private HttpServletRequest request;
 
     @Autowired
-    private HttpServletRequest request;
+    private CrgDataSourcesPool crgDataSourcesPool;
 
     @Bean
     public DataSource getDataSource() {
-        final DataSource dataSource = DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .url(environment.getProperty("spring.datasource.url"))
-                .username(environment.getProperty("spring.datasource.username"))
-                .password(environment.getProperty("spring.datasource.password"))
-                .build();
+        HikariDataSource initialDataSource = crgDataSourcesPool.getInitialDataSource();
 
-        return new CrgDataSource(dataSource, request);
+        return new CrgDataSource(initialDataSource, request);
     }
 }
