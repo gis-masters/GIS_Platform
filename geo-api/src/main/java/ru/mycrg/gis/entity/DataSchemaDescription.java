@@ -13,7 +13,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class FeatureDescription {
+public class DataSchemaDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +21,21 @@ public class FeatureDescription {
     private long id;
 
     @Column
-    private String className;
+    private String name;
 
     @Type(type = "jsonb-node")
     @Column(columnDefinition = "json")
     private JsonNode classRule;
 
-    public FeatureDescription() {}
+    @Column
+    @Type(type="text")
+    private String customRule;
+
+    @Column
+    @Type(type="text")
+    private String calculatedFields;
+
+    public DataSchemaDescription() {}
 
     public long getId() {
         return id;
@@ -37,12 +45,12 @@ public class FeatureDescription {
         this.id = id;
     }
 
-    public String getClassName() {
-        return className;
+    public String getName() {
+        return name;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setName(String className) {
+        this.name = className;
     }
 
     public JsonNode getClassRule() {
@@ -51,5 +59,21 @@ public class FeatureDescription {
 
     public void setClassRule(JsonNode classRule) {
         this.classRule = classRule;
+    }
+
+    public String getCustomRule() {
+        return customRule;
+    }
+
+    public void setCustomRule(String customRule) {
+        this.customRule = customRule;
+    }
+
+    public String getCalculatedFields() {
+        return calculatedFields;
+    }
+
+    public void setCalculatedFields(String calculatedFields) {
+        this.calculatedFields = calculatedFields;
     }
 }

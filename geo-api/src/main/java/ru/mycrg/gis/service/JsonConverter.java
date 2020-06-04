@@ -1,4 +1,4 @@
-package ru.mycrg.gis.service.data_schema;
+package ru.mycrg.gis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -7,31 +7,14 @@ import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.gis.entity.FeatureDescription;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 
-import java.io.IOException;
-import java.util.Optional;
+public class JsonConverter {
 
-public class MapperUtil {
-
-    private static Logger log = LoggerFactory.getLogger(MapperUtil.class);
+    private static Logger log = LoggerFactory.getLogger(JsonConverter.class);
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    public static Optional<SchemaDto> mapToSchemaDto(FeatureDescription featureDescription) {
-        try {
-            JsonNode classRule = featureDescription.getClassRule();
-
-            return Optional.of(mapper.readValue(classRule.toString(), SchemaDto.class));
-        } catch (IOException e) {
-            log.warn("Failed convert JSON / Error: {}", e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    public static JsonNode convertToJsonNode(Object object) {
+    public static JsonNode toJsonNode(Object object) {
         try {
             return JacksonUtil.toJsonNode(getJsonString(object));
         } catch (JsonProcessingException e) {

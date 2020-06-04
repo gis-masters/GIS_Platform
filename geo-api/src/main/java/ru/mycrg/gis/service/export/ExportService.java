@@ -13,9 +13,9 @@ import ru.mycrg.gis.exceptions.ConflictException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.data_schema.DataSchemaService;
-import ru.mycrg.gis.service.data_schema.MapperUtil;
+import ru.mycrg.gis.service.JsonConverter;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
@@ -35,11 +35,11 @@ public class ExportService extends BaseProcessService {
     private static Logger log = LoggerFactory.getLogger(ExportService.class);
 
     private final MqSender mqSender;
-    private final DataSchemaService schemaService;
+    private final SchemaService schemaService;
     private final WsNotificationService wsNotificationService;
 
     public ExportService(MqSender mqSender,
-                         DataSchemaService schemaService,
+                         SchemaService schemaService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
@@ -65,8 +65,8 @@ public class ExportService extends BaseProcessService {
         payload.setDocSchema(request.getDocSchema());
 
         request.getLayers().forEach(layerName -> {
-            schemaService.getSchemaByName(layerName).ifPresent(featureDescription -> {
-                payload.addRule(featureDescription);
+            schemaService.getSchemaByLayerName(layerName).ifPresent(schema -> {
+                payload.addRule(schema);
                 payload.addResource(
                         new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
             });
@@ -130,7 +130,7 @@ public class ExportService extends BaseProcessService {
 
             details.addTask(subProcess);
 
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
+            JsonNode jsonNode = JsonConverter.toJsonNode(details);
 
             process.setDetails(jsonNode);
         } catch (IOException e) {

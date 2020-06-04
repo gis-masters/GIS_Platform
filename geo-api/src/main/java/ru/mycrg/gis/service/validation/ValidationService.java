@@ -12,8 +12,8 @@ import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
@@ -31,12 +31,12 @@ public class ValidationService extends BaseProcessService {
     private static Logger log = LoggerFactory.getLogger(ValidationService.class);
 
     private final MqSender mqSender;
-    private final DataSchemaService schemaService;
+    private final SchemaService schemaService;
     private final WsNotificationService wsNotificationService;
 
     @Autowired
     public ValidationService(MqSender mqSender,
-                             DataSchemaService schemaService,
+                             SchemaService schemaService,
                              ProcessRepository processRepository,
                              WsNotificationService wsNotificationService) {
         super(processRepository);
@@ -64,8 +64,8 @@ public class ValidationService extends BaseProcessService {
         ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
 
         request.getLayers().forEach(layerName -> {
-            schemaService.getSchemaByName(layerName).ifPresent(featureDescription -> {
-                payload.addFeatureProjections(featureDescription);
+            schemaService.getSchemaByLayerName(layerName).ifPresent(schema -> {
+                payload.addFeatureProjections(schema);
                 payload.addResourceProjections(
                         new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
             });

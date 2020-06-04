@@ -12,7 +12,7 @@ import ru.mycrg.gis.dto.ValidationInfo;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.FailedException;
-import ru.mycrg.gis.service.data_schema.DataSchemaService;
+import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
 import java.io.IOException;
@@ -31,11 +31,11 @@ public class ViolationService {
 
     private static Logger log = LoggerFactory.getLogger(ViolationService.class);
 
-    private final DataSchemaService schemaService;
+    private final SchemaService schemaService;
     private final CrgProperties crgProperties;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public ViolationService(CrgProperties crgProperties, DataSchemaService schemaService) {
+    public ViolationService(CrgProperties crgProperties, SchemaService schemaService) {
         this.crgProperties = crgProperties;
         this.schemaService = schemaService;
     }

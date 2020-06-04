@@ -11,8 +11,8 @@ import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
 import ru.mycrg.gis.service.CrgAuthHelper;
+import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.data_schema.DataSchemaService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.SchemaDto;
@@ -34,12 +34,12 @@ public class ImportService extends BaseProcessService {
 
     private static Logger log = LoggerFactory.getLogger(ImportService.class);
 
-    private final DataSchemaService schemaService;
+    private final SchemaService schemaService;
     private final MqSender mqSender;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
-                         DataSchemaService schemaService,
+                         SchemaService schemaService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
@@ -61,7 +61,7 @@ public class ImportService extends BaseProcessService {
             String workTableName = uiTask.getWorkTableName().toLowerCase();
 
             SchemaDto featureDescription = new SchemaDto();
-            Optional<SchemaDto> oDescription = schemaService.getSchemaByName(uiTask.getSchemaName());
+            Optional<SchemaDto> oDescription = schemaService.getSchemaByLayerName(uiTask.getSchemaName());
             if (oDescription.isPresent()) {
                 featureDescription = oDescription.get();
 

@@ -10,7 +10,6 @@ import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.entity.Process;
 import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.repository.ProcessRepository;
-import ru.mycrg.gis.service.data_schema.MapperUtil;
 import ru.mycrg.mq_queue_contract.Processable;
 import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
 import ru.mycrg.mq_queue_contract.enums.ProcessType;
@@ -43,7 +42,7 @@ public abstract class BaseProcessService implements Processable {
     }
 
     protected Process create(String userName, String title, ProcessType type, Object extra) {
-        return processRepository.save(new Process(userName, title, type, MapperUtil.convertToJsonNode(extra)));
+        return processRepository.save(new Process(userName, title, type, JsonConverter.toJsonNode(extra)));
     }
 
     public Process getProcess(long taskId) {
@@ -77,7 +76,7 @@ public abstract class BaseProcessService implements Processable {
         process.setStatus(ProcessStatus.DONE);
 
         if (data != null) {
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(data);
+            JsonNode jsonNode = JsonConverter.toJsonNode(data);
             process.setDetails(jsonNode);
         }
 
@@ -91,7 +90,7 @@ public abstract class BaseProcessService implements Processable {
         process.setStatus(ProcessStatus.ERROR);
 
         if (errMsg != null) {
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(errMsg);
+            JsonNode jsonNode = JsonConverter.toJsonNode(errMsg);
             process.setDetails(jsonNode);
         }
 
@@ -113,7 +112,7 @@ public abstract class BaseProcessService implements Processable {
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
             details.addTask(taskModel);
 
-            JsonNode jsonNode = MapperUtil.convertToJsonNode(details);
+            JsonNode jsonNode = JsonConverter.toJsonNode(details);
 
             process.setDetails(jsonNode);
         } catch (IOException e) {
