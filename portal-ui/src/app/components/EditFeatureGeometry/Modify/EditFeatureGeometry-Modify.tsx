@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
+import { transformGeometry, olProjection } from '../../../services/geoserver/projections.service';
 import { FormField, FormLabel, FormControl } from '../../Form/Form';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Modify.scss';
@@ -35,11 +36,16 @@ export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModi
   render () {
     return (
       <FormField className={cnEditFeatureGeometry('Modify')}>
-        <FormLabel htmlFor='modifyControl'>
+        <FormLabel htmlFor='editFeatureGeometryModifyControl'>
           Рисование
         </FormLabel>
         <FormControl>
-          <Switch id='modifyControl' checked={this.checked} onChange={this.changeHandler} />
+          <Switch
+            id='editFeatureGeometryModifyControl'
+            checked={this.checked}
+            onChange={this.changeHandler}
+            disabled={!this.props.store.isValid}
+          />
         </FormControl>
       </FormField>
     );
@@ -57,13 +63,17 @@ export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModi
   }
 
   private modifyHandler (e: ModifyEvent) {
-    const geometry = e.features.item(0).getGeometry();
-    const { store } = this.props;
-    // @ts-ignore
-    let coordinates = geometry.getCoordinates();
+    const olGeometry = e.features.item(0).getGeometry();
+    const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
+    const { coordinates } = transformGeometry(
+                          // @ts-ignore
+                          { type: geometryType, coordinates: olGeometry.getCoordinates() },
+                          olProjection,
+                          nativeProjection);
 
-    store.setGeometry({
-      ...store.geometry,
+    // @ts-ignore
+    setGeometry({
+      ...geometry,
       coordinates
     });
   }

@@ -1,5 +1,3 @@
-import {NameHrefProjection} from '../projections';
-
 export interface ScratchImport {
   id: number;
   href: string;
@@ -36,12 +34,12 @@ export interface ImportTaskShort {
 }
 
 export interface ImportTaskFull extends ImportTaskShort {
-  layer: NameHrefProjection;
+  layer: { name: string, href: string };
   progress: string;
 }
 
 export interface ImportTask extends ImportTaskShort {
-  layer?: NameHrefProjection;
+  layer?: { name: string, href: string };
   progress?: string;
 }
 

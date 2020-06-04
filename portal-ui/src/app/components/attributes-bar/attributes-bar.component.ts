@@ -16,15 +16,19 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
+import {
+  schemaService,
+  FeatureDescription,
+  PropertySchema,
+  PropertyEnumerations
+} from '../../services/crg/schema.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { schemaService, FeatureDescription, PropertySchema } from '../../services/crg/schema.service';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { projectsService } from '../../services/crg/projects.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
-import { ValueTitleProjection } from '../../services/geoserver/projections';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { ViewFeaturesData } from '../view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
@@ -37,6 +41,7 @@ import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { isUpdateAllowed, isDeleteAllowed } from '../../services/util/permissions';
+import { getProjection } from '../../services/geoserver/projections.service';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -49,7 +54,6 @@ export interface WfsFeatureView extends WfsFeature {
   styleUrls: ['./attributes-bar.component.scss']
 })
 export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestroy {
-
   @Input() layer: CrgLayer;
 
   @ViewChild(DatatableComponent, {static: true}) attributeTable: DatatableComponent;
@@ -86,6 +90,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   showPercent = true;
 
   private schema: FeatureDescription;
+  private deletingAllowed = false;
+  private updatingAllowed = false;
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -115,6 +121,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           const lastRequest = this.requestModel$.getValue();
           this.updateTable(lastRequest);
         });
+
+    await this.checkPermissions();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -174,7 +182,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   showSelectedFeatures() {
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      openLayersService.highlightFeature(this.attributeTable.selected);
+      openLayersService.highlightFeature(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
     }
 
     window.dispatchEvent(new Event('resize'));
@@ -264,8 +272,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     if (event.type === 'dblclick') {
       this.currentPositionFeature = event.row;
 
-      openLayersService.highlightFeature(event.row);
-      openLayersService.positionToFeature(event.row);
+      const projection = getProjection(this.layer.nativeCRS);
+      openLayersService.highlightFeature(event.row, projection);
+      openLayersService.positionToFeature(event.row, projection);
     }
   }
 
@@ -374,12 +383,9 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         });
   }
 
-  isUpdateAllowed() {
-    return isUpdateAllowed(this.layer);
-  }
-
-  isDeletionAllowed() {
-    return isDeleteAllowed(this.layer);
+  private async checkPermissions () {
+    this.updatingAllowed = await isUpdateAllowed(this.layer);
+    this.deletingAllowed = await isDeleteAllowed(this.layer);
   }
 
   private checkSelectionEmptiness(selected: any[]) {
@@ -394,6 +400,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
     const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
     const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
+    const layersUpdatePermissions = await Promise.all(layers.map(isUpdateAllowed));
 
     return layers.filter((layer, i) => {
       if (!schemas[i]) {
@@ -404,7 +411,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
       return (currentLayer.complexName !== layer.complexName) &&
              (currentSchema.geometryType === geometryType) &&
-             isUpdateAllowed(layer);
+             layersUpdatePermissions[i];
     });
   }
 
@@ -412,8 +419,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     return this.dialog
                .open(CopyFeaturesDialogComponent, {
                  data: {
-                   title: title,
-                   layers: layers,
+                   title,
+                   layers,
                    objects: this.attributeTable.selected,
                  }
                })
@@ -433,7 +440,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName)),
+        concatMap(features => this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)),
         catchError(err => this.handleError(err)),
       ).subscribe(() => {
         i++;
@@ -458,7 +465,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName)
+            this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)
           );
         }),
         concatMap(([features]) => {
@@ -609,19 +616,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     return resultObject;
   }
 
-  private getValueTitle(value: string, enumerations: ValueTitleProjection[]): string {
-    let result = value;
-    enumerations.forEach((item: ValueTitleProjection) => {
-      if (!item || !value) {
-        return;
-      }
-
-      if (item.value.toString() === value.toString()) {
-        result = item.title;
-      }
-    });
-
-    return result;
+  private getValueTitle(startValue: string, enumerations: PropertyEnumerations): string {
+    return enumerations.reduce((acc, { value, title }) => {
+      return (String(startValue) === String(value)) ? title : acc;
+    }, startValue);
   }
 
   private definePropertySource(property: string) {

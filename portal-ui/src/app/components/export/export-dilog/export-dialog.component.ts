@@ -1,10 +1,9 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
-import { ValueTitleProjection } from '../../../services/geoserver/projections';
 import { communicationService } from '../../../services/communication.service';
 import { exportService } from '../../../services/crg/export.service';
 import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
@@ -27,7 +26,7 @@ export class ExportDialogComponent implements OnDestroy {
   filterTerm: string;
   selectedLayers: CrgLayer[] = [];
   selectedDocSchema: string = undefined;
-  docs: ValueTitleProjection[] = [
+  docs = [
     {
       value: 'Doc.10501010100',
       title: 'Положение о территориальном планировании в области федерального транспорта'
@@ -63,7 +62,7 @@ export class ExportDialogComponent implements OnDestroy {
     {
       value: 'Doc.20301010000',
       title: 'Положение о территориальном планировании городского округа'
-    },
+    }
   ];
 
   private isExportInited = false;

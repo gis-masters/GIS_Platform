@@ -11,6 +11,7 @@ import { cn } from '@bem-react/classname';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { transform, olProjection } from '../../../services/geoserver/projections.service';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
 
@@ -60,7 +61,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw (e: DrawEvent) {
     // @ts-ignore
     const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
-    const newCoordinates = drawed[0].map(coord => this.props.store.currentProjection.to(coord));
+    const newCoordinates = drawed[0].map(coord => transform(olProjection, this.props.store.currentProjection, coord));
 
     this.updateGeometry(newCoordinates);
   }

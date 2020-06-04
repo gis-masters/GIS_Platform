@@ -46,8 +46,8 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
             {coordinates.map((coordinate, i) => (
               <TableRow key={i}>
                 {!isPoint && <TableCell align='right'>{i + 1}</TableCell>}
-                <TableCell>{coordinate[0]}</TableCell>
                 <TableCell>{coordinate[1]}</TableCell>
+                <TableCell>{coordinate[0]}</TableCell>
               </TableRow>
             ))}
           </TableBody>

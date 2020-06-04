@@ -35,7 +35,6 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
     service: 'wfs',
     // version: '2.0.0',
     request: 'GetFeature',
-    srsName: 'EPSG:3857',
     outputFormat: 'application/json',
     exceptions: 'application/json',
     typeName: complexName,
@@ -108,12 +107,12 @@ export const normalizeCoordinates = (coord: CoordEdited | string | number): Coor
 
 export const transformDimension = (dimension: number | string) => String(dimension).trim() === '' ? NaN : Number(dimension);
 
-const prepareLink =  async (typeName: string, objectId: string): Promise<string> => {
+const prepareLink = async (typeName: string, objectId: string): Promise<string> => {
   const workspaceName = typeName.split(':')[0];
 
   return (await serverProperties.geoServerUrl) + '/' + workspaceName + '/ows'
     + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
-    + '&outputFormat=application%2Fjson&srsName=EPSG:3857&featureID=' + objectId;
+    + '&outputFormat=application%2Fjson&featureID=' + objectId;
 };
 
 const clearFeatureId = (fCollection: WfsFeatureCollection): WfsFeatureCollection => {

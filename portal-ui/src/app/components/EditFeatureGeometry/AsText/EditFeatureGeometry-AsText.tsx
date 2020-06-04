@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
 import { ListAlt } from '@material-ui/icons';
-import { isEqual } from 'lodash';
+import { isEqual, clone } from 'lodash';
 
 import { Button } from '../../Button/Button';
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
@@ -81,7 +81,7 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
   }
 
   private initText() {
-    this.setText(this.props.coordinates.map(coord => coord.join('\t')).join('\n'));
+    this.setText(this.props.coordinates.map(coord => clone(coord).reverse().join('\t')).join('\n'));
   }
 
   private changeHandler (e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -112,7 +112,7 @@ export class EditFeatureGeometryAsText extends React.Component<EditFeatureGeomet
                                .split('\n')
                                .map(row => row.trim().replace(/\s+/g, ' '))
                                .filter(row => row)
-                               .map(row => row.split(/\s/));
+                               .map(row => row.split(/\s/).reverse());
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
       newCoordinates.push(newCoordinates[0]);

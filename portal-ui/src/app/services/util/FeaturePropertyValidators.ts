@@ -1,8 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
 
-import { PropertySchema } from '../crg/schema.service';
-import { ValueTitleProjection } from '../geoserver/projections';
+import { PropertySchema, PropertyEnumerations } from '../crg/schema.service';
 
 // Править в соответствии с ru/mycrg/common/enums/ValueType.java
 export enum ValueType {
@@ -35,7 +34,6 @@ export interface ErrorMessages {
 }
 
 export class FeaturePropertyValidators {
-
   static validateCustomRules(featureObject: {}, customRuleFunction: string): ValidationError[] {
     let errors: ValidationError[] = [];
 
@@ -218,16 +216,15 @@ export class FeaturePropertyValidators {
     }
   }
 
-  private static isEnumIncludeValue(enumerations: ValueTitleProjection[], currentValue: any): boolean {
+  private static isEnumIncludeValue(enumerations: PropertyEnumerations, currentValue: any): boolean {
     if (!currentValue) {
       return false;
     }
 
-    const result = enumerations.find((item: ValueTitleProjection) => {
+    const result = enumerations.find(item => {
       return item.value.toString() === currentValue.toString();
     });
 
     return result !== undefined;
   }
-
 }

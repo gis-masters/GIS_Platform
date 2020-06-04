@@ -15,11 +15,10 @@ import { ListAlt, AddCircle, Unarchive, Delete } from '@material-ui/icons';
 import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
 import { CrgLayer, CrgGroup } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
-import { layersService } from '../../../services/geoserver/layers.service';
+import { deleteLayer } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
 import { isReadAllowed, isCreateAllowed, isExportAllowed, isDeleteAllowed } from '../../../services/util/permissions';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
-import { ViewFeaturesData } from '../../view-features/view-features.component';
 import { Button } from '../../Button/Button';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
@@ -37,11 +36,13 @@ interface LayerMenuProps {
 @observer
 export class LayerMenu extends Component<LayerMenuProps> {
   @observable private deleteDialogOpen = false;
+  @observable private readAllowed = false;
+  @observable private createAllowed = false;
+  @observable private exportAllowed = false;
+  @observable private deleteAllowed = false;
 
   constructor (props: LayerMenuProps) {
     super(props);
-
-    this.fetchSchema();
 
     this.openAttributeTable = this.openAttributeTable.bind(this);
     this.addFeature = this.addFeature.bind(this);
@@ -50,6 +51,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
     this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
     this.deleteLayer = this.deleteLayer.bind(this);
     this.deleteDialogKeyHandler = this.deleteDialogKeyHandler.bind(this);
+  }
+
+  async componentDidMount() {
+    await this.handlePermissions();
   }
 
   render () {
@@ -68,7 +73,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!isGroup && isReadAllowed(entity as CrgLayer) && (
+          {!isGroup && this.readAllowed && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -77,7 +82,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && isCreateAllowed(entity as CrgLayer) && (
+          {!isGroup && this.createAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -86,7 +91,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && isExportAllowed(entity as CrgLayer) && (
+          {!isGroup && this.exportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />
@@ -95,7 +100,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && isDeleteAllowed(entity as CrgLayer) && (
+          {!isGroup && this.deleteAllowed && (
             <MenuItem onClick={this.openDeleteDialog}>
               <ListItemIcon>
                 <Delete />
@@ -124,6 +129,31 @@ export class LayerMenu extends Component<LayerMenuProps> {
     );
   }
 
+  private async handlePermissions() {
+    const { entity, isGroup } = this.props;
+
+    if (isGroup) {
+      return;
+    }
+
+    const permissions = await Promise.all([
+      isReadAllowed(entity as CrgLayer),
+      isCreateAllowed(entity as CrgLayer),
+      isDeleteAllowed(entity as CrgLayer),
+      isExportAllowed(entity as CrgLayer)
+    ]);
+
+    this.setPermissions(permissions);
+  }
+
+  @action
+  private setPermissions([readAllowed, createAllowed, deleteAllowed, exportAllowed]: boolean[]) {
+    this.readAllowed = readAllowed;
+    this.createAllowed = createAllowed;
+    this.deleteAllowed = deleteAllowed;
+    this.exportAllowed = exportAllowed;
+  }
+
   private openAttributeTable () {
     const { entity, onClose } = this.props;
 
@@ -136,28 +166,19 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  private async fetchSchema() {
-    const { entity, isGroup } = this.props;
-
-    if (isGroup) {
-      return;
-    }
-
-    return await schemaService.getSchema((entity as CrgLayer).schemaId);
-  }
-
   private async addFeature () {
     const { entity, onClose } = this.props;
     const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
 
     sideBarManager.do({
-      target: SidebarType.FEATURES, action: ActionType.OPEN,
+      target: SidebarType.FEATURES,
+      action: ActionType.OPEN,
       data: {
         features: [emptyFeature],
         mode: EditFeatureMode.single,
         layer: entity,
         isNew: true
-      } as ViewFeaturesData
+      }
     });
 
     onClose();
@@ -174,7 +195,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   private deleteLayer () {
-    layersService.deleteLayer(this.props.entity as CrgLayer);
+    deleteLayer(this.props.entity as CrgLayer);
     this.closeDeleteDialog();
     sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
   }

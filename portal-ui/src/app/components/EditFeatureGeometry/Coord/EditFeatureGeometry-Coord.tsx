@@ -9,6 +9,7 @@ import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { olProjection, transform } from '../../../services/geoserver/projections.service';
 
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 import { EditFeatureGeometryCoordPick } from '../CoordPick/EditFeatureGeometry-CoordPick';
@@ -54,6 +55,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   render () {
     const { val, withControls, index, canBeDeleted, disabled } = this.props;
 
+    // росреестра своё понимание X и Y
     return (
       <div className={cnEditFeatureGeometry('Coord', { withControls, active: this.picking })}
            onKeyDown={this.keyHandler}>
@@ -65,18 +67,18 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
         <TextField
             className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
-            value={val[0]}
-            error={!isDimensionValid(val[0])}
-            onChange={this.changeXHandler}
+            value={val[1]}
+            error={!isDimensionValid(val[1])}
+            onChange={this.changeYHandler}
             variant="outlined"
             disabled={disabled}
         />
 
         <TextField
             className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
-            value={val[1]}
-            error={!isDimensionValid(val[1])}
-            onChange={this.changeYHandler}
+            value={val[0]}
+            error={!isDimensionValid(val[0])}
+            onChange={this.changeXHandler}
             variant="outlined"
             disabled={disabled}
         />
@@ -147,7 +149,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @action
   private pickHandler (e: MapBrowserEvent) {
     const { val, onChange, index } = this.props;
-    val.splice(0, 2, ...this.props.store.currentProjection.to(e.coordinate));
+    val.splice(0, 2, ...transform(olProjection, this.props.store.currentProjection, e.coordinate));
     onChange(val, index);
     this.offPicking();
   }

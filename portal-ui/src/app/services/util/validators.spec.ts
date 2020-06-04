@@ -2,7 +2,6 @@ import { FormControl } from '@angular/forms';
 
 import { PropertySchema } from '../crg/schema.service';
 import { FeaturePropertyValidators, ValueType } from './FeaturePropertyValidators';
-import { ValueTitleProjection } from '../geoserver/projections';
 
 describe('Property validation test', () => {
   it('should validate required', () => {
@@ -271,7 +270,7 @@ describe('Property validation test', () => {
   });
 
   it('should validate enumeration', () => {
-    const enumerations: ValueTitleProjection[] = [
+    const enumerations = [
       {
         value: '1',
         title: 'first'

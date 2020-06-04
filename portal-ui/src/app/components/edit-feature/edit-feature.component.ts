@@ -20,7 +20,7 @@ import { BatchModel } from '../../services/crg/batch-model';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { fromMobx } from '../../services/util/fromMobx';
-import { ValueTitleProjection } from '../../services/geoserver/projections';
+import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { isUpdateAllowed, isDeleteAllowed } from '../../services/util/permissions';
@@ -50,6 +50,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   @Input() data: EditFeatureData;
   @Output() closeMe = new EventEmitter<boolean>();
   @Output() delete = new EventEmitter<string>();
+  deletingAllowed = false;
+  updatingAllowed = false;
 
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
@@ -66,7 +68,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     super();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     sideBarManager.currentState$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(sidebarsState => {
@@ -80,52 +82,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    this.unsubscribeFromMobx$.next();
-    delete this.changedGeometry;
-    this.isGeometryValid = false;
-    this.isGeometryChanged = false;
-    this.editGeometryStore.initGeometry(this.data.features[0].geometry);
-
-    if (!this.isUpdateAllowed()) {
-      fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
-        .pipe(first())
-        .pipe(takeUntil(this.unsubscribe$))
-        .pipe(takeUntil(this.unsubscribeFromMobx$))
-        .subscribe(() => {
-          fromMobx(() => this.editGeometryStore.resultGeometry)
-              .pipe(takeUntil(this.unsubscribe$))
-              .pipe(takeUntil(this.unsubscribeFromMobx$))
-              .subscribe(changedGeometry => {
-                this.changedGeometry = changedGeometry;
-
-                if (this.editGeometryStore.isValid) {
-                  const feature = {
-                    ...this.data.features[0],
-                    geometry: changedGeometry
-                  };
-                  openLayersService.highlightFeature(feature);
-                } else {
-                  openLayersService.clearDraft();
-                }
-              });
-
-          fromMobx(() => this.editGeometryStore.isValid)
-              .pipe(takeUntil(this.unsubscribe$))
-              .pipe(takeUntil(this.unsubscribeFromMobx$))
-              .subscribe(isValid => {
-                this.isGeometryValid = isValid;
-              });
-
-          fromMobx(() => this.editGeometryStore.isChanged)
-              .pipe(takeUntil(this.unsubscribe$))
-              .pipe(takeUntil(this.unsubscribeFromMobx$))
-              .subscribe(isChanged => {
-                this.isGeometryChanged = isChanged;
-              });
-        });
-    }
-
     const dataChanged = changes.data;
+
     if (dataChanged) {
       this.editFeatureData = [];
       const currentData: EditFeatureData = dataChanged.currentValue;
@@ -167,9 +125,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
                   },
                   {
                     validators: [
-                      FeaturePropertyValidators.validate(property),
-                    ],
-                    // updateOn: 'blur'
+                      FeaturePropertyValidators.validate(property)
+                    ]
                   }
                 );
 
@@ -207,6 +164,53 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         this.validateCustomRules(currentData.features[0].properties);
       }, 22);
     }
+
+    this.unsubscribeFromMobx$.next();
+    delete this.changedGeometry;
+    this.isGeometryValid = false;
+    this.isGeometryChanged = false;
+    await this.checkPermissions();
+
+    this.editGeometryStore.initGeometry(this.data.features[0].geometry, getFeatureProjection(this.data.features[0]));
+
+    if (this.updatingAllowed) {
+      fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
+        .pipe(first())
+        .pipe(takeUntil(this.unsubscribe$))
+        .pipe(takeUntil(this.unsubscribeFromMobx$))
+        .subscribe(() => {
+          fromMobx(() => this.editGeometryStore.resultGeometry)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(changedGeometry => {
+                this.changedGeometry = changedGeometry;
+
+                if (this.editGeometryStore.isValid) {
+                  const feature = {
+                    ...this.data.features[0],
+                    geometry: changedGeometry
+                  };
+                  openLayersService.highlightFeature(feature);
+                } else {
+                  openLayersService.clearDraft();
+                }
+              });
+
+          fromMobx(() => this.editGeometryStore.isValid)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(isValid => {
+                this.isGeometryValid = isValid;
+              });
+
+          fromMobx(() => this.editGeometryStore.isChanged)
+              .pipe(takeUntil(this.unsubscribe$))
+              .pipe(takeUntil(this.unsubscribeFromMobx$))
+              .subscribe(isChanged => {
+                this.isGeometryChanged = isChanged;
+              });
+        });
+    }
   }
 
   async editFeature() {
@@ -222,9 +226,11 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       this.transformFeatureService.insertFeatures(
         [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
         currentProject.internalName,
-        this.featureDescription.tableName
+        this.featureDescription.tableName,
+        this.data.layer.nativeCRS
       ).subscribe(() => {
         this.close();
+        openLayersService.refreshLayers();
       });
     } else {
       this.batchUpdateFeatures(
@@ -294,17 +300,14 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     }
   }
 
-  getEnumerationTitle(enumerations: ValueTitleProjection[], value: string | number): string {
-    const item = enumerations.find(i => String(i.value) === String(value));
+  getEnumerationTitle (enumerations: { value: string; title: string }[], value: string | number): string {
+    const item = enumerations.find(item => String(item.value) === String(value));
     return item && item.title;
   }
 
-  isUpdateAllowed() {
-    return isUpdateAllowed(this.data.layer);
-  }
-
-  isDeletionAllowed() {
-    return isDeleteAllowed(this.data.layer);
+  private async checkPermissions () {
+    this.updatingAllowed = await isUpdateAllowed(this.data.layer);
+    this.deletingAllowed = await isDeleteAllowed(this.data.layer);
   }
 
   private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {

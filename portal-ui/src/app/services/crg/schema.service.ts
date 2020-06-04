@@ -1,15 +1,14 @@
-import {debounce, Cancelable} from 'lodash';
+import { debounce, Cancelable } from 'lodash';
 
-import {ValueTitleProjection} from '../geoserver/projections';
-import {serverProperties} from '../server-properties.service';
-import {FeatureUtil} from '../util/FeatureUtil';
-import {getEmptyGeometry} from '../geoserver/wfs.service';
-import {WfsFeature, CoordinateEdited, SupportedGeometryType} from '../geoserver/wfs-models';
-import {ImportLayerItem} from '../geoserver/import/models';
-import {BugObject} from './validation.service';
-import {CrgLayer} from '../crg/projects.models';
-import {services} from '../services';
-import {currentProject} from '../../stores/CurrentProject.store';
+import { serverProperties } from '../server-properties.service';
+import { FeatureUtil } from '../util/FeatureUtil';
+import { getEmptyGeometry } from '../geoserver/wfs.service';
+import { WfsFeature, CoordinateEdited, SupportedGeometryType } from '../geoserver/wfs-models';
+import { ImportLayerItem } from '../geoserver/import/models';
+import { BugObject } from './validation.service';
+import { CrgLayer } from '../crg/projects.models';
+import { services } from '../services';
+import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface FeatureDescription {
   name: string;
@@ -23,6 +22,8 @@ export interface FeatureDescription {
   calcFiledFunction?: string;
   readOnly?: boolean;
 }
+
+export type PropertyEnumerations = { value: string, title: string }[];
 
 export interface PropertySchema {
   name: string;
@@ -51,7 +52,7 @@ export interface PropertySchema {
   totalDigits?: number;
   fractionDigits?: number;
   allowedValues?: string[];
-  enumerations?: ValueTitleProjection[];
+  enumerations?: PropertyEnumerations;
   dateFormat?: string;
   displayMode?: 'in_popup';
 }
@@ -79,7 +80,7 @@ class SchemaService {
   private schemasResolvers: { [key: string]: (value?: FeatureDescription) => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
-  private debouncedFetch: ((fetchAll?: boolean) => Promise<void>) & Cancelable;
+  private readonly debouncedFetch: ((fetchAll?: boolean) => Promise<void>) & Cancelable;
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);
@@ -90,13 +91,13 @@ class SchemaService {
     return this._instance || (this._instance = new this());
   }
 
-  getSchema(name: string): Promise<FeatureDescription> {
+  async getSchema(name: string): Promise<FeatureDescription> {
     if (!this.schemas[name]) {
       this.schemas[name] = new Promise(resolve => {
         this.schemasResolvers[name] = resolve;
       });
       this.fetchingPool.push(name);
-      this.debouncedFetch();
+      await this.debouncedFetch();
     }
 
     return this.schemas[name];
@@ -167,7 +168,7 @@ class SchemaService {
     return schema.properties
       .filter((simpleProperty: PropertySchema) => simpleProperty.enumerations)
       .reduce((val: string, simpleProperty: PropertySchema) => {
-        return simpleProperty.enumerations.reduce((title: string, item: ValueTitleProjection) => {
+        return simpleProperty.enumerations.reduce((title: string, item) => {
           if (String(bugObject.classId) === item.value || String(bugObject.classId) === item.value) {
             return item.title;
           } else {

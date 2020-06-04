@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { Select } from '../../Select/Select';
-import { projections } from '../../../services/geoserver/projections-transform.service';
+import { projections, getProjection } from '../../../services/geoserver/projections.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { FormField, FormLabel, FormControl } from '../../Form/Form';
 
@@ -17,7 +17,7 @@ interface Props {
 
 export const EditFeatureGeometryProjSel: FC<Props> = observer(({ store }: Props) => {
   const handleChange = useCallback((e: ChangeEvent<{ name?: string; value: unknown }>) => {
-    store.setProjection(projections.find(projection => projection.id === e.target.value as string));
+    store.setProjection(getProjection(e.target.value as string));
   }, [store]);
 
   return (

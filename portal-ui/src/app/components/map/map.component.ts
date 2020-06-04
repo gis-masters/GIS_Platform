@@ -8,7 +8,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer } from '../../services/crg/projects.models';
-import { WfsUtil } from '../../services/open-layer/WfsUtil';
+import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';
 import { ViewFeaturesData } from '../../components/view-features/view-features.component';
@@ -16,14 +16,15 @@ import { communicationService } from '../../services/communication.service';
 import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
 
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { layersService } from '../../services/geoserver/layers.service';
+import { deleteLayer } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { sideBarManager, ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
 import { baseMapsService } from '../../services/crg/base-maps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+
+type NamesChunks = { [srsName: string]: string[] };
 
 @Component({
   selector: 'crg-map',
@@ -144,7 +145,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   async deleteLayer(layer: CrgLayer) {
-    await layersService.deleteLayer(layer);
+    await deleteLayer(layer);
     const fType: FeatureType = await this.featureTypesService.getByName(layer);
     await this.featureTypesService.delete(fType);
     Toast.info('Удалено');
@@ -156,35 +157,55 @@ export class MapComponent implements OnInit, OnDestroy {
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: Coordinate) {
-    const visibleLayersComplexName = currentProject.visibleLayers.flat().map(item => item.payload.complexName);
+    const visibleLayers = currentProject.visibleLayers.flat().map(({ payload }) => payload);
 
-    if (visibleLayersComplexName.length) {
-      const buffer = openLayersService.getBufferByCoordinates(coordinate);
-
-      // Формируем xml для запроса к WFS
-      const xml = WfsUtil.makeXmlPolygonIntersect(visibleLayersComplexName, buffer);
-
-      openLayersService.showSelectionMarker(buffer.getCoordinates());
-
-      const fCollection: WfsFeatureCollection = await getFeaturesByXmlFilter(xml);
-
-      if (fCollection.features && fCollection.features.length) {
-        sideBarManager.do({ target: SidebarType.FEATURES, action: ActionType.CLOSE });
-
-        setTimeout(() => {
-          sideBarManager.do({
-            target: SidebarType.FEATURES, action: ActionType.OPEN,
-            data: {
-              features: fCollection.features,
-              mode: EditFeatureMode.single
-            } as ViewFeaturesData
-          });
-        }, 0);
-
-        openLayersService.highlightFeature(fCollection.features);
-      }
-    } else {
+    if (!visibleLayers.length) {
       this.logger.debug('No visible layers');
+      return;
+    }
+
+    const visibleLayersComplexNames: NamesChunks = visibleLayers.reduce((acc: NamesChunks, layer) => {
+      const { nativeCRS, complexName } = layer;
+      
+      if (!acc[nativeCRS]) {
+        acc[nativeCRS] = [];
+      }
+      
+      acc[nativeCRS].push(complexName);
+      
+      return acc;
+    }, {});
+
+    const buffer = openLayersService.getBufferByCoordinates(coordinate);
+
+    openLayersService.showSelectionMarker(buffer.getCoordinates());
+
+    const collections = await Promise.all(Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {
+      const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName);
+
+      return getFeaturesByXmlFilter(xml);
+    }));
+
+    const features = collections.map(({ features }) => features || []).flat();
+
+    if (features.length) {
+      sideBarManager.do({
+        target: SidebarType.FEATURES,
+        action: ActionType.CLOSE
+      });
+
+      setTimeout(() => {
+        sideBarManager.do({
+          target: SidebarType.FEATURES,
+          action: ActionType.OPEN,
+          data: {
+            features: features,
+            mode: EditFeatureMode.single
+          } as ViewFeaturesData
+        });
+      }, 0);
+
+      openLayersService.highlightFeature(features);
     }
   }
 

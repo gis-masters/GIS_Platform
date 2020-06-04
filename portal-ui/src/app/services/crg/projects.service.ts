@@ -1,17 +1,17 @@
-import {reaction} from 'mobx';
-import {HttpParams} from '@angular/common/http';
+import { reaction } from 'mobx';
+import { HttpParams } from '@angular/common/http';
 
-import {getRoute, services} from '../services';
-import {TaskImport} from '../geoserver/import/taskImport';
-import {wsService} from '../ws.service';
-import {serverProperties} from '../server-properties.service';
-import {CrgApiResponse, Process} from './models';
-import {projectsList} from '../../stores/ProjectsList.store';
-import {Project} from './projects.models';
-import {currentProject} from '../../stores/CurrentProject.store';
-import {route} from '../../stores/Route.store';
-import {dataService} from './data.service';
-import {isReadAllowed} from '../util/permissions';
+import { getRoute, services } from '../services';
+import { TaskImport } from '../geoserver/import/taskImport';
+import { wsService } from '../ws.service';
+import { serverProperties } from '../server-properties.service';
+import { CrgApiResponse, Process } from './models';
+import { projectsList } from '../../stores/ProjectsList.store';
+import { Project } from './projects.models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { route } from '../../stores/Route.store';
+import { getSourceInfo } from './data.service';
+import { isReadAllowed } from '../util/permissions';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -120,11 +120,13 @@ class ProjectsService {
   }
 
   private async handleLayers(project: Project) {
-    for (const layer of project.layers) {
-      layer.sourceData = await dataService.getSourceInfo('workspace_' + project.id, layer.internalName);
-    }
+    await Promise.all(project.layers.map(async layer => {
+      layer.sourceData = await getSourceInfo('workspace_' + project.id, layer.internalName);
+    }));
 
-    project.layers = project.layers.filter(layer => isReadAllowed(layer));
+    const layersPermissions = await Promise.all(project.layers.map(isReadAllowed));
+
+    project.layers = project.layers.filter((layer, i) => layersPermissions[i]);
   }
 }
 

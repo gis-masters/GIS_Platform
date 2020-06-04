@@ -1,4 +1,5 @@
-import {CrgLayer} from '../crg/projects.models';
+import { CrgLayer } from '../crg/projects.models';
+import { schemaService } from '../crg/schema.service';
 
 export enum UserPermission {
   OWNER = 'OWNER',
@@ -35,16 +36,18 @@ const permissions = new Map<UserPermission, PermissionPoint[]>([
   ]],
 ]);
 
-const isAllowed = (layer: CrgLayer, targetPoint: PermissionPoint): boolean => {
+async function isAllowed (layer: CrgLayer, targetPoint: PermissionPoint): Promise<boolean> {
+  const { readOnly } = await schemaService.getSchema(layer.schemaId);
+
   if (!layer || !targetPoint) {
     return false;
   }
 
-  if (layer.schema && layer.schema.readOnly) {
+  if (readOnly) {
     return permissions.get(UserPermission.VIEWER).includes(targetPoint);
   }
 
-  const {sourceData} = layer;
+  const { sourceData } = layer;
   if (!sourceData) {
     return false;
   }
@@ -52,9 +55,26 @@ const isAllowed = (layer: CrgLayer, targetPoint: PermissionPoint): boolean => {
   return permissions.get(sourceData.permission).includes(targetPoint);
 };
 
-export const isCreateAllowed = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.CREATE);
-export const isReadAllowed   = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.READ);
-export const isUpdateAllowed = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.UPDATE);
-export const isDeleteAllowed = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.DELETE);
-export const isExportAllowed = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.EXPORT);
-export const isImportAllowed = (layer: CrgLayer): boolean => isAllowed(layer, PermissionPoint.IMPORT);
+export function isCreateAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.CREATE);
+}
+
+export function isReadAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.READ);
+}
+
+export function isUpdateAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.UPDATE);
+}
+
+export function isDeleteAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.DELETE);
+}
+
+export function isExportAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.EXPORT);
+}
+
+export function isImportAllowed (layer: CrgLayer): Promise<boolean> {
+  return isAllowed(layer, PermissionPoint.IMPORT);
+}

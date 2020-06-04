@@ -7,7 +7,7 @@
       <crg-button
           class="attributes-bar__head-button"
           [matMenuTriggerFor]="editMenu"
-          *ngIf="isUpdateAllowed()">
+          *ngIf="updatingAllowed">
         Правка
       </crg-button>
 
@@ -89,7 +89,7 @@
 <mat-menu #editMenu="matMenu">
 
   <button mat-menu-item (click)="editFeatures()"
-          *ngIf="isUpdateAllowed()">
+          *ngIf="updatingAllowed">
     <mat-icon>edit</mat-icon>
     <span>Множественное редактирование</span>
   </button>
@@ -97,19 +97,19 @@
   <mat-divider></mat-divider>
 
   <button mat-menu-item (click)="copyObjects()"
-          *ngIf="isUpdateAllowed()">
+          *ngIf="updatingAllowed">
     <mat-icon>file_copy</mat-icon>
     <span>Копировать</span>
   </button>
 
   <button mat-menu-item (click)="moveObjects()"
-          *ngIf="isDeletionAllowed()">
+          *ngIf="deletingAllowed">
     <mat-icon>shuffle</mat-icon>
     <span>Переместить</span>
   </button>
 
   <button mat-menu-item (click)="deleteObjects()"
-          *ngIf="isDeletionAllowed()">
+          *ngIf="deletingAllowed">
     <mat-icon>delete</mat-icon>
     <span>Удалить</span>
   </button>

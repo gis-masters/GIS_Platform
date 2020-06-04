@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { reaction } from 'mobx';
+import { chunk } from 'lodash';
 import { Map, View, MapBrowserEvent } from 'ol';
 import { MultiPolygon } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
@@ -28,6 +29,13 @@ import { services } from '../services';
 import { tokenStorageService } from '../token-storage.service';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
 import { CrgBaseMap, SourceType } from '../crg/base-maps.models';
+import {
+  olProjection,
+  transform,
+  transformGeometry,
+  getFeatureProjection,
+  CrgProjection
+} from '../geoserver/projections.service';
 
 export interface TileSource {
   name: string;
@@ -296,9 +304,15 @@ class OpenLayersService {
   /**
    * Подсвечивает обьект. (очищает черновой слой)
    */
-  highlightFeature(features: WfsFeature | WfsFeature[]) {
+  highlightFeature(features: WfsFeature | WfsFeature[], projection?: CrgProjection) {
+    const featuresInOlProjection: WfsFeature[] = [].concat(features).map((feature: WfsFeature) => ({
+      ...feature,
+      geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)
+    }))
+
     this.clearDraft();
-    this.paintFeatures([].concat(features));
+
+    this.paintFeatures(featuresInOlProjection);
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {
@@ -409,7 +423,8 @@ class OpenLayersService {
     }
   }
 
-  positionToFeature(wfsFeature: WfsFeature) {
+  positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {
+    projection = projection || getFeatureProjection(wfsFeature);
     const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);
@@ -419,19 +434,22 @@ class OpenLayersService {
     const view = this._map.getView();
     const size = this._map.getSize();
 
+
     const geometry = olFeature.getGeometry();
+    const extent = chunk(geometry.getExtent(), 2).map(coord => transform(projection, olProjection, coord)).flat();
+
     switch (geometry.getType()) {
       case GeometryType.POINT:
-        view.centerOn(geometry.getExtent(), size, [570, 500]);
+        view.centerOn(extent, size, [570, 500]);
         break;
       case GeometryType.MULTI_LINE_STRING:
-        this.fitToBbox(geometry.getExtent(), [50, 650, 50, 50]);
+        this.fitToBbox(extent, [50, 650, 50, 50]);
         break;
       case GeometryType.MULTI_POLYGON:
-        this.fitToBbox(geometry.getExtent(), [50, 650, 50, 50]);
+        this.fitToBbox(extent, [50, 650, 50, 50]);
         break;
       default:
-        services.logger.warn('Unsupported geometry type: ', geometry.getType());
+        services.logger.error('Unsupported geometry type: ', geometry.getType());
     }
   }
 

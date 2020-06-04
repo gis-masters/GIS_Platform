@@ -1,7 +1,6 @@
 import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
 import { UserPermission } from '../util/permissions';
-import { FeatureDescription } from './schema.service';
 
 interface CrgEntity {
   id: number;
@@ -26,7 +25,6 @@ interface BaseCrgLayer extends CrgEntity {
 // extended on ui
 export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
-  schema?: FeatureDescription;
   legend?: RuleWithLegend[];
   legendIsFetching?: boolean;
   sourceData?: CrgSource;

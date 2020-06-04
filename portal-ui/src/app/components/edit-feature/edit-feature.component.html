@@ -2,7 +2,7 @@
   <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
     <div class="col-12" style="padding-left: 5px; padding-right: 5px">
 
-      <button *ngIf="isUpdateAllowed()"
+      <button *ngIf="updatingAllowed"
               mat-stroked-button
               color="primary"
               (click)="editFeature()"
@@ -16,7 +16,7 @@
         Сохранить
       </button>
 
-      <button *ngIf="isDeletionAllowed() && !data.isNew"
+      <button *ngIf="deletingAllowed && !data.isNew"
               class="del-button"
               mat-stroked-button
               color="error"
@@ -25,7 +25,7 @@
       </button>
 
       <button mat-stroked-button (click)="close()" class="float-right">
-        {{!isUpdateAllowed() ? 'Закрыть' : 'Отмена'}}
+        {{!updatingAllowed ? 'Закрыть' : 'Отмена'}}
       </button>
 
     </div>
@@ -41,7 +41,7 @@
         </mat-tab>
         <mat-tab label="Геометрия">
           <ng-template matTabContent>
-            <crg-edit-feature-geometry [store]="editGeometryStore" [readOnly]="!isUpdateAllowed()">
+            <crg-edit-feature-geometry [store]="editGeometryStore" [readOnly]="!updatingAllowed">
             </crg-edit-feature-geometry>
           </ng-template>
         </mat-tab>
@@ -74,7 +74,7 @@
             </span>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="isUpdateAllowed()">
+            <div class="input-group" *ngIf="updatingAllowed">
               <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
               <span class="input-group-text error-badge"
                     *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
@@ -92,7 +92,7 @@
               </div>
             </div>
 
-            <div *ngIf="!isUpdateAllowed()" class="read-value">
+            <div *ngIf="!updatingAllowed" class="read-value">
               {{editFeatureItem.value}}
             </div>
           </div>
@@ -105,7 +105,7 @@
             <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="isUpdateAllowed()">
+            <div class="input-group" *ngIf="updatingAllowed">
               <input class="form-control" type="number" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
@@ -124,7 +124,7 @@
               </div>
             </div>
 
-            <div *ngIf="!isUpdateAllowed()" class="read-value">
+            <div *ngIf="!updatingAllowed" class="read-value">
               {{editFeatureItem.value}}
             </div>
           </div>
@@ -137,7 +137,7 @@
             <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
           </div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="isUpdateAllowed()">
+            <div class="input-group" *ngIf="updatingAllowed">
               <input class="form-control" type="number" step="0.0001" formControlName="{{editFeatureItem.name}}">
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
@@ -156,7 +156,7 @@
                 </div>
               </div>
 
-            <div *ngIf="!isUpdateAllowed()" class="read-value">
+            <div *ngIf="!updatingAllowed" class="read-value">
               {{editFeatureItem.value}}
             </div>
           </div>
@@ -165,7 +165,7 @@
         <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
           <div class="col-6 px-0">
-            <div class="input-group" *ngIf="isUpdateAllowed()">
+            <div class="input-group" *ngIf="updatingAllowed">
               <select class="custom-select" formControlName="{{editFeatureItem.name}}">
                 <option [value]=""></option>
                 <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
@@ -190,7 +190,7 @@
               </div>
             </div>
 
-            <div *ngIf="!isUpdateAllowed()" class="read-value">
+            <div *ngIf="!updatingAllowed" class="read-value">
               {{getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value)}}
             </div>
           </div>

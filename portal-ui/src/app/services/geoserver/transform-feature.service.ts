@@ -12,6 +12,7 @@ import { serverProperties } from '../server-properties.service';
 import { FeatureDescription } from '../crg/schema.service';
 import { HttpQueue } from '../util/HttpQueue';
 import { FeatureUtil } from '../util/FeatureUtil';
+import { getFeatureProjection } from './projections.service';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -75,7 +76,9 @@ export class TransformFeatureService {
       featureType: schema.tableName,
       featurePrefix: workspace,
       nativeElements: [],
-      gmlOptions: { srsName: 'EPSG:3857' }
+      gmlOptions: {
+        srsName: getFeatureProjection(features[0]).id
+      }
     };
 
     let payload = this.xs.serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
@@ -85,20 +88,22 @@ export class TransformFeatureService {
     return this.httpq.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  insertFeatures(featuresData: WfsFeature[], workspaceName: string, layerName: string) {
+  insertFeatures(featuresData: WfsFeature[], workspaceName: string, layerName: string, srsName: string) {
     const options: WriteTransactionOptions = {
       featureNS: workspaceName,
       featureType: layerName,
       featurePrefix: '',
       nativeElements: [],
-      gmlOptions: { srsName: 'EPSG:3857' }
+      gmlOptions: { srsName }
     };
 
     const featuresToInsert: Feature[] = featuresData.map((featureData: WfsFeature) => {
       const feature = new Feature(featureData.properties);
 
       // TODO: брать поле с геометрией из схемы
-      feature.set('shape', MapperUtil.mapFwsGeometryToGeometry(featureData.geometry));
+      if (featureData.geometry) {
+        feature.set('shape', MapperUtil.mapFwsGeometryToGeometry(featureData.geometry));
+      }
 
       return feature;
     });

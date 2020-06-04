@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { LinearProgress } from '@material-ui/core';
 
-import { layersService } from '../../../services/geoserver/layers.service';
+import { loadLayerLegend } from '../../../services/geoserver/layers.service';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { Legend } from '../../Legend/Legend';
 
@@ -20,7 +20,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
   }
 
   componentDidMount () {
-    layersService.loadLayerLegend(this.props.layer);
+    loadLayerLegend(this.props.layer);
   }
 
   render () {
