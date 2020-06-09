@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.dto.UserCreateDto;
 import ru.mycrg.auth_service.dto.UserProjection;
+import ru.mycrg.auth_service.entity.Authorities;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exeptions.ConflictException;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isGeoserverAdmin;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
@@ -66,7 +69,11 @@ public class UserService {
         if (!organizations.isEmpty()) {
             Organization organization = organizations.iterator().next();
 
-            return new UserInfoModel(userName, organization.getName(), organization.getId());
+            final List<String> roles = user.getAuthorities().stream()
+                    .map(Authorities::getAuthority)
+                    .collect(Collectors.toList());
+
+            return new UserInfoModel(userName, organization.getName(), organization.getId(), roles);
         }
 
         return new UserInfoModel(userName);

@@ -1,17 +1,21 @@
 package ru.mycrg.auth_service_contract.dto;
 
+import java.util.List;
+
 public class UserInfoModel {
 
     private String userName;
     private String orgName;
     private Long orgId;
+    private List<String> roles;
 
     public UserInfoModel() {}
 
-    public UserInfoModel(String userName, String orgName, Long orgId) {
+    public UserInfoModel(String userName, String orgName, Long orgId, List<String> roles) {
         this.userName = userName;
         this.orgName = orgName;
         this.orgId = orgId;
+        this.roles = roles;
     }
 
     public UserInfoModel(String userName) {
@@ -40,5 +44,13 @@ public class UserInfoModel {
 
     public void setOrgId(Long orgId) {
         this.orgId = orgId;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
