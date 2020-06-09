@@ -7,9 +7,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.mycrg.data_service.dao.CrgMigrationHandler;
 
 @SpringBootApplication
+@EnableTransactionManagement
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
 

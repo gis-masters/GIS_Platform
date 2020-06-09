@@ -12,9 +12,11 @@ import { ImportPageComponent } from './pages/import/import-page.component';
 import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
+import { ManagementGuardService } from './services/management-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
 import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
+import { ManagerPageComponent } from './pages/content-manager/manager-page.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -103,15 +105,24 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'manager',
+    component: ManagerPageComponent,
+    canActivate: [ ManagementGuardService ],
+    resolve: {
+      orgInfo: OrganizationInfoResolver
+    }
+  },
   { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ],
+  providers: [ AuthGuardService, WorkflowGuardService, ProjectsGuardService, ManagementGuardService ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
 
 export const routingComponents = [
   HomePageComponent,
@@ -122,5 +133,6 @@ export const routingComponents = [
   RecoveryComponent,
   ImportPageComponent,
   MappingPageComponent,
-  ProjectsPageComponent
+  ProjectsPageComponent,
+  ManagerPageComponent
 ];

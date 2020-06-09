@@ -59,7 +59,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.importData.comparableLayers$.subscribe((comparableLayers: ComparableLayersPair[]) => {
       this.comparableLayers = comparableLayers;
     });
-    
+
     const importLayers = await getAllImportLayers();
 
     importLayers.forEach((importLayer: ImportLayer) => {
@@ -89,7 +89,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.isWorkImportInited = true;
 
     const workTasks = this.importData.getWorkTasks();
-    
+
      await projectsService.fetchCurrent();
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!

@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class LayerUpdateDto {
 
-    @Length(min = 3, max = 255)
+    @Length(min = 2, max = 255)
     private String title;
 
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")

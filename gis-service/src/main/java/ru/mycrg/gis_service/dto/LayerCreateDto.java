@@ -13,15 +13,15 @@ import javax.validation.constraints.NotBlank;
 public class LayerCreateDto {
 
     @NotBlank
-    @Length(min = 3, max = 255)
+    @Length(min = 2, max = 255)
     private String title;
 
     @NotBlank
-    @Length(min = 3, max = 255)
+    @Length(min = 2, max = 255)
     private String internalName;
 
     @NotBlank
-    @Length(min = 3, max = 100)
+    @Length(min = 2, max = 100)
     private String schemaId;
 
     @NotBlank

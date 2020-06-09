@@ -4,7 +4,9 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import { EventService, IEvent } from '../../services/event.service';
+import { services } from '../../services/services';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
+import { isManagementAllowed } from '../../services/util/permissions';
 
 import { WorkspaceHeader } from './workspace-header@common';
 
@@ -16,6 +18,7 @@ import { WorkspaceHeader } from './workspace-header@common';
 export class WorkspaceHeaderComponent extends WorkspaceHeader {
 
   notificationCounter = 0;
+  managementAllowed = false;
 
   constructor(protected route: ActivatedRoute,
               protected authService: AuthService,
@@ -28,9 +31,16 @@ export class WorkspaceHeaderComponent extends WorkspaceHeader {
           filter(value => !!value),
           takeUntil(this.unsubscribe$)
         ).subscribe((events: IEvent[]) => this.notificationCounter = events.length);
+
+    this.managementAllowed = isManagementAllowed();
   }
 
   notification() {
     sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
   }
+
+  toContentEditor() {
+    services.router.navigateByUrl('/manager');
+  }
+
 }

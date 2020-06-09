@@ -13,6 +13,11 @@
     notifications
   </mat-icon>
   <mat-icon class="workspace-header__notification"
+            (click)="toContentEditor()"
+            *ngIf="managementAllowed">
+    build
+  </mat-icon>
+  <mat-icon class="workspace-header__notification"
             matBadge="{{notificationCounter}}"
             matBadgeColor="warn"
             *ngIf="notificationCounter > 0"

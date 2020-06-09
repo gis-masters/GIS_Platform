@@ -5,12 +5,12 @@ import { getRoute, services } from '../services';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
+import { getSourceInfo } from './data.service';
 import { CrgApiResponse, Process } from './models';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { Project } from './projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
-import { getSourceInfo } from './data.service';
 import { isReadAllowed } from '../util/permissions';
 
 class ProjectsService {

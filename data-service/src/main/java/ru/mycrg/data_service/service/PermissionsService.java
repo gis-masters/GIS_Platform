@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.ResourceIdentifier.makeIdentifier;
 
+@Log4j2
 @Service
 @Transactional
 public class PermissionsService {
@@ -65,21 +67,21 @@ public class PermissionsService {
                                        @NotNull PermissionCreateDto dto) {
         String identifier = makeIdentifier(schemaName, tableName);
 
-        var ref = new Object() {
-            Permission permission;
-        };
+        Permission permission;
+        Optional<Permission> oPermission = permissionsRepository
+                .findPermissionByParams(dto.getPrincipalType(), dto.getPrincipalId(), dto.getRole());
 
-        permissionsRepository
-                .findPermissionByParams(dto.getPrincipalType(), dto.getPrincipalId(), dto.getRole())
-                .ifPresentOrElse(per -> {
-                    joinResource(per, identifier);
+        if (oPermission.isPresent()) {
+            permission = oPermission.get();
 
-                    ref.permission = per;
-                }, () -> {
-                    ref.permission = createNewPermission(dto, identifier);
-                });
+            joinResource(permission, identifier);
+        } else {
+            log.debug("Create new permission for: {} / {}", tableName, dto);
 
-        return projectionFactory.createProjection(PermissionProjection.class, ref.permission);
+            permission = createNewPermission(dto, identifier);
+        }
+
+        return projectionFactory.createProjection(PermissionProjection.class, permission);
     }
 
     public void deleteByPermissionId(String schemaName, String tableName, Long permissionId) {

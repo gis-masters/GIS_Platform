@@ -1,5 +1,12 @@
 import { CrgLayer } from '../crg/projects.models';
 import { schemaService } from '../crg/schema.service';
+import { localStorageService } from '../local-storage.service';
+
+export enum BuildInRole {
+  GLOBAL_ADMIN = 'GLOBAL_ADMIN',
+  ORG_ADMIN = 'ORG_ADMIN',
+  USER = 'USER',
+}
 
 export enum UserPermission {
   OWNER = 'OWNER',
@@ -53,6 +60,16 @@ async function isAllowed (layer: CrgLayer, targetPoint: PermissionPoint): Promis
   }
 
   return permissions.get(sourceData.permission).includes(targetPoint);
+}
+
+const isEditContent = (): boolean => {
+  const userInfo = localStorageService.getUserInfo();
+  if (!userInfo) {
+    return false;
+  }
+
+  return userInfo.roles &&
+        (userInfo.roles.includes(BuildInRole.ORG_ADMIN) || userInfo.roles.includes(BuildInRole.GLOBAL_ADMIN));
 };
 
 export function isCreateAllowed (layer: CrgLayer): Promise<boolean> {
@@ -78,3 +95,5 @@ export function isExportAllowed (layer: CrgLayer): Promise<boolean> {
 export function isImportAllowed (layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.IMPORT);
 }
+
+export const isManagementAllowed = (): boolean => isEditContent();
