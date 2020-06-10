@@ -109,6 +109,7 @@ public class GroupService {
 
             nextGroup.getProject()
                     .getLayers().stream()
+                    .filter(layer -> layer.getGroup() != null)
                     .filter(layer -> layer.getGroup().getId().equals(nextGroup.getId()))
                     .forEach(layer -> layerService.delete(layer, projectId, authentication));
         });

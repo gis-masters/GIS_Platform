@@ -13,12 +13,14 @@ interface CrgEntity {
 // layer from api
 interface BaseCrgLayer extends CrgEntity {
   internalName: string;
+  type: string;
   maxZoom: number;
   minZoom: number;
   styleName: string;
   nativeCRS: string;
   schemaId: string;
   complexName: string;
+  dataSourceUri: string;
   groupId?: number;
 }
 

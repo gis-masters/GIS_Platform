@@ -1,8 +1,7 @@
 package ru.mycrg.gis_service.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -30,17 +29,18 @@ import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis_service.service.ProjectService.DEFAULT_PROJECT_NAME;
 
+@Log4j2
 @Service
 @Transactional
 public class LayerService {
-
-    private static Logger log = LoggerFactory.getLogger(LayerService.class);
 
     private final ProjectionFactory factory;
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
     private final LayersService geoserverLayers;
     private final JsonPatcher jsonPatcher;
+
+    public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     public LayerService(ProjectionFactory factory,
                         JsonPatcher jsonPatcher,
@@ -137,7 +137,7 @@ public class LayerService {
         Layer newLayer = new Layer(dto);
 
         String projectName = DEFAULT_PROJECT_NAME + "_" + project.getId();
-        String dataSourceUri = "/schemas/" + projectName + "/tables/" + dto.getInternalName();
+        String dataSourceUri = DATA_SERVICE_API_PREFIX + "/schemas/" + projectName + "/tables/" + dto.getInternalName();
 
         newLayer.setDataSourceUri(dataSourceUri);
         newLayer.setProject(project);

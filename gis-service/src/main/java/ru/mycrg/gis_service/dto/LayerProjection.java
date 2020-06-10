@@ -13,6 +13,8 @@ public interface LayerProjection {
 
     String getTitle();
 
+    String getType();
+
     String getInternalName();
 
     boolean isEnabled();

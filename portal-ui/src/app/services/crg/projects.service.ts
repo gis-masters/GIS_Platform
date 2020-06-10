@@ -121,7 +121,9 @@ class ProjectsService {
 
   private async handleLayers(project: Project) {
     await Promise.all(project.layers.map(async layer => {
-      layer.sourceData = await getSourceInfo('workspace_' + project.id, layer.internalName);
+      if (layer.dataSourceUri) {
+        layer.sourceData = await getSourceInfo(layer.dataSourceUri);
+      }
     }));
 
     const layersPermissions = await Promise.all(project.layers.map(isReadAllowed));

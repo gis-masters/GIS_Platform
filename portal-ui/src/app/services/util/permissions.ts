@@ -44,22 +44,20 @@ const permissions = new Map<UserPermission, PermissionPoint[]>([
 ]);
 
 async function isAllowed (layer: CrgLayer, targetPoint: PermissionPoint): Promise<boolean> {
-  const { readOnly } = await schemaService.getSchema(layer.schemaId);
+  if (layer.type === 'raster') {
+    return true;
+  }
 
-  if (!layer || !targetPoint) {
+  if (!layer || !targetPoint || !layer.sourceData) {
     return false;
   }
 
+  const { readOnly } = await schemaService.getSchema(layer.schemaId);
   if (readOnly) {
     return permissions.get(UserPermission.VIEWER).includes(targetPoint);
+  } else {
+    return permissions.get(layer.sourceData.permission).includes(targetPoint);
   }
-
-  const { sourceData } = layer;
-  if (!sourceData) {
-    return false;
-  }
-
-  return permissions.get(sourceData.permission).includes(targetPoint);
 }
 
 const isEditContent = (): boolean => {

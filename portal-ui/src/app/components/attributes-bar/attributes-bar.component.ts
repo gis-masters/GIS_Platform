@@ -138,6 +138,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       openLayersService.clearDraft();
       this.updateTable({page: {pageSize: 25, offset: 0}});
     }
+
+    await this.checkPermissions();
   }
 
   ngOnDestroy(): void {

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -31,5 +32,8 @@ public class LayerCreateDto {
     @NotBlank
     @Length(min = 6, max = 255)
     private String nativeCRS;
+
+    @Pattern(regexp = "^(vector|raster)$", message = "Допустимые значения поля type: vector или raster")
+    private String type;
 
 }

@@ -23,6 +23,9 @@ public class Layer implements Identifiable<Long> {
     private String internalName;
 
     @Column
+    private String type;
+
+    @Column
     private boolean enabled;
 
     @Column
@@ -75,6 +78,7 @@ public class Layer implements Identifiable<Long> {
         styleName = dto.getInternalName();
         dataStoreName = dto.getDataStoreName();
         nativeCRS = dto.getNativeCRS();
+        type = dto.getType();
 
         enabled = false;
         position = 0;
@@ -221,5 +225,13 @@ public class Layer implements Identifiable<Long> {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
