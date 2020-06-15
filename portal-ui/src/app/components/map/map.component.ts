@@ -5,6 +5,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { Coordinate } from 'ol/coordinate';
+import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer } from '../../services/crg/projects.models';

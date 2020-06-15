@@ -1,8 +1,7 @@
 <div [class]="cn()">
   <div id="fiz-openLayer-map" [class]="cn('map')"></div>
 
-  <crg-layers-sidebar [class]="cn('bar', {dir: 'left'})"
-                      (deleteLayer)="deleteLayer($event)">
+  <crg-layers-sidebar [class]="cn('bar', {dir: 'left'})">
   </crg-layers-sidebar>
 
   <crg-report-sidebar [class]="cn('bar', {dir: 'right'})"

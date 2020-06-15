@@ -1,6 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import { reaction } from 'mobx';
 import { chunk } from 'lodash';
+import jsPDF from 'jspdf';
 import { Map, View, MapBrowserEvent } from 'ol';
 import { MultiPolygon } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
@@ -9,17 +10,16 @@ import { Coordinate } from 'ol/coordinate';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Feature from 'ol/Feature';
 import ImageWrapper from 'ol/Image';
-import LayerType from 'ol/LayerType';
 import Tile from 'ol/Tile';
 import { Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer, Layer } from 'ol/layer';
-import BaseLayer from 'ol/layer/Base';
 import { Draw, Modify } from 'ol/interaction';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { get as getProjection } from 'ol/proj';
-import { getTopLeft, getWidth } from 'ol/extent';
+import { getTopLeft, getWidth, Extent } from 'ol/extent';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { Vector as VectorSource, TileImage, ImageWMS, WMTS, XYZ, OSM } from 'ol/source';
+import { Options as XYZOptions } from 'ol/source/XYZ';
 
 import { MapperUtil } from './MapperUtil';
 import { WfsFeature } from '../geoserver/wfs-models';
@@ -36,6 +36,7 @@ import {
   getFeatureProjection,
   CrgProjection
 } from '../geoserver/projections.service';
+import { printSettings } from '../../stores/PrintSettings.store';
 
 export interface TileSource {
   name: string;
@@ -56,7 +57,7 @@ class OpenLayersService {
   private static _instance: OpenLayersService;
 
   constructor() {
-    reaction(() => baseMapsStore.getCurrentBaseMap, currentBaseMap => {
+    reaction(() => baseMapsStore.currentBaseMap, currentBaseMap => {
       if (currentBaseMap) {
         const tileSource = this.prepareTileSource(currentBaseMap);
         if (tileSource) {
@@ -109,7 +110,7 @@ class OpenLayersService {
       features: []
     });
 
-    this.draftSourceModify = new Modify({source: this.draftSource});
+    this.draftSourceModify = new Modify({ source: this.draftSource });
 
     this.view = new View({
       center: this.defaultViewPoint,
@@ -146,10 +147,6 @@ class OpenLayersService {
           })
         })
       ]
-    });
-
-    this._map.on('movestart', () => {
-      window.dispatchEvent(new Event('resize'));
     });
 
     this._map.on('singleclick', event => {
@@ -259,7 +256,7 @@ class OpenLayersService {
     }
   }
 
-  public set_ZIndex(complexLayerName: string, index: number) {
+  set_ZIndex(complexLayerName: string, index: number) {
     const layerByName = this.getLayerByName(complexLayerName);
     if (layerByName) {
       layerByName.setZIndex(index);
@@ -269,19 +266,12 @@ class OpenLayersService {
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  public getLayerByName(complexLayerName: string): BaseLayer | undefined {
-    let layer;
+  getLayerByName(complexLayerName: string): ImageLayer | undefined {
+    return this.getImageLayers().find(layer => {
+      const source = layer.getSource() as ImageWMS;
 
-    this.getImageLayers().forEach((bLayer: BaseLayer) => {
-      const source: ImageWMS = bLayer.get('source');
-      if (source && source.getParams().LAYERS === complexLayerName) {
-        layer = bLayer;
-      }
+      return source && source.getParams().LAYERS === complexLayerName;
     });
-
-    if (layer) {
-      return layer;
-    }
   }
 
   // Принудительный рефреш
@@ -341,7 +331,7 @@ class OpenLayersService {
     }
   }
 
-  fitToBbox(bbox: number[], padding: [number, number, number, number]) {
+  fitToBbox(bbox: Extent, padding: [number, number, number, number]) {
     this._map
         .getView()
         .fit(bbox, {padding: padding}); // constrainResolution Ломает view на слоях с геометрией Point
@@ -436,7 +426,9 @@ class OpenLayersService {
 
 
     const geometry = olFeature.getGeometry();
-    const extent = chunk(geometry.getExtent(), 2).map(coord => transform(projection, olProjection, coord)).flat();
+    const extent = chunk(geometry.getExtent(), 2)
+                      .map(coord => transform(projection, olProjection, coord))
+                      .flat() as Extent;
 
     switch (geometry.getType()) {
       case GeometryType.POINT:
@@ -451,6 +443,48 @@ class OpenLayersService {
       default:
         services.logger.error('Unsupported geometry type: ', geometry.getType());
     }
+  }
+
+  print () {
+    const size = this._map.getSize();
+    const viewResolution = this._map.getView().getResolution();
+    const { pageWidth, pageHeight, resolution, pageFormat } = printSettings;
+    const width = Math.round(pageWidth * resolution / 25.4);
+    const height = Math.round(pageHeight * resolution / 25.4);
+
+    printSettings.setPrintingStatus(true);
+
+    this._map.once('rendercomplete', () => {
+      const mapCanvas = document.createElement('canvas');
+      mapCanvas.width = width;
+      mapCanvas.height = height;
+      const mapContext = mapCanvas.getContext('2d');
+      document.querySelectorAll('.ol-layer canvas').forEach((canvas: HTMLCanvasElement) => {
+        if (canvas.width > 0) {
+          const opacity = canvas.parentElement.style.opacity;
+          mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+          const transform = canvas.style.transform;
+          // Get the transform parameters from the style's transform matrix
+          const matrix = transform.match(/^matrix\(([^\(]*)\)$/)[1].split(',').map(Number);
+          // Apply the transform to the export map context
+          CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
+          mapContext.drawImage(canvas, 0, 0);
+        }
+      });
+      const pdf = new jsPDF(printSettings.orientation, undefined, pageFormat.id);
+      pdf.addImage(mapCanvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pageWidth, pageHeight);
+      pdf.save('map.pdf');
+      // Reset original map size
+      this._map.setSize(size);
+      this._map.getView().setResolution(viewResolution);
+
+      printSettings.setPrintingStatus(false);
+    });
+
+    // Set print size
+    this._map.setSize([ width, height ]);
+    const scaling = Math.min(width / size[0], height / size[1]);
+    this._map.getView().setResolution(viewResolution / scaling);
   }
 
   private paintFeatures(wfsFeatures: WfsFeature[]) {
@@ -472,10 +506,11 @@ class OpenLayersService {
   /**
    * Все слои типа 'IMAGE'
    */
-  private getImageLayers(): BaseLayer[] {
+  private getImageLayers(): ImageLayer[] {
     return this._map
-               .getLayers().getArray()
-               .filter((bLayer: BaseLayer) => bLayer.getType() === LayerType.IMAGE);
+               .getLayers()
+               .getArray()
+               .filter(baseLayer => baseLayer instanceof ImageLayer) as ImageLayer[];
   }
 
   private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
@@ -483,19 +518,19 @@ class OpenLayersService {
       return undefined;
     }
 
+
     switch (baseMap.type) {
-      case SourceType.OSM:  return new OSM();
-      case SourceType.WMTS: return this.prepareWMTS(baseMap);
+      case SourceType.OSM:
+        return new OSM();
+      case SourceType.WMTS:
+        return this.prepareWMTS(baseMap);
       case SourceType.XYZ:
+        const options: XYZOptions = { crossOrigin: 'Anonymous' };
         if (baseMap.url) {
-          return new XYZ({
-            url: baseMap.url
-          });
-        } else {
-          return new XYZ();
+          options.url = baseMap.url;
         }
-      default:
-        return undefined;
+
+        return new XYZ(options);
     }
   }
 
@@ -525,7 +560,8 @@ class OpenLayersService {
         matrixSet: baseMap.projection,
         format: baseMap.format,
         projection: projection,
-        wrapX: true
+        wrapX: true,
+        crossOrigin: 'Anonymous'
       });
     } catch (e) {
       return undefined;

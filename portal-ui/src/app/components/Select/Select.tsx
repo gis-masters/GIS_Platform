@@ -15,16 +15,17 @@ interface Option {
 }
 
 interface SelectProps extends IClassNameProps {
+  id?: string;
   label?: string;
   options: Option[];
   value?: Value;
   onChange?: (e: React.ChangeEvent<{ name?: string; value: unknown }>) => void;
 }
 
-export const Select: React.FC<SelectProps> = ({ className, label, value, onChange, options }) => (
+export const Select: React.FC<SelectProps> = ({ className, id, label, value, onChange, options }) => (
   <FormControl className={cnSelect(null, [className])}>
     {label ? <InputLabel>{label}</InputLabel> : null}
-    <BaseSelect value={value} onChange={onChange}>
+    <BaseSelect value={value} onChange={onChange} id={id}>
       {options.map((option, i) => <MenuItem {...option} key={i} />)}
     </BaseSelect>
   </FormControl>

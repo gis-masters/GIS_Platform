@@ -52,7 +52,6 @@ import {DataImportComponent} from './components/data-import/data-import.componen
 import {AtleastPipe} from './pipes/atleast.pipe';
 import {WorkspaceHeaderComponent} from './components/workspace-header/workspace-header.component';
 import {HomeComponent} from './components/home/home.component';
-import {TileSourceSelectComponent} from './components/tile-source-select/tile-source-select.component';
 import {MapComponent} from './components/map/map.component';
 import {ServicesProvider} from './components/services-provider/services-provider.component';
 import {GlobalErrorHandler} from './services/global-error.handler';
@@ -62,7 +61,6 @@ import {WorkspaceComponent} from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { FeaturesListComponent } from './components/features-list/features-list.component';
-import { LayersTreeComponent } from './components/layers-tree/layers-tree.component';
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 
 import { configure } from 'mobx';
@@ -101,7 +99,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     AtleastPipe,
     WorkspaceHeaderComponent,
     HomeComponent,
-    TileSourceSelectComponent,
     MapComponent,
     ServicesProvider,
     WorkImportPreviewComponent,
@@ -111,7 +108,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     EditFeatureGeometryComponent,
     FeaturesListComponent,
     EditFeatureGeometryComponent,
-    LayersTreeComponent,
     ZoomToFeatureComponent
   ],
   imports: [

@@ -9,7 +9,7 @@ class ProjectsList {
 
   private constructor() { }
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 

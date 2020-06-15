@@ -37,7 +37,7 @@ export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModi
     return (
       <FormField className={cnEditFeatureGeometry('Modify')}>
         <FormLabel htmlFor='editFeatureGeometryModifyControl'>
-          Рисование
+          Редактировать на карте
         </FormLabel>
         <FormControl>
           <Switch
