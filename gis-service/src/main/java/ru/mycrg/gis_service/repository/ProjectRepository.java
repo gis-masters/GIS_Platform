@@ -7,6 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Project;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RepositoryRestResource(collectionResourceRel = "projects", path = "projects")
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
@@ -17,7 +18,4 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
 
     Optional<Project> findByNameAndOrganizationId(String name, Long organizationId);
 
-    Optional<Project> findByInternalNameAndOrganizationId(String internalName, Long organizationId);
-
-    Optional<Project> findByInternalName(String internalName);
 }

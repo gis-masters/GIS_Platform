@@ -35,7 +35,7 @@ public class ProjectController {
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<?> getProjects(Pageable pageable, Authentication authentication) {
-        Page<ProjectProjection> projects = projectService.findAll(pageable, authentication);
+        Page<ProjectProjection> projects = projectService.getAll(pageable, authentication);
 
         return ResponseEntity.ok(assembler.toResource(projects));
     }

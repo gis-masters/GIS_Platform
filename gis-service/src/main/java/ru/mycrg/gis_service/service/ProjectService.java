@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
@@ -13,17 +14,22 @@ import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.projects.IProject;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
+import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
+import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
+import ru.mycrg.gis_service.security.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
-import static ru.mycrg.gis_service.security.CrgClaimsParser.isRoot;
+import static ru.mycrg.gis_service.security.CrgClaimsParser.*;
 
 @Service
 @Transactional
@@ -45,14 +51,22 @@ public class ProjectService {
         this.geoserverClient = new ru.mycrg.geoserver_client.services.projects.ProjectService();
     }
 
-    public Page<ProjectProjection> findAll(Pageable pageable, Authentication authentication) {
+    public Page<ProjectProjection> getAll(Pageable pageable, Authentication authentication) {
         Page<Project> projects;
         if (isRoot(authentication)) {
             projects = projectRepository.findAll(pageable);
         } else {
-            Long orgId = getOrganizationId(authentication);
+            final UserDetails userDetails = getUserDetails(authentication);
+            Long orgId = getFirstOrganizationId(userDetails);
+            if (isOrganizationAdmin(authentication)) {
+                projects = projectRepository.findAllByOrganizationId(orgId, pageable);
+            } else {
+                final List<Project> organizationProjects = projectRepository.findAllByOrganizationId(orgId, pageable)
+                        .stream().collect(Collectors.toList());
+                final List<Project> filteredProjects = filterByPermissions(organizationProjects, userDetails);
 
-            projects = projectRepository.findAllByOrganizationId(orgId, pageable);
+                projects = new PageImpl<>(filteredProjects, pageable, filteredProjects.size());
+            }
         }
 
         return projects.map(project -> factory.createProjection(ProjectProjection.class, project));
@@ -68,16 +82,28 @@ public class ProjectService {
      */
     @NotNull
     public Project getById(@NotNull Long id, @NotNull Authentication authentication) {
+        final UserDetails userDetails = getUserDetails(authentication);
+
         if (isRoot(authentication)) {
             return projectRepository
                     .findById(id)
                     .orElseThrow(() -> new NotFoundException(id));
-        } else {
-            Long orgId = getOrganizationId(authentication);
+        }
 
-            return projectRepository
-                    .findByIdAndOrganizationId(id, orgId)
-                    .orElseThrow(() -> new NotFoundException(id));
+        Long orgId = getFirstOrganizationId(userDetails);
+        Project project = projectRepository
+                .findByIdAndOrganizationId(id, orgId)
+                .orElseThrow(() -> new NotFoundException(id));
+
+        if (isOrganizationAdmin(authentication)) {
+            return project;
+        }
+
+        final List<Project> filteredProjects = filterByPermissions(Collections.singletonList(project), userDetails);
+        if (!filteredProjects.isEmpty()) {
+            return project;
+        } else {
+            throw new ForbiddenException("Not allowed");
         }
     }
 
@@ -152,5 +178,32 @@ public class ProjectService {
         } catch (GeoserverClientException e) {
             throw new GisServiceException("Не удалось удалить проект на геосервере", e.getCause());
         }
+    }
+
+    private List<Project> filterByPermissions(List<Project> projects, UserDetails userDetails) {
+        final Long userId = userDetails.getUserId();
+        final List<Long> groupsIds = userDetails.getGroups();
+
+        // Нужно просмотреть все пермишены проекта, там должны быть какието касательно пользователя или его группы,
+        // если таковых нет то нет доступа, отфильтровываем
+        return projects.stream()
+                .filter(project -> {
+                    final List<Permission> permissions = project.getPermissions();
+                    boolean isExist = false;
+                    for (Permission permission : permissions) {
+                        if (permission.getPrincipalType().equals("user")) {
+                            if (permission.getPrincipalId().equals(userId)) {
+                                isExist = true;
+                            }
+                        } else if (permission.getPrincipalType().equals("group")) {
+                            if (groupsIds.contains(permission.getPrincipalId())) {
+                                isExist = true;
+                            }
+                        }
+                    }
+
+                    return isExist;
+                })
+                .collect(Collectors.toList());
     }
 }

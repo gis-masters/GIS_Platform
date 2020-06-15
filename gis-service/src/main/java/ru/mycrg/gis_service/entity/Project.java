@@ -46,6 +46,9 @@ public class Project implements Identifiable<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<Group> groups = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    private List<Permission> permissions = new ArrayList<>();
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "projects_basemaps",
@@ -165,4 +168,11 @@ public class Project implements Identifiable<Long> {
         this.baseMaps.add(baseMap);
     }
 
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 }

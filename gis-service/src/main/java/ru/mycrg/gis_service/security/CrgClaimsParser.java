@@ -6,51 +6,102 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import ru.mycrg.gis_service.config.Authorities;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN;
+import static ru.mycrg.gis_service.config.Authorities.ORG_ADMIN;
 
 public class CrgClaimsParser {
 
+    private static final String CLAIM_USER_ID = "user_id";
     private static final String CLAIM_ORGANIZATIONS = "organizations";
+    private static final String CLAIM_GROUPS = "groups";
 
     public static boolean isRoot(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
+        return isUserHasAuthority(authentication, GLOBAL_ADMIN);
     }
 
-    private static boolean isUserHasAuthority(Authentication authentication, String authority) {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        return authorities.contains(new SimpleGrantedAuthority(authority));
+    public static boolean isOrganizationAdmin(Authentication authentication) {
+        return isUserHasAuthority(authentication, ORG_ADMIN);
     }
 
     @NotNull
     public static Long getOrganizationId(Principal principal) {
-        long orgId = 0;
-
         try {
-            Object details = ((OAuth2Authentication) principal).getDetails();
-            Map<String, Object> decodedDetails =
-                    (Map<String, Object>) ((OAuth2AuthenticationDetails) details).getDecodedDetails();
+            Map<String, Object> decodedDetails = decode(principal);
 
             Optional<Object> oOrganization = getValue(decodedDetails, CLAIM_ORGANIZATIONS);
             if (oOrganization.isPresent()) {
                 Map<String, Object> firstOrg = (Map<String, Object>) ((ArrayList) oOrganization.get()).get(0);
                 Optional<Object> oValue = getValue(firstOrg, "id");
-                if (oValue.isPresent()) {
-                    orgId = ((Integer) oValue.get()).longValue();
-                }
+
+                return oValue.map(o -> ((Integer) o).longValue()).orElse(-1L);
+            } else {
+                return -1L;
             }
         } catch (Exception e) {
-            throw new ForbiddenException("Incorrect organization claims");
+            return -1L;
+        }
+    }
+
+    @NotNull
+    public static Long getFirstOrganizationId(UserDetails userDetails) {
+        List<OrganizationDetails> organisations = userDetails.getOrganisations();
+        if (!organisations.isEmpty() && organisations.get(0).getId() != null) {
+            return organisations.get(0).getId();
         }
 
-        return orgId;
+        throw new ForbiddenException("Incorrect organization claims");
+    }
+
+    @NotNull
+    public static UserDetails getUserDetails(Principal principal) {
+        UserDetails userDetails = new UserDetails();
+
+        try {
+            Map<String, Object> decodedDetails = decode(principal);
+
+            getValue(decodedDetails, CLAIM_USER_ID)
+                    .ifPresent(o -> {
+                        userDetails.setUserId(Long.valueOf(String.valueOf(o)));
+                    });
+
+            getValue(decodedDetails, CLAIM_GROUPS)
+                    .ifPresent(groups -> {
+                        ((ArrayList) groups).forEach(data -> {
+                            getValue((Map<String, Object>) data, "id")
+                                    .ifPresent(o -> {
+                                        userDetails.addGroupId(Long.valueOf(String.valueOf(o)));
+                                    });
+                        });
+                    });
+
+            getValue(decodedDetails, CLAIM_ORGANIZATIONS)
+                    .ifPresent(organizations -> {
+                        ((ArrayList) organizations).forEach(org -> {
+                            Map<String, Object> objectMap = (Map<String, Object>) org;
+
+                            userDetails.addOrganization(
+                                    Long.valueOf(objectMap.get("id").toString()),
+                                    objectMap.get("name").toString()
+                            );
+                        });
+                    });
+        } catch (Exception e) {
+            throw new ForbiddenException("Incorrect user details claims");
+        }
+
+        return userDetails;
+    }
+
+    private static Map<String, Object> decode(Principal principal) {
+        final OAuth2Authentication authentication = (OAuth2Authentication) principal;
+        final OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
+
+        return (Map<String, Object>) details.getDecodedDetails();
     }
 
     private static Optional<Object> getValue(Map<String, Object> data, String target) {
@@ -61,6 +112,12 @@ public class CrgClaimsParser {
         }
 
         return Optional.empty();
+    }
+
+    private static boolean isUserHasAuthority(Authentication authentication, String authority) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        return authorities.contains(new SimpleGrantedAuthority(authority));
     }
 
 }
