@@ -21,6 +21,9 @@
     <filters name="gwc" class="org.geoserver.security.ServiceLoginFilterChain" roleFilterName="roleFilter" interceptorName="restInterceptor" exceptionTranslationName="exception" path="/gwc/rest/**" disabled="false" allowSessionCreation="false" ssl="false" matchHTTPMethod="false">
       <filter>basic</filter>
     </filters>
+    <filters name="WMTS-Basic" class="org.geoserver.security.ServiceLoginFilterChain" roleFilterName="roleFilter" interceptorName="restInterceptor" exceptionTranslationName="exception" path="/gwc/service/wmts" disabled="false" allowSessionCreation="false" ssl="false" matchHTTPMethod="false">
+      <filter>basic</filter>
+    </filters>
     <filters name="JWT" class="org.geoserver.security.ServiceLoginFilterChain" roleFilterName="roleFilter" interceptorName="restInterceptor" exceptionTranslationName="exception" path="/**,/rest/**" disabled="false" allowSessionCreation="false" ssl="false" matchHTTPMethod="false">
       <filter>JWT</filter>
     </filters>
