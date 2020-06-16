@@ -8,7 +8,7 @@ import '!style-loader!css-loader!sass-loader!./Layer-Icon.scss';
 
 export const cnLayerIcon = cn('Layer', 'Icon');
 
-type IconType = 'group' | SupportedGeometryType | 'unknown';
+export type IconType = 'group' | 'error' | SupportedGeometryType | 'unknown';
 
 export interface LayerIconProps extends IClassNameProps {
   type: IconType;

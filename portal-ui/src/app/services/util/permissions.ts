@@ -52,7 +52,13 @@ async function isAllowed (layer: CrgLayer, targetPoint: PermissionPoint): Promis
     return false;
   }
 
-  const { readOnly } = await schemaService.getSchema(layer.schemaId);
+  let readOnly: boolean;
+  try {
+    readOnly = (await schemaService.getSchema(layer.schemaId)).readOnly;
+  } catch (e) {
+    readOnly = true;
+  }
+
   if (readOnly) {
     return permissions.get(UserPermission.VIEWER).includes(targetPoint);
   } else {

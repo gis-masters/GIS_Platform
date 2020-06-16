@@ -10,14 +10,15 @@ const cnLayer = cn('Layer');
 
 interface LayerEyeProps {
   enabled: boolean;
+  disabled: boolean;
   onClick: () => void;
 }
 
-export const LayerEye: FC<LayerEyeProps> = ({ enabled, onClick }) => {
+export const LayerEye: FC<LayerEyeProps> = ({ enabled, disabled, onClick }) => {
   const Icon = enabled ? Visibility : VisibilityOff;
 
   return (
-    <IconButton className={cnLayer('Eye')} color='primary' size='small' onClick={onClick}>
+    <IconButton className={cnLayer('Eye')} color='primary' size='small' onClick={onClick} disabled={disabled}>
       <Icon fontSize='inherit' />
     </IconButton>
   );

@@ -9,10 +9,11 @@ const cnLayerBurger = cn('Layer', 'Burger');
 
 interface LayerBurgerProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 }
 
-export const LayerBurger: FC<LayerBurgerProps> = ({ onClick }) => (
-  <IconButton className={cnLayerBurger()} color='primary' size='small' onClick={onClick}>
+export const LayerBurger: FC<LayerBurgerProps> = ({ onClick, disabled }) => (
+  <IconButton className={cnLayerBurger()} color='primary' size='small' onClick={onClick} disabled={disabled}>
     <Menu fontSize='inherit' />
   </IconButton>
 );

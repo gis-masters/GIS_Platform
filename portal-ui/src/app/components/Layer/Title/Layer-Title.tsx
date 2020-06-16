@@ -3,10 +3,14 @@ import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Title.scss';
 
-const cnLayer = cn('Layer');
+const cnLayerTitle = cn('Layer', 'Title');
 
-export const LayerTitle: FC = ({ children }) => (
-  <div className={cnLayer('Title')}>
+interface LayerTitleProps {
+  isError: boolean;
+}
+
+export const LayerTitle: FC<LayerTitleProps> = ({ children, isError }) => (
+  <div className={cnLayerTitle({ error: isError })}>
     {children}
   </div>
 );

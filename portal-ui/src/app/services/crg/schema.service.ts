@@ -78,8 +78,10 @@ class SchemaService {
   private static _instance: SchemaService;
   private schemas: { [key: string]: Promise<FeatureDescription> } = {};
   private schemasResolvers: { [key: string]: (value?: FeatureDescription) => void } = {};
+  private schemasRejecters: { [key: string]: () => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
+  private fetchingNow = 0;
   private readonly debouncedFetch: ((fetchAll?: boolean) => Promise<void>) & Cancelable;
 
   private constructor() {
@@ -93,8 +95,9 @@ class SchemaService {
 
   async getSchema(name: string): Promise<FeatureDescription> {
     if (!this.schemas[name]) {
-      this.schemas[name] = new Promise(resolve => {
+      this.schemas[name] = new Promise((resolve, reject) => {
         this.schemasResolvers[name] = resolve;
+        this.schemasRejecters[name] = reject;
       });
       this.fetchingPool.push(name);
       await this.debouncedFetch();
@@ -259,13 +262,16 @@ class SchemaService {
   }
 
   private async fetch(fetchAll?: boolean): Promise<void> {
+    this.fetchingNow++;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     await services.provided;
     const url = await serverProperties.schemaUrl;
     const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
     if (!response) {
-      services.logger.error(`Getting schemas ${JSON.stringify(payload)} response is: `, response);
+      throw new Error (`Getting schemas ${JSON.stringify(payload)} error`);
+      this.fetchingNow--;
+      this.checkForsakenResolvers();
       return;
     }
 
@@ -274,12 +280,25 @@ class SchemaService {
       if (this.schemasResolvers[name]) {
         this.schemasResolvers[name](schema);
         delete this.schemasResolvers[name];
+        delete this.schemasRejecters[name];
       } else if (!this.schemas[name]) {
         this.schemas[name] = new Promise(resolve => {
           resolve(schema);
         });
       }
     });
+
+    this.fetchingNow--;
+    this.checkForsakenResolvers();
+  }
+
+  private checkForsakenResolvers () {
+    if (!this.fetchingPool.length && !this.fetchingNow) {
+      Object.entries(this.schemasRejecters).forEach(([schemaName, reject]) => {
+        reject();
+        throw new Error('Не найдена схема ' + schemaName);
+      });
+    }
   }
 }
 

@@ -5,13 +5,14 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayer, CrgGroup } from '../../services/crg/projects.models';
-import { supportedGeometryTypes, SupportedGeometryType } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { schemaService } from '../../services/crg/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
 import { LayerCard } from './Card/Layer-Card';
 import { LayerIcon } from './Icon/Layer-Icon.composed';
+import { IconType } from './Icon/Layer-Icon';
 import { LayerMenu } from './Menu/Layer-Menu';
 import { LayerOpen } from './Open/Layer-Open';
 import { LayerTitle } from './Title/Layer-Title';
@@ -19,6 +20,7 @@ import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerLegend } from './Legend/Layer-Legend';
 import { LayerInnards } from './Innards/Layer-Innards';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
+import { LayerErrors } from './Errors/Layer-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
 
@@ -32,8 +34,6 @@ export interface LayerProps extends IClassNameProps {
   onEyeClick: () => void;
 }
 
-type IconType = SupportedGeometryType | 'group' | 'unknown';
-
 @observer
 export class Layer extends Component<LayerProps> {
   @observable private _open = false;
@@ -41,6 +41,7 @@ export class Layer extends Component<LayerProps> {
   @observable private menuX = 0;
   @observable private menuY = 0;
   @observable private iconType: IconType = 'unknown';
+  @observable private errors: string[] = [];
   private menuAnchor?: HTMLElement;
 
   constructor (props: LayerProps) {
@@ -63,17 +64,18 @@ export class Layer extends Component<LayerProps> {
       <div className={cnLayer({ open: this.open, group: isGroup, visible }, [className])}>
         <LayerCard onContextMenu={this.handleContextMenu}>
           <LayerTransparencyIndicator value={data.transparency} />
-          <LayerEye enabled={enabled} onClick={onEyeClick} />
+          <LayerEye enabled={enabled} disabled={this.isError} onClick={onEyeClick} />
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} />
           <LayerIcon type={this.iconType} expanded={expanded} />
-          <LayerTitle>
+          <LayerTitle isError={this.isError}>
             {title}
           </LayerTitle>
-          <LayerBurger onClick={this.handleBurgerClick} />
+          <LayerBurger disabled={this.isError} onClick={this.handleBurgerClick} />
         </LayerCard>
 
         <LayerInnards show={this.open && !isGroup} depth={depth}>
+          {this.isError && <LayerErrors errors={this.errors} />}
           <LayerLegend layer={data as CrgLayer} />
         </LayerInnards>
 
@@ -91,21 +93,33 @@ export class Layer extends Component<LayerProps> {
   }
 
   @computed
-  private get open () {
+  private get open (): boolean {
     const { isGroup, data } = this.props;
 
     return isGroup ? (data as CrgGroup).expanded : this._open;
   }
 
+  @computed
+  private get isError (): boolean {
+    return Boolean(this.errors.length);
+  }
+
   private async fetchIconType () {
     const { data, isGroup } = this.props;
+    let iconType: IconType;
 
     if (isGroup) {
-      this.setIconType('group');
+      iconType = 'group';
     } else {
-      const { geometryType } = await schemaService.getSchema((data as CrgLayer).schemaId);
-      this.setIconType(supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown');
+      try {
+        const { geometryType } = await schemaService.getSchema((data as CrgLayer).schemaId);
+        iconType = supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown';
+      } catch (e) {
+        iconType = 'error';
+        this.addError('Не найдена схема для слоя.')
+      }
     }
+    this.setIconType(iconType);
   }
 
   @action
@@ -128,6 +142,11 @@ export class Layer extends Component<LayerProps> {
   @action
   private handleContextMenu (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
+
+    if (this.isError) {
+      return;
+    }
+
     delete this.menuAnchor;
     this.menuX = e.clientX - 2;
     this.menuY = e.clientY - 4;
@@ -148,5 +167,16 @@ export class Layer extends Component<LayerProps> {
   @action
   private handleContextMenuClose () {
     this.menuOpen = false;
+  }
+
+  @action
+  private addError (error: string) {
+    this.errors.push(error);
+
+    const { data, onEyeClick } = this.props;
+
+    if (data.enabled) {
+      onEyeClick();
+    }
   }
 }
