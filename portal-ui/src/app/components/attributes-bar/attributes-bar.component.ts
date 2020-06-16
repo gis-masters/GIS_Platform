@@ -334,7 +334,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    const layers = await this.getSuitableLayers(this.layer, currentProject.layers);
+    const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Копирование', layers)
         .pipe(
@@ -352,7 +352,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       return;
     }
 
-    const layers = await this.getSuitableLayers(this.layer, currentProject.layers);
+    const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Перемещение', layers)
         .pipe(

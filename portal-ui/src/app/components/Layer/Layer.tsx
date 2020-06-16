@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { observable, computed, action } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayer, CrgGroup } from '../../services/crg/projects.models';
+import { CrgGroup, CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { schemaService } from '../../services/crg/schema.service';
 
@@ -111,14 +111,21 @@ export class Layer extends Component<LayerProps> {
     if (isGroup) {
       iconType = 'group';
     } else {
-      try {
-        const { geometryType } = await schemaService.getSchema((data as CrgLayer).schemaId);
-        iconType = supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown';
-      } catch (e) {
-        iconType = 'error';
-        this.addError('Не найдена схема для слоя.')
+      const { schemaId, type } = data as CrgLayer;
+
+      if (type === CrgLayerType.VECTOR) {
+        try {
+          const { geometryType } = await schemaService.getSchema(schemaId);
+          iconType = supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown';
+        } catch (e) {
+          iconType = 'error';
+          this.addError('Не найдена схема для слоя.');
+        }
+      } else {
+        iconType = 'raster';
       }
     }
+
     this.setIconType(iconType);
   }
 
@@ -135,6 +142,11 @@ export class Layer extends Component<LayerProps> {
       const group = data as CrgGroup;
       group.expanded = !group.expanded;
     } else {
+      const { type } = data as CrgLayer;
+      if (type === CrgLayerType.RASTER) {
+        return;
+      }
+
       this._open = !this._open;
     }
   }

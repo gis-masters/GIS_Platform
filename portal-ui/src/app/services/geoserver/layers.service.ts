@@ -54,7 +54,7 @@ export async function loadLayerLegend (layer: CrgLayer) {
 export function getFeatureLayer (feature: WfsFeature): CrgLayer {
   const [ layerName ] = feature.id.split('.');
 
-  return currentProject.layers.find(l => l.internalName === layerName);
+  return currentProject.vectorLayers.find(l => l.internalName === layerName);
 }
 
 // на будущее

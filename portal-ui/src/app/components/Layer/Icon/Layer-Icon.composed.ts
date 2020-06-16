@@ -7,9 +7,11 @@ import { withTypeGroup } from './_type/Layer-Icon_type_group';
 import { withTypePoint } from './_type/Layer-Icon_type_Point';
 import { withTypeMultiLineString } from './_type/Layer-Icon_type_MultiLineString';
 import { withTypeMultiPolygon } from './_type/Layer-Icon_type_MultiPolygon';
+import { withTypeRaster } from './_type/Layer-Icon_type_raster';
 
 export const LayerIcon = composeU(
   withTypeUnknown,
+  withTypeRaster,
   withTypeError,
   withTypeGroup,
   withTypePoint,

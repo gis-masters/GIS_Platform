@@ -43,7 +43,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((data: CrgLayer[]) => this.initValidation(data));
 
-    this.layers = currentProject.layers;
+    this.layers = currentProject.vectorLayers;
   }
 
   async ngOnInit() {
@@ -64,7 +64,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.layers = currentProject.layers;
+    this.layers = currentProject.vectorLayers;
 
     this.commonProgress = 0;
     const isActiveChange = changes['isActive'];

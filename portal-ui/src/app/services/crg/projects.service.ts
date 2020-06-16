@@ -8,7 +8,7 @@ import { serverProperties } from '../server-properties.service';
 import { getSourceInfo } from './data.service';
 import { CrgApiResponse, Process } from './models';
 import { projectsList } from '../../stores/ProjectsList.store';
-import { Project } from './projects.models';
+import { CrgLayerType, Project } from './projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { route } from '../../stores/Route.store';
 import { isReadAllowed } from '../util/permissions';
@@ -121,7 +121,7 @@ class ProjectsService {
 
   private async handleLayers(project: Project) {
     await Promise.all(project.layers.map(async layer => {
-      if (layer.dataSourceUri) {
+      if (layer.type === CrgLayerType.VECTOR && layer.dataSourceUri) {
         layer.sourceData = await getSourceInfo(layer.dataSourceUri);
       }
     }));

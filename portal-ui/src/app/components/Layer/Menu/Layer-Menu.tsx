@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
-  Menu,
-  MenuItem,
-  ListItemIcon,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions
+  ListItemIcon,
+  Menu,
+  MenuItem
 } from '@material-ui/core';
-import { ListAlt, AddCircle, Unarchive, Delete } from '@material-ui/icons';
+import { AddCircle, Delete, ListAlt, Unarchive } from '@material-ui/icons';
 
-import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
-import { CrgLayer, CrgGroup } from '../../../services/crg/projects.models';
+import { ActionType, sideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { CrgGroup, CrgLayer, CrgLayerType } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { deleteLayer } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
-import { isReadAllowed, isCreateAllowed, isExportAllowed, isDeleteAllowed } from '../../../services/util/permissions';
+import { isCreateAllowed, isDeleteAllowed, isExportAllowed, isReadAllowed } from '../../../services/util/permissions';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
 import { Button } from '../../Button/Button';
 
@@ -73,7 +73,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!isGroup && this.readAllowed && (
+          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.readAllowed && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -82,7 +82,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && this.createAllowed && (
+          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.createAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -91,7 +91,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && this.exportAllowed && (
+          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.exportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />

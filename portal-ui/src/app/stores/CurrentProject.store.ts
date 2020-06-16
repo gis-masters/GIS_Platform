@@ -1,11 +1,11 @@
 import { action, computed, observable } from 'mobx';
 
-import { CrgGroup, CrgLayer, Project, TreeItem } from '../services/crg/projects.models';
+import { CrgGroup, CrgLayer, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
 
 const MAX_LAYERS_IN_BATCH = 100;
 
-class CurrentProject implements Project {
+class CurrentProject {
 
   private static _instance: CurrentProject;
 
@@ -14,7 +14,8 @@ class CurrentProject implements Project {
   @observable groups: CrgGroup[];
   @observable id: number;
   @observable internalName: string;
-  @observable layers: CrgLayer[];
+  @observable vectorLayers: CrgLayer[];
+  @observable rasterLayers: CrgLayer[];
   @observable name: string;
   @observable order: number;
   @observable organizationId: number;
@@ -37,7 +38,12 @@ class CurrentProject implements Project {
         payload: group,
         isGroup: true
       })),
-      ...this.layers.map(layer => ({
+      ...this.vectorLayers.map(layer => ({
+        id: layer.id,
+        payload: layer,
+        isGroup: false
+      })),
+      ...this.rasterLayers.map(layer => ({
         id: layer.id,
         payload: layer,
         isGroup: false
@@ -94,18 +100,20 @@ class CurrentProject implements Project {
     this.id = project && project.id;
     this.internalName = project && project.internalName;
     this.groups = project ? project.groups : [];
-    this.layers = project ? project.layers : [];
     this.name = project && project.name;
     this.order = project && project.order;
     this.organizationId = project && project.organizationId;
     this.baseMaps = project && project.baseMaps;
+
+    this.vectorLayers = project ? project.layers.filter(l => l.type === CrgLayerType.VECTOR) : [];
+    this.rasterLayers = project ? project.layers.filter(l => l.type === CrgLayerType.RASTER) : [];
   }
 
   @action
   deleteLayer (layer: CrgLayer) {
-    const index = this.layers.indexOf(layer);
+    const index = this.vectorLayers.indexOf(layer);
     if (index > -1) {
-      this.layers.splice(index, 1);
+      this.vectorLayers.splice(index, 1);
     }
   }
 

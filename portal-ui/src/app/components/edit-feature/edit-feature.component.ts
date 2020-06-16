@@ -98,7 +98,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       this.editFeatureForm = this.formBuilder.group({});
       this.featureDescription = await schemaService.getSchemaByLayerName(currentData.features[0].id.split('.')[0]);
 
-      currentData.layer = currentProject.layers.find(layer => layer.schemaId === this.featureDescription.name);
+      currentData.layer = currentProject.vectorLayers.find(layer => layer.schemaId === this.featureDescription.name);
 
       Object.keys(currentData.features[0].properties)
             .filter(key => key !== 'bbox')

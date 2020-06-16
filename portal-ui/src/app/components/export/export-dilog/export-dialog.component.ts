@@ -69,7 +69,7 @@ export class ExportDialogComponent implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger) {
-    this.layers = currentProject.layers;
+    this.layers = currentProject.vectorLayers;
   }
 
   onChange(selectionList: MatSelectionList) {

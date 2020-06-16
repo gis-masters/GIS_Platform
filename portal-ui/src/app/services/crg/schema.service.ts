@@ -107,7 +107,7 @@ class SchemaService {
   }
 
   async getCurrentProjectSchemas(): Promise<FeatureDescription[]> {
-    const names = currentProject.layers.map(layer => layer.schemaId);
+    const names = currentProject.vectorLayers.map(layer => layer.schemaId);
 
     return Promise.all(names.map(this.getSchema));
   }

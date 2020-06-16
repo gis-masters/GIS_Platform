@@ -2,6 +2,11 @@ import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
 import { UserPermission } from '../util/permissions';
 
+export enum CrgLayerType {
+  VECTOR = 'vector',
+  RASTER = 'raster'
+}
+
 interface CrgEntity {
   id: number;
   title: string;
@@ -13,7 +18,7 @@ interface CrgEntity {
 // layer from api
 interface BaseCrgLayer extends CrgEntity {
   internalName: string;
-  type: string;
+  type: CrgLayerType;
   maxZoom: number;
   minZoom: number;
   styleName: string;
