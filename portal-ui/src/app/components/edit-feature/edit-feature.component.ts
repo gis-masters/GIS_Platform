@@ -231,6 +231,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       ).subscribe(() => {
         this.close();
         openLayersService.refreshLayers();
+        communicationService.featuresUpdate$.emit();
       });
     } else {
       this.batchUpdateFeatures(
@@ -246,7 +247,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       approveBtnName: 'Удалить'
     };
     const { features } = this.data;
-    const [layerName, newId] = features[0].id.split('.');
+    const [ layerName, newId ] = features[0].id.split('.');
     const { internalName } = currentProject;
 
     this.dialog
@@ -261,6 +262,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
             this.delete.emit(features[0].id);
             this.close();
             openLayersService.refreshLayers();
+            communicationService.featuresUpdate$.emit();
           });
         });
   }
