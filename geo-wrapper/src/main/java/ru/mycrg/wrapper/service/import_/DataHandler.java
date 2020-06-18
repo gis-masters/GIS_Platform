@@ -71,7 +71,6 @@ public class DataHandler {
         });
 
         decodedRow.computeIfAbsent(PRIMARY_KEY, k -> UUID.randomUUID());
-        decodedRow.computeIfAbsent(GLOBAL_ID, k -> UUID.randomUUID());
 
         return decodedRow;
     }

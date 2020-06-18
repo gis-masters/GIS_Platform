@@ -58,25 +58,6 @@ public class HandleRowTest {
     }
 
     @Test
-    public void shouldGenerateGlobalId() throws IOException {
-        // PREPARE
-        final SchemaDto schema = getSchemaFromFile("educationSchema.json");
-        final Map<String, Object> dbRow = new HashMap<String, Object>(){{
-            put("objectid", 1);
-            put("classid", "602010101");
-        }};
-
-        when(scriptEngine.invokeFunction(any(), any())).thenReturn(new HashMap<String, Object>());
-
-        // ACT
-        final Map<String, Object> result = dataHandler.handle(dbRow, schema);
-
-        // ASSERT
-        assertNotNull(result);
-        assertNotNull(result.get("globalid"));
-    }
-
-    @Test
     public void shouldConvertWrongDataToNull() throws IOException {
         // PREPARE
         final SchemaDto schema = getSchemaFromFile("educationSchema.json");
