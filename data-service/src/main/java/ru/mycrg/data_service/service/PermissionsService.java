@@ -33,7 +33,7 @@ import static ru.mycrg.data_service.service.ResourceIdentifier.makeIdentifier;
 @Transactional
 public class PermissionsService {
 
-    public static final int RESOURCES_PER_PERMISSION_LIMIT = 100;
+    public static final int RESOURCES_PER_PERMISSION_LIMIT = 1000;
 
     private final ProjectionFactory projectionFactory;
     private final PermissionsRepository permissionsRepository;
