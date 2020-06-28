@@ -140,6 +140,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    openLayersService.destroyMap();
     this.reactionDisposer();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

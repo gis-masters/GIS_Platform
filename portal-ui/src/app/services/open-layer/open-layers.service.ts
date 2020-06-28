@@ -161,6 +161,14 @@ class OpenLayersService {
     });
   }
 
+  destroyMap() {
+    this.drawOff();
+    this.pickingOff();
+    this._map.unset('target');
+    delete this._map;
+    delete this.view;
+  }
+
   async showItems(items: TreeItem<CrgLayer>[][]) {
     this.getImageLayers().forEach(layer => {
       layer.setVisible(false);
