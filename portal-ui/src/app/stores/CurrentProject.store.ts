@@ -81,9 +81,13 @@ class CurrentProject {
                 }
 
                 const lastBatch = acc[acc.length - 1];
-                const lastTransparency = lastBatch[lastBatch.length - 1].actualTransparency;
+                const lastItem = lastBatch[lastBatch.length - 1];
+                const lastTransparency = lastItem.actualTransparency;
+                const lastType = lastItem.payload.type;
+                const transparency = item.actualTransparency;
+                const typ = item.payload.type;
 
-                if (item.actualTransparency === lastTransparency && lastBatch.length < MAX_LAYERS_IN_BATCH) {
+                if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
                   lastBatch.push(item);
                 } else {
                   acc.push([item]);
