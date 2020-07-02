@@ -97,6 +97,11 @@ class CurrentProject {
               }, []);
   }
 
+  @computed
+  get visibleLayersWithoutRasters(): TreeItem<CrgLayer>[] {
+    return this.visibleLayers.flat().filter(item => item.payload.type !== CrgLayerType.RASTER);
+  }
+
   @action
   setProject(project: Project | null) {
     this.bbox = project && project.bbox;

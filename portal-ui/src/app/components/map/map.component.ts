@@ -159,7 +159,7 @@ export class MapComponent implements OnInit, OnDestroy {
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: Coordinate) {
-    const visibleLayers = currentProject.visibleLayers.flat().map(({ payload }) => payload);
+    const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
 
     if (!visibleLayers.length) {
       this.logger.debug('No visible layers');
@@ -168,13 +168,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
     const visibleLayersComplexNames: NamesChunks = visibleLayers.reduce((acc: NamesChunks, layer) => {
       const { nativeCRS, complexName } = layer;
-      
+
       if (!acc[nativeCRS]) {
         acc[nativeCRS] = [];
       }
-      
+
       acc[nativeCRS].push(complexName);
-      
+
       return acc;
     }, {});
 
