@@ -11,4 +11,4 @@ echo "3" > ${GEOSERVER_DATA_DIR}/migrationVersion
 echo "${TAB}Done V3__AddProjections"
 echo
 
-#Run Next migration
+./V4__UpdateDb/run.sh

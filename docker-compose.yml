@@ -40,7 +40,7 @@ services:
     volumes:
       - /opt/data/postgis:/var/lib/postgresql
     environment:
-      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service
+      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
       EXISTING_DATA_DIR: $IS_DATA_EXIST

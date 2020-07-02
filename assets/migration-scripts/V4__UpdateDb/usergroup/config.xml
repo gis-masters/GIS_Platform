@@ -6,8 +6,8 @@
   <propertyFileNameDML>usersdml.xml</propertyFileNameDML>
   <jndi>false</jndi>
   <driverClassName>org.postgresql.Driver</driverClassName>
-  <connectURL>jdbc:postgresql://database:5432/geoserver_db</connectURL>
-  <userName>postgres</userName>
+  <connectURL>jdbc:postgresql://postgis:5432/geoserver_db</connectURL>
+  <userName>fiz</userName>
   <password>plain:314</password>
   <creatingTables>true</creatingTables>
   <passwordEncoderName>strongPbePasswordEncoder</passwordEncoderName>

@@ -3,6 +3,6 @@
   <name>PostgresDb</name>
   <className>org.geoserver.security.jdbc.JDBCConnectAuthProvider</className>
   <driverClassName>org.postgresql.Driver</driverClassName>
-  <connectURL>jdbc:postgresql://database:5432/geoserver_db</connectURL>
+  <connectURL>jdbc:postgresql://postgis:5432/geoserver_db</connectURL>
   <userGroupServiceName>postgres_db_user_service</userGroupServiceName>
 </org.geoserver.security.jdbc.config.JDBCConnectAuthProviderConfig>

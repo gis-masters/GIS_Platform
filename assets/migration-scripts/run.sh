@@ -15,6 +15,10 @@ elif [[ currentMigration -eq 2 ]]; then
 
     ./V3__AddProjections/run.sh
 elif [[ currentMigration -eq 3 ]]; then
+    echo "  Last completed migration: 'V3__AddProjections'";
+
+    ./V4__UpdateDb/run.sh
+elif [[ currentMigration -eq 4 ]]; then
     echo -e "  All migration completed";
 else
     echo -e "  No migrations yet"
