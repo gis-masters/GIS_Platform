@@ -38,6 +38,20 @@ proj4.defs(
 );
 
 proj4.defs(
+  'EPSG:28407',
+  '+proj=tmerc ' +
+  '+lat_0=0 ' +
+  '+lon_0=39 ' +
+  '+k=1 ' +
+  '+x_0=7500000 ' +
+  '+y_0=0 ' +
+  '+ellps=krass ' +
+  '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
+  '+units=m ' +
+  '+no_defs'
+);
+
+proj4.defs(
   'EPSG:314315',
   '+proj=tmerc ' +
   '+lat_0=0.0833333333333333 ' +
@@ -71,6 +85,10 @@ export const projections: CrgProjection[] = [
   {
     id: 'EPSG:28406',
     title: 'Pulkovo 1942 / Gauss-Kruger zone 6'
+  },
+  {
+    id: 'EPSG:28407',
+    title: 'Pulkovo 1942 / Gauss-Kruger zone 7'
   },
   {
     id: 'EPSG:314314',
