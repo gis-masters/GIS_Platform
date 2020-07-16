@@ -40,23 +40,29 @@ export class Util {
   }
 
   private static parseFilter(filterEvent: FilterEvent): string {
+    const { property, value } = filterEvent;
+
     // name ILIKE %some%
-    if (filterEvent.property.valueType === 'STRING') {
-      return filterEvent.property.name.toLowerCase() + ' ILIKE \'%' + filterEvent.value + '%\'';
+    if (property.valueType === 'STRING') {
+      return property.name.toLowerCase() + ' ILIKE \'%' + value + '%\'';
     }
 
     // area BETWEEN n AND n+1
-    if (filterEvent.property.valueType === 'DOUBLE') {
-      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + this.upLastDigit(filterEvent.value[0]);
+    if (property.valueType === 'DOUBLE') {
+      return property.name.toLowerCase() + ' BETWEEN ' + value + ' AND ' + this.upLastDigit(value[0]);
     }
 
     if (filterEvent.property.valueType === 'INT') {
-      return filterEvent.property.name.toLowerCase() + ' BETWEEN ' + filterEvent.value + ' AND ' + Number(filterEvent.value) + 0.9;
+      return property.name.toLowerCase() + ' BETWEEN ' + value + ' AND ' + Number(value) + 0.9;
     }
 
-    // voltage IN(110)
-    if (filterEvent.property.valueType === 'CHOICE') {
-      return filterEvent.property.name.toLowerCase() + ' IN(' + filterEvent.value + ')';
+    // foreignKeyType string => IN('110'), other => IN(110)
+    if (property.valueType === 'CHOICE') {
+      if (property.foreignKeyType === 'STRING') {
+        return `${property.name.toLowerCase()} IN(${this.prepareChoiceValue(value)})`;
+      } else {
+        return filterEvent.property.name.toLowerCase() + ' IN(' + filterEvent.value + ')';
+      }
     }
 
     return '';
@@ -73,4 +79,8 @@ export class Util {
     }
   }
 
+  private static prepareChoiceValue(value: string[]): string {
+    return value.map(item => `'${item}'`)
+                .join(',');
+  }
 }
