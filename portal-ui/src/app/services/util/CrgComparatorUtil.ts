@@ -5,15 +5,17 @@ import { AS_IS, NOT_IMPORT } from '../crg/models';
 
 /**
  * Первый и самый простой компаратор.
- * Приводит строки к одному регистру и сравнивает.
+ * Приводит строки к одному регистру и сравнивает по первым 10 символам. (Длинна ограничения названия shp формата)
  */
 export class DirectComparison implements CrgComparison {
   private comparison: CrgComparison;
 
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     let result = null;
+    const shapeName = source.name.substr(0, 10).toLowerCase();
     properties.forEach((property: PropertySchema) => {
-      if (source.name.toLowerCase() === property.name.toLowerCase()) {
+      const ourName = property.name.substr(0, 10).toLowerCase();
+      if (shapeName === ourName) {
         result = property;
       }
     });

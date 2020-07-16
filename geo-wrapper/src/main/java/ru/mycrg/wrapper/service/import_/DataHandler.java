@@ -67,6 +67,8 @@ public class DataHandler {
                 if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
                     decodedRow.put(key, NULL_MARKER);
                 }
+            } else {
+                decodedRow.put(key, NULL_MARKER);
             }
         });
 
