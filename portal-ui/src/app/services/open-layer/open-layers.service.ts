@@ -1,48 +1,53 @@
 import { EventEmitter } from '@angular/core';
-import { reaction } from 'mobx';
-import { chunk } from 'lodash';
 import jsPDF from 'jspdf';
-import { Map, View, MapBrowserEvent } from 'ol';
-import { MultiPolygon } from 'ol/geom';
-import GeometryType from 'ol/geom/GeometryType';
+import { chunk } from 'lodash';
+import { reaction } from 'mobx';
+import { Map, MapBrowserEvent, View } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
-import { Circle, Fill, Stroke, Style } from 'ol/style.js';
+import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
+import { MultiPolygon } from 'ol/geom';
+import GeometryType from 'ol/geom/GeometryType';
 import ImageWrapper from 'ol/Image';
-import Tile from 'ol/Tile';
-import { Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer, Layer } from 'ol/layer';
 import { Draw, Modify } from 'ol/interaction';
-import { ModifyEvent } from 'ol/interaction/Modify';
 import { DrawEvent } from 'ol/interaction/Draw';
+import { ModifyEvent } from 'ol/interaction/Modify';
+import { Image as ImageLayer, Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import BaseLayer from 'ol/layer/Base';
 import { get as getProjection } from 'ol/proj';
-import { getTopLeft, getWidth, Extent } from 'ol/extent';
-import WMTSTileGrid from 'ol/tilegrid/WMTS';
-import { Vector as VectorSource, TileImage, ImageWMS, WMTS, XYZ, OSM } from 'ol/source';
+import { ImageWMS, OSM, TileArcGISRest, TileImage, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import { Options as XYZOptions } from 'ol/source/XYZ';
-
-import { MapperUtil } from './MapperUtil';
-import { WfsFeature } from '../geoserver/wfs-models';
-import { serverProperties } from '../server-properties.service';
-import { CrgLayer, TreeItem } from '../../services/crg/projects.models';
-import { services } from '../services';
-import { tokenStorageService } from '../token-storage.service';
+import { Circle, Fill, Stroke, Style } from 'ol/style.js';
+import Tile from 'ol/Tile';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { CrgLayer } from '../../services/crg/projects.models';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { CrgBaseMap, SourceType } from '../crg/base-maps.models';
 import {
+  CrgProjection,
+  getFeatureProjection,
   olProjection,
   transform,
-  transformGeometry,
-  getFeatureProjection,
-  CrgProjection
+  transformGeometry
 } from '../geoserver/projections.service';
-import { printSettings } from '../../stores/PrintSettings.store';
+import { WfsFeature } from '../geoserver/wfs-models';
+import { serverProperties } from '../server-properties.service';
+import { services } from '../services';
+import { tokenStorageService } from '../token-storage.service';
+
+import { MapperUtil } from './MapperUtil';
 
 export interface TileSource {
   name: string;
   title: string;
   source: XYZ;
   thumbnail: string;
+}
+
+export interface CrgAdditionalLayerInfo {
+  isUserLayer: boolean;
 }
 
 export let BEARER_TOKEN = '';
@@ -55,6 +60,8 @@ export interface CrgWmsParams {
 
 class OpenLayersService {
   private static _instance: OpenLayersService;
+
+  private CRG_INFO_PROP_NAME = 'crgInfo';
 
   constructor() {
     reaction(() => baseMapsStore.currentBaseMap, currentBaseMap => {
@@ -169,23 +176,45 @@ class OpenLayersService {
     delete this.view;
   }
 
-  async showItems(items: TreeItem<CrgLayer>[][]) {
-    this.getImageLayers().forEach(layer => {
+  hideUserLayers() {
+    this.getUserLayers().forEach(layer => {
       layer.setVisible(false);
-    });
-
-    items.forEach((batch, i) => {
-      const { actualTransparency } = batch[0];
-
-      this.addLayersToMap(
-        batch.map(item => item.payload).reverse(),
-        items.length - i,
-        actualTransparency / 100
-      );
     });
   }
 
-  private async addLayersToMap(layers: CrgLayer[], zIndex: number, opacity: number) {
+  addExternalLayers(layers: CrgLayer[], zIndex: number) {
+    layers.forEach(layer => {
+      const layerOnMap = this.getLayerByName(layer.internalName);
+      if (layerOnMap) {
+        layerOnMap.setVisible(true);
+        layerOnMap.setOpacity(layer.transparency / 100);
+        layerOnMap.setZIndex(zIndex);
+      } else {
+        const tileLayer = new TileLayer({
+          source: new TileArcGISRest({
+            url: layer.dataSourceUri,
+            params: {
+              LAYERS: layer.internalName
+            },
+            tileLoadFunction: this.arcGisMapServerLoadFunction
+          }),
+          visible: true,
+          opacity: layer.transparency / 100,
+          zIndex: zIndex
+        });
+
+        const props: { [key: string]: CrgAdditionalLayerInfo } = {
+          [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
+        };
+
+        tileLayer.setProperties(props);
+
+        this._map.addLayer(tileLayer);
+      }
+    });
+  }
+
+  async addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
     const resultName = this.calcLayerName(layers);
 
     const layerOnMap = this.getLayerByName(resultName);
@@ -212,6 +241,12 @@ class OpenLayersService {
         opacity,
         zIndex
       });
+
+      const props: { [key: string]: CrgAdditionalLayerInfo } = {
+        [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
+      };
+
+      imageLayer.setProperties(props);
 
       this._map.addLayer(imageLayer);
     }
@@ -275,7 +310,7 @@ class OpenLayersService {
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
   getLayerByName(complexLayerName: string): ImageLayer | undefined {
-    return this.getImageLayers().find(layer => {
+    return this.getUserLayers().find(layer => {
       const source = layer.getSource() as ImageWMS;
 
       return source && source.getParams().LAYERS === complexLayerName;
@@ -284,7 +319,7 @@ class OpenLayersService {
 
   // Принудительный рефреш
   refreshLayers() {
-    this.getImageLayers().forEach(layer => (layer as Layer).getSource().refresh());
+    this.getUserLayers().forEach(layer => (layer as Layer).getSource().refresh());
   }
 
   // Очистить карту от слоя, который отображал объект.
@@ -296,7 +331,7 @@ class OpenLayersService {
 
   // Очистить карту от всех слоёв.
   clearMap() {
-    this.getImageLayers().forEach(layer => this._map.removeLayer(layer));
+    this.getUserLayers().forEach(layer => this._map.removeLayer(layer));
   }
 
   /**
@@ -306,7 +341,7 @@ class OpenLayersService {
     const featuresInOlProjection: WfsFeature[] = [].concat(features).map((feature: WfsFeature) => ({
       ...feature,
       geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)
-    }))
+    }));
 
     this.clearDraft();
 
@@ -501,7 +536,7 @@ class OpenLayersService {
   }
 
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
-    let data;
+    let data: Blob | any;
     try {
       data = await services.httpq.get<Blob>(url, { responseType: 'blob' });
     } catch (errorResponse) {
@@ -511,14 +546,34 @@ class OpenLayersService {
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
   }
 
+  private async arcGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
+    let data: Blob | any;
+
+    const replacedUrl = url.replace('256%2C256', '1024%2C1024')
+                           .replace('BBOXSR=3857', 'bboxSR=102100')
+                           .replace('IMAGESR=3857', 'imageSR=102100');
+
+    try {
+      const response = await fetch(replacedUrl);
+      if (response.ok) {
+        data = await response.blob();
+      }
+    } catch (errorResponse) {
+      data = errorResponse.error;
+    }
+
+    const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
+    ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
+  }
+
   /**
-   * Все слои типа 'IMAGE'
+   * Все слои которые являются пользовательскими
    */
-  private getImageLayers(): ImageLayer[] {
+  private getUserLayers(): ImageLayer[] {
     return this._map
                .getLayers()
                .getArray()
-               .filter(baseLayer => baseLayer instanceof ImageLayer) as ImageLayer[];
+               .filter(layer => this.isUserLayer(layer)) as ImageLayer[];
   }
 
   private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
@@ -575,6 +630,20 @@ class OpenLayersService {
       return undefined;
     }
   }
+
+  printDebugInfo() {
+    services.logger.debug('Current extent: ', this.view.calculateExtent());
+  }
+
+  private isUserLayer(layer: BaseLayer): boolean {
+    const crgInfo = layer.getProperties()[this.CRG_INFO_PROP_NAME];
+    if (crgInfo) {
+      return crgInfo.isUserLayer;
+    } else {
+      return false;
+    }
+  }
+
 }
 
 export const openLayersService = OpenLayersService.instance;

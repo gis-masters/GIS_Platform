@@ -14,13 +14,12 @@ class CurrentProject {
   @observable groups: CrgGroup[];
   @observable id: number;
   @observable internalName: string;
-  @observable vectorLayers: CrgLayer[];
-  @observable rasterLayers: CrgLayer[];
   @observable name: string;
   @observable order: number;
   @observable organizationId: number;
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
+  @observable layers: CrgLayer[];
 
   private constructor() {
     this.sorter = this.sorter.bind(this);
@@ -44,6 +43,11 @@ class CurrentProject {
         isGroup: false
       })),
       ...this.rasterLayers.map(layer => ({
+        id: layer.id,
+        payload: layer,
+        isGroup: false
+      })),
+      ...this.externalLayers.map(layer => ({
         id: layer.id,
         payload: layer,
         isGroup: false
@@ -113,16 +117,29 @@ class CurrentProject {
     this.order = project && project.order;
     this.organizationId = project && project.organizationId;
     this.baseMaps = project && project.baseMaps;
+    this.layers = project ? project.layers : [];
+  }
 
-    this.vectorLayers = project ? project.layers.filter(l => l.type === CrgLayerType.VECTOR) : [];
-    this.rasterLayers = project ? project.layers.filter(l => l.type === CrgLayerType.RASTER) : [];
+  @computed
+  get vectorLayers () {
+    return this.layers.filter(l => l.type === CrgLayerType.VECTOR);
+  }
+
+  @computed
+  get rasterLayers () {
+    return this.layers.filter(l => l.type === CrgLayerType.RASTER);
+  }
+
+  @computed
+  get externalLayers () {
+    return this.layers.filter(l => l.type === CrgLayerType.EXTERNAL);
   }
 
   @action
   deleteLayer (layer: CrgLayer) {
-    const index = this.vectorLayers.indexOf(layer);
+    const index = this.layers.indexOf(layer);
     if (index > -1) {
-      this.vectorLayers.splice(index, 1);
+      this.layers.splice(index, 1);
     }
   }
 

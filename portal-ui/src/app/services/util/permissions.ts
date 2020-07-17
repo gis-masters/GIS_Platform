@@ -44,7 +44,7 @@ const permissions = new Map<UserPermission, PermissionPoint[]>([
 ]);
 
 async function isAllowed (layer: CrgLayer, targetPoint: PermissionPoint): Promise<boolean> {
-  if (layer.type === 'raster') {
+  if (layer.type !== 'vector') {
     return true;
   }
 

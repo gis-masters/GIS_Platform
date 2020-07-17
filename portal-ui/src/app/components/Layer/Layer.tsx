@@ -143,7 +143,7 @@ export class Layer extends Component<LayerProps> {
       group.expanded = !group.expanded;
     } else {
       const { type } = data as CrgLayer;
-      if (type === CrgLayerType.RASTER) {
+      if (type !== CrgLayerType.VECTOR) {
         return;
       }
 

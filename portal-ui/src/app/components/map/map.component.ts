@@ -8,7 +8,7 @@ import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
 import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';
@@ -62,7 +62,22 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     this.reactionDisposer = reaction(() => currentProject.visibleLayers, visibleItems => {
-      openLayersService.showItems(visibleItems);
+      openLayersService.hideUserLayers();
+
+      visibleItems.forEach((batch, i) => {
+        const { actualTransparency } = batch[0];
+
+        const layers = batch.map(item => item.payload).reverse();
+
+        openLayersService.addLayers(
+          layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
+          visibleItems.length - i,
+          actualTransparency / 100);
+
+        openLayersService.addExternalLayers(
+          layers.filter(l => l.type === CrgLayerType.EXTERNAL),
+          visibleItems.length - i);
+      });
     }, { fireImmediately: true });
 
     communicationService.validationDialog
@@ -216,4 +231,5 @@ export class MapComponent implements OnInit, OnDestroy {
       sidebar.target === SidebarType.FEATURES ||
       sidebar.target === SidebarType.ATTRIBUTES;
   }
+
 }

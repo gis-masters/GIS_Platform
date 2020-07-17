@@ -4,7 +4,8 @@ import { UserPermission } from '../util/permissions';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
-  RASTER = 'raster'
+  RASTER = 'raster',
+  EXTERNAL = 'external'
 }
 
 interface CrgEntity {

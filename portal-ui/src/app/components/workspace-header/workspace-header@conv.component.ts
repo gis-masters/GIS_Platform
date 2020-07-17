@@ -4,6 +4,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import { EventService, IEvent } from '../../services/event.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { services } from '../../services/services';
 import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { isManagementAllowed } from '../../services/util/permissions';
@@ -37,6 +38,8 @@ export class WorkspaceHeaderComponent extends WorkspaceHeader {
 
   notification() {
     sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
+
+    openLayersService.printDebugInfo();
   }
 
   toContentEditor() {

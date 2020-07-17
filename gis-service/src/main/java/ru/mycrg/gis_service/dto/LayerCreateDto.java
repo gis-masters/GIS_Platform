@@ -33,7 +33,7 @@ public class LayerCreateDto {
     @Length(min = 6, max = 255)
     private String nativeCRS;
 
-    @Pattern(regexp = "^(vector|raster)$", message = "Допустимые значения поля type: vector или raster")
+    @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
     private String type;
 
 }

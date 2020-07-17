@@ -442,7 +442,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)),
+        concatMap(features => this.tFeatureService
+          .insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)),
         catchError(err => this.handleError(err)),
       ).subscribe(() => {
         i++;

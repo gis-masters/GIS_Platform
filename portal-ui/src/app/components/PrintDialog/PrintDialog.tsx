@@ -56,7 +56,7 @@ export class PrintDialog extends Component<PrintDialogProps> {
 
         <FormField>
           <FormLabel htmlFor='printSettingsOrientation'>
-            Разрешение:
+            Ориентация:
           </FormLabel>
           <FormControl>
             <Select
