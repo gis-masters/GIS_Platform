@@ -3,24 +3,16 @@ import { cloneDeep } from 'lodash';
 
 import { serverProperties } from '../server-properties.service';
 import { services } from '../services';
-import { CrgLayer, CrgGroup, Rule } from '../crg/projects.models';
+import { CrgLayer, CrgLayersGroup, Rule } from '../crg/projects.models';
 import { WfsFeature } from '../geoserver/wfs-models';
 import { currentProject } from '../../stores/CurrentProject.store';
 
-export interface GeoserverLayer {
-  name: string;
-  type: string;
-  defaultStyle: { name: string, href: string };
-  resource: any;
-  attribution: any;
-}
-
-export async function deleteLayer (layer: CrgLayer) {
+export async function deleteLayer(layer: CrgLayer) {
   await services.httpq.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layer.id}`);
   currentProject.deleteLayer(layer);
 }
 
-export async function loadLayerLegend (layer: CrgLayer) {
+export async function loadLayerLegend(layer: CrgLayer) {
   if (layer.legend || layer.legendIsFetching) {
     return;
   }
@@ -35,30 +27,32 @@ export async function loadLayerLegend (layer: CrgLayer) {
       name: rule.querySelector('Name').innerHTML,
       title: rule.querySelector('Title').innerHTML
     }));
-  const rulesWithLegend = await Promise.all(rules.map(async rule => {
-    const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
-    const img = await createImageFromBlob(blob);
+  const rulesWithLegend = await Promise.all(
+    rules.map(async rule => {
+      const blob = await getLegendGraphicByRuleName(layer.complexName, rule.name);
+      const img = await createImageFromBlob(blob);
 
-    return {
-      ...rule,
-      legend: img
-    };
-  }));
+      return {
+        ...rule,
+        legend: img
+      };
+    })
+  );
 
   currentProject.patch(layer, {
     legend: rulesWithLegend,
-    legendIsFetching: false,
+    legendIsFetching: false
   });
 }
 
-export function getFeatureLayer (feature: WfsFeature): CrgLayer {
-  const [ layerName ] = feature.id.split('.');
+export function getFeatureLayer(feature: WfsFeature): CrgLayer {
+  const [layerName] = feature.id.split('.');
 
   return currentProject.vectorLayers.find(l => l.internalName === layerName);
 }
 
 // на будущее
-async function updateLayerOrGroup <T extends (CrgLayer | CrgGroup)>(item: T, patch: Partial<T>, isGroup: boolean) {
+async function updateLayerOrGroup<T extends CrgLayer | CrgLayersGroup>(item: T, patch: Partial<T>, isGroup: boolean) {
   await services.provided;
   const backup = cloneDeep(item);
   const path = isGroup ? 'groups' : 'layers';
@@ -71,13 +65,17 @@ async function updateLayerOrGroup <T extends (CrgLayer | CrgGroup)>(item: T, pat
   }
 }
 
-function createImageFromBlob (image: Blob): Promise<string> {
+function createImageFromBlob(image: Blob): Promise<string> {
   return new Promise(resolve => {
     const reader = new FileReader();
 
-    reader.addEventListener('load', () => {
-      resolve(reader.result as string);
-    }, false);
+    reader.addEventListener(
+      'load',
+      () => {
+        resolve(reader.result as string);
+      },
+      false
+    );
 
     if (image) {
       reader.readAsDataURL(image);
@@ -92,7 +90,7 @@ function createImageFromBlob (image: Blob): Promise<string> {
  * @param ruleName          Название правила в стиле. Ожидаем что в названии стиля будет использован атрибут на
  *                          основе которого сделан фильтр.
  */
-async function getLegendGraphicByRuleName (complexLayerName: string, ruleName: string): Promise<Blob> {
+async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: string): Promise<Blob> {
   const params = new HttpParams()
     .set('REQUEST', 'GetLegendGraphic')
     .set('VERSION', '1.3.0')
@@ -110,18 +108,18 @@ async function getLegendGraphicByRuleName (complexLayerName: string, ruleName: s
  *
  * @param complexStyleName style name or complex style name ("workspace_name:style_name")
  */
-async function getStyleSld (complexStyleName: string): Promise<string> {
+async function getStyleSld(complexStyleName: string): Promise<string> {
   const styleNameArr = complexStyleName.split(':');
   const styleName = styleNameArr.pop();
   const geoServerUrl = await serverProperties.geoServerUrl;
   const workspacesUrl = geoServerUrl + '/rest/workspaces/';
   const workspaceName = styleNameArr[0];
-  const url: string = workspaceName ?
-                        `${workspacesUrl}${workspaceName}/styles/${styleName}.sld` :
-                        `${geoServerUrl}/rest/styles/${styleName}.sld`;
+  const url: string = workspaceName
+    ? `${workspacesUrl}${workspaceName}/styles/${styleName}.sld`
+    : `${geoServerUrl}/rest/styles/${styleName}.sld`;
 
-  return services.httpq.get<string>(
-      url,
-      { headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' }, responseType: 'text' }
-  );
+  return services.httpq.get<string>(url, {
+    headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
+    responseType: 'text'
+  });
 }

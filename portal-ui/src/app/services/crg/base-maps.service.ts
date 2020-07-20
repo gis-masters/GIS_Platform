@@ -1,67 +1,60 @@
-import {HttpParams} from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 
-import {serverProperties} from '../server-properties.service';
-import {CrgBaseMap, CrgProjectBaseMap, SourceType} from './base-maps.models';
-import {baseMapsStore} from '../../stores/BaseMaps.store';
-import {services} from '../services';
-import {CrgApiResponse} from './models';
+import { serverProperties } from '../server-properties.service';
+import { CrgBaseMap, CrgProjectBaseMap, SourceType } from './base-maps.models';
+import { baseMapsStore } from '../../stores/BaseMaps.store';
+import { services } from '../services';
+import { CrgApiResponse } from './models';
 
-class BaseMapsService {
-  private static _instance: BaseMapsService;
+/**
+ * Fetch all basemaps for project
+ */
+export async function fetchAllBaseMaps(baseMaps: CrgProjectBaseMap[]) {
+  await services.provided;
 
-  private constructor() {
-  }
+  let params = new HttpParams();
+  params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
 
-  public static get instance() {
-    return this._instance || (this._instance = new this());
-  }
+  const url = (await serverProperties.dataServerUrl) + '/basemaps/search/findByIdIn';
+  services.httpq
+    .get<CrgApiResponse<{ basemaps: CrgBaseMap[] }>>(url, { params })
+    .then(
+      response => {
+        if (response._embedded) {
+          const crgBaseMaps = handleBaseMaps(baseMaps, response._embedded.basemaps);
 
-  /**
-   * Fetch all basemaps for project
-   */
-  async fetchAll(baseMaps: CrgProjectBaseMap[]) {
-    await services.provided;
+          baseMapsStore.initBaseMaps(crgBaseMaps);
+        } else {
+          baseMapsStore.initBaseMaps([]);
+        }
+      },
+      reason => {
+        console.error('Подложки не подготовлены?: ', reason);
 
-    let params = new HttpParams();
-    params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
-
-    const url = await serverProperties.dataServerUrl + '/basemaps/search/findByIdIn';
-    services.httpq.get<CrgApiResponse>(url, {params: params}).then(response => {
-      if (response._embedded) {
-        const crgBaseMaps = this.handleBaseMaps(baseMaps, response._embedded.basemaps);
-
-        baseMapsStore.initBaseMaps(crgBaseMaps);
-      } else {
-        baseMapsStore.initBaseMaps([]);
+        const osmBaseMap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM };
+        baseMapsStore.initBaseMaps([osmBaseMap]);
       }
-    }, reason => {
-      console.error('Подложки не подготовлены?: ', reason);
-
-      const osmBaseMap = {title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM};
-      baseMapsStore.initBaseMaps([osmBaseMap]);
-    });
-  }
-
-  // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
-  private handleBaseMaps(projectBaseMaps: CrgProjectBaseMap[], baseMaps: CrgBaseMap[]): CrgBaseMap[] {
-    const result: CrgBaseMap[] = [];
-    projectBaseMaps
-      .sort((a, b) => a.position - b.position)
-      .forEach(projectBaseMap => {
-        const crgBaseMap = baseMaps.find(baseMap => baseMap.id === projectBaseMap.baseMapId);
-        if (projectBaseMap.title) {
-          if (crgBaseMap) {
-            crgBaseMap.title = projectBaseMap.title;
-          }
-        }
-
-        if (crgBaseMap) {
-          result.push(crgBaseMap);
-        }
-      });
-
-    return result;
-  }
+    );
 }
 
-export const baseMapsService = BaseMapsService.instance;
+// К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
+function handleBaseMaps(projectBaseMaps: CrgProjectBaseMap[], baseMaps: CrgBaseMap[]): CrgBaseMap[] {
+  const result: CrgBaseMap[] = [];
+  projectBaseMaps
+    .slice()
+    .sort((a, b) => a.position - b.position)
+    .forEach(projectBaseMap => {
+      const crgBaseMap = baseMaps.find(baseMap => baseMap.id === projectBaseMap.baseMapId);
+      if (projectBaseMap.title) {
+        if (crgBaseMap) {
+          crgBaseMap.title = projectBaseMap.title;
+        }
+      }
+
+      if (crgBaseMap) {
+        result.push(crgBaseMap);
+      }
+    });
+
+  return result;
+}

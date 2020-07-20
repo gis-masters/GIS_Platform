@@ -12,11 +12,9 @@
             *ngIf="notificationCounter == 0">
     notifications
   </mat-icon>
-  <mat-icon class="workspace-header__notification"
-            (click)="toContentEditor()"
-            *ngIf="managementAllowed">
-    build
-  </mat-icon>
+
+  <crg-org-admin-button></crg-org-admin-button>
+
   <mat-icon class="workspace-header__notification"
             matBadge="{{notificationCounter}}"
             matBadgeColor="warn"

@@ -3,6 +3,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
+import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
@@ -17,12 +18,6 @@ interface ZoomToFeatureProps extends IClassNameProps {
 export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   private btnRef = createRef<HTMLButtonElement>();
 
-  constructor (props: ZoomToFeatureProps) {
-    super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
-  }
-
   render () {
     const { className } = this.props;
 
@@ -35,6 +30,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
     );
   }
 
+  @boundMethod
   private clickHandler () {
     const { feature, onClick } = this.props;
 

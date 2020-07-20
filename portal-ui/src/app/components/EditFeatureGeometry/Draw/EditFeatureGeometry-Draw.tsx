@@ -23,28 +23,26 @@ interface EditFeatureGeometryDrawProps {
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
+  constructor(props: EditFeatureGeometryDrawProps) {
+    super(props);
 
-  componentWillUnmount () {
+    this.handleDraw = this.handleDraw.bind(this);
+  }
+
+  componentWillUnmount() {
     if (this.active) {
       document.body.classList.remove('global-crosshair-cursor');
       openLayersService.drawOff();
     }
   }
 
-  constructor (props: EditFeatureGeometryDrawProps) {
-    super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
-    this.handleDraw = this.handleDraw.bind(this);
-  }
-
-  render () {
+  render() {
     return (
-      <Tooltip title="Нарисовать на карте">
+      <Tooltip title='Нарисовать на карте'>
         <IconButton
-            className={cnEditFeatureGeometryDraw()}
-            onClick={this.clickHandler}
-            color={this.active ? 'secondary' : 'default'}
+          className={cnEditFeatureGeometryDraw()}
+          onClick={this.clickHandler}
+          color={this.active ? 'secondary' : 'default'}
         >
           <Brush />
         </IconButton>
@@ -52,13 +50,13 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     );
   }
 
-  private get geometryType (): GeometryType {
+  private get geometryType(): GeometryType {
     const { geometryType } = this.props.store;
 
     return geometryType === GeometryType.MULTI_POLYGON ? GeometryType.POLYGON : geometryType;
   }
 
-  private handleDraw (e: DrawEvent) {
+  private handleDraw(e: DrawEvent) {
     // @ts-ignore
     const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
     const newCoordinates = drawed[0].map(coord => transform(olProjection, this.props.store.currentProjection, coord));
@@ -67,13 +65,13 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   @action
-  private updateGeometry (newCoordinates: CoordinateEdited[]) {
+  private updateGeometry(newCoordinates: CoordinateEdited[]) {
     const { coordinates } = this.props;
     coordinates.splice(0, coordinates.length, ...newCoordinates);
   }
 
-  @action
-  private clickHandler () {
+  @action.bound
+  private clickHandler() {
     this.active = !this.active;
     if (this.active) {
       document.body.classList.add('global-crosshair-cursor');

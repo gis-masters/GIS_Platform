@@ -31,7 +31,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   @observable private fetching = false;
   value: FieldTypeUrlValue;
 
-  constructor (props: EditFeaturesControlProps) {
+  constructor(props: EditFeaturesControlProps) {
     super(props);
 
     try {
@@ -39,12 +39,9 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
     } catch (e) {
       services.logger.warn('Incorrect url value: ', props.field.value);
     }
-
-    this.openDialog = this.openDialog.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
   }
 
-  render () {
+  render() {
     if (!this.value) {
       return null;
     }
@@ -60,14 +57,16 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
             <PseudoLink onClick={this.openDialog} disabled={disabled}>
               {text}
             </PseudoLink>
-            <Dialog open={this.isOpen}  PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}>
+            <Dialog
+              open={this.isOpen}
+              onClose={this.closeDialog}
+              PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}
+            >
               <DialogContent>
                 <HtmlContent content={this.content} />
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.closeDialog} variant='outlined'>
-                  Закрыть
-                </Button>
+                <Button onClick={this.closeDialog}>Закрыть</Button>
               </DialogActions>
               {this.content ? null : <Loading />}
             </Dialog>
@@ -81,7 +80,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
     );
   }
 
-  private async fetchContent () {
+  private async fetchContent() {
     if (!this.content && !this.fetching) {
       this.setFetching(true);
       try {
@@ -96,23 +95,23 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   }
 
   @action
-  private setFetching (fetching: boolean) {
+  private setFetching(fetching: boolean) {
     this.fetching = fetching;
   }
 
   @action
-  private setContent (content: string) {
+  private setContent(content: string) {
     this.content = content;
   }
 
-  @action
-  private openDialog () {
+  @action.bound
+  private openDialog() {
     this.isOpen = true;
     this.fetchContent();
   }
 
-  @action
-  private closeDialog () {
+  @action.bound
+  private closeDialog() {
     this.isOpen = false;
     location.hash = '';
   }

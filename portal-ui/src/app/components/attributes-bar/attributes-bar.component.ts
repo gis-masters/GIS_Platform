@@ -40,7 +40,7 @@ import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { isUpdateAllowed, isDeleteAllowed } from '../../services/util/permissions';
+import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
 import { getProjection } from '../../services/geoserver/projections.service';
 
 export interface WfsFeatureView extends WfsFeature {
@@ -56,10 +56,10 @@ export interface WfsFeatureView extends WfsFeature {
 export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() layer: CrgLayer;
 
-  @ViewChild(DatatableComponent, {static: true}) attributeTable: DatatableComponent;
-  @ViewChild('filterTemplate', {static: true}) filterTemplate: TemplateRef<any>;
-  @ViewChild('cellTemplate', {static: true}) cellTemplate: TemplateRef<any>;
-  @ViewChild('customSelectAll', {static: true}) customSelectAll: TemplateRef<any>;
+  @ViewChild(DatatableComponent, { static: true }) attributeTable: DatatableComponent;
+  @ViewChild('filterTemplate', { static: true }) filterTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate', { static: true }) cellTemplate: TemplateRef<any>;
+  @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
   isNeedPrepareColumn = true;
 
@@ -67,7 +67,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   features: WfsFeatureView[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
-  customRowIdentity = ((row: WfsFeature) => row.id);
+  customRowIdentity = (row: WfsFeature) => row.id;
   pageInfo: Pageable = {
     pageSize: 25,
     offset: 0
@@ -95,32 +95,22 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private tFeatureService: TransformFeatureService,
-              private logger: NGXLogger,
-              private dialog: MatDialog) {
-  }
+  constructor(private tFeatureService: TransformFeatureService, private logger: NGXLogger, private dialog: MatDialog) {}
 
   async ngAfterViewInit() {
     window.dispatchEvent(new Event('resize'));
 
     await projectsService.fetchCurrent();
 
-    this.requestModel$
-        .pipe(
-          debounceTime(50),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((requestModel: CrgModels) => {
-          this.updateTable(requestModel);
-        });
+    this.requestModel$.pipe(debounceTime(50), takeUntil(this.unsubscribe$)).subscribe((requestModel: CrgModels) => {
+      this.updateTable(requestModel);
+    });
 
-    communicationService.featuresUpdate$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
-          const lastRequest = this.requestModel$.getValue();
-          this.updateTable(lastRequest);
-        });
+    communicationService.featuresUpdated.on(() => {
+      // TODO: Самы простой вариант с лишним запросом. Заменить на обновление данных без запроса.
+      const lastRequest = this.requestModel$.getValue();
+      this.updateTable(lastRequest);
+    }, this);
 
     await this.checkPermissions();
   }
@@ -132,11 +122,11 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
     if (layerChanged && !layerChanged.isFirstChange()) {
       this.isNeedPrepareColumn = true;
-      this.requestModel$.next({page: {pageSize: 25, offset: 0}});
+      this.requestModel$.next({ page: { pageSize: 25, offset: 0 } });
 
       this.attributeTable.selected = [];
       openLayersService.clearDraft();
-      this.updateTable({page: {pageSize: 25, offset: 0}});
+      this.updateTable({ page: { pageSize: 25, offset: 0 } });
     }
 
     await this.checkPermissions();
@@ -150,35 +140,36 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     openLayersService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    communicationService.off(this);
   }
 
   updateTable(requestModel?: CrgModels) {
     this.loading = true;
     this.showPercent = false;
     getFeatures(this.layer.complexName, requestModel)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((fCollection: WfsFeatureCollection) => {
-          if (fCollection) {
-            this.loading = false;
-            this.totalFeatures = fCollection.totalFeatures;
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((fCollection: WfsFeatureCollection) => {
+        if (fCollection) {
+          this.loading = false;
+          this.totalFeatures = fCollection.totalFeatures;
 
-            if (this.isNeedPrepareColumn) {
-              // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
-              //  при открытии или при переходе на новый слой
-              this.prepareColumns(fCollection.features[0]);
-              this.isNeedPrepareColumn = false;
-            }
-
-            this.features = fCollection.features.map((feature: WfsFeature) => {
-              const wfsFeatureView: WfsFeatureView = feature;
-              wfsFeatureView.aliases = this.fillAliases(feature.properties);
-
-              return wfsFeatureView;
-            });
-          } else {
-            this.logger.warn('Unexpected response:', fCollection);
+          if (this.isNeedPrepareColumn) {
+            // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
+            //  при открытии или при переходе на новый слой
+            this.prepareColumns(fCollection.features[0]);
+            this.isNeedPrepareColumn = false;
           }
-        });
+
+          this.features = fCollection.features.map((feature: WfsFeature) => {
+            const wfsFeatureView: WfsFeatureView = feature;
+            wfsFeatureView.aliases = this.fillAliases(feature.properties);
+
+            return wfsFeatureView;
+          });
+        } else {
+          this.logger.warn('Unexpected response:', fCollection);
+        }
+      });
   }
 
   showSelectedFeatures() {
@@ -236,7 +227,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   closeMe() {
     openLayersService.clearDraft();
-    sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
+    sideBarManager.do({ target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE });
   }
 
   onFilterChange(filterEvent: FilterEvent) {
@@ -294,13 +285,13 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
       this.loading = true;
       this.showPercent = false;
       getFeatures(this.layer.complexName, clonedRequestModel)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(fCollection => {
-            this.attributeTable.selected = fCollection.features;
-            this.loading = false;
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(fCollection => {
+          this.attributeTable.selected = fCollection.features;
+          this.loading = false;
 
-            this.showSelectedFeatures();
-          });
+          this.showSelectedFeatures();
+        });
     } else {
       this.attributeTable.selected = [];
       openLayersService.clearDraft();
@@ -320,7 +311,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     });
     // Отсылка в сайдбар
     sideBarManager.do({
-      target: SidebarType.FEATURES, action: ActionType.OPEN,
+      target: SidebarType.FEATURES,
+      action: ActionType.OPEN,
       data: {
         features: clonedFeatures,
         mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
@@ -337,9 +329,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Копирование', layers)
-        .pipe(
-          takeUntil(this.unsubscribe$)
-        ).subscribe((selectedLayer: CrgLayer) => {
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
           this.batchInsertFeatures(selectedLayer, batchModel);
         });
@@ -355,9 +346,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     const layers = await this.getSuitableLayers(this.layer, currentProject.vectorLayers);
     if (this.isSuitableLayersExist(layers)) {
       this.openEditDialog('Перемещение', layers)
-        .pipe(
-          takeUntil(this.unsubscribe$)
-        ).subscribe((selectedLayer: CrgLayer) => {
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((selectedLayer: CrgLayer) => {
           const batchModel = this.prepareBatchProcess(selected);
           this.batchReplaceFeatures(selectedLayer, batchModel);
         });
@@ -376,16 +366,17 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     };
 
     this.dialog
-        .open(ConfirmDialogComponent, {width: '400px', data: data})
-        .afterClosed().pipe(filter(value => !!value))
-        .subscribe(() => {
-          const batchModel = this.prepareBatchProcess(selected);
-          this.batchDeleteFeatures(batchModel);
-          this.attributeTable.selected = [];
-        });
+      .open(ConfirmDialogComponent, { width: '400px', data: data })
+      .afterClosed()
+      .pipe(filter(value => !!value))
+      .subscribe(() => {
+        const batchModel = this.prepareBatchProcess(selected);
+        this.batchDeleteFeatures(batchModel);
+        this.attributeTable.selected = [];
+      });
   }
 
-  private async checkPermissions () {
+  private async checkPermissions() {
     this.updatingAllowed = await isUpdateAllowed(this.layer);
     this.deletingAllowed = await isDeleteAllowed(this.layer);
   }
@@ -411,23 +402,25 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
       const { geometryType } = schemas[i];
 
-      return (currentLayer.complexName !== layer.complexName) &&
-             (currentSchema.geometryType === geometryType) &&
-             layersUpdatePermissions[i];
+      return (
+        currentLayer.complexName !== layer.complexName &&
+        currentSchema.geometryType === geometryType &&
+        layersUpdatePermissions[i]
+      );
     });
   }
 
   private openEditDialog(title: string, layers: CrgLayer[]): Observable<CrgLayer> {
     return this.dialog
-               .open(CopyFeaturesDialogComponent, {
-                 data: {
-                   title,
-                   layers,
-                   objects: this.attributeTable.selected,
-                 }
-               })
-               .afterClosed()
-               .pipe(filter(value => !!value));
+      .open(CopyFeaturesDialogComponent, {
+        data: {
+          title,
+          layers,
+          objects: this.attributeTable.selected
+        }
+      })
+      .afterClosed()
+      .pipe(filter(value => !!value));
   }
 
   private prepareBatchProcess(selectedFeatures: WfsFeature[]): BatchModel<WfsFeature> {
@@ -442,10 +435,17 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features => this.tFeatureService
-          .insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)),
-        catchError(err => this.handleError(err)),
-      ).subscribe(() => {
+        concatMap(features =>
+          this.tFeatureService.insertFeatures(
+            features,
+            currentProject.internalName,
+            selectedLayer.internalName,
+            this.layer.nativeCRS
+          )
+        ),
+        catchError(err => this.handleError(err))
+      )
+      .subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);
         if (i >= batchModel.totalBatches) {
@@ -468,17 +468,23 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(features, currentProject.internalName, selectedLayer.internalName, this.layer.nativeCRS)
+            this.tFeatureService.insertFeatures(
+              features,
+              currentProject.internalName,
+              selectedLayer.internalName,
+              this.layer.nativeCRS
+            )
           );
         }),
         concatMap(([features]) => {
-          const featureIds = features.map((feature) => feature.id);
+          const featureIds = features.map(feature => feature.id);
 
           return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
-      ).subscribe(() => {
+      )
+      .subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);
         if (i >= batchModel.totalBatches) {
@@ -498,11 +504,12 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     from(batchModel.batches)
       .pipe(
         concatMap(features => {
-          const featureIds = features.map((feature) => feature.id);
+          const featureIds = features.map(feature => feature.id);
 
           return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
-        }),
-      ).subscribe(() => {
+        })
+      )
+      .subscribe(() => {
         i++;
         const percent = Math.ceil(batchModel.percentOfOneBatch * i);
         if (i >= batchModel.totalBatches) {
@@ -559,7 +566,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         resizeable: false,
         width: 100,
         maxWidth: 100,
-        headerTemplate: this.filterTemplate,
+        headerTemplate: this.filterTemplate
         // summaryTemplate: this.headerFilterTemplate
       }
     ];
@@ -570,7 +577,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           const newProperty: TableColumn = {
             name: this.defineColumnName(property),
             prop: this.definePropertySource(property),
-            headerTemplate: this.filterTemplate,
+            headerTemplate: this.filterTemplate
           };
 
           if (property.toLowerCase() === 'globalid') {
@@ -586,8 +593,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     }
   }
 
-  private fillAliases(properties: {[key: string]: any}): {} {
-    const resultObject: {[key: string]: any} = {};
+  private fillAliases(properties: { [key: string]: any }): {} {
+    const resultObject: { [key: string]: any } = {};
 
     Object.keys(properties).forEach(property => {
       const simpleProperty = this.getSimpleProperty(property);
@@ -621,7 +628,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   private getValueTitle(startValue: string, enumerations: PropertyEnumerations): string {
     return enumerations.reduce((acc, { value, title }) => {
-      return (String(startValue) === String(value)) ? title : acc;
+      return String(startValue) === String(value) ? title : acc;
     }, startValue);
   }
 

@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { localStorageService } from './local-storage.service';
-import { BuildInRole } from './util/permissions';
+import { BuildInRole } from './crg/permissions.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManagementGuardService implements CanActivate {
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   canActivate(): Observable<boolean> | boolean {
     const userInfo = localStorageService.getUserInfo();

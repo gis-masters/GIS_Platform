@@ -1,5 +1,5 @@
-import React from 'react';
-import Dropzone from 'react-dropzone'
+import React, { FC } from 'react';
+import Dropzone from 'react-dropzone';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { cn } from '@bem-react/classname';
@@ -19,7 +19,7 @@ interface DataImportDropzoneProps {
   onClear: () => void;
 }
 
-export const DataImportDropzone: React.FC<DataImportDropzoneProps> = (props) => {
+export const DataImportDropzone: FC<DataImportDropzoneProps> = props => {
   const { file, loading, onDrop, onClear, importOn } = props;
   let fileSize: number;
   if (file) {
@@ -34,31 +34,28 @@ export const DataImportDropzone: React.FC<DataImportDropzoneProps> = (props) => 
   return (
     <div className={cnDataImport('Dropzone')}>
       <Dropzone onDrop={onDrop} preventDropOnDocument={true} disabled={loading || Boolean(file)}>
-        {({getRootProps, getInputProps, isDragActive}) => (
-            <div
-                className={cnDataImport('DropzoneControl', {fileOver: isDragActive})}
-                {...getRootProps()}>
-              <div className={cnDataImport('DropzoneCaption')}>
-                Перетащите zip архив с shape файлами<br />или<br />
-                  <Button variant='contained' className={cnDataImport('DropzoneButton')}>
-                    Откройте проводник для выбора файла
-                  </Button>
-              </div>
-
-              <input {...getInputProps()} />
+        {({ getRootProps, getInputProps, isDragActive }) => (
+          <div className={cnDataImport('DropzoneControl', { fileOver: isDragActive })} {...getRootProps()}>
+            <div className={cnDataImport('DropzoneCaption')}>
+              Перетащите zip архив с shape файлами
+              <br />
+              или
+              <br />
+              <Button variant='contained' className={cnDataImport('DropzoneButton')}>
+                Откройте проводник для выбора файла
+              </Button>
             </div>
+
+            <input {...getInputProps()} />
+          </div>
         )}
       </Dropzone>
       {file || emptyFile ? (
         <div className={cnDataImport('DropzoneFiles')}>
           <div className={cnDataImport('DropzoneFile')}>
-            <div className={cnDataImport('DropzoneFileName')}>
-              {emptyFile ? 'Загруженный файл' : file.name}
-            </div>
-            { emptyFile ? null : (
-              <div className={cnDataImport('DropzoneFileSize')}>
-                { Number(fileSize.toFixed(3)) } MB
-              </div>
+            <div className={cnDataImport('DropzoneFileName')}>{emptyFile ? 'Загруженный файл' : file.name}</div>
+            {emptyFile ? null : (
+              <div className={cnDataImport('DropzoneFileSize')}>{Number(fileSize.toFixed(3))} MB</div>
             )}
             <IconButton className={cnDataImport('DropzoneFileDel')} onClick={onClear}>
               <DeleteIcon color='error' />
@@ -69,4 +66,4 @@ export const DataImportDropzone: React.FC<DataImportDropzoneProps> = (props) => 
       <Loading visible={loading} />
     </div>
   );
-}
+};

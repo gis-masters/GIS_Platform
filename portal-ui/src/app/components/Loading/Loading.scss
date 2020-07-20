@@ -16,4 +16,9 @@
   &_noBackdrop {
     background: none;
   }
+
+  &_global {
+    position: fixed;
+    z-index: 9999;
+  }
 }

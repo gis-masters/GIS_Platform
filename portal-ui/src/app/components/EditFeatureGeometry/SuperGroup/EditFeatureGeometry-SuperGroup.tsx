@@ -28,29 +28,22 @@ interface EditFeatureGeometrySuperGroupProps {
 
 @observer
 export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometrySuperGroupProps> {
-  constructor (props: EditFeatureGeometrySuperGroupProps) {
-    super(props);
-
-    this.addGroupHandler = this.addGroupHandler.bind(this);
-    this.deleteGroupHandler = this.deleteGroupHandler.bind(this);
-  }
-
-  render () {
+  render() {
     const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store } = this.props;
 
     return (
       <div className={cnEditFeatureGeometry('SuperGroup')}>
         {geometryPart.map((coordGroup, i, coordinates) => (
           <EditFeatureGeometryGroup
-              coordinates={coordGroup}
-              minCoordsCount={minCoordsPerGroup}
-              mustBeClosed={groupsMustBeClosed}
-              canBeDeleted={coordinates.length > 1}
-              onDelete={this.deleteGroupHandler}
-              multiple={coordinates.length > 1}
-              store={store}
-              index={i}
-              key={i}
+            coordinates={coordGroup}
+            minCoordsCount={minCoordsPerGroup}
+            mustBeClosed={groupsMustBeClosed}
+            canBeDeleted={coordinates.length > 1}
+            onDelete={this.deleteGroupHandler}
+            multiple={coordinates.length > 1}
+            store={store}
+            index={i}
+            key={i}
           />
         ))}
 
@@ -63,8 +56,8 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     );
   }
 
-  @action
-  private addGroupHandler () {
+  @action.bound
+  private addGroupHandler() {
     const group = [];
 
     for (let i = 0; i < this.props.minCoordsPerGroup; i++) {
@@ -74,8 +67,8 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     this.props.geometryPart.push(group);
   }
 
-  @action
-  private deleteGroupHandler (i: number) {
+  @action.bound
+  private deleteGroupHandler(i: number) {
     this.props.geometryPart.splice(i, 1);
   }
 }

@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
@@ -36,59 +37,45 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @observable private picking = false;
   private pickRef = createRef<HTMLButtonElement>();
 
-  constructor (props: EditFeatureGeometryCoordProps) {
-    super(props);
-
-    this.changeXHandler = this.changeXHandler.bind(this);
-    this.changeYHandler = this.changeYHandler.bind(this);
-    this.deleteHandler = this.deleteHandler.bind(this);
-    this.pickerClickHandler = this.pickerClickHandler.bind(this);
-    this.pickerBlurHandler = this.pickerBlurHandler.bind(this);
-    this.pickHandler = this.pickHandler.bind(this);
-    this.keyHandler = this.keyHandler.bind(this);
-  }
-
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.offPicking();
   }
 
-  render () {
+  render() {
     const { val, withControls, index, canBeDeleted, disabled } = this.props;
 
     // росреестра своё понимание X и Y
     return (
-      <div className={cnEditFeatureGeometry('Coord', { withControls, active: this.picking })}
-           onKeyDown={this.keyHandler}>
-        {withControls ? (
-          <div className={cnEditFeatureGeometry('CoordNumber')}>
-            { index + 1 }
-          </div>
-        ) : null}
+      <div
+        className={cnEditFeatureGeometry('Coord', { withControls, active: this.picking })}
+        onKeyDown={this.keyHandler}
+      >
+        {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{index + 1}</div> : null}
 
         <TextField
-            className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
-            value={val[1]}
-            error={!isDimensionValid(val[1])}
-            onChange={this.changeYHandler}
-            variant="outlined"
-            disabled={disabled}
+          className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
+          value={val[1]}
+          error={!isDimensionValid(val[1])}
+          onChange={this.changeYHandler}
+          variant='outlined'
+          disabled={disabled}
         />
 
         <TextField
-            className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
-            value={val[0]}
-            error={!isDimensionValid(val[0])}
-            onChange={this.changeXHandler}
-            variant="outlined"
-            disabled={disabled}
+          className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
+          value={val[0]}
+          error={!isDimensionValid(val[0])}
+          onChange={this.changeXHandler}
+          variant='outlined'
+          disabled={disabled}
         />
 
         <EditFeatureGeometryCoordPick
-            onClick={this.pickerClickHandler}
-            onBlur={this.pickerBlurHandler}
-            active={this.picking}
-            btnRef={this.pickRef}
-            disabled={disabled}
+          onClick={this.pickerClickHandler}
+          onBlur={this.pickerBlurHandler}
+          active={this.picking}
+          btnRef={this.pickRef}
+          disabled={disabled}
         />
 
         {withControls ? (
@@ -98,43 +85,47 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     );
   }
 
-  @action
-  private changeXHandler (e: React.ChangeEvent<HTMLInputElement>) {
+  @action.bound
+  private changeXHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[0] = e.target.value;
     onChange(val, index);
   }
 
-  @action
-  private changeYHandler (e: React.ChangeEvent<HTMLInputElement>) {
+  @action.bound
+  private changeYHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[1] = e.target.value;
     onChange(val, index);
   }
 
   @action
-  private pick () {
+  private pick() {
     this.picking = true;
     openLayersService.pickPoint(this.pickHandler);
     document.body.classList.add('global-crosshair-cursor');
   }
 
   @action
-  private offPicking () {
+  private offPicking() {
     this.picking = false;
     document.body.classList.remove('global-crosshair-cursor');
-    if (this.pickRef.current) this.pickRef.current.blur();
+    if (this.pickRef.current) {
+      this.pickRef.current.blur();
+    }
     openLayersService.pickingOff();
   }
 
-  private deleteHandler () {
+  @boundMethod
+  private deleteHandler() {
     const { onDelete, index } = this.props;
     if (onDelete) {
       onDelete(index);
     }
   }
 
-  private pickerClickHandler () {
+  @boundMethod
+  private pickerClickHandler() {
     if (this.picking) {
       this.offPicking();
     } else {
@@ -142,19 +133,21 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     }
   }
 
-  private pickerBlurHandler () {
+  @boundMethod
+  private pickerBlurHandler() {
     this.offPicking();
   }
 
-  @action
-  private pickHandler (e: MapBrowserEvent) {
+  @action.bound
+  private pickHandler(e: MapBrowserEvent) {
     const { val, onChange, index } = this.props;
     val.splice(0, 2, ...transform(olProjection, this.props.store.currentProjection, e.coordinate));
     onChange(val, index);
     this.offPicking();
   }
 
-  private keyHandler (e: React.KeyboardEvent<HTMLDivElement>) {
+  @boundMethod
+  private keyHandler(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Escape') {
       this.offPicking();
     }

@@ -1,4 +1,5 @@
 import { debounce, Cancelable } from 'lodash';
+import { boundMethod } from 'autobind-decorator';
 
 import { serverProperties } from '../server-properties.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -23,7 +24,7 @@ export interface FeatureDescription {
   readOnly?: boolean;
 }
 
-export type PropertyEnumerations = { value: string, title: string }[];
+export type PropertyEnumerations = { value: string; title: string }[];
 
 export interface PropertySchema {
   name: string;
@@ -86,13 +87,13 @@ class SchemaService {
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);
-    this.getSchema = this.getSchema.bind(this);
   }
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
+  @boundMethod
   async getSchema(name: string): Promise<FeatureDescription> {
     if (!this.schemas[name]) {
       this.schemas[name] = new Promise((resolve, reject) => {
@@ -133,8 +134,10 @@ class SchemaService {
 
     const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
 
-    return schemas.find(schema => schema.name.toLowerCase() === layerName.toLowerCase()) ||
-      schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()));
+    return (
+      schemas.find(schema => schema.name.toLowerCase() === layerName.toLowerCase()) ||
+      schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()))
+    );
   }
 
   /**
@@ -157,8 +160,10 @@ class SchemaService {
       }
     }
 
-    return await this.getSchemaByLayerName(layerNameWithGeomType, true) ||
-           await this.getSchemaByLayerName(layerName, true);
+    return (
+      (await this.getSchemaByLayerName(layerNameWithGeomType, true)) ||
+      (await this.getSchemaByLayerName(layerName, true))
+    );
   }
 
   async getClassIdAlias(layer: CrgLayer, bugObject: BugObject): Promise<string> {
@@ -207,11 +212,11 @@ class SchemaService {
    * @param propertySchemas Свойства полученные из схемы.
    */
   getPropertySchemaByName(key: string, propertySchemas: PropertySchema[]) {
-    return propertySchemas.find(({name}) => name.toLowerCase() === key.toLowerCase());
+    return propertySchemas.find(({ name }) => name.toLowerCase() === key.toLowerCase());
   }
 
   async getEmptyFeature(layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
-    const {internalName, schemaId} = layer;
+    const { internalName, schemaId } = layer;
     const schema = await this.getSchema(schemaId);
 
     const properties = schema.properties.reduce((acc: { [key: string]: null }, propertySchema) => {
@@ -269,7 +274,7 @@ class SchemaService {
     const response = await services.httpq.post<FeatureDescription[]>(url, payload);
 
     if (!response) {
-      throw new Error (`Getting schemas ${JSON.stringify(payload)} error`);
+      throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
       this.fetchingNow--;
       this.checkForsakenResolvers();
       return;
@@ -292,7 +297,7 @@ class SchemaService {
     this.checkForsakenResolvers();
   }
 
-  private checkForsakenResolvers () {
+  private checkForsakenResolvers() {
     if (!this.fetchingPool.length && !this.fetchingNow) {
       Object.entries(this.schemasRejecters).forEach(([schemaName, reject]) => {
         reject();

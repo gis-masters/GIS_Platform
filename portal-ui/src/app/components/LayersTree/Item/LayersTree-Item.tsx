@@ -16,13 +16,7 @@ interface LayersTreeItemProps {
 
 @observer
 export class LayersTreeItem extends Component<LayersTreeItemProps> {
-  constructor (props: LayersTreeItemProps) {
-    super(props);
-
-    this.eyeHandler = this.eyeHandler.bind(this);
-  }
-
-  render () {
+  render() {
     const { isGroup, payload, depth, visible } = this.props.item;
 
     return (
@@ -37,8 +31,8 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
     );
   }
 
-  @action
-  private eyeHandler () {
+  @action.bound
+  private eyeHandler() {
     const { item } = this.props;
 
     if (item.visible) {
@@ -46,13 +40,13 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
       return;
     }
 
-    this.getDisabledAncestors(item).forEach(item => item.payload.enabled = true);
+    this.getDisabledAncestors(item).forEach(item => (item.payload.enabled = true));
   }
 
-  getDisabledAncestors (item: TreeItem, result: TreeItem[] = []): TreeItem[] {
+  getDisabledAncestors(item: TreeItem, result: TreeItem[] = []): TreeItem[] {
     if (!item.parent || item.parent.visible) {
       result.push(item);
-      
+
       return result;
     }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { HelpToc } from '../HelpToc/HelpToc';
@@ -15,18 +15,14 @@ interface HelpPopupProps {
   onClose: () => void;
 }
 
-export const HelpPopup: React.FC<HelpPopupProps> = ({ items, onSelect, onClose }) => (
+export const HelpPopup: FC<HelpPopupProps> = ({ items, onSelect, onClose }) => (
   <div className={cnHelpPopup()}>
-    <div className={cnHelpPopup('Title')}>
-      Справка:
-    </div>
+    <div className={cnHelpPopup('Title')}>Справка:</div>
 
     <HelpToc items={items} onSelect={onSelect} />
 
     <div className={cnHelpPopup('Actions')}>
-      <Button onClick={onClose} variant='outlined'>
-        Закрыть
-      </Button>
+      <Button onClick={onClose}>Закрыть</Button>
     </div>
   </div>
 );

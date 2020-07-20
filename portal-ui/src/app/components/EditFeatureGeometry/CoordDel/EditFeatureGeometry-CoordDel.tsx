@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordDel.scss';
 
@@ -13,21 +14,16 @@ interface EditFeatureGeometryCoordDelProps {
 }
 
 export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCoordDelProps> {
-  constructor (props: EditFeatureGeometryCoordDelProps) {
-    super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
-  }
-
-  render () {
+  render() {
     return (
       <Tooltip title='Удалить узел' enterDelay={800}>
         <span>
-          <IconButton className={cnEditFeatureGeometryCoordDel()}
-                  onClick={this.clickHandler}
-                  size="small"
-                  disabled={this.props.disabled}>
-
+          <IconButton
+            className={cnEditFeatureGeometryCoordDel()}
+            onClick={this.clickHandler}
+            size='small'
+            disabled={this.props.disabled}
+          >
             <Delete />
           </IconButton>
         </span>
@@ -35,7 +31,8 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
     );
   }
 
-  private clickHandler (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  @boundMethod
+  private clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.currentTarget.blur();
     this.props.onClick();
   }

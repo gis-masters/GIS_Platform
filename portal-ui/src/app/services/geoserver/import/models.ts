@@ -5,15 +5,15 @@ export interface ScratchImport {
   archive: boolean;
   targetWorkspace: {
     workspace: {
-      name: string,
-      isolated: boolean
-    }
+      name: string;
+      isolated: boolean;
+    };
   };
   targetStore: {
     dataStore: {
-      name: string,
-      type: string
-    }
+      name: string;
+      type: string;
+    };
   };
   tasks: ImportTaskShort[];
 }
@@ -30,16 +30,16 @@ export interface ImportTaskResponse {
 export interface ImportTaskShort {
   id: number;
   href: string;
-  state: string;
+  state: TaskStatusCode;
 }
 
 export interface ImportTaskFull extends ImportTaskShort {
-  layer: { name: string, href: string };
+  layer: { name: string; href: string };
   progress: string;
 }
 
 export interface ImportTask extends ImportTaskShort {
-  layer?: { name: string, href: string };
+  layer?: { name: string; href: string };
   progress?: string;
 }
 
@@ -59,23 +59,23 @@ export interface TaskItem {
   updateMode: string;
 
   data: {
-    type: string,
-    format: string,
-    file: string,
+    type: string;
+    format: string;
+    file: string;
   };
 
   layer: {
-    name: string,
-    href: string,
+    name: string;
+    href: string;
   };
 
   target: {
-    href: string,
+    href: string;
   };
 
   transforms: any;
   transformChain: {
-    type: string,
+    type: string;
   };
 }
 
@@ -87,16 +87,16 @@ export interface ImportLayerItem {
   nativeName: string;
   srs: string;
   bbox: {
-    minx: string,
-    miny: string,
-    maxx: string,
-    maxy: string,
-    crs: string
+    minx: string;
+    miny: string;
+    maxx: string;
+    maxy: string;
+    crs: string;
   };
   attributes: LayerAttribute[];
   style: {
-    name: string,
-    href: string
+    name: string;
+    href: string;
   };
 
   isActive?: boolean;
@@ -110,4 +110,18 @@ export interface LayerAttribute {
 
 export interface ImportLayer {
   layer: ImportLayerItem;
+}
+
+export enum TaskStatusCode {
+  PENDING = 'PENDING',
+  READY = 'READY',
+  RUNNING = 'RUNNING',
+  NO_CRS = 'NO_CRS',
+  NO_BOUNDS = 'NO_BOUNDS',
+  NO_FORMAT = 'NO_FORMAT',
+  BAD_FORMAT = 'BAD_FORMAT',
+  ERROR = 'ERROR',
+  CANCELED = 'CANCELED',
+  COMPLETE = 'COMPLETE',
+  UNKNOWN = 'UNKNOWN'
 }

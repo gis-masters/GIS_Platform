@@ -1,6 +1,6 @@
 import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
-import { UserPermission } from '../util/permissions';
+import { Role } from './permissions.service';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -40,22 +40,22 @@ export interface CrgLayer extends BaseCrgLayer {
 
 export interface CrgSource {
   name: string;
-  permission: UserPermission;
+  permission: Role;
   valid: boolean;
 }
 
-export interface CrgGroup extends CrgEntity {
+export interface CrgLayersGroup extends CrgEntity {
   parent?: number;
   expanded: boolean;
 }
 
-export interface TreeItem<T = (CrgLayer | CrgGroup)> {
+export interface TreeItem<T = CrgLayer | CrgLayersGroup> {
   id: number;
   payload: T;
   isGroup: boolean;
   depth?: number;
   visible?: boolean;
-  parent?: TreeItem<CrgGroup>;
+  parent?: TreeItem<CrgLayersGroup>;
   actualTransparency?: number;
 }
 
@@ -68,7 +68,7 @@ export interface Project {
   order: number;
   organizationId: number;
   layers: CrgLayer[];
-  groups: CrgGroup[];
+  groups: CrgLayersGroup[];
   createdAt: string;
   baseMaps: CrgProjectBaseMap[];
 }

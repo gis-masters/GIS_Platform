@@ -2,6 +2,7 @@ import React, { Component, FormEvent, ChangeEvent } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { printSettings, resolutions, pageFormats, Orientation } from '../../stores/PrintSettings.store';
 import { Form, FormField, FormLabel, FormControl } from '../Form/Form';
@@ -15,21 +16,11 @@ interface PrintDialogProps {
 
 @observer
 export class PrintDialog extends Component<PrintDialogProps> {
-  constructor (props: PrintDialogProps) {
-    super(props);
-
-    this.submitHandler = this.submitHandler.bind(this);
-    this.handleFormatChange = this.handleFormatChange.bind(this);
-    this.handleResolutionChange = this.handleResolutionChange.bind(this);
-  }
-
-  render () {
+  render() {
     return (
       <Form className={cnPrintDialog()} onSubmit={this.props.onSubmit}>
         <FormField>
-          <FormLabel htmlFor='printSettingsPageFormat'>
-            Формат:
-          </FormLabel>
+          <FormLabel htmlFor='printSettingsPageFormat'>Формат:</FormLabel>
           <FormControl>
             <Select
               id='printSettingsPageFormat'
@@ -41,9 +32,7 @@ export class PrintDialog extends Component<PrintDialogProps> {
         </FormField>
 
         <FormField>
-          <FormLabel htmlFor='printSettingsResolution'>
-            Разрешение:
-          </FormLabel>
+          <FormLabel htmlFor='printSettingsResolution'>Разрешение:</FormLabel>
           <FormControl>
             <Select
               id='printSettingsResolution'
@@ -55,9 +44,7 @@ export class PrintDialog extends Component<PrintDialogProps> {
         </FormField>
 
         <FormField>
-          <FormLabel htmlFor='printSettingsOrientation'>
-            Ориентация:
-          </FormLabel>
+          <FormLabel htmlFor='printSettingsOrientation'>Ориентация:</FormLabel>
           <FormControl>
             <Select
               id='printSettingsOrientation'
@@ -80,22 +67,24 @@ export class PrintDialog extends Component<PrintDialogProps> {
     );
   }
 
-  private submitHandler (e: FormEvent<HTMLFormElement>) {
+  @boundMethod
+  private submitHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     this.props.onSubmit();
   }
 
-  private handleFormatChange (e: ChangeEvent<{ name?: string; value: unknown }>) {
+  @boundMethod
+  private handleFormatChange(e: ChangeEvent<{ name?: string; value: unknown }>) {
     printSettings.setPageFormat(e.target.value as string);
   }
 
-  @action
-  private handleResolutionChange (e: ChangeEvent<{ name?: string; value: unknown }>) {
+  @action.bound
+  private handleResolutionChange(e: ChangeEvent<{ name?: string; value: unknown }>) {
     printSettings.resolution = Number(e.target.value);
   }
 
   @action
-  private handleOrientationChange (e: ChangeEvent<{ name?: string; value: unknown }>) {
+  private handleOrientationChange(e: ChangeEvent<{ name?: string; value: unknown }>) {
     printSettings.orientation = e.target.value as Orientation;
   }
 }

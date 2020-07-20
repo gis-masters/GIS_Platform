@@ -11,20 +11,26 @@ import {
   MenuItem
 } from '@material-ui/core';
 import { AddCircle, Delete, ListAlt, Unarchive } from '@material-ui/icons';
+import { boundMethod } from 'autobind-decorator';
 
 import { ActionType, sideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
-import { CrgGroup, CrgLayer, CrgLayerType } from '../../../services/crg/projects.models';
+import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { deleteLayer } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
-import { isCreateAllowed, isDeleteAllowed, isExportAllowed, isReadAllowed } from '../../../services/util/permissions';
+import {
+  isCreateAllowed,
+  isDeleteAllowed,
+  isExportAllowed,
+  isReadAllowed
+} from '../../../services/crg/permissions.service';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
 import { Button } from '../../Button/Button';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 
 interface LayerMenuProps {
-  entity: CrgLayer | CrgGroup;
+  entity: CrgLayer | CrgLayersGroup;
   open: boolean;
   x: number;
   y: number;
@@ -41,23 +47,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private exportAllowed = false;
   @observable private deleteAllowed = false;
 
-  constructor (props: LayerMenuProps) {
-    super(props);
-
-    this.openAttributeTable = this.openAttributeTable.bind(this);
-    this.addFeature = this.addFeature.bind(this);
-    this.export = this.export.bind(this);
-    this.openDeleteDialog = this.openDeleteDialog.bind(this);
-    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
-    this.deleteLayer = this.deleteLayer.bind(this);
-    this.deleteDialogKeyHandler = this.deleteDialogKeyHandler.bind(this);
-  }
-
   async componentDidMount() {
     await this.handlePermissions();
   }
 
-  render () {
+  render() {
     const { open, x, y, onClose, anchor, entity, isGroup } = this.props;
 
     return (
@@ -110,19 +104,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
         </Menu>
 
-        <Dialog open={this.deleteDialogOpen} onKeyDown={this.deleteDialogKeyHandler}>
+        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
           <DialogContent>
-            <DialogContentText>
-              Удалить слой "{entity.title}"?
-            </DialogContentText>
+            <DialogContentText>Удалить слой "{entity.title}"?</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.deleteLayer} color='primary' variant='outlined'>
+            <Button onClick={this.deleteLayer} color='primary'>
               Удалить
             </Button>
-            <Button onClick={this.closeDeleteDialog} variant='outlined'>
-              Отмена
-            </Button>
+            <Button onClick={this.closeDeleteDialog}>Отмена</Button>
           </DialogActions>
         </Dialog>
       </>
@@ -154,7 +144,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
     this.exportAllowed = exportAllowed;
   }
 
-  private openAttributeTable () {
+  @boundMethod
+  private openAttributeTable() {
     const { entity, onClose } = this.props;
 
     sideBarManager.do({
@@ -166,7 +157,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  private async addFeature () {
+  @boundMethod
+  private async addFeature() {
     const { entity, onClose } = this.props;
     const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
 
@@ -184,41 +176,32 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  private async export () {
+  @boundMethod
+  private async export() {
     const { entity, onClose } = this.props;
     const { internalName } = entity as CrgLayer;
 
-    await exportService.export({format: 'ESRI Shapefile', layers: [internalName]});
-    sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
+    await exportService.export({ format: 'ESRI Shapefile', layers: [internalName] });
+    sideBarManager.do({ target: SidebarType.INFO, action: ActionType.OPEN });
 
     onClose();
   }
 
-  private deleteLayer () {
-    deleteLayer(this.props.entity as CrgLayer);
+  @boundMethod
+  private async deleteLayer() {
+    await deleteLayer(this.props.entity as CrgLayer);
     this.closeDeleteDialog();
-    sideBarManager.do({target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE});
+    sideBarManager.do({ target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE });
   }
 
-  @action
-  openDeleteDialog () {
+  @action.bound
+  private openDeleteDialog() {
     this.deleteDialogOpen = true;
     this.props.onClose();
   }
 
-  @action
-  private closeDeleteDialog () {
+  @action.bound
+  private closeDeleteDialog() {
     this.deleteDialogOpen = false;
-  }
-
-  private deleteDialogKeyHandler (e: React.KeyboardEvent<HTMLDivElement>) {
-    e.preventDefault();
-
-    if (e.key === 'Enter') {
-      this.deleteLayer();
-    }
-    if (e.key === 'Escape') {
-      this.closeDeleteDialog();
-    }
   }
 }

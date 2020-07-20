@@ -16,41 +16,36 @@ interface FeaturesListProps {
   features?: WfsFeature[];
   onItemSelect: (item: WfsFeature) => void;
   onItemHighlight: (item: WfsFeature | null) => void;
-
 }
 
 @observer
 export class FeaturesList extends Component<FeaturesListProps> {
   @observable private highlightedFeatureId: string | null = null;
 
-  constructor (props: FeaturesListProps) {
-    super(props);
-
-    this.handleItemHighlight = this.handleItemHighlight.bind(this);
-  }
-
-  render () {
+  render() {
     const { features, onItemSelect } = this.props;
 
     return (
       <div className={cnFeaturesList()}>
-        {features && features.length ?
-            features.map(feature => (
-                <FeaturesListItem
-                    feature={feature}
-                    highlighted={feature.id === this.highlightedFeatureId}
-                    onSelect={onItemSelect}
-                    onHighlight={this.handleItemHighlight}
-                    key={feature.id}
-                />
-            )) :
-            <FeaturesListEmpty />}
+        {features && features.length ? (
+          features.map(feature => (
+            <FeaturesListItem
+              feature={feature}
+              highlighted={feature.id === this.highlightedFeatureId}
+              onSelect={onItemSelect}
+              onHighlight={this.handleItemHighlight}
+              key={feature.id}
+            />
+          ))
+        ) : (
+          <FeaturesListEmpty />
+        )}
       </div>
     );
   }
 
-  @action
-  private handleItemHighlight (feature: WfsFeature | null) {
+  @action.bound
+  private handleItemHighlight(feature: WfsFeature | null) {
     this.props.onItemHighlight(feature);
     this.highlightedFeatureId = feature && feature.id;
   }

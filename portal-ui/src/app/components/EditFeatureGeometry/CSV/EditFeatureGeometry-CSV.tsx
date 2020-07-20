@@ -6,6 +6,7 @@ import { Archive, Unarchive } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
+import { boundMethod } from 'autobind-decorator';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 
@@ -20,36 +21,29 @@ interface EditFeatureGeometryCSVProps {
   readOnly?: boolean;
 }
 
-export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps>{
+export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps> {
   private inputRef = createRef<HTMLInputElement>();
 
-  constructor (props: EditFeatureGeometryCSVProps) {
-    super(props);
-
-    this.importClickHandler = this.importClickHandler.bind(this);
-    this.exportClickHandler = this.exportClickHandler.bind(this);
-    this.fileHandler = this.fileHandler.bind(this);
-  }
-
-  render () {
+  render() {
     const { readOnly, empty } = this.props;
 
     return (
       <>
-        {!readOnly && <Tooltip title='Импорт координат линии/контура из CSV'>
-          <IconButton
-              className={cnEditFeatureGeometryCSV({ do: 'import' })}
-              onClick={this.importClickHandler}>
-            <Archive />
-          </IconButton>
-        </Tooltip>}
+        {!readOnly && (
+          <Tooltip title='Импорт координат линии/контура из CSV'>
+            <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.importClickHandler}>
+              <Archive />
+            </IconButton>
+          </Tooltip>
+        )}
 
         <Tooltip title='Экспорт координат линии/контура в CSV'>
           <span>
             <IconButton
-                className={cnEditFeatureGeometryCSV({ do: 'export' })}
-                disabled={empty}
-                onClick={this.exportClickHandler}>
+              className={cnEditFeatureGeometryCSV({ do: 'export' })}
+              disabled={empty}
+              onClick={this.exportClickHandler}
+            >
               <Unarchive />
             </IconButton>
           </span>
@@ -60,15 +54,18 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
     );
   }
 
-  private importClickHandler () {
+  @boundMethod
+  private importClickHandler() {
     this.inputRef.current.click();
   }
 
-  private exportClickHandler () {
+  @boundMethod
+  private exportClickHandler() {
     this.saveAs(unparse(this.props.coordinates.map(coord => clone(coord).reverse())));
   }
 
-  private fileHandler (e: ChangeEvent<HTMLInputElement>) {
+  @boundMethod
+  private fileHandler(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -79,7 +76,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   }
 
   @action
-  private doImport (csv: string) {
+  private doImport(csv: string) {
     // @ts-ignore
     const result = parse(csv, { skipEmptyLines: 'greedy' });
 
@@ -89,8 +86,8 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
     const { coordinates, mustBeClosed } = this.props;
     const newCoordinates: CoordinateEdited[] = result.data
-                                                     .map((point: CoordinateEdited) => point.reverse())
-                                                     .filter((point: CoordinateEdited) => point[0] && point[1]);
+      .map((point: CoordinateEdited) => point.reverse())
+      .filter((point: CoordinateEdited) => point[0] && point[1]);
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
       newCoordinates.push(newCoordinates[0]);

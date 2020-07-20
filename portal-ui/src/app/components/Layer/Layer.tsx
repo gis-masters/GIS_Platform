@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup, CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
+import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { schemaService } from '../../services/crg/schema.service';
 
@@ -28,7 +28,7 @@ export const cnLayer = cn('Layer');
 
 export interface LayerProps extends IClassNameProps {
   isGroup: boolean;
-  data: CrgLayer | CrgGroup;
+  data: CrgLayer | CrgLayersGroup;
   depth: number;
   visible: boolean;
   onEyeClick: () => void;
@@ -44,21 +44,16 @@ export class Layer extends Component<LayerProps> {
   @observable private errors: string[] = [];
   private menuAnchor?: HTMLElement;
 
-  constructor (props: LayerProps) {
+  constructor(props: LayerProps) {
     super(props);
 
     this.fetchIconType();
-
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleBurgerClick = this.handleBurgerClick.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
-    this.handleContextMenuClose = this.handleContextMenuClose.bind(this);
   }
 
-  render () {
+  render() {
     const { className, data, isGroup, depth, onEyeClick, visible } = this.props;
     const { title, enabled } = data;
-    const { expanded } = data as CrgGroup;
+    const { expanded } = data as CrgLayersGroup;
 
     return (
       <div className={cnLayer({ open: this.open, group: isGroup, visible }, [className])}>
@@ -68,9 +63,7 @@ export class Layer extends Component<LayerProps> {
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} />
           <LayerIcon type={this.iconType} expanded={expanded} />
-          <LayerTitle isError={this.isError}>
-            {title}
-          </LayerTitle>
+          <LayerTitle isError={this.isError}>{title}</LayerTitle>
           <LayerBurger disabled={this.isError} onClick={this.handleBurgerClick} />
         </LayerCard>
 
@@ -93,18 +86,18 @@ export class Layer extends Component<LayerProps> {
   }
 
   @computed
-  private get open (): boolean {
+  private get open(): boolean {
     const { isGroup, data } = this.props;
 
-    return isGroup ? (data as CrgGroup).expanded : this._open;
+    return isGroup ? (data as CrgLayersGroup).expanded : this._open;
   }
 
   @computed
-  private get isError (): boolean {
+  private get isError(): boolean {
     return Boolean(this.errors.length);
   }
 
-  private async fetchIconType () {
+  private async fetchIconType() {
     const { data, isGroup } = this.props;
     let iconType: IconType;
 
@@ -130,16 +123,16 @@ export class Layer extends Component<LayerProps> {
   }
 
   @action
-  private setIconType (iconType: IconType) {
+  private setIconType(iconType: IconType) {
     this.iconType = iconType;
   }
 
-  @action
-  private handleOpen () {
+  @action.bound
+  private handleOpen() {
     const { isGroup, data } = this.props;
 
     if (isGroup) {
-      const group = data as CrgGroup;
+      const group = data as CrgLayersGroup;
       group.expanded = !group.expanded;
     } else {
       const { type } = data as CrgLayer;
@@ -151,8 +144,8 @@ export class Layer extends Component<LayerProps> {
     }
   }
 
-  @action
-  private handleContextMenu (e: React.MouseEvent<HTMLDivElement>) {
+  @action.bound
+  private handleContextMenu(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
 
     if (this.isError) {
@@ -165,8 +158,8 @@ export class Layer extends Component<LayerProps> {
     this.menuOpen = true;
   }
 
-  @action
-  private handleBurgerClick (e: React.MouseEvent<HTMLButtonElement>) {
+  @action.bound
+  private handleBurgerClick(e: React.MouseEvent<HTMLButtonElement>) {
     this.menuAnchor = e.target as HTMLButtonElement;
     this.menuOpen = true;
 
@@ -176,13 +169,13 @@ export class Layer extends Component<LayerProps> {
     }
   }
 
-  @action
-  private handleContextMenuClose () {
+  @action.bound
+  private handleContextMenuClose() {
     this.menuOpen = false;
   }
 
   @action
-  private addError (error: string) {
+  private addError(error: string) {
     this.errors.push(error);
 
     const { data, onEyeClick } = this.props;

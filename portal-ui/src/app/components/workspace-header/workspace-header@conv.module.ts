@@ -6,11 +6,13 @@ import { HelpTogglerModule } from '../help-toggler/help-toggler.module';
 import { CrgStepperComponent } from '../crg-stepper/crg-stepper.component';
 
 import { WorkspaceHeaderComponent } from './workspace-header@conv.component';
+import { OrgAdminButtonComponent } from '../org-admin-button/org-admin-button.component';
 
 @NgModule({
   declarations: [
     WorkspaceHeaderComponent,
-    CrgStepperComponent
+    CrgStepperComponent,
+    OrgAdminButtonComponent
   ],
   entryComponents: [
     WorkspaceHeaderComponent

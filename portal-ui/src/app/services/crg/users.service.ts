@@ -1,19 +1,32 @@
 import { HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { debounce } from 'lodash';
+
 import { serverProperties } from '../server-properties.service';
+import { localStorageService } from '../local-storage.service';
 import { services } from '../services';
-import { BuildInRole } from '../util/permissions';
 import { CrgApiResponse } from './models';
+import { usersList } from '../../stores/UsersList.store';
+import { BuildInRole } from './permissions.service';
+
+export interface ApiLink {
+  href: string;
+  templated: boolean;
+}
 
 export interface CrgUser {
+  id: number;
   email: string;
+  name: string;
+  surName: string;
   username: string;
   enabled: boolean;
-  surName?: string;
-  authorities: string[];
+  authorities: { authority: string }[];
   createdAt: string;
-  name: string;
-  id: number;
+  _links?: { [key: string]: ApiLink }[];
+}
+
+export interface NewUserData extends Pick<CrgUser, 'email' | 'name' | 'surName'> {
+  password: string;
 }
 
 export interface UserInfoModel {
@@ -23,32 +36,77 @@ export interface UserInfoModel {
   roles?: BuildInRole[];
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UsersService {
+class UsersService {
   private static _instance: UsersService;
+  private usersListStoreInited = false;
+  private debouncedFetchUsersListStore: () => Promise<void>;
 
   private constructor() {
+    this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
   }
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  async getInfo(): Promise<UserInfoModel> {
+  async getCurrentUserInfo(): Promise<UserInfoModel> {
     await services.provided;
-    const url = await serverProperties.usersUrl + '/current';
+    const url = (await serverProperties.usersUrl) + '/current';
 
     return await services.httpq.get<UserInfoModel>(url);
   }
 
-  async getAll(): Promise<CrgApiResponse> {
+  async getAll(): Promise<CrgUser[]> {
     await services.provided;
     const url = await serverProperties.usersUrl;
-    const params = new HttpParams().set('size', '1000');
+    const params = new HttpParams().set('size', '10000');
 
-    return await services.httpq.get<CrgApiResponse>(url, {params});
+    return (await services.httpq.get<CrgApiResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
+  }
+
+  async create(userData: NewUserData) {
+    await services.provided;
+    const url = await serverProperties.usersUrl;
+
+    await services.httpq.post(url, userData);
+
+    this.debouncedFetchUsersListStore();
+  }
+
+  async delete(user: CrgUser) {
+    await services.provided;
+    const url = await serverProperties.usersUrl;
+
+    await services.httpq.delete(`${url}/${user.id}`);
+
+    this.debouncedFetchUsersListStore();
+  }
+
+  async initUsersListStore() {
+    if (this.usersListStoreInited) {
+      return;
+    }
+
+    this.usersListStoreInited = true;
+
+    await this.fetchUsersListStore();
+  }
+
+  private async fetchUsersListStore() {
+    if (!this.usersListStoreInited) {
+      return;
+    }
+
+    if (usersList.fetching) {
+      this.debouncedFetchUsersListStore();
+      return;
+    }
+
+    usersList.setFetching(true);
+    const currentUser = localStorageService.getUserInfo();
+    const users = (await this.getAll()).filter(user => user.username !== currentUser.userName);
+    usersList.setList(users);
+    usersList.setFetching(false);
   }
 }
 

@@ -1,17 +1,17 @@
 import { action, computed, observable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
-import { CrgGroup, CrgLayer, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
+import { CrgLayersGroup, CrgLayer, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
 
 const MAX_LAYERS_IN_BATCH = 100;
 
 class CurrentProject {
-
   private static _instance: CurrentProject;
 
   @observable bbox: string;
   @observable createdAt: string;
-  @observable groups: CrgGroup[];
+  @observable groups: CrgLayersGroup[];
   @observable id: number;
   @observable internalName: string;
   @observable name: string;
@@ -21,16 +21,14 @@ class CurrentProject {
   @observable default: boolean;
   @observable layers: CrgLayer[];
 
-  private constructor() {
-    this.sorter = this.sorter.bind(this);
-  }
+  private constructor() {}
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   @computed
-  get tree (): TreeItem[] {
+  get tree(): TreeItem[] {
     return [
       ...this.groups.map(group => ({
         id: group.id,
@@ -53,52 +51,52 @@ class CurrentProject {
         isGroup: false
       }))
     ]
-    .map((item: TreeItem, i, items) => {
-      const parentId = item.isGroup ? (item.payload as CrgGroup).parent : (item.payload as CrgLayer).groupId;
+      .map((item: TreeItem, i, items) => {
+        const parentId = item.isGroup ? (item.payload as CrgLayersGroup).parent : (item.payload as CrgLayer).groupId;
 
-      if (parentId) {
-        item.parent = items.find(t => t.isGroup && t.id === parentId) as TreeItem<CrgGroup>;
-      }
+        if (parentId) {
+          item.parent = items.find(t => t.isGroup && t.id === parentId) as TreeItem<CrgLayersGroup>;
+        }
 
-      return item;
-    })
-    .map(item => {
-      item.depth = this.getDept(item);
-      item.visible = this.getGenusVisibility(item);
+        return item;
+      })
+      .map(item => {
+        item.depth = this.getDept(item);
+        item.visible = this.getGenusVisibility(item);
 
-      if (!item.isGroup) {
-        item.actualTransparency = this.getActualTransparency(item);
-      }
+        if (!item.isGroup) {
+          item.actualTransparency = this.getActualTransparency(item);
+        }
 
-      return item;
-    })
-    .sort(this.sorter);
+        return item;
+      })
+      .sort(this.sorter);
   }
 
   @computed
   get visibleLayers(): TreeItem<CrgLayer>[][] {
     return this.tree
-              .filter(item => item.visible && !item.isGroup)
-              .reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
-                if (!acc.length) {
-                  return [[item]];
-                }
+      .filter(item => item.visible && !item.isGroup)
+      .reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
+        if (!acc.length) {
+          return [[item]];
+        }
 
-                const lastBatch = acc[acc.length - 1];
-                const lastItem = lastBatch[lastBatch.length - 1];
-                const lastTransparency = lastItem.actualTransparency;
-                const lastType = lastItem.payload.type;
-                const transparency = item.actualTransparency;
-                const typ = item.payload.type;
+        const lastBatch = acc[acc.length - 1];
+        const lastItem = lastBatch[lastBatch.length - 1];
+        const lastTransparency = lastItem.actualTransparency;
+        const lastType = lastItem.payload.type;
+        const transparency = item.actualTransparency;
+        const typ = item.payload.type;
 
-                if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
-                  lastBatch.push(item);
-                } else {
-                  acc.push([item]);
-                }
+        if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
+          lastBatch.push(item);
+        } else {
+          acc.push([item]);
+        }
 
-                return acc;
-              }, []);
+        return acc;
+      }, []);
   }
 
   @computed
@@ -144,19 +142,20 @@ class CurrentProject {
   }
 
   @action
-  patch<T> (item: T, patch: Partial<T>) {
+  patch<T>(item: T, patch: Partial<T>) {
     Object.assign(item, patch);
   }
 
-  private getDept (item: TreeItem): number {
+  private getDept(item: TreeItem): number {
     return item.parent ? this.getDept(item.parent) + 1 : 0;
   }
 
-  private getGenusVisibility (item: TreeItem): boolean {
+  private getGenusVisibility(item: TreeItem): boolean {
     return item.payload.enabled && (item.parent ? this.getGenusVisibility(item.parent) : true);
   }
 
-  private sorter (a: TreeItem, b: TreeItem): number {
+  @boundMethod
+  private sorter(a: TreeItem, b: TreeItem): number {
     if (a.parent === b.parent) {
       return this.sortSiblings(a, b);
     }
@@ -164,14 +163,14 @@ class CurrentProject {
     return this.sortCommonAncestorsChildren(a, b);
   }
 
-  private sortSiblings (a: TreeItem, b: TreeItem): number {
+  private sortSiblings(a: TreeItem, b: TreeItem): number {
     const { payload: payloadA, isGroup: aGroup } = a;
     const { payload: payloadB, isGroup: bGroup } = b;
 
-    return (payloadA.position - payloadB.position) || (payloadA.id - payloadB.id) || (Number(bGroup) - Number(aGroup));
+    return payloadA.position - payloadB.position || payloadA.id - payloadB.id || Number(bGroup) - Number(aGroup);
   }
 
-  private sortCommonAncestorsChildren (a: TreeItem, b: TreeItem, depth?: number): number {
+  private sortCommonAncestorsChildren(a: TreeItem, b: TreeItem, depth?: number): number {
     if (depth === undefined) {
       depth = Math.min(a.depth, b.depth);
     }
@@ -190,7 +189,7 @@ class CurrentProject {
     return this.sortCommonAncestorsChildren(ax, bx, depth - 1);
   }
 
-  private getGenusAtDept (item: TreeItem, depth: number): TreeItem {
+  private getGenusAtDept(item: TreeItem, depth: number): TreeItem {
     if (item.depth === depth) {
       return item;
     } else {
@@ -198,7 +197,7 @@ class CurrentProject {
     }
   }
 
-  private getActualTransparency (item: TreeItem, value?: number): number {
+  private getActualTransparency(item: TreeItem, value?: number): number {
     value = value || item.payload.transparency;
 
     if (item.parent) {

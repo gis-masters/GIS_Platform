@@ -22,7 +22,7 @@ import { FeatureTypesService } from '../../services/geoserver/featuretypes.servi
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { sideBarManager, ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
 import { Toast } from '../Toast/Toast';
-import { baseMapsService } from '../../services/crg/base-maps.service';
+import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 
 type NamesChunks = { [srsName: string]: string[] };
@@ -47,12 +47,10 @@ export class MapComponent implements OnInit, OnDestroy {
   private reactionDisposer: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private featureTypesService: FeatureTypesService) {
-  }
+  constructor(private logger: NGXLogger, private featureTypesService: FeatureTypesService) {}
 
   async ngOnInit() {
-    await baseMapsService.fetchAll(currentProject.baseMaps);
+    await fetchAllBaseMaps(currentProject.baseMaps);
 
     openLayersService.createMap();
 
@@ -61,93 +59,97 @@ export class MapComponent implements OnInit, OnDestroy {
       openLayersService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
     }
 
-    this.reactionDisposer = reaction(() => currentProject.visibleLayers, visibleItems => {
-      openLayersService.hideUserLayers();
+    this.reactionDisposer = reaction(
+      () => currentProject.visibleLayers,
+      visibleItems => {
+        openLayersService.hideUserLayers();
 
-      visibleItems.forEach((batch, i) => {
-        const { actualTransparency } = batch[0];
+        visibleItems.forEach((batch, i) => {
+          const { actualTransparency } = batch[0];
 
-        const layers = batch.map(item => item.payload).reverse();
+          const layers = batch.map(item => item.payload).reverse();
 
-        openLayersService.addLayers(
-          layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
-          visibleItems.length - i,
-          actualTransparency / 100);
+          openLayersService.addLayers(
+            layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
+            visibleItems.length - i,
+            actualTransparency / 100
+          );
 
-        openLayersService.addExternalLayers(
-          layers.filter(l => l.type === CrgLayerType.EXTERNAL),
-          visibleItems.length - i);
-      });
-    }, { fireImmediately: true });
-
-    communicationService.validationDialog
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: ValidationDialogData) => {
-          if (data && data.show) {
-            this.isValidationDialogShow = true;
-
-            if (data.layers && data.layers.length > 0) {
-              this.validationDialogData = data;
-            } else {
-              Toast.warn('Отсутствуют данные. Начните свою работу с загрузки слоев.');
-            }
-          } else {
-            this.isValidationDialogShow = false;
-          }
+          openLayersService.addExternalLayers(
+            layers.filter(l => l.type === CrgLayerType.EXTERNAL),
+            visibleItems.length - i
+          );
         });
+      },
+      { fireImmediately: true }
+    );
+
+    communicationService.validationDialog.pipe(takeUntil(this.unsubscribe$)).subscribe((data: ValidationDialogData) => {
+      if (data && data.show) {
+        this.isValidationDialogShow = true;
+
+        if (data.layers && data.layers.length > 0) {
+          this.validationDialogData = data;
+        } else {
+          Toast.warn('Отсутствуют данные. Начните свою работу с загрузки слоев.');
+        }
+      } else {
+        this.isValidationDialogShow = false;
+      }
+    });
 
     communicationService.gmlDialog
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: GmlDialogData) => this.isGmlDialogShow = data.action !== ActionType.CLOSE);
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: GmlDialogData) => (this.isGmlDialogShow = data.action !== ActionType.CLOSE));
 
     communicationService.sidebarManager
-        .pipe(
-          filter((data: Sidebar) => this.isMapSidebar(data)),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((sidebar: Sidebar) => {
-          if (sidebar.target === SidebarType.BUG_REPORT) {
-            switch (sidebar.action) {
-              case ActionType.CLOSE:
-                this.isBugReportSidebarActive = false;
-                break;
-              case ActionType.OPEN:
-                this.isBugReportSidebarActive = true;
-                break;
-              case ActionType.SWITCH:
-                this.isBugReportSidebarActive = !this.isBugReportSidebarActive;
-                break;
-            }
-          } else if (sidebar.target === SidebarType.FEATURES) {
-            this.viewFeaturesData = sidebar.data;
-
-            switch (sidebar.action) {
-              case ActionType.CLOSE:
-                this.isFeaturesSidebarActive = false;
-                break;
-              case ActionType.OPEN:
-                this.isFeaturesSidebarActive = true;
-                break;
-              case ActionType.SWITCH:
-                this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive;
-                break;
-            }
-          } else if (sidebar.target === SidebarType.ATTRIBUTES) {
-            this.selectedLayer = sidebar.data;
-
-            switch (sidebar.action) {
-              case ActionType.CLOSE:
-                this.isAttrSidebarActive = false;
-                break;
-              case ActionType.OPEN:
-                this.isAttrSidebarActive = true;
-                break;
-              case ActionType.SWITCH:
-                this.isAttrSidebarActive = !this.isAttrSidebarActive;
-                break;
-            }
+      .pipe(
+        filter((data: Sidebar) => this.isMapSidebar(data)),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((sidebar: Sidebar) => {
+        if (sidebar.target === SidebarType.BUG_REPORT) {
+          switch (sidebar.action) {
+            case ActionType.CLOSE:
+              this.isBugReportSidebarActive = false;
+              break;
+            case ActionType.OPEN:
+              this.isBugReportSidebarActive = true;
+              break;
+            case ActionType.SWITCH:
+              this.isBugReportSidebarActive = !this.isBugReportSidebarActive;
+              break;
           }
-        });
+        } else if (sidebar.target === SidebarType.FEATURES) {
+          this.viewFeaturesData = sidebar.data;
+
+          switch (sidebar.action) {
+            case ActionType.CLOSE:
+              this.isFeaturesSidebarActive = false;
+              break;
+            case ActionType.OPEN:
+              this.isFeaturesSidebarActive = true;
+              break;
+            case ActionType.SWITCH:
+              this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive;
+              break;
+          }
+        } else if (sidebar.target === SidebarType.ATTRIBUTES) {
+          this.selectedLayer = sidebar.data;
+
+          switch (sidebar.action) {
+            case ActionType.CLOSE:
+              this.isAttrSidebarActive = false;
+              break;
+            case ActionType.OPEN:
+              this.isAttrSidebarActive = true;
+              break;
+            case ActionType.SWITCH:
+              this.isAttrSidebarActive = !this.isAttrSidebarActive;
+              break;
+          }
+        }
+      });
 
     openLayersService.mapClick$
       .pipe(takeUntil(this.unsubscribe$))
@@ -197,11 +199,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
     openLayersService.showSelectionMarker(buffer.getCoordinates());
 
-    const collections = await Promise.all(Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {
-      const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName);
+    const collections = await Promise.all(
+      Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {
+        const xml = makeXmlPolygonIntersect(complexNames, buffer, srsName);
 
-      return getFeaturesByXmlFilter(xml);
-    }));
+        return getFeaturesByXmlFilter(xml);
+      })
+    );
 
     const features = collections.map(({ features }) => features || []).flat();
 
@@ -227,9 +231,10 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private isMapSidebar(sidebar: Sidebar) {
-    return sidebar.target === SidebarType.BUG_REPORT ||
+    return (
+      sidebar.target === SidebarType.BUG_REPORT ||
       sidebar.target === SidebarType.FEATURES ||
-      sidebar.target === SidebarType.ATTRIBUTES;
+      sidebar.target === SidebarType.ATTRIBUTES
+    );
   }
-
 }

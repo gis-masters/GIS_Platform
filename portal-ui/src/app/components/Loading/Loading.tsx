@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
 
@@ -10,14 +10,15 @@ interface LoadingProps {
   visible?: boolean;
   className?: string;
   noBackdrop?: boolean;
+  global?: boolean;
 }
 
-export const Loading: React.FC<LoadingProps> = ({ visible, className, noBackdrop }) => {
+export const Loading: FC<LoadingProps> = ({ visible, className, noBackdrop, global }) => {
   if (visible === false) {
     return null;
   }
   return (
-    <div className={cnLoading({noBackdrop}, [className])}>
+    <div className={cnLoading({ noBackdrop, global }, [className])}>
       <CircularProgress size={100} />
     </div>
   );

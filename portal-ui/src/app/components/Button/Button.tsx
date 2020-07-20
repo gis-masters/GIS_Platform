@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Button as BaseButton } from '@material-ui/core';
 import { ButtonProps as BaseButtonProps } from '@material-ui/core/Button/Button';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../services/services';
 
@@ -13,15 +14,10 @@ interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
 }
 
-export class Button extends React.Component<ButtonProps> {
-  constructor (props: ButtonProps) {
-    super(props);
-
-    this.onClickHandler = this.onClickHandler.bind(this);
-  }
-
-  render () {
+export class Button extends Component<ButtonProps> {
+  render() {
     const extendedProps: ButtonProps = {
+      variant: 'outlined',
       ...this.props,
       className: cnButton(null, [this.props.className]),
       href: this.props.routerLink || this.props.href,
@@ -32,7 +28,8 @@ export class Button extends React.Component<ButtonProps> {
     return <BaseButton {...extendedProps} />;
   }
 
-  private onClickHandler (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  @boundMethod
+  private onClickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     if (this.props.onClick) {
       this.props.onClick(e);
     }
@@ -43,7 +40,7 @@ export class Button extends React.Component<ButtonProps> {
     }
   }
 
-  private async navigate () {
+  private async navigate() {
     await services.provided;
 
     services.ngZone.run(() => {

@@ -4,20 +4,24 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 interface Task {
   method: 'get' | 'post' | 'delete' | 'patch';
   url: string;
-  body?: any | null,
+  body?: any | null;
   options?: Options;
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
 }
 
 interface Options {
-  headers?: HttpHeaders | {
-      [header: string]: string | string[];
-  };
+  headers?:
+    | HttpHeaders
+    | {
+        [header: string]: string | string[];
+      };
   observe?: 'body';
-  params?: HttpParams | {
-      [param: string]: string | string[];
-  };
+  params?:
+    | HttpParams
+    | {
+        [param: string]: string | string[];
+      };
   reportProgress?: boolean;
   responseType?: 'text' | 'json' | 'blob';
   withCredentials?: boolean;
@@ -31,39 +35,39 @@ export class HttpQueue {
   private queue: Task[] = [];
   private maxParallel: number = 6;
 
-  constructor (private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  get <T>(url: string, options?: Options): Promise<T> {
+  get<T>(url: string, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({method: 'get', url, options, resolve, reject})
+      this.queue.push({ method: 'get', url, options, resolve, reject });
       this.tick();
     });
   }
 
-  patch <T>(url: string, body: any, options?: Options): Promise<T> {
+  patch<T>(url: string, body: any, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
       options = options || {};
       const headers = new HttpHeaders({ 'Content-type': 'application/merge-patch+json' });
-      this.queue.push({ method: 'patch', url, body, options: ({ headers, ...options }), resolve, reject });
+      this.queue.push({ method: 'patch', url, body, options: { headers, ...options }, resolve, reject });
       this.tick();
     });
   }
 
-  post <T>(url: string, body: any | null, options?: Options): Promise<T> {
+  post<T>(url: string, body: any | null, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
       this.queue.push({ method: 'post', url, body, options, resolve, reject });
       this.tick();
     });
   }
 
-  delete <T>(url: string): Promise<T> {
+  delete<T>(url: string): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({method: 'delete', url, resolve, reject})
+      this.queue.push({ method: 'delete', url, resolve, reject });
       this.tick();
     });
   }
 
-  private tick () {
+  private tick() {
     if (!this.queue.length || this.executing >= this.maxParallel) return;
 
     const task: Task = this.queue.shift();

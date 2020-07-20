@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Project } from '../../services/crg/projects.models';
@@ -16,10 +16,10 @@ interface ProjectCardProps {
   typ: 'card' | 'add';
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({className, project, typ}) => (
+export const ProjectCard: FC<ProjectCardProps> = ({ className, project, typ }) => (
   <div className={cnProjectCard(null, [className])}>
-    <div className={cnProjectCard('Inner', {typ})}>
-      {typ === 'add' ? <ProjectCardAdd/> : (<ProjectCardCard project={project}/>)}
+    <div className={cnProjectCard('Inner', { typ })}>
+      {typ === 'add' ? <ProjectCardAdd /> : <ProjectCardCard project={project} />}
     </div>
   </div>
 );

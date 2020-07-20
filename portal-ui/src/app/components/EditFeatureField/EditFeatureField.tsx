@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { FieldType, EditFeatureItem } from '../../services/crg/schema.service';
@@ -15,15 +15,13 @@ interface EditFeatureFieldProps {
   field: EditFeatureItem;
 }
 
-export class EditFeatureField extends React.Component<EditFeatureFieldProps> {
-  render () {
+export class EditFeatureField extends Component<EditFeatureFieldProps> {
+  render() {
     const { type, field } = this.props;
 
     return (
       <div className={cnEditFeatureField({ type: this.props.type })}>
-        <EditFeatureFieldLabel>
-          {field.property.title}
-        </EditFeatureFieldLabel>
+        <EditFeatureFieldLabel>{field.property.title}</EditFeatureFieldLabel>
         <EditFeatureFieldField type={type} field={field} />
       </div>
     );

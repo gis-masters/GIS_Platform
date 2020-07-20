@@ -1,5 +1,5 @@
-import React from 'react';
-import { FormControl, Select as BaseSelect, InputLabel, MenuItem } from '@material-ui/core'
+import React, { FC, ReactNode } from 'react';
+import { FormControl, Select as BaseSelect, InputLabel, MenuItem } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
@@ -11,7 +11,7 @@ type Value = string | number | string[];
 
 interface Option {
   value: Value;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 interface SelectProps extends IClassNameProps {
@@ -22,11 +22,13 @@ interface SelectProps extends IClassNameProps {
   onChange?: (e: React.ChangeEvent<{ name?: string; value: unknown }>) => void;
 }
 
-export const Select: React.FC<SelectProps> = ({ className, id, label, value, onChange, options }) => (
+export const Select: FC<SelectProps> = ({ className, id, label, value, onChange, options }) => (
   <FormControl className={cnSelect(null, [className])}>
     {label ? <InputLabel>{label}</InputLabel> : null}
     <BaseSelect value={value} onChange={onChange} id={id}>
-      {options.map((option, i) => <MenuItem {...option} key={i} />)}
+      {options.map((option, i) => (
+        <MenuItem {...option} key={i} />
+      ))}
     </BaseSelect>
   </FormControl>
 );

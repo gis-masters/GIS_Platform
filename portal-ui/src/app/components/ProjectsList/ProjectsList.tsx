@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -17,11 +17,10 @@ import '!style-loader!css-loader!sass-loader!./ProjectsList.scss';
 const cnProjectsList = cn('ProjectsList');
 
 @observer
-export class ProjectsList extends React.Component {
-  @observable
-  private isCreationEnabled = false;
+export class ProjectsList extends Component {
+  @observable private isCreationEnabled = false;
 
-  async componentDidMount () {
+  async componentDidMount() {
     const { platform } = await getEnvironment();
     if (platform !== 'simf') {
       this.enableCreation();
@@ -30,17 +29,17 @@ export class ProjectsList extends React.Component {
     await projectsService.fetchProjects();
   }
 
-  render () {
+  render() {
     return (
       <div className={cnProjectsList()}>
-        {!projectsList.isLoaded ? <ProjectsListLoader /> : (
+        {!projectsList.isLoaded ? (
+          <ProjectsListLoader />
+        ) : (
           <>
             {projectsList.list.map((project, i) => (
               <ProjectCard className={cnProjectsList('Card')} project={project} typ='card' key={i} />
             ))}
-            {this.isCreationEnabled ?
-                <ProjectCard className={cnProjectsList('Card')} typ='add' /> :
-                null}
+            {this.isCreationEnabled ? <ProjectCard className={cnProjectsList('Card')} typ='add' /> : null}
           </>
         )}
       </div>
@@ -48,7 +47,7 @@ export class ProjectsList extends React.Component {
   }
 
   @action
-  private enableCreation () {
+  private enableCreation() {
     this.isCreationEnabled = !this.isCreationEnabled;
   }
 }

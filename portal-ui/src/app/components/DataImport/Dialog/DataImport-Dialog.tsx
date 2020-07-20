@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
@@ -22,31 +22,26 @@ interface DataImportDialogProps {
 }
 
 @observer
-export class DataImportDialog extends React.Component<DataImportDialogProps> {
+export class DataImportDialog extends Component<DataImportDialogProps> {
   @observable private busy = false;
-
-  constructor (props: DataImportDialogProps) {
-    super(props);
-    
-    this.handleNext = this.handleNext.bind(this);
-  }
 
   render() {
     const { open, onClose } = this.props;
 
     return (
-      <Dialog open={open}>
+      <Dialog open={open} onClose={onClose}>
         <DialogContent>
           <DialogContentText>
-            Некоторые слои будут удалены перед продолжением:<br />
+            Некоторые слои будут удалены перед продолжением:
+            <br />
           </DialogContentText>
           <DataImportTasksList short onlyErrors className={cnDataImport('DialogTasksList')} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleNext} color="primary" variant='outlined' disabled={this.busy}>
+          <Button onClick={this.handleNext} color='primary' disabled={this.busy}>
             Продолжить
           </Button>
-          <Button onClick={onClose} variant='outlined' disabled={this.busy}>
+          <Button onClick={onClose} disabled={this.busy}>
             Отмена
           </Button>
         </DialogActions>
@@ -55,13 +50,13 @@ export class DataImportDialog extends React.Component<DataImportDialogProps> {
     );
   }
 
-  @action
-  private handleNext () {
+  @action.bound
+  private handleNext() {
     this.busy = true;
-    this.next()
+    this.next();
   }
 
-  private async next () {
+  private async next() {
     await services.provided;
     await Promise.all(currentImport.errorTasks.map(task => deleteTask(task)));
     services.router.navigate([this.props.nextUrl], { replaceUrl: true });

@@ -48,23 +48,18 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
       }
     }
 
-    sideBarManager.currentState$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(sidebarsState => {
-          const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
-          if (attrSidebarState === ActionType.OPEN) {
-            this.isAttributeSidebarOpened = true;
-          } else {
-            this.isAttributeSidebarOpened = false;
-          }
-        });
+    sideBarManager.currentState$.pipe(takeUntil(this.unsubscribe$)).subscribe(sidebarsState => {
+      const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
+      if (attrSidebarState === ActionType.OPEN) {
+        this.isAttributeSidebarOpened = true;
+      } else {
+        this.isAttributeSidebarOpened = false;
+      }
+    });
 
-    communicationService.featuresUpdate$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-
-          this.closeMe();
-        });
+    communicationService.featuresUpdated.on(() => {
+      this.closeMe();
+    }, this);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,6 +84,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    communicationService.off(this);
   }
 
   switchMode() {
@@ -122,13 +118,13 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  closeMe () {
+  closeMe() {
     this.viewFeatures = [];
     openLayersService.clearDraft();
-    sideBarManager.do({target: SidebarType.FEATURES, action: ActionType.CLOSE});
+    sideBarManager.do({ target: SidebarType.FEATURES, action: ActionType.CLOSE });
   }
 
-  deleteHandler (id: string) {
+  deleteHandler(id: string) {
     this.deletedFeaturesIds.push(id);
     this.showFeatures();
     if (this.data.features.length === this.deletedFeaturesIds.length) {

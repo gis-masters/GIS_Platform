@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../services/services';
 
@@ -16,23 +17,24 @@ interface LinkProps {
 }
 
 export class Link extends Component<LinkProps> {
-  constructor (props: LinkProps) {
-    super(props);
-    this.navigate = this.navigate.bind(this);
-  }
-
-  render () {
+  render() {
     const { children, className, url, target } = this.props;
 
     return (
       <a href={url} target={target} onClick={this.navigate} className={cnLink(null, [className])}>
-        {target === '_blank' ? <><OpenInNew className={cnLink('Icon')} />&nbsp;</> : null}
+        {target === '_blank' ? (
+          <>
+            <OpenInNew className={cnLink('Icon')} />
+            &nbsp;
+          </>
+        ) : null}
         {children}
       </a>
     );
   }
 
-  private async navigate (e: React.MouseEvent<HTMLAnchorElement>) {
+  @boundMethod
+  private async navigate(e: React.MouseEvent<HTMLAnchorElement>) {
     const { url, target } = this.props;
 
     if (!target) {

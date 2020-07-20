@@ -1,0 +1,61 @@
+import React, { Component } from 'react';
+import { action, computed } from 'mobx';
+import { observer } from 'mobx-react';
+import { Select, MenuItem } from '@material-ui/core';
+import { cn } from '@bem-react/classname';
+
+import {
+  Role,
+  PrincipalType,
+  roles,
+  projectRoles,
+  rolesTitles,
+  getSetOfRoleAssignments
+} from '../../../services/crg/permissions.service';
+import { PermissionsListItem } from '../../../services/crg/permissionsList.service';
+
+import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';
+
+const cnPermissionsListRoleSelect = cn('PermissionsListDialog', 'RoleSelect');
+
+interface PermissionsListRoleSelectProps {
+  listItem: PermissionsListItem;
+  onChange: (newItem: PermissionsListItem) => void;
+  principalId: number;
+  principalType: PrincipalType;
+}
+
+@observer
+export class PermissionsListRoleSelect extends Component<PermissionsListRoleSelectProps> {
+  render() {
+    return (
+      <div className={cnPermissionsListRoleSelect()}>
+        <Select value={this.value} onChange={this.handleChange}>
+          {this.roles.map(roleName => (
+            <MenuItem value={roleName} key={roleName}>
+              {rolesTitles[roleName]}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+    );
+  }
+
+  @computed
+  private get roles(): Role[] {
+    return this.props.listItem.layer ? roles : projectRoles;
+  }
+
+  @computed
+  private get value(): Role {
+    return this.roles[Math.max(...this.props.listItem.permissions.map(({ role }) => this.roles.indexOf(role)))];
+  }
+
+  @action.bound
+  private handleChange(e: React.ChangeEvent<{ value: Role }>) {
+    const { listItem, onChange, principalId, principalType } = this.props;
+    const newPermissions = getSetOfRoleAssignments(principalId, principalType, e.target.value, Boolean(listItem.layer));
+
+    onChange({ ...listItem, permissions: newPermissions });
+  }
+}

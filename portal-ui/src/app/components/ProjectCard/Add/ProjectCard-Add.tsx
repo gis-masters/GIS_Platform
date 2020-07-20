@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import AddIcon from '@material-ui/icons/Add';
@@ -11,37 +11,29 @@ import '!style-loader!css-loader!sass-loader!./ProjectCard-Add.scss';
 const cnProjectCard = cn('ProjectCard');
 
 @observer
-export class ProjectCardAdd extends React.Component<{}> {
+export class ProjectCardAdd extends Component {
   @observable
   private active: boolean = false;
 
-  constructor (props: {}) {
-    super(props);
-
-    this.toggleActive = this.toggleActive.bind(this);
-  }
-
-  render () {
+  render() {
     return this.active ? this.renderForm() : this.renderAdd();
   }
 
-  private renderAdd () {
+  private renderAdd() {
     return (
       <div className={cnProjectCard('Add')} onClick={this.toggleActive}>
         <AddIcon className={cnProjectCard('AddIcon')} />
-        <div className={cnProjectCard('AddCaption')}>
-          Создать новый проект
-        </div>
+        <div className={cnProjectCard('AddCaption')}>Создать новый проект</div>
       </div>
     );
   }
 
-  private renderForm () {
+  private renderForm() {
     return <ProjectCardForm onCancel={this.toggleActive} />;
   }
 
-  @action
-  private toggleActive () {
+  @action.bound
+  private toggleActive() {
     this.active = !this.active;
   }
 }

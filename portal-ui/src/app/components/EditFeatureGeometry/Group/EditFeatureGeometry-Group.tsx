@@ -2,8 +2,9 @@ import React, { Component, ComponentType, PropsWithChildren, createRef } from 'r
 import { observer } from 'mobx-react';
 import { observable, computed, action } from 'mobx';
 import { debounce } from 'lodash';
-import { IClassNameProps } from '@bem-react/core'
+import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -39,7 +40,7 @@ export interface EditFeatureGeometryGroupProps extends IClassNameProps {
 const COORD_HEIGHT = 39;
 const COORDS_IN_VIEWPORT = 15;
 
-const Div = ((props: ContainerProps) => <div {...props} />);
+const Div = (props: ContainerProps) => <div {...props} />;
 
 @observer
 export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroupProps> {
@@ -47,21 +48,14 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
   @observable private endOffset: number;
   private innerRef = createRef<HTMLDivElement>();
 
-
-  constructor (props: EditFeatureGeometryGroupProps) {
+  constructor(props: EditFeatureGeometryGroupProps) {
     super(props);
 
     this.calcOffsets(0);
-
-    this.deleteHandler = this.deleteHandler.bind(this);
-    this.addHandler = this.addHandler.bind(this);
-    this.deleteGroupHandler = this.deleteGroupHandler.bind(this);
-    this.changeHandler = this.changeHandler.bind(this);
-    this.scrollHandler = this.scrollHandler.bind(this);
     this.calcOffsets = debounce(this.calcOffsets, 100);
   }
 
-  render () {
+  render() {
     const { coordinates, minCoordsCount, canBeDeleted, className, Container, mustBeClosed, store } = this.props;
     const Tag = Container || Div;
 
@@ -77,24 +71,22 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
           onScroll={this.scrollHandler}
           innerRef={this.innerRef}
         >
-          {coordinates
-            .slice(this.startOffset, coordinates.length - this.endOffset)
-            .map((coordinate, i) => {
-              const isLast = i + this.startOffset === coordinates.length - 1;
+          {coordinates.slice(this.startOffset, coordinates.length - this.endOffset).map((coordinate, i) => {
+            const isLast = i + this.startOffset === coordinates.length - 1;
 
-              return (
-                <EditFeatureGeometryCoord
-                    store={store}
-                    val={coordinate}
-                    key={i + this.startOffset}
-                    index={i + this.startOffset}
-                    onDelete={this.deleteHandler}
-                    withControls={true}
-                    canBeDeleted={coordinates.length > minCoordsCount}
-                    disabled={isLast && mustBeClosed}
-                    onChange={this.changeHandler}
-                />
-              )
+            return (
+              <EditFeatureGeometryCoord
+                store={store}
+                val={coordinate}
+                key={i + this.startOffset}
+                index={i + this.startOffset}
+                onDelete={this.deleteHandler}
+                withControls={true}
+                canBeDeleted={coordinates.length > minCoordsCount}
+                disabled={isLast && mustBeClosed}
+                onChange={this.changeHandler}
+              />
+            );
           })}
         </EditFeatureGeometryGroupInner>
 
@@ -110,12 +102,12 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
   }
 
   @computed
-  private get empty () {
+  private get empty() {
     return !this.props.coordinates.flat(5).some(coord => coord);
   }
 
-  @action
-  private deleteHandler (i: number) {
+  @action.bound
+  private deleteHandler(i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
     coordinates.splice(i, 1);
@@ -127,21 +119,22 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
     this.calcOffsets();
   }
 
-  @action
-  private addHandler () {
+  @action.bound
+  private addHandler() {
     const { coordinates, mustBeClosed } = this.props;
     const where = coordinates.length - (mustBeClosed ? 1 : 0);
     coordinates.splice(where, 0, ['', '']);
     this.calcOffsets();
   }
 
-  private deleteGroupHandler () {
+  @boundMethod
+  private deleteGroupHandler() {
     const { onDelete, index } = this.props;
     onDelete(index);
   }
 
-  @action
-  private changeHandler (val: CoordinateEdited, i: number) {
+  @action.bound
+  private changeHandler(val: CoordinateEdited, i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
     if (i === 0 && mustBeClosed) {
@@ -151,17 +144,18 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
     this.calcOffsets();
   }
 
-  private scrollHandler () {
+  @boundMethod
+  private scrollHandler() {
     this.calcOffsets();
   }
 
   @action
-  private calcOffsets (scrollTop?: number) {
+  private calcOffsets(scrollTop?: number) {
     if (scrollTop === undefined) {
       scrollTop = this.innerRef.current.scrollTop;
     }
     const padding = 5;
     this.startOffset = Math.max(0, Math.ceil(scrollTop / COORD_HEIGHT - padding));
-    this.endOffset =  Math.max(0, this.props.coordinates.length - this.startOffset - COORDS_IN_VIEWPORT - padding * 2);
+    this.endOffset = Math.max(0, this.props.coordinates.length - this.startOffset - COORDS_IN_VIEWPORT - padding * 2);
   }
 }

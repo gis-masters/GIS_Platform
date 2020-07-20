@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { observable, computed, action } from 'mobx';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../services/services';
 import {
@@ -26,36 +27,30 @@ import '!style-loader!css-loader!sass-loader!./DataImport.scss';
 const cnDataImport = cn('DataImport');
 
 @observer
-export class DataImport extends React.Component<{}> {
+export class DataImport extends Component<{}> {
   private pollTimeout?: number;
   private pollingOn = false;
   private pollingDelay = 500;
   @observable private dialogOpen = false;
 
   @computed
-  private get importUrl (): string {
+  private get importUrl(): string {
     return `/projects/${route.params.projectId}/import`;
   }
 
   @computed
-  private get nextUrl (): string {
+  private get nextUrl(): string {
     return `${this.importUrl}/${route.params.importId}/mapping`;
   }
 
-  constructor (props: {}) {
+  constructor(props: {}) {
     super(props);
 
     // прогреем схемы, понадобятся на следующем шаге
     schemaService.getAllSchemas();
-
-    this.fileDropHandler = this.fileDropHandler.bind(this);
-    this.reset = this.reset.bind(this);
-    this.poll = this.poll.bind(this);
-    this.handleNext = this.handleNext.bind(this);
-    this.handleDialogClose = this.handleDialogClose.bind(this);
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     await services.provided;
 
     const urlImportId = route.params.importId;
@@ -78,11 +73,11 @@ export class DataImport extends React.Component<{}> {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.stopPolling();
   }
 
-  render () {
+  render() {
     if (!route.params) {
       return null;
     }
@@ -92,41 +87,34 @@ export class DataImport extends React.Component<{}> {
     return (
       <div className={cnDataImport()}>
         <DataImportDropzone
-            loading={this.loading}
-            file={file}
-            importOn={on}
-            onDrop={this.fileDropHandler}
-            onClear={this.reset} />
+          loading={this.loading}
+          file={file}
+          importOn={on}
+          onDrop={this.fileDropHandler}
+          onClear={this.reset}
+        />
 
         <DataImportNotice />
 
         <DataImportNotifications />
 
-        <DataImportTasksList
-            className={cnDataImport('TasksList')}
-            onDeleteAllTask={this.reset} />
+        <DataImportTasksList className={cnDataImport('TasksList')} onDeleteAllTask={this.reset} />
 
-        <DataImportNavButtons
-            onNext={this.handleNext}
-            onCancel={this.reset}
-            nextUrl={this.nextUrl} />
+        <DataImportNavButtons onNext={this.handleNext} onCancel={this.reset} nextUrl={this.nextUrl} />
 
-        <DataImportDialog
-            open={this.dialogOpen}
-            onClose={this.handleDialogClose}
-            nextUrl={this.nextUrl} />
+        <DataImportDialog open={this.dialogOpen} onClose={this.handleDialogClose} nextUrl={this.nextUrl} />
       </div>
     );
   }
 
   @computed
-  private get loading (): boolean {
+  private get loading(): boolean {
     const { file, id, isError, isFinished } = currentImport;
     return Boolean(file || id) && !isError && !isFinished;
   }
 
-  @action
-  private fileDropHandler (files: File[]) {
+  @action.bound
+  private fileDropHandler(files: File[]) {
     if (files.length) {
       currentImport.file = files[0];
       if (!currentImport.isWrongExt) {
@@ -135,30 +123,33 @@ export class DataImport extends React.Component<{}> {
     }
   }
 
-  private reset () {
+  @boundMethod
+  private reset() {
     this.stopPolling();
     currentImport.reset();
-    services.ngZone.run(() => {
-      services.router.navigate([this.importUrl], { replaceUrl: true });
+    services.ngZone.run(async () => {
+      await services.router.navigate([this.importUrl], { replaceUrl: true });
     });
   }
 
-  private start () {
+  private start() {
     services.ngZone.run(async () => {
       const { id } = await initScratchImport(currentImport.file);
-      if (currentImport.file) { // if was not reseted
-        services.router.navigate([`${this.importUrl}/${id}`]);
+      if (currentImport.file) {
+        // if was not reseted
+        await services.router.navigate([`${this.importUrl}/${id}`]);
         this.launchPolling();
       }
     });
   }
 
-  private launchPolling () {
+  private launchPolling() {
     this.pollingOn = true;
     this.poll();
   }
 
-  private async poll () {
+  @boundMethod
+  private async poll() {
     if (currentImport.isFinished) {
       this.stopPolling();
     }
@@ -179,16 +170,16 @@ export class DataImport extends React.Component<{}> {
     clearTimeout(this.pollTimeout);
   }
 
-  @action
-  private handleNext (e: React.MouseEvent<HTMLButtonElement>) {
+  @action.bound
+  private handleNext(e: React.MouseEvent<HTMLButtonElement>) {
     if (currentImport.hasErrorTasks) {
       e.preventDefault();
       this.dialogOpen = true;
     }
   }
 
-  @action
-  private handleDialogClose () {
+  @action.bound
+  private handleDialogClose() {
     this.dialogOpen = false;
   }
 }

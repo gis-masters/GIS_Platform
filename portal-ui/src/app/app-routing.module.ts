@@ -16,7 +16,7 @@ import { ManagementGuardService } from './services/management-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
 import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
-import { ManagerPageComponent } from './pages/content-manager/manager-page.component';
+import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -106,9 +106,12 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'manager',
-    component: ManagerPageComponent,
+    path: 'org-admin',
+    component: OrgAdminPageComponent,
     canActivate: [ ManagementGuardService ],
+    data: {
+      step: 1
+    },
     resolve: {
       orgInfo: OrganizationInfoResolver
     }
@@ -134,5 +137,5 @@ export const routingComponents = [
   ImportPageComponent,
   MappingPageComponent,
   ProjectsPageComponent,
-  ManagerPageComponent
+  OrgAdminPageComponent
 ];

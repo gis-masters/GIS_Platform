@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import '!style-loader!css-loader!sass-loader!./PseudoLink.scss';
 
@@ -11,28 +12,21 @@ interface PseudoLinkProps {
   disabled?: boolean;
 }
 
-export class PseudoLink extends React.Component<PseudoLinkProps> {
-  constructor (props: PseudoLinkProps) {
-    super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
-  }
-
-  render () {
+export class PseudoLink extends Component<PseudoLinkProps> {
+  render() {
     const { disabled, className, children } = this.props;
 
     return (
       <span className={cnPseudoLink({ disabled }, [className])} onClick={this.clickHandler}>
-        <span className={cnPseudoLink('Inner')}>
-          {children}
-        </span>
+        <span className={cnPseudoLink('Inner')}>{children}</span>
       </span>
     );
   }
 
-  private clickHandler (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+  @boundMethod
+  private clickHandler(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     if (!this.props.disabled) {
       this.props.onClick(e);
     }
   }
-};
+}

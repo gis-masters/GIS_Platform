@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { Switch } from '@material-ui/core';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
@@ -22,23 +23,14 @@ interface EditFeatureGeometryModifyProps {
 export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModifyProps> {
   @observable private checked = false;
 
-  constructor (props: EditFeatureGeometryModifyProps) {
-    super(props);
-
-    this.changeHandler = this.changeHandler.bind(this);
-    this.modifyHandler = this.modifyHandler.bind(this);
-  }
-
-  componentWillUnmount () {
+  componentWillUnmount() {
     openLayersService.disableDraftModification(this.modifyHandler);
   }
 
-  render () {
+  render() {
     return (
       <FormField className={cnEditFeatureGeometry('Modify')}>
-        <FormLabel htmlFor='editFeatureGeometryModifyControl'>
-          Редактировать на карте
-        </FormLabel>
+        <FormLabel htmlFor='editFeatureGeometryModifyControl'>Редактировать на карте</FormLabel>
         <FormControl>
           <Switch
             id='editFeatureGeometryModifyControl'
@@ -51,8 +43,8 @@ export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModi
     );
   }
 
-  @action
-  changeHandler (e: ChangeEvent<HTMLInputElement>, checked: boolean) {
+  @action.bound
+  changeHandler(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     this.checked = checked;
 
     if (checked) {
@@ -62,14 +54,16 @@ export class EditFeatureGeometryModify extends Component<EditFeatureGeometryModi
     }
   }
 
-  private modifyHandler (e: ModifyEvent) {
+  @boundMethod
+  private modifyHandler(e: ModifyEvent) {
     const olGeometry = e.features.item(0).getGeometry();
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
     const { coordinates } = transformGeometry(
-                          // @ts-ignore
-                          { type: geometryType, coordinates: olGeometry.getCoordinates() },
-                          olProjection,
-                          nativeProjection);
+      // @ts-ignore
+      { type: geometryType, coordinates: olGeometry.getCoordinates() },
+      olProjection,
+      nativeProjection
+    );
 
     // @ts-ignore
     setGeometry({

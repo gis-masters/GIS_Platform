@@ -17,13 +17,7 @@ const ANIMATION_DURATION = 300;
 export class LayersSidebar extends Component<{}> {
   @observable private open = true;
 
-  constructor (props: {}) {
-    super(props);
-
-    this.toggleOpen = this.toggleOpen.bind(this);
-  }
-
-  render () {
+  render() {
     const style = { '--LayersSidebarOpeningDuration': ANIMATION_DURATION + 'ms' } as CSSProperties;
 
     return (
@@ -42,8 +36,8 @@ export class LayersSidebar extends Component<{}> {
     );
   }
 
-  @action
-  private toggleOpen () {
+  @action.bound
+  private toggleOpen() {
     this.open = !this.open;
 
     const interval = setInterval(() => {

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
@@ -13,16 +14,10 @@ interface HelpTocItemProps {
   selectedItem: TocItem;
 }
 
-export class HelpTocItem extends React.Component<HelpTocItemProps> {
-  constructor (props: HelpTocItemProps) {
-    super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
-  }
-
-  render () {
+export class HelpTocItem extends Component<HelpTocItemProps> {
+  render() {
     const { item, selectedItem, onSelect } = this.props;
-    const selected = selectedItem && (selectedItem.id === item.id);
+    const selected = selectedItem && selectedItem.id === item.id;
 
     return (
       <div className={cnHelpToc('Item')}>
@@ -33,10 +28,7 @@ export class HelpTocItem extends React.Component<HelpTocItemProps> {
         {item.children && item.children.length ? (
           <div className={cnHelpToc('Subitems')}>
             {item.children.map((subItem, i) => (
-              <HelpTocItem item={subItem}
-                           selectedItem={selectedItem}
-                           onSelect={onSelect}
-                           key={i} />
+              <HelpTocItem item={subItem} selectedItem={selectedItem} onSelect={onSelect} key={i} />
             ))}
           </div>
         ) : null}
@@ -44,7 +36,8 @@ export class HelpTocItem extends React.Component<HelpTocItemProps> {
     );
   }
 
-  private clickHandler () {
+  @boundMethod
+  private clickHandler() {
     this.props.onSelect(this.props.item);
   }
 }

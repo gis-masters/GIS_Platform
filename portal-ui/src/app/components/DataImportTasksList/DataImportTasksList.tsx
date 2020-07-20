@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { currentImport } from '../../stores/CurrentImport.store';
 
@@ -18,22 +19,10 @@ interface DataImportTasksListProps {
 }
 
 @observer
-export class DataImportTasksList extends React.Component<DataImportTasksListProps> {
+export class DataImportTasksList extends Component<DataImportTasksListProps> {
   private progressTimeout: number;
-  private ismounted = false;
 
-  constructor (props: DataImportTasksListProps) {
-    super(props);
-
-    this.onDeleteTask = this.onDeleteTask.bind(this);
-  }
-
-  componentDidMount () {
-    this.ismounted = true;
-  }
-
-  componentWillUnmount () {
-    this.ismounted = false;
+  componentWillUnmount() {
     window.clearTimeout(this.progressTimeout);
   }
 
@@ -45,19 +34,21 @@ export class DataImportTasksList extends React.Component<DataImportTasksListProp
         <table className={cnDataImportTasksList('Table')}>
           <tbody>
             {tasks.map(task => (
-              <DataImportTasksListTask task={task}
-                                       key={task.id}
-                                       onDeleteTask={this.onDeleteTask}
-                                       short={this.props.short}
-              />)
-            )}
+              <DataImportTasksListTask
+                task={task}
+                key={task.id}
+                onDeleteTask={this.onDeleteTask}
+                short={this.props.short}
+              />
+            ))}
           </tbody>
         </table>
       </div>
     );
   }
 
-  private onDeleteTask () {
+  @boundMethod
+  private onDeleteTask() {
     if (!currentImport.tasks.length) {
       this.props.onDeleteAllTask();
     }

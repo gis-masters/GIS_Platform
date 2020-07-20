@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Slider } from '@material-ui/core';
 
-import { CrgLayer, CrgGroup } from '../../../services/crg/projects.models';
+import { CrgLayer, CrgLayersGroup } from '../../../services/crg/projects.models';
 
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
@@ -13,36 +13,24 @@ import '!style-loader!css-loader!sass-loader!./Layer-Transparency.scss';
 const cnLayerTransparency = cn('Layer', 'Transparency');
 
 interface LayerTransparencyProps {
-  entity: CrgLayer | CrgGroup;
+  entity: CrgLayer | CrgLayersGroup;
 }
 
 @observer
 export class LayerTransparency extends Component<LayerTransparencyProps> {
-  constructor (props: LayerTransparencyProps) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  render () {
+  render() {
     const { transparency } = this.props.entity;
 
     return (
       <div className={cnLayerTransparency()}>
-        <Slider
-          value={transparency}
-          min={5}
-          max={100}
-          step={1}
-          onChange={this.handleChange}
-        />
+        <Slider value={transparency} min={5} max={100} step={1} onChange={this.handleChange} />
         <LayerTransparencyLabel value={transparency} />
       </div>
     );
   }
 
-  @action
-  private handleChange (e: ChangeEvent, value: number) {
+  @action.bound
+  private handleChange(e: ChangeEvent, value: number) {
     this.props.entity.transparency = value;
   }
 }

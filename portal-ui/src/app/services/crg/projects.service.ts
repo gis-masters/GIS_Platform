@@ -1,17 +1,17 @@
 import { reaction } from 'mobx';
 import { HttpParams } from '@angular/common/http';
 
-import { getRoute, services } from '../services';
 import { TaskImport } from '../geoserver/import/taskImport';
+import { getRoute, services } from '../services';
 import { wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
 import { getSourceInfo } from './data.service';
 import { CrgApiResponse, Process } from './models';
-import { projectsList } from '../../stores/ProjectsList.store';
 import { CrgLayerType, Project } from './projects.models';
+import { projectsList } from '../../stores/ProjectsList.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { isReadAllowed } from './permissions.service';
 import { route } from '../../stores/Route.store';
-import { isReadAllowed } from '../util/permissions';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -23,7 +23,7 @@ class ProjectsService {
     });
   }
 
-  public static get instance() {
+  static get instance() {
     return this._instance || (this._instance = new this());
   }
 
@@ -32,7 +32,7 @@ class ProjectsService {
     const url = await serverProperties.projectsUrl;
     const params = new HttpParams().set('size', '1000');
 
-    const response = await services.httpq.get<CrgApiResponse>(url, {params});
+    const response = await services.httpq.get<CrgApiResponse<{ projects: Project[] }>>(url, { params });
 
     if (response && response._embedded) {
       projectsList.setList(response._embedded.projects);

@@ -4,10 +4,7 @@ import { observer } from 'mobx-react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import {
-  WfsMultiPolygonGeometry,
-  CoordinateEdited
-} from '../../../../services/geoserver/wfs-models';
+import { WfsMultiPolygonGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs-models';
 import { env } from '../../../../stores/Env.store';
 
 import {
@@ -20,13 +17,7 @@ import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometr
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
-  constructor (props: EditFeatureGeometryFormProps) {
-    super(props);
-
-    this.addPolygonHandler = this.addPolygonHandler.bind(this);
-  }
-
-  render () {
+  render() {
     const { className, store } = this.props;
     const geometry = store.geometry as WfsMultiPolygonGeometry;
 
@@ -34,28 +25,33 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
       <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
         {geometry.coordinates.map((geometryPart, index) => (
           <EditFeatureGeometrySuperGroup
-              geometryPart={geometryPart}
-              minCoordsPerGroup={4}
-              groupsMustBeClosed={true}
-              store={store}
-              index={index}
-              key={index}
+            geometryPart={geometryPart}
+            minCoordsPerGroup={4}
+            groupsMustBeClosed={true}
+            store={store}
+            index={index}
+            key={index}
           />
         ))}
 
         {env.platform !== 'simf' ? (
-          <EditFeatureGeometryAddButton onClick={this.addPolygonHandler}>
-            Добавить полигон
-          </EditFeatureGeometryAddButton>
+          <EditFeatureGeometryAddButton onClick={this.addPolygonHandler}>Добавить полигон</EditFeatureGeometryAddButton>
         ) : null}
       </div>
     );
   }
 
-  @action
-  private addPolygonHandler () {
+  @action.bound
+  private addPolygonHandler() {
     const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
-    geometry.coordinates.push([[['', ''], ['', ''], ['', ''], ['', '']]]);
+    geometry.coordinates.push([
+      [
+        ['', ''],
+        ['', ''],
+        ['', ''],
+        ['', '']
+      ]
+    ]);
   }
 }
 

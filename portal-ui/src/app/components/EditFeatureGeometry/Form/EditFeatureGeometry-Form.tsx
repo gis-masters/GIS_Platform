@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import GeometryType from 'ol/geom/GeometryType';
 import { cn } from '@bem-react/classname';
@@ -16,8 +16,8 @@ export interface EditFeatureGeometryFormProps extends IClassNameProps {
   store: EditFeatureGeometryStore;
 }
 
-export class EditFeatureGeometryForm extends React.Component<EditFeatureGeometryFormProps> {
-  render () {
+export class EditFeatureGeometryForm extends Component<EditFeatureGeometryFormProps> {
+  render() {
     return (
       <div className={cnEditFeatureGeometryForm()}>
         <EditFeatureGeometryError>

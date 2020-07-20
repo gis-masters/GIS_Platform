@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -36,40 +36,33 @@ interface ToastProps extends ToastOpts {
 }
 
 @observer
-export class Toast extends React.Component<ToastProps> {
+export class Toast extends Component<ToastProps> {
   static defaultDuration = 5000;
 
-  @observable
-  open = false;
-
-  private static icons: {[key: string]: React.FC<SvgIconProps>} = {
+  private static icons: { [key: string]: FC<SvgIconProps> } = {
     error: ErrorIcon,
     success: CheckCircleIcon,
     warning: WarningIcon,
     info: InfoIcon
   };
 
-  constructor (props: ToastProps) {
-    super(props);
-    this.toggleOpen = this.toggleOpen.bind(this);
-  }
+  @observable
+  open = false;
 
-  static show (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static show(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type] || null;
-    const toastInfo: {id: ToastId} = { id: '0' };
+    const toastInfo: { id: ToastId } = { id: '0' };
     const closeHandler = () => {
       toast.dismiss(toastInfo.id);
-    }
+    };
 
     opts = {
       ...normalizedOpts,
       className: 'Toast-Toastify',
       closeButton: (
         <>
-          <IconButton type='button'
-                      className={cnToast('Close')}
-                      onClick={closeHandler}>
+          <IconButton type='button' className={cnToast('Close')} onClick={closeHandler}>
             <CloseIcon className={cnToast('CloseIcon')} />
           </IconButton>
         </>
@@ -85,28 +78,28 @@ export class Toast extends React.Component<ToastProps> {
     toastInfo.id = toast(<Toast {...props} />, opts);
   }
 
-  static info (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static info(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'info'
     } as ToastOpts);
   }
 
-  static warn (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static warn(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'warning'
     } as ToastOpts);
   }
 
-  static success (message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
+  static success(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
     this.show({
       ...this.normalizeOpts(message, opts),
       type: 'success'
     } as ToastOpts);
   }
 
-  private static normalizeOpts (message: JSX.Element | string | ToastOpts, opts?: ToastOpts): ToastOpts {
+  private static normalizeOpts(message: JSX.Element | string | ToastOpts, opts?: ToastOpts): ToastOpts {
     if (!opts) {
       if (message.hasOwnProperty('message')) {
         opts = message as ToastOpts;
@@ -118,16 +111,18 @@ export class Toast extends React.Component<ToastProps> {
 
     return {
       ...opts,
-      message: message as JSX.Element | string,
-    }
+      message: message as JSX.Element | string
+    };
   }
 
-  static error (message: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
+  static error(message: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
     if (!opts) {
-      if (message.hasOwnProperty('message') ||
-            message.hasOwnProperty('error') ||
-            message.hasOwnProperty('details') ||
-            message.hasOwnProperty('source')) {
+      if (
+        message.hasOwnProperty('message') ||
+        message.hasOwnProperty('error') ||
+        message.hasOwnProperty('details') ||
+        message.hasOwnProperty('source')
+      ) {
         opts = message as ToastErrorOpts;
         message = opts.message;
       } else {
@@ -136,15 +131,15 @@ export class Toast extends React.Component<ToastProps> {
     }
 
     const { source, error, details, fileno, columnNumber } = opts;
-    const sourceFile = source ? (new URL(source)).pathname : '';
-
+    const sourceFile = source ? new URL(source).pathname : '';
 
     this.show({
       autoClose: 10000,
       ...opts,
       type: 'error',
-      message: message as JSX.Element | string || 'Произошла ошибка.',
-      details: error || details || source ? (
+      message: (message as JSX.Element | string) || 'Произошла ошибка.',
+      details:
+        error || details || source ? (
           <>
             <div className={cnToast('Message')}>
               {nl2br(details)}
@@ -152,9 +147,7 @@ export class Toast extends React.Component<ToastProps> {
             </div>
             {sourceFile ? (
               <div className={cnToast('File')}>
-                <div className={cnToast('Source')}>
-                  {sourceFile}
-                </div>
+                <div className={cnToast('Source')}>{sourceFile}</div>
                 <div className={cnToast('FileNums')}>
                   {fileno}:{columnNumber}
                 </div>
@@ -165,33 +158,27 @@ export class Toast extends React.Component<ToastProps> {
     } as ToastOpts);
   }
 
-  render () {
+  render() {
     const { details, message, type } = this.props;
 
     return (
       <div className={cnToast({ type })}>
         <div className={cnToast('Head')}>
           {this.props.icon}
-          <div className={cnToast('Title')}>
-            {nl2br(message)}
-          </div>
+          <div className={cnToast('Title')}>{nl2br(message)}</div>
           {details ? (
             <div className={cnToast('Moar')} onClick={this.toggleOpen}>
               {this.open ? 'Скрыть' : 'Подробнее'}
             </div>
           ) : null}
         </div>
-        {this.open ? (
-          <div className={cnToast('Details')}>
-            {nl2br(details)}
-          </div>
-        ) : null}
+        {this.open ? <div className={cnToast('Details')}>{nl2br(details)}</div> : null}
       </div>
     );
   }
 
-  @action
-  private toggleOpen () {
+  @action.bound
+  private toggleOpen() {
     this.open = !this.open;
     toast.update(this.props.toastInfo.id, {
       autoClose: !this.open && (this.props.hasOwnProperty('autoClose') ? this.props.autoClose : Toast.defaultDuration)

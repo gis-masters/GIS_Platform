@@ -1,0 +1,17 @@
+.OrgAdmin {
+  position: absolute;
+  top: 75px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: block;
+  overflow: auto;
+
+  margin-top: -20px;
+  padding: 20px 40px 50px;
+
+  & &-Tabs {
+    margin-bottom: 20px;
+  }
+}

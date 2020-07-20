@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { AddCircleOutline } from '@material-ui/icons';
 
 import { Button } from '../../Button/Button';
 
@@ -12,11 +12,14 @@ interface EditFeatureGeometryAddButtonProps {
   onClick: () => void;
 }
 
-export const EditFeatureGeometryAddButton: React.FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (
-  <Button className={cnEditFeatureGeometry('AddButton')}
-          color='primary'
-          startIcon={<AddCircleOutlineIcon />}
-          onClick={onClick}>
+export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (
+  <Button
+    className={cnEditFeatureGeometry('AddButton')}
+    color='primary'
+    startIcon={<AddCircleOutline />}
+    onClick={onClick}
+    variant='text'
+  >
     {children}
   </Button>
 );

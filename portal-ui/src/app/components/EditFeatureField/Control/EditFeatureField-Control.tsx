@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -11,8 +11,6 @@ export interface EditFeaturesControlProps extends IClassNameProps {
   field: EditFeatureItem;
 }
 
-export const EditFeatureFieldControl: React.FC<EditFeaturesControlProps> = ({ field }) => (
-  <div className={cnEditFeatureFieldControl()}>
-    {field.value}aaa s
-  </div>
+export const EditFeatureFieldControl: FC<EditFeaturesControlProps> = ({ field }) => (
+  <div className={cnEditFeatureFieldControl()}>{field.value}</div>
 );

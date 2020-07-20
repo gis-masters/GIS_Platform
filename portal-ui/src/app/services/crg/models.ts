@@ -7,10 +7,36 @@ export interface CrgApiLink {
   templated?: boolean;
 }
 
-export interface CrgApiResponse {
-  _embedded: any;
+export interface CrgApiResponse<T> {
+  _embedded?: T;
   _links: CrgApiLink[];
   page: CrgApiPageable;
+}
+
+export interface CrgApiPageableResponse<T> {
+  content: T[];
+  first: boolean;
+  last: boolean;
+  number: number;
+  numberOfElements: number;
+  pageable: {
+    offset: number;
+    pageNumber: number;
+    pageSize: number;
+    paged: boolean;
+    unpaged: boolean;
+    sort: {
+      unsorted: boolean;
+      sorted: boolean;
+    };
+  };
+  size: number;
+  sort: {
+    unsorted: boolean;
+    sorted: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface CrgModels {
@@ -76,11 +102,11 @@ export enum ProcessType {
 export enum ProcessStatus {
   PENDING = 'PENDING',
 
-  TASK_DONE = 'TASK_DONE',    // Завершена часть процесса (например: обработан один ресур из нескольких)
-  TASK_ERROR = 'TASK_ERROR',  // Часть процесса завершилась неудачно
+  TASK_DONE = 'TASK_DONE', // Завершена часть процесса (например: обработан один ресур из нескольких)
+  TASK_ERROR = 'TASK_ERROR', // Часть процесса завершилась неудачно
 
   DONE = 'DONE',
-  ERROR = 'ERROR',
+  ERROR = 'ERROR'
 }
 
 export enum ImportTargetType {
@@ -91,12 +117,12 @@ export enum ImportTargetType {
 
 export const AS_IS = {
   title: 'Импортировать как есть',
-  name: ImportTargetType.AS_IS,
+  name: ImportTargetType.AS_IS
 };
 
 export const NOT_IMPORT = {
   title: 'Не импортировать',
-  name: ImportTargetType.NOT_IMPORT,
+  name: ImportTargetType.NOT_IMPORT
 };
 
 export const IMPORT_LAYER_AS_IS: FeatureDescription = {

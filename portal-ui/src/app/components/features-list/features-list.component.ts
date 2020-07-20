@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
@@ -26,11 +27,6 @@ export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
   @Output() onItemSelect = new EventEmitter<WfsFeature>();
   @Output() onItemHighlight = new EventEmitter<WfsFeature>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
-
-  constructor () {
-    this.itemSelectHandler = this.itemSelectHandler.bind(this);
-    this.itemHighlightHandler = this.itemHighlightHandler.bind(this);
-  }
 
   ngOnInit () {
     this.renderReactElement();
@@ -54,10 +50,12 @@ export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
     render(reactElement, this.ref.nativeElement);
   }
 
+  @boundMethod
   private itemSelectHandler (item: WfsFeature) {
     this.onItemSelect.emit(item);
   }
-
+  
+  @boundMethod
   private itemHighlightHandler (item: WfsFeature) {
     this.onItemHighlight.emit(item);
   }

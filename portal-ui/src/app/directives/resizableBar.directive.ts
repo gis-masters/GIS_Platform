@@ -1,4 +1,5 @@
-import {Directive, ElementRef, HostListener, Input, OnInit} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit } from '@angular/core';
+import { boundMethod } from 'autobind-decorator';
 
 export type Direction = 'top' | 'right' | 'bottom' | 'left';
 
@@ -25,17 +26,14 @@ export class ResizableBarDirective implements OnInit {
 
   cursor: string;
 
-  constructor(private el: ElementRef) {
-    this.onDocumentMouseMove = this.onDocumentMouseMove.bind(this);
-    this.onDocumentMouseOff = this.onDocumentMouseOff.bind(this);
-  }
+  constructor(private el: ElementRef) {}
 
   ngOnInit() {
     this.initialCursor = this.el.nativeElement.style.cursor;
     this.cursor = cursors[this.direction];
   }
 
-  @HostListener('mousemove', ['$event']) onMouseMove (e: MouseEvent) {
+  @HostListener('mousemove', ['$event']) onMouseMove(e: MouseEvent) {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
@@ -43,11 +41,11 @@ export class ResizableBarDirective implements OnInit {
     this.setResizeReadyState(this.testResizeZone(this.getPosFromE(e)));
   }
 
-  @HostListener('mouseleave') onMouseLeave () {
+  @HostListener('mouseleave') onMouseLeave() {
     this.setResizeReadyState(false);
   }
 
-  @HostListener('mousedown', ['$event']) onMouseDown (e: MouseEvent) {
+  @HostListener('mousedown', ['$event']) onMouseDown(e: MouseEvent) {
     if (this.resizeReady) {
       this.initialPos = this.getPosFromE(e);
       this.initialSize = this.size;
@@ -60,12 +58,14 @@ export class ResizableBarDirective implements OnInit {
     }
   }
 
-  private onDocumentMouseMove (e: MouseEvent) {
+  @boundMethod
+  private onDocumentMouseMove(e: MouseEvent) {
     this.size = this.initialSize - this.getPosFromE(e) + this.initialPos;
     window.dispatchEvent(new Event('resize'));
   }
 
-  private onDocumentMouseOff () {
+  @boundMethod
+  private onDocumentMouseOff() {
     document.removeEventListener('mousemove', this.onDocumentMouseMove);
     document.removeEventListener('mouseup', this.onDocumentMouseOff);
     document.removeEventListener('mouseleave', this.onDocumentMouseOff);
@@ -73,7 +73,7 @@ export class ResizableBarDirective implements OnInit {
     document.body.style.cursor = '';
   }
 
-  private testResizeZone (pos: number): boolean {
+  private testResizeZone(pos: number): boolean {
     const dragZoneSize = 3;
     const rect: DOMRect = this.el.nativeElement.getBoundingClientRect();
     let offset: number;
@@ -85,14 +85,14 @@ export class ResizableBarDirective implements OnInit {
     return pos >= offset && pos <= offset + dragZoneSize;
   }
 
-  private setResizeReadyState (ready: boolean): void {
+  private setResizeReadyState(ready: boolean): void {
     if (this.resizeReady !== ready) {
       this.el.nativeElement.style.cursor = ready ? this.cursor : this.initialCursor;
       this.resizeReady = ready;
     }
   }
 
-  private getPosFromE (e: MouseEvent): number {
+  private getPosFromE(e: MouseEvent): number {
     const x = e.screenX;
     const y = e.pageY;
     let pos: number;
@@ -115,7 +115,7 @@ export class ResizableBarDirective implements OnInit {
     return pos;
   }
 
-  private get size (): number {
+  private get size(): number {
     if (this.direction === 'top' || this.direction === 'bottom') {
       return this.el.nativeElement.offsetHeight;
     } else {
@@ -123,7 +123,7 @@ export class ResizableBarDirective implements OnInit {
     }
   }
 
-  private set size (size: number) {
+  private set size(size: number) {
     if (this.direction === 'top' || this.direction === 'bottom') {
       this.el.nativeElement.style.height = `${size}px`;
     } else {

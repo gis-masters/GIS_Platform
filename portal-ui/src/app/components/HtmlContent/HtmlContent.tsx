@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
@@ -11,11 +11,11 @@ interface HtmlContentProps extends IClassNameProps {
 }
 
 const rebaseLinks = (html: string): string => {
-  const baseUrl = location.href.substring(0,location.href.lastIndexOf(location.hash));
+  const baseUrl = location.href.substring(0, location.href.lastIndexOf(location.hash));
 
-  return html.replace(/(href=")(#)([^"]+)/ig, `$1${baseUrl}#$3`);
-}
+  return html.replace(/(href=")(#)([^"]+)/gi, `$1${baseUrl}#$3`);
+};
 
-export const HtmlContent: React.FC<HtmlContentProps> = ({ content, className }) => (
-  <div className={cnHtmlContent(null, [className])} dangerouslySetInnerHTML={{__html: rebaseLinks(content)}} />
+export const HtmlContent: FC<HtmlContentProps> = ({ content, className }) => (
+  <div className={cnHtmlContent(null, [className])} dangerouslySetInnerHTML={{ __html: rebaseLinks(content) }} />
 );
