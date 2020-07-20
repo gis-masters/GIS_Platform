@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { MaterialModule } from '../../material.module';
-import { HelpTogglerModule } from '../help-toggler/help-toggler.module';
 import { CrgStepperComponent } from '../crg-stepper/crg-stepper.component';
+import { HelpTogglerModule } from '../help-toggler/help-toggler.module';
+import { SearchModule } from '../search/search.module';
 
 import { WorkspaceHeaderComponent } from './workspace-header@conv.component';
 import { OrgAdminButtonComponent } from '../org-admin-button/org-admin-button.component';
@@ -20,7 +21,8 @@ import { OrgAdminButtonComponent } from '../org-admin-button/org-admin-button.co
   imports: [
     CommonModule,
     MaterialModule,
-    HelpTogglerModule
+    HelpTogglerModule,
+    SearchModule
   ],
 })
 export class WorkspaceHeaderModule {

@@ -130,13 +130,11 @@ export function transform (projFrom: CrgProjection, projTo: CrgProjection, coord
   return proj4(projFrom.id, projTo.id, coordinate).map(dis => Number(dis.toFixed(4)));
 }
 
-export function transformGeometry (
-  geometry: WfsGeometryEdited,
-  projFrom: CrgProjection,
-  projTo: CrgProjection,
-  originGeometry?: WfsGeometry,
-  transformedOriginGeometry?: WfsGeometry
-): WfsGeometry | undefined {
+export function transformGeometry (geometry: WfsGeometryEdited,
+                                   projFrom: CrgProjection,
+                                   projTo: CrgProjection,
+                                   originGeometry?: WfsGeometry,
+                                   transformedOriginGeometry?: WfsGeometry): WfsGeometry | undefined {
   if (!geometry) {
     return;
   }

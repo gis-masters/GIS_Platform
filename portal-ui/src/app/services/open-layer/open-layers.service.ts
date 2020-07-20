@@ -35,27 +35,17 @@ import {
 import { WfsFeature } from '../geoserver/wfs-models';
 import { serverProperties } from '../server-properties.service';
 import { services } from '../services';
-import { tokenStorageService } from '../token-storage.service';
 
 import { MapperUtil } from './MapperUtil';
-
-export interface TileSource {
-  name: string;
-  title: string;
-  source: XYZ;
-  thumbnail: string;
-}
-
-export interface CrgAdditionalLayerInfo {
-  isUserLayer: boolean;
-}
-
-export let BEARER_TOKEN = '';
 
 // WMS request parameters. At least a LAYERS param is required.
 export interface CrgWmsParams {
   LAYERS: string;
   FORMAT?: string;
+}
+
+export interface CrgAdditionalLayerInfo {
+  isUserLayer: boolean;
 }
 
 class OpenLayersService {
@@ -111,8 +101,6 @@ class OpenLayersService {
   private defaultViewPoint = [3844444, 5644444];
 
   async createMap() {
-    BEARER_TOKEN = tokenStorageService.getAccessToken();
-
     this.draftSource = new VectorSource({
       features: []
     });

@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit } from '@angular/core';
+import { OnDestroy, OnInit, Type } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { localStorageService } from '../../services/local-storage.service';
 export class WorkspaceHeader implements OnDestroy, OnInit {
 
   userModel: UserInfoModel;
+  isMapPage: boolean;
 
   unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -26,6 +27,9 @@ export class WorkspaceHeader implements OnDestroy, OnInit {
             localStorageService.saveUserModel(userModel);
           }
         });
+
+    const component: Type<any> | string | null = this.route.component;
+    this.isMapPage = component['name'] === 'MapPageComponent';
   }
 
   ngOnDestroy(): void {
