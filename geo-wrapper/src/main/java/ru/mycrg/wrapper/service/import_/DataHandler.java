@@ -1,5 +1,6 @@
 package ru.mycrg.wrapper.service.import_;
 
+import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
@@ -67,6 +68,8 @@ public class DataHandler {
                 if (((BigDecimal) value).compareTo(BigDecimal.ZERO) == 0) {
                     decodedRow.put(key, NULL_MARKER);
                 }
+            } else if (value instanceof PGobject) {
+                // do nothing with geometry
             } else {
                 decodedRow.put(key, NULL_MARKER);
             }

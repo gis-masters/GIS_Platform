@@ -6,12 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.postgresql.util.PGobject;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.wrapper.service.import_.DataHandler;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -58,8 +60,11 @@ public class HandleRowTest {
     }
 
     @Test
-    public void shouldConvertWrongDataToNull() throws IOException {
+    public void shouldConvertWrongDataToNull() throws IOException, SQLException {
         // PREPARE
+        final PGobject pgObject = new PGobject();
+        pgObject.setValue("032165198161651981");
+
         final SchemaDto schema = getSchemaFromFile("educationSchema.json");
         final Map<String, Object> dbRow = new HashMap<String, Object>(){{
             put("classid", "602010101");
@@ -71,7 +76,7 @@ public class HandleRowTest {
             put("capacity", 0);
             put("status", "4");
             put("reg_status", "1");
-            put("shape", "");
+            put("shape", pgObject);
             put("ruleid", "5");
         }};
 
@@ -87,6 +92,7 @@ public class HandleRowTest {
         assertEquals(NULL_MARKER, result.get("capacity"));
         assertEquals(NULL_MARKER, result.get("edu_stype"));
         assertEquals(NULL_MARKER, result.get("edu_tunit"));
+        assertEquals("032165198161651981", result.get("shape").toString());
         assertEquals("4", result.get("status"));
         assertEquals("1", result.get("reg_status"));
     }
