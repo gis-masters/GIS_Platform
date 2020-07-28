@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.service.ResourceIdentifier.makeIdentifier;
 
 @Log4j2
 @Service
@@ -47,26 +46,20 @@ public class PermissionsService {
         this.permissionsRepository = permissionsRepository;
     }
 
-    public Page<PermissionWithoutResourceProjection> getForResource(Pageable pageable,
-                                                                    String schemaName,
-                                                                    String tableName) {
-        return permissionsRepository
-                .getAllByResourceIdentifier(makeIdentifier(schemaName, tableName), pageable);
+    public Page<PermissionWithoutResourceProjection> getForResource(TableIdentifier resource, Pageable pageable) {
+        return permissionsRepository.getAllByResourceIdentifier(resource.toString(), pageable);
     }
 
     public List<TableDto> getAllByResource(String schemaName, List<Long> ids) {
         return permissionsRepository
                 .getAllByResourceIdentifierAndPrincipalIds(schemaName, ids).stream()
-                .map(ResourceIdentifier::extractTableName)
+                .map(TableIdentifier::extractTableName)
                 .map(TableDto::new)
                 .collect(Collectors.toList());
     }
 
-    public PermissionProjection create(@NotNull String schemaName,
-                                       @NotNull String tableName,
+    public PermissionProjection create(@NotNull TableIdentifier resource,
                                        @NotNull PermissionCreateDto dto) {
-        String identifier = makeIdentifier(schemaName, tableName);
-
         Permission permission;
         Optional<Permission> oPermission = permissionsRepository
                 .findPermissionByParams(dto.getPrincipalType(), dto.getPrincipalId(), dto.getRole());
@@ -74,34 +67,30 @@ public class PermissionsService {
         if (oPermission.isPresent()) {
             permission = oPermission.get();
 
-            joinResource(permission, identifier);
+            joinResource(permission, resource.toString());
         } else {
-            log.debug("Create new permission for: {} / {}", tableName, dto);
+            log.debug("Create new permission for: {} / {}", resource.getTable(), dto);
 
-            permission = createNewPermission(dto, identifier);
+            permission = createNewPermission(dto, resource.toString());
         }
 
         return projectionFactory.createProjection(PermissionProjection.class, permission);
     }
 
-    public void deleteByPermissionId(String schemaName, String tableName, Long permissionId) {
-        String identifier = makeIdentifier(schemaName, tableName);
-
+    public void deleteByPermissionId(TableIdentifier resource, Long permissionId) {
         permissionsRepository
-                .getByIdWithSpecificResource(permissionId, identifier, TABLE.toString())
-                .ifPresentOrElse(permission -> deleteResource(permission, identifier), () -> {
+                .getByIdWithSpecificResource(permissionId, resource.toString(), TABLE.toString())
+                .ifPresentOrElse(permission -> deleteResource(permission, resource.toString()), () -> {
                     throw new NotFoundException("Not found permission: " + permissionId);
                 });
     }
 
-    public void deleteAllByResourceIdentifier(String schemaName, String tableName) {
-        String identifier = makeIdentifier(schemaName, tableName);
-
+    public void deleteAllByResourceIdentifier(TableIdentifier tableIdentifier) {
         Set<Permission> permissions = permissionsRepository
-                .getAllByResourceIdentifierAndType(identifier, TABLE.toString());
+                .getAllByResourceIdentifierAndType(tableIdentifier.toString(), TABLE.toString());
 
         if (permissions.isEmpty()) {
-            throw new NotFoundException("Not found permissions for: " + identifier);
+            throw new NotFoundException("Not found permissions for: " + tableIdentifier.toString());
         }
 
         // Delete Resource from all permissions
@@ -109,7 +98,7 @@ public class PermissionsService {
             Set<Resource> resources = permission.getResources();
 
             resources.stream()
-                    .filter(resource -> resource.getIdentifier().equalsIgnoreCase(identifier))
+                    .filter(resource -> resource.getIdentifier().equalsIgnoreCase(tableIdentifier.toString()))
                     .findFirst()
                     .ifPresent(resource -> {
                         resources.remove(resource);

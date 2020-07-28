@@ -21,9 +21,17 @@ spring:
     password: 314
   jpa:
     database-platform:  org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
 
 management:
   health:
     db:
       enabled: false
+
+crg-options:
+  fileStoragePath: /opt/file_storage
+

@@ -57,8 +57,21 @@
   <form class="example-form col-md-12" [formGroup]="editFeatureForm">
     <ng-container *ngFor="let editFeatureItem of editFeatureData">
       <div *ngIf="!editFeatureItem.property?.hidden">
+
         <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
-          <crg-edit-feature-field type="url" [field]="editFeatureItem">
+          <crg-edit-feature-field type="url"
+                                  [field]="editFeatureItem">
+          </crg-edit-feature-field>
+        </div>
+
+        <div class="row fiz-edit-item"
+             *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && data.mode === 'single'">
+          <crg-edit-feature-field type="lookup"
+                                  [field]="editFeatureItem"
+                                  [featureData]="data"
+                                  [layer]="data.layer"
+                                  [isReadOnly]="updatingAllowed"
+          >
           </crg-edit-feature-field>
         </div>
 

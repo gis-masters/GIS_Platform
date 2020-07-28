@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.service.TableIdentifier;
 
 @Service
 public class TablesDDL {
@@ -17,15 +18,15 @@ public class TablesDDL {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean isTableExist(String schemaName, String tableName) {
+    public boolean isTableExist(TableIdentifier resource) {
         String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables " +
-                "WHERE table_schema = '" + schemaName + "' " +
-                "AND table_name = '" + tableName + "')";
+                "WHERE table_schema = '" + resource.getSchema() + "' " +
+                "AND table_name = '" + resource.getTable() + "')";
 
         try {
             return jdbcTemplate.queryForObject(sql, Boolean.class);
         } catch (DataAccessException e) {
-            log.warn("Check table: {} failed: {}", schemaName + ":" + tableName, e.getMessage());
+            log.warn("Check table: {} failed: {}", resource.toString(), e.getMessage());
 
             return false;
         }

@@ -15,6 +15,7 @@ import { Link } from '../../../Link/Link';
 import { EditFeaturesControlProps, cnEditFeatureFieldControl } from '../EditFeatureField-Control';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url.scss';
+import { FieldType } from '../../../../services/crg/schema.service';
 
 const cnEditFeatureField = cn('EditFeatureField');
 
@@ -119,6 +120,6 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
 
 export const withTypeUrl = withBemMod<{}, EditFeaturesControlProps>(
   cnEditFeatureFieldControl(),
-  { type: 'url' },
+  { type: FieldType.URL },
   () => EditFeatureFieldControlTypeUrl
 );

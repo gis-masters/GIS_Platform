@@ -1,5 +1,6 @@
 import { debounce, Cancelable } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
+import { Toast } from '../../components/Toast/Toast';
 
 import { serverProperties } from '../server-properties.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -56,6 +57,7 @@ export interface PropertySchema {
   enumerations?: PropertyEnumerations;
   dateFormat?: string;
   displayMode?: 'in_popup';
+  resourcePath?: string;
 }
 
 export enum Updateability {
@@ -65,10 +67,11 @@ export enum Updateability {
 }
 
 export enum FieldType {
-  URL = 'url'
+  URL = 'url',
+  LOOKUP = 'lookup'
 }
 
-export interface EditFeatureItem {
+export interface EditedField {
   name: string;
   value: string;
   property: PropertySchema;
@@ -271,7 +274,7 @@ class SchemaService {
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     await services.provided;
     const url = await serverProperties.schemaUrl;
-    const response = await services.httpq.post<FeatureDescription[]>(url, payload);
+    const response = await services.httpq.post<(FeatureDescription | null)[]>(url, payload);
 
     if (!response) {
       throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
@@ -281,6 +284,12 @@ class SchemaService {
     }
 
     response.forEach(schema => {
+      if (!schema) {
+        Toast.error('Возникла ошибка при загрузке схемы');
+        services.logger.error('Failed schema', schema);
+        return;
+      }
+
       const { name } = schema;
       if (this.schemasResolvers[name]) {
         this.schemasResolvers[name](schema);

@@ -10,6 +10,9 @@ public class Authorities {
     public static final String GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY =
             "hasAnyAuthority('" + GLOBAL_ADMIN + "', '" + ORG_ADMIN + "')";
 
+    public static final String ORG_ADMIN_AUTHORITY =
+            "hasAnyAuthority('" + ORG_ADMIN + "')";
+
     public static final String HAS_ANY_AUTHORITY =
             "hasAnyAuthority('" + GLOBAL_ADMIN + "', '" + ORG_ADMIN + "', '" + USER + "')";
 }

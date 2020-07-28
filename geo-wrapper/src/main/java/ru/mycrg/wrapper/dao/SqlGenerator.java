@@ -3,8 +3,8 @@ package ru.mycrg.wrapper.dao;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.SimplePropertyDto;
 import ru.mycrg.mq_queue_contract.enums.ForeignKeyType;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
@@ -157,11 +157,13 @@ public class SqlGenerator {
                 return "shape public.geometry";
             case DATETIME:
                 return attrDescription.getName() + " timestamp";
+            case LOOKUP:
+                return attrDescription.getName() + " text";
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueType());
         }
 
-        return "";
+        return attrDescription.getName() + " character varying";
     }
 
     @NotNull

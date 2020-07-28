@@ -11,6 +11,7 @@ import ru.mycrg.data_service.dao.TablesDDL;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.service.PermissionsService;
+import ru.mycrg.data_service.service.TableIdentifier;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -42,11 +43,12 @@ public class PermissionsController {
     public ResponseEntity<PermissionProjection> addPermission(@PathVariable String schemaName,
                                                               @PathVariable String tableName,
                                                               @Valid @RequestBody PermissionCreateDto dto) {
-        if (!tablesDDL.isTableExist(schemaName, tableName)) {
+        TableIdentifier tableIdentifier = new TableIdentifier(schemaName, tableName);
+        if (!tablesDDL.isTableExist(tableIdentifier)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        var permissionProjection = permissionsService.create(schemaName, tableName, dto);
+        var permissionProjection = permissionsService.create(tableIdentifier, dto);
 
         return ResponseEntity.ok(permissionProjection);
     }
@@ -56,11 +58,12 @@ public class PermissionsController {
     public ResponseEntity<Object> getPermission(@PathVariable String schemaName,
                                                 @PathVariable String tableName,
                                                 Pageable pageable) {
-        if (!tablesDDL.isTableExist(schemaName, tableName)) {
+        TableIdentifier tableIdentifier = new TableIdentifier(schemaName, tableName);
+        if (!tablesDDL.isTableExist(tableIdentifier)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        var permissions = permissionsService.getForResource(pageable, schemaName, tableName);
+        var permissions = permissionsService.getForResource(tableIdentifier, pageable);
 
         return ResponseEntity.ok(permissions);
     }
@@ -69,11 +72,12 @@ public class PermissionsController {
     @DeleteMapping("/schemas/{schemaName}/tables/{tableName}/roleAssignment")
     public ResponseEntity<Object> deletePermission(@PathVariable String schemaName,
                                                    @PathVariable String tableName) {
-        if (!tablesDDL.isTableExist(schemaName, tableName)) {
+        TableIdentifier tableIdentifier = new TableIdentifier(schemaName, tableName);
+        if (!tablesDDL.isTableExist(tableIdentifier)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        permissionsService.deleteAllByResourceIdentifier(schemaName, tableName);
+        permissionsService.deleteAllByResourceIdentifier(tableIdentifier);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -83,11 +87,12 @@ public class PermissionsController {
     public ResponseEntity<Object> deletePermission(@PathVariable String schemaName,
                                                    @PathVariable String tableName,
                                                    @PathVariable Long permissionId) {
-        if (!tablesDDL.isTableExist(schemaName, tableName)) {
+        TableIdentifier tableIdentifier = new TableIdentifier(schemaName, tableName);
+        if (!tablesDDL.isTableExist(tableIdentifier)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        permissionsService.deleteByPermissionId(schemaName, tableName, permissionId);
+        permissionsService.deleteByPermissionId(tableIdentifier, permissionId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,0 +1,11 @@
+.DocumentsList-DeleteButton {
+  transition: opacity 0.3s;
+
+  opacity: 0.1;
+
+  justify-self: center;
+}
+
+.DocumentsList-Item:hover .DocumentsList-DeleteButton {
+  opacity: 1;
+}

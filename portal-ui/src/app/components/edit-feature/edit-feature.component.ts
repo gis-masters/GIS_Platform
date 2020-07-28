@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, first } from 'rxjs/operators';
+import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
-import { schemaService, PropertySchema } from '../../services/crg/schema.service';
+import { ActionType, sideBarManager, SidebarType } from '../../services/side-bar-manager.service';
+import { FieldType, PropertySchema, schemaService } from '../../services/crg/schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { Toast } from '../Toast/Toast';
@@ -20,7 +19,8 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer } from '../../services/crg/projects.models';
-import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
+import { isDeleteAllowed, isUpdateAllowed } from '../../services/crg/permissions.service';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
 
 export interface EditFeatureData {
   layer: CrgLayer;
@@ -61,11 +61,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private transformFeatureService: TransformFeatureService
-  ) {
+  constructor(private formBuilder: FormBuilder,
+              private dialog: MatDialog) {
     super();
   }
 
@@ -86,7 +83,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     if (dataChanged) {
       this.editFeatureData = [];
       const currentData: EditFeatureData = dataChanged.currentValue;
-
       if (currentData.mode === EditFeatureMode.single) {
         if (!this.data.isNew) {
           openLayersService.highlightFeature(currentData.features[0]);
@@ -220,14 +216,12 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     const newProperties = this.getActualValuesFromForm();
 
     if (this.data.isNew) {
-      this.transformFeatureService
+      transformFeature
         .insertFeatures(
           [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
-          currentProject.internalName,
           this.featureDescription.tableName,
-          this.data.layer.nativeCRS
-        )
-        .subscribe(() => {
+        this.data.layer.nativeCRS
+      ).then(() => {
           this.close();
           openLayersService.refreshLayers();
           communicationService.featuresUpdated.emit();
@@ -248,14 +242,13 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     };
     const { features } = this.data;
     const [layerName, newId] = features[0].id.split('.');
-    const { internalName } = currentProject;
 
     this.dialog
       .open(ConfirmDialogComponent, { width: '400px', data: data })
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(() => {
-        this.transformFeatureService.deleteFeatures([newId], internalName, layerName).subscribe(() => {
+        transformFeature.deleteFeatures([newId], layerName).then(() => {
           this.delete.emit(features[0].id);
           this.close();
           openLayersService.refreshLayers();
@@ -300,7 +293,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   getEnumerationTitle(enumerations: { value: string; title: string }[], value: string | number): string {
-    const item = enumerations.find(item => String(item.value) === String(value));
+    const item = enumerations.find(i => String(i.value) === String(value));
     return item && item.title;
   }
 
@@ -310,19 +303,15 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
-    const { internalName } = currentProject;
-
     const batchModel = new BatchModel(features);
     let percent = 0;
 
     for (let i = 0; i < batchModel.totalBatches; i++) {
-      await this.transformFeatureService.updateFeatures(
+      await transformFeature.updateFeatures(
         batchModel.batches[i],
-        internalName,
         this.featureDescription,
         newProperties,
-        geometry
-      );
+        geometry);
       percent = Math.ceil(batchModel.percentOfOneBatch * i);
       this.loadPercent = percent > 100 ? 100 : percent;
     }

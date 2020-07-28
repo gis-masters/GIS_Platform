@@ -19,6 +19,7 @@ import static ru.mycrg.data_service.config.Authorities.HAS_ANY_AUTHORITY;
                         excerptProjection = BaseMapProjection.class)
 public interface BaseMapRepository extends PagingAndSortingRepository<BaseMap, Long> {
 
+    // Do not remove. Method used: "/api/data/basemaps/search/findByIdIn?ids="
     Page<BaseMap> findByIdIn(@Param("ids") Collection<Long> ids, Pageable p);
 
 }

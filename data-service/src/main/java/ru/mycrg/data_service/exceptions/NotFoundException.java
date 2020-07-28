@@ -10,7 +10,11 @@ public class NotFoundException extends RuntimeException {
 		super(msg);
 	}
 
-	public NotFoundException(long id) {
-		super("Сущность не найдена по идентификатору: " + id);
+	public NotFoundException(Object id) {
+		super("Сущность не найдена по идентификатору: " + id.toString());
+	}
+
+	public NotFoundException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 }

@@ -1,6 +1,6 @@
 import { services } from '../services';
-import { serverProperties } from '../server-properties.service';
 import { CrgSource } from './projects.models';
+import { serverProperties } from '../server-properties.service';
 
 export async function getSourceInfo(uri: string): Promise<CrgSource> {
   const url = `${await serverProperties.baseUrl}${uri}`;

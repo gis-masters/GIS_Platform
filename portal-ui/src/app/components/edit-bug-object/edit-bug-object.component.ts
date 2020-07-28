@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
 
 import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { communicationService, ObjectDto } from '../../services/communication.service';
-import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { schemaService } from '../../services/crg/schema.service';
 import { BaseEdit } from './base-edit';
 import { Toast } from '../Toast/Toast';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -28,9 +28,8 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private object: ObjectDto;
 
-  constructor(private logger: NGXLogger,
-              private formBuilder: FormBuilder,
-              private transformFeatureService: TransformFeatureService) {
+  constructor(private formBuilder: FormBuilder,
+              private logger: NGXLogger) {
     super();
   }
 
@@ -57,14 +56,9 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   async editFeature() {
     if (this.wfsFeature && this.wfsFeature.properties) {
-      const crgLayer = this.object.crgLayer;
-      const workspaceName = crgLayer.complexName.split(':')[0];
+      const response = await transformFeature.updateFeatures([this.wfsFeature], this.featureDescription,
+        this.getActualValuesFromForm());
 
-      const response = await this.transformFeatureService.updateFeatures(
-                                                                    [this.wfsFeature],
-                                                                    workspaceName,
-                                                                    this.featureDescription,
-                                                                    this.getActualValuesFromForm());
       if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
         this.closeMe.emit(true);
         Toast.success('Сохранено');

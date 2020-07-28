@@ -11,7 +11,8 @@ export enum ValueType {
   CHOICE = 'CHOICE',
   GEOMETRY = 'GEOMETRY',
   URL = 'URL',
-  DATETIME = 'DATETIME'
+  DATETIME = 'DATETIME',
+  LOOKUP = 'LOOKUP'
 }
 
 export interface ValidationError {

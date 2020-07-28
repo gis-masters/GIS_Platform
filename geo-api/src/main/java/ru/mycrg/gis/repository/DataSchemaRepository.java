@@ -15,5 +15,5 @@ public interface DataSchemaRepository extends PagingAndSortingRepository<DataSch
 
     List<DataSchemaDescription> findByNameIn(Collection<String> names);
 
-    Optional<DataSchemaDescription> findByName(String name);
+    List<DataSchemaDescription> findByName(String name);
 }

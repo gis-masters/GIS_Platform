@@ -1,6 +1,7 @@
 package ru.mycrg.mq_queue_contract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.mycrg.mq_queue_contract.enums.ChoiceType;
 import ru.mycrg.mq_queue_contract.enums.ForeignKeyType;
 import ru.mycrg.mq_queue_contract.enums.Updateability;
@@ -9,6 +10,7 @@ import ru.mycrg.mq_queue_contract.enums.ValueType;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SimplePropertyDto {
 
     private String name;
@@ -26,6 +28,7 @@ public class SimplePropertyDto {
     private ValueType valueType;
     private ForeignKeyType foreignKeyType;
 
+    private String resourcePath;
     private String whiteSpace;
     private String pattern;
     private String patternDescription = "";
@@ -253,6 +256,14 @@ public class SimplePropertyDto {
 
     public void setForeignKeyType(ForeignKeyType foreignKeyType) {
         this.foreignKeyType = foreignKeyType;
+    }
+
+    public String getResourcePath() {
+        return resourcePath;
+    }
+
+    public void setResourcePath(String resourcePath) {
+        this.resourcePath = resourcePath;
     }
 
     @JsonIgnore

@@ -1,18 +1,15 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Feature } from 'ol';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
-import { Geometry, Point, MultiLineString, MultiPolygon } from 'ol/geom';
+import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
-import { NGXLogger } from 'ngx-logger';
-
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { WfsFeature, WfsGeometry } from './wfs-models';
 import { serverProperties } from '../server-properties.service';
 import { FeatureDescription } from '../crg/schema.service';
-import { HttpQueue } from '../util/HttpQueue';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getFeatureProjection } from './projections.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { services } from '../services';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -20,35 +17,59 @@ export enum TransactionType {
   DELETE = 'delete',
 }
 
-type Properties = { [key: string]: any };
+interface Properties {
+  [key: string]: any;
+}
 
-@Injectable({
-  providedIn: 'root'
-})
 export class TransformFeatureService {
+
+  private static _instance: TransformFeatureService;
+
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private wfsUrl: string;
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
 
-  constructor(private logger: NGXLogger,
-              private http: HttpClient,
-              private httpq: HttpQueue) {
+  constructor() {
     serverProperties.geoServerUrl.then((geoServerUrl) => {
       this.wfsUrl = geoServerUrl + '/wfs';
     });
   }
 
-  updateFeatures(
-          features: WfsFeature[],
-          workspace: string,
-          schema: FeatureDescription,
-          newProperties: Properties,
-          geometry?: WfsGeometry
-  ): Promise<string> {
+  updateProperty(tableName: string, featureId: string, propName: string, propValue): Promise<string> {
+    const projectName = currentProject.internalName;
+
+    const payload =
+      `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">
+        <Update typeName="${projectName}:${tableName}">
+          <Property>
+              <Name>${propName}</Name>
+              <Value>${propValue}</Value>
+          </Property>
+          <Filter xmlns="http://www.opengis.net/ogc">
+              <FeatureId fid="${featureId}"/>
+          </Filter>
+        </Update>
+      </Transaction>`;
+
+    return services.httpq
+                   .post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+  }
+
+  updateFeatures(features: WfsFeature[],
+                 schema: FeatureDescription,
+                 newProperties: Properties,
+                 geometry?: WfsGeometry): Promise<string> {
+    const workspaceName = currentProject.internalName;
+
     const featuresForUpdate: Feature[] = features.map(feature => {
-      const calculated = FeatureUtil.calculateByFunction(
-                                        { ...feature.properties, ...newProperties },
-                                        schema.calcFiledFunction);
+      const calculated = FeatureUtil
+        .calculateByFunction({ ...feature.properties, ...newProperties }, schema.calcFiledFunction);
 
       const newFeature = new Feature({ ...newProperties, ...calculated });
       newFeature.setId(feature.id);
@@ -74,21 +95,23 @@ export class TransformFeatureService {
     const options: WriteTransactionOptions = {
       featureNS: 'castyl_for_remove',
       featureType: schema.tableName,
-      featurePrefix: workspace,
+      featurePrefix: workspaceName,
       nativeElements: [],
       gmlOptions: {
         srsName: getFeatureProjection(features[0]).id
       }
     };
 
-    let payload = this.xs.serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
-                          .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
-                          .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
+    const payload = this.xs.serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
+      .replace(new RegExp(`xmlns:${ workspaceName }="castyl_for_remove"`, 'g'), '')
+      .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
-    return this.httpq.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return services.httpq.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  insertFeatures(featuresData: WfsFeature[], workspaceName: string, layerName: string, srsName: string) {
+  insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
+    const workspaceName = currentProject.internalName;
+
     const options: WriteTransactionOptions = {
       featureNS: workspaceName,
       featureType: layerName,
@@ -110,14 +133,15 @@ export class TransformFeatureService {
 
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
 
-    return this.http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return services.httpq.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  deleteFeatures(featureIds: string[], workspace: string, layerName: string) {
+  deleteFeatures(featureIds: string[], layerName: string) {
+    const workspaceName = currentProject.internalName;
     const options = {
       featureNS: 'castyl_for_remove',
       featureType: layerName,
-      featurePrefix: workspace,
+      featurePrefix: workspaceName,
       nativeElements: []
     } as WriteTransactionOptions;
 
@@ -128,13 +152,13 @@ export class TransformFeatureService {
       return newFeature;
     });
 
-    let payload = this.xs.serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
-                                        .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
+    const payload = this.xs.serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
+      .replace(new RegExp(`xmlns:${ workspaceName }="castyl_for_remove"`, 'g'), '');
 
-    return this.http.post(
-        this.wfsUrl,
-        payload,
-        { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' }
+    return services.httpq.post(
+      this.wfsUrl,
+      payload,
+      { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' }
     );
   }
 
@@ -142,15 +166,20 @@ export class TransformFeatureService {
     let node;
     switch (type) {
       case TransactionType.INSERT:
-        node = this.formatWFS.writeTransaction(features, null, null, options); break;
+        node = this.formatWFS.writeTransaction(features, null, null, options);
+        break;
       case TransactionType.UPDATE:
-        node = this.formatWFS.writeTransaction(null, features, null, options); break;
+        node = this.formatWFS.writeTransaction(null, features, null, options);
+        break;
       case TransactionType.DELETE:
-        node = this.formatWFS.writeTransaction(null, null, features, options); break;
+        node = this.formatWFS.writeTransaction(null, null, features, options);
+        break;
       default:
-        this.logger.warn('Unsupported transaction type: ', type);
+        services.logger.warn('Unsupported transaction type: ', type);
     }
 
     return node;
   }
 }
+
+export const transformFeature = TransformFeatureService.instance;

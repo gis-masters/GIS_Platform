@@ -8,7 +8,7 @@ import { CrgLayersGroup, TreeItem } from '../../services/crg/projects.models';
 
 import { LayersTreeItem } from './Item/LayersTree-Item';
 
-import '!style-loader!css-loader!sass-loader!./LayerTree.scss';
+import '!style-loader!css-loader!sass-loader!./LayersTree.scss';
 
 const cnLayersTree = cn('LayersTree');
 

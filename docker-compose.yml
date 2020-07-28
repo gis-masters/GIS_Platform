@@ -104,6 +104,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/file_storage:/opt/file_storage
 
   gis-service:
     container_name: crg-gis-service

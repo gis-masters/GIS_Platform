@@ -42,7 +42,8 @@ public class SchemaService {
     }
 
     public Optional<SchemaDto> getSchemaByLayerName(@NotNull String name) {
-        final DataSchemaDescription schemaDescription = schemaRepository.findByName(name)
+        final DataSchemaDescription schemaDescription = schemaRepository.findByName(name).stream()
+                .findFirst()
                 .orElseThrow(() -> new NotFoundException("Not found schema by name:" + name));
 
         return Optional.ofNullable(mapToSchemaDto(schemaDescription));
@@ -50,7 +51,8 @@ public class SchemaService {
 
     public void checkFeatureByName(String name) {
         schemaRepository
-                .findByName(name)
+                .findByName(name).stream()
+                .findFirst()
                 .orElseThrow(() -> new NotFoundException("Not found schema by name:" + name));
     }
 

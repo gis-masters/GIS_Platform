@@ -8,5 +8,6 @@ public enum ValueType {
     CHOICE,
     GEOMETRY,
     URL,
-    DATETIME
+    DATETIME,
+    LOOKUP
 }

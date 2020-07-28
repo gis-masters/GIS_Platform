@@ -33,13 +33,13 @@ interface Options {
 export class HttpQueue {
   private executing: number;
   private queue: Task[] = [];
-  private maxParallel: number = 6;
+  private maxParallel = 6;
 
   constructor(private http: HttpClient) {}
 
   get<T>(url: string, options?: Options): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.queue.push({ method: 'get', url, options, resolve, reject });
+      this.queue.push({method: 'get', url, options, resolve, reject})
       this.tick();
     });
   }
@@ -68,7 +68,9 @@ export class HttpQueue {
   }
 
   private tick() {
-    if (!this.queue.length || this.executing >= this.maxParallel) return;
+    if (!this.queue.length || this.executing >= this.maxParallel) {
+      return;
+    }
 
     const task: Task = this.queue.shift();
     this.executing++;

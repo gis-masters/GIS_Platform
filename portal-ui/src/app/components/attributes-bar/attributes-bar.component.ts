@@ -9,38 +9,38 @@ import {
   ViewChild
 } from '@angular/core';
 import moment from 'moment';
+import { cloneDeep } from 'lodash';
+import { NGXLogger } from 'ngx-logger';
+import { MatDialog } from '@angular/material/dialog';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
 import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/operators';
-import { cloneDeep } from 'lodash';
-import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
-import { MatDialog } from '@angular/material/dialog';
-import { NGXLogger } from 'ngx-logger';
 
+import { Toast } from '../Toast/Toast';
 import {
   schemaService,
   FeatureDescription,
   PropertySchema,
   PropertyEnumerations
 } from '../../services/crg/schema.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
-import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
+import { BatchModel } from '../../services/crg/batch-model';
+import { CrgLayer } from '../../services/crg/projects.models';
 import { getFeatures } from '../../services/geoserver/wfs.service';
-import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { projectsService } from '../../services/crg/projects.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { ViewFeaturesData } from '../view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
-import { CrgLayer } from '../../services/crg/projects.models';
-import { TransformFeatureService } from '../../services/geoserver/transform-feature.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
+import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
+import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
+import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { Toast } from '../Toast/Toast';
-import { BatchModel } from '../../services/crg/batch-model';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
 import { getProjection } from '../../services/geoserver/projections.service';
 
 export interface WfsFeatureView extends WfsFeature {
@@ -67,7 +67,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   features: WfsFeatureView[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
-  customRowIdentity = (row: WfsFeature) => row.id;
+  customRowIdentity = ((row: WfsFeature) => row.id);
   pageInfo: Pageable = {
     pageSize: 25,
     offset: 0
@@ -95,7 +95,8 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private tFeatureService: TransformFeatureService, private logger: NGXLogger, private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog,
+              private logger: NGXLogger) {}
 
   async ngAfterViewInit() {
     window.dispatchEvent(new Event('resize'));
@@ -436,9 +437,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     from(batchModel.batches)
       .pipe(
         concatMap(features =>
-          this.tFeatureService.insertFeatures(
-            features,
-            currentProject.internalName,
+          transformFeature.insertFeatures(features,
             selectedLayer.internalName,
             this.layer.nativeCRS
           )
@@ -468,9 +467,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            this.tFeatureService.insertFeatures(
-              features,
-              currentProject.internalName,
+            transformFeature.insertFeatures(features,
               selectedLayer.internalName,
               this.layer.nativeCRS
             )
@@ -479,7 +476,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(([features]) => {
           const featureIds = features.map(feature => feature.id);
 
-          return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
+          return transformFeature.deleteFeatures(featureIds, this.layer.internalName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -506,7 +503,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           const featureIds = features.map(feature => feature.id);
 
-          return this.tFeatureService.deleteFeatures(featureIds, currentProject.internalName, this.layer.internalName);
+          return transformFeature.deleteFeatures(featureIds, this.layer.internalName);
         })
       )
       .subscribe(() => {
@@ -536,7 +533,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     return of();
   }
 
-  private prepareColumns(wfsFeature: WfsFeature) {
+  private async prepareColumns(wfsFeature: WfsFeature) {
     this.columns = [
       {
         name: '',
@@ -572,15 +569,22 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     ];
 
     if (wfsFeature) {
-      Object.keys(wfsFeature.properties).forEach(property => {
-        if (property !== 'bbox') {
+      const schema = await schemaService.getSchema(this.layer.schemaId);
+
+      Object.keys(wfsFeature.properties).forEach(propertyName => {
+        const pSchema = schema.properties.find(propertySchema => propertySchema.name === propertyName);
+        if (pSchema && pSchema.valueType === 'LOOKUP') {
+          return;
+        }
+
+        if (propertyName !== 'bbox') {
           const newProperty: TableColumn = {
-            name: this.defineColumnName(property),
-            prop: this.definePropertySource(property),
-            headerTemplate: this.filterTemplate
+            name: this.defineColumnName(propertyName),
+            prop: this.definePropertySource(propertyName),
+            headerTemplate: this.filterTemplate,
           };
 
-          if (property.toLowerCase() === 'globalid') {
+          if (propertyName.toLowerCase() === 'globalid') {
             newProperty.width = 300;
             newProperty.resizeable = false;
           }
