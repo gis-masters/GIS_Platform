@@ -171,12 +171,14 @@ public class ProjectService {
                 .findByIdAndOrganizationId(projectId, orgId)
                 .orElseThrow(() -> new NotFoundException(projectId));
 
-        projectRepository.delete(project);
-
         try {
+            projectRepository.delete(project);
+
             geoserverClient.deleteProject(project.getInternalName());
         } catch (GeoserverClientException e) {
-            throw new GisServiceException("Не удалось удалить проект на геосервере", e.getCause());
+            throw new GisServiceException("Не удалось удалить проект на геосервере: " + projectId, e.getCause());
+        } catch (Exception e) {
+            throw new GisServiceException("Не удалось удалить проект: " + projectId, e.getCause());
         }
     }
 

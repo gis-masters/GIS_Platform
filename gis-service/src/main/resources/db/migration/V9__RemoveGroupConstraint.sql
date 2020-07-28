@@ -1,0 +1,2 @@
+ALTER TABLE public.groups
+	DROP CONSTRAINT IF EXISTS fknqb3tlhbwy2abk31480y20wq0;
