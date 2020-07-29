@@ -74,11 +74,12 @@ public class Layer implements Identifiable<Long> {
     public Layer(LayerCreateDto dto) {
         title = dto.getTitle();
         internalName = dto.getInternalName();
+        type = dto.getType();
         schemaId = dto.getSchemaId();
         styleName = dto.getInternalName();
         dataStoreName = dto.getDataStoreName();
         nativeCRS = dto.getNativeCRS();
-        type = dto.getType();
+        dataSourceUri = dto.getDataSourceUri();
 
         enabled = false;
         position = 0;

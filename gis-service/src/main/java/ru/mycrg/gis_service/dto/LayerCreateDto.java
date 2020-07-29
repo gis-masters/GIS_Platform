@@ -22,18 +22,19 @@ public class LayerCreateDto {
     private String internalName;
 
     @NotBlank
-    @Length(min = 2, max = 100)
-    private String schemaId;
-
-    @NotBlank
-    @Length(min = 3, max = 100)
-    private String dataStoreName;
-
-    @NotBlank
-    @Length(min = 6, max = 255)
-    private String nativeCRS;
-
     @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
     private String type;
 
+    @Length(min = 2, max = 100)
+    private String schemaId;
+
+    @Length(min = 3, max = 100)
+    private String dataStoreName;
+
+    @Length(min = 6, max = 255)
+    private String nativeCRS;
+
+    @Length(min = 6, max = 255)
+    private String dataSourceUri;
+    
 }

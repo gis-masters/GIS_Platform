@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.mycrg.gis_service.validators.CrgParentGroup;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -27,8 +30,13 @@ public class LayerUpdateDto {
     @Max(message = "Максимальное значение прозрачности 100", value = 100)
     private int transparency = -1;
 
-    @Size(max = 100)
-    private String styleName;
+    @Min(message = "Минимальное значение 0", value = -1)
+    @Max(message = "Максимальное значение 40", value = 40)
+    private int minZoom;
+
+    @Min(message = "Минимальное значение 0", value = -1)
+    @Max(message = "Максимальное значение 40", value = 40)
+    private int maxZoom;
 
     @CrgParentGroup
     private Long groupId;
@@ -36,8 +44,5 @@ public class LayerUpdateDto {
     @NotBlank
     @Length(min = 6, max = 255)
     private String nativeCRS;
-
-    @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
-    private String type;
 
 }

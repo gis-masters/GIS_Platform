@@ -137,9 +137,11 @@ public class LayerService {
         Layer newLayer = new Layer(dto);
 
         String projectName = DEFAULT_PROJECT_NAME + "_" + project.getId();
-        String dataSourceUri = DATA_SERVICE_API_PREFIX + "/schemas/" + projectName + "/tables/" + dto.getInternalName();
+        if ("vector".equals(dto.getType())) {
+            String dataSourceUri = DATA_SERVICE_API_PREFIX + "/schemas/" + projectName + "/tables/" + dto.getInternalName();
+            newLayer.setDataSourceUri(dataSourceUri);
+        }
 
-        newLayer.setDataSourceUri(dataSourceUri);
         newLayer.setProject(project);
 
         return layerRepository.save(newLayer);

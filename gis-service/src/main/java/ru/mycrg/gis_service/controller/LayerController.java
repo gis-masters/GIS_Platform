@@ -1,19 +1,22 @@
 package ru.mycrg.gis_service.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.entity.Layer;
+import ru.mycrg.gis_service.exceptions.BindingErrorsException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.validators.CrgLayerValidator;
 
 import javax.json.JsonMergePatch;
 import javax.validation.Valid;
@@ -23,19 +26,26 @@ import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUT
 import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
+@Log4j2
 @RestController
 @RequestMapping("/projects/{project_id}")
 public class LayerController {
 
-    private static Logger log = LoggerFactory.getLogger(LayerController.class);
-
     private final LayerService layerService;
     private final ProjectService projectService;
+    private final CrgLayerValidator validator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
 
     public LayerController(LayerService layerService,
-                           ProjectService projectService) {
+                           ProjectService projectService,
+                           CrgLayerValidator validator) {
         this.layerService = layerService;
         this.projectService = projectService;
+        this.validator = validator;
     }
 
     @GetMapping("/layers")
@@ -51,7 +61,12 @@ public class LayerController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
                                                        @Valid @RequestBody LayerCreateDto dto,
+                                                       BindingResult bindingResult,
                                                        Authentication authentication) {
+        if (bindingResult.hasErrors()) {
+            throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
+        }
+
         LayerProjection layerProjection = layerService.create(projectId, dto, authentication);
 
         return new ResponseEntity<>(layerProjection, HttpStatus.CREATED);
