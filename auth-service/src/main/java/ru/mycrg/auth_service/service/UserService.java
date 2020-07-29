@@ -184,13 +184,15 @@ public class UserService {
     }
 
     public void delete(Long id, Authentication authentication) {
-        UserProjection user = findById(id, authentication);
+        UserProjection userProjection = findById(id, authentication);
+        log.debug("Try delete user: {}", userProjection.getEmail());
 
-        log.debug("Try delete user: {}", user.getEmail());
+        userRepository.findById(id).ifPresent(user -> {
+            messageBus.sendUserEvent(new UserDeletedEvent(user.getUsername()));
 
-        messageBus.sendUserEvent(new UserDeletedEvent(user.getUsername()));
-
-        userRepository.deleteById(user.getId());
+            user.getOrganizations().forEach(org -> org.getUsers().remove(user));
+            userRepository.deleteById(user.getId());
+        });
     }
 
     public void addAuthority(Long id, String authority, Authentication authentication) {
