@@ -4,7 +4,7 @@ import { permissionsList } from '../../stores/PermissionsList.store';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { getPermissions, RoleAssignmentBody } from './permissions.service';
 import { communicationService } from '../communication.service';
-import { Project, CrgLayer } from './projects.models';
+import { Project, CrgLayer, CrgLayerType } from './projects.models';
 import { projectsService } from './projects.service';
 import { services } from '../services';
 import { Toast } from '../../components/Toast/Toast';
@@ -57,38 +57,38 @@ class PermissionsListService {
 
     await projectsService.fetchProjects();
 
-    const permissions = (
-      await Promise.all(
-        projectsList.list.map(async project => {
-          return await Promise.all(
-            [undefined].concat(project.layers).map(async layer => {
-              let broken = false;
-              let permissions: RoleAssignmentBody[] = [];
+    const permissions: PermissionsListItem[] = [];
 
-              try {
-                permissions = await getPermissions(project, layer);
-              } catch (e) {
-                broken = true;
-                const errText =
-                  'Ошибка получения данных ' +
-                  (layer
-                    ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
-                    : `для проекта "${project.name}"`);
-                Toast.warn(errText);
-                services.logger.error(errText, e);
-              }
+    for (let project of projectsList.list) {
+      //undefined - нужен для обозначения собственно проекта
+      let layers = [undefined].concat(project.layers).filter(layer => !layer || layer.type === CrgLayerType.VECTOR);
 
-              return {
-                project,
-                layer,
-                permissions,
-                broken
-              };
-            })
-          );
-        })
-      )
-    ).flat();
+      for (let layer of layers) {
+        let broken = false;
+        let layerPermissions: RoleAssignmentBody[] = [];
+
+        try {
+          // если слой не указан (undefined), вернёт результат для самого проекта
+          layerPermissions = await getPermissions(project, layer);
+        } catch (e) {
+          broken = true;
+          let errText =
+            'Ошибка получения данных ' +
+            (layer
+              ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
+              : `для проекта "${project.name}"`);
+          Toast.warn(errText);
+          services.logger.error(errText, e);
+        }
+
+        permissions.push({
+          project,
+          layer,
+          permissions: layerPermissions,
+          broken
+        });
+      }
+    }
 
     permissionsList.setList(permissions);
     permissionsList.setFetching(false);
