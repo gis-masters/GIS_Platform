@@ -60,24 +60,24 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     this.reactionDisposer = reaction(
-      () => currentProject.visibleLayers,
-      visibleItems => {
+      () => currentProject.visibleLayersBatched,
+      visibleBatches => {
         openLayersService.hideUserLayers();
 
-        visibleItems.forEach((batch, i) => {
+        visibleBatches.forEach((batch, i) => {
           const { actualTransparency } = batch[0];
 
           const layers = batch.map(item => item.payload).reverse();
 
           openLayersService.addLayers(
             layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
-            visibleItems.length - i,
+            visibleBatches.length - i,
             actualTransparency / 100
           );
 
           openLayersService.addExternalLayers(
             layers.filter(l => l.type === CrgLayerType.EXTERNAL),
-            visibleItems.length - i
+            visibleBatches.length - i
           );
         });
       },

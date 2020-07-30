@@ -74,34 +74,37 @@ class CurrentProject {
   }
 
   @computed
-  get visibleLayers(): TreeItem<CrgLayer>[][] {
-    return this.tree
-      .filter(item => item.visible && !item.isGroup)
-      .reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
-        if (!acc.length) {
-          return [[item]];
-        }
+  get visibleLayers(): TreeItem<CrgLayer>[] {
+    return this.tree.filter(item => item.visible && !item.isGroup) as TreeItem<CrgLayer>[];
+  }
 
-        const lastBatch = acc[acc.length - 1];
-        const lastItem = lastBatch[lastBatch.length - 1];
-        const lastTransparency = lastItem.actualTransparency;
-        const lastType = lastItem.payload.type;
-        const transparency = item.actualTransparency;
-        const typ = item.payload.type;
+  @computed
+  get visibleLayersBatched(): TreeItem<CrgLayer>[][] {
+    return this.visibleLayers.reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
+      if (!acc.length) {
+        return [[item]];
+      }
 
-        if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
-          lastBatch.push(item);
-        } else {
-          acc.push([item]);
-        }
+      const lastBatch = acc[acc.length - 1];
+      const lastItem = lastBatch[lastBatch.length - 1];
+      const lastTransparency = lastItem.actualTransparency;
+      const lastType = lastItem.payload.type;
+      const transparency = item.actualTransparency;
+      const typ = item.payload.type;
 
-        return acc;
-      }, []);
+      if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
+        lastBatch.push(item);
+      } else {
+        acc.push([item]);
+      }
+
+      return acc;
+    }, []);
   }
 
   @computed
   get visibleLayersWithoutRasters(): TreeItem<CrgLayer>[] {
-    return this.visibleLayers.flat().filter(item => item.payload.type !== CrgLayerType.RASTER);
+    return this.visibleLayers.filter(item => item.payload.type !== CrgLayerType.RASTER);
   }
 
   @action
@@ -119,22 +122,22 @@ class CurrentProject {
   }
 
   @computed
-  get vectorLayers () {
+  get vectorLayers() {
     return this.layers.filter(l => l.type === CrgLayerType.VECTOR);
   }
 
   @computed
-  get rasterLayers () {
+  get rasterLayers() {
     return this.layers.filter(l => l.type === CrgLayerType.RASTER);
   }
 
   @computed
-  get externalLayers () {
+  get externalLayers() {
     return this.layers.filter(l => l.type === CrgLayerType.EXTERNAL);
   }
 
   @action
-  deleteLayer (layer: CrgLayer) {
+  deleteLayer(layer: CrgLayer) {
     const index = this.layers.indexOf(layer);
     if (index > -1) {
       this.layers.splice(index, 1);
