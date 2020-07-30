@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isGeoserverAdmin;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
@@ -137,10 +136,7 @@ public class UserService {
 
             Set<Organization> organizations = owner.getOrganizations();
             if (!organizations.isEmpty()) {
-                Organization organization = organizations.iterator().next();
-                List<User> organizationUsers = new ArrayList<>(organization.getUsers());
-
-                users = new PageImpl<>(organizationUsers, pageable, organizationUsers.size());
+                users = userRepository.findByOrganizations(organizations, pageable);
             } else {
                 users = new PageImpl<>(new ArrayList<>(), pageable, 0);
             }
