@@ -26,7 +26,7 @@ public class Group {
     @Column
     private String description;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "groups_users",
             joinColumns = {@JoinColumn(name = "group_id")},
