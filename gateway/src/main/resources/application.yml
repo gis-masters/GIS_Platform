@@ -8,6 +8,13 @@ spring:
       max-request-size: 60MB
 
 zuul:
+  host:
+    connect-timeout-millis: 30000
+    socket-timeout-millis: 30000
+    # max-total-connections: 500
+    # max-per-route-connections: 20
+    # time-unit: MILLISECONDS
+    # time-to-live: 10000
   #  prefix: /api
   #  include-debug-header: true
   ignoredServices: '*'
