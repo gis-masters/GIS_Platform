@@ -21,9 +21,10 @@ class Route {
   @observable data: Data;
   @observable paramMap: ParamMap;
   @observable queryParamMap: ParamMap;
+  @observable currentPage: string;
 
   @action
-  private setRoute (route: ActivatedRouteSnapshot) {
+  private setRoute(route: ActivatedRouteSnapshot) {
     this.url = route.url;
     this.params = route.params;
     this.queryParams = route.queryParams;
@@ -31,30 +32,37 @@ class Route {
     this.data = route.data;
     this.paramMap = route.paramMap;
     this.queryParamMap = route.queryParamMap;
+
+    console.log('currentPage: ', this.url[0]);
+    if (this.url.length) {
+      this.currentPage = this.url[0].path;
+    } else {
+      this.currentPage = '';
+    }
   }
 
-  private constructor () {
+  private constructor() {
     this.subscribe();
   }
 
-  private async subscribe () {
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private async subscribe() {
     await services.provided;
 
     this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
 
     services.router.events.subscribe((event: RouterEvent) => {
-      if(event instanceof RoutesRecognized) {
+      if (event instanceof RoutesRecognized) {
         this.setRoute(this.getDeepestChildren(event.state.root));
       }
     });
   }
 
-  private getDeepestChildren (snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
+  private getDeepestChildren(snapshot: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
     return snapshot.children.length ? this.getDeepestChildren(snapshot.children[0]) : snapshot;
-  }
-
-  public static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 

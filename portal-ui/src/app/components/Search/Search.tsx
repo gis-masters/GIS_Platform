@@ -2,10 +2,12 @@ import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 import { SearchTwoTone } from '@material-ui/icons';
 import { Divider, IconButton, InputBase, Popover } from '@material-ui/core';
 
 import { Loading } from '../Loading/Loading';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';
 
 import { SearchResultList } from './ResultList/Search-ResultList';
@@ -32,11 +34,6 @@ export class Search extends Component<SearchProps> {
 
   constructor(props: SearchProps) {
     super(props);
-
-    this.onFocus = this.onFocus.bind(this);
-    this.doSearch = this.doSearch.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    this.handleResultListClose = this.handleResultListClose.bind(this);
   }
 
   render() {
@@ -84,6 +81,9 @@ export class Search extends Component<SearchProps> {
   @action.bound
   private handleInputChange(e) {
     this.searchValue = e.target.value;
+    if (!this.searchValue) {
+      openLayersService.clearMarkers();
+    }
   }
 
   @action
@@ -91,16 +91,19 @@ export class Search extends Component<SearchProps> {
     this.searchResult = result;
   }
 
+  @boundMethod
   private onFocus(e) {
     this.anchor = e.target as HTMLElement;
   }
 
+  @boundMethod
   private handleKeyUp(e) {
     if (e.key === 'Enter') {
       this.doSearch();
     }
   }
 
+  @boundMethod
   private async doSearch() {
     if (!this.searchValue) {
       return;
@@ -112,6 +115,7 @@ export class Search extends Component<SearchProps> {
     this.setLoading(false);
   }
 
+  @boundMethod
   private handleResultListClose() {
     this.closeResultList();
   }
@@ -119,6 +123,7 @@ export class Search extends Component<SearchProps> {
   @action.bound
   private closeResultList() {
     this.resultListOpen = false;
+    openLayersService.clearMarkers();
   }
 
   @action

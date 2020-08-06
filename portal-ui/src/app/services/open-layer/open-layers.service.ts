@@ -80,6 +80,7 @@ class OpenLayersService {
 
   private _map: Map;
   private view: View;
+  private markersSource: VectorSource;
   private draftSource: VectorSource;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
@@ -95,12 +96,17 @@ class OpenLayersService {
 
   // ZIndex чернового слоя который используется для подсвечивания объектов
   private DRAFT_LAYER_ZINDEX = 10000;
+  private MARKERS_LAYER_ZINDEX = 10100;
 
   // Default view options
   private defaultZoomValue = 9;
   private defaultViewPoint = [3844444, 5644444];
 
   async createMap() {
+    this.markersSource = new VectorSource({
+      features: []
+    });
+
     this.draftSource = new VectorSource({
       features: []
     });
@@ -122,6 +128,10 @@ class OpenLayersService {
       ]),
       layers: [
         this.baseMapLayer,
+        new VectorLayer({
+          source: this.markersSource,
+          zIndex: this.MARKERS_LAYER_ZINDEX
+        }),
         new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
@@ -333,7 +343,8 @@ class OpenLayersService {
 
     this.clearDraft();
 
-    this.paintFeatures(featuresInOlProjection);
+    const olFeatures = featuresInOlProjection.map(feature => MapperUtil.mapWfsFeatureToFeature(feature));
+    this.draftSource.addFeatures(olFeatures);
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {
@@ -518,9 +529,12 @@ class OpenLayersService {
     this._map.getView().setResolution(viewResolution / scaling);
   }
 
-  private paintFeatures(wfsFeatures: WfsFeature[]) {
-    const olFeatures = wfsFeatures.map(feature => MapperUtil.mapWfsFeatureToFeature(feature));
-    this.draftSource.addFeatures(olFeatures);
+  drawMarkers(features: Feature[]) {
+    this.markersSource.addFeatures(features);
+  }
+
+  clearMarkers() {
+    this.markersSource.clear();
   }
 
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {

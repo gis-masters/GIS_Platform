@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { MyLocation } from '@material-ui/icons';
@@ -19,8 +20,6 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
 
   constructor(props: SearchResultListItemProps) {
     super(props);
-
-    this.clickHandler = this.clickHandler.bind(this);
   }
 
   render(): ReactNode {
@@ -41,13 +40,17 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
     );
   }
 
+  @boundMethod
   private clickHandler() {
     this.props.onClick();
 
+    const { pos } = this.props.geoObject.Point;
+    const posSplited = pos.split(' ');
     const { lowerCorner, upperCorner } = this.props.geoObject.boundedBy.Envelope;
     const lowerSplited = lowerCorner.split(' ');
     const upperSplited = upperCorner.split(' ');
 
+    yaMapDecorator.drawMarker([Number(posSplited[0]), Number(posSplited[1])]);
     yaMapDecorator.fitToBbox([Number(lowerSplited[0]), Number(lowerSplited[1]),
                               Number(upperSplited[0]), Number(upperSplited[1])], [0, 0, 0, 0]);
   }
