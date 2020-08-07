@@ -1,41 +1,26 @@
 package ru.mycrg.gateway.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 public class CrgExceptionModel {
 
-    private String timestamp;
-    private int status;
-    private String error;
+    private HttpStatus status;
     private String message;
-    private String path;
 
-    public CrgExceptionModel(String timestamp, int status, String message) {
-        this.timestamp = timestamp;
+    public CrgExceptionModel() {
+    }
+
+    public CrgExceptionModel(final HttpStatus status, String message) {
         this.status = status;
         this.message = message;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(HttpStatus status) {
         this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 
     public String getMessage() {
@@ -46,11 +31,12 @@ public class CrgExceptionModel {
         this.message = message;
     }
 
-    public String getPath() {
-        return path;
+    @Override
+    public String toString() {
+        return "{" +
+                "    \"status\": \"" + status + "\"," +
+                "    \"message\": \"" + message + "\"" +
+                "}";
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
 }

@@ -9,8 +9,8 @@ spring:
 
 zuul:
   host:
-    connect-timeout-millis: 30000
-    socket-timeout-millis: 30000
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 10000
     # max-total-connections: 500
     # max-per-route-connections: 20
     # time-unit: MILLISECONDS
@@ -82,6 +82,7 @@ zuul:
       serviceId: http://geoserver:8080/geoserver/
 
 logging:
-  file: /opt/logs/gateway.log
   level:
     ru.mycrg: DEBUG
+  file:
+    name: /opt/logs/gateway.log

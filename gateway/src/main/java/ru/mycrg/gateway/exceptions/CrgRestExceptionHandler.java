@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ControllerAdvice
@@ -24,13 +22,10 @@ public class CrgRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<CrgExceptionModel> handleMaxSizeException(final MaxUploadSizeExceededException ex) {
         String maxUploadSize = environment.getRequiredProperty("spring.servlet.multipart.max-file-size");
 
-        CrgExceptionModel exceptionModel = new CrgExceptionModel(
-                LocalDateTime.now().toString(),
-                BAD_REQUEST.value(),
+        CrgExceptionModel crgExceptionModel = new CrgExceptionModel(BAD_REQUEST,
                 "Maximum upload size exceeded, configured maximum: " + maxUploadSize
         );
 
-        return new ResponseEntity<>(exceptionModel, BAD_REQUEST);
+        return new ResponseEntity<>(crgExceptionModel, BAD_REQUEST);
     }
-
 }
