@@ -33,7 +33,6 @@ class Route {
     this.paramMap = route.paramMap;
     this.queryParamMap = route.queryParamMap;
 
-    console.log('currentPage: ', this.url[0]);
     if (this.url.length) {
       this.currentPage = this.url[0].path;
     } else {

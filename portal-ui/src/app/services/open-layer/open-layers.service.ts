@@ -634,7 +634,9 @@ class OpenLayersService {
   }
 
   printDebugInfo() {
-    services.logger.debug('Current extent: ', this.view.calculateExtent());
+    if (this.view) {
+      services.logger.debug('Current extent: ', this.view.calculateExtent());
+    }
   }
 
   private isUserLayer(layer: BaseLayer): boolean {
