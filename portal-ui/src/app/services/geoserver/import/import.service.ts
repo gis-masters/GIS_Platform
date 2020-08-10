@@ -35,39 +35,39 @@ const JSON_FORMAT = new HttpHeaders({ 'Content-Type': 'application/json' });
 export const fetchCurrentImport = async (importId: string) => {
   currentImport.fit({ scratch: await getById(importId) });
   fillTasks();
-}
+};
 
 export const getById = async (id: string) => {
   await services.provided;
   const url = `${await getImportUrl()}/${id}`;
   return (await services.httpq.get<InputStartResponseDto>(url)).import;
-}
+};
 
 export const checkImportStatus = async () => {
   await services.provided;
   const { href } = currentImport.scratch;
   const { import: scratch } = await services.httpq.get<InputStartResponseDto>(href);
 
-  currentImport.fit({scratch});
+  currentImport.fit({ scratch });
   fillTasks();
-}
+};
 
 const getImportLayer = async (task: ImportTaskShort): Promise<ImportLayer> => {
   await services.provided;
 
   return services.httpq.get<ImportLayer>(task.href + '/layer');
-}
+};
 
 export const getAllImportLayers = (): Promise<ImportLayer[]> => {
   return Promise.all(currentImport.tasks.map(getImportLayer));
-}
+};
 
 /**
  * Инициируем импорт во временное хранилище.
  */
 export const initScratchImport = async (file: File): Promise<ScratchImport> => {
   await services.provided;
-  currentImport.reset({file});
+  currentImport.reset({ file });
 
   const orgId = localStorageService.getOrgId();
   const workspace = 'scratch_database_' + orgId;
@@ -93,12 +93,12 @@ export const initScratchImport = async (file: File): Promise<ScratchImport> => {
 
   try {
     const { import: scratchImport } = await services.httpq.post<InputStartResponseDto>(
-        await getImportUrl(),
-        payload,
-        { headers: JSON_FORMAT }
+      await getImportUrl(),
+      payload,
+      { headers: JSON_FORMAT }
     );
 
-    currentImport.fit({scratch: scratchImport});
+    currentImport.fit({ scratch: scratchImport });
 
     await uploadTasks(scratchImport.href, file);
 
@@ -108,11 +108,11 @@ export const initScratchImport = async (file: File): Promise<ScratchImport> => {
 
     return Promise.reject(err);
   }
-}
+};
 
 const getImportUrl = async (): Promise<string> => {
   return (await serverProperties.geoServerUrl) + '/rest/imports';
-}
+};
 
 const uploadTasks = async (url: string, file: File) => {
   await services.provided;
@@ -124,7 +124,7 @@ const uploadTasks = async (url: string, file: File) => {
 
   try {
     const tasks: ImportTaskShort[] = GeoUtil.tasksHandler(
-                      await services.httpq.post<ImportTaskResponse>(tasksUrl, formData));
+      await services.httpq.post<ImportTaskResponse>(tasksUrl, formData));
 
     fillTasks();
 
@@ -135,42 +135,44 @@ const uploadTasks = async (url: string, file: File) => {
     currentImport.setError(err);
     return Promise.reject(err);
   }
-}
+};
 
 /**
  * Последний шаг, после всех приготовлений, стартуем импорт.
  */
 const uploadToScratch = async () => {
-  await services.provided;
   return services.httpq.post(`${await getImportUrl()}/${currentImport.id}`, {}).catch(err => {
-    if (err.error && err.error.message !== 'Read timed out') {
+    // Geoserver "держит" этот запрос до самого конца импорта соответственно в зависимости от обьема ответ может
+    // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
+    // ошибкой, ретраи здесь также не нужны.
+    if (err && err.status !== 504) {
       currentImport.setError(err);
     }
   });
-}
+};
 
 export const fillTasks = async () => {
   const tasks = currentImport.notFullfilledTasks;
-  tasks.forEach(async task => currentImport.setFullTasks([await getFullImportTask(task)]));
-}
+  tasks.forEach(async task => currentImport.setFullTasks([ await getFullImportTask(task) ]));
+};
 
 export const updateProgress = async () => {
   await services.provided;
-  const firstTask = currentImport.tasks[0];
+  const firstTask = currentImport.tasks[ 0 ];
 
   if (firstTask && firstTask.progress) {
     currentImport.setProgress(await services.httpq.get<ImportTaskProgress>(firstTask.progress));
   }
-}
+};
 
 const getFullImportTask = async (shortTask: ImportTaskShort): Promise<ImportTaskFull> => {
   await services.provided;
-  const { task } = await services.httpq.get<{task: ImportTaskFull}>(shortTask.href);
+  const { task } = await services.httpq.get<{ task: ImportTaskFull }>(shortTask.href);
   return task;
-}
+};
 
 export const deleteTask = async (task: ImportTaskShort) => {
   await services.provided;
   await services.httpq.delete(task.href);
   await checkImportStatus();
-}
+};

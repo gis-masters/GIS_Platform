@@ -67,6 +67,12 @@ class CurrentImport implements ImportInfo {
     error: false
   };
 
+  private constructor() {}
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   @computed
   get id(): string | null {
     if (this.scratch) {
@@ -111,7 +117,7 @@ class CurrentImport implements ImportInfo {
 
   @computed
   get isWrongExt(): boolean {
-    if (!this.file) return false;
+    if (!this.file) { return false; }
     return this.file.name.split('.')[1] !== 'zip';
   }
 
@@ -180,12 +186,6 @@ class CurrentImport implements ImportInfo {
     } else {
       return 'Неопределенный статус';
     }
-  }
-
-  private constructor() {}
-
-  public static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 
