@@ -4,30 +4,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dao.TablesDDL;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.TableIdentifier;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
 import static ru.mycrg.data_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class PermissionsController {
-
-    @Inject
-    private LocalValidatorFactoryBean validator;
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(validator);
-    }
 
     private final TablesDDL tablesDDL;
     private final PermissionsService permissionsService;
@@ -42,7 +33,12 @@ public class PermissionsController {
     @PostMapping("/schemas/{schemaName}/tables/{tableName}/roleAssignment")
     public ResponseEntity<PermissionProjection> addPermission(@PathVariable String schemaName,
                                                               @PathVariable String tableName,
-                                                              @Valid @RequestBody PermissionCreateDto dto) {
+                                                              @Valid @RequestBody PermissionCreateDto dto,
+                                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
+        }
+
         TableIdentifier tableIdentifier = new TableIdentifier(schemaName, tableName);
         if (!tablesDDL.isTableExist(tableIdentifier)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

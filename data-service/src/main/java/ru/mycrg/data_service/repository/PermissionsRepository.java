@@ -2,6 +2,7 @@ package ru.mycrg.data_service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +21,11 @@ import java.util.Set;
         excerptProjection = PermissionProjection.class,
         exported = false)
 public interface PermissionsRepository extends PagingAndSortingRepository<Permission, Long> {
+
+    @RestResource(exported = false)
+    @Query("FROM Permission as p WHERE p.principalType = :principalType AND p.principalId = :principalId")
+    Optional<Permission> findPermissionByPrincipal(@Param("principalType") String principalType,
+                                                   @Param("principalId") Long principalId);
 
     @RestResource(exported = false)
     @Query("FROM Permission as p " +
@@ -68,5 +74,12 @@ public interface PermissionsRepository extends PagingAndSortingRepository<Permis
     Optional<String> getRoleForGroups(@Param("groups") List<Long> groups,
                                       @Param("identifier") String identifier, @Param("type") String type);
 
+    @Modifying
+    @Query("UPDATE Permission p SET p.role = :newRole, p.lastModified = CURRENT_TIMESTAMP " +
+            "WHERE p.principalId = :pId AND p.principalType = :pType")
+    @RestResource(exported = false)
+    int updatePermissionRole(@Param("pType") String pincipalType,
+                             @Param("pId") Long principalId,
+                             @Param("newRole") String newRole);
 }
 

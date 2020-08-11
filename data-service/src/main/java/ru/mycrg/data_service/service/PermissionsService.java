@@ -60,21 +60,30 @@ public class PermissionsService {
 
     public PermissionProjection create(@NotNull TableIdentifier resource,
                                        @NotNull PermissionCreateDto dto) {
-        Permission permission;
+        String principalType = dto.getPrincipalType();
+        Long principalId = dto.getPrincipalId();
+        String role = dto.getRole();
+
+        final Permission[] permissions = new Permission[1];
         Optional<Permission> oPermission = permissionsRepository
-                .findPermissionByParams(dto.getPrincipalType(), dto.getPrincipalId(), dto.getRole());
+                .findPermissionByParams(principalType, principalId, role);
 
         if (oPermission.isPresent()) {
-            permission = oPermission.get();
+            permissions[0] = oPermission.get();
 
-            joinResource(permission, resource.toString());
+            joinResource(permissions[0], resource.toString());
         } else {
-            log.debug("Create new permission for: {} / {}", resource.getTable(), dto);
+            permissionsRepository
+                    .findPermissionByPrincipal(principalType, principalId)
+                    .ifPresentOrElse(permissionForUpdate -> {
+                        permissionForUpdate.setRole(role);
+                        permissions[0] = permissionForUpdate;
 
-            permission = createNewPermission(dto, resource.toString());
+                        permissionsRepository.updatePermissionRole(principalType, principalId, role);
+                    }, () -> permissions[0] = createNewPermission(dto, resource.toString()));
         }
 
-        return projectionFactory.createProjection(PermissionProjection.class, permission);
+        return projectionFactory.createProjection(PermissionProjection.class, permissions[0]);
     }
 
     public void deleteByPermissionId(TableIdentifier resource, Long permissionId) {

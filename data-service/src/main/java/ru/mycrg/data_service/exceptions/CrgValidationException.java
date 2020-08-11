@@ -1,24 +1,34 @@
 package ru.mycrg.data_service.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class CrgValidationException extends ValidationException {
 
+    private final List<ErrorInfo> errors;
+
     public <T> CrgValidationException(Set<ConstraintViolation<T>> violations) {
-        super(violations != null ? toString(violations) : "");
+        super("Сущность описана некорректно");
+
+        this.errors = mapViolations(violations);
     }
 
-    private static String toString(Set<? extends ConstraintViolation<?>> constraintViolations) {
+    private static List<ErrorInfo> mapViolations(Set<? extends ConstraintViolation<?>> constraintViolations) {
         return constraintViolations.stream()
-                .map(cv -> cv == null ? "null" : cv.getPropertyPath() + ": " + cv.getMessage())
-                .collect(Collectors.joining(", "));
+                .map(violation -> {
+                    if (violation != null) {
+                        return new ErrorInfo(violation.getPropertyPath().toString(), violation.getMessage());
+                    } else {
+                        return new ErrorInfo();
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
+    public List<ErrorInfo> getErrors() {
+        return errors;
+    }
 }
