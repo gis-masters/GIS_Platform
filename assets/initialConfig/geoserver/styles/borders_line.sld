@@ -12,7 +12,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>482-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -43,7 +43,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>480-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>

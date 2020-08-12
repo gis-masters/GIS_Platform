@@ -18,7 +18,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>100-100-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -48,7 +48,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>175-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -78,7 +78,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>175-100-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -125,7 +125,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>202-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -147,7 +147,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>319-400-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -162,7 +162,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -182,7 +182,7 @@
               <se:Size>15</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:AnchorPoint>
@@ -198,7 +198,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -218,7 +218,7 @@
               <se:Size>15</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -235,7 +235,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>319-500-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -250,7 +250,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -270,7 +270,7 @@
               <se:Size>15</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -282,7 +282,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -302,7 +302,7 @@
               <se:Size>15</se:Size>
                <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -319,14 +319,14 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>323-300-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -346,7 +346,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -358,7 +358,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -378,7 +378,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -390,7 +390,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -410,7 +410,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -422,7 +422,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -442,7 +442,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -459,7 +459,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>325-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -484,7 +484,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -504,7 +504,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -516,7 +516,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -536,7 +536,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -548,7 +548,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -568,7 +568,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -580,7 +580,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -600,7 +600,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -617,7 +617,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>313-000-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -642,7 +642,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -662,7 +662,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -674,7 +674,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -694,7 +694,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -706,7 +706,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -726,7 +726,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -738,7 +738,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -758,7 +758,7 @@
               <se:Size>10</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -775,7 +775,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>323-380-L</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -804,7 +804,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -824,7 +824,7 @@
               <se:Size>4</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -836,7 +836,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -856,7 +856,7 @@
               <se:Size>4</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -868,7 +868,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -888,7 +888,7 @@
               <se:Size>4</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:Displacement>
@@ -900,7 +900,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -920,7 +920,7 @@
               <se:Size>4</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
               <se:AnchorPoint>
@@ -936,7 +936,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="startpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -956,7 +956,7 @@
               <se:Size>5</se:Size>
               <se:Rotation>
                 <ogc:Function name="startAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>
@@ -964,7 +964,7 @@
           <se:PointSymbolizer>
             <se:Geometry>
               <ogc:Function name="endpoint">
-                <ogc:PropertyName>the_geom</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
@@ -984,7 +984,7 @@
               <se:Size>5</se:Size>
               <se:Rotation>
                 <ogc:Function name="endAngle">
-                  <ogc:PropertyName>the_geom</ogc:PropertyName>
+                  <ogc:PropertyName>shape</ogc:PropertyName>
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>

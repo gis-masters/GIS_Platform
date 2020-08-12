@@ -11,7 +11,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>123-100-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -30,7 +30,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>026-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -52,7 +52,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>112-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -74,7 +74,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>112-200-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -93,7 +93,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>095-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -112,7 +112,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>121-300-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -131,7 +131,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>074-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -150,7 +150,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>143-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -164,7 +164,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>141-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -178,7 +178,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>122-800-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -197,7 +197,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>121-700-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -216,7 +216,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>308-040-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -238,7 +238,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>265-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -257,7 +257,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>098-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
@@ -276,7 +276,7 @@
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>CODE</ogc:PropertyName>
+              <ogc:PropertyName>code</ogc:PropertyName>
               <ogc:Literal>056-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
