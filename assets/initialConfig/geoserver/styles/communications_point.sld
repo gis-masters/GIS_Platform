@@ -6,7 +6,7 @@
   <NamedLayer>
     <se:Name>Коммуникации точечные</se:Name>
     <UserStyle>
-      <se:Name>Communication_point</se:Name>
+      <se:Name>Communications</se:Name>
       <se:FeatureTypeStyle>	
         <se:Rule>
           <se:Name>074-000-P</se:Name>
@@ -555,7 +555,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.2.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -579,7 +579,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.2.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -603,7 +603,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.2.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -627,7 +627,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.2.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kolodec_smotrovoi_luk.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>5</se:Size>

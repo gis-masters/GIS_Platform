@@ -6,7 +6,7 @@
   <NamedLayer>
     <se:Name>Маркеры</se:Name>
     <UserStyle>
-      <se:Name>Markers_point</se:Name>
+      <se:Name>Markers</se:Name>
       <se:FeatureTypeStyle>	
         <se:Rule>
           <se:Name>416-020-P</se:Name>

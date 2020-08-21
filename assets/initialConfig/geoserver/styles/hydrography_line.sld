@@ -3,7 +3,7 @@
   <NamedLayer>
     <se:Name>Гидрография линейная</se:Name>
     <UserStyle>
-      <se:Name>Hydrography_line</se:Name>
+      <se:Name>Hydrography</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>239-100-L</se:Name>

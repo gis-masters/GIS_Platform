@@ -3,7 +3,7 @@
   <NamedLayer>
     <se:Name>Коммуникации линейные</se:Name>
     <UserStyle>
-      <se:Name>Communication_L</se:Name>
+      <se:Name>Communications</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>158-300-L</se:Name>

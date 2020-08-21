@@ -2,7 +2,7 @@
   <NamedLayer>
     <se:Name>Мосты и путепроводы площадные</se:Name>
     <UserStyle>
-      <se:Name>Mosti_i_puteprovodi_Poly</se:Name>
+      <se:Name>Bridges</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>319-000-S</se:Name>

@@ -9,7 +9,7 @@
   <NamedLayer>
     <se:Name>Мосты и путепроводы линейные</se:Name>
     <UserStyle>
-      <se:Name>Mosti_i_puteprovodi_line</se:Name>
+      <se:Name>Bridges</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>100-100-L</se:Name>

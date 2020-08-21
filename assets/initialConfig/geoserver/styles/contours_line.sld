@@ -3,7 +3,7 @@
   <NamedLayer>
     <se:Name>Контурная часть</se:Name>
     <UserStyle>
-      <se:Name>Konturnaya chast</se:Name>
+      <se:Name>Contours</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>366-000-L</se:Name>

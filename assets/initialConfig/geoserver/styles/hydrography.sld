@@ -2,7 +2,7 @@
   <NamedLayer>
     <se:Name>Элементы гидрографии площадные</se:Name>
     <UserStyle>
-      <se:Name>Gidrografiya_Poly</se:Name>
+      <se:Name>Hydrography</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>211-000-S</se:Name>

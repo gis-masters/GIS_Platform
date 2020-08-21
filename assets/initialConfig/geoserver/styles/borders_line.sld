@@ -3,7 +3,7 @@
   <NamedLayer>
     <se:Name>Граница</se:Name>
     <UserStyle>
-      <se:Name>Granica</se:Name>
+      <se:Name>Borders</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>482-000-L</se:Name>
