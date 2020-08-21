@@ -34,6 +34,8 @@ security:
     secret: vjp4lLW_QmjMHiUw1OBVRIZH
     client_id: admin
     client_secret: geoserver
+    access_token_validity_seconds: 86400
+    refresh_token_validity_seconds: 1209600
 
 server:
   port: 9000

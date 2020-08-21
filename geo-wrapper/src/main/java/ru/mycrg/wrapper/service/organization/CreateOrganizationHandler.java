@@ -62,8 +62,8 @@ public class CreateOrganizationHandler implements IOrganizationRequestHandler {
 
             organizationService.create(mqEvent);
 
-            final JwtToken jwtToken = oAuthClient.getJwtToken(properties.getRootUserName(),
-                    properties.getRootUserPassword());
+            final JwtToken jwtToken = oAuthClient.getToken(properties.getRootUserName(),
+                    properties.getRootUserPassword()).get();
             JSONObject payload = new JSONObject();
             payload.put("name", DEFAULT_DB_NAME + mqEvent.getOrgId());
             Request request = new Request.Builder().url(new URL(properties.getDataServiceUrl(), "/databases"))

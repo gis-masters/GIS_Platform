@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import ru.mycrg.data_service.dao.ServiceTablesInitializer;
 
 @Configuration
 @EnableResourceServer

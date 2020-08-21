@@ -75,7 +75,7 @@ export class HttpQueue {
     const task: Task = this.queue.shift();
     this.executing++;
 
-    this.http.request(task.method, task.url, { body: task.body, ...task.options }).subscribe(
+    this.http.request(task.method, task.url, { body: task.body, ...task.options, withCredentials: true }).subscribe(
       result => {
         task.resolve(result);
         this.executing--;

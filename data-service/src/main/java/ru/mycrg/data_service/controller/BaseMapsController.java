@@ -15,5 +15,4 @@ public class BaseMapsController {
     public ResponseEntity<Object> updateBaseMap(@PathVariable String id) {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
-
 }

@@ -51,14 +51,14 @@ public class AcceptanceTests {
     }
 
     @Test
-    public void aa_ShouldAuthorize() throws OAuthClientException, MalformedURLException {
+    public void aa_ShouldAuthorize() throws MalformedURLException, OAuthClientException {
         OAuthClient oAuthClient = OAuthClient.builder()
                 .url(new URL("http://" + testServerHost + ":" + testServerPort))
                 .clientId(rootUserName)
                 .clientSecret(rootPassword)
                 .build();
 
-        jwtToken = oAuthClient.getJwtToken(rootUserName, rootPassword);
+        jwtToken = oAuthClient.getToken(rootUserName, rootPassword).get();
 
         requestJwt = RestAssured.given()
                 .headers("Authorization", "Bearer " + jwtToken.getAccess_token(), "Content-Type",

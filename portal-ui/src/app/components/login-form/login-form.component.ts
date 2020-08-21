@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { AuthService, AuthCredentials } from '../../services/auth.service';
-import { JwtToken, tokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'crg-login-form',
@@ -27,7 +26,8 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.authService.validateAuth(this.redirectTo);
@@ -48,21 +48,19 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.isWrongPassword = false;
       this.isUserDisabled = false;
 
-      this.authService.authenticate(credentials).then(
-          (jwtToken: JwtToken) => {
-            this.authService.authenticated = true;
-            tokenStorageService.saveToken(jwtToken);
-            this.router.navigateByUrl('/projects/default');
-          },
-          response => {
-            this.authService.authenticated = false;
+      this.authService.authenticate(credentials).then(() => {
+          this.authService.authenticated = true;
 
-            if (response.error && response.error.error_description === 'User is disabled') {
-              this.isUserDisabled = true;
-            } else if (response.error.error_description === 'Bad credentials') {
-              this.isWrongPassword = true;
-            }
+          this.router.navigateByUrl('/projects/default');
+        }, (response) => {
+          this.authService.authenticated = false;
+
+          if (response.error) {
+            this.isUserDisabled = true;
+          } else if (response.status === 401) {
+            this.isWrongPassword = true;
           }
+        }
       );
     } else {
       alert('Not valid form!');

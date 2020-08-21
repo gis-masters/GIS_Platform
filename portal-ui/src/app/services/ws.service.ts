@@ -5,7 +5,6 @@ import { Stomp, CompatClient } from '@stomp/stompjs';
 
 import { generateRandomId } from './util/stringUtil';
 import { BugObject } from './crg/validation.service';
-import { tokenStorageService } from './token-storage.service';
 import { serverProperties } from './server-properties.service';
 import { ProcessType } from './crg/models';
 
@@ -68,7 +67,7 @@ class WsService {
     // добавить корс вебсокет секьюрити и на 8100
     const host = await serverProperties.host;
     const port = await serverProperties.wsPort;
-    const socket = new SockJS(`${host}:${port}/crg-ws-endpoint?access_token=${tokenStorageService.getAccessToken()}`);
+    const socket = new SockJS(`${host}:${port}/crg-ws-endpoint`);
 
     this.stompClient = Stomp.over(socket);
 

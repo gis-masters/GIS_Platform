@@ -9,12 +9,11 @@ import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
-import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 import ru.mycrg.oauth_client.OAuthClientException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GeoServerBaseService {
 
@@ -34,17 +33,15 @@ public class GeoServerBaseService {
     }
 
     protected String getRootAccessToken() throws GeoserverClientException {
-        JwtToken jwtToken;
+        AtomicReference<String> accessToken = new AtomicReference<>("");
         try {
-            jwtToken = oAuthClient.getJwtToken(geoserverInfo.getRootUserName(), geoserverInfo.getRootUserPassword());
-        } catch (OAuthClientException | MalformedURLException e) {
-            throw new GeoserverClientException(e.getMessage(), e.getCause());
-        }
+            oAuthClient
+                    .getToken(geoserverInfo.getRootUserName(), geoserverInfo.getRootUserPassword())
+                    .ifPresent(jwt -> accessToken.set(jwt.getAccess_token()));
 
-        if (jwtToken == null) {
-            return "";
-        } else {
-            return jwtToken.getAccess_token();
+            return accessToken.get();
+        } catch (OAuthClientException e) {
+            throw new GeoserverClientException(e.getMessage(), e.getCause());
         }
     }
 

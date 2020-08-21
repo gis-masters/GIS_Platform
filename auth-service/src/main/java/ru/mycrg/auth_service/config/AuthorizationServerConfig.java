@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.mycrg.auth_service.security.CustomTokenConverter;
 
+@Log4j2
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -28,8 +30,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.jwt.client_secret:geoserver}")
     private String CLIENT_SECRET;
 
-    private static final int ACCESS_TOKEN_VALIDITY_TIME = 60 * 60 * 24;
-    private static final int REFRESH_TOKEN_VALIDITY_TIME = 60 * 60 * 24 * 14;
+    @Value("#{ '${security.jwt.access_token_validity_seconds}'.isEmpty() " +
+            "? 86400 : '${security.jwt.access_token_validity_seconds}' }")
+    private Integer ACCESS_TOKEN_VALIDITY_TIME;
+
+    @Value("#{ '${security.jwt.refresh_token_validity_seconds}'.isEmpty() " +
+            "? 1209600 : '${security.jwt.refresh_token_validity_seconds}' }")
+    private Integer REFRESH_TOKEN_VALIDITY_TIME;
 
     private final BCryptPasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
@@ -43,6 +50,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        log.debug("Setup access/refresh tokens time in sec: {} / {}",
+                ACCESS_TOKEN_VALIDITY_TIME,
+                REFRESH_TOKEN_VALIDITY_TIME);
+
         clients
                 .inMemory()
                 .withClient(CLIENT_ID)

@@ -19,7 +19,7 @@ class ProjectsService {
 
   private constructor() {
     reaction(() => route.params && route.params.projectId, async (id) => {
-      this.fetchCurrent(Number(id));
+      await this.fetchCurrent(Number(id));
     });
   }
 

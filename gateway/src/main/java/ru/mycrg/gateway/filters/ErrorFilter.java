@@ -3,8 +3,7 @@ package ru.mycrg.gateway.filters;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import ru.mycrg.gateway.exceptions.CrgExceptionModel;
 
@@ -12,14 +11,13 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.ERROR_TYPE;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SEND_ERROR_FILTER_ORDER;
 import static org.springframework.http.HttpStatus.*;
 
 @Component
 public class ErrorFilter extends ZuulFilter {
-    private static final Logger log = LoggerFactory.getLogger(ErrorFilter.class);
 
     private static final String THROWABLE_KEY = "throwable";
-    private static final int FILTER_ORDER = -1;
 
     @Override
     public String filterType() {
@@ -28,7 +26,7 @@ public class ErrorFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return FILTER_ORDER;
+        return SEND_ERROR_FILTER_ORDER - 1;
     }
 
     @Override
@@ -48,8 +46,6 @@ public class ErrorFilter extends ZuulFilter {
             // remove error code to prevent further error handling in follow up filters
             context.remove(THROWABLE_KEY);
             context.getResponse().setContentType("application/json");
-
-            log.error("Zuul failure class: {}", cause.getClass());
 
             if (cause instanceof SocketTimeoutException) {
                 context.setResponseBody(new CrgExceptionModel(GATEWAY_TIMEOUT, makeReadableMsg(context, cause)).toString());
@@ -72,6 +68,7 @@ public class ErrorFilter extends ZuulFilter {
                 " Reason: " + cause.getMessage();
     }
 
+    @Nullable
     private Throwable getDeeperCause(ZuulException zuulException) {
         Throwable realCause;
 

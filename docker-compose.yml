@@ -5,7 +5,7 @@ services:
     container_name: rabbitmq
     image: $DOCKER_CRG_HOST/rabbitmq:$RABBIT_TAG
     restart: always
-    labels: 
+    labels:
        co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
     ports:
       - "5672:5672"
@@ -18,7 +18,7 @@ services:
     container_name: database
     image: $DOCKER_CRG_HOST/postgres:$POSTGRES_TAG
     restart: always
-    labels: 
+    labels:
       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5432?sslmode=disable\"],\"username\":\"postgres\",\"password\":\"$DB_PASS\"}]"
     environment:
       POSTGRES_DB: gis_portal
@@ -84,6 +84,9 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: $CRG_USER
       SPRING_RABBITMQ_PASSWORD: $RABBIT_PASS
+
+      SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: $JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+      SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: $JWT_REFRESH_TOKEN_VALIDITY_SECONDS
     volumes:
       - /opt/logs:/opt/logs
     logging:
@@ -150,6 +153,11 @@ services:
      - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_CLIENT_ID: admin
+      CRG_OPTIONS_CLIENT_SECRET: geoserver
+      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
+      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
     ports:
       - 8100:8100
     volumes:

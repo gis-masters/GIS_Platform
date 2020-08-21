@@ -11,8 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.mycrg.gateway.filters.AuthPreFilter;
-import ru.mycrg.gateway.filters.JwtTokenAuthenticationFilter;
+import ru.mycrg.gateway.domain.CookieHandler;
+import ru.mycrg.gateway.filters.MainAuthFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -21,7 +21,10 @@ import java.util.Collections;
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private CookieHandler cookieHandler;
+
+    @Autowired
+    private CrgProperties properties;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -49,20 +52,10 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
                 // Add a filter to validate the tokens with every request
-                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new MainAuthFilter(cookieHandler, properties),
+                        UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
                 .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations/init").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
-
-    @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
-    }
-
-    @Bean
-    public AuthPreFilter authPreFilter() {
-        return new AuthPreFilter();
-    }
-
 }

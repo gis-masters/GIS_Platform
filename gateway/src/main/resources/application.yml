@@ -20,10 +20,6 @@ zuul:
   ignoredServices: '*'
   sensitive-headers: Cookie,Set-Cookie
   routes:
-    # AUTH SERVICE
-    crg-auth-service:
-      path: /oauth/token/**
-      service-id: http://auth-service:9000/oauth/token
 
     crg-auth-service-groups:
       path: /groups/**
@@ -86,3 +82,12 @@ logging:
     ru.mycrg: DEBUG
   file:
     name: /opt/logs/gateway.log
+
+crg-options:
+  auth-service-url: http://127.0.0.1:9000
+  secret: vjp4lLW_QmjMHiUw1OBVRIZH
+  client-id: admin
+  client-secret: geoserver
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver
+

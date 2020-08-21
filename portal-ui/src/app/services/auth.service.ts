@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import Cookies from 'js-cookie';
 
-import { tokenStorageService, JwtToken } from './token-storage.service';
 import { serverProperties } from './server-properties.service';
 import { HttpQueue } from './util/HttpQueue';
 
@@ -25,14 +25,16 @@ export interface RegData {
 export class AuthService {
   private _authenticated = false;
 
+  private COOKIE_NAME = 'crgAuthCookie';
+
   constructor(private httpq: HttpQueue,
               private router: Router) {
-    if (tokenStorageService.getToken()) {
+    if (Cookies.get(this.COOKIE_NAME)) {
       this._authenticated = true;
     }
   }
 
-  async authenticate(credentials: AuthCredentials): Promise<JwtToken> {
+  async authenticate(credentials: AuthCredentials): Promise<void> {
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
@@ -45,7 +47,7 @@ export class AuthService {
     const options = {withCredentials: true, headers: headers};
     const url = await serverProperties.authServerUrl;
 
-    return this.httpq.post<JwtToken>(url, params.toString(), options);
+    return this.httpq.post(url, params.toString(), options);
   }
 
   validateAuth(redirectTo: string) {
@@ -55,7 +57,7 @@ export class AuthService {
   }
 
   logout() {
-     tokenStorageService.signOut();
+    Cookies.remove(this.COOKIE_NAME);
 
     this._authenticated = false;
     this.router.navigate(['/']);
