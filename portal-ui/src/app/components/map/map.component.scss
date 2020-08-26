@@ -11,9 +11,9 @@
   justify-content: stretch;
 
   justify-items: stretch;
-  grid-template-areas: 'bar-left map'
-  'bar-bottom bar-bottom';
-  grid-template-columns: auto 1fr;
+  grid-template-areas: 'bar-left map bar-right'
+  'bar-bottom bar-bottom bar-bottom';
+  grid-template-columns: auto 1fr auto;
   grid-template-rows: 1fr auto;
   grid-gap: 0 0;
 
@@ -30,6 +30,10 @@
     &_dir {
       &_left {
         grid-area: bar-left;
+      }
+
+      &_right {
+        grid-area: bar-right;
       }
 
       &_bottom {

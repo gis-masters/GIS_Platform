@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import moment from 'moment';
 import { cloneDeep } from 'lodash';
 import { NGXLogger } from 'ngx-logger';
@@ -25,23 +16,23 @@ import {
 } from '../../services/crg/schema.service';
 import { BatchModel } from '../../services/crg/batch-model';
 import { CrgLayer } from '../../services/crg/projects.models';
+import { sidebars } from '../../stores/Sidebars.store';
 import { getFeatures } from '../../services/geoserver/wfs.service';
 import { projectsService } from '../../services/crg/projects.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
-import { ViewFeaturesData } from '../view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getProjection } from '../../services/geoserver/projections.service';
+import { fromMobx } from '../../services/util/fromMobx';
 
 export interface WfsFeatureView extends WfsFeature {
   aliases?: {};
@@ -53,21 +44,20 @@ export interface WfsFeatureView extends WfsFeature {
   templateUrl: './attributes-bar.component.html',
   styleUrls: ['./attributes-bar.component.scss']
 })
-export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @Input() layer: CrgLayer;
-
+export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DatatableComponent, { static: true }) attributeTable: DatatableComponent;
   @ViewChild('filterTemplate', { static: true }) filterTemplate: TemplateRef<any>;
   @ViewChild('cellTemplate', { static: true }) cellTemplate: TemplateRef<any>;
   @ViewChild('customSelectAll', { static: true }) customSelectAll: TemplateRef<any>;
 
+  layer?: CrgLayer;
   isNeedPrepareColumn = true;
 
   currentPositionFeature: WfsFeature;
   features: WfsFeatureView[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
-  customRowIdentity = ((row: WfsFeature) => row.id);
+  customRowIdentity = (row: WfsFeature) => row.id;
   pageInfo: Pageable = {
     pageSize: 25,
     offset: 0
@@ -89,18 +79,36 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
   loadPercent = 0;
   showPercent = true;
 
+  deletingAllowed = false;
+  updatingAllowed = false;
   private schema: FeatureDescription;
-  private deletingAllowed = false;
-  private updatingAllowed = false;
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private dialog: MatDialog,
-              private logger: NGXLogger) {}
+  constructor(private dialog: MatDialog, private logger: NGXLogger) {}
+
+  ngOnInit() {
+    fromMobx<CrgLayer>(() => sidebars.layerForAttributes, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(async layer => {
+        const layerChanged = (this.layer && this.layer.id) !== (layer && layer.id);
+
+        this.layer = layer;
+
+        if (layer && layerChanged) {
+          this.schema = await schemaService.getSchema(layer.schemaId);
+          this.isNeedPrepareColumn = true;
+          this.requestModel$.next({ page: { pageSize: 25, offset: 0 } });
+
+          this.attributeTable.selected = [];
+          openLayersService.clearDraft();
+          this.updateTable({ page: { pageSize: 25, offset: 0 } });
+          await this.checkPermissions();
+        }
+      });
+  }
 
   async ngAfterViewInit() {
-    window.dispatchEvent(new Event('resize'));
-
     await projectsService.fetchCurrent();
 
     this.requestModel$.pipe(debounceTime(50), takeUntil(this.unsubscribe$)).subscribe((requestModel: CrgModels) => {
@@ -116,28 +124,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     await this.checkPermissions();
   }
 
-  async ngOnChanges(changes: SimpleChanges) {
-    const layerChanged = changes.layer;
-    const layer = layerChanged.currentValue as CrgLayer;
-    this.schema = await schemaService.getSchema(layer.schemaId);
-
-    if (layerChanged && !layerChanged.isFirstChange()) {
-      this.isNeedPrepareColumn = true;
-      this.requestModel$.next({ page: { pageSize: 25, offset: 0 } });
-
-      this.attributeTable.selected = [];
-      openLayersService.clearDraft();
-      this.updateTable({ page: { pageSize: 25, offset: 0 } });
-    }
-
-    await this.checkPermissions();
-  }
-
   ngOnDestroy(): void {
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 0);
-
     openLayersService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -228,7 +215,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
 
   closeMe() {
     openLayersService.clearDraft();
-    sideBarManager.do({ target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE });
+    sidebars.closeAttributes();
   }
 
   onFilterChange(filterEvent: FilterEvent) {
@@ -310,14 +297,10 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     clonedFeatures.forEach((feature: WfsFeature) => {
       feature.id = this.layer.internalName + '.' + feature.id;
     });
-    // Отсылка в сайдбар
-    sideBarManager.do({
-      target: SidebarType.FEATURES,
-      action: ActionType.OPEN,
-      data: {
-        features: clonedFeatures,
-        mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
-      } as ViewFeaturesData
+
+    sidebars.openFeatures({
+      features: clonedFeatures,
+      mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
     });
   }
 
@@ -437,10 +420,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
     from(batchModel.batches)
       .pipe(
         concatMap(features =>
-          transformFeature.insertFeatures(features,
-            selectedLayer.internalName,
-            this.layer.nativeCRS
-          )
+          transformFeature.insertFeatures(features, selectedLayer.internalName, this.layer.nativeCRS)
         ),
         catchError(err => this.handleError(err))
       )
@@ -467,10 +447,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
         concatMap(features => {
           return combineLatest(
             of(features),
-            transformFeature.insertFeatures(features,
-              selectedLayer.internalName,
-              this.layer.nativeCRS
-            )
+            transformFeature.insertFeatures(features, selectedLayer.internalName, this.layer.nativeCRS)
           );
         }),
         concatMap(([features]) => {
@@ -581,7 +558,7 @@ export class AttributesBarComponent implements AfterViewInit, OnChanges, OnDestr
           const newProperty: TableColumn = {
             name: this.defineColumnName(propertyName),
             prop: this.definePropertySource(propertyName),
-            headerTemplate: this.filterTemplate,
+            headerTemplate: this.filterTemplate
           };
 
           if (propertyName.toLowerCase() === 'globalid') {

@@ -2,6 +2,7 @@ import { Feature } from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import GeometryType from 'ol/geom/GeometryType';
 import { MultiLineString, MultiPolygon, Point } from 'ol/geom';
+import { Coordinate } from 'ol/coordinate';
 
 import { WfsFeature, WfsGeometry } from '../geoserver/wfs-models';
 import { Toast } from '../../components/Toast/Toast';
@@ -23,14 +24,14 @@ export class MapperUtil {
       return;
     }
     return new Feature({
-      geometry: this.mapFwsGeometryToGeometry(wfsFeature.geometry)
+      geometry: this.mapFwsGeometryToGeometry(wfsFeature.geometry as WfsGeometry<Coordinate>)
     });
   }
 
   /**
    * Из {@link WfsGeometry} формируем OpenLayer {@link Geometry}
    */
-  public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry): Geometry | undefined | void {
+  public static mapFwsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): Geometry | undefined | void {
     if (!wfsGeometry) {
       Toast.error('Некорректная геометрия');
 

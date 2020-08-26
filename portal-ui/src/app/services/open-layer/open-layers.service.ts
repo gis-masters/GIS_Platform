@@ -54,19 +54,22 @@ class OpenLayersService {
   private CRG_INFO_PROP_NAME = 'crgInfo';
 
   constructor() {
-    reaction(() => baseMapsStore.currentBaseMap, currentBaseMap => {
-      if (currentBaseMap) {
-        const tileSource = this.prepareTileSource(currentBaseMap);
-        if (tileSource) {
-          this.baseMapLayer.setVisible(true);
-          this.baseMapLayer.setSource(tileSource);
+    reaction(
+      () => baseMapsStore.currentBaseMap,
+      currentBaseMap => {
+        if (currentBaseMap) {
+          const tileSource = this.prepareTileSource(currentBaseMap);
+          if (tileSource) {
+            this.baseMapLayer.setVisible(true);
+            this.baseMapLayer.setSource(tileSource);
+          } else {
+            this.baseMapLayer.setVisible(false);
+          }
         } else {
           this.baseMapLayer.setVisible(false);
         }
-      } else {
-        this.baseMapLayer.setVisible(false);
       }
-    });
+    );
   }
 
   public static get instance() {
@@ -123,9 +126,7 @@ class OpenLayersService {
     this._map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
-      controls: defaultControls().extend([
-        new ScaleLine()
-      ]),
+      controls: defaultControls().extend([new ScaleLine()]),
       layers: [
         this.baseMapLayer,
         new VectorLayer({
@@ -233,7 +234,7 @@ class OpenLayersService {
           imageLoadFunction: this.crgImageLoadFunction,
           ratio: 1,
           serverType: 'geoserver',
-          crossOrigin: 'anonymous',
+          crossOrigin: 'anonymous'
         }),
         visible: true,
         opacity,
@@ -366,17 +367,13 @@ class OpenLayersService {
       setTimeout(() => {
         try {
           this.draftSource.removeFeature(olFeature);
-        } catch (e) {
-
-        }
+        } catch (e) {}
       }, 500);
     }
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number]) {
-    this._map
-        .getView()
-        .fit(bbox, {padding: padding}); // constrainResolution Ломает view на слоях с геометрией Point
+    this._map.getView().fit(bbox, { padding }); // constrainResolution Ломает view на слоях с геометрией Point
   }
 
   getResolution() {
@@ -385,7 +382,7 @@ class OpenLayersService {
 
   getBufferByCoordinates(pos: Coordinate) {
     const round = (n: number) => Number(n.toFixed(this.PRECISION));
-    const res = round((this.getResolution() * this.HIT_TOLERANCE));
+    const res = round(this.getResolution() * this.HIT_TOLERANCE);
     pos = pos.map(round);
 
     const x1 = pos[0] + res / 2;
@@ -393,30 +390,34 @@ class OpenLayersService {
     const y1 = pos[1] + res / 2;
     const y2 = y1 - res;
 
-    const buffer = [[[
-      [x1, y1],
-      [x2, y1],
-      [x2, y2],
-      [x1, y2],
-      [x1, y1]
-    ]]];
+    const buffer = [
+      [
+        [
+          [x1, y1],
+          [x2, y1],
+          [x2, y2],
+          [x1, y2],
+          [x1, y1]
+        ]
+      ]
+    ];
 
     return new MultiPolygon(buffer);
   }
 
-  enableDraftModification (handler: (e: ModifyEvent) => void) {
+  enableDraftModification(handler: (e: ModifyEvent) => void) {
     this.isModifying = true;
     this.draftSourceModify.on('modifyend', handler);
     this._map.addInteraction(this.draftSourceModify);
   }
 
-  disableDraftModification (handler: (e: ModifyEvent) => void) {
+  disableDraftModification(handler: (e: ModifyEvent) => void) {
     this.isModifying = false;
     this.draftSourceModify.un('modifyend', handler);
     this._map.removeInteraction(this.draftSourceModify);
   }
 
-  draw (geometryType: GeometryType, handler: (e: DrawEvent) => void) {
+  draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {
     this.draftSourceDraw = new Draw({
       source: this.draftSource,
       type: geometryType
@@ -431,7 +432,7 @@ class OpenLayersService {
     this._map.addInteraction(this.draftSourceDraw);
   }
 
-  drawOff () {
+  drawOff() {
     if (this.draftSourceDraw) {
       this.draftSourceDraw.un('drawend', this.drawHandler);
       this._map.removeInteraction(this.draftSourceDraw);
@@ -439,8 +440,8 @@ class OpenLayersService {
     }
   }
 
-  pickPoint (handler: (e: MapBrowserEvent) => void) {
-    this.pickHandler = (e) => {
+  pickPoint(handler: (e: MapBrowserEvent) => void) {
+    this.pickHandler = e => {
       handler(e);
       this.pickingOff();
     };
@@ -448,7 +449,7 @@ class OpenLayersService {
     this._map.once('singleclick', this.pickHandler);
   }
 
-  pickingOff () {
+  pickingOff() {
     if (this.pickHandler) {
       this._map.un('singleclick', this.pickHandler);
       delete this.pickHandler;
@@ -466,33 +467,32 @@ class OpenLayersService {
     const view = this._map.getView();
     const size = this._map.getSize();
 
-
     const geometry = olFeature.getGeometry();
     const extent = chunk(geometry.getExtent(), 2)
-                      .map(coord => transform(projection, olProjection, coord))
-                      .flat() as Extent;
+      .map(coord => transform(projection, olProjection, coord))
+      .flat() as Extent;
 
     switch (geometry.getType()) {
       case GeometryType.POINT:
-        view.centerOn(extent, size, [570, 500]);
+        view.centerOn(extent, size, [size[0] / 2, size[1] / 2]);
         break;
       case GeometryType.MULTI_LINE_STRING:
-        this.fitToBbox(extent, [50, 650, 50, 50]);
+        this.fitToBbox(extent, [50, 50, 50, 50]);
         break;
       case GeometryType.MULTI_POLYGON:
-        this.fitToBbox(extent, [50, 650, 50, 50]);
+        this.fitToBbox(extent, [50, 50, 50, 50]);
         break;
       default:
         services.logger.error('Unsupported geometry type: ', geometry.getType());
     }
   }
 
-  print () {
+  print() {
     const size = this._map.getSize();
     const viewResolution = this._map.getView().getResolution();
     const { pageWidth, pageHeight, resolution, pageFormat } = printSettings;
-    const width = Math.round(pageWidth * resolution / 25.4);
-    const height = Math.round(pageHeight * resolution / 25.4);
+    const width = Math.round((pageWidth * resolution) / 25.4);
+    const height = Math.round((pageHeight * resolution) / 25.4);
 
     printSettings.setPrintingStatus(true);
 
@@ -507,7 +507,10 @@ class OpenLayersService {
           mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
           const transform = canvas.style.transform;
           // Get the transform parameters from the style's transform matrix
-          const matrix = transform.match(/^matrix\(([^\(]*)\)$/)[1].split(',').map(Number);
+          const matrix = transform
+            .match(/^matrix\(([^\(]*)\)$/)[1]
+            .split(',')
+            .map(Number);
           // Apply the transform to the export map context
           CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
           mapContext.drawImage(canvas, 0, 0);
@@ -524,7 +527,7 @@ class OpenLayersService {
     });
 
     // Set print size
-    this._map.setSize([ width, height ]);
+    this._map.setSize([width, height]);
     const scaling = Math.min(width / size[0], height / size[1]);
     this._map.getView().setResolution(viewResolution / scaling);
   }
@@ -551,9 +554,10 @@ class OpenLayersService {
   private async arcGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
     let data: Blob | any;
 
-    const replacedUrl = url.replace('256%2C256', '1024%2C1024')
-                           .replace('BBOXSR=3857', 'bboxSR=102100')
-                           .replace('IMAGESR=3857', 'imageSR=102100');
+    const replacedUrl = url
+      .replace('256%2C256', '1024%2C1024')
+      .replace('BBOXSR=3857', 'bboxSR=102100')
+      .replace('IMAGESR=3857', 'imageSR=102100');
 
     try {
       const response = await fetch(replacedUrl);
@@ -573,16 +577,15 @@ class OpenLayersService {
    */
   private getUserLayers(): ImageLayer[] {
     return this._map
-               .getLayers()
-               .getArray()
-               .filter(layer => this.isUserLayer(layer)) as ImageLayer[];
+      .getLayers()
+      .getArray()
+      .filter(layer => this.isUserLayer(layer)) as ImageLayer[];
   }
 
   private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
     if (!baseMap || !baseMap.type) {
       return undefined;
     }
-
 
     switch (baseMap.type) {
       case SourceType.OSM:
@@ -647,7 +650,6 @@ class OpenLayersService {
       return false;
     }
   }
-
 }
 
 export const openLayersService = OpenLayersService.instance;

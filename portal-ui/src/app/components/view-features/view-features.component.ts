@@ -6,14 +6,15 @@ import { takeUntil } from 'rxjs/operators';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureData, EditFeatureMode } from '../edit-feature/edit-feature.component';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
+import { sidebars } from '../../stores/Sidebars.store';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { communicationService } from '../../services/communication.service';
+import { fromMobx } from '../../services/util/fromMobx';
 
 export interface ViewFeaturesData {
   features: WfsFeature[];
   mode: EditFeatureMode;
-  layer: CrgLayer;
+  layer?: CrgLayer;
   isNew?: true;
 }
 
@@ -23,7 +24,7 @@ export interface ViewFeaturesData {
   styleUrls: ['./view-features.component.css']
 })
 export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
-  @Input() data: ViewFeaturesData;
+  data: ViewFeaturesData;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   deletedFeaturesIds: string[] = [];
@@ -37,25 +38,32 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
-    this.showFeatures();
+    fromMobx(() => sidebars.featuresData, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
 
-    if (this.data.mode === EditFeatureMode.multipleEdit) {
-      this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
-      this.isEditMode = true;
-    } else {
-      if (this.data.features.length === 1) {
-        this.selectFeature(this.data.features[0]);
-      }
-    }
+        this.data = data;
 
-    sideBarManager.currentState$.pipe(takeUntil(this.unsubscribe$)).subscribe(sidebarsState => {
-      const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
-      if (attrSidebarState === ActionType.OPEN) {
-        this.isAttributeSidebarOpened = true;
-      } else {
-        this.isAttributeSidebarOpened = false;
-      }
-    });
+        this.showFeatures();
+
+        if (this.data.mode === EditFeatureMode.multipleEdit) {
+          this.editFeatureData = this.prepareDataForMultipleEdit(this.data.features);
+          this.isEditMode = true;
+        } else {
+          if (this.data.features.length === 1) {
+            this.selectFeature(this.data.features[0]);
+          }
+        }
+      });
+
+    fromMobx(() => sidebars.attributesOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(attributesOpen => {
+        this.isAttributeSidebarOpened = attributesOpen;
+      });
 
     communicationService.featuresUpdated.on(() => {
       this.closeMe();
@@ -121,7 +129,7 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   closeMe() {
     this.viewFeatures = [];
     openLayersService.clearDraft();
-    sideBarManager.do({ target: SidebarType.FEATURES, action: ActionType.CLOSE });
+    sidebars.closeFeatures();
   }
 
   deleteHandler(id: string) {
@@ -133,7 +141,9 @@ export class ViewFeaturesComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private showFeatures() {
-    this.viewFeatures = this.data.features.filter(feature => !this.deletedFeaturesIds.includes(feature.id));
+    this.viewFeatures = this.data
+      ? this.data.features.filter(feature => !this.deletedFeaturesIds.includes(feature.id))
+      : [];
     this.highlightFeature();
   }
 

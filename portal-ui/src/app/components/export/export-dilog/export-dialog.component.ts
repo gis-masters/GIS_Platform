@@ -6,10 +6,22 @@ import { Subject } from 'rxjs';
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
 import { communicationService } from '../../../services/communication.service';
 import { exportService } from '../../../services/crg/export.service';
-import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { Process } from '../../../services/crg/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
+
+export interface GmlDialogData {
+  action: ActionType;
+  layers: CrgLayer[];
+}
+
+export enum ActionType {
+  OPEN,
+  CLOSE,
+  SWITCH
+}
+
 
 @Component({
   selector: 'crg-export-dialog',
@@ -33,7 +45,8 @@ export class ExportDialogComponent implements OnDestroy {
     },
     {
       value: 'Doc.10502010100',
-      title: 'Положение о территориальном планировании в области федерального транспорта (в части трубопроводного транспорта)'
+      title:
+        'Положение о территориальном планировании в области федерального транспорта (в части трубопроводного транспорта)'
     },
     {
       value: 'Doc.10504010100',
@@ -95,8 +108,8 @@ export class ExportDialogComponent implements OnDestroy {
     this.logger.info('export to GML response', process);
     this.isExportInited = false;
 
-    sideBarManager.do({target: SidebarType.INFO, action: ActionType.OPEN});
-    communicationService.gmlDialog.emit({action: ActionType.CLOSE, layers: []});
+    sidebars.openInfo();
+    communicationService.gmlDialog.emit({ action: ActionType.CLOSE, layers: [] });
   }
 
   handleTitle(crgLayer: CrgLayer) {
@@ -114,13 +127,8 @@ export class ExportDialogComponent implements OnDestroy {
   }
 
   private updateSelectedLayers() {
-    this.selectedLayers = this.list.selectedOptions.selected
-        .map((selectedOption: MatListOption) => selectedOption.value);
+    this.selectedLayers = this.list.selectedOptions.selected.map(
+      (selectedOption: MatListOption) => selectedOption.value
+    );
   }
-
-}
-
-export interface GmlDialogData {
-  action: ActionType;
-  layers: CrgLayer[];
 }

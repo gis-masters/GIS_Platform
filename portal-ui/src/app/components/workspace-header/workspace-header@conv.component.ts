@@ -4,9 +4,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import { EventService, IEvent } from '../../services/event.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { services } from '../../services/services';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
+import { sidebars } from '../../stores/Sidebars.store';
 
 import { WorkspaceHeader } from './workspace-header@common';
 
@@ -16,30 +15,28 @@ import { WorkspaceHeader } from './workspace-header@common';
   styleUrls: ['./workspace-header@conv.component.scss']
 })
 export class WorkspaceHeaderComponent extends WorkspaceHeader {
-
   notificationCounter = 0;
 
-  constructor(protected route: ActivatedRoute,
-              protected authService: AuthService,
-              private eventService: EventService) {
+  constructor(protected route: ActivatedRoute, protected authService: AuthService, private eventService: EventService) {
     super(authService, route);
 
-    this.eventService
-        .events$
-        .pipe(
-          filter(value => !!value),
-          takeUntil(this.unsubscribe$)
-        ).subscribe((events: IEvent[]) => this.notificationCounter = events.length);
+    this.eventService.events$
+      .pipe(
+        filter(value => !!value),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((events: IEvent[]) => (this.notificationCounter = events.length));
   }
 
   notification() {
-    sideBarManager.do({target: SidebarType.INFO, action: ActionType.SWITCH});
-
-    openLayersService.printDebugInfo();
+    if (sidebars.infoOpen) {
+      sidebars.closeInfo();
+    } else {
+      sidebars.openInfo();
+    }
   }
 
   toContentEditor() {
     services.router.navigateByUrl('/manager');
   }
-
 }

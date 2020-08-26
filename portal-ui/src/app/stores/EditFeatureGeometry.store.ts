@@ -1,19 +1,20 @@
 import { observable, computed, action } from 'mobx';
 import { isEqual } from 'lodash';
+import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 
-import { WfsGeometryEdited, WfsGeometry } from '../services/geoserver/wfs-models';
+import { WfsGeometry } from '../services/geoserver/wfs-models';
 import { isGeometryValid } from '../services/geoserver/wfs.service';
 import { CrgProjection, transformGeometry } from '../services/geoserver/projections.service';
 
 export class EditFeatureGeometryStore {
-  @observable geometry?: WfsGeometryEdited;
+  @observable geometry?: WfsGeometry;
   @observable currentProjection: CrgProjection;
   @observable nativeProjection: CrgProjection;
   @observable private virginGeometry?: WfsGeometry;
 
   @computed
-  get resultGeometry(): WfsGeometry | undefined {
+  get resultGeometry(): WfsGeometry<Coordinate> | undefined {
     if (!this.currentProjection) {
       return;
     }

@@ -6,7 +6,6 @@ import proj4 from 'proj4';
 
 import {
   WfsFeature,
-  WfsGeometryEdited,
   CoordinateEdited,
   WfsGeometry,
   WfsPointGeometry,
@@ -26,57 +25,57 @@ type Coord = Coordinate | CoordinateEdited;
 proj4.defs(
   'EPSG:28406',
   '+proj=tmerc ' +
-  '+lat_0=0 ' +
-  '+lon_0=33 ' +
-  '+k=1 ' +
-  '+x_0=6500000 ' +
-  '+y_0=0 ' +
-  '+ellps=krass ' +
-  '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-  '+units=m ' +
-  '+no_defs'
+    '+lat_0=0 ' +
+    '+lon_0=33 ' +
+    '+k=1 ' +
+    '+x_0=6500000 ' +
+    '+y_0=0 ' +
+    '+ellps=krass ' +
+    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
+    '+units=m ' +
+    '+no_defs'
 );
 
 proj4.defs(
   'EPSG:28407',
   '+proj=tmerc ' +
-  '+lat_0=0 ' +
-  '+lon_0=39 ' +
-  '+k=1 ' +
-  '+x_0=7500000 ' +
-  '+y_0=0 ' +
-  '+ellps=krass ' +
-  '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-  '+units=m ' +
-  '+no_defs'
+    '+lat_0=0 ' +
+    '+lon_0=39 ' +
+    '+k=1 ' +
+    '+x_0=7500000 ' +
+    '+y_0=0 ' +
+    '+ellps=krass ' +
+    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
+    '+units=m ' +
+    '+no_defs'
 );
 
 proj4.defs(
   'EPSG:314315',
   '+proj=tmerc ' +
-  '+lat_0=0.0833333333333333 ' +
-  '+lon_0=32.5 ' +
-  '+k=1 ' +
-  '+x_0=4300000 ' +
-  '+y_0=0 ' +
-  '+ellps=krass ' +
-  '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-  '+units=m ' +
-  '+no_defs'
+    '+lat_0=0.0833333333333333 ' +
+    '+lon_0=32.5 ' +
+    '+k=1 ' +
+    '+x_0=4300000 ' +
+    '+y_0=0 ' +
+    '+ellps=krass ' +
+    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
+    '+units=m ' +
+    '+no_defs'
 );
 
 proj4.defs(
   'EPSG:314314',
   '+proj=tmerc ' +
-  '+lat_0=0.0833333333333333 ' +
-  '+lon_0=35.5 ' +
-  '+k=1 ' +
-  '+x_0=5300000 ' +
-  '+y_0=0 ' +
-  '+ellps=krass ' +
-  '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
-  '+units=m ' +
-  '+no_defs'
+    '+lat_0=0.0833333333333333 ' +
+    '+lon_0=35.5 ' +
+    '+k=1 ' +
+    '+x_0=5300000 ' +
+    '+y_0=0 ' +
+    '+ellps=krass ' +
+    '+towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 ' +
+    '+units=m ' +
+    '+no_defs'
 );
 
 register(proj4);
@@ -104,7 +103,7 @@ export const projections: CrgProjection[] = [
   }
 ];
 
-export function getProjection (projectionId: string): CrgProjection {
+export function getProjection(projectionId: string): CrgProjection {
   const projection = projections.find(({ id }) => id === projectionId);
 
   if (!projection) {
@@ -114,7 +113,7 @@ export function getProjection (projectionId: string): CrgProjection {
   return projection;
 }
 
-export function getFeatureProjection (feature: WfsFeature): CrgProjection {
+export function getFeatureProjection(feature: WfsFeature): CrgProjection {
   const layer = getFeatureLayer(feature);
 
   return getProjection(layer.nativeCRS);
@@ -122,7 +121,7 @@ export function getFeatureProjection (feature: WfsFeature): CrgProjection {
 
 export const olProjection = projections.find(({ id }) => id === 'EPSG:3857');
 
-export function transform (projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate) {
+export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate) {
   if (projFrom.id === projTo.id) {
     return coordinate;
   }
@@ -130,11 +129,13 @@ export function transform (projFrom: CrgProjection, projTo: CrgProjection, coord
   return proj4(projFrom.id, projTo.id, coordinate).map(dis => Number(dis.toFixed(4)));
 }
 
-export function transformGeometry (geometry: WfsGeometryEdited,
-                                   projFrom: CrgProjection,
-                                   projTo: CrgProjection,
-                                   originGeometry?: WfsGeometry,
-                                   transformedOriginGeometry?: WfsGeometry): WfsGeometry | undefined {
+export function transformGeometry(
+  geometry: WfsGeometry,
+  projFrom: CrgProjection,
+  projTo: CrgProjection,
+  originGeometry?: WfsGeometry,
+  transformedOriginGeometry?: WfsGeometry
+): WfsGeometry<Coordinate> | undefined {
   if (!geometry) {
     return;
   }
@@ -146,8 +147,9 @@ export function transformGeometry (geometry: WfsGeometryEdited,
       coordinates as Coordinate,
       projFrom,
       projTo,
-      originGeometry && [originGeometry.coordinates] as Coordinate[],
-      transformedOriginGeometry && [transformedOriginGeometry.coordinates] as Coordinate[]);
+      originGeometry && ([originGeometry.coordinates] as Coordinate[]),
+      transformedOriginGeometry && ([transformedOriginGeometry.coordinates] as Coordinate[])
+    );
 
     return {
       ...geometry,
@@ -160,8 +162,9 @@ export function transformGeometry (geometry: WfsGeometryEdited,
       coordinates as Coordinate[][],
       projFrom,
       projTo,
-      originGeometry && originGeometry.coordinates as Coordinate[][],
-      transformedOriginGeometry && transformedOriginGeometry.coordinates as Coordinate[][]);
+      originGeometry && (originGeometry.coordinates as Coordinate[][]),
+      transformedOriginGeometry && (transformedOriginGeometry.coordinates as Coordinate[][])
+    );
 
     return {
       ...geometry,
@@ -174,8 +177,9 @@ export function transformGeometry (geometry: WfsGeometryEdited,
       coordinates as Coordinate[][][],
       projFrom,
       projTo,
-      originGeometry && originGeometry.coordinates as Coordinate[][][],
-      transformedOriginGeometry && transformedOriginGeometry.coordinates as Coordinate[][][]);
+      originGeometry && (originGeometry.coordinates as Coordinate[][][]),
+      transformedOriginGeometry && (transformedOriginGeometry.coordinates as Coordinate[][][])
+    );
 
     return {
       ...geometry,
@@ -184,7 +188,7 @@ export function transformGeometry (geometry: WfsGeometryEdited,
   }
 }
 
-function transformCoordinate (
+function transformCoordinate(
   coordEdited: Coord,
   projFrom: CrgProjection,
   projTo: CrgProjection,
@@ -201,47 +205,48 @@ function transformCoordinate (
   return isCoordinateValid(coord) ? transform(projFrom, projTo, coord) : coordEdited;
 }
 
-function transformGroup (
+function transformGroup(
   group: Coord[],
   projFrom: CrgProjection,
   projTo: CrgProjection,
   origin?: Coord[],
   transformedOrigin?: Coord[]
 ): Coord[] {
-  return group.map(coord => transformCoordinate(
-    coord,
-    projFrom,
-    projTo,
-    origin,
-    transformedOrigin));
+  return group.map(coord => transformCoordinate(coord, projFrom, projTo, origin, transformedOrigin));
 }
 
-function transformSuperGroup (
+function transformSuperGroup(
   superGroup: Coord[][],
   projFrom: CrgProjection,
   projTo: CrgProjection,
   origin?: Coord[][],
   transformedOrigin?: Coord[][]
 ): Coord[][] {
-  return superGroup.map((group, i) => transformGroup(
-    group,
-    projFrom,
-    projTo,
-    origin && origin.length >= i - 1 && origin[i],
-    transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]));
+  return superGroup.map((group, i) =>
+    transformGroup(
+      group,
+      projFrom,
+      projTo,
+      origin && origin.length >= i - 1 && origin[i],
+      transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]
+    )
+  );
 }
 
-function transformMultiSuperGroup (
+function transformMultiSuperGroup(
   superGroups: Coord[][][],
   projFrom: CrgProjection,
   projTo: CrgProjection,
   origin?: Coord[][][],
   transformedOrigin?: Coord[][][]
 ): Coord[][][] {
-  return superGroups.map((superGroup, i) => transformSuperGroup(
-    superGroup,
-    projFrom,
-    projTo,
-    origin && origin.length >= i - 1 && origin[i],
-    transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]));
+  return superGroups.map((superGroup, i) =>
+    transformSuperGroup(
+      superGroup,
+      projFrom,
+      projTo,
+      origin && origin.length >= i - 1 && origin[i],
+      transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]
+    )
+  );
 }

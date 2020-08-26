@@ -2,7 +2,6 @@ import { EventEmitter } from '@angular/core';
 
 import { GmlDialogData } from '../components/export/export-dilog/export-dialog.component';
 import { ValidationDialogData } from '../components/validation/validation-dialog/validation-dialog.component';
-import { Sidebar } from './side-bar-manager.service';
 import { CrgLayer } from '../services/crg/projects.models';
 import { Emitter } from './util/Emitter';
 
@@ -20,7 +19,6 @@ class CommunicationService {
   permissionsUpdated = new Emitter();
 
   // TODO: избавиться от EventEmitter rxjs тут
-  sidebarManager = new EventEmitter<Sidebar>();
   validationDialog = new EventEmitter<ValidationDialogData>();
   selectedForValidation = new EventEmitter<CrgLayer[]>();
   gmlDialog = new EventEmitter<GmlDialogData>();

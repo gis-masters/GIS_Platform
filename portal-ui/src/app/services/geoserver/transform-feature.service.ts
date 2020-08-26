@@ -10,11 +10,12 @@ import { FeatureUtil } from '../util/FeatureUtil';
 import { getFeatureProjection } from './projections.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { services } from '../services';
+import { Coordinate } from 'ol/coordinate';
 
 export enum TransactionType {
   INSERT = 'insert',
   UPDATE = 'update',
-  DELETE = 'delete',
+  DELETE = 'delete'
 }
 
 interface Properties {
@@ -39,7 +40,7 @@ export class TransformFeatureService {
     });
   }
 
-  updateProperty(tableName: string, featureId: string, propName: string, propValue): Promise<string> {
+  updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
     const projectName = currentProject.internalName;
 
     const payload =
@@ -64,7 +65,7 @@ export class TransformFeatureService {
   updateFeatures(features: WfsFeature[],
                  schema: FeatureDescription,
                  newProperties: Properties,
-                 geometry?: WfsGeometry): Promise<string> {
+                 geometry?: WfsGeometry<Coordinate>): Promise<string> {
     const workspaceName = currentProject.internalName;
 
     const featuresForUpdate: Feature[] = features.map(feature => {
@@ -125,7 +126,7 @@ export class TransformFeatureService {
 
       // TODO: брать поле с геометрией из схемы
       if (featureData.geometry) {
-        feature.set('shape', MapperUtil.mapFwsGeometryToGeometry(featureData.geometry));
+        feature.set('shape', MapperUtil.mapFwsGeometryToGeometry(featureData.geometry as WfsGeometry<Coordinate>));
       }
 
       return feature;
@@ -145,7 +146,7 @@ export class TransformFeatureService {
       nativeElements: []
     } as WriteTransactionOptions;
 
-    const featuresToDelete = featureIds.map((id) => {
+    const featuresToDelete = featureIds.map(id => {
       const newFeature = new Feature();
       newFeature.setId(id);
 
@@ -163,7 +164,7 @@ export class TransformFeatureService {
   }
 
   private getNode(type: TransactionType, features: Feature[], options: WriteTransactionOptions): Node {
-    let node;
+    let node: Node;
     switch (type) {
       case TransactionType.INSERT:
         node = this.formatWFS.writeTransaction(features, null, null, options);

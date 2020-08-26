@@ -36,7 +36,7 @@ export class HelpToggler extends Component<{}> {
   constructor(props: {}) {
     super(props);
 
-    this.helpPart = new HelpPart(route.data.helpPage);
+    this.helpPart = new HelpPart(route.data.page);
   }
 
   render() {

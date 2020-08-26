@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
-import { communicationService } from '../../services/communication.service';
 import { localStorageService } from '../../services/local-storage.service';
-import { ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
 import { cn } from '../../services/util/cn';
+import { fromMobx } from '../../services/util/fromMobx';
+import { sidebars } from '../../stores/Sidebars.store';
 
 @Component({
   selector: 'crg-workspace',
@@ -20,41 +20,25 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private route: ActivatedRoute) {
-    communicationService.sidebarManager
-        .pipe(
-          filter((data: Sidebar) => data.target === SidebarType.INFO),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((data: Sidebar) => {
-          switch (data.action) {
-            case ActionType.CLOSE:
-              this.isInfoSidebarActive = false;
-              break;
-            case ActionType.OPEN:
-              this.isInfoSidebarActive = true;
-              break;
-            case ActionType.SWITCH:
-              this.isInfoSidebarActive = !this.isInfoSidebarActive;
-              break;
-          }
-        });
-  }
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.data
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(data => {
-          const userModel = data['orgInfo'];
-          if (userModel) {
-            localStorageService.saveUserModel(userModel);
-          }
-        });
+    this.route.data.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      const userModel = data['orgInfo'];
+      if (userModel) {
+        localStorageService.saveUserModel(userModel);
+      }
+    });
+
+    fromMobx(() => sidebars.infoOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(infoOpen => {
+        this.isInfoSidebarActive = infoOpen;
+      });
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 }

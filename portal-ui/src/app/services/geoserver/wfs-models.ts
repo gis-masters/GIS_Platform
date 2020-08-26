@@ -44,11 +44,9 @@ export type SupportedWfsGeometry<T = Coordinate> = WfsPointGeometry<T> |
                                                    WfsMultiLineStringGeometry<T> |
                                                    WfsMultiPolygonGeometry<T>;
 
-export type WfsGeometry<T = Coordinate> = SupportedWfsGeometry<T> | OtherGeometry<T>;
+export type WfsGeometry<T = Coordinate | CoordinateEdited> = SupportedWfsGeometry<T> | OtherGeometry<T>;
 
-export type WfsGeometryEdited = WfsGeometry<CoordinateEdited>;
-
-export interface WfsFeature<T = Coordinate> extends GeoJSONObject {
+export interface WfsFeature<T = Coordinate | CoordinateEdited> extends GeoJSONObject {
   type: 'Feature';
   id: string;
   geometry: WfsGeometry<T>;

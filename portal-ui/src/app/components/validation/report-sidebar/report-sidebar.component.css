@@ -19,15 +19,6 @@
   max-height: 36px;
 }
 
-/*::ng-deep .validation_accordion .mat-expansion-panel {*/
-/*  background-color: ghostwhite;*/
-/*}*/
-
-/*::ng-deep .validation_accordion .mat-accordion .mat-expansion-panel:last-of-type {*/
-/*  border-bottom-right-radius: 24px;*/
-/*  border-bottom-left-radius: 24px;*/
-/*}*/
-
 .mat-raised-button {
   width: 34px;
   min-width: 34px;
@@ -37,7 +28,7 @@
   border-radius: 50%;
 }
 
-.crg-validation-sidebar {
+.report-sidebar {
   position: fixed;
   z-index: 100;
   top: 55px;
@@ -45,29 +36,6 @@
 
   width: 550px;
   height: calc(100% - 55px);
-
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
-
-  background-color: white;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
-}
-
-.crg-validation-sidebar_hidden {
-  position: fixed;
-  z-index: 100;
-  top: 55px;
-  left: 100%;
-
-  width: 550px;
-  height: calc(100% - 55px);
-
-  -webkit-transition-duration: 0.3s;
-     -moz-transition-duration: 0.3s;
-       -o-transition-duration: 0.3s;
-          transition-duration: 0.3s;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);

@@ -63,6 +63,7 @@ import { EditFeatureGeometryComponent } from './components/edit-feature-geometry
 import { FeaturesListComponent } from './components/features-list/features-list.component';
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
+import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 
 import { configure } from 'mobx';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
@@ -110,7 +111,8 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     FeaturesListComponent,
     EditFeatureGeometryComponent,
     ZoomToFeatureComponent,
-    OrgAdminComponent
+    OrgAdminComponent,
+    EditFeatureConfirmComponent
   ],
   imports: [
     HttpClientModule,

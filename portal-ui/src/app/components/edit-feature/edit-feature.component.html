@@ -1,40 +1,42 @@
 <div class="container-fluid">
-  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
-    <div class="col-12" style="padding-left: 5px; padding-right: 5px">
-
-      <button *ngIf="updatingAllowed"
-              mat-stroked-button
-              color="primary"
-              (click)="editFeature()"
-              class="float-left"
-              matBadge="{{data.total}}"
-              matBadgePosition="after"
-              matBadgeColor="accent"
-              matTooltip="{{getTooltip()}}"
-              [disabled]="editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)">
+  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro;">
+    <div class="col-12" style="padding-left: 5px; padding-right: 5px;">
+      <button
+        *ngIf="updatingAllowed"
+        mat-stroked-button
+        color="primary"
+        (click)="editFeature()"
+        class="float-left"
+        matBadge="{{ data.total }}"
+        matBadgePosition="after"
+        matBadgeColor="accent"
+        matTooltip="{{ getTooltip() }}"
+        [disabled]="editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)"
+      >
         <mat-icon *ngIf="data.mode === 'multipleEdit'">list</mat-icon>
         Сохранить
       </button>
 
-      <button *ngIf="deletingAllowed && !data.isNew"
-              class="del-button"
-              mat-stroked-button
-              color="error"
-              (click)="deleteFeature()">
+      <button
+        *ngIf="deletingAllowed && !data.isNew"
+        class="del-button"
+        mat-stroked-button
+        color="error"
+        (click)="deleteFeature()"
+      >
         Удалить
       </button>
 
       <button mat-stroked-button (click)="close()" class="float-right">
-        {{!updatingAllowed ? 'Закрыть' : 'Отмена'}}
+        {{ !updatingAllowed ? 'Закрыть' : 'Отмена' }}
       </button>
-
     </div>
   </div>
 
-  <div [ngClass]="isAttributeSidebarOpened? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
+  <div [ngClass]="isAttributeSidebarOpened ? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
     <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
-    <ng-container *ngIf="data.mode === 'single' else editAttrsForm">
+    <ng-container *ngIf="data.mode === 'single'; else editAttrsForm">
       <mat-tab-group class="tabs scroll">
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
@@ -48,7 +50,11 @@
       </mat-tab-group>
     </ng-container>
 
-    <crg-zoom-to-feature class="zoom-to-feature" [feature]="data.features[0]" *ngIf="data.mode === 'single' && !data.isNew">
+    <crg-zoom-to-feature
+      class="zoom-to-feature"
+      [feature]="data.features[0]"
+      *ngIf="data.mode === 'single' && !data.isNew"
+    >
     </crg-zoom-to-feature>
   </div>
 </div>
@@ -57,40 +63,41 @@
   <form class="example-form col-md-12" [formGroup]="editFeatureForm">
     <ng-container *ngFor="let editFeatureItem of editFeatureData">
       <div *ngIf="!editFeatureItem.property?.hidden">
-
         <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
-          <crg-edit-feature-field type="url"
-                                  [field]="editFeatureItem">
-          </crg-edit-feature-field>
+          <crg-edit-feature-field type="url" [field]="editFeatureItem"> </crg-edit-feature-field>
         </div>
 
-        <div class="row fiz-edit-item"
-             *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && data.mode === 'single'">
-          <crg-edit-feature-field type="lookup"
-                                  [field]="editFeatureItem"
-                                  [featureData]="data"
-                                  [layer]="data.layer"
-                                  [isReadOnly]="updatingAllowed"
+        <div
+          class="row fiz-edit-item"
+          *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && data.mode === 'single'"
+        >
+          <crg-edit-feature-field
+            type="lookup"
+            [field]="editFeatureItem"
+            [featureData]="data"
+            [layer]="data.layer"
+            [isReadOnly]="updatingAllowed"
           >
           </crg-edit-feature-field>
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('STRING')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">
-            <span *ngIf="!editFeatureItem.isFgistpProperty"
-                  style="color: grey"
-                  matTooltip="Данное свойство не соответствует приказу">
-              {{editFeatureItem.property?.title}}
+            <span
+              *ngIf="!editFeatureItem.isFgistpProperty"
+              style="color: grey;"
+              matTooltip="Данное свойство не соответствует приказу"
+            >
+              {{ editFeatureItem.property?.title }}
             </span>
             <span *ngIf="editFeatureItem.isFgistpProperty">
-              {{editFeatureItem.property?.title}}
+              {{ editFeatureItem.property?.title }}
             </span>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
-              <input class="form-control" type="text" formControlName="{{editFeatureItem.name}}">
-              <span class="input-group-text error-badge"
-                    *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
+              <input class="form-control" type="text" formControlName="{{ editFeatureItem.name }}" />
+              <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
               </span>
 
@@ -106,20 +113,24 @@
             </div>
 
             <div *ngIf="!updatingAllowed" class="read-value">
-              {{editFeatureItem.value}}
+              {{ editFeatureItem.value }}
             </div>
           </div>
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">
-            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+            <span
+              *ngIf="!editFeatureItem.isFgistpProperty"
+              style="color: grey;"
+              matTooltip="Данное свойство не соответствует приказу"
+              >{{ editFeatureItem.property?.title }}</span
+            >
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{ editFeatureItem.property?.title }}</span>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
-              <input class="form-control" type="number" formControlName="{{editFeatureItem.name}}">
+              <input class="form-control" type="number" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
                   <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
@@ -138,20 +149,24 @@
             </div>
 
             <div *ngIf="!updatingAllowed" class="read-value">
-              {{editFeatureItem.value}}
+              {{ editFeatureItem.value }}
             </div>
           </div>
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">
-            <span *ngIf="!editFeatureItem.isFgistpProperty" style="color: grey"
-                  matTooltip="Данное свойство не соответствует приказу">{{editFeatureItem.property?.title}}</span>
-            <span *ngIf="editFeatureItem.isFgistpProperty">{{editFeatureItem.property?.title}}</span>
+            <span
+              *ngIf="!editFeatureItem.isFgistpProperty"
+              style="color: grey;"
+              matTooltip="Данное свойство не соответствует приказу"
+              >{{ editFeatureItem.property?.title }}</span
+            >
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{ editFeatureItem.property?.title }}</span>
           </div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
-              <input class="form-control" type="number" step="0.0001" formControlName="{{editFeatureItem.name}}">
+              <input class="form-control" type="number" step="0.0001" formControlName="{{ editFeatureItem.name }}" />
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
                 <span class="input-group-text error-badge">
                   <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
@@ -164,26 +179,25 @@
                 </span>
               </div>
 
-                <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
-                  <span class="template-text">Оставить как есть</span>
-                </div>
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
               </div>
+            </div>
 
             <div *ngIf="!updatingAllowed" class="read-value">
-              {{editFeatureItem.value}}
+              {{ editFeatureItem.value }}
             </div>
           </div>
         </div>
 
         <div *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')" class="row fiz-edit-item">
-          <div class="col-6 px-0 edit-item-title">{{editFeatureItem.property?.title}}</div>
+          <div class="col-6 px-0 edit-item-title">{{ editFeatureItem.property?.title }}</div>
           <div class="col-6 px-0">
             <div class="input-group" *ngIf="updatingAllowed">
-              <select class="custom-select" formControlName="{{editFeatureItem.name}}">
+              <select class="custom-select" formControlName="{{ editFeatureItem.name }}">
                 <option [value]=""></option>
-                <option *ngFor="let enumOption of editFeatureItem.property.enumerations"
-                        [value]="enumOption.value">
-                  {{enumOption.title}}
+                <option *ngFor="let enumOption of editFeatureItem.property.enumerations" [value]="enumOption.value">
+                  {{ enumOption.title }}
                 </option>
               </select>
               <div class="input-group-append" *ngIf="!editFeatureForm.controls[editFeatureItem.name].valid">
@@ -204,7 +218,7 @@
             </div>
 
             <div *ngIf="!updatingAllowed" class="read-value">
-              {{getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value)}}
+              {{ getEnumerationTitle(editFeatureItem.property.enumerations, editFeatureItem.value) }}
             </div>
           </div>
         </div>
@@ -212,3 +226,5 @@
     </ng-container>
   </form>
 </ng-template>
+
+<crg-edit-feature-confirm></crg-edit-feature-confirm>

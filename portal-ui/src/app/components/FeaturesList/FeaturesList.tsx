@@ -26,7 +26,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
     const { features, onItemSelect } = this.props;
 
     return (
-      <div className={cnFeaturesList()}>
+      <div className={cnFeaturesList(null, ['scroll'])}>
         {features && features.length ? (
           features.map(feature => (
             <FeaturesListItem

@@ -7,7 +7,7 @@ import { openLayersService } from '../../../services/open-layer/open-layers.serv
 import { communicationService, ObjectDto } from '../../../services/communication.service';
 import { ValidationBrieflyInfo, ValidationService } from '../../../services/crg/validation.service';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
-import { sideBarManager, ActionType, SidebarType } from '../../../services/side-bar-manager.service';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { ProcessStatus, ProcessType } from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
 import { CrgLayer } from '../../../services/crg/projects.models';
@@ -19,9 +19,6 @@ import { currentProject } from '../../../stores/CurrentProject.store';
   styleUrls: ['./report-sidebar.component.css']
 })
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
-
-  @Input() isActive: boolean;
-
   layers: CrgLayer[];
 
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
@@ -36,44 +33,36 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private validationService: ValidationService) {
-    communicationService
-        .selectedForValidation
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: CrgLayer[]) => this.initValidation(data));
+  constructor(private logger: NGXLogger, private validationService: ValidationService) {
+    communicationService.selectedForValidation
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data: CrgLayer[]) => this.initValidation(data));
 
     this.layers = currentProject.vectorLayers;
   }
 
   async ngOnInit() {
-    communicationService.editView
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((objects: ObjectDto[]) => {
-          this.isEditMode = true;
-          this.objectsToEdit = objects;
-        });
+    communicationService.editView.pipe(takeUntil(this.unsubscribe$)).subscribe((objects: ObjectDto[]) => {
+      this.isEditMode = true;
+      this.objectsToEdit = objects;
+    });
 
     wsService.messages$
-        .pipe(
-          filter(value => !!value),
-          filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
-          takeUntil(this.unsubscribe$)
-        )
-        .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
+      .pipe(
+        filter(value => !!value),
+        filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.layers = currentProject.vectorLayers;
 
     this.commonProgress = 0;
-    const isActiveChange = changes['isActive'];
     const layersChange = changes['layers'];
-    if (isActiveChange && isActiveChange.currentValue) {
-      this.updateBrieflyInfo(this.layers);
-    }
 
-    if (layersChange && this.isActive) {
+    if (layersChange) {
       this.updateBrieflyInfo(this.layers);
     }
   }
@@ -114,13 +103,13 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   closeMe() {
     openLayersService.clearDraft();
-    sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.CLOSE});
+    sidebars.closeBugReport();
   }
 
   reValidate() {
     if (this.layers && this.layers.length > 0) {
       const copy = Object.assign([], this.layers);
-      communicationService.validationDialog.emit({show: true, layers: copy});
+      communicationService.validationDialog.emit({ show: true, layers: copy });
     } else {
       this.logger.info('Не подгружены слоя');
     }
@@ -140,8 +129,6 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private handleWsMessage(validationWsMsg: ValidationWsMsg) {
-    // this.logger.info('handleWsMessage:', validationWsMsg);
-
     if (validationWsMsg.status === ProcessStatus.PENDING) {
       this.commonProgress = validationWsMsg.progress;
     } else if (validationWsMsg.status === ProcessStatus.TASK_DONE) {
@@ -158,32 +145,28 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.validationService
-        .getShortInfo(layers)
-        .then(
-          (response: ValidationBrieflyInfo[]) => {
-            this.isValidationInited = false;
+    this.validationService.getShortInfo(layers).then(
+      (response: ValidationBrieflyInfo[]) => {
+        this.isValidationInited = false;
 
-            if (!response) {
-              this.logger.warn('Cant get layer info', response);
+        if (!response) {
+          this.logger.warn('Cant get layer info', response);
+        } else {
+          response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
+            if (brieflyInfo.status === 'ERROR') {
+              this.logger.warn('Error for feature: ', brieflyInfo);
             } else {
-              // console.log('new SHORT response', response);
-
-              response.forEach((brieflyInfo: ValidationBrieflyInfo) => {
-                if (brieflyInfo.status === 'ERROR') {
-                  this.logger.warn('Error for feature: ', brieflyInfo);
-                } else {
-                  this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
-                }
-              });
+              this.commonInfo.set(brieflyInfo.featureName, brieflyInfo);
             }
-          },
-          error => {
-            this.isValidationInited = false;
+          });
+        }
+      },
+      error => {
+        this.isValidationInited = false;
 
-            this.logger.error('Cant get validation info: ', error);
-          }
-        );
+        this.logger.error('Cant get validation info: ', error);
+      }
+    );
   }
 
   private showError(error?) {
@@ -191,5 +174,4 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.logger.error('Cant validate layers: ', error);
     Toast.error('Ошибка проверки данных');
   }
-
 }

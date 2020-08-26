@@ -4,9 +4,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
-import { sideBarManager, ActionType, SidebarType } from '../../services/side-bar-manager.service';
+import { sidebars } from '../../stores/Sidebars.store';
 import { route } from '../../stores/Route.store';
 import { fromMobx } from '../../services/util/fromMobx';
+import { ActionType } from '../export/export-dilog/export-dialog.component';
 
 @Component({
   selector: 'crg-crg-stepper',
@@ -40,15 +41,13 @@ export class CrgStepperComponent implements OnDestroy, OnInit {
     if (selectedStep <= this.activeStep || (selectedStep === 4 && this.activeStep === 3)) {
       if (selectedStep === 1) {
         this.router.navigate(['/projects']);
-        sideBarManager.closeAll();
       }
       if (selectedStep === 2) {
         this.router.navigate([`/projects/${projectId}/import`]);
-        sideBarManager.closeAll();
       }
       if (selectedStep === 3) {
         this.router.navigate([`/projects/${projectId}/map`]);
-        sideBarManager.do({target: SidebarType.BUG_REPORT, action: ActionType.SWITCH});
+        sidebars.openBugReport();
       }
       if (selectedStep === 4) {
         this.router.navigate([`/projects/${projectId}/map`]);

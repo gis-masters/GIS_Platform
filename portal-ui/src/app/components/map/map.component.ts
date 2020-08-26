@@ -11,7 +11,7 @@ import { cn } from '../../services/util/cn';
 import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
 import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
-import { GmlDialogData } from '../../components/export/export-dilog/export-dialog.component';
+import { GmlDialogData, ActionType } from '../../components/export/export-dilog/export-dialog.component';
 import { ViewFeaturesData } from '../../components/view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
 import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
@@ -20,10 +20,11 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { deleteLayer } from '../../services/geoserver/layers.service';
 import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { sideBarManager, ActionType, Sidebar, SidebarType } from '../../services/side-bar-manager.service';
+import { sidebars } from '../../stores/Sidebars.store';
 import { Toast } from '../Toast/Toast';
 import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { fromMobx } from '../../services/util/fromMobx';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -33,13 +34,12 @@ type NamesChunks = { [srsName: string]: string[] };
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy {
-  isAttrSidebarActive = false;
+  isAttrSidebarActive: boolean;
   isBugReportSidebarActive = false;
   isValidationDialogShow = false;
   isGmlDialogShow = false;
   isFeaturesSidebarActive = false;
 
-  viewFeaturesData: ViewFeaturesData;
   validationDialogData: ValidationDialogData;
   selectedLayer: CrgLayer;
   cn = cn('map');
@@ -98,62 +98,48 @@ export class MapComponent implements OnInit, OnDestroy {
       }
     });
 
-    communicationService.gmlDialog
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data: GmlDialogData) => (this.isGmlDialogShow = data.action !== ActionType.CLOSE));
-
-    communicationService.sidebarManager
-      .pipe(
-        filter((data: Sidebar) => this.isMapSidebar(data)),
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((sidebar: Sidebar) => {
-        if (sidebar.target === SidebarType.BUG_REPORT) {
-          switch (sidebar.action) {
-            case ActionType.CLOSE:
-              this.isBugReportSidebarActive = false;
-              break;
-            case ActionType.OPEN:
-              this.isBugReportSidebarActive = true;
-              break;
-            case ActionType.SWITCH:
-              this.isBugReportSidebarActive = !this.isBugReportSidebarActive;
-              break;
-          }
-        } else if (sidebar.target === SidebarType.FEATURES) {
-          this.viewFeaturesData = sidebar.data;
-
-          switch (sidebar.action) {
-            case ActionType.CLOSE:
-              this.isFeaturesSidebarActive = false;
-              break;
-            case ActionType.OPEN:
-              this.isFeaturesSidebarActive = true;
-              break;
-            case ActionType.SWITCH:
-              this.isFeaturesSidebarActive = !this.isFeaturesSidebarActive;
-              break;
-          }
-        } else if (sidebar.target === SidebarType.ATTRIBUTES) {
-          this.selectedLayer = sidebar.data;
-
-          switch (sidebar.action) {
-            case ActionType.CLOSE:
-              this.isAttrSidebarActive = false;
-              break;
-            case ActionType.OPEN:
-              this.isAttrSidebarActive = true;
-              break;
-            case ActionType.SWITCH:
-              this.isAttrSidebarActive = !this.isAttrSidebarActive;
-              break;
-          }
-        }
-      });
+    communicationService.gmlDialog.pipe(takeUntil(this.unsubscribe$)).subscribe((data: GmlDialogData) => {
+      this.isGmlDialogShow = data.action !== ActionType.CLOSE;
+    });
 
     openLayersService.mapClick$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
+
+    fromMobx(() => sidebars.leftOpen)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 0);
+      });
+
+    fromMobx(() => sidebars.attributesOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(attributesOpen => {
+        this.isAttrSidebarActive = attributesOpen;
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 0);
+      });
+
+    fromMobx(() => sidebars.featuresOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(featuresOpen => {
+        this.isFeaturesSidebarActive = featuresOpen;
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 0);
+      });
+
+    fromMobx(() => sidebars.bugReportOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(bugReportOpen => {
+        this.isBugReportSidebarActive = bugReportOpen;
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 0);
+      });
   }
 
   ngOnDestroy(): void {
@@ -176,6 +162,10 @@ export class MapComponent implements OnInit, OnDestroy {
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: Coordinate) {
+    if (sidebars.needEditFeatureConfirmation(this.showFeaturesInfo.bind(this,  coordinate))) {
+      return;
+    }
+
     const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
 
     if (!visibleLayers.length) {
@@ -210,31 +200,16 @@ export class MapComponent implements OnInit, OnDestroy {
     const features = collections.map(({ features }) => features || []).flat();
 
     if (features.length) {
-      sideBarManager.do({
-        target: SidebarType.FEATURES,
-        action: ActionType.CLOSE
-      });
+      sidebars.closeFeatures();
 
       setTimeout(() => {
-        sideBarManager.do({
-          target: SidebarType.FEATURES,
-          action: ActionType.OPEN,
-          data: {
-            features: features,
-            mode: EditFeatureMode.single
-          } as ViewFeaturesData
+        sidebars.openFeatures({
+          features: features,
+          mode: EditFeatureMode.single
         });
       }, 0);
 
       openLayersService.highlightFeature(features);
     }
-  }
-
-  private isMapSidebar(sidebar: Sidebar) {
-    return (
-      sidebar.target === SidebarType.BUG_REPORT ||
-      sidebar.target === SidebarType.FEATURES ||
-      sidebar.target === SidebarType.ATTRIBUTES
-    );
   }
 }

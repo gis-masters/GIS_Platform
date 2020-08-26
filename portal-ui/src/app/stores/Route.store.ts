@@ -65,4 +65,4 @@ class Route {
   }
 }
 
-export let route = Route.instance;
+export const route = Route.instance;

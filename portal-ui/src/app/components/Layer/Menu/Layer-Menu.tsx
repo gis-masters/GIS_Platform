@@ -13,7 +13,7 @@ import {
 import { AddCircle, Delete, ListAlt, Unarchive } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
-import { ActionType, sideBarManager, SidebarType } from '../../../services/side-bar-manager.service';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { deleteLayer } from '../../../services/geoserver/layers.service';
@@ -148,11 +148,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private openAttributeTable() {
     const { entity, onClose } = this.props;
 
-    sideBarManager.do({
-      target: SidebarType.ATTRIBUTES,
-      action: ActionType.OPEN,
-      data: entity
-    });
+    sidebars.openAttributes(entity as CrgLayer);
 
     onClose();
   }
@@ -162,15 +158,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, onClose } = this.props;
     const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
 
-    sideBarManager.do({
-      target: SidebarType.FEATURES,
-      action: ActionType.OPEN,
-      data: {
-        features: [emptyFeature],
-        mode: EditFeatureMode.single,
-        layer: entity,
-        isNew: true
-      }
+    sidebars.openFeatures({
+      features: [emptyFeature],
+      mode: EditFeatureMode.single,
+      layer: entity as CrgLayer,
+      isNew: true
     });
 
     onClose();
@@ -182,7 +174,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { internalName } = entity as CrgLayer;
 
     await exportService.export({ format: 'ESRI Shapefile', layers: [internalName] });
-    sideBarManager.do({ target: SidebarType.INFO, action: ActionType.OPEN });
+    sidebars.openInfo();
 
     onClose();
   }
@@ -191,7 +183,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private async deleteLayer() {
     await deleteLayer(this.props.entity as CrgLayer);
     this.closeDeleteDialog();
-    sideBarManager.do({ target: SidebarType.ATTRIBUTES, action: ActionType.CLOSE });
+    sidebars.closeAttributes();
   }
 
   @action.bound

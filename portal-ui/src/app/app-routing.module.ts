@@ -33,7 +33,7 @@ const routes: Routes = [
     },
     data: {
       step: 1,
-      helpPage: 'projects'
+      page: 'projects'
     }
   },
   {
@@ -45,7 +45,7 @@ const routes: Routes = [
     },
     data: {
       step: 1,
-      helpPage: 'projects'
+      page: 'projects'
     }
   },
   {
@@ -61,7 +61,7 @@ const routes: Routes = [
         },
         data: {
           step: 2,
-          helpPage: 'import'
+          page: 'import'
         }
       },
       {
@@ -73,7 +73,7 @@ const routes: Routes = [
         },
         data: {
           step: 2,
-          helpPage: 'import'
+          page: 'import'
         }
       },
       {
@@ -85,7 +85,7 @@ const routes: Routes = [
         },
         data: {
           step: 2,
-          helpPage: 'import'
+          page: 'import'
         }
       },
       {
@@ -97,7 +97,7 @@ const routes: Routes = [
         },
         data: {
           step: 3,
-          helpPage: 'map'
+          page: 'map'
         }
       },
       {

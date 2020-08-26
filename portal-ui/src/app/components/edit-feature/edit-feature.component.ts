@@ -3,15 +3,16 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
+import { Coordinate } from 'ol/coordinate';
+import { boundMethod } from 'autobind-decorator';
 
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { ActionType, sideBarManager, SidebarType } from '../../services/side-bar-manager.service';
-import { FieldType, PropertySchema, schemaService } from '../../services/crg/schema.service';
+import { sidebars } from '../../stores/Sidebars.store';
+import { schemaService, PropertySchema } from '../../services/crg/schema.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { BaseEdit } from '../edit-bug-object/base-edit';
-import { Toast } from '../Toast/Toast';
 import { BatchModel } from '../../services/crg/batch-model';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
@@ -21,6 +22,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { isDeleteAllowed, isUpdateAllowed } from '../../services/crg/permissions.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { Toast } from '../Toast/Toast';
 
 export interface EditFeatureData {
   layer: CrgLayer;
@@ -55,25 +57,25 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
-  changedGeometry?: WfsGeometry;
+  changedGeometry?: WfsGeometry<Coordinate>;
   isGeometryValid = false;
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
-  constructor(private formBuilder: FormBuilder,
-              private dialog: MatDialog) {
+  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {
     super();
   }
 
   ngOnInit() {
-    sideBarManager.currentState$.pipe(takeUntil(this.unsubscribe$)).subscribe(sidebarsState => {
-      const attrSidebarState = sidebarsState[SidebarType.ATTRIBUTES];
-      this.isAttributeSidebarOpened = attrSidebarState === ActionType.OPEN;
-    });
+    fromMobx<boolean>(() => sidebars.attributesOpen)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(attributesOpen => (this.isAttributeSidebarOpened = attributesOpen));
 
     this.editFeatureForm.valueChanges.subscribe(featureProperties => {
       this.validateCustomRules(featureProperties);
+
+      sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);
     });
   }
 
@@ -201,6 +203,7 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
             .pipe(takeUntil(this.unsubscribeFromMobx$))
             .subscribe(isChanged => {
               this.isGeometryChanged = isChanged;
+              sidebars.setFeaturesEdited(!this.editFeatureForm.pristine || isChanged);
             });
         });
     }
@@ -220,8 +223,9 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
         .insertFeatures(
           [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
           this.featureDescription.tableName,
-        this.data.layer.nativeCRS
-      ).then(() => {
+          this.data.layer.nativeCRS
+        )
+        .then(() => {
           this.close();
           openLayersService.refreshLayers();
           communicationService.featuresUpdated.emit();
@@ -279,16 +283,16 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     return this.editFeatureForm.controls[property.name.toLowerCase()].disabled;
   }
 
+  @boundMethod
   close() {
-    this.closeMe.emit(true);
+    if (!sidebars.needEditFeatureConfirmation(this.close)) {
+      this.closeMe.emit(true);
 
-    openLayersService.clearDraft();
+      openLayersService.clearDraft();
 
-    if (this.data.isNew) {
-      sideBarManager.do({
-        target: SidebarType.FEATURES,
-        action: ActionType.CLOSE
-      });
+      if (this.data.isNew) {
+        sidebars.closeFeatures();
+      }
     }
   }
 
@@ -302,16 +306,16 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
     this.deletingAllowed = await isDeleteAllowed(this.data.layer);
   }
 
-  private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
+  private async batchUpdateFeatures(
+    features: WfsFeature[],
+    newProperties: Properties,
+    geometry?: WfsGeometry<Coordinate>
+  ) {
     const batchModel = new BatchModel(features);
     let percent = 0;
 
     for (let i = 0; i < batchModel.totalBatches; i++) {
-      await transformFeature.updateFeatures(
-        batchModel.batches[i],
-        this.featureDescription,
-        newProperties,
-        geometry);
+      await transformFeature.updateFeatures(batchModel.batches[i], this.featureDescription, newProperties, geometry);
       percent = Math.ceil(batchModel.percentOfOneBatch * i);
       this.loadPercent = percent > 100 ? 100 : percent;
     }
