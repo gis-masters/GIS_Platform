@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import { cn } from '@bem-react/classname';
 
 import { groupsList } from '../../stores/GroupsList.store';
 import { permissionsList } from '../../stores/PermissionsList.store';
@@ -11,6 +12,7 @@ import { PrincipalType } from '../../services/crg/permissions.service';
 import { permissionsListService } from '../../services/crg/permissionsList.service';
 import { FilterParams, filterObjects } from '../../services/util/filterObjects';
 import { SortParams, sortObjects } from '../../services/util/sortObjects';
+import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
 import { TableOverHead } from '../TableOverHead/TableOverHead';
 import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
 import { FilterButton } from '../FilterButton/FilterButton';
@@ -19,6 +21,8 @@ import { Highlight } from '../Highlight/Highlight';
 import { IdBadge } from '../IdBadge/IdBadge';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
+
+import '!style-loader!css-loader!sass-loader!./OrgGroups.scss';
 
 const cnOrgGroups = cn('OrgGroups');
 
@@ -35,6 +39,8 @@ export class OrgGroups extends Component {
   @observable private sortParams: GroupSortParams = { field: 'name', asc: true };
   @observable private filterParams: GroupFilterParams = {};
   @observable private filterEnabled = false;
+  @observable private page = 1;
+  private rowsPerPage = 20;
 
   componentDidMount() {
     groupsService.initGroupsListStore();
@@ -48,8 +54,8 @@ export class OrgGroups extends Component {
           <OrgGroupsCreate />
           <FilterButton filterEnabled={this.filterEnabled} onClick={this.toggleFilter} />
         </TableOverHead>
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} className='scroll'>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableHeadCell
@@ -95,8 +101,8 @@ export class OrgGroups extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.groups.map(group => (
-                <TableRow key={group.id}>
+              {this.pagedGroups.map(group => (
+                <TableRow key={group.id} hover>
                   <TableCell component='th' scope='row'>
                     <Highlight word={this.filterParams.name} enabled={this.filterEnabled}>
                       {group.name}
@@ -126,15 +132,20 @@ export class OrgGroups extends Component {
             </TableBody>
           </Table>
         </TableContainer>
+        <TableUnderFooter>
+          <Pagination
+            count={Math.ceil(groupsList.list.length / this.rowsPerPage)}
+            page={this.page}
+            onChange={this.handlePagination}
+          />
+        </TableUnderFooter>
       </div>
     );
   }
 
   @computed
   private get groups(): CrgGroupExtended[] {
-    const { field, asc } = this.sortParams;
-
-    let preparedGroups = groupsList.list.map(group => ({
+    return groupsList.list.map(group => ({
       ...group,
       usersCount: group.users.length,
       permissionsCount: permissionsList.list.filter(item =>
@@ -143,16 +154,35 @@ export class OrgGroups extends Component {
         )
       ).length
     }));
+  }
+
+  @computed
+  private get filteredAndSortedGroups(): CrgGroupExtended[] {
+    const { field, asc } = this.sortParams;
+    let groups = this.groups;
 
     if (this.filterEnabled) {
-      preparedGroups = filterObjects(preparedGroups, this.filterParams);
+      groups = filterObjects(groups, this.filterParams);
     }
 
-    return sortObjects(preparedGroups, field, asc, 'id');
+    return sortObjects(groups, field, asc, 'id');
+  }
+
+  @computed
+  private get pagedGroups(): CrgGroupExtended[] {
+    return this.filteredAndSortedGroups.slice(
+      (this.page - 1) * this.rowsPerPage,
+      (this.page - 1) * this.rowsPerPage + this.rowsPerPage
+    );
   }
 
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
+  }
+
+  @action.bound
+  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
+    this.page = value;
   }
 }

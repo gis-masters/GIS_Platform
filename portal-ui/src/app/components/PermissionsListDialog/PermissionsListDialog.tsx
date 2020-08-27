@@ -3,7 +3,6 @@ import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import {
-  Paper,
   TableContainer,
   Table,
   TableHead,
@@ -15,6 +14,7 @@ import {
   DialogContent,
   DialogActions
 } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import { boundMethod } from 'autobind-decorator';
 
 import {
@@ -29,6 +29,7 @@ import { FilterParams, filterObjects } from '../../services/util/filterObjects';
 import { PermissionsListItem } from '../../services/crg/permissionsList.service';
 import { SortParams, sortObjects } from '../../services/util/sortObjects';
 import { permissionsList } from '../../stores/PermissionsList.store';
+import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
 import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
 import { Highlight } from '../Highlight/Highlight';
 import { Loading } from '../Loading/Loading';
@@ -36,6 +37,7 @@ import { IdBadge } from '../IdBadge/IdBadge';
 import { Button } from '../Button/Button';
 
 import { PermissionsListEmpty } from './Empty/PermissionsListDialog-Empty';
+import { PermissionsListDialogTable } from './Table/PermissionsListDialog-Table';
 import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
 import { PermissionsListDialogTitle } from './Title/PermissionsListDialog-Title';
 import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
@@ -72,6 +74,8 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   @observable private sortParams: ListSortParams = { field: 'synteticId', asc: true };
   @observable private filterParams: ListFilterParams = {};
   @observable private filterEnabled = false;
+  @observable private page = 1;
+  private rowsPerPage = 20;
 
   render() {
     const { principalId, principalType, principalName, open } = this.props;
@@ -97,77 +101,86 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         </DialogTitle>
         <DialogContent>
           {this.currentList.length ? (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableHeadCell
-                      field='projectTitle'
-                      sorting
-                      sortParams={this.sortParams}
-                      filtering={this.filterEnabled}
-                      filterParams={this.filterParams}
-                    >
-                      Проект
-                    </TableHeadCell>
-                    <TableHeadCell
-                      field='layerTitle'
-                      sorting
-                      sortParams={this.sortParams}
-                      filtering={this.filterEnabled}
-                      filterParams={this.filterParams}
-                    >
-                      Слой
-                    </TableHeadCell>
-                    <TableHeadCell
-                      field='schemaId'
-                      sorting
-                      sortParams={this.sortParams}
-                      filtering={this.filterEnabled}
-                      filterParams={this.filterParams}
-                    >
-                      Схема
-                    </TableHeadCell>
-                    <TableCell align='right'>Разрешения</TableCell>
-                    <TableCell align='right'>Действия</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.list.map(({ synteticId, projectTitle, layerTitle, schemaId, origin }) => (
-                    <TableRow key={synteticId}>
-                      <TableCell>
-                        <Highlight word={this.filterParams.projectTitle} enabled={this.filterEnabled}>
-                          {projectTitle}
-                        </Highlight>
-                        <IdBadge id={origin.project.id} />
-                      </TableCell>
-                      <TableCell>
-                        <Highlight word={this.filterParams.layerTitle} enabled={this.filterEnabled}>
-                          {layerTitle}
-                        </Highlight>
-                        {origin.layer && <IdBadge id={origin.layer.id} />}
-                      </TableCell>
-                      <TableCell>
-                        <Highlight word={this.filterParams.schemaId} enabled={this.filterEnabled}>
-                          {schemaId}
-                        </Highlight>
-                      </TableCell>
-                      <TableCell align='right' padding='checkbox'>
-                        <PermissionsListRoleSelect
-                          listItem={origin}
-                          onChange={this.handleRolesChange}
-                          principalId={principalId}
-                          principalType={principalType}
-                        />
-                      </TableCell>
-                      <TableCell align='right' padding='checkbox'>
-                        <PermissionsListActions item={origin} onDelete={this.handleDelete} />
-                      </TableCell>
+            <>
+              <TableContainer component={PermissionsListDialogTable}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableHeadCell
+                        field='projectTitle'
+                        sorting
+                        sortParams={this.sortParams}
+                        filtering={this.filterEnabled}
+                        filterParams={this.filterParams}
+                      >
+                        Проект
+                      </TableHeadCell>
+                      <TableHeadCell
+                        field='layerTitle'
+                        sorting
+                        sortParams={this.sortParams}
+                        filtering={this.filterEnabled}
+                        filterParams={this.filterParams}
+                      >
+                        Слой
+                      </TableHeadCell>
+                      <TableHeadCell
+                        field='schemaId'
+                        sorting
+                        sortParams={this.sortParams}
+                        filtering={this.filterEnabled}
+                        filterParams={this.filterParams}
+                      >
+                        Схема
+                      </TableHeadCell>
+                      <TableCell align='right'>Разрешения</TableCell>
+                      <TableCell align='right'>Действия</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {this.listPaged.map(({ synteticId, projectTitle, layerTitle, schemaId, origin }) => (
+                      <TableRow key={synteticId} hover>
+                        <TableCell>
+                          <Highlight word={this.filterParams.projectTitle} enabled={this.filterEnabled}>
+                            {projectTitle}
+                          </Highlight>
+                          <IdBadge id={origin.project.id} />
+                        </TableCell>
+                        <TableCell>
+                          <Highlight word={this.filterParams.layerTitle} enabled={this.filterEnabled}>
+                            {layerTitle}
+                          </Highlight>
+                          {origin.layer && <IdBadge id={origin.layer.id} />}
+                        </TableCell>
+                        <TableCell>
+                          <Highlight word={this.filterParams.schemaId} enabled={this.filterEnabled}>
+                            {schemaId}
+                          </Highlight>
+                        </TableCell>
+                        <TableCell align='right' padding='checkbox'>
+                          <PermissionsListRoleSelect
+                            listItem={origin}
+                            onChange={this.handleRolesChange}
+                            principalId={principalId}
+                            principalType={principalType}
+                          />
+                        </TableCell>
+                        <TableCell align='right' padding='checkbox'>
+                          <PermissionsListActions item={origin} onDelete={this.handleDelete} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TableUnderFooter>
+                <Pagination
+                  count={Math.ceil(this.list.length / this.rowsPerPage)}
+                  page={this.page}
+                  onChange={this.handlePagination}
+                />
+              </TableUnderFooter>
+            </>
           ) : (
             !this.loading && <PermissionsListEmpty />
           )}
@@ -235,6 +248,11 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
     return sortObjects(preparedList, field, asc, 'synteticId');
   }
 
+  @computed
+  private get listPaged(): PermissionsListItemWrapped[] {
+    return this.list.slice((this.page - 1) * this.rowsPerPage, (this.page - 1) * this.rowsPerPage + this.rowsPerPage);
+  }
+
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
@@ -286,6 +304,11 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   @action.bound
   private dropChangedList() {
     this.changedList = undefined;
+  }
+
+  @action.bound
+  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
+    this.page = value;
   }
 
   @boundMethod

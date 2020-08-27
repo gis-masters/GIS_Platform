@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { TableContainer, Paper, Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import { Done, Block, FilterList } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
@@ -14,6 +15,7 @@ import { PrincipalType } from '../../services/crg/permissions.service';
 import { permissionsList } from '../../stores/PermissionsList.store';
 import { groupsList } from '../../stores/GroupsList.store';
 import { usersList } from '../../stores/UsersList.store';
+import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
 import { TableOverHead } from '../TableOverHead/TableOverHead';
 import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
 import { FilterButton } from '../FilterButton/FilterButton';
@@ -22,6 +24,8 @@ import { Highlight } from '../Highlight/Highlight';
 import { IdBadge } from '../IdBadge/IdBadge';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
+
+import '!style-loader!css-loader!sass-loader!./OrgUsers.scss';
 
 const cnOrgUsers = cn('OrgUsers');
 
@@ -46,6 +50,8 @@ export class OrgUsers extends Component {
   @observable private sortParams: UserSortParams = { field: 'surName', asc: true };
   @observable private filterParams: UserFilterParams = {};
   @observable private filterEnabled = false;
+  @observable private page = 1;
+  private rowsPerPage = 20;
 
   componentDidMount() {
     usersService.initUsersListStore();
@@ -60,8 +66,8 @@ export class OrgUsers extends Component {
           <OrgUsersCreate />
           <FilterButton filterEnabled={this.filterEnabled} onClick={this.toggleFilter} />
         </TableOverHead>
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} className='scroll'>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableHeadCell
@@ -119,8 +125,8 @@ export class OrgUsers extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.users.map(user => (
-                <TableRow key={user.id}>
+              {this.pagedUsers.map(user => (
+                <TableRow key={user.id} hover>
                   <TableCell component='th' scope='row'>
                     <Highlight word={this.filterParams.surName} enabled={this.filterEnabled}>
                       {user.surName}
@@ -157,15 +163,20 @@ export class OrgUsers extends Component {
             </TableBody>
           </Table>
         </TableContainer>
+        <TableUnderFooter>
+          <Pagination
+            count={Math.ceil(usersList.list.length / this.rowsPerPage)}
+            page={this.page}
+            onChange={this.handlePagination}
+          />
+        </TableUnderFooter>
       </div>
     );
   }
 
   @computed
   private get users(): CrgUserExtended[] {
-    const { field, asc } = this.sortParams;
-
-    let preparedUsers = usersList.list.map(user => ({
+    return usersList.list.map(user => ({
       ...user,
       groups: groupsList.list.filter(group => group.users.some(({ id }) => id === user.id)),
       permissionsCount: permissionsList.list.filter(item =>
@@ -174,16 +185,35 @@ export class OrgUsers extends Component {
         )
       ).length
     }));
+  }
+
+  @computed
+  private get filteredAndSortedUsers(): CrgUserExtended[] {
+    const { field, asc } = this.sortParams;
+    let users = this.users;
 
     if (this.filterEnabled) {
-      preparedUsers = filterObjects(preparedUsers, this.filterParams, customFilterFieldsPrep);
+      users = filterObjects(users, this.filterParams, customFilterFieldsPrep);
     }
 
-    return sortObjects(preparedUsers, field, asc, 'id', customSortFieldsPrep);
+    return sortObjects(users, field, asc, 'id', customSortFieldsPrep);
+  }
+
+  @computed
+  private get pagedUsers(): CrgUserExtended[] {
+    return this.filteredAndSortedUsers.slice(
+      (this.page - 1) * this.rowsPerPage,
+      (this.page - 1) * this.rowsPerPage + this.rowsPerPage
+    );
   }
 
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
+  }
+
+  @action.bound
+  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
+    this.page = value;
   }
 }

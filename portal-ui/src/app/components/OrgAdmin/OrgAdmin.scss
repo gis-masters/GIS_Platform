@@ -5,13 +5,13 @@
   bottom: 0;
   left: 0;
 
-  display: block;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
 
   margin-top: -20px;
-  padding: 20px 40px 50px;
+  padding: 20px 30px 30px;
 
   & &-Tabs {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 }

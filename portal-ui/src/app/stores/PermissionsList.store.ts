@@ -4,6 +4,7 @@ import { PermissionsListItem } from '../services/crg/permissionsList.service';
 
 class PermissionsList {
   @observable fetching = false;
+  @observable fetchingProgress?: number;
   @observable list: PermissionsListItem[] = [];
 
   private static _instance: PermissionsList;
@@ -13,8 +14,13 @@ class PermissionsList {
   @action setList(list: PermissionsListItem[]) {
     this.list = list;
   }
+
   @action setFetching(fetching: boolean) {
     this.fetching = fetching;
+  }
+
+  @action setFetchingProgress(fetching?: number) {
+    this.fetchingProgress = fetching;
   }
 
   static get instance() {

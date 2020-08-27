@@ -19,6 +19,7 @@ export interface PermissionsListItem {
 class PermissionsListService {
   private static _instance: PermissionsListService;
   private groupsListStoreInited = false;
+  private fetchingOperationId: Symbol;
   private debouncedFetchPermissionsListStore: () => Promise<void>;
 
   private constructor() {
@@ -48,50 +49,63 @@ class PermissionsListService {
       return;
     }
 
-    if (permissionsList.fetching) {
-      this.debouncedFetchPermissionsListStore();
-      return;
-    }
+    const operationId = Symbol();
+    this.fetchingOperationId = operationId;
 
     permissionsList.setFetching(true);
 
-    await projectsService.fetchProjects();
+    if (!projectsList.isLoaded) {
+      await projectsService.fetchProjects();
+    }
 
     const permissions: PermissionsListItem[] = [];
+    let itemCounter = 0;
+    const items = projectsList.list
+      .map(project =>
+        //undefined нужен для обозначения собственно проекта
+        [undefined]
+          .concat(project.layers)
+          .filter(layer => !layer || layer.type === CrgLayerType.VECTOR)
+          .map(layer => [project, layer])
+      )
+      .flat();
 
-    for (let project of projectsList.list) {
-      //undefined - нужен для обозначения собственно проекта
-      let layers = [undefined].concat(project.layers).filter(layer => !layer || layer.type === CrgLayerType.VECTOR);
+    for (let [project, layer] of items) {
+      let broken = false;
+      let layerPermissions: RoleAssignmentBody[] = [];
 
-      for (let layer of layers) {
-        let broken = false;
-        let layerPermissions: RoleAssignmentBody[] = [];
-
-        try {
-          // если слой не указан (undefined), вернёт результат для самого проекта
-          layerPermissions = await getPermissions(project, layer);
-        } catch (e) {
-          broken = true;
-          let errText =
-            'Ошибка получения данных ' +
-            (layer
-              ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
-              : `для проекта "${project.name}"`);
-          Toast.warn(errText);
-          services.logger.error(errText, e);
-        }
-
-        permissions.push({
-          project,
-          layer,
-          permissions: layerPermissions,
-          broken
-        });
+      try {
+        // если слой не указан (undefined), вернёт результат для самого проекта
+        layerPermissions = await getPermissions(project, layer);
+      } catch (e) {
+        broken = true;
+        let errText =
+          'Ошибка получения данных ' +
+          (layer
+            ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
+            : `для проекта "${project.name}"`);
+        Toast.warn(errText);
+        services.logger.error(errText, e);
       }
+
+      if (this.fetchingOperationId !== operationId) {
+        return;
+      }
+
+      itemCounter++;
+      permissionsList.setFetchingProgress((itemCounter / items.length) * 100);
+
+      permissions.push({
+        project,
+        layer,
+        permissions: layerPermissions,
+        broken
+      });
     }
 
     permissionsList.setList(permissions);
     permissionsList.setFetching(false);
+    permissionsList.setFetchingProgress(null);
   }
 }
 

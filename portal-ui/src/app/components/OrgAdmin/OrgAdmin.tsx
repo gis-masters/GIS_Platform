@@ -28,7 +28,7 @@ export class OrgAdmin extends Component {
     const [ChildComponent] = tabs[this.activeTab];
 
     return (
-      <div className={cnOrgAdmin(null, ['scroll'])}>
+      <div className={cnOrgAdmin()}>
         <Tabs
           value={this.activeTab}
           indicatorColor='primary'
@@ -41,7 +41,7 @@ export class OrgAdmin extends Component {
           ))}
         </Tabs>
         <ChildComponent />
-        <Loading global visible={this.loading} />
+        <Loading global visible={this.loading} value={permissionsList.fetchingProgress} />
       </div>
     );
   }
@@ -52,7 +52,7 @@ export class OrgAdmin extends Component {
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<{}>, value: number) {
+  private changeHandler(e: React.ChangeEvent, value: number) {
     this.activeTab = value;
   }
 }

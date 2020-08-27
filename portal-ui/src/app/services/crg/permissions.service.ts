@@ -6,7 +6,7 @@ import { localStorageService } from '../local-storage.service';
 import { CrgApiPageableResponse } from './models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
-import { communicationService } from '../communication.service';
+import { Toast } from '../../components/Toast/Toast';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -133,6 +133,22 @@ async function getPermissionsUrl(project: Project, layer?: CrgLayer): Promise<st
   }
 }
 
+function handleSavingError(
+  e: any,
+  actionType: string,
+  payload: RoleAssignmentBody,
+  project: Project,
+  layer?: CrgLayer
+) {
+  const errText =
+    `Не удалось ${actionType} разрешение "${payload.role}" для ` +
+    (layer
+      ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
+      : `для проекта "${project.name}"`);
+  Toast.warn(errText);
+  services.logger.error(errText, e);
+}
+
 export async function getPermissions(project: Project, layer?: CrgLayer): Promise<RoleAssignmentBody[]> {
   const url = await getPermissionsUrl(project, layer);
 
@@ -149,17 +165,21 @@ export async function getPermissions(project: Project, layer?: CrgLayer): Promis
 export async function addPermission(payload: RoleAssignmentBody, project: Project, layer?: CrgLayer) {
   const url = await getPermissionsUrl(project, layer);
 
-  await services.httpq.post(url, payload);
-
-  communicationService.permissionsUpdated.emit();
+  try {
+    await services.httpq.post(url, payload);
+  } catch (e) {
+    handleSavingError(e, 'добавить', payload, project, layer);
+  }
 }
 
 export async function removePermission(payload: RoleAssignmentBody, project: Project, layer?: CrgLayer) {
   const url = await getPermissionsUrl(project, layer);
 
-  await services.httpq.delete(`${url}/${payload.id}`);
-
-  communicationService.permissionsUpdated.emit();
+  try {
+    await services.httpq.delete(`${url}/${payload.id}`);
+  } catch (e) {
+    handleSavingError(e, 'удалить', payload, project, layer);
+  }
 }
 
 export function getSetOfRoleAssignments(

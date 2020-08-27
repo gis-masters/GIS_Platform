@@ -12,16 +12,21 @@ interface LoadingProps {
   noBackdrop?: boolean;
   size?: number;
   global?: boolean;
+  value?: number;
 }
 
-export const Loading: FC<LoadingProps> = ({ visible, className, noBackdrop, size, global }) => {
+export const Loading: FC<LoadingProps> = ({ visible, className, noBackdrop, size, global, value }) => {
   if (visible === false) {
     return null;
   }
 
   return (
     <div className={cnLoading({ noBackdrop, global }, [className])}>
-      <CircularProgress size={size ? size : 100} />
+      <CircularProgress
+        size={size ? size : 100}
+        value={value}
+        variant={typeof value === 'number' ? 'static' : 'indeterminate'}
+      />
     </div>
   );
 };
