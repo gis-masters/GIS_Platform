@@ -1,5 +1,5 @@
 import { StorageKeys } from './storage-keys';
-import { UserInfoModel } from './crg/users.service';
+import { UserInfo } from './crg/users.service';
 
 class LocalStorageService {
   private static _instance: LocalStorageService;
@@ -34,12 +34,12 @@ class LocalStorageService {
     }
   }
 
-  saveUserModel(model: UserInfoModel) {
+  saveUserModel(model: UserInfo) {
     this.saveByKey(StorageKeys.userModel, JSON.stringify(model));
   }
 
-  getUserInfo(): UserInfoModel | undefined {
-    const userModel = JSON.parse(this.getByKey(StorageKeys.userModel)) as UserInfoModel;
+  getUserInfo(): UserInfo | undefined {
+    const userModel = JSON.parse(this.getByKey(StorageKeys.userModel)) as UserInfo;
     if (!!userModel) {
       return userModel;
     } else {

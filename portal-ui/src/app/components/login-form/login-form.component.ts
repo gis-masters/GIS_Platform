@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
-import { AuthService, AuthCredentials } from '../../services/auth.service';
+import { authService, AuthCredentials } from '../../services/auth.service';
 
 @Component({
   selector: 'crg-login-form',
@@ -19,18 +19,17 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   loginForm = this.fb.group({
     username: [null, [Validators.required, Validators.email]],
-    password: [null, Validators.required],
+    password: [null, Validators.required]
   });
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private fb: FormBuilder,
-              private authService: AuthService,
               private router: Router) {
   }
 
   ngOnInit(): void {
-    this.authService.validateAuth(this.redirectTo);
+    authService.validateAuth(this.redirectTo);
   }
 
   ngOnDestroy(): void {
@@ -48,12 +47,12 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.isWrongPassword = false;
       this.isUserDisabled = false;
 
-      this.authService.authenticate(credentials).then(() => {
-          this.authService.authenticated = true;
+      authService.authenticate(credentials).then(() => {
+          authService.authenticated = true;
 
           this.router.navigateByUrl('/projects/default');
         }, (response) => {
-          this.authService.authenticated = false;
+          authService.authenticated = false;
 
           if (response.error) {
             this.isUserDisabled = true;

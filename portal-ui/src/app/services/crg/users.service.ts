@@ -29,7 +29,7 @@ export interface NewUserData extends Pick<CrgUser, 'email' | 'name' | 'surName'>
   password: string;
 }
 
-export interface UserInfoModel {
+export interface UserInfo {
   userName: string;
   orgName: string;
   orgId: number;
@@ -40,6 +40,7 @@ class UsersService {
   private static _instance: UsersService;
   private usersListStoreInited = false;
   private debouncedFetchUsersListStore: () => Promise<void>;
+  private currentUserInfoRequest?: Promise<UserInfo>;
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
@@ -49,11 +50,18 @@ class UsersService {
     return this._instance || (this._instance = new this());
   }
 
-  async getCurrentUserInfo(): Promise<UserInfoModel> {
-    await services.provided;
-    const url = (await serverProperties.usersUrl) + '/current';
+  async getCurrent(): Promise<UserInfo> {
+    if (!this.currentUserInfoRequest) {
+      await services.provided;
+      const url = (await serverProperties.usersUrl) + '/current';
+      this.currentUserInfoRequest = services.httpq.get<UserInfo>(url);
+    }
 
-    return await services.httpq.get<UserInfoModel>(url);
+    return await this.currentUserInfoRequest;
+  }
+
+  dropCurrent() {
+    delete this.currentUserInfoRequest;
   }
 
   async getAll(): Promise<CrgUser[]> {

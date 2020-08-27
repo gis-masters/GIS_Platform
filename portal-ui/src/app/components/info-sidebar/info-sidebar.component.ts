@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EventService, IEvent } from '../../services/event.service';
 import { sidebars } from '../../stores/Sidebars.store';
+import { eventService, IEvent } from '../../services/event.service';
 
 @Component({
   selector: 'crg-info-sidebar',
@@ -16,10 +16,8 @@ export class InfoSidebarComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private eventService: EventService) {}
-
   ngOnInit() {
-    this.eventService.events$
+    eventService.events$
       .pipe(
         filter(value => !!value),
         takeUntil(this.unsubscribe$)

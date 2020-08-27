@@ -636,12 +636,6 @@ class OpenLayersService {
     }
   }
 
-  printDebugInfo() {
-    if (this.view) {
-      services.logger.debug('Current extent: ', this.view.calculateExtent());
-    }
-  }
-
   private isUserLayer(layer: BaseLayer): boolean {
     const crgInfo = layer.getProperties()[this.CRG_INFO_PROP_NAME];
     if (crgInfo) {

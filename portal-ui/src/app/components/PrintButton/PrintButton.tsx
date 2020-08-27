@@ -24,7 +24,7 @@ export class PrintButton extends Component {
     return (
       <>
         <Tooltip title='Распечатать карту (PDF)'>
-          <IconButton className={cnPrintButton()} onClick={this.openDialog}>
+          <IconButton className={cnPrintButton()} onClick={this.openDialog} color='inherit'>
             <Print />
           </IconButton>
         </Tooltip>

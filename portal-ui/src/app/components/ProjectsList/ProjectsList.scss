@@ -1,11 +1,8 @@
 .ProjectsList {
   display: grid;
-  overflow: auto;
   justify-content: center;
 
-  max-height: calc(100% - 60px);
-  margin: -36px 0 0;
-  padding: 30px 45px 20px;
+  padding: 35px 40px;
 
   grid-template-columns: repeat(var(--ProjectsListColumns), minmax(310px, 410px));
   --ProjectsListColumns: 3;

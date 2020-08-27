@@ -1,5 +1,5 @@
+import React, { Component, ReactNode } from 'react';
 import { HttpErrorResponse } from '@angular/common/http';
-import React, { Component } from 'react';
 import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -9,23 +9,32 @@ import { services } from '../../services/services';
 import { serverProperties } from '../../services/server-properties.service';
 
 import '!style-loader!css-loader!sass-loader!./Link.scss';
+import { sleep } from '../../services/util/sleep';
 
 const cnLink = cn('Link');
 
 interface LinkProps {
   url: string;
+  theme?: 'normal' | 'none';
   className?: string;
-  children?: React.ReactChild;
+  children?: ReactNode;
   target?: string;
   download?: boolean | string;
+  disabled?: boolean;
+  delay?: number;
 }
 
 export class Link extends Component<LinkProps> {
   render() {
-    const { children, className, url, target } = this.props;
+    const { children, className, url, target, theme } = this.props;
 
     return (
-      <a href={url} target={target} onClick={this.navigate} className={cnLink(null, [className])}>
+      <a
+        href={url}
+        target={target}
+        onClick={this.navigate}
+        className={cnLink({ theme: theme || 'normal' }, [className])}
+      >
         {target === '_blank' ? (
           <>
             <OpenInNew className={cnLink('Icon')} />
@@ -39,10 +48,18 @@ export class Link extends Component<LinkProps> {
 
   @boundMethod
   private async navigate(e: React.MouseEvent<HTMLAnchorElement>) {
-    const { url, target, download } = this.props;
+    const { url, target, download, disabled, delay } = this.props;
 
-    if (!target) {
+    if (!target || disabled || delay) {
       e.preventDefault();
+
+      if (disabled) {
+        return;
+      }
+
+      if (delay) {
+        await sleep(delay);
+      }
 
       if (!download) {
         services.ngZone.run(() => {
@@ -51,7 +68,8 @@ export class Link extends Component<LinkProps> {
       } else if (download) {
         const baseUrl = await serverProperties.baseUrl;
 
-        services.httpq.get(url, { responseType: 'blob' })
+        services.httpq
+          .get(url, { responseType: 'blob' })
           .then(response => {
             const objectURL = window.URL.createObjectURL(response);
             const a = document.createElement('a');

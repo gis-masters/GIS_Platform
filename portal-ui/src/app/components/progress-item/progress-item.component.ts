@@ -1,10 +1,11 @@
-import {saveAs} from 'file-saver';
-import {NGXLogger} from 'ngx-logger';
-import {Component, Input, OnDestroy} from '@angular/core';
-import {EventService, IEvent} from '../../services/event.service';
-import {DownloadFileService} from '../../services/download-file.service';
-import {Subject} from 'rxjs';
-import {ProcessStatus, ProcessType} from '../../services/crg/models';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { saveAs } from 'file-saver';
+import { NGXLogger } from 'ngx-logger';
+import { Subject } from 'rxjs';
+
+import { eventService, IEvent } from '../../services/event.service';
+import { DownloadFileService } from '../../services/download-file.service';
+import { ProcessStatus, ProcessType } from '../../services/crg/models';
 
 @Component({
   selector: 'crg-progress-item',
@@ -12,15 +13,11 @@ import {ProcessStatus, ProcessType} from '../../services/crg/models';
   styleUrls: ['./progress-item.component.css']
 })
 export class ProgressItemComponent implements OnDestroy {
-
   @Input() event: IEvent;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private fileService: DownloadFileService,
-              private eventService: EventService) {
-  }
+  constructor(private logger: NGXLogger, private fileService: DownloadFileService) {}
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -48,8 +45,10 @@ export class ProgressItemComponent implements OnDestroy {
 
   isSpinner(): boolean {
     if (!!this.event.payload.payload.progress) {
-      return this.event.payload.payload.status === ProcessStatus.PENDING ||
-             this.event.payload.payload.status === ProcessStatus.TASK_DONE;
+      return (
+        this.event.payload.payload.status === ProcessStatus.PENDING ||
+        this.event.payload.payload.status === ProcessStatus.TASK_DONE
+      );
     } else {
       return false;
     }
@@ -60,12 +59,14 @@ export class ProgressItemComponent implements OnDestroy {
       return false;
     }
 
-    return this.event.payload.payload.status === ProcessStatus.PENDING ||
-           this.event.payload.payload.status === ProcessStatus.TASK_DONE;
+    return (
+      this.event.payload.payload.status === ProcessStatus.PENDING ||
+      this.event.payload.payload.status === ProcessStatus.TASK_DONE
+    );
   }
 
   closeNotice() {
-    this.eventService.delete(this.event.id);
+    eventService.delete(this.event.id);
   }
 
   async download() {
@@ -73,14 +74,16 @@ export class ProgressItemComponent implements OnDestroy {
     const exportWsMsg = wsMessage.payload as any;
     const fileName = exportWsMsg.payload.split('/')[3];
     const data = await this.fileService.download(fileName);
-    const blob = new Blob([data], {type: 'text/xml'});
+    const blob = new Blob([data], { type: 'text/xml' });
 
     saveAs(blob, fileName);
   }
 
   isShowActionBlock(): boolean {
-    return this.event.payload.payload.status === ProcessStatus.DONE ||
-           this.event.payload.payload.status === ProcessStatus.ERROR;
+    return (
+      this.event.payload.payload.status === ProcessStatus.DONE ||
+      this.event.payload.payload.status === ProcessStatus.ERROR
+    );
   }
 
   isShowDownloadLink(): boolean {
@@ -93,7 +96,7 @@ export class ProgressItemComponent implements OnDestroy {
     // } else if (this.event.payload.type === WsMessageType.EXPORT) {
     //   return 'Скачать Shape архив';
     // } else {
-      return 'Скачать';
+    return 'Скачать';
     // }
   }
 }

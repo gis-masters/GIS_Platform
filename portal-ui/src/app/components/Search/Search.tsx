@@ -4,27 +4,19 @@ import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { SearchTwoTone } from '@material-ui/icons';
-import { Divider, IconButton, InputBase, Popover } from '@material-ui/core';
+import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@material-ui/core';
 
-import { Loading } from '../Loading/Loading';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';
 
 import { SearchResultList } from './ResultList/Search-ResultList';
 
 import '!style-loader!css-loader!sass-loader!./Search.scss';
-import '!style-loader!css-loader!sass-loader!./Input/Search-Input.scss';
-import '!style-loader!css-loader!sass-loader!./Divider/Search-Divider.scss';
-import '!style-loader!css-loader!sass-loader!./Loader/Search-Loader.scss';
 
 const cnSearch = cn('Search');
 
-export interface SearchProps {
-  hidden: boolean;
-}
-
 @observer
-export class Search extends Component<SearchProps> {
+export class Search extends Component {
   @observable private searchValue: string;
   @observable private searchResult: YaGeoObjectCollection;
   @observable private resultListOpen = false;
@@ -32,54 +24,42 @@ export class Search extends Component<SearchProps> {
 
   private anchor?: HTMLElement;
 
-  constructor(props: SearchProps) {
-    super(props);
-  }
-
   render() {
     return (
       <>
-        {!this.props.hidden ?
-          <div className={cnSearch()}>
-            <InputBase
-              className={cnSearch('Input')}
-              placeholder='Найти адрес или место'
-              type='search'
-              onChange={this.handleInputChange}
-              onKeyUp={this.handleKeyUp}
-              onFocus={this.onFocus}
-            />
+        <Paper component='form' className={cnSearch()} onSubmit={this.handleSubmit}>
+          <InputBase
+            className={cnSearch('Input')}
+            placeholder='Найти адрес или место'
+            onChange={this.handleInputChange}
+          />
 
-            <Divider className={cnSearch('Divider')} orientation='vertical'/>
+          <IconButton className={cnSearch('Button')} size='small' type='submit'>
+            {!this.isLoading ? <SearchTwoTone /> : <CircularProgress size={20} />}
+          </IconButton>
+        </Paper>
 
-            {!this.isLoading ?
-              <IconButton className={ cnSearch('Button') } onClick={ this.doSearch } size='small'>
-                <SearchTwoTone/>
-              </IconButton> :
-              <Loading className={ cnSearch('Loader') } visible={ true } size={ 20 }/>}
-
-            <Popover
-              open={this.resultListOpen}
-              anchorEl={this.anchor}
-              onClose={this.handleResultListClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-            >
-              <SearchResultList data={this.searchResult} onClick={this.closeResultList}/>
-            </Popover>
-          </div> : null}
+        <Popover
+          open={this.resultListOpen}
+          anchorEl={this.anchor}
+          onClose={this.handleResultListClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+        >
+          <SearchResultList data={this.searchResult} onClick={this.closeResultList} />
+        </Popover>
       </>
     );
   }
 
   @action.bound
-  private handleInputChange(e) {
+  private handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.searchValue = e.target.value;
     if (!this.searchValue) {
       openLayersService.clearMarkers();
@@ -92,19 +72,11 @@ export class Search extends Component<SearchProps> {
   }
 
   @boundMethod
-  private onFocus(e) {
+  private async handleSubmit(e: React.FormEvent<HTMLElement>) {
+    e.preventDefault();
+
     this.anchor = e.target as HTMLElement;
-  }
 
-  @boundMethod
-  private handleKeyUp(e) {
-    if (e.key === 'Enter') {
-      this.doSearch();
-    }
-  }
-
-  @boundMethod
-  private async doSearch() {
     if (!this.searchValue) {
       return;
     }

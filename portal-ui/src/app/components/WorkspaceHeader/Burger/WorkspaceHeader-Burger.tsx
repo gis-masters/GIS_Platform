@@ -1,0 +1,97 @@
+import React, { Component } from 'react';
+import { observable, action } from 'mobx';
+import { observer } from 'mobx-react';
+import { IconButton, Menu, MenuItem, ListItemIcon } from '@material-ui/core';
+import { Menu as MenuIcon, Map as MapIcon, ViewModule, Business, CloudDownload } from '@material-ui/icons';
+import { cn } from '@bem-react/classname';
+
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { isAdmin } from '../../../services/crg/permissions.service';
+import { Pages } from '../../../app-routing.module';
+import { route } from '../../../stores/Route.store';
+import { Link } from '../../Link/Link';
+
+import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Burger.scss';
+
+const cnWorkspaceHeaderBurger = cn('WorkspaceHeader', 'Burger');
+
+@observer
+export class WorkspaceHeaderBurger extends Component {
+  @observable private anchorEl: HTMLElement | null = null;
+  private isAdmin = false;
+
+  constructor(props: {}) {
+    super(props);
+
+    this.isAdmin = isAdmin();
+  }
+
+  render() {
+    return (
+      <>
+        <IconButton className={cnWorkspaceHeaderBurger()} onClick={this.toggleOpen} color='inherit'>
+          <MenuIcon fontSize='inherit' />
+        </IconButton>
+
+        <Menu open={Boolean(this.anchorEl)} onClose={this.close} anchorEl={this.anchorEl}>
+          {route.data.page === Pages.MAP && this.isAdmin && (
+            <Link url={`/projects/${currentProject.id}/import`} theme='none' delay={300}>
+              <MenuItem onClick={this.close}>
+                <ListItemIcon>
+                  <CloudDownload />
+                </ListItemIcon>
+                Импорт данных
+              </MenuItem>
+            </Link>
+          )}
+
+          {route.data.page === Pages.IMPORT && (
+            <Link
+              url={`/projects/${currentProject.id}/map`}
+              theme='none'
+              disabled={!currentProject.layers || !currentProject.layers.length}
+              delay={300}
+            >
+              <MenuItem onClick={this.close} disabled={!currentProject.layers.length}>
+                <ListItemIcon>
+                  <MapIcon />
+                </ListItemIcon>
+                Карта
+              </MenuItem>
+            </Link>
+          )}
+
+          <Link url='/projects' theme='none' delay={300}>
+            <MenuItem onClick={this.close}>
+              <ListItemIcon>
+                <ViewModule />
+              </ListItemIcon>
+              Проекты
+            </MenuItem>
+          </Link>
+
+          {this.isAdmin && (
+            <Link url='/org-admin' theme='none' delay={300}>
+              <MenuItem onClick={this.close}>
+                <ListItemIcon>
+                  <Business />
+                </ListItemIcon>
+                Управление организацией
+              </MenuItem>
+            </Link>
+          )}
+        </Menu>
+      </>
+    );
+  }
+
+  @action.bound
+  private toggleOpen(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    this.anchorEl = this.anchorEl ? null : (e.target as HTMLElement);
+  }
+
+  @action.bound
+  private close() {
+    this.anchorEl = null;
+  }
+}

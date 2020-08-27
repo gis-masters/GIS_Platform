@@ -91,18 +91,6 @@ async function isAllowed(layer: CrgLayer, targetPoint: PermissionPoint): Promise
   }
 }
 
-const isEditContent = (): boolean => {
-  const userInfo = localStorageService.getUserInfo();
-  if (!userInfo) {
-    return false;
-  }
-
-  return (
-    userInfo.roles &&
-    (userInfo.roles.includes(BuildInRole.ORG_ADMIN) || userInfo.roles.includes(BuildInRole.GLOBAL_ADMIN))
-  );
-};
-
 export function isCreateAllowed(layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.CREATE);
 }
@@ -123,12 +111,16 @@ export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.EXPORT);
 }
 
-export function isImportAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.IMPORT);
-}
+export function isAdmin(): boolean {
+  const userInfo = localStorageService.getUserInfo();
+  if (!userInfo) {
+    return false;
+  }
 
-export function isManagementAllowed(): boolean {
-  return isEditContent();
+  return (
+    userInfo.roles &&
+    (userInfo.roles.includes(BuildInRole.ORG_ADMIN) || userInfo.roles.includes(BuildInRole.GLOBAL_ADMIN))
+  );
 }
 
 async function getPermissionsUrl(project: Project, layer?: CrgLayer): Promise<string> {

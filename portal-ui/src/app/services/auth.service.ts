@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import Cookies from 'js-cookie';
 
 import { serverProperties } from './server-properties.service';
-import { HttpQueue } from './util/HttpQueue';
+import { usersService } from './crg/users.service';
+import { services } from './services';
 
 export interface AuthCredentials {
   username: string;
@@ -21,14 +21,18 @@ export interface RegData {
   password_: string;
 }
 
-@Injectable({providedIn: 'root'})
-export class AuthService {
+class AuthService {
+  private static _instance: AuthService;
+
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private _authenticated = false;
 
   private COOKIE_NAME = 'crgAuthCookie';
 
-  constructor(private httpq: HttpQueue,
-              private router: Router) {
+  constructor() {
     if (Cookies.get(this.COOKIE_NAME)) {
       this._authenticated = true;
     }
@@ -41,18 +45,18 @@ export class AuthService {
     params.append('grant_type', 'password');
 
     const headers = new HttpHeaders({
-      'Content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'
     });
 
-    const options = {withCredentials: true, headers: headers};
+    const options = { withCredentials: true, headers: headers };
     const url = await serverProperties.authServerUrl;
 
-    return this.httpq.post(url, params.toString(), options);
+    return services.httpq.post(url, params.toString(), options);
   }
 
   validateAuth(redirectTo: string) {
     if (this._authenticated) {
-      this.router.navigateByUrl(redirectTo);
+      services.router.navigateByUrl(redirectTo);
     }
   }
 
@@ -60,7 +64,8 @@ export class AuthService {
     Cookies.remove(this.COOKIE_NAME);
 
     this._authenticated = false;
-    this.router.navigate(['/']);
+    services.router.navigate(['/']);
+    usersService.dropCurrent();
   }
 
   // TODO: Создание новой орг в модуле аутентификации???
@@ -77,7 +82,7 @@ export class AuthService {
     };
     const url = await serverProperties.organizationsUrl;
 
-    return this.httpq.post(url + '/init', payload);
+    return services.httpq.post(url + '/init', payload);
   }
 
   get authenticated(): boolean {
@@ -88,3 +93,5 @@ export class AuthService {
     this._authenticated = value;
   }
 }
+
+export const authService = AuthService.instance;

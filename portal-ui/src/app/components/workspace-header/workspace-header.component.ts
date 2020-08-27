@@ -1,49 +1,32 @@
-import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  NgModuleRef,
-  NgModule,
-  ViewChild,
-  ViewContainerRef,
-  Compiler,
-  Injector
-} from '@angular/core';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { createElement } from 'react';
 
-import { getEnvironment } from '../../services/environment';
+import { WorkspaceHeader } from '../WorkspaceHeader/WorkspaceHeader';
 
 @Component({
   selector: 'crg-workspace-header',
-  template: '<div #here></div>'
+  template: '<div class="workspace-header" #react></div>',
+  styleUrls: ['./workspace-header.component.scss']
 })
-export class WorkspaceHeaderComponent implements AfterViewInit, OnDestroy {
-  moduleRef: NgModuleRef<NgModule>;
+export class WorkspaceHeaderComponent implements OnInit, OnChanges, OnDestroy {
+  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  @ViewChild('here', {read: ViewContainerRef, static: true})
-  here: ViewContainerRef;
-
-  constructor(private compiler: Compiler,
-              private injector: Injector) {
+  ngOnInit() {
+    this.renderReactElement();
   }
 
-  async ngAfterViewInit() {
-    const environment = await getEnvironment();
-    import(`./workspace-header@${environment.platform}.module`)
-      .then(m => m.WorkspaceHeaderModule)
-      .then(lazyModule => {
-        this.compiler.compileModuleAsync(lazyModule).then(ngModuleFactory => {
-          this.moduleRef = ngModuleFactory.create(this.injector);
-          const compFactory = this.moduleRef.componentFactoryResolver.resolveComponentFactory(
-            lazyModule.rootEntry
-          );
-          this.here.createComponent(compFactory);
-        });
-      });
+  ngOnDestroy() {
+    unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnDestroy(): void {
-    if (this.moduleRef) {
-      this.moduleRef.destroy();
-    }
+  ngOnChanges() {
+    this.renderReactElement();
+  }
+
+  private renderReactElement() {
+    const reactElement = createElement(WorkspaceHeader);
+
+    render(reactElement, this.ref.nativeElement);
   }
 }

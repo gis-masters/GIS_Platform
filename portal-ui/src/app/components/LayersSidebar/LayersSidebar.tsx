@@ -5,7 +5,6 @@ import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { BaseMapsSelect } from '../BaseMapsSelect/BaseMapsSelect';
-import { PrintButton } from '../PrintButton/PrintButton';
 import { LayersTree } from '../LayersTree/LayersTree';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar.scss';
@@ -21,7 +20,6 @@ export class LayersSidebar extends Component {
         <div className={cnLayersSidebar('Inner')}>
           <div className={cnLayersSidebar('MapControls')}>
             <BaseMapsSelect className={cnLayersSidebar('BaseMapsSelect')} />
-            <PrintButton />
           </div>
           <div className={cnLayersSidebar('Content', ['scroll'])}>
             <LayersTree />

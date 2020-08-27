@@ -1,6 +1,6 @@
 <div [class]="cn()">
-  <crg-workspace-header [class]="cn('header')"></crg-workspace-header>
-  <div [class]="cn('container')">
+  <crg-workspace-header></crg-workspace-header>
+  <div [class]="cn('container', ['scroll'])">
     <ng-content></ng-content>
   </div>
 </div>

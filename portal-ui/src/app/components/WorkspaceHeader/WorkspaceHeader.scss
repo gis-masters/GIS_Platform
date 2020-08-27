@@ -1,0 +1,15 @@
+.WorkspaceHeader {
+  position: relative;
+
+  display: grid;
+  align-items: center;
+
+  height: 55px;
+  padding: 4px 16px;
+
+  color: var(--white);
+  background: #3f51b5;
+
+  grid-template: auto / 1fr auto 1fr;
+  grid-template-areas: 'breadcrumbs organisation buttons';
+}

@@ -11,6 +11,7 @@ import {
   checkImportStatus,
   updateProgress
 } from '../../services/geoserver/import/import.service';
+import { projectsService } from '../../services/crg/projects.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
@@ -27,7 +28,7 @@ import '!style-loader!css-loader!sass-loader!./DataImport.scss';
 const cnDataImport = cn('DataImport');
 
 @observer
-export class DataImport extends Component<{}> {
+export class DataImport extends Component {
   private pollTimeout?: number;
   private pollingOn = false;
   private pollingDelay = 500;
@@ -49,17 +50,17 @@ export class DataImport extends Component<{}> {
     // прогреем схемы, понадобятся на следующем шаге
     schemaService.getAllSchemas();
   }
-
+  
   async componentDidMount() {
     await services.provided;
-
+    
     const urlImportId = route.params.importId;
-
+    
     if (urlImportId) {
       if (currentImport.id && currentImport.id !== urlImportId) {
         this.reset();
       }
-
+      
       try {
         await fetchCurrentImport(urlImportId);
         this.launchPolling();
@@ -71,6 +72,8 @@ export class DataImport extends Component<{}> {
         this.reset();
       }
     }
+
+    await projectsService.fetchCurrent();
   }
 
   componentWillUnmount() {

@@ -8,10 +8,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
   templateUrl: './map-page.component.html'
 })
 export class MapPageComponent implements OnInit {
-  projectName: string;
-
   async ngOnInit() {
     await projectsService.fetchCurrent();
-    this.projectName = currentProject.name;
   }
 }

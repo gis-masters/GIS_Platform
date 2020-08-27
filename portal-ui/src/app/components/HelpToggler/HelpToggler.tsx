@@ -9,17 +9,18 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Tooltip
 } from '@material-ui/core';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
-import { route } from '../../stores/Route.store';
 import { TocItem } from '../../stores/Help.store';
+import { route } from '../../stores/Route.store';
 import { HelpPopup } from '../HelpPopup/HelpPopup';
-import { Help } from '../Help/Help';
 import { Button } from '../Button/Button';
+import { Help } from '../Help/Help';
 
 import '!style-loader!css-loader!sass-loader!./HelpToggler.scss';
 
@@ -30,14 +31,7 @@ export class HelpToggler extends Component<{}> {
   @observable private popupOpen = false;
   @observable private dialogOpen = false;
   @observable private selectedItem?: TocItem;
-  private helpPart: HelpPart;
   private ref = createRef<HTMLButtonElement>();
-
-  constructor(props: {}) {
-    super(props);
-
-    this.helpPart = new HelpPart(route.data.page);
-  }
 
   render() {
     if (!this.visible) {
@@ -46,9 +40,11 @@ export class HelpToggler extends Component<{}> {
 
     return (
       <>
-        <IconButton className={cnHelpToggler()} onClick={this.openPopup} ref={this.ref}>
-          <LiveHelpIcon />
-        </IconButton>
+        <Tooltip title={'Справка'}>
+          <IconButton className={cnHelpToggler()} onClick={this.togglePopup} ref={this.ref} color='inherit'>
+            <LiveHelpIcon />
+          </IconButton>
+        </Tooltip>
 
         <Popper className={cnHelpToggler('Popup')} open={this.popupOpen} anchorEl={this.ref.current} transition>
           {({ TransitionProps }) => (
@@ -74,18 +70,23 @@ export class HelpToggler extends Component<{}> {
   }
 
   @computed
+  private get helpPart(): HelpPart {
+    return new HelpPart(route.data.page);
+  }
+
+  @computed
   private get visible(): boolean {
     return Boolean(this.helpPart.items && this.helpPart.items.length);
   }
 
   @action.bound
-  private openPopup() {
-    this.popupOpen = true;
+  private closePopup() {
+    this.popupOpen = false;
   }
 
   @action.bound
-  private closePopup() {
-    this.popupOpen = false;
+  private togglePopup() {
+    this.popupOpen = !this.popupOpen;
   }
 
   @action.bound
@@ -95,7 +96,7 @@ export class HelpToggler extends Component<{}> {
 
   @action.bound
   private closeDialog() {
-    this.dialogOpen = true;
+    this.dialogOpen = false;
   }
 
   @action.bound

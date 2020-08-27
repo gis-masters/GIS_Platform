@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, publishReplay, refCount } from 'rxjs/operators';
 import { remove } from 'lodash';
@@ -8,26 +7,34 @@ import { localStorageService } from './local-storage.service';
 import { IWsMessage, wsService } from './ws.service';
 import { ProcessType } from './crg/models';
 
+// Пока события будут завязаны на IWsMessage
+export interface IEvent {
+  id: string;
+  type: ProcessType;
+  payload: IWsMessage;
+}
+
 /**
  * Сервис обработки и хранения событий.
  * Возникающие события удаляется из списка пользователем.
  */
-@Injectable({
-  providedIn: 'root'
-})
-export class EventService {
+class EventService {
+  private static _instance: EventService;
 
   private EVENTS_KEY = 'events';
 
   private _events$: BehaviorSubject<IEvent[]> = new BehaviorSubject<IEvent[]>([]);
-  public events$: Observable<IEvent[]> = this._events$.asObservable()
-    .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
-      publishReplay(1),
-      refCount()
-    );
+  public events$: Observable<IEvent[]> = this._events$.asObservable().pipe(
+    // компоненты при подписке должны видеть одно последнее значение в потоке
+    publishReplay(1),
+    refCount()
+  );
 
-  constructor() {
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  private constructor() {
     const savedEvents: IEvent[] = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
       this._events$.next(savedEvents);
@@ -35,11 +42,11 @@ export class EventService {
 
     // Не буду тут заморачиваться с отписками потому как этот сервис живет постоянно
     wsService.messages$
-        .pipe(
-          filter(value => !!value),
-          filter((msg: IWsMessage) => this.isAllowedMessageType(msg)),
-        )
-        .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
+      .pipe(
+        filter(value => !!value),
+        filter((msg: IWsMessage) => this.isAllowedMessageType(msg))
+      )
+      .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
   }
 
   // Пока только експорт
@@ -63,7 +70,7 @@ export class EventService {
    * @param wsMessage Сообщение от сервера
    */
   private handleMessage(wsMessage: IWsMessage) {
-    const newEvent: IEvent = {id: generateRandomId(), payload: wsMessage, type: wsMessage.type};
+    const newEvent: IEvent = { id: generateRandomId(), payload: wsMessage, type: wsMessage.type };
     const events = this._events$.getValue();
 
     const sameEvent = this.findSameEvent(wsMessage, events);
@@ -99,12 +106,6 @@ export class EventService {
 
     return JSON.parse(events);
   }
-
 }
 
-// Пока события будут завязаны на IWsMessage
-export interface IEvent {
-  id: string;
-  type: ProcessType;
-  payload: IWsMessage;
-}
+export const eventService = EventService.instance;

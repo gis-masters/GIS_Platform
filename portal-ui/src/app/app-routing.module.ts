@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Route, Data } from '@angular/router';
 
 import { LoginPageComponent } from './pages/login/login-page.component';
 import { AboutComponent } from './pages/about/about.component';
@@ -18,114 +18,148 @@ import { ProjectsGuardService } from './services/projects-guard.service';
 import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
 import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
 
-const routes: Routes = [
-  { path: '', component: HomePageComponent },
-  { path: 'login', component: LoginPageComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'recovery', component: RecoveryComponent },
-  { path: 'about', component: AboutComponent },
+export enum Pages {
+  HOME = 'home',
+  LOGIN = 'login',
+  REGISTER = 'register',
+  RECOVERY = 'recovery',
+  ABOUT = 'about',
+  PROJECTS = 'projects',
+  IMPORT = 'import',
+  MAP = 'map',
+  ORG_ADMIN = 'org-admin'
+}
+
+export interface AppRouteData extends Data {
+  page: Pages;
+}
+
+interface AppRoute extends Route {
+  data: AppRouteData;
+}
+
+interface AppRouteParent extends Route {
+  children: AppRoutes;
+  data?: AppRouteData;
+}
+
+interface AppRouteRedirect extends Route {
+  redirectTo: string;
+}
+
+type AppRoutes = (AppRoute | AppRouteParent | AppRouteRedirect)[];
+
+const routes: AppRoutes = [
+  {
+    path: '',
+    component: HomePageComponent,
+    data: { page: Pages.HOME }
+  },
+  {
+    path: 'login',
+    component: LoginPageComponent,
+    data: { page: Pages.LOGIN }
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    data: { page: Pages.REGISTER }
+  },
+  {
+    path: 'recovery',
+    component: RecoveryComponent,
+    data: { page: Pages.RECOVERY }
+  },
+  {
+    path: 'about',
+    component: AboutComponent,
+    data: { page: Pages.ABOUT }
+  },
   {
     path: 'projects/default',
     component: ProjectsPageComponent,
-    canActivate: [ AuthGuardService, ProjectsGuardService ],
+    canActivate: [AuthGuardService, ProjectsGuardService],
     resolve: {
       orgInfo: OrganizationInfoResolver
     },
-    data: {
-      step: 1,
-      page: 'projects'
-    }
+    data: { page: Pages.PROJECTS }
   },
   {
     path: 'projects',
     component: ProjectsPageComponent,
-    canActivate: [ AuthGuardService ],
+    canActivate: [AuthGuardService],
     resolve: {
       orgInfo: OrganizationInfoResolver
     },
-    data: {
-      step: 1,
-      page: 'projects'
-    }
+    data: { page: Pages.PROJECTS }
   },
   {
     path: 'projects/:projectId',
-    canActivate: [ AuthGuardService, WorkflowGuardService ],
+    canActivate: [AuthGuardService, WorkflowGuardService],
     children: [
       {
         path: 'import',
         component: ImportPageComponent,
-        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
           orgInfo: OrganizationInfoResolver
         },
-        data: {
-          step: 2,
-          page: 'import'
-        }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'import/:importId',
         component: ImportPageComponent,
-        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
           orgInfo: OrganizationInfoResolver
         },
-        data: {
-          step: 2,
-          page: 'import'
-        }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'import/:importId/mapping',
         component: MappingPageComponent,
-        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
           orgInfo: OrganizationInfoResolver
         },
-        data: {
-          step: 2,
-          page: 'import'
-        }
+        data: { page: Pages.IMPORT }
       },
       {
         path: 'map',
         component: MapPageComponent,
-        canActivate: [ AuthGuardService, WorkflowGuardService ],
+        canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
           orgInfo: OrganizationInfoResolver
         },
-        data: {
-          step: 3,
-          page: 'map'
-        }
+        data: { page: Pages.MAP }
       },
       {
-        path: '**', redirectTo: '../projects'
+        path: '**',
+        redirectTo: '../projects'
       }
     ]
   },
   {
     path: 'org-admin',
     component: OrgAdminPageComponent,
-    canActivate: [ ManagementGuardService ],
-    data: {
-      step: 1
-    },
+    canActivate: [ManagementGuardService],
     resolve: {
       orgInfo: OrganizationInfoResolver
-    }
+    },
+    data: { page: Pages.ORG_ADMIN }
   },
-  { path: '**', redirectTo: '' }
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ],
-  providers: [ AuthGuardService, WorkflowGuardService, ProjectsGuardService, ManagementGuardService ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService, ManagementGuardService]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}
 
 export const routingComponents = [
   HomePageComponent,

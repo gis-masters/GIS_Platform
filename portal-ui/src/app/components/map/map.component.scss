@@ -18,6 +18,8 @@
   grid-gap: 0 0;
 
   &__map {
+    position: relative;
+
     overflow: hidden;
 
     grid-area: map;

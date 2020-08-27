@@ -3,13 +3,13 @@ import {
   RoutesRecognized,
   UrlSegment,
   Params,
-  Data,
   ParamMap,
   RouterEvent
 } from '@angular/router';
 import { observable, action } from 'mobx';
 
 import { services } from '../services/services';
+import { AppRouteData } from '../app-routing.module';
 
 class Route {
   private static _instance: Route;
@@ -18,10 +18,9 @@ class Route {
   @observable params: Params;
   @observable queryParams: Params;
   @observable fragment: string;
-  @observable data: Data;
+  @observable data: AppRouteData;
   @observable paramMap: ParamMap;
   @observable queryParamMap: ParamMap;
-  @observable currentPage: string;
 
   @action
   private setRoute(route: ActivatedRouteSnapshot) {
@@ -29,15 +28,9 @@ class Route {
     this.params = route.params;
     this.queryParams = route.queryParams;
     this.fragment = route.fragment;
-    this.data = route.data;
+    this.data = route.data as AppRouteData;
     this.paramMap = route.paramMap;
     this.queryParamMap = route.queryParamMap;
-
-    if (this.url.length) {
-      this.currentPage = this.url[0].path;
-    } else {
-      this.currentPage = '';
-    }
   }
 
   private constructor() {

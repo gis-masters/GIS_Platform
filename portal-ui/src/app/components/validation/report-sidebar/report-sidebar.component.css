@@ -29,13 +29,8 @@
 }
 
 .report-sidebar {
-  position: fixed;
-  z-index: 100;
-  top: 55px;
-  left: calc(100% - 550px);
-
   width: 550px;
-  height: calc(100% - 55px);
+  height: 100%;
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);

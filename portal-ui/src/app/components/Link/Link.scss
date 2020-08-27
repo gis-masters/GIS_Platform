@@ -2,4 +2,16 @@
   & &-Icon {
     font-size: 0.875em;
   }
+
+  body &_theme_none {
+    text-decoration: inherit;
+
+    color: inherit;
+
+    &:hover {
+      text-decoration: inherit;
+
+      color: inherit;
+    }
+  }
 }
