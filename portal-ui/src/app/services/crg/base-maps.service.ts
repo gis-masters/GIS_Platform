@@ -16,25 +16,16 @@ export async function fetchAllBaseMaps(baseMaps: CrgProjectBaseMap[]) {
   params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
 
   const url = (await serverProperties.dataServerUrl) + '/basemaps/search/findByIdIn';
-  services.httpq
-    .get<CrgApiResponse<{ basemaps: CrgBaseMap[] }>>(url, { params })
-    .then(
-      response => {
-        if (response._embedded) {
-          const crgBaseMaps = handleBaseMaps(baseMaps, response._embedded.basemaps);
 
-          baseMapsStore.initBaseMaps(crgBaseMaps);
-        } else {
-          baseMapsStore.initBaseMaps([]);
-        }
-      },
-      reason => {
-        console.error('Подложки не подготовлены?: ', reason);
-
-        const osmBaseMap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM };
-        baseMapsStore.initBaseMaps([osmBaseMap]);
-      }
-    );
+  try {
+    const response = await services.httpq.get<CrgApiResponse<{ basemaps: CrgBaseMap[] }>>(url, { params });
+    if (response._embedded) {
+      const crgBaseMaps = handleBaseMaps(baseMaps, response._embedded.basemaps);
+      baseMapsStore.initBaseMaps(crgBaseMaps);
+    }
+  } catch (e) {
+    services.logger.error('Подложки не подготовлены? ', e);
+  }
 }
 
 // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
@@ -42,7 +33,7 @@ function handleBaseMaps(projectBaseMaps: CrgProjectBaseMap[], baseMaps: CrgBaseM
   const result: CrgBaseMap[] = [];
   projectBaseMaps
     .slice()
-    .sort((a, b) => a.position - b.position)
+    .sort((a, b) => a.position - b.position || a.id - b.id)
     .forEach(projectBaseMap => {
       const crgBaseMap = baseMaps.find(baseMap => baseMap.id === projectBaseMap.baseMapId);
       if (projectBaseMap.title) {

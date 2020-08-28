@@ -104,19 +104,6 @@
     }
   }
 
-  &-MapControls {
-    display: flex;
-    align-items: center;
-
-    padding: 20px 15px 0;
-  }
-
-  &-BaseMapsSelect {
-    display: block;
-
-    width: calc(100% - 15px);
-  }
-
   &-Content {
     overflow-x: hidden;
     overflow-y: auto;

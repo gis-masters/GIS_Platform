@@ -65,6 +65,7 @@ import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-fea
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { SearchComponent } from './components/search/search.component';
+import { BaseMapsSelectComponent } from './components/base-maps-select/base-maps-select.component';
 
 import { configure } from 'mobx';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
@@ -114,7 +115,8 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     ZoomToFeatureComponent,
     OrgAdminComponent,
     EditFeatureConfirmComponent,
-    SearchComponent
+    SearchComponent,
+    BaseMapsSelectComponent
   ],
   imports: [
     HttpClientModule,

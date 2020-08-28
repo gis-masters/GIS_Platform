@@ -23,6 +23,10 @@
     overflow: hidden;
 
     grid-area: map;
+
+    ::ng-deep .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible {
+      display: none;
+    }
   }
 
   &__bar {

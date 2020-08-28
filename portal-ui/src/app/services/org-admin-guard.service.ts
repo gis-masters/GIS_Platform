@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+
 import { localStorageService } from './local-storage.service';
 import { BuildInRole } from './crg/permissions.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ManagementGuardService implements CanActivate {
+export class OrgAdminGuardService implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): Observable<boolean> | boolean {

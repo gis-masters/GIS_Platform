@@ -18,9 +18,6 @@ export class LayersSidebar extends Component {
       <div className={cnLayersSidebar({ open: sidebars.leftOpen })}>
         <button className={cnLayersSidebar('Open', { open: sidebars.leftOpen })} onClick={this.toggleOpen} />
         <div className={cnLayersSidebar('Inner')}>
-          <div className={cnLayersSidebar('MapControls')}>
-            <BaseMapsSelect className={cnLayersSidebar('BaseMapsSelect')} />
-          </div>
           <div className={cnLayersSidebar('Content', ['scroll'])}>
             <LayersTree />
           </div>

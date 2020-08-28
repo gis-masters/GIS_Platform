@@ -1,17 +1,8 @@
-.BaseMapsSelect {
-  min-width: 200px;
+body .BaseMapsSelect {
+  position: absolute;
+  z-index: 3;
+  right: 10px;
+  bottom: 10px;
 
-  vertical-align: middle;
-
-  font-size: 16px;
-
-  &-Thumbnail {
-    width: 50px;
-    height: auto;
-    margin-right: 10px;
-  }
-
-  & &-SelectRoot {
-    padding: 6px 0 6px 10px;
-  }
+  padding: 3px;
 }

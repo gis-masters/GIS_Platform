@@ -12,7 +12,7 @@ import { ImportPageComponent } from './pages/import/import-page.component';
 import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 
 import { AuthGuardService } from './services/auth-guard.service';
-import { ManagementGuardService } from './services/management-guard.service';
+import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
 import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
@@ -142,7 +142,7 @@ const routes: AppRoutes = [
   {
     path: 'org-admin',
     component: OrgAdminPageComponent,
-    canActivate: [ManagementGuardService],
+    canActivate: [ OrgAdminGuardService ],
     resolve: {
       orgInfo: OrganizationInfoResolver
     },
@@ -155,9 +155,9 @@ const routes: AppRoutes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService, ManagementGuardService]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ],
+  providers: [ AuthGuardService, WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService ]
 })
 export class AppRoutingModule {}
 

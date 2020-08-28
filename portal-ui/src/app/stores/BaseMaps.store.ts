@@ -1,10 +1,12 @@
 import { observable, action } from 'mobx';
 
-import { CrgBaseMap } from '../services/crg/base-maps.models';
+import { CrgBaseMap, SourceType } from '../services/crg/base-maps.models';
+
+const osmBaseMap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM, id: 666 };
 
 class BaseMaps {
   @observable baseMaps: CrgBaseMap[];
-  @observable currentBaseMap?: CrgBaseMap;
+  @observable currentBaseMap: CrgBaseMap;
 
   private static _instance: BaseMaps;
 
@@ -12,7 +14,9 @@ class BaseMaps {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() { }
+  private constructor() {
+    this.initBaseMaps([osmBaseMap]);
+  }
 
   @action
   initBaseMaps(baseMaps: CrgBaseMap[]) {
