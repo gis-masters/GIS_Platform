@@ -1,11 +1,11 @@
 package ru.mycrg.data_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.config.CrgProperties;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.DataServiceInternalException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -22,8 +22,10 @@ public class FileStorageService {
     private final String FILE_EXTENSION = ".blob";
 
     @Autowired
-    public FileStorageService(CrgProperties properties) {
-        documentStorageLocation = Paths.get(properties.getFileStoragePath()).toAbsolutePath().normalize();
+    public FileStorageService(Environment environment) {
+        String path = environment.getRequiredProperty("crg-options.fileStoragePath");
+
+        documentStorageLocation = Paths.get(path).toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(documentStorageLocation);

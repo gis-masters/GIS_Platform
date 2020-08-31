@@ -9,6 +9,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.mycrg.data_service.dao.CrgMigrationHandler;
+import ru.mycrg.data_service.dao.GeoserverMigrationHandler;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -18,6 +19,9 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     @Autowired
     private CrgMigrationHandler migrationHandler;
 
+    @Autowired
+    private GeoserverMigrationHandler geoserverMigrationHandler;
+
     public static void main(String[] args) {
         SpringApplication.run(DataServiceApplication.class, args);
     }
@@ -25,5 +29,6 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     @EventListener(ApplicationReadyEvent.class)
     public void appReadyEvent() {
         migrationHandler.handle();
+        geoserverMigrationHandler.handle();
     }
 }
