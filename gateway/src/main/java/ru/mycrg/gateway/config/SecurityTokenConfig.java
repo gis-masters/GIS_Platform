@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.mycrg.gateway.domain.BearerHandler;
 import ru.mycrg.gateway.domain.CookieHandler;
 import ru.mycrg.gateway.filters.MainAuthFilter;
 
@@ -22,6 +23,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CookieHandler cookieHandler;
+
+    @Autowired
+    private BearerHandler bearerHandler;
 
     @Autowired
     private CrgProperties properties;
@@ -52,7 +56,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
                 // Add a filter to validate the tokens with every request
-                .addFilterAfter(new MainAuthFilter(cookieHandler, properties),
+                .addFilterAfter(new MainAuthFilter(cookieHandler, bearerHandler, properties),
                         UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
                 .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations/init").permitAll()

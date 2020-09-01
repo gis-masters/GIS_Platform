@@ -35,7 +35,6 @@ public class Authenticator {
                     username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
             // 3. Authenticate the user. Now, user is authenticated
-            log.debug("Now, user is authenticated: {}", auth);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             return true;

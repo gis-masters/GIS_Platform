@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.oauth_client.JwtToken;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static java.lang.Integer.MAX_VALUE;
 
 @Service
-public class CookieHandler {
+public class CookieHandler implements TokenHandler {
 
     public final int COOKIE_VERSION = 1;
     public final String COOKIE_NAME = "crgAuthCookie";
@@ -37,7 +38,9 @@ public class CookieHandler {
         return authCookie;
     }
 
-    public Optional<JwtToken> extractToken(Cookie[] cookies) {
+    @Override
+    public Optional<JwtToken> extractToken(@NotNull HttpServletRequest request) {
+        final Cookie[] cookies = request.getCookies();
         if (cookies == null || cookies.length == 0) {
             return Optional.empty();
         }

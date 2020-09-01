@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.gateway.config.CrgProperties;
 import ru.mycrg.gateway.domain.CookieHandler;
+import ru.mycrg.gateway.domain.TokenHandler;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 import ru.mycrg.oauth_client.OAuthClientException;
@@ -24,11 +25,15 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
     private final CrgProperties properties;
     private final CookieHandler cookieHandler;
+    private final TokenHandler bearerHandler;
     private final OAuthClient authClient;
 
-    public MainAuthFilter(CookieHandler cookieHandler, CrgProperties properties) {
+    public MainAuthFilter(CookieHandler cookieHandler,
+                          TokenHandler bearerHandler,
+                          CrgProperties properties) {
         this.properties = properties;
         this.cookieHandler = cookieHandler;
+        this.bearerHandler = bearerHandler;
         this.authClient = OAuthClient.builder()
                 .url(properties.getAuthServiceUrl())
                 .clientId(properties.getClientId())
@@ -65,12 +70,20 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             gotoNextFilter(request, response, chain);
         } else {
             log.debug("Path: {}", request.getServletPath());
-            cookieHandler
-                    .extractToken(request.getCookies())
-                    .ifPresentOrElse(
-                            jwtToken -> authorizeWithToken(request, response, chain, jwtToken),
-                            () -> gotoNextFilter(request, response, chain)
-                    );
+
+            bearerHandler
+                    .extractToken(request)
+                    .ifPresentOrElse(jwtToken -> {
+                        authorizeWithToken(request, response, chain, jwtToken);
+                    }, () -> {
+                        cookieHandler
+                                .extractToken(request)
+                                .ifPresentOrElse(jwtToken -> {
+                                    authorizeWithToken(request, response, chain, jwtToken);
+                                }, () -> {
+                                    gotoNextFilter(request, response, chain);
+                                });
+                    });
         }
     }
 
@@ -120,8 +133,11 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
     private JwtToken refreshToken(JwtToken tokenModel) {
         try {
-            log.debug("Try use refresh token");
+            if (tokenModel.getRefresh_token() == null) {
+                throw new IllegalArgumentException("Refresh token not passed");
+            }
 
+            log.debug("Try use refresh token");
             final JwtToken[] token = new JwtToken[1];
             authClient
                     .refreshToken(tokenModel.getRefresh_token())
