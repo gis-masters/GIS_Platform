@@ -32,8 +32,6 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 @Transactional
 public class PermissionsService {
 
-    public static final int RESOURCES_PER_PERMISSION_LIMIT = 1000;
-
     private final ProjectionFactory projectionFactory;
     private final PermissionsRepository permissionsRepository;
     private final ResourceRepository resourceRepository;
@@ -130,13 +128,8 @@ public class PermissionsService {
     }
 
     private void joinResource(Permission permission, String identifier) {
-        Set<Resource> resources = permission.getResources();
-        if (resources.size() > RESOURCES_PER_PERMISSION_LIMIT) {
-            throw new ConflictException("Limit by " + RESOURCES_PER_PERMISSION_LIMIT +
-                    " resources by permission reached");
-        }
-
-        resources.stream()
+        permission
+                .getResources().stream()
                 .filter(resource -> resource.getIdentifier().equalsIgnoreCase(identifier))
                 .findFirst()
                 .ifPresentOrElse(resource -> { // Resource already joined
