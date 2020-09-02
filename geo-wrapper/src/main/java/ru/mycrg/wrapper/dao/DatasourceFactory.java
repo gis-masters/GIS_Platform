@@ -28,6 +28,7 @@ public class DatasourceFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    synchronized
     public HikariDataSource getDatasource(String dbName) {
         log.trace("Try get datasource for DB: {}", dbName);
 
@@ -42,7 +43,7 @@ public class DatasourceFactory {
             newDataSource.setJdbcUrl(getConnectionUrl(dbName));
             newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
             newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-            newDataSource.setMaximumPoolSize(5);
+            newDataSource.setMaximumPoolSize(2);
 
             dataSources.put(dbName, newDataSource);
 
@@ -55,8 +56,6 @@ public class DatasourceFactory {
     }
 
     public JdbcTemplate getJdbcTemplate(final String dbName) {
-        log.trace("get new JdbcTemplate for: {}", dbName);
-
         return new JdbcTemplate(getDatasource(dbName));
     }
 

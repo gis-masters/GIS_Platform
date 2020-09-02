@@ -19,7 +19,7 @@ public class CrgDataSourcesPool {
     public static final String INITIAL_SCHEMA_NAME = "public";
     public static final String INITIAL_DB_NAME = "crg_data_service";
 
-    private static final int HIKARI_POOL_SIZE = 3;
+    private static final int HIKARI_POOL_SIZE = 2;
 
     final Map<String, HikariDataSource> dataSources = new HashMap<>();
 
@@ -30,13 +30,19 @@ public class CrgDataSourcesPool {
         return getDataSource(dbName, schemaName, 1);
     }
 
+    synchronized
     public HikariDataSource getDataSource(String dbName) {
+        log.debug("getDataSource for: {}", dbName);
+
         if (dataSources.containsKey(dbName)) {
+            log.debug("get from pool");
+
             return dataSources.get(dbName);
         } else {
             HikariDataSource dataSource = getDataSource(dbName, DATA_SCHEMA_NAME, HIKARI_POOL_SIZE);
 
             dataSources.put(dbName, dataSource);
+            log.debug("Created new one. Current pool size: {}", dataSources.size());
 
             return dataSource;
         }
