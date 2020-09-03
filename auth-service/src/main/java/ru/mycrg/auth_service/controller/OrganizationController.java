@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.auth_service.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.service.OrganizationService;
+import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 
 import javax.validation.Valid;
 import java.net.URI;

@@ -52,6 +52,8 @@
 		<module>contracts/auth-service-contract</module>
 		<module>contracts/mq-queue-contract</module>
 		<module>contracts/integration-service-contract</module>
+
+		<module>tests/acceptance-tests</module>
 	</modules>
 
 </project>

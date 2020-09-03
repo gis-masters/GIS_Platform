@@ -13,10 +13,10 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.auth_service.dto.UserCreateDto;
 import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.service.AuthorityService;
 import ru.mycrg.auth_service.service.UserService;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
 import javax.inject.Inject;

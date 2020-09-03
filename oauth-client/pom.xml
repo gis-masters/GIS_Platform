@@ -94,7 +94,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skipTests>${skipTests}</skipTests>
+                    <skipTests>true</skipTests>
                     <systemPropertyVariables>
                         <!--suppress UnresolvedMavenProperty -->
                         <environment>${env.HOST}</environment>

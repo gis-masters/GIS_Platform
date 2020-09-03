@@ -3,8 +3,6 @@ package ru.mycrg.auth_service.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service.dto.OrganizationCreateDto;
-import ru.mycrg.auth_service.dto.UserCreateDto;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exeptions.ConflictException;
@@ -13,6 +11,8 @@ import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service.security.AES;
 import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
+import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;

@@ -11,9 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.auth_service.dto.GroupCreateDto;
 import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.service.GroupService;
+import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

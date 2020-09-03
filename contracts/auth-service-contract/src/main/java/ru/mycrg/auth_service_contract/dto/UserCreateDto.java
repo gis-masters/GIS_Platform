@@ -1,6 +1,4 @@
-package ru.mycrg.auth_service.dto;
-
-import org.hibernate.validator.constraints.Length;
+package ru.mycrg.auth_service_contract.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,12 +12,12 @@ public class UserCreateDto {
     private String name;
 
     @NotBlank(message = "Please provide user surname")
-    @Length(max = 100, message = "No more than 100 characters")
+    @Size(max = 100, message = "No more than 100 characters")
     private String surName;
 
     @Email
     @NotBlank
-    @Length(max = 60, message = "No more than 60 characters")
+    @Size(max = 60, message = "No more than 60 characters")
     private String email;
 
     //    ^                 # start-of-string
@@ -35,6 +33,13 @@ public class UserCreateDto {
     private String password;
 
     public UserCreateDto() {
+    }
+
+    public UserCreateDto(String name, String surName, String email, String password) {
+        this.name = name;
+        this.surName = surName;
+        this.email = email;
+        this.password = password;
     }
 
     public String getName() {

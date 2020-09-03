@@ -10,7 +10,6 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.auth_service.dto.GroupCreateDto;
 import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.entity.Group;
 import ru.mycrg.auth_service.entity.Organization;
@@ -19,6 +18,7 @@ import ru.mycrg.auth_service.exeptions.CrgValidationException;
 import ru.mycrg.auth_service.exeptions.NotFoundException;
 import ru.mycrg.auth_service.repository.GroupRepository;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
+import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;

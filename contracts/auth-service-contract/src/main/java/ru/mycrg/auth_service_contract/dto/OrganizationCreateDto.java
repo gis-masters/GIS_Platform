@@ -1,6 +1,4 @@
-package ru.mycrg.auth_service.dto;
-
-import org.hibernate.validator.constraints.Length;
+package ru.mycrg.auth_service_contract.dto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -14,7 +12,7 @@ public class OrganizationCreateDto {
     private String name;
 
     @NotBlank(message = "Please provide phone")
-    @Length(max = 20, message = "No more than 20 characters")
+    @Size(max = 20, message = "No more than 20 characters")
     private String phone;
 
     @Valid
@@ -22,6 +20,12 @@ public class OrganizationCreateDto {
     private UserCreateDto owner;
 
     public OrganizationCreateDto() {}
+
+    public OrganizationCreateDto(String name, String phone, UserCreateDto owner) {
+        this.name = name;
+        this.phone = phone;
+        this.owner = owner;
+    }
 
     public String getName() {
         return name;
