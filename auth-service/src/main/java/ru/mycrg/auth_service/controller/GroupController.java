@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.controller;
 
+import jakarta.inject.Inject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -15,7 +16,6 @@ import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.service.GroupService;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
 import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
