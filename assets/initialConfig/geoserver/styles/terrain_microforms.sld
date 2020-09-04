@@ -312,7 +312,7 @@
               <se:GraphicFill>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/Osipi_rh_porod.png" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_rh_porod.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>20</se:Size>
@@ -406,7 +406,7 @@
               <se:GraphicFill>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_tv_porod kam.png" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_tv_porod_kam.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>20</se:Size>

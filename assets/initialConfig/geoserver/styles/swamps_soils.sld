@@ -185,7 +185,7 @@
               <se:GraphicFill>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/galka_now.1.png" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/galka_now.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>60</se:Size>

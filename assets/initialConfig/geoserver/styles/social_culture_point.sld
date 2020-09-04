@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink"
+                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
                        xmlns:se="http://www.opengis.net/se">
   <NamedLayer>
     <se:Name>Соцкульт и сельхоз точечные</se:Name>
     <UserStyle>
       <se:Name>Social culture</se:Name>
-      <se:FeatureTypeStyle>	
+      <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>066-100-P</se:Name>
           <se:Description>
@@ -24,7 +24,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam.tur.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam_tur.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -48,7 +48,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam.tur.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam_tur.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -72,7 +72,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam.tur.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam_tur.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -96,7 +96,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam.tur.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam_tur.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -120,7 +120,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam.tur.png" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/sculptura_kam_tur.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>40</se:Size>
@@ -636,7 +636,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>073-000-V</se:Name>
           <se:Description>
@@ -660,7 +660,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>073-000-V</se:Name>
           <se:Description>
@@ -684,7 +684,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>073-000-V</se:Name>
           <se:Description>
@@ -708,7 +708,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>073-000-V</se:Name>
           <se:Description>
@@ -732,8 +732,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-        
+
+
         <se:Rule>
           <se:Name>031-000-P</se:Name>
           <se:Description>
@@ -757,7 +757,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>031-000-P</se:Name>
           <se:Description>
@@ -781,7 +781,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>031-000-P</se:Name>
           <se:Description>
@@ -805,7 +805,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>031-000-P</se:Name>
           <se:Description>
@@ -829,7 +829,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>031-000-P</se:Name>
           <se:Description>
@@ -853,8 +853,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-        
+
+
         <se:Rule>
           <se:Name>029-100-P</se:Name>
           <se:Description>
@@ -878,7 +878,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>029-100-P</se:Name>
           <se:Description>
@@ -902,7 +902,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>029-100-P</se:Name>
           <se:Description>
@@ -926,7 +926,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>029-100-P</se:Name>
           <se:Description>
@@ -950,7 +950,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>029-100-P</se:Name>
           <se:Description>

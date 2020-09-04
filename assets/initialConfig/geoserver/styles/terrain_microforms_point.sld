@@ -24,7 +24,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -48,7 +48,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -72,7 +72,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -96,7 +96,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -120,7 +120,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>5</se:Size>
@@ -146,7 +146,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>60</se:Size>
@@ -170,7 +170,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>50</se:Size>
@@ -194,7 +194,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>40</se:Size>
@@ -218,7 +218,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -242,7 +242,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vihod_gazov.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -266,7 +266,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -290,7 +290,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -314,7 +314,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -338,7 +338,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -362,7 +362,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/vhod_v_pecheru.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -386,7 +386,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -410,7 +410,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -434,7 +434,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -458,7 +458,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -482,7 +482,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_estestvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -506,7 +506,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -530,7 +530,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -554,7 +554,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -578,7 +578,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -602,7 +602,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/yama_iskustvenaya.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>5</se:Size>
@@ -626,7 +626,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -650,7 +650,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -674,7 +674,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -698,7 +698,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -722,7 +722,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/bugor_orientir.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -746,7 +746,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -770,7 +770,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -794,7 +794,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -818,7 +818,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -842,7 +842,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kurgan.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -867,7 +867,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -891,7 +891,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -915,7 +915,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -939,7 +939,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>10</se:Size>
@@ -963,7 +963,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/kamen_orientir_otd.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>5</se:Size>
@@ -989,7 +989,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -1013,7 +1013,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -1037,7 +1037,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -1061,7 +1061,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -1085,7 +1085,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney_point.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -1109,7 +1109,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -1133,7 +1133,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -1157,7 +1157,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -1181,7 +1181,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -1205,7 +1205,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/skala_ostanec_vershina.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
@@ -1229,7 +1229,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>35</se:Size>
@@ -1253,7 +1253,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
@@ -1277,7 +1277,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>25</se:Size>
@@ -1301,7 +1301,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>20</se:Size>
@@ -1325,7 +1325,7 @@
           <se:PointSymbolizer>
             <se:Graphic>
               <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.PNG" />
+                <se:OnlineResource xlink:type="simple" xlink:href="icons/glubina_ovraga.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>15</se:Size>
