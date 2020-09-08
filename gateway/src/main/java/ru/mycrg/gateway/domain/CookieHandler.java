@@ -26,6 +26,7 @@ public class CookieHandler implements TokenHandler {
         authCookie.setVersion(COOKIE_VERSION);
         authCookie.setPath("/");
         authCookie.setMaxAge(MAX_VALUE);
+        authCookie.setHttpOnly(true);
 
         return authCookie;
     }
@@ -34,6 +35,7 @@ public class CookieHandler implements TokenHandler {
         Cookie authCookie = new Cookie(COOKIE_NAME, "");
         authCookie.setVersion(COOKIE_VERSION);
         authCookie.setPath("/");
+        authCookie.setHttpOnly(true);
 
         return authCookie;
     }
@@ -61,5 +63,9 @@ public class CookieHandler implements TokenHandler {
         } else {
             return Optional.empty();
         }
+    }
+
+    public String getCookieName() {
+        return COOKIE_NAME;
     }
 }

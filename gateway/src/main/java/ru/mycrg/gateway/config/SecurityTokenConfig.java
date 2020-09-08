@@ -2,7 +2,6 @@ package ru.mycrg.gateway.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +16,8 @@ import ru.mycrg.gateway.filters.MainAuthFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+
+import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
@@ -52,6 +53,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 // make sure we use stateless session; session won't be used to store user's state.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+                .logout()
+                .deleteCookies(cookieHandler.getCookieName())
+            .and()
                 // handle an authorized attempts
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
@@ -59,7 +63,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new MainAuthFilter(cookieHandler, bearerHandler, properties),
                         UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
-                .antMatchers(HttpMethod.POST, "/oauth/token", "/organizations/init").permitAll()
+                .antMatchers(POST, "/oauth/token", "/organizations/init").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 }
