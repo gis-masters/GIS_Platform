@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import AddIcon from '@material-ui/icons/Add';
 import { cn } from '@bem-react/classname';
 
 import { ProjectCardForm } from '../Form/ProjectCard-Form';
+import { ProjectCardAddIcon } from '../AddIcon/ProjectCard-AddIcon';
+import { ProjectCardAddCaption } from '../AddCaption/ProjectCard-AddCaption';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Add.scss';
 
-const cnProjectCard = cn('ProjectCard');
+const cnProjectCardAdd = cn('ProjectCard', 'Add');
 
 @observer
 export class ProjectCardAdd extends Component {
@@ -21,9 +22,9 @@ export class ProjectCardAdd extends Component {
 
   private renderAdd() {
     return (
-      <div className={cnProjectCard('Add')} onClick={this.toggleActive}>
-        <AddIcon className={cnProjectCard('AddIcon')} />
-        <div className={cnProjectCard('AddCaption')}>Создать новый проект</div>
+      <div className={cnProjectCardAdd()} onClick={this.toggleActive}>
+        <ProjectCardAddIcon />
+        <ProjectCardAddCaption />
       </div>
     );
   }

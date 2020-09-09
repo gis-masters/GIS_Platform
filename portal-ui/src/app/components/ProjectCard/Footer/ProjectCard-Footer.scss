@@ -1,0 +1,23 @@
+.ProjectCard-Footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  height: 35px;
+
+  user-select: none;
+  text-align: center;
+  text-decoration: none;
+
+  color: white;
+
+  &:hover {
+    text-decoration: none;
+
+    color: white;
+  }
+}

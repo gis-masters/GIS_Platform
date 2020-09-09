@@ -52,7 +52,7 @@ export class WorkspaceHeaderBurger extends Component {
               disabled={!currentProject.layers || !currentProject.layers.length}
               delay={300}
             >
-              <MenuItem onClick={this.close} disabled={!currentProject.layers.length}>
+              <MenuItem onClick={this.close} disabled={!currentProject.layers || !currentProject.layers.length}>
                 <ListItemIcon>
                   <MapIcon />
                 </ListItemIcon>

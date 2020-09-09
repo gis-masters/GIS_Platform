@@ -19,7 +19,7 @@ class CurrentProject {
   @observable organizationId: number;
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
-  @observable layers: CrgLayer[];
+  @observable layers?: CrgLayer[];
 
   private constructor() {}
 

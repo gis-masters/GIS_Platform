@@ -1,0 +1,11 @@
+body .ProjectCard-Delete {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  cursor: pointer;
+  transition: opacity 0.3s;
+
+  opacity: var(--ProjectCardHovered);
+  color: ghostwhite;
+}
