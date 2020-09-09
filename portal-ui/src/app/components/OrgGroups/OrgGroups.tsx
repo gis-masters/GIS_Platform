@@ -39,7 +39,7 @@ export class OrgGroups extends Component {
   @observable private sortParams: GroupSortParams = { field: 'name', asc: true };
   @observable private filterParams: GroupFilterParams = {};
   @observable private filterEnabled = false;
-  @observable private page = 1;
+  @observable private _page = 1;
   private rowsPerPage = 20;
 
   componentDidMount() {
@@ -133,11 +133,7 @@ export class OrgGroups extends Component {
           </Table>
         </TableContainer>
         <TableUnderFooter>
-          <Pagination
-            count={Math.ceil(groupsList.list.length / this.rowsPerPage)}
-            page={this.page}
-            onChange={this.handlePagination}
-          />
+          <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
         </TableUnderFooter>
       </div>
     );
@@ -176,6 +172,16 @@ export class OrgGroups extends Component {
     );
   }
 
+  @computed
+  private get pagesCount(): number {
+    return Math.ceil(this.filteredAndSortedGroups.length / this.rowsPerPage);
+  }
+
+  @computed
+  private get page(): number {
+    return Math.min(this._page, this.pagesCount);
+  }
+
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
@@ -183,6 +189,6 @@ export class OrgGroups extends Component {
 
   @action.bound
   private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this.page = value;
+    this._page = value;
   }
 }

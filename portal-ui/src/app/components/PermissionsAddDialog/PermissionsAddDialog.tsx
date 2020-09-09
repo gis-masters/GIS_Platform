@@ -67,7 +67,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   @observable private sortParams: ListSortParams = { field: 'synteticId', asc: true };
   @observable private filterParams: ListFilterParams = {};
   @observable private filterEnabled = false;
-  @observable private page = 1;
+  @observable private _page = 1;
   private rowsPerPage = 20;
 
   render() {
@@ -165,11 +165,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
                 </Table>
               </TableContainer>
               <TableUnderFooter>
-                <Pagination
-                  count={Math.ceil(this.list.length / this.rowsPerPage)}
-                  page={this.page}
-                  onChange={this.handlePagination}
-                />
+                <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
               </TableUnderFooter>
             </>
           ) : (
@@ -227,6 +223,16 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @computed
+  private get pagesCount(): number {
+    return Math.ceil(this.list.length / this.rowsPerPage);
+  }
+
+  @computed
+  private get page(): number {
+    return Math.min(this._page, this.pagesCount);
+  }
+
+  @computed
   private get listPaged(): PermissionsListItemWrapped[] {
     return this.list.slice((this.page - 1) * this.rowsPerPage, (this.page - 1) * this.rowsPerPage + this.rowsPerPage);
   }
@@ -274,6 +280,6 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
 
   @action.bound
   private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this.page = value;
+    this._page = value;
   }
 }

@@ -50,7 +50,7 @@ export class OrgUsers extends Component {
   @observable private sortParams: UserSortParams = { field: 'surName', asc: true };
   @observable private filterParams: UserFilterParams = {};
   @observable private filterEnabled = false;
-  @observable private page = 1;
+  @observable private _page = 1;
   private rowsPerPage = 20;
 
   componentDidMount() {
@@ -164,11 +164,7 @@ export class OrgUsers extends Component {
           </Table>
         </TableContainer>
         <TableUnderFooter>
-          <Pagination
-            count={Math.ceil(usersList.list.length / this.rowsPerPage)}
-            page={this.page}
-            onChange={this.handlePagination}
-          />
+          <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
         </TableUnderFooter>
       </div>
     );
@@ -207,6 +203,16 @@ export class OrgUsers extends Component {
     );
   }
 
+  @computed
+  private get pagesCount(): number {
+    return Math.ceil(this.filteredAndSortedUsers.length / this.rowsPerPage);
+  }
+
+  @computed
+  private get page(): number {
+    return Math.min(this._page, this.pagesCount);
+  }
+
   @action.bound
   private toggleFilter() {
     this.filterEnabled = !this.filterEnabled;
@@ -214,6 +220,6 @@ export class OrgUsers extends Component {
 
   @action.bound
   private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this.page = value;
+    this._page = value;
   }
 }
