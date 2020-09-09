@@ -87,7 +87,6 @@
             <version>1.9.10</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
@@ -124,17 +123,17 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-shapefile</artifactId>
-            <version>22-SNAPSHOT</version>
+            <version>22.0</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-main</artifactId>
-            <version>22-SNAPSHOT</version>
+            <version>22.0</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-opengis</artifactId>
-            <version>22-SNAPSHOT</version>
+            <version>22.0</version>
         </dependency>
 
         <dependency>
@@ -190,7 +189,7 @@
             </snapshots>
             <id>boundless</id>
             <name>Boundless Maven Repository</name>
-            <url>http://repo.boundlessgeo.com/main</url>
+            <url>https://repo.osgeo.org/repository/release/</url>
         </repository>
         <repository>
             <id>GisPlatformFeed</id>
@@ -242,5 +241,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
