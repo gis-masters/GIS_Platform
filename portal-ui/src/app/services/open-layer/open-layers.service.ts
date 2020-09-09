@@ -68,7 +68,8 @@ class OpenLayersService {
         } else {
           this.baseMapLayer.setVisible(false);
         }
-      }
+      },
+      { fireImmediately: true }
     );
   }
 

@@ -20,8 +20,10 @@ class BaseMaps {
 
   @action
   initBaseMaps(baseMaps: CrgBaseMap[]) {
-    this.baseMaps = baseMaps;
-    this.currentBaseMap = baseMaps[0];
+    if (baseMaps.length) {
+      this.baseMaps = baseMaps;
+      this.currentBaseMap = baseMaps[0];
+    }
   }
 
   @action
