@@ -31,11 +31,9 @@ public class CookieHandler implements TokenHandler {
         return authCookie;
     }
 
-    public Cookie makeEmptyCookie() {
+    public Cookie makeDeletionCookie() {
         Cookie authCookie = new Cookie(COOKIE_NAME, "");
-        authCookie.setVersion(COOKIE_VERSION);
-        authCookie.setPath("/");
-        authCookie.setHttpOnly(true);
+        authCookie.setMaxAge(0);
 
         return authCookie;
     }

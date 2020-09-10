@@ -45,7 +45,9 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain chain) {
-        if (isGetTokenRequest(request)) {
+        if (isLogoutRequest(request)) {
+            response.addCookie(cookieHandler.makeDeletionCookie());
+        } else if (isGetTokenRequest(request)) {
             log.debug("isGetTokenRequest");
 
             String username = request.getParameter("username");
@@ -118,13 +120,17 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             } else {
                 log.debug("Refresh token expired");
 
-                response.addCookie(cookieHandler.makeEmptyCookie());
+                response.addCookie(cookieHandler.makeDeletionCookie());
 
                 sendError(response);
             }
         } catch (Exception e) {
             clearContext(e, "Not authenticated");
         }
+    }
+
+    private boolean isLogoutRequest(@NotNull HttpServletRequest request) {
+        return "/perform_logout".equals(request.getServletPath());
     }
 
     private boolean isGetTokenRequest(@NotNull HttpServletRequest request) {

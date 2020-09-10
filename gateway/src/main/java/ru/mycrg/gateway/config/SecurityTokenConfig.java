@@ -53,9 +53,6 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 // make sure we use stateless session; session won't be used to store user's state.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-                .logout()
-                .deleteCookies(cookieHandler.getCookieName())
-            .and()
                 // handle an authorized attempts
                 .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
@@ -63,7 +60,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new MainAuthFilter(cookieHandler, bearerHandler, properties),
                         UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests() // authorization requests config
-                .antMatchers(POST, "/oauth/token", "/organizations/init").permitAll()
+                .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }
 }

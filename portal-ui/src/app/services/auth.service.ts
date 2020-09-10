@@ -60,11 +60,12 @@ class AuthService {
     }
   }
 
-  logout() {
-    Cookies.remove(this.COOKIE_NAME);
+  async logout() {
+    const url = await serverProperties.baseUrl;
+    services.httpq.post(url + '/perform_logout', {});
 
     this._authenticated = false;
-    services.router.navigate(['/']);
+    services.router.navigate([ '/' ]);
     usersService.dropCurrent();
   }
 
