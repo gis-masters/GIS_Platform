@@ -4,7 +4,7 @@ import { boundMethod } from 'autobind-decorator';
 import { CrgLayersGroup, CrgLayer, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
 
-const MAX_LAYERS_IN_BATCH = 100;
+const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 
 class CurrentProject {
   private static _instance: CurrentProject;
@@ -20,6 +20,7 @@ class CurrentProject {
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
   @observable layers?: CrgLayer[];
+  @observable _maxLayersInBatch?: number;
 
   private constructor() {}
 
@@ -92,7 +93,7 @@ class CurrentProject {
       const transparency = item.actualTransparency;
       const typ = item.payload.type;
 
-      if (transparency === lastTransparency && typ === lastType && lastBatch.length < MAX_LAYERS_IN_BATCH) {
+      if (transparency === lastTransparency && typ === lastType && lastBatch.length < this.maxLayersInBatch) {
         lastBatch.push(item);
       } else {
         acc.push([item]);
@@ -134,6 +135,11 @@ class CurrentProject {
   @computed
   get externalLayers() {
     return this.layers.filter(l => l.type === CrgLayerType.EXTERNAL);
+  }
+
+  @computed
+  private get maxLayersInBatch() {
+    return Number(this._maxLayersInBatch || MAX_LAYERS_IN_BATCH_DEFAULT);
   }
 
   @action
@@ -209,6 +215,14 @@ class CurrentProject {
 
     return value;
   }
+
+  @action.bound
+  setMaxLayersInBatch(count: number) {
+    this._maxLayersInBatch = count;
+  }
 }
 
 export const currentProject = CurrentProject.instance;
+
+// инструмент для эксперимента
+window['setMaxLayersInBatch'] = currentProject.setMaxLayersInBatch;
