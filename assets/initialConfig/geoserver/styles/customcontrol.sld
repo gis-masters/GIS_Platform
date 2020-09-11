@@ -1,89 +1,269 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se">
-  <NamedLayer>
-    <se:Name>Пункт пропуска через Государственную границу</se:Name>
-    <UserStyle>
-      <se:Name>CustomControl</se:Name>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:Name>60203150101</se:Name>
-          <se:Description>
-            <se:Title>Пункт пропуска через Государственную границу существующий</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60203150101</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
-              <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>60203150102</se:Name>
-          <se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к размещению</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60203150102</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
-              <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            <se:SvgParameter name="stroke-dasharray">28 7</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>60203150103</se:Name>
-          <se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:PropertyIsEqualTo>
-              <ogc:PropertyName>ruleid</ogc:PropertyName>
-              <ogc:Literal>60203150103</ogc:Literal>
-            </ogc:PropertyIsEqualTo>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
-              <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>Default</se:Name>
-          <se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
-          <se:ElseFilter/>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#ff55ff</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">0.5</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </UserStyle>
-  </NamedLayer>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
+	<NamedLayer>
+		<se:Name>CustomControl</se:Name>
+		<UserStyle>
+			<se:Name>CustomControl</se:Name>
+			<se:FeatureTypeStyle>
+				<se:Rule>
+					<se:Name>60203150111</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий федерального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150111</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150111.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150112</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению федерального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150112</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150112.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150113</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150113</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150113.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150114</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150114</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150114.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150121</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий регионального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150121</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150121.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150122</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению регионального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150122</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150122.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150123</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150123</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150123.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150124</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150124</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150124.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150131</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий местного значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150131</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150131.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150132</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению местного значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150132</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150132.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150133</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150133</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150133.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>60203150134</se:Name>
+					<se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyIsEqualTo>
+							<ogc:PropertyName>ruleid</ogc:PropertyName>
+							<ogc:Literal>60203150134</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/09_CustomControl/60203150134.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Name>Default</se:Name>
+					<se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
+					<se:ElseFilter/>
+					<se:PointSymbolizer>
+						<se:Graphic>
+							<se:ExternalGraphic>
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/Else.svg" />
+								<se:Format>image/svg+xml</se:Format>
+							</se:ExternalGraphic>
+						</se:Graphic>
+					</se:PointSymbolizer>
+				</se:Rule>
+			</se:FeatureTypeStyle>
+		</UserStyle>
+	</NamedLayer>
 </StyledLayerDescriptor>
