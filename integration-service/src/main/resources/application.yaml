@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+logging:
+  file:
+    name: data-service.log
+    path: /opt/logs
+  level:
+    ru.mycrg: DEBUG
+
+---
+
+server:
+  port: 8338
+
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/bpmn_camunda
+    username: fiz
+    password: 314
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+
+camunda.bpm.admin-user:
+  id: demo
+  password: demo

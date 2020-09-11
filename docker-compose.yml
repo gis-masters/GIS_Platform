@@ -40,7 +40,7 @@ services:
     volumes:
       - /opt/data/postgis:/var/lib/postgresql
     environment:
-      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db
+      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda
       POSTGRES_USER: $CRG_USER
       POSTGRES_PASS: $DB_PASS
       EXISTING_DATA_DIR: $IS_DATA_EXIST
@@ -93,6 +93,20 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+
+  integration-service:
+    container_name: crg-integration-service
+    image: $DOCKER_CRG_HOST/crg-integration-service:$CRG_INTEGRATION_SERVICE_TAG
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/bpmn_camunda
+      SPRING_DATASOURCE_USERNAME: $CRG_USER
+      SPRING_DATASOURCE_PASSWORD: $DB_PASS
+    volumes:
+      - /opt/logs:/opt/logs
 
   data-service:
     container_name: crg-data-service

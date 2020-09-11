@@ -60,6 +60,7 @@
 
 		<module>gis-service</module>
 		<module>data-service</module>
+		<module>integration-service</module>
 
 		<module>oauth-client</module>
 		<module>geoserver-client</module>
