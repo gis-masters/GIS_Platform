@@ -3,6 +3,7 @@ package ru.mycrg.acceptance;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
@@ -22,7 +23,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class OrganizationStepsDefinitions {
 
@@ -36,7 +38,8 @@ public class OrganizationStepsDefinitions {
 
     private static String orgId;
     private static Cookie cookie;
-    private static Duration authRequestDurationRestriction = Duration.ofSeconds(60);
+    private static Duration authRequestDurationRestriction = Duration.ofSeconds(120);
+    private static Map<String, OrganizationCreateDto> orgs = new HashMap<>();
 
     @Before
     public static void setup() {
@@ -55,12 +58,23 @@ public class OrganizationStepsDefinitions {
         request.basePath("/");
     }
 
-    @When("Пользователь вводит корректные данные")
-    public void createValidOrganization(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+    @Given("Существует организация")
+    public void checkOrg(DataTable dataTable) throws InterruptedException {
+        if (!orgs.containsKey(dataTable.asList().get(4))) {
+            createOrganization(dataTable);
+        }
+    }
 
-        UserCreateDto owner = new UserCreateDto(data.get(2), data.get(3), data.get(4), data.get(5));
-        OrganizationCreateDto org = new OrganizationCreateDto(data.get(0), data.get(1), owner);
+    @When("Создается организация")
+    public void createOrganization(DataTable dataTable) {
+        setup();
+        List<String> data = dataTable.asList();
+        UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
+                replaceString(data.get(4)), replaceString(data.get(5)));
+        OrganizationCreateDto org = new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
+                owner);
+
+        orgs.put(org.getOwner().getEmail(), org);
 
         String payload = new Gson().toJson(org);
 
@@ -92,13 +106,13 @@ public class OrganizationStepsDefinitions {
     @When("Пользователь пытается авторизоваться")
     public void tryToGetAuthorized(DataTable dataTable) throws InterruptedException {
         setup();
-
         List<String> data = dataTable.asList();
 
         Map<String, String> queryParams = new HashMap<>();
+
         queryParams.put("username", data.get(0));
         queryParams.put("password", data.get(1));
-        queryParams.put("grant_type", data.get(2));
+        queryParams.put("grant_type", "password");
 
         do {
             int waitDelayInMillis = 5000;
@@ -126,51 +140,60 @@ public class OrganizationStepsDefinitions {
                 .get(orgId);
     }
 
-    @And("Сервер отвечает с полем status = PROVISIONED")
-    public void checkIsOrgProvisioned() {
-        JsonPath jsonPath = response.jsonPath();
-        String status = jsonPath.get("status");
-
-        assertTrue(status.equalsIgnoreCase("PROVISIONED"));
-    }
-
-    @When("Пользователь вводит некорректные данные")
-    public void createInvalidOrganization(DataTable dataTable) {
+    @And("Сервер отвечает с полем status = PROVISIONED и поля совпадают с переданными")
+    public void checkIsOrgProvisioned(DataTable dataTable) {
         List<String> data = dataTable.asList();
-        UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
-                replaceString(data.get(4)), replaceString(data.get(5)));
-        OrganizationCreateDto org = new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                owner);
 
-        String payload = new Gson().toJson(org);
+        JsonPath jsonPath = response.jsonPath();
 
-        response = request
-                .body(payload)
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/organizations/init");
+        assertEquals(jsonPath.get("status"), ("PROVISIONED"));
+        assertEquals(jsonPath.get("name"), data.get(0));
+        assertEquals(jsonPath.get("phone"), data.get(1));
+        assertEquals(jsonPath.getList("_embedded.users.name").get(0), data.get(2));
+        assertEquals(jsonPath.getList("_embedded.users.surName").get(0), data.get(3));
+        assertEquals(jsonPath.getList("_embedded.users.email").get(0), data.get(4));
     }
 
     private String replaceString(String input) {
         if (input == null) return "";
 
         switch (input) {
-            case "LONG_ORG_NAME":
-                return "testOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgte" +
-                        "stOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtes" +
-                        "tOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtest" +
-                        "OrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestO" +
-                        "rgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOrgtestOr" +
-                        "gtestOrgtestOrgtestOrgtestOrgtestOrgtestOrg";
-            case "LONG_ORG_PHONE":
-                return "123456789012345678901";
-            case "LONG_ADMIN_NAME":
-                return "testNametestNametestNametestNametestNametestNametestName";
-            case "LONG_ADMIN_SURNAME":
-                return "testSurnametestSurnametestSurnametestSurnametestSurnametestSurnametestSurnametestSurnametestS" +
-                        "urnametestSurname";
-            case "LONG_ADMIN_EMAIL":
-                return "emailemailemailemailemailemailemailemailemailemailemail@email.com";
+            case "LONG_STRING_60":
+                return "3QH98MuCSR" +
+                        "N6087ZKrHF" +
+                        "WsNXDQXCgK" +
+                        "E0xAq4Vtwg" +
+                        "ySpRc0Kl0O" +
+                        "9FFqy6VoZa" +
+                        "a";
+            case "LONG_STRING_100":
+                return "srzMpSkdGvlAyjWACxeWwx7NiMGscfHyCKlLWabKJCMMJgP9DW" +
+                        "Vxo8sAxIjJGUdwgLElaqyI1x44AIfNNrxnF6GdoSybRkQdSugs" +
+                        "a";
+            case "LONG_STRING_500":
+                return "7FhLY9W1MmOjpT7wuY5PBbH8x0bNs0VpFL8jenIyyXYTXVEDDH" +
+                        "cNU0xduYPfjN46A89tK00ptSuJWcaioDT4DmOmuOY8gjFBB1vx" +
+                        "mI8WfyPlvqLX1ncwbOQtDnOEsCK4AMJjRYC1JltiuZq4QuqD01" +
+                        "q13iuGvlPb0DRLwk0WA28dLsqBWuXmIQ1q74ltpVUbSHnPFQpK" +
+                        "QYTBCMfpcgVwcs9hVuiWXJPzWt6Cp0yK8nuriH7mlsCiHkSofq" +
+                        "GKZU9KtCyVXkuCSW9P9Cwtq98o3MTANB6DPT98RSKSUBDFxjSU" +
+                        "6KNNpDCYtPjhHKzkNVxYKFgnem1Kt17KPJe06PrcaLWNzwMr1k" +
+                        "tCUeRF6jhDz5ijqlI8W0DVwAng4nKdhzSv8wK6OHfzZpPjQay2" +
+                        "XE3GXvGQZV704JIST4EuAnOSi3yA1PelgjWhUEYcXHxlIiyBGw" +
+                        "jecjGe7BlTZhKU7QOdCATCVkrWhavtKJDGW3OJBvdB9CXlJ44N" +
+                        "a";
+            case "LONG_NUMBER_20":
+                return "1234567890" +
+                        "1234567890" +
+                        "1";
+            case "LONG_ADMIN_EMAIL_60":
+                return "3QH98MuCSR" +
+                        "N6087ZKrHF" +
+                        "WsNXDQXCgK" +
+                        "E0xAq4Vtwg" +
+                        "ySpRc0Kl0O" +
+                        "9FFqy6VoZa" +
+                        "@email.com";
             default:
                 return input;
         }
