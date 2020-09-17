@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, CSSProperties } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./Layer-TransparencyIndicator.scss';
@@ -10,9 +10,5 @@ interface LayerTransparencyIndicatorProps {
 }
 
 export const LayerTransparencyIndicator: FC<LayerTransparencyIndicatorProps> = ({ value }) => (
-  <div
-    className={cnLayerTransparencyIndicator()}
-    // @ts-ignore
-    style={{'--LayerTransparencyValue': value}}
-  />
+  <div className={cnLayerTransparencyIndicator()} style={{ '--LayerTransparencyValue': value } as CSSProperties} />
 );

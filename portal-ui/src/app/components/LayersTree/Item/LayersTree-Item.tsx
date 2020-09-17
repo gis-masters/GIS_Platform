@@ -3,8 +3,8 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { TreeItem } from '../../../services/crg/projects.models';
 import { Layer } from '../../Layer/Layer';
+import { TreeItem } from '../../../services/crg/projects.models';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 
@@ -17,15 +17,16 @@ interface LayersTreeItemProps {
 @observer
 export class LayersTreeItem extends Component<LayersTreeItemProps> {
   render() {
-    const { isGroup, payload, depth, visible } = this.props.item;
+    const { isGroup, payload, depth, visible, hiddenByZoom } = this.props.item;
 
     return (
       <Layer
-        className={cnLayersTree('Item', { visible })}
+        className={cnLayersTree('Item', { visible, hiddenByZoom })}
         isGroup={isGroup}
         data={payload}
         depth={depth}
         visible={visible}
+        hiddenByZoom={hiddenByZoom}
         onEyeClick={this.eyeHandler}
       />
     );
@@ -40,7 +41,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
       return;
     }
 
-    this.getDisabledAncestors(item).forEach(item => (item.payload.enabled = true));
+    this.getDisabledAncestors(item).forEach(element => (element.payload.enabled = true));
   }
 
   getDisabledAncestors(item: TreeItem, result: TreeItem[] = []): TreeItem[] {

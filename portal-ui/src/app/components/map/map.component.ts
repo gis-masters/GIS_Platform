@@ -1,7 +1,7 @@
 import { reaction, IReactionDisposer } from 'mobx';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { Coordinate } from 'ol/coordinate';
@@ -12,7 +12,6 @@ import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.mo
 import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData, ActionType } from '../../components/export/export-dilog/export-dialog.component';
-import { ViewFeaturesData } from '../../components/view-features/view-features.component';
 import { communicationService } from '../../services/communication.service';
 import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
 
@@ -25,6 +24,7 @@ import { Toast } from '../Toast/Toast';
 import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
+import { Emitter } from '../../services/util/Emitter';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -102,10 +102,6 @@ export class MapComponent implements OnInit, OnDestroy {
       this.isGmlDialogShow = data.action !== ActionType.CLOSE;
     });
 
-    openLayersService.mapClick$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((coordinate: [number, number]) => this.showFeaturesInfo(coordinate));
-
     fromMobx(() => sidebars.leftOpen)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
@@ -140,6 +136,9 @@ export class MapComponent implements OnInit, OnDestroy {
           window.dispatchEvent(new Event('resize'));
         }, 0);
       });
+
+    openLayersService.mapClick.on(coordinate => this.showFeaturesInfo(coordinate), this);
+    openLayersService.zoomChanged.on(value => currentProject.changeZoom(value), this);
   }
 
   ngOnDestroy(): void {
@@ -147,6 +146,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.reactionDisposer();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    Emitter.scopeOff(this);
   }
 
   async deleteLayer(layer: CrgLayer) {
@@ -162,7 +162,7 @@ export class MapComponent implements OnInit, OnDestroy {
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: Coordinate) {
-    if (sidebars.needEditFeatureConfirmation(this.showFeaturesInfo.bind(this,  coordinate))) {
+    if (sidebars.needEditFeatureConfirmation(this.showFeaturesInfo.bind(this, coordinate))) {
       return;
     }
 

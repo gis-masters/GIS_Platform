@@ -6,21 +6,23 @@ import { cn } from '@bem-react/classname';
 
 import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
-import { LayerCard } from './Card/Layer-Card';
-import { LayerIcon } from './Icon/Layer-Icon.composed';
 import { IconType } from './Icon/Layer-Icon';
+import { LayerCard } from './Card/Layer-Card';
 import { LayerMenu } from './Menu/Layer-Menu';
 import { LayerOpen } from './Open/Layer-Open';
 import { LayerTitle } from './Title/Layer-Title';
+import { LayerErrors } from './Errors/Layer-Errors';
 import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerLegend } from './Legend/Layer-Legend';
+import { LayerIcon } from './Icon/Layer-Icon.composed';
 import { LayerInnards } from './Innards/Layer-Innards';
+import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
-import { LayerErrors } from './Errors/Layer-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
 
@@ -31,6 +33,7 @@ export interface LayerProps extends IClassNameProps {
   data: CrgLayer | CrgLayersGroup;
   depth: number;
   visible: boolean;
+  hiddenByZoom: boolean;
   onEyeClick: () => void;
 }
 
@@ -51,15 +54,25 @@ export class Layer extends Component<LayerProps> {
   }
 
   render() {
-    const { className, data, isGroup, depth, onEyeClick, visible } = this.props;
+    const { className, data, isGroup, depth, onEyeClick, visible, hiddenByZoom } = this.props;
     const { title, enabled } = data;
     const { expanded } = data as CrgLayersGroup;
+    const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
+    const hiddenByZoomTooltipText = hiddenByZoom
+      ? `${out ? 'Уменьшите' : 'Увеличьте'} карту, чтобы увидеть объекты`
+      : '';
 
     return (
       <div className={cnLayer({ open: this.open, group: isGroup, visible }, [className])}>
         <LayerCard onContextMenu={this.handleContextMenu}>
-          <LayerTransparencyIndicator value={data.transparency} />
-          <LayerEye enabled={enabled} disabled={this.isError} onClick={onEyeClick} />
+          {!hiddenByZoom && <LayerTransparencyIndicator value={data.transparency} />}
+          {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
+          <LayerEye
+            enabled={enabled}
+            disabled={this.isError}
+            onClick={onEyeClick}
+            tooltipText={hiddenByZoomTooltipText}
+          />
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} />
           <LayerIcon type={this.iconType} expanded={expanded} />

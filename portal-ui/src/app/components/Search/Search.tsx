@@ -27,7 +27,7 @@ export class Search extends Component {
   render() {
     return (
       <>
-        <Paper component='form' className={cnSearch()} onSubmit={this.handleSubmit}>
+        <Paper component='form' className={cnSearch()} onSubmit={this.handleSubmit} elevation={3}>
           <InputBase
             className={cnSearch('Input')}
             placeholder='Найти адрес или место'

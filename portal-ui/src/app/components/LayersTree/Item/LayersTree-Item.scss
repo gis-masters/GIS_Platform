@@ -6,4 +6,8 @@
   &_visible {
     opacity: 1;
   }
+
+  &_hiddenByZoom {
+    opacity: 0.6;
+  }
 }

@@ -1,8 +1,8 @@
 import { action, computed, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgLayersGroup, CrgLayer, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
 
 const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 
@@ -21,6 +21,8 @@ class CurrentProject {
   @observable default: boolean;
   @observable layers?: CrgLayer[];
   @observable _maxLayersInBatch?: number;
+
+  @observable viewZoom: number;
 
   private constructor() {}
 
@@ -64,6 +66,7 @@ class CurrentProject {
       .map(item => {
         item.depth = this.getDept(item);
         item.visible = this.getGenusVisibility(item);
+        item.hiddenByZoom = this.isHiddenByZoom(item);
 
         if (!item.isGroup) {
           item.actualTransparency = this.getActualTransparency(item);
@@ -76,7 +79,7 @@ class CurrentProject {
 
   @computed
   get visibleLayers(): TreeItem<CrgLayer>[] {
-    return this.tree.filter(item => item.visible && !item.isGroup) as TreeItem<CrgLayer>[];
+    return this.tree.filter(item => !item.isGroup && item.visible && !item.hiddenByZoom) as TreeItem<CrgLayer>[];
   }
 
   @computed
@@ -155,6 +158,11 @@ class CurrentProject {
     Object.assign(item, patch);
   }
 
+  @action
+  changeZoom(value: number) {
+    this.viewZoom = value;
+  }
+
   private getDept(item: TreeItem): number {
     return item.parent ? this.getDept(item.parent) + 1 : 0;
   }
@@ -219,6 +227,16 @@ class CurrentProject {
   @action.bound
   setMaxLayersInBatch(count: number) {
     this._maxLayersInBatch = count;
+  }
+
+  private isHiddenByZoom(treeItem: TreeItem): boolean {
+    if (treeItem.isGroup) {
+      return false;
+    }
+
+    const { minZoom, maxZoom } = treeItem.payload as CrgLayer;
+
+    return this.viewZoom < minZoom || this.viewZoom > maxZoom;
   }
 }
 

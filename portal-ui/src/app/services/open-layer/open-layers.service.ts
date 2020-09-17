@@ -1,6 +1,5 @@
-import { EventEmitter } from '@angular/core';
 import jsPDF from 'jspdf';
-import { chunk } from 'lodash';
+import { chunk, debounce } from 'lodash';
 import { reaction } from 'mobx';
 import { Map, MapBrowserEvent, View } from 'ol';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
@@ -21,6 +20,7 @@ import { Options as XYZOptions } from 'ol/source/XYZ';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+
 import { CrgLayer } from '../../services/crg/projects.models';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
@@ -35,7 +35,7 @@ import {
 import { WfsFeature } from '../geoserver/wfs-models';
 import { serverProperties } from '../server-properties.service';
 import { services } from '../services';
-
+import { Emitter } from '../util/Emitter';
 import { MapperUtil } from './MapperUtil';
 
 // WMS request parameters. At least a LAYERS param is required.
@@ -52,6 +52,8 @@ class OpenLayersService {
   private static _instance: OpenLayersService;
 
   private CRG_INFO_PROP_NAME = 'crgInfo';
+
+  private readonly debouncedZoomEvent: () => void;
 
   constructor() {
     reaction(
@@ -71,13 +73,16 @@ class OpenLayersService {
       },
       { fireImmediately: true }
     );
+
+    this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view.getZoom()), 100);
   }
 
   public static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  mapClick$ = new EventEmitter<Coordinate>();
+  mapClick = new Emitter<Coordinate>();
+  zoomChanged = new Emitter<number>();
 
   // Подлдожка
   private baseMapLayer = new TileLayer();
@@ -121,7 +126,7 @@ class OpenLayersService {
       center: this.defaultViewPoint,
       zoom: this.defaultZoomValue,
       minZoom: 3,
-      maxZoom: 19
+      maxZoom: 21
     });
 
     this._map = new Map({
@@ -159,13 +164,16 @@ class OpenLayersService {
     this._map.on('singleclick', event => {
       if (event.coordinate) {
         if (!this.isModifying && !this.draftSourceDraw) {
-          this.mapClick$.emit(event.coordinate);
+          this.mapClick.emit(event.coordinate);
         }
       } else {
         console.warn('No coordinate', event.coordinate);
-        this.mapClick$.emit([0, 0]);
+        this.mapClick.emit([0, 0]);
       }
     });
+
+    this.view.on('change:resolution', this.debouncedZoomEvent);
+    this.debouncedZoomEvent();
   }
 
   destroyMap() {
@@ -381,6 +389,10 @@ class OpenLayersService {
     return this.view.getResolution();
   }
 
+  getZoom() {
+    return this.view.getZoom();
+  }
+
   getBufferByCoordinates(pos: Coordinate) {
     const round = (n: number) => Number(n.toFixed(this.PRECISION));
     const res = round(this.getResolution() * this.HIT_TOLERANCE);
@@ -557,6 +569,7 @@ class OpenLayersService {
 
     const replacedUrl = url
       .replace('256%2C256', '1024%2C1024')
+      .replace('DPI=90', 'DPI=360')
       .replace('BBOXSR=3857', 'bboxSR=102100')
       .replace('IMAGESR=3857', 'imageSR=102100');
 

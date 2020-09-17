@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 
@@ -12,14 +12,17 @@ interface LayerEyeProps {
   enabled: boolean;
   disabled: boolean;
   onClick: () => void;
+  tooltipText: string;
 }
 
-export const LayerEye: FC<LayerEyeProps> = ({ enabled, disabled, onClick }) => {
+export const LayerEye: FC<LayerEyeProps> = ({ enabled, disabled, onClick, tooltipText }) => {
   const Icon = enabled ? Visibility : VisibilityOff;
 
   return (
     <IconButton className={cnLayer('Eye')} color='primary' size='small' onClick={onClick} disabled={disabled}>
-      <Icon fontSize='inherit' />
+      <Tooltip title={tooltipText}>
+        <Icon fontSize='inherit' />
+      </Tooltip>
     </IconButton>
   );
-}
+};
