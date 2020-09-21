@@ -11,26 +11,26 @@ class Env implements Environment {
   @observable ws_port: number;
   @observable scratchWorkspaceName: string;
 
-  private async loadEnv () {
-    this.setEnv(await getEnvironment());
-  }
-
-  @action
-  private setEnv (env: Environment) {
-    const { platform, production, server, ws_port, scratchWorkspaceName } = env;
-    this.platform = platform;
-    this.production = production;
-    this.server = server;
-    this.ws_port = ws_port;
-    this.scratchWorkspaceName = scratchWorkspaceName;
+  public static get instance() {
+    return this._instance || (this._instance = new this());
   }
 
   private constructor() {
     this.loadEnv();
   }
 
-  public static get instance() {
-    return this._instance || (this._instance = new this());
+  private async loadEnv() {
+    this.setEnv(await getEnvironment());
+  }
+
+  @action
+  private setEnv(env: Environment) {
+    const { platform, production, server, ws_port, scratchWorkspaceName } = env;
+    this.platform = platform;
+    this.production = production;
+    this.server = server;
+    this.ws_port = ws_port;
+    this.scratchWorkspaceName = scratchWorkspaceName;
   }
 }
 

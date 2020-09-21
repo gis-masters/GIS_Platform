@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 
-import { HttpQueue } from '../util/HttpQueue';
 import { ValidationError } from '../util/FeaturePropertyValidators';
-import { ValidationWsMsg, wsService } from '../ws.service';
-import { serverProperties } from '../server-properties.service';
-import { ProcessStatus } from './models';
-import { projectsService } from './projects.service';
-import { CrgLayer } from "../crg/projects.models";
 import { currentProject } from '../../stores/CurrentProject.store';
+import { serverProperties } from '../server-properties.service';
+import { ValidationWsMsg, wsService } from '../ws.service';
+import { CrgLayer } from '../crg/projects.models';
+import { ProcessStatus } from './models';
+import { http } from '../http.service';
 
 export interface ValidationResultsResponse {
   validated: boolean;
@@ -45,9 +43,6 @@ export interface ViolationItem {
   providedIn: 'root'
 })
 export class ValidationService {
-
-  constructor(private httpq: HttpQueue) { }
-
   /**
    * Провалидировать слоя.
    * @param crgLayers Слоя на валидацию.
@@ -62,27 +57,34 @@ export class ValidationService {
 
     const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation`;
 
-    return this.httpq
-               .post<ValidationWsMsg>(url, JSON.stringify(payload),
-                     {headers: {'Content-Type': 'application/json'}});
+    return http.post<ValidationWsMsg>(url, JSON.stringify(payload), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   /**
    * Выборка результатов валидации.
    */
-  async getValidationResults(layerName: string, page: number, size: number, sortBy: string,
-                       sortDirection: string): Promise<ValidationResultsResponse> {
-    const params = new HttpParams()
-      .set('layerName', layerName)
-      .set('page', page ? String(page) : '0')
-      .set('size', page ? String(size) : '25')
-      .set('sort_by', sortBy.length > 0 ? (`${sortBy}.${sortDirection}`) : '');
+  async getValidationResults(
+    layerName: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ): Promise<ValidationResultsResponse> {
+    const params = {
+      layerName: layerName,
+      page: page ? String(page) : '0',
+      size: page ? String(size) : '25',
+      sort_by: sortBy.length > 0 ? `${sortBy}.${sortDirection}` : ''
+    };
 
     const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation`;
 
-    return this.httpq
-               .get<ValidationResultsResponse>(url,
-                 {headers: {'Content-Type': 'application/json'}, params: params});
+    return http.get<ValidationResultsResponse>(url, {
+      headers: { 'Content-Type': 'application/json' },
+      params: params
+    });
   }
 
   /**
@@ -99,9 +101,8 @@ export class ValidationService {
 
     const url = `${await serverProperties.apiUrl}/${currentProject.id}/validation/short`;
 
-    return this.httpq
-               .post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload),
-                 {headers: {'Content-Type': 'application/json'}});
+    return http.post<ValidationBrieflyInfo[]>(url, JSON.stringify(payload), {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
-
 }

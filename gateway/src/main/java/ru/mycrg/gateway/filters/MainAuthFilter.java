@@ -59,7 +59,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                     authClient
                             .getToken(username, password)
                             .ifPresentOrElse(
-                                    jwtToken -> response.addCookie(cookieHandler.makeCookie(jwtToken)),
+                                    jwtToken -> prepareResponse(response, jwtToken),
                                     () -> sendError(response)
                             );
                 } catch (OAuthClientException e) {
@@ -86,6 +86,16 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                                     gotoNextFilter(request, response, chain);
                                 });
                     });
+        }
+    }
+
+    private void prepareResponse(@NotNull HttpServletResponse response, JwtToken jwtToken) {
+        response.addCookie(cookieHandler.makeCookie(jwtToken));
+
+        try {
+            response.getWriter().write(jwtToken.getAccess_token());
+        } catch (IOException e) {
+            log.error("Error prepare response: {}", e.getMessage());
         }
     }
 

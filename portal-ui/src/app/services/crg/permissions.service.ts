@@ -1,12 +1,10 @@
-import { HttpParams } from '@angular/common/http';
-
 import { CrgLayer, Project } from './projects.models';
 import { schemaService } from './schema.service';
-import { localStorageService } from '../local-storage.service';
 import { CrgApiPageableResponse } from './models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
 import { Toast } from '../../components/Toast/Toast';
+import { http } from '../http.service';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -111,18 +109,6 @@ export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.EXPORT);
 }
 
-export function isAdmin(): boolean {
-  const userInfo = localStorageService.getUserInfo();
-  if (!userInfo) {
-    return false;
-  }
-
-  return (
-    userInfo.roles &&
-    (userInfo.roles.includes(BuildInRole.ORG_ADMIN) || userInfo.roles.includes(BuildInRole.GLOBAL_ADMIN))
-  );
-}
-
 async function getPermissionsUrl(project: Project, layer?: CrgLayer): Promise<string> {
   if (layer) {
     const dataServerUrl = await serverProperties.dataServerUrl;
@@ -153,11 +139,11 @@ export async function getPermissions(project: Project, layer?: CrgLayer): Promis
   const url = await getPermissionsUrl(project, layer);
 
   if (layer) {
-    const params = new HttpParams().set('size', '10000');
-    const response = await services.httpq.get<CrgApiPageableResponse<RoleAssignmentBody>>(url, { params });
+    const response = await http.get<CrgApiPageableResponse<RoleAssignmentBody>>(url, { params: { size: '10000' } });
+
     return response.content;
   } else {
-    const response = await services.httpq.get<RoleAssignmentBody[]>(url);
+    const response = await http.get<RoleAssignmentBody[]>(url);
     return response;
   }
 }
@@ -166,7 +152,7 @@ export async function addPermission(payload: RoleAssignmentBody, project: Projec
   const url = await getPermissionsUrl(project, layer);
 
   try {
-    await services.httpq.post(url, payload);
+    await http.post(url, payload);
   } catch (e) {
     handleSavingError(e, 'добавить', payload, project, layer);
   }
@@ -176,7 +162,7 @@ export async function removePermission(payload: RoleAssignmentBody, project: Pro
   const url = await getPermissionsUrl(project, layer);
 
   try {
-    await services.httpq.delete(`${url}/${payload.id}`);
+    await http.delete(`${url}/${payload.id}`);
   } catch (e) {
     handleSavingError(e, 'удалить', payload, project, layer);
   }

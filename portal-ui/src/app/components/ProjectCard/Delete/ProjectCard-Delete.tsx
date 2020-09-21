@@ -7,8 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { projectsService } from '../../../services/crg/projects.service';
-import { isAdmin } from '../../../services/crg/permissions.service';
 import { Project } from '../../../services/crg/projects.models';
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';
@@ -22,16 +22,9 @@ interface ProjectCardDeleteProps {
 @observer
 export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
   @observable private isDeleteDialogOpen = false;
-  private isShown: boolean;
-
-  constructor(props: ProjectCardDeleteProps) {
-    super(props);
-
-    this.isShown = isAdmin();
-  }
 
   render() {
-    if (!this.isShown) {
+    if (!currentUser.isAdmin) {
       return null;
     }
 

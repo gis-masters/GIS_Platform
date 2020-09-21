@@ -1,12 +1,12 @@
-import { HttpParams } from '@angular/common/http';
 import { debounce } from 'lodash';
 
 import { serverProperties } from '../server-properties.service';
-import { localStorageService } from '../local-storage.service';
-import { services } from '../services';
-import { CrgApiResponse } from './models';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { usersList } from '../../stores/UsersList.store';
 import { BuildInRole } from './permissions.service';
+import { CrgApiResponse } from './models';
+import { services } from '../services';
+import { http } from '../http.service';
 
 export interface ApiLink {
   href: string;
@@ -50,33 +50,34 @@ class UsersService {
     return this._instance || (this._instance = new this());
   }
 
-  async getCurrent(): Promise<UserInfo> {
+  async fetchCurrent() {
     if (!this.currentUserInfoRequest) {
       await services.provided;
       const url = (await serverProperties.usersUrl) + '/current';
-      this.currentUserInfoRequest = services.httpq.get<UserInfo>(url);
+      this.currentUserInfoRequest = http.get<UserInfo>(url);
     }
 
-    return await this.currentUserInfoRequest;
+    currentUser.setUser(await this.currentUserInfoRequest);
   }
 
   dropCurrent() {
     delete this.currentUserInfoRequest;
+    currentUser.drop();
   }
 
   async getAll(): Promise<CrgUser[]> {
     await services.provided;
     const url = await serverProperties.usersUrl;
-    const params = new HttpParams().set('size', '10000');
+    const params = { size: '10000' };
 
-    return (await services.httpq.get<CrgApiResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
+    return (await http.get<CrgApiResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
   }
 
   async create(userData: NewUserData) {
     await services.provided;
     const url = await serverProperties.usersUrl;
 
-    await services.httpq.post(url, userData);
+    await http.post(url, userData);
 
     this.debouncedFetchUsersListStore();
   }
@@ -85,7 +86,7 @@ class UsersService {
     await services.provided;
     const url = await serverProperties.usersUrl;
 
-    await services.httpq.delete(`${url}/${user.id}`);
+    await http.delete(`${url}/${user.id}`);
 
     this.debouncedFetchUsersListStore();
   }
@@ -111,7 +112,6 @@ class UsersService {
     }
 
     usersList.setFetching(true);
-    const currentUser = localStorageService.getUserInfo();
     const users = (await this.getAll()).filter(user => user.username !== currentUser.userName);
     usersList.setList(users);
     usersList.setFetching(false);

@@ -1,45 +1,30 @@
-import { Injectable } from '@angular/core';
-
-import { localStorageService } from '../local-storage.service';
-import { serverProperties } from '../server-properties.service';
-import { HttpQueue } from '../util/HttpQueue';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
+
+import { currentProject } from '../../stores/CurrentProject.store';
+import { serverProperties } from '../server-properties.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { projectsService } from '../crg/projects.service';
 import { CrgLayer } from '../crg/projects.models';
-import { currentProject } from '../../stores/CurrentProject.store';
+import { http } from '../http.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class FeatureTypesService {
+async function buildUrl(targetName: string): Promise<string> {
+  await projectsService.fetchCurrent();
+  const featureTypesUrl = await serverProperties.geoServerUrl;
+  const workspaceName = currentProject.internalName;
+  const storeName = `database_${currentUser.orgId}_store`;
 
-  private featureTypesUrl: string;
+  return `${featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${targetName}`;
+}
 
-  constructor(private httpq: HttpQueue) {
-    // TODO fixme
-    serverProperties.geoServerUrl.then((geoServerUrl) => {
-      this.featureTypesUrl = geoServerUrl + '/rest/workspaces';
-    });
-  }
+export async function getFeatureTypeByLayer(layer: CrgLayer): Promise<FeatureType> {
+  const url = await this.buildUrl(layer.internalName);
+  const { featureType } = await http.get<{ featureType: FeatureType }>(url);
 
-  async getByName(layer: CrgLayer): Promise<FeatureType> {
-    await projectsService.fetchCurrent();
-    const orgId = localStorageService.getOrgId();
-    const workspaceName = currentProject.internalName;
-    const storeName = 'database_' + orgId + '_store';
-    const url = `${this.featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${layer.internalName}`;
-    const { featureType } = await this.httpq.get<{featureType: FeatureType}>(url);
+  return featureType;
+}
 
-    return featureType;
-  }
+export async function deleteFeatureType(featureType: FeatureType): Promise<Object> {
+  const url = await this.buildUrl(featureType.name);
 
-  async delete(featureType: FeatureType): Promise<Object> {
-    await projectsService.fetchCurrent();
-    const orgId = localStorageService.getOrgId();
-    const workspaceName = currentProject.internalName;
-    const storeName = 'database_' + orgId + '_store';
-    const url = `${this.featureTypesUrl}/${workspaceName}/datastores/${storeName}/featuretypes/${featureType.name}`;
-
-    return this.httpq.delete(url);
-  }
+  return http.delete(url);
 }

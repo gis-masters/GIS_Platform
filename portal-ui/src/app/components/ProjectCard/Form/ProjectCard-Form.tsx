@@ -87,8 +87,8 @@ export class ProjectCardForm extends Component<ProjectCardFormProps> {
 
       this.props.onCancel();
     } catch (err) {
-      if (err.error.status === 409) {
-        this.setError(err.error.message);
+      if (err.response && err.response.status === 409) {
+        this.setError(err.message);
       } else {
         this.setError('Ошибка при создании проекта');
       }

@@ -17,7 +17,7 @@ import { EditFeatureMode } from '../../components/edit-feature/edit-feature.comp
 
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { deleteLayer } from '../../services/geoserver/layers.service';
-import { FeatureTypesService } from '../../services/geoserver/featuretypes.service';
+import { getFeatureTypeByLayer, deleteFeatureType } from '../../services/geoserver/featuretypes.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { sidebars } from '../../stores/Sidebars.store';
 import { Toast } from '../Toast/Toast';
@@ -47,7 +47,7 @@ export class MapComponent implements OnInit, OnDestroy {
   private reactionDisposer: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger, private featureTypesService: FeatureTypesService) {}
+  constructor(private logger: NGXLogger) {}
 
   async ngOnInit() {
     await fetchAllBaseMaps(currentProject.baseMaps);
@@ -151,8 +151,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
   async deleteLayer(layer: CrgLayer) {
     await deleteLayer(layer);
-    const fType: FeatureType = await this.featureTypesService.getByName(layer);
-    await this.featureTypesService.delete(fType);
+    const fType: FeatureType = await getFeatureTypeByLayer(layer);
+    await deleteFeatureType(fType);
     Toast.info('Удалено');
 
     await openLayersService.deleteLayerFromMap(layer.complexName);

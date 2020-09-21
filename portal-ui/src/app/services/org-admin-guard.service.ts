@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 
-import { localStorageService } from './local-storage.service';
-import { BuildInRole } from './crg/permissions.service';
+import { usersService } from './crg/users.service';
+import { currentUser } from '../stores/CurrentUser.store';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +10,15 @@ import { BuildInRole } from './crg/permissions.service';
 export class OrgAdminGuardService implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate(): Observable<boolean> | boolean {
-    const userInfo = localStorageService.getUserInfo();
-    if (!userInfo) {
+  async canActivate(): Promise<boolean> {
+    await usersService.fetchCurrent();
+
+    if (!currentUser.userName) {
       this.router.navigate(['login']);
       return false;
     }
 
-    if (userInfo.roles.includes(BuildInRole.ORG_ADMIN) || userInfo.roles.includes(BuildInRole.GLOBAL_ADMIN)) {
+    if (currentUser.isAdmin) {
       return true;
     } else {
       this.router.navigate(['login']);

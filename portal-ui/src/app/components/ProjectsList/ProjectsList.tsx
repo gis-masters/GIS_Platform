@@ -7,8 +7,6 @@ import { projectsList } from '../../stores/ProjectsList.store';
 import { projectsService } from '../../services/crg/projects.service';
 import { getEnvironment } from '../../services/environment';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
-import { route } from '../../stores/Route.store';
-import { services } from '../../services/services';
 
 import { ProjectsListLoader } from './Loader/ProjectsList-Loader';
 

@@ -15,7 +15,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { OrgAdminGuardService } from './services/org-admin-guard.service';
 import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
-import { OrganizationInfoResolver } from './services/resolvers/project-resolver.service';
+import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
 import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
 
 export enum Pages {
@@ -80,7 +80,7 @@ const routes: AppRoutes = [
     component: ProjectsPageComponent,
     canActivate: [AuthGuardService, ProjectsGuardService],
     resolve: {
-      orgInfo: OrganizationInfoResolver
+      user: CurrentUserResolver
     },
     data: { page: Pages.PROJECTS }
   },
@@ -89,7 +89,7 @@ const routes: AppRoutes = [
     component: ProjectsPageComponent,
     canActivate: [AuthGuardService],
     resolve: {
-      orgInfo: OrganizationInfoResolver
+      user: CurrentUserResolver
     },
     data: { page: Pages.PROJECTS }
   },
@@ -102,7 +102,7 @@ const routes: AppRoutes = [
         component: ImportPageComponent,
         canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
-          orgInfo: OrganizationInfoResolver
+          user: CurrentUserResolver
         },
         data: { page: Pages.IMPORT }
       },
@@ -111,7 +111,7 @@ const routes: AppRoutes = [
         component: ImportPageComponent,
         canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
-          orgInfo: OrganizationInfoResolver
+          user: CurrentUserResolver
         },
         data: { page: Pages.IMPORT }
       },
@@ -120,7 +120,7 @@ const routes: AppRoutes = [
         component: MappingPageComponent,
         canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
-          orgInfo: OrganizationInfoResolver
+          user: CurrentUserResolver
         },
         data: { page: Pages.IMPORT }
       },
@@ -129,7 +129,7 @@ const routes: AppRoutes = [
         component: MapPageComponent,
         canActivate: [AuthGuardService, WorkflowGuardService],
         resolve: {
-          orgInfo: OrganizationInfoResolver
+          user: CurrentUserResolver
         },
         data: { page: Pages.MAP }
       },
@@ -142,9 +142,9 @@ const routes: AppRoutes = [
   {
     path: 'org-admin',
     component: OrgAdminPageComponent,
-    canActivate: [ OrgAdminGuardService ],
+    canActivate: [OrgAdminGuardService],
     resolve: {
-      orgInfo: OrganizationInfoResolver
+      user: CurrentUserResolver
     },
     data: { page: Pages.ORG_ADMIN }
   },
@@ -155,9 +155,9 @@ const routes: AppRoutes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ],
-  providers: [ AuthGuardService, WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+  providers: [AuthGuardService, WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService]
 })
 export class AppRoutingModule {}
 

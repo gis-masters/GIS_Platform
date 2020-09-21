@@ -1,10 +1,9 @@
-import { HttpParams } from '@angular/common/http';
-
 import { serverProperties } from '../server-properties.service';
-import { CrgBaseMap, CrgProjectBaseMap, SourceType } from './base-maps.models';
+import { CrgBaseMap, CrgProjectBaseMap } from './base-maps.models';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
 import { services } from '../services';
 import { CrgApiResponse } from './models';
+import { http } from '../http.service';
 
 /**
  * Fetch all basemaps for project
@@ -12,13 +11,12 @@ import { CrgApiResponse } from './models';
 export async function fetchAllBaseMaps(baseMaps: CrgProjectBaseMap[]) {
   await services.provided;
 
-  let params = new HttpParams();
-  params = params.append('ids', baseMaps.map(value => String(value.baseMapId)).join(', '));
+  const params = {'ids': baseMaps.map(value => String(value.baseMapId)).join(', ')};
 
   const url = (await serverProperties.dataServerUrl) + '/basemaps/search/findByIdIn';
 
   try {
-    const response = await services.httpq.get<CrgApiResponse<{ basemaps: CrgBaseMap[] }>>(url, { params });
+    const response = await http.get<CrgApiResponse<{ basemaps: CrgBaseMap[] }>>(url, { params });
     if (response._embedded) {
       const crgBaseMaps = handleBaseMaps(baseMaps, response._embedded.basemaps);
       baseMapsStore.initBaseMaps(crgBaseMaps);

@@ -4,12 +4,13 @@ import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Toast } from '../Toast/Toast';
-import { services } from '../../services/services';
 import { serverProperties } from '../../services/server-properties.service';
+import { sleep } from '../../services/util/sleep';
+import { http } from '../../services/http.service';
+import { services } from '../../services/services';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./Link.scss';
-import { sleep } from '../../services/util/sleep';
 
 const cnLink = cn('Link');
 
@@ -68,7 +69,7 @@ export class Link extends Component<LinkProps> {
       } else if (download) {
         const baseUrl = await serverProperties.baseUrl;
 
-        services.httpq
+        http
           .get(url, { responseType: 'blob' })
           .then(response => {
             const objectURL = window.URL.createObjectURL(response);

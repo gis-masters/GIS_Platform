@@ -24,12 +24,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private fb: FormBuilder,
-              private router: Router) {
-  }
+  constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
-    authService.validateAuth(this.redirectTo);
+    // authService.validateAuth(this.redirectTo);//
   }
 
   ngOnDestroy(): void {
@@ -37,7 +35,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  onSubmit() {
+  async onSubmit() {
     const credentials: AuthCredentials = {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password
@@ -47,20 +45,14 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       this.isWrongPassword = false;
       this.isUserDisabled = false;
 
-      authService.authenticate(credentials).then(() => {
-          authService.authenticated = true;
+      const result = await authService.authenticate(credentials);
 
-          this.router.navigateByUrl('/projects/default');
-        }, (response) => {
-          authService.authenticated = false;
-
-          if (response.error) {
-            this.isUserDisabled = true;
-          } else if (response.status === 401) {
-            this.isWrongPassword = true;
-          }
-        }
-      );
+      if (result.ok) {
+        this.router.navigateByUrl('/projects/default');
+      } else {
+        this.isUserDisabled = result.userDisabled;
+        this.isWrongPassword = result.wrongPassword;
+      }
     } else {
       alert('Not valid form!');
     }

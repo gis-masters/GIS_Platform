@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { cloneDeep } from 'lodash';
 
 import { serverProperties } from '../server-properties.service';
@@ -6,9 +5,10 @@ import { services } from '../services';
 import { CrgLayer, CrgLayersGroup, Rule } from '../crg/projects.models';
 import { WfsFeature } from '../geoserver/wfs-models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { http } from '../http.service';
 
 export async function deleteLayer(layer: CrgLayer) {
-  await services.httpq.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layer.id}`);
+  await http.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layer.id}`);
   currentProject.deleteLayer(layer);
 }
 
@@ -59,7 +59,7 @@ async function updateLayerOrGroup<T extends CrgLayer | CrgLayersGroup>(item: T, 
   currentProject.patch(item, patch);
   try {
     const url = `${await serverProperties.projectsUrl}/${currentProject.id}/${path}/${item.id}`;
-    await services.httpq.patch(url, patch);
+    await http.patch(url, patch);
   } catch (err) {
     currentProject.patch(item, backup);
   }
@@ -91,16 +91,17 @@ function createImageFromBlob(image: Blob): Promise<string> {
  *                          основе которого сделан фильтр.
  */
 async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: string): Promise<Blob> {
-  const params = new HttpParams()
-    .set('REQUEST', 'GetLegendGraphic')
-    .set('VERSION', '1.3.0')
-    .set('FORMAT', 'image/png')
-    .set('WIDTH', '40')
-    .set('HEIGHT', '20')
-    .set('LAYER', complexLayerName)
-    .set('RULE', ruleName);
+  const params = {
+    REQUEST: 'GetLegendGraphic',
+    VERSION: '1.3.0',
+    FORMAT: 'image/png',
+    WIDTH: '40',
+    HEIGHT: '20',
+    LAYER: complexLayerName,
+    RULE: ruleName
+  };
 
-  return services.httpq.get(`${await serverProperties.geoServerUrl}/wms`, { responseType: 'blob', params });
+  return http.get(`${await serverProperties.geoServerUrl}/wms`, { responseType: 'blob', params });
 }
 
 /**
@@ -118,7 +119,7 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
     ? `${workspacesUrl}${workspaceName}/styles/${styleName}.sld`
     : `${geoServerUrl}/rest/styles/${styleName}.sld`;
 
-  return services.httpq.get<string>(url, {
+  return http.get<string>(url, {
     headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
     responseType: 'text'
   });

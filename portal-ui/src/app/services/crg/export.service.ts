@@ -1,8 +1,8 @@
 import { Process } from './models';
-import { serverProperties } from '../server-properties.service';
+import { http } from '../http.service';
 import { wsService } from '../ws.service';
 import { projectsService } from './projects.service';
-import { services } from '../services';
+import { serverProperties } from '../server-properties.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 
 export interface ExportGmlRequest {
@@ -42,7 +42,7 @@ class ExportService {
     const payload: ExportGmlRequest = requestModel;
     payload.wsUiId = wsService.getId();
 
-    return services.httpq.post<Process>(
+    return http.post<Process>(
         url,
         JSON.stringify(payload),
         { headers: { 'Content-Type': 'application/json' } }

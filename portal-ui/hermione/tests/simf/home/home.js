@@ -16,7 +16,7 @@ describe('simf: Начальная страница', () => {
    *   When пользователь заходит на главную страницу
    *   Then главная страница выглядит как форма логина
    */
-  it('Внешний вид', async function() {
+  it('Внешний вид', async function () {
     const homePage = new HomePage(this.browser);
 
     await homePage.assertSelfie();

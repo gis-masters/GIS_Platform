@@ -1,10 +1,9 @@
-import { HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
-import Cookies from 'js-cookie';
+import axios, { AxiosError } from 'axios';
 
 import { serverProperties } from './server-properties.service';
 import { usersService } from './crg/users.service';
 import { services } from './services';
+import { http } from './http.service';
 
 export interface AuthCredentials {
   username: string;
@@ -21,6 +20,38 @@ export interface RegData {
   password_: string;
 }
 
+interface AuthenticationResult {
+  ok: boolean;
+  userDisabled?: boolean;
+  wrongPassword?: boolean;
+}
+
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = 'Bearer ' + authService.token;
+
+  return config;
+});
+
+axios.interceptors.response.use(
+  value => value,
+  async (e: AxiosError) => {
+    const err = e.toJSON ? { ...e.toJSON(), response: e.response } : e;
+
+    if (e.config && e.config.url === (await serverProperties.authServerUrl)) {
+      throw err;
+    }
+
+    if (e.response && e.response.status === 401) {
+      authService.logout();
+      return;
+    } else {
+      throw err;
+    }
+  }
+);
+
+const TOKEN_KEY = 'crgAuthToken';
+
 class AuthService {
   private static _instance: AuthService;
 
@@ -28,45 +59,48 @@ class AuthService {
     return this._instance || (this._instance = new this());
   }
 
-  private _authenticated = false;
+  token: string;
 
-  private COOKIE_NAME = 'crgAuthCookie';
-
-  constructor() {
-    if (Cookies.get(this.COOKIE_NAME)) {
-      this._authenticated = true;
-    }
+  private constructor() {
+    this.token = localStorage.getItem(TOKEN_KEY);
   }
 
-  async authenticate(credentials: AuthCredentials): Promise<void> {
+  async authenticate(credentials: AuthCredentials): Promise<AuthenticationResult> {
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
     params.append('grant_type', 'password');
 
-    const headers = new HttpHeaders({
+    const headers = {
       'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'
-    });
+    };
 
-    const options = { withCredentials: true, headers: headers };
+    const options = { withCredentials: true, headers };
     const url = await serverProperties.authServerUrl;
+    try {
+      this.token = await http.post(url, params.toString(), options);
+      localStorage.setItem(TOKEN_KEY, this.token);
+      await usersService.fetchCurrent();
 
-    return services.httpq.post(url, params.toString(), options);
-  }
-
-  validateAuth(redirectTo: string) {
-    if (this._authenticated) {
-      services.router.navigateByUrl(redirectTo);
+      return { ok: true };
+    } catch (e) {
+      if (e.response && e.response.status === 401) {
+        return { ok: false, wrongPassword: true };
+      } else {
+        return { ok: false, userDisabled: true };
+      }
     }
   }
 
   async logout() {
-    const url = await serverProperties.baseUrl;
-    services.httpq.post(url + '/perform_logout', {});
-
-    this._authenticated = false;
-    services.router.navigate([ '/' ]);
+    const baseUrl = await serverProperties.baseUrl;
+    await http.post(baseUrl + '/perform_logout', {}, { withCredentials: true });
+    this.token = '';
+    localStorage.removeItem(TOKEN_KEY);
     usersService.dropCurrent();
+    services.ngZone.run(() => {
+      services.router.navigate(['/']);
+    });
   }
 
   // TODO: Создание новой орг в модуле аутентификации???
@@ -83,15 +117,7 @@ class AuthService {
     };
     const url = await serverProperties.organizationsUrl;
 
-    return services.httpq.post(url + '/init', payload);
-  }
-
-  get authenticated(): boolean {
-    return this._authenticated;
-  }
-
-  set authenticated(value: boolean) {
-    this._authenticated = value;
+    return http.post(url + '/init', payload);
   }
 }
 

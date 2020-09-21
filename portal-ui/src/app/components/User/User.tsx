@@ -6,21 +6,15 @@ import { AccountCircle, ExitToApp } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { usersService } from '../../services/crg/users.service';
 import { authService } from '../../services/auth.service';
 import { Button } from '../Button/Button';
+import { currentUser } from '../../stores/CurrentUser.store';
 
 const cnUser = cn('User');
 
 @observer
 export class User extends Component {
-  @observable private name = '';
   @observable private anchorEl: HTMLElement | null = null;
-
-  async componentDidMount() {
-    const { userName } = await usersService.getCurrent();
-    this.setName(userName);
-  }
 
   render() {
     return (
@@ -33,7 +27,7 @@ export class User extends Component {
           variant='text'
           size='large'
         >
-          {this.name}
+          {currentUser.userName}
         </Button>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.toggleMenu} anchorEl={this.anchorEl}>
@@ -51,11 +45,6 @@ export class User extends Component {
   @action.bound
   private toggleMenu(e: React.MouseEvent<HTMLElement, MouseEvent>) {
     this.anchorEl = this.anchorEl ? null : (e.target as HTMLElement);
-  }
-
-  @action
-  private setName(name: string) {
-    this.name = name;
   }
 
   @boundMethod

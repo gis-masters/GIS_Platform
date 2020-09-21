@@ -1,5 +1,4 @@
 import { reaction } from 'mobx';
-import { HttpParams } from '@angular/common/http';
 
 import { TaskImport } from '../geoserver/import/taskImport';
 import { getRoute, services } from '../services';
@@ -12,15 +11,19 @@ import { projectsList } from '../../stores/ProjectsList.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { isReadAllowed } from './permissions.service';
 import { route } from '../../stores/Route.store';
+import { http } from '../http.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
   private fetchingCurrentProject?: Promise<Project>;
 
   private constructor() {
-    reaction(() => route.params && route.params.projectId, async (id) => {
-      await this.fetchCurrent(Number(id));
-    });
+    reaction(
+      () => route.params && route.params.projectId,
+      async id => {
+        await this.fetchCurrent(Number(id));
+      }
+    );
   }
 
   static get instance() {
@@ -30,9 +33,9 @@ class ProjectsService {
   async fetchProjects() {
     await services.provided;
     const url = await serverProperties.projectsUrl;
-    const params = new HttpParams().set('size', '1000');
+    const params = { size: '1000' };
 
-    const response = await services.httpq.get<CrgApiResponse<{ projects: Project[] }>>(url, { params });
+    const response = await http.get<CrgApiResponse<{ projects: Project[] }>>(url, { params });
 
     if (response && response._embedded) {
       projectsList.setList(response._embedded.projects);
@@ -79,16 +82,16 @@ class ProjectsService {
     const url = await serverProperties.projectsUrl;
 
     const payload = {
-      'projectName': name
+      projectName: name
     };
 
-    return services.httpq.post<Process>(url, payload);
+    return http.post<Process>(url, payload);
   }
 
   async delete(id: number) {
     await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
-    await services.httpq.delete(url);
+    await http.delete(url);
     projectsList.considerDeleted(id);
   }
 
@@ -106,13 +109,13 @@ class ProjectsService {
       importTasks: tasks
     };
 
-    return services.httpq.post<Process>(url, payload);
+    return http.post<Process>(url, payload);
   }
 
   private async getById(id: number): Promise<Project> {
     await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
-    const project = await services.httpq.get<Project>(url);
+    const project = await http.get<Project>(url);
 
     await this.handleLayers(project);
 
@@ -120,11 +123,13 @@ class ProjectsService {
   }
 
   private async handleLayers(project: Project) {
-    await Promise.all(project.layers.map(async layer => {
-      if (layer.type === CrgLayerType.VECTOR && layer.dataSourceUri) {
-        layer.sourceData = await getSourceInfo(layer.dataSourceUri);
-      }
-    }));
+    await Promise.all(
+      project.layers.map(async layer => {
+        if (layer.type === CrgLayerType.VECTOR && layer.dataSourceUri) {
+          layer.sourceData = await getSourceInfo(layer.dataSourceUri);
+        }
+      })
+    );
 
     const layersPermissions = await Promise.all(project.layers.map(isReadAllowed));
 

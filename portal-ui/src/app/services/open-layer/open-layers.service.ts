@@ -37,6 +37,7 @@ import { serverProperties } from '../server-properties.service';
 import { services } from '../services';
 import { Emitter } from '../util/Emitter';
 import { MapperUtil } from './MapperUtil';
+import { http } from '../http.service';
 
 // WMS request parameters. At least a LAYERS param is required.
 export interface CrgWmsParams {
@@ -556,7 +557,7 @@ class OpenLayersService {
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
     let data: Blob | any;
     try {
-      data = await services.httpq.get<Blob>(url, { responseType: 'blob' });
+      data = await http.get<Blob>(url, { responseType: 'blob' });
     } catch (errorResponse) {
       data = errorResponse.error;
     }

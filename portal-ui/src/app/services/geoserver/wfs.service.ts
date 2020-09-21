@@ -5,23 +5,18 @@ import { isEqual } from 'lodash';
 
 import { CrgModels } from '../crg/models';
 import { Util } from './util';
-import {
-  WfsFeature,
-  WfsFeatureCollection,
-  CoordinateEdited,
-  WfsGeometry
-} from './wfs-models';
+import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs-models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
+import { http } from '../http.service';
 
 type Coord = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
 export const getFeatureById = async (complexName: string, objectId: string): Promise<WfsFeature> => {
   await services.provided;
-  const { httpq } = services;
   const url = await prepareLink(complexName, objectId);
-  const featureCollection: WfsFeatureCollection = await httpq.get<WfsFeatureCollection>(url);
+  const featureCollection: WfsFeatureCollection = await http.get<WfsFeatureCollection>(url);
 
   if (featureCollection && featureCollection.features.length > 0) {
     return featureCollection.features[0];
@@ -43,8 +38,8 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
   };
 
   if (requestModel && requestModel.page) {
-    const countRows = (requestModel.page.pageSize) ? requestModel.page.pageSize.toString() : '100';
-    const offset = (requestModel.page.offset) ? requestModel.page.offset.toString() : '0';
+    const countRows = requestModel.page.pageSize ? requestModel.page.pageSize.toString() : '100';
+    const offset = requestModel.page.offset ? requestModel.page.offset.toString() : '0';
 
     params.startindex = String(Number(offset) * Number(countRows));
     params.count = countRows;
@@ -57,9 +52,8 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
 
   return defer(async () => {
     await services.provided;
-    const { httpq } = services;
     const url = (await serverProperties.geoServerUrl) + '/wfs';
-    const fCollection = await httpq.get<WfsFeatureCollection>(url, { params: params })
+    const fCollection = await http.get<WfsFeatureCollection>(url, { params: params });
 
     return clearFeatureId(fCollection);
   });
@@ -71,23 +65,25 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
  */
 export const getFeaturesByXmlFilter = async (xml: string): Promise<WfsFeatureCollection> => {
   await services.provided;
-  const { httpq } = services;
   const url = (await serverProperties.geoServerUrl) + '/wfs';
 
-  return httpq.post<WfsFeatureCollection>(url, xml, { params: { exceptions: 'application/json' } });
+  return http.post<WfsFeatureCollection>(url, xml, {
+    headers: { 'Content-type': 'application/xml' },
+    params: { exceptions: 'application/json' }
+  });
 };
 
 export const isGeometryValid = (geometry: WfsGeometry): boolean => {
-  return isCoordinateValid(geometry.coordinates.flat(5)) && !hasUnclosedPolygons(geometry);
+  return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
 };
 
 const hasUnclosedPolygons = (geometry: WfsGeometry): boolean => {
   if (geometry.type === GeometryType.MULTI_POLYGON) {
-    return geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])))
+    return geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])));
   } else {
     return false;
   }
-}
+};
 
 export const isCoordinateValid = (coord: Coordinate): boolean => {
   return coord.every(isDimensionValid);
@@ -99,20 +95,28 @@ export const isDimensionValid = (dimension: string | number): boolean => {
 
 export const normalizeCoordinates = (coord: CoordEdited | string | number): Coord | number => {
   if (Array.isArray(coord)) {
-    return  (coord as CoordEdited[]).map(normalizeCoordinates) as Coord;
+    return (coord as CoordEdited[]).map(normalizeCoordinates) as Coord;
   } else {
     return transformDimension(coord);
   }
 };
 
-export const transformDimension = (dimension: number | string) => String(dimension).trim() === '' ? NaN : Number(dimension);
+export const transformDimension = (dimension: number | string) =>
+  String(dimension).trim() === '' ? NaN : Number(dimension);
 
 const prepareLink = async (typeName: string, objectId: string): Promise<string> => {
   const workspaceName = typeName.split(':')[0];
 
-  return (await serverProperties.geoServerUrl) + '/' + workspaceName + '/ows'
-    + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + typeName
-    + '&outputFormat=application%2Fjson&featureID=' + objectId;
+  return (
+    (await serverProperties.geoServerUrl) +
+    '/' +
+    workspaceName +
+    '/ows' +
+    '?service=WFS&version=1.0.0&request=GetFeature&typeName=' +
+    typeName +
+    '&outputFormat=application%2Fjson&featureID=' +
+    objectId
+  );
 };
 
 const clearFeatureId = (fCollection: WfsFeatureCollection): WfsFeatureCollection => {
@@ -137,14 +141,28 @@ export const getEmptyGeometry = (geometryType: GeometryType): WfsGeometry<Coordi
   if (geometryType === GeometryType.MULTI_LINE_STRING) {
     return {
       type: GeometryType.MULTI_LINE_STRING,
-      coordinates: [[['', ''], ['', '']]]
+      coordinates: [
+        [
+          ['', ''],
+          ['', '']
+        ]
+      ]
     };
   }
 
   if (geometryType === GeometryType.MULTI_POLYGON) {
     return {
       type: GeometryType.MULTI_POLYGON,
-      coordinates: [[[['', ''], ['', ''], ['', ''], ['', '']]]]
+      coordinates: [
+        [
+          [
+            ['', ''],
+            ['', ''],
+            ['', ''],
+            ['', '']
+          ]
+        ]
+      ]
     };
   }
-}
+};

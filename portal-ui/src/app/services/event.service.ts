@@ -3,7 +3,6 @@ import { filter, publishReplay, refCount } from 'rxjs/operators';
 import { remove } from 'lodash';
 
 import { generateRandomId } from './util/stringUtil';
-import { localStorageService } from './local-storage.service';
 import { IWsMessage, wsService } from './ws.service';
 import { ProcessType } from './crg/models';
 
@@ -98,7 +97,7 @@ class EventService {
   }
 
   private saveToLocalStorage(events: IEvent[]): void {
-    localStorageService.saveByKey(this.EVENTS_KEY, JSON.stringify(events));
+    localStorage.setItem(this.EVENTS_KEY, JSON.stringify(events));
   }
 
   private getFromLocalStorage(): IEvent[] {

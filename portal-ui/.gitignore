@@ -20,10 +20,9 @@ speed-measure-plugin.json
 *.launch
 .settings/
 *.sublime-workspace
-
 nbproject/
-
 .vscode/*
+.vs/*
 
 # misc
 /.sass-cache

@@ -6,9 +6,9 @@ import { Menu as MenuIcon, Map as MapIcon, ViewModule, Business, CloudDownload }
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { isAdmin } from '../../../services/crg/permissions.service';
-import { Pages } from '../../../app-routing.module';
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { route } from '../../../stores/Route.store';
+import { Pages } from '../../../app-routing.module';
 import { Link } from '../../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Burger.scss';
@@ -18,13 +18,6 @@ const cnWorkspaceHeaderBurger = cn('WorkspaceHeader', 'Burger');
 @observer
 export class WorkspaceHeaderBurger extends Component {
   @observable private anchorEl: HTMLElement | null = null;
-  private isAdmin = false;
-
-  constructor(props: {}) {
-    super(props);
-
-    this.isAdmin = isAdmin();
-  }
 
   render() {
     return (
@@ -34,7 +27,7 @@ export class WorkspaceHeaderBurger extends Component {
         </IconButton>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.close} anchorEl={this.anchorEl}>
-          {route.data.page === Pages.MAP && this.isAdmin && (
+          {route.data.page === Pages.MAP && currentUser.isAdmin && (
             <Link url={`/projects/${currentProject.id}/import`} theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>
@@ -70,7 +63,7 @@ export class WorkspaceHeaderBurger extends Component {
             </MenuItem>
           </Link>
 
-          {this.isAdmin && (
+          {currentUser.isAdmin && (
             <Link url='/org-admin' theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>

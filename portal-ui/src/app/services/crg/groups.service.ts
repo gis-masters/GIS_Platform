@@ -1,11 +1,11 @@
-import { HttpParams } from '@angular/common/http';
 import { debounce } from 'lodash';
 
-import { serverProperties } from '../server-properties.service';
+import { http } from '../http.service';
 import { services } from '../services';
 import { CrgApiResponse } from './models';
 import { ApiLink, CrgUser } from './users.service';
 import { groupsList } from '../../stores/GroupsList.store';
+import { serverProperties } from '../server-properties.service';
 
 export interface CrgGroup {
   id: number;
@@ -34,9 +34,8 @@ class GroupsService {
   async getAll(): Promise<CrgGroup[]> {
     await services.provided;
     const url = await serverProperties.groupsUrl;
-    const params = new HttpParams().set('size', '10000');
-
-    const response = await services.httpq.get<CrgApiResponse<{ groups: CrgGroup[] }>>(url, { params });
+    const params = { size: '10000' };
+    const response = await http.get<CrgApiResponse<{ groups: CrgGroup[] }>>(url, { params });
 
     return response._embedded ? response._embedded.groups : [];
   }
@@ -45,7 +44,7 @@ class GroupsService {
     await services.provided;
     const url = await serverProperties.groupsUrl;
 
-    await services.httpq.post<CrgGroup>(url, groupData);
+    await http.post<CrgGroup>(url, groupData);
 
     this.debouncedFetchGroupsListStore();
   }
@@ -54,7 +53,7 @@ class GroupsService {
     await services.provided;
     const url = await serverProperties.groupsUrl;
 
-    await services.httpq.delete(`${url}/${group.id}`);
+    await http.delete(`${url}/${group.id}`);
 
     this.debouncedFetchGroupsListStore();
   }
@@ -63,7 +62,7 @@ class GroupsService {
     await services.provided;
     const url = await serverProperties.groupsUrl;
 
-    await services.httpq.post(`${url}/${group.id}/users/${user.id}`, {});
+    await http.post(`${url}/${group.id}/users/${user.id}`, {});
 
     this.debouncedFetchGroupsListStore();
   }
@@ -72,7 +71,7 @@ class GroupsService {
     await services.provided;
     const url = await serverProperties.groupsUrl;
 
-    await services.httpq.delete(`${url}/${group.id}/users/${user.id}`);
+    await http.delete(`${url}/${group.id}/users/${user.id}`);
 
     this.debouncedFetchGroupsListStore();
   }

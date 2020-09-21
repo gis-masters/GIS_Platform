@@ -11,6 +11,7 @@ import { BugObject } from './validation.service';
 import { CrgLayer } from '../crg/projects.models';
 import { services } from '../services';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { http } from '../http.service';
 
 export interface FeatureDescription {
   name: string;
@@ -274,7 +275,7 @@ class SchemaService {
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     await services.provided;
     const url = await serverProperties.schemaUrl;
-    const response = await services.httpq.post<(FeatureDescription | null)[]>(url, payload);
+    const response = await http.post<(FeatureDescription | null)[]>(url, payload);
 
     if (!response) {
       throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
