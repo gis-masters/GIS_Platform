@@ -3,8 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
 import { EditedField, FeatureDescription } from '../../services/crg/schema.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
-import { sidebars } from '../../stores/Sidebars.store';
 
 type Properties = { [key: string]: string };
 
@@ -19,7 +19,7 @@ export class BaseEdit implements OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    sidebars.setFeaturesEdited(false);
+    openLayersService.clearDraft();
   }
 
   getActualValuesFromForm(): Properties {

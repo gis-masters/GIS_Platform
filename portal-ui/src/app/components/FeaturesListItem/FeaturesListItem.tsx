@@ -88,9 +88,8 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @boundMethod
   private selectIt() {
-    const { onSelect, feature, onHighlight } = this.props;
+    const { onSelect, feature } = this.props;
     onSelect(feature);
-    onHighlight(feature);
   }
 
   @boundMethod

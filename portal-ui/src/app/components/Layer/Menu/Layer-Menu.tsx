@@ -158,7 +158,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, onClose } = this.props;
     const emptyFeature = await schemaService.getEmptyFeature(entity as CrgLayer);
 
-    sidebars.openFeatures({
+    sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,
       layer: entity as CrgLayer,

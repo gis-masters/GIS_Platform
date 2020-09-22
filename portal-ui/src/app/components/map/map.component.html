@@ -6,8 +6,11 @@
 
   <crg-layers-sidebar [class]="cn('bar', { dir: 'left' })"> </crg-layers-sidebar>
 
+  <crg-edit-features-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isEditSidebarActive">
+  </crg-edit-features-sidebar>
+  <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isFeaturesSidebarActive">
+  </crg-features-list-sidebar>
   <crg-report-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isBugReportSidebarActive"> </crg-report-sidebar>
-  <crg-view-features [class]="cn('bar', { dir: 'right' })" *ngIf="isFeaturesSidebarActive"> </crg-view-features>
 
   <crg-attributes-bar [class]="cn('bar', { dir: 'bottom' })" *ngIf="isAttrSidebarActive"> </crg-attributes-bar>
 </div>

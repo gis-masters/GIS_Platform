@@ -346,7 +346,7 @@ class OpenLayersService {
   /**
    * Подсвечивает обьект. (очищает черновой слой)
    */
-  highlightFeature(features: WfsFeature | WfsFeature[], projection?: CrgProjection) {
+  highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
     const featuresInOlProjection: WfsFeature[] = [].concat(features).map((feature: WfsFeature) => ({
       ...feature,
       geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)

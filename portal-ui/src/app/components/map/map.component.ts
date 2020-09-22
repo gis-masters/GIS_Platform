@@ -8,23 +8,22 @@ import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
-import { CrgLayer, CrgLayerType, TreeItem } from '../../services/crg/projects.models';
-import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
+import { CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
 import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
 import { GmlDialogData, ActionType } from '../../components/export/export-dilog/export-dialog.component';
-import { communicationService } from '../../services/communication.service';
-import { EditFeatureMode } from '../../components/edit-feature/edit-feature.component';
-
-import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { deleteLayer } from '../../services/geoserver/layers.service';
 import { getFeatureTypeByLayer, deleteFeatureType } from '../../services/geoserver/featuretypes.service';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { sidebars } from '../../stores/Sidebars.store';
-import { Toast } from '../Toast/Toast';
+import { communicationService } from '../../services/communication.service';
+import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
+import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
+import { deleteLayer } from '../../services/geoserver/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
+import { sidebars } from '../../stores/Sidebars.store';
+import { Toast } from '../Toast/Toast';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -34,11 +33,12 @@ type NamesChunks = { [srsName: string]: string[] };
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy {
-  isAttrSidebarActive: boolean;
+  isAttrSidebarActive = false;
   isBugReportSidebarActive = false;
   isValidationDialogShow = false;
   isGmlDialogShow = false;
   isFeaturesSidebarActive = false;
+  isEditSidebarActive = false;
 
   validationDialogData: ValidationDialogData;
   selectedLayer: CrgLayer;
@@ -128,6 +128,15 @@ export class MapComponent implements OnInit, OnDestroy {
         }, 0);
       });
 
+    fromMobx(() => sidebars.editOpen, true)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(editOpen => {
+        this.isEditSidebarActive = editOpen;
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 0);
+      });
+
     fromMobx(() => sidebars.bugReportOpen, true)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(bugReportOpen => {
@@ -162,10 +171,6 @@ export class MapComponent implements OnInit, OnDestroy {
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */
   private async showFeaturesInfo(coordinate: Coordinate) {
-    if (sidebars.needEditFeatureConfirmation(this.showFeaturesInfo.bind(this, coordinate))) {
-      return;
-    }
-
     const visibleLayers = currentProject.visibleLayersWithoutRasters.map(({ payload }) => payload);
 
     if (!visibleLayers.length) {
@@ -200,16 +205,14 @@ export class MapComponent implements OnInit, OnDestroy {
     const features = collections.map(({ features }) => features || []).flat();
 
     if (features.length) {
-      sidebars.closeFeatures();
-
-      setTimeout(() => {
-        sidebars.openFeatures({
-          features: features,
+      if (features.length > 1) {
+        sidebars.openFeatures(features);
+      } else {
+        sidebars.openEdit({
+          features,
           mode: EditFeatureMode.single
         });
-      }, 0);
-
-      openLayersService.highlightFeature(features);
+      }
     }
   }
 }

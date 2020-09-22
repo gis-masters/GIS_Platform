@@ -94,7 +94,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
       }
 
-      openLayersService.highlightFeature(wfsFeature);
+      openLayersService.highlightFeatures([wfsFeature]);
     } catch (err) {
       this.isFeatureTypeLoaded = true;
     }

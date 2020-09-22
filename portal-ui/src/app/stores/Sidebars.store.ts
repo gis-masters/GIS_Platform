@@ -1,15 +1,27 @@
 import { observable, action, reaction } from 'mobx';
 
-import { CrgLayer } from '../services/crg/projects.models';
 import { route } from './Route.store';
-import { ViewFeaturesData } from '../components/view-features/view-features.component';
+import { CrgLayer } from '../services/crg/projects.models';
+import { WfsFeature } from '../services/geoserver/wfs-models';
+import { EditFeatureMode, Properties } from '../components/edit-feature/edit-feature.component';
 
-const defaultValues: Partial<{ [key in keyof Sidebars]: Sidebars[key] }> = {
+export interface EditFeaturesData {
+  features: WfsFeature[];
+  mode: EditFeatureMode;
+  viewFeatures?: WfsFeature[];
+  layer?: CrgLayer;
+  properties?: Properties;
+  isNew?: true;
+}
+
+const defaultValues: Partial<Sidebars> = {
   leftOpen: true,
   attributesOpen: false,
   layerForAttributes: null,
   featuresOpen: false,
-  featuresData: null,
+  viewFeatures: null,
+  editFeaturesData: null,
+  editOpen: false,
   featuresEdited: false,
   featuresClosingConfirmationOpen: false,
   featuresClosingConfirmationCallback: null,
@@ -24,7 +36,9 @@ class Sidebars {
   @observable attributesOpen: boolean;
   @observable layerForAttributes?: CrgLayer;
   @observable featuresOpen: boolean;
-  @observable featuresData?: ViewFeaturesData;
+  @observable editOpen: boolean;
+  @observable viewFeatures?: WfsFeature[];
+  @observable editFeaturesData?: EditFeaturesData;
   @observable featuresEdited: boolean;
   @observable featuresClosingConfirmationOpen: boolean;
   @observable featuresClosingConfirmationCallback?: () => void;
@@ -71,37 +85,52 @@ class Sidebars {
   }
 
   @action
-  openFeatures(data: ViewFeaturesData) {
-    if (this.needEditFeatureConfirmation(this.openFeatures.bind(this, data))) {
+  openFeatures(features: WfsFeature[]) {
+    if (this.needEditConfirmation(this.openFeatures.bind(this, features))) {
       return;
     }
-    this.featuresOpen = true;
-    this.featuresData = data;
     this.closeBugReport();
+    this.closeEdit();
+    this.featuresOpen = true;
+    this.viewFeatures = features;
   }
 
   @action.bound
   closeFeatures() {
-    if (this.needEditFeatureConfirmation(this.closeFeatures)) {
-      return;
-    }
     this.featuresOpen = false;
-    this.featuresData = null;
-    this.featuresEdited = false;
+    this.viewFeatures = null;
   }
 
   @action
-  setFeaturesEdited(edited: boolean) {
-    this.featuresEdited = edited;
+  openEdit(data: EditFeaturesData) {
+    if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
+      return;
+    }
+
+    this.editFeaturesData = data;
+    this.closeBugReport();
+    this.editOpen = true;
+    this.closeFeatures();
+  }
+
+  @action.bound
+  closeEdit() {
+    if (this.needEditConfirmation(this.closeEdit)) {
+      return;
+    }
+    this.editOpen = false;
+    this.featuresEdited = false;
+    this.editFeaturesData = null;
   }
 
   @action.bound
   openBugReport() {
-    if (this.needEditFeatureConfirmation(this.openBugReport)) {
+    if (this.needEditConfirmation(this.openBugReport)) {
       return;
     }
     this.bugReportOpen = true;
     this.closeFeatures();
+    this.closeEdit();
   }
 
   @action
@@ -119,6 +148,11 @@ class Sidebars {
     this.infoOpen = false;
   }
 
+  @action
+  setFeaturesEdited(edited: boolean) {
+    this.featuresEdited = edited;
+  }
+
   @action.bound
   closeEditFeatureConfirmation() {
     this.featuresClosingConfirmationOpen = false;
@@ -126,7 +160,7 @@ class Sidebars {
   }
 
   @action
-  needEditFeatureConfirmation(callback: () => void): boolean {
+  private needEditConfirmation(callback: () => void): boolean {
     if (this.featuresEdited && !this.featuresClosingConfirmationOpen) {
       this.featuresClosingConfirmationOpen = true;
       this.featuresClosingConfirmationCallback = () => {
@@ -136,8 +170,8 @@ class Sidebars {
       };
       return true;
     } else {
-      return false;
       this.closeEditFeatureConfirmation();
+      return false;
     }
   }
 

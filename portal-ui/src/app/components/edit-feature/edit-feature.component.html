@@ -1,24 +1,24 @@
-<div class="container-fluid">
-  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro;">
-    <div class="col-12" style="padding-left: 5px; padding-right: 5px;">
+<div class="container-fluid edit-feature">
+  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
+    <div class="col-12" style="padding-left: 5px; padding-right: 5px">
       <button
         *ngIf="updatingAllowed"
         mat-stroked-button
         color="primary"
         (click)="editFeature()"
         class="float-left"
-        matBadge="{{ data.total }}"
+        matBadge="{{ features.length > 1 ? features.length : null }}"
         matBadgePosition="after"
         matBadgeColor="accent"
         matTooltip="{{ getTooltip() }}"
         [disabled]="editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)"
       >
-        <mat-icon *ngIf="data.mode === 'multipleEdit'">list</mat-icon>
+        <mat-icon *ngIf="mode === 'multipleEdit'">list</mat-icon>
         Сохранить
       </button>
 
       <button
-        *ngIf="deletingAllowed && !data.isNew"
+        *ngIf="deletingAllowed && !isNew"
         class="del-button"
         mat-stroked-button
         color="error"
@@ -33,11 +33,11 @@
     </div>
   </div>
 
-  <div [ngClass]="isAttributeSidebarOpened ? 'row edit-content scroll short-h' : 'row edit-content scroll full-h'">
+  <div class="row edit-content">
     <crg-loading *ngIf="isSaveInProgress" [percents]="loadPercent"></crg-loading>
 
-    <ng-container *ngIf="data.mode === 'single'; else editAttrsForm">
-      <mat-tab-group class="tabs scroll">
+    <ng-container *ngIf="mode === 'single'; else editAttrsForm">
+      <mat-tab-group class="tabs">
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
         </mat-tab>
@@ -52,15 +52,15 @@
 
     <crg-zoom-to-feature
       class="zoom-to-feature"
-      [feature]="data.features[0]"
-      *ngIf="data.mode === 'single' && !data.isNew"
+      [feature]="features[0]"
+      *ngIf="mode === 'single' && !isNew && features"
     >
     </crg-zoom-to-feature>
   </div>
 </div>
 
 <ng-template #editAttrsForm>
-  <form class="example-form col-md-12" [formGroup]="editFeatureForm">
+  <form *ngIf="editFeatureForm" class="edit-feature__form col-md-12 scroll" [formGroup]="editFeatureForm">
     <ng-container *ngFor="let editFeatureItem of editFeatureData">
       <div *ngIf="!editFeatureItem.property?.hidden">
         <div *ngIf="editFeatureItem.property?.valueType?.includes('URL')" class="row fiz-edit-item">
@@ -69,13 +69,14 @@
 
         <div
           class="row fiz-edit-item"
-          *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && data.mode === 'single'"
+          *ngIf="editFeatureItem.property?.valueType?.includes('LOOKUP') && mode === 'single'"
         >
           <crg-edit-feature-field
             type="lookup"
             [field]="editFeatureItem"
-            [featureData]="data"
-            [layer]="data.layer"
+            [feature]="features[0]"
+            [isNew]="isNew"
+            [layer]="layer"
             [isReadOnly]="updatingAllowed"
           >
           </crg-edit-feature-field>
@@ -85,7 +86,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey;"
+              style="color: grey"
               matTooltip="Данное свойство не соответствует приказу"
             >
               {{ editFeatureItem.property?.title }}
@@ -101,7 +102,7 @@
                 <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
               </span>
 
-              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+              <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
                 <span class="input-group-text multiple-edit-badge">
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
@@ -122,7 +123,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey;"
+              style="color: grey"
               matTooltip="Данное свойство не соответствует приказу"
               >{{ editFeatureItem.property?.title }}</span
             >
@@ -137,7 +138,7 @@
                 </span>
               </div>
 
-              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+              <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
                 <span class="input-group-text multiple-edit-badge">
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
@@ -158,7 +159,7 @@
           <div class="col-6 px-0 edit-item-title">
             <span
               *ngIf="!editFeatureItem.isFgistpProperty"
-              style="color: grey;"
+              style="color: grey"
               matTooltip="Данное свойство не соответствует приказу"
               >{{ editFeatureItem.property?.title }}</span
             >
@@ -173,7 +174,7 @@
                 </span>
               </div>
 
-              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+              <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
                 <span class="input-group-text multiple-edit-badge">
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>
@@ -206,7 +207,7 @@
                 </span>
               </div>
 
-              <div class="input-group-append" *ngIf="data.mode === 'multipleEdit'">
+              <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
                 <span class="input-group-text multiple-edit-badge">
                   <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
                 </span>

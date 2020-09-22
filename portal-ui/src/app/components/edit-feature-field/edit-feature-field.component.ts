@@ -1,18 +1,10 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  Input,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
 import { EditedField, FieldType } from '../../services/crg/schema.service';
-import { EditFeatureField, EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
-import { EditFeatureData } from '../edit-feature/edit-feature.component';
+import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
+import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { CrgLayer } from '../../services/crg/projects.models';
 
 @Component({
@@ -23,20 +15,21 @@ import { CrgLayer } from '../../services/crg/projects.models';
 export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   @Input() type: FieldType;
   @Input() field: EditedField;
-  @Input() featureData?: EditFeatureData;
+  @Input() feature: WfsFeature;
+  @Input() isNew: boolean;
   @Input() isReadOnly: CrgLayer;
   @Input() layer?: CrgLayer;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit () {
+  ngOnInit() {
     this.renderReactElement();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnChanges () {
+  ngOnChanges() {
     this.renderReactElement();
   }
 
@@ -45,10 +38,10 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
       type: this.type,
       field: this.field,
       featureInfo: {
-        feature: this.featureData ? this.featureData.features[0] : null,
-        isNew: this.featureData ? this.featureData.isNew : false,
+        feature: this.feature,
+        isNew: this.isNew,
         layerName: this.layer ? this.layer.internalName : '',
-        isReadOnly: !!this.isReadOnly
+        isReadOnly: Boolean(this.isReadOnly)
       }
     });
 

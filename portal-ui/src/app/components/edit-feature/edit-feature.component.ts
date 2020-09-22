@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -6,34 +6,26 @@ import { filter, first, takeUntil } from 'rxjs/operators';
 import { Coordinate } from 'ol/coordinate';
 import { boundMethod } from 'autobind-decorator';
 
-import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { communicationService } from '../../services/communication.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { sidebars } from '../../stores/Sidebars.store';
-import { schemaService, PropertySchema } from '../../services/crg/schema.service';
-import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
-import { BaseEdit } from '../edit-bug-object/base-edit';
+import { Toast } from '../Toast/Toast';
+import { fromMobx } from '../../services/util/fromMobx';
 import { BatchModel } from '../../services/crg/batch-model';
+import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { communicationService } from '../../services/communication.service';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
-import { fromMobx } from '../../services/util/fromMobx';
+import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { schemaService, PropertySchema } from '../../services/crg/schema.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayer } from '../../services/crg/projects.models';
-import { isDeleteAllowed, isUpdateAllowed } from '../../services/crg/permissions.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { Toast } from '../Toast/Toast';
+import { isDeleteAllowed, isUpdateAllowed } from '../../services/crg/permissions.service';
+import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
-export interface EditFeatureData {
-  layer: CrgLayer;
-  features: WfsFeature[];
-  mode: EditFeatureMode;
-  total?: number;
-  properties?: { [key: string]: any };
-  isNew?: true;
-}
+import { BaseEdit } from '../edit-bug-object/base-edit';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { getFeatureLayer } from '../../services/geoserver/layers.service';
 
-interface Properties {
+export interface Properties {
   [key: string]: any;
 }
 
@@ -47,14 +39,17 @@ export enum EditFeatureMode {
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
-  @Input() data: EditFeatureData;
-  @Output() closeMe = new EventEmitter<boolean>();
-  @Output() delete = new EventEmitter<string>();
+export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
+  mode: EditFeatureMode;
+  features: WfsFeature[];
+  private viewFeatures?: WfsFeature[];
+  layer: CrgLayer;
+  private properties?: Properties;
+  isNew: boolean;
+
   deletingAllowed = false;
   updatingAllowed = false;
 
-  isAttributeSidebarOpened = false;
   isSaveInProgress = false;
   loadPercent = 0;
   changedGeometry?: WfsGeometry<Coordinate>;
@@ -68,145 +63,145 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   ngOnInit() {
-    fromMobx<boolean>(() => sidebars.attributesOpen)
+    fromMobx<EditFeaturesData>(() => sidebars.editFeaturesData, true)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(attributesOpen => (this.isAttributeSidebarOpened = attributesOpen));
-
-    this.editFeatureForm.valueChanges.subscribe(featureProperties => {
-      this.validateCustomRules(featureProperties);
-
-      sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);
-    });
-  }
-
-  async ngOnChanges(changes: SimpleChanges) {
-    const dataChanged = changes.data;
-
-    if (dataChanged) {
-      this.editFeatureData = [];
-      const currentData: EditFeatureData = dataChanged.currentValue;
-      if (currentData.mode === EditFeatureMode.single) {
-        if (!this.data.isNew) {
-          openLayersService.highlightFeature(currentData.features[0]);
+      .subscribe(async data => {
+        if (!data || !data.features) {
+          return;
         }
-        this.isGeometryChanged = false;
-      }
 
-      this.editFeatureForm = this.formBuilder.group({});
-      this.featureDescription = await schemaService.getSchemaByLayerName(currentData.features[0].id.split('.')[0]);
+        this.editFeatureForm = this.formBuilder.group({});
 
-      currentData.layer = currentProject.vectorLayers.find(layer => layer.schemaId === this.featureDescription.name);
+        this.mode = data.mode;
+        this.features = data.features;
+        this.layer = data.layer || getFeatureLayer(this.features[0]);
+        this.properties = data.properties;
+        this.isNew = data.isNew;
 
-      Object.keys(currentData.features[0].properties)
-        .filter(key => key !== 'bbox')
-        .forEach(key => {
-          const currentValue = currentData.features[0].properties[key];
+        if (!this.isNew) {
+          openLayersService.highlightFeatures(this.features);
+          this.isGeometryChanged = false;
+        }
 
-          let property: PropertySchema;
-          if (this.featureDescription) {
-            property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
-          }
+        this.editFeatureForm = this.formBuilder.group({});
 
-          if (property) {
-            this.editFeatureData.push({
-              name: key,
-              property: property,
-              value: currentValue,
-              isFgistpProperty: true
-            });
+        this.featureDescription = await schemaService.getSchema(this.layer.schemaId);
 
-            const formControl = new FormControl(
-              {
-                value: currentValue,
-                disabled: property.name === 'GLOBALID'
-              },
-              {
-                validators: [FeaturePropertyValidators.validate(property)]
-              }
-            );
+        this.editFeatureData = [];
+        Object.keys(this.features[0].properties)
+          .filter(key => key !== 'bbox')
+          .forEach(key => {
+            const currentValue = this.features[0].properties[key];
 
-            if (this.data.mode === EditFeatureMode.multipleEdit) {
-              formControl.disable();
+            let property: PropertySchema;
+            if (this.featureDescription) {
+              property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
             }
 
-            this.editFeatureForm.addControl(key, formControl);
-          } else {
-            // TODO: надобы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
-            this.editFeatureData.push({
-              name: key,
-              property: {
+            if (property) {
+              this.editFeatureData.push({
                 name: key,
-                title: key,
-                valueType: ValueType.STRING
-              },
-              value: currentValue,
-              isFgistpProperty: false
-            });
+                property,
+                value: currentValue,
+                isFgistpProperty: true
+              });
 
-            const formControl = new FormControl(currentValue);
+              const formControl = new FormControl(
+                {
+                  value: currentValue,
+                  disabled: property.name === 'GLOBALID'
+                },
+                {
+                  validators: [FeaturePropertyValidators.validate(property)]
+                }
+              );
 
-            if (this.data.mode === EditFeatureMode.multipleEdit) {
-              formControl.disable();
-            }
-
-            this.editFeatureForm.addControl(key, formControl);
-          }
-        });
-
-      this.data = currentData;
-
-      setTimeout(() => {
-        this.validateCustomRules(currentData.features[0].properties);
-      }, 22);
-    }
-
-    this.unsubscribeFromMobx$.next();
-    delete this.changedGeometry;
-    this.isGeometryValid = false;
-    this.isGeometryChanged = false;
-    await this.checkPermissions();
-
-    this.editGeometryStore.initGeometry(this.data.features[0].geometry, getFeatureProjection(this.data.features[0]));
-
-    if (this.updatingAllowed) {
-      fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
-        .pipe(first())
-        .pipe(takeUntil(this.unsubscribe$))
-        .pipe(takeUntil(this.unsubscribeFromMobx$))
-        .subscribe(() => {
-          fromMobx(() => this.editGeometryStore.resultGeometry)
-            .pipe(takeUntil(this.unsubscribe$))
-            .pipe(takeUntil(this.unsubscribeFromMobx$))
-            .subscribe(changedGeometry => {
-              this.changedGeometry = changedGeometry;
-
-              if (this.editGeometryStore.isValid) {
-                const feature = {
-                  ...this.data.features[0],
-                  geometry: changedGeometry
-                };
-                openLayersService.highlightFeature(feature);
-              } else {
-                openLayersService.clearDraft();
+              if (this.mode === EditFeatureMode.multipleEdit) {
+                formControl.disable();
               }
-            });
 
-          fromMobx(() => this.editGeometryStore.isValid)
+              this.editFeatureForm.addControl(key, formControl);
+            } else {
+              // TODO: надобы запрашивать DescribeFeatureType по WFS и брать тип лишних атрибутов там.
+              this.editFeatureData.push({
+                name: key,
+                property: {
+                  name: key,
+                  title: key,
+                  valueType: ValueType.STRING
+                },
+                value: currentValue,
+                isFgistpProperty: false
+              });
+
+              const formControl = new FormControl(currentValue);
+
+              if (this.mode === EditFeatureMode.multipleEdit) {
+                formControl.disable();
+              }
+
+              this.editFeatureForm.addControl(key, formControl);
+            }
+          });
+
+        setTimeout(() => {
+          this.validateCustomRules(this.features[0].properties);
+        }, 22);
+
+        this.unsubscribeFromMobx$.next();
+        delete this.changedGeometry;
+        this.isGeometryValid = false;
+        this.isGeometryChanged = false;
+        await this.checkPermissions();
+
+        this.editGeometryStore.initGeometry(this.features[0].geometry, getFeatureProjection(this.features[0]));
+
+        if (this.updatingAllowed) {
+          fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
+            .pipe(first())
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
-            .subscribe(isValid => {
-              this.isGeometryValid = isValid;
-            });
+            .subscribe(() => {
+              fromMobx(() => this.editGeometryStore.resultGeometry)
+                .pipe(takeUntil(this.unsubscribe$))
+                .pipe(takeUntil(this.unsubscribeFromMobx$))
+                .subscribe(changedGeometry => {
+                  this.changedGeometry = changedGeometry;
 
-          fromMobx(() => this.editGeometryStore.isChanged)
-            .pipe(takeUntil(this.unsubscribe$))
-            .pipe(takeUntil(this.unsubscribeFromMobx$))
-            .subscribe(isChanged => {
-              this.isGeometryChanged = isChanged;
-              sidebars.setFeaturesEdited(!this.editFeatureForm.pristine || isChanged);
+                  if (this.editGeometryStore.isValid) {
+                    const feature = {
+                      ...this.features[0],
+                      geometry: changedGeometry
+                    };
+                    openLayersService.highlightFeatures([feature]);
+                  } else {
+                    openLayersService.clearDraft();
+                  }
+                });
+
+              fromMobx(() => this.editGeometryStore.isValid)
+                .pipe(takeUntil(this.unsubscribe$))
+                .pipe(takeUntil(this.unsubscribeFromMobx$))
+                .subscribe(isValid => {
+                  this.isGeometryValid = isValid;
+                });
+
+              fromMobx(() => this.editGeometryStore.isChanged)
+                .pipe(takeUntil(this.unsubscribe$))
+                .pipe(takeUntil(this.unsubscribeFromMobx$))
+                .subscribe(isChanged => {
+                  this.isGeometryChanged = isChanged;
+                  sidebars.setFeaturesEdited(!this.editFeatureForm.pristine || isChanged);
+                });
             });
+        }
+
+        this.editFeatureForm.valueChanges.subscribe(featureProperties => {
+          this.validateCustomRules(featureProperties);
+
+          sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);
         });
-    }
+      });
   }
 
   async editFeature() {
@@ -218,25 +213,25 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     const newProperties = this.getActualValuesFromForm();
 
-    if (this.data.isNew) {
-      transformFeature
-        .insertFeatures(
-          [{ ...this.data.features[0], properties: newProperties, geometry: this.changedGeometry }],
-          this.featureDescription.tableName,
-          this.data.layer.nativeCRS
-        )
-        .then(() => {
-          this.close();
-          openLayersService.refreshLayers();
-          communicationService.featuresUpdated.emit();
-        });
+    if (this.isNew) {
+      await transformFeature.insertFeatures(
+        [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
+        this.featureDescription.tableName,
+        this.layer.nativeCRS
+      );
+
+      openLayersService.refreshLayers();
+      communicationService.featuresUpdated.emit();
     } else {
-      this.batchUpdateFeatures(
-        this.data.features,
+      await this.batchUpdateFeatures(
+        this.features,
         newProperties,
         this.isGeometryChanged ? this.changedGeometry : undefined
       );
     }
+
+    sidebars.setFeaturesEdited(false);
+    sidebars.closeEdit();
   }
 
   async deleteFeature() {
@@ -244,27 +239,30 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
     };
-    const { features } = this.data;
-    const [layerName, newId] = features[0].id.split('.');
+    const [layerName, newId] = this.features[0].id.split('.');
 
     this.dialog
-      .open(ConfirmDialogComponent, { width: '400px', data: data })
+      .open(ConfirmDialogComponent, { width: '400px', data })
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(() => {
         transformFeature.deleteFeatures([newId], layerName).then(() => {
-          this.delete.emit(features[0].id);
-          this.close();
           openLayersService.refreshLayers();
           communicationService.featuresUpdated.emit();
+          sidebars.setFeaturesEdited(false);
+          if (this.viewFeatures) {
+            sidebars.openFeatures(this.viewFeatures);
+          } else {
+            sidebars.closeEdit();
+          }
         });
       });
   }
 
   getTooltip() {
-    const featuresCount = this.data.total;
+    const featuresCount = this.features.length;
     if (featuresCount) {
-      return 'Сохранить данные для ' + this.data.total + ' объектов';
+      return `Сохранить данные для ${featuresCount} объектов`;
     } else {
       return 'Сохранить объект';
     }
@@ -285,14 +283,10 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
   @boundMethod
   close() {
-    if (!sidebars.needEditFeatureConfirmation(this.close)) {
-      this.closeMe.emit(true);
-
-      openLayersService.clearDraft();
-
-      if (this.data.isNew) {
-        sidebars.closeFeatures();
-      }
+    if (sidebars.editFeaturesData.viewFeatures) {
+      sidebars.openFeatures(sidebars.editFeaturesData.viewFeatures);
+    } else {
+      sidebars.closeEdit();
     }
   }
 
@@ -302,8 +296,8 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
   }
 
   private async checkPermissions() {
-    this.updatingAllowed = await isUpdateAllowed(this.data.layer);
-    this.deletingAllowed = await isDeleteAllowed(this.data.layer);
+    this.updatingAllowed = await isUpdateAllowed(this.layer);
+    this.deletingAllowed = await isDeleteAllowed(this.layer);
   }
 
   private async batchUpdateFeatures(
@@ -322,7 +316,6 @@ export class EditFeatureComponent extends BaseEdit implements OnChanges, OnInit,
 
     this.loadPercent = percent > 100 ? 100 : percent;
     this.isSaveInProgress = false;
-    this.closeMe.emit(true);
     openLayersService.refreshLayers();
     openLayersService.clearDraft();
 

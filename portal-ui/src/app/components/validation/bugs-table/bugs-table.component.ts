@@ -113,7 +113,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   async showObject(event: Event, objectId: string) {
     event.stopPropagation();
     const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
-    openLayersService.highlightFeature(wfsFeature);
+    openLayersService.highlightFeatures([wfsFeature]);
   }
 
   editObject(event: Event, objectId: string) {

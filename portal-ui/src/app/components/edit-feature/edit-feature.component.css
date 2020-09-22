@@ -1,9 +1,18 @@
-.full-h {
-  height: calc(100vh - 105px);
+.edit-feature {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
 }
 
-.short-h {
-  height: calc(100vh - 551px);
+.edit-feature__form {
+  overflow: auto;
+
+  max-height: 100%;
 }
 
 .edit-content {

@@ -163,7 +163,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   showSelectedFeatures() {
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      openLayersService.highlightFeature(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
+      openLayersService.highlightFeatures(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
     }
 
     window.dispatchEvent(new Event('resize'));
@@ -254,7 +254,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       this.currentPositionFeature = event.row;
 
       const projection = getProjection(this.layer.nativeCRS);
-      openLayersService.highlightFeature(event.row, projection);
+      openLayersService.highlightFeatures(event.row, projection);
       openLayersService.positionToFeature(event.row, projection);
     }
   }
@@ -298,7 +298,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       feature.id = this.layer.internalName + '.' + feature.id;
     });
 
-    sidebars.openFeatures({
+    sidebars.openEdit({
       features: clonedFeatures,
       mode: clonedFeatures.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
     });

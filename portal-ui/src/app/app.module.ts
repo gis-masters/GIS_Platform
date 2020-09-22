@@ -40,7 +40,7 @@ import { LayersSidebarComponent } from './components/layers-sidebar/layers-sideb
 import { ProgressItemComponent } from './components/progress-item/progress-item.component';
 import { JwtInterceptorService } from './services/interceptors/jwt-interceptor.service';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
-import { ViewFeaturesComponent } from './components/view-features/view-features.component';
+import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
 import { AttributesBarComponent } from './components/attributes-bar/attributes-bar.component';
 import { TableFilterComponent } from './components/table-filter/table-filter.component';
@@ -60,6 +60,7 @@ import { AlertDialogComponent } from './components/dialogs/alert-dialog/alert-di
 import { WorkspaceComponent } from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
+import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
 import { FeaturesListComponent } from './components/features-list/features-list.component';
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
@@ -91,7 +92,7 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     ProgressItemComponent,
     ProjectsListComponent,
     ConfirmDialogComponent,
-    ViewFeaturesComponent,
+    EditFeaturesSidebarComponent,
     EditFeatureComponent,
     AttributesBarComponent,
     TableFilterComponent,
@@ -110,6 +111,7 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     WorkspaceComponent,
     EditFeatureFieldComponent,
     EditFeatureGeometryComponent,
+    FeaturesListSidebarComponent,
     FeaturesListComponent,
     EditFeatureGeometryComponent,
     ZoomToFeatureComponent,

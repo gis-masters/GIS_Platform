@@ -14,45 +14,45 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs-models';
-import { FeaturesList } from '../FeaturesList/FeaturesList';
+import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
 @Component({
-  selector: 'crg-features-list',
-  template: '<div class="features-list" #react></div>',
-  styleUrls: ['./features-list.component.scss']
+  selector: 'crg-features-list-sidebar',
+  template: '<div class="features-list-sidebar" #react></div>',
+  styleUrls: ['./features-list-sidebar.component.scss']
 })
-export class FeaturesListComponent implements OnInit, OnDestroy, OnChanges {
+export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() features: WfsFeature[];
   @Input() layerTitle: string;
   @Output() onItemSelect = new EventEmitter<WfsFeature>();
   @Output() onItemHighlight = new EventEmitter<WfsFeature>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit() {
+  ngOnInit () {
     this.renderReactElement();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy () {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnChanges() {
+  ngOnChanges () {
     this.renderReactElement();
   }
 
   private renderReactElement() {
-    const reactElement = createElement(FeaturesList, {});
+    const reactElement = createElement(FeaturesListSidebar, {});
 
     render(reactElement, this.ref.nativeElement);
   }
 
   @boundMethod
-  private itemSelectHandler(item: WfsFeature) {
+  private itemSelectHandler (item: WfsFeature) {
     this.onItemSelect.emit(item);
   }
-
+  
   @boundMethod
-  private itemHighlightHandler(item: WfsFeature) {
+  private itemHighlightHandler (item: WfsFeature) {
     this.onItemHighlight.emit(item);
   }
 }
