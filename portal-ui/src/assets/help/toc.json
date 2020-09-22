@@ -2,41 +2,54 @@
   {
     "id": "about",
     "title": "О программе",
-    "platforms": ["conv"],
-    "contentUrl": "/assets/help/about/03task.html",
+    "contentUrl": "/assets/help/about/00about.html",
     "children": [
       {
         "id": "evolution",
         "title": "Эволюция документов территориального планирования",
+        "platforms": ["conv"],
         "contentUrl": "/assets/help/about/01evolution.html"
       },
       {
         "id": "GML",
         "title": "Что такое GML-документ территориального планирования",
+        "platforms": ["conv"],
         "contentUrl": "/assets/help/about/02GML.html"
       },
       {
         "id": "task",
         "title": "Задачи GML конвертера",
+        "platforms": ["conv"],
         "contentUrl": "/assets/help/about/03task.html"
       }
     ]
   },
   {
+    "id": "login",
+    "title": "Запуск и авторизация в системе",
+    "contentUrl": "/assets/help/login/00login.html"
+  },
+  {
     "id": "projects",
     "title": "Управление проектами",
-    "platforms": ["conv"],
     "contentUrl": "/assets/help/projects/00projects.html",
     "children": [
       {
         "id": "create",
         "title": "Создание проекта",
+        "platforms": ["conv"],
         "contentUrl": "/assets/help/projects/01create.html"
       },
       {
         "id": "delete",
         "title": "Удаление проекта",
+        "platforms": ["conv"],
         "contentUrl": "/assets/help/projects/02delete.html"
+      },
+      {
+        "id": "select",
+        "title": "Выбор проекта",
+        "contentUrl": "/assets/help/projects/03select.html"
       }
     ]
   },
@@ -64,20 +77,99 @@
     "contentUrl": "/assets/help/map/00map.html",
     "children": [
       {
-        "id": "copy",
-        "title": "Копирование и перенос векторных данных между слоями.",
-        "contentUrl": "/assets/help/map/01copy.html"
+        "id": "controlLayers",
+        "title": "Управление слоями",
+        "contentUrl": "/assets/help/map/01controlLayers.html"
       },
       {
-        "id": "edit",
-        "title": "Внесение изменений в требуемую Приказом информацию.",
-        "contentUrl": "/assets/help/map/02edit.html"
+        "id": "addressSearch",
+        "title": "Адресный поиск",
+        "contentUrl": "/assets/help/map/02addressSearch.html"
+      },
+      {
+        "id": "accountChange",
+        "title": "Смена учётной записи",
+        "contentUrl": "/assets/help/map/03accountChange.html"
+      },
+      {
+        "id": "punctureObject",
+        "title": "Получение дополнительной информации об объекте (прокол)",
+        "contentUrl": "/assets/help/map/04punctureObject.html"
+      },
+      {
+        "id": "attributeTable",
+        "title": "Получение атрибутивной информации об объекте (атрибутивная таблица)",
+        "contentUrl": "/assets/help/map/05attributeTable.html"
+      },
+      {
+        "id": "fullEditObject",
+        "title": "Добавление/редактирование/удаление объектов",
+        "contentUrl": "/assets/help/map/fullEditObject/01createObjectMap.html",
+        "children": [
+          {
+            "id": "createObjectMap",
+            "title": "Создание объекта путем рисования на карте",
+            "contentUrl": "/assets/help/map/fullEditObject/01createObjectMap.html"
+          },
+          {
+            "id": "createObjectNotepad",
+            "title": "Создание объекта по координатам путем вставки их из блокнота",
+            "contentUrl": "/assets/help/map/fullEditObject/02createObjectNotepad.html"
+          },
+          {
+            "id": "createObjectCSV",
+            "title": "Создание объекта по координатам путем вставки их из файла CSV",
+            "contentUrl": "/assets/help/map/fullEditObject/03createObjectCSV.html"
+          },
+          {
+            "id": "editObject",
+            "title": "Редактирование объекта",
+            "contentUrl": "/assets/help/map/fullEditObject/04editObject.html"
+          },
+          {
+            "id": "addDocumentObject",
+            "title": "Прикрепление документов (файлов) к объектам",
+            "contentUrl": "/assets/help/map/fullEditObject/05addDocumentObject.html"
+          },
+          {
+            "id": "deleteObject",
+            "title": "Удаление объекта",
+            "contentUrl": "/assets/help/map/fullEditObject/06deleteObject.html"
+          },
+          {
+            "id": "downloadCoordinates",
+            "title": "Выгрузка координат существующего объекта в файл CSV",
+            "contentUrl": "/assets/help/map/fullEditObject/07downloadCoordinates.html"
+          },
+          {
+            "id": "allEditObjects",
+            "title": "Множественное редактирование/удаление объектов на карте через атрибутивную таблицу",
+            "contentUrl": "/assets/help/map/fullEditObject/08allEditObjects.html"
+          },
+          {
+            "id": "copy",
+            "title": "Копирование и перенос векторных данных между слоями",
+            "contentUrl": "/assets/help/map/fullEditObject/09copy.html"
+          },
+          {
+            "id": "edit",
+            "title": "Внесение изменений в требуемую Приказом информацию",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/fullEditObject/10edit.html"
+          }
+        ]
+      },
+      {
+        "id": "print",
+        "title": "Печать фрагмента карты",
+        "contentUrl": "/assets/help/map/print/00print.html"
       }
     ]
   },
   {
     "id": "validate",
     "title": "Проверка данных",
+    "platforms": ["conv"],
     "contentUrl": "/assets/help/validate/00validate.html",
     "children": [
       {
@@ -108,6 +200,7 @@
   {
     "id": "export",
     "title": "Выгрузка данных",
+    "platforms": ["conv"],
     "contentUrl": "/assets/help/export/00export.html",
     "children": [
       {
