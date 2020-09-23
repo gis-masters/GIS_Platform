@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { authService, AuthCredentials } from '../../services/auth.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 
 @Component({
   selector: 'crg-login-form',
@@ -14,6 +15,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   @Input() redirectTo: string;
   @Input() noRecovery: boolean;
 
+  busy = false;
   isWrongPassword = false;
   isUserDisabled = false;
 
@@ -26,8 +28,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private router: Router) {}
 
-  ngOnInit(): void {
-    // authService.validateAuth(this.redirectTo);//
+  ngOnInit() {
+    if (currentUser.userName) {
+      this.goToProjects();
+    }
   }
 
   ngOnDestroy(): void {
@@ -35,7 +39,12 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  private goToProjects() {
+    this.router.navigateByUrl('/projects/default');
+  }
+
   async onSubmit() {
+    this.busy = true;
     const credentials: AuthCredentials = {
       username: this.loginForm.value.username,
       password: this.loginForm.value.password
@@ -48,8 +57,9 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       const result = await authService.authenticate(credentials);
 
       if (result.ok) {
-        this.router.navigateByUrl('/projects/default');
+        this.goToProjects();
       } else {
+        this.busy = false;
         this.isUserDisabled = result.userDisabled;
         this.isWrongPassword = result.wrongPassword;
       }

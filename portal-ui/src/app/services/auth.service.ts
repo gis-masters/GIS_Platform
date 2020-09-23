@@ -37,16 +37,16 @@ axios.interceptors.response.use(
   async (e: AxiosError) => {
     const err = e.toJSON ? { ...e.toJSON(), response: e.response } : e;
 
-    if (e.config && e.config.url === (await serverProperties.authServerUrl)) {
-      throw err;
+    if (
+      e.response &&
+      e.response.status === 401 &&
+      !(e.config && e.config.url === (await serverProperties.authServerUrl)) &&
+      !(e.config && e.config.url === (await serverProperties.usersUrl) + '/current')
+    ) {
+      await authService.logout();
     }
 
-    if (e.response && e.response.status === 401) {
-      authService.logout();
-      return;
-    } else {
-      throw err;
-    }
+    throw err;
   }
 );
 

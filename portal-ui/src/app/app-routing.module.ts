@@ -58,6 +58,9 @@ const routes: AppRoutes = [
   {
     path: 'login',
     component: LoginPageComponent,
+    resolve: {
+      user: CurrentUserResolver
+    },
     data: { page: Pages.LOGIN }
   },
   {

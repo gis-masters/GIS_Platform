@@ -40,7 +40,7 @@ class UsersService {
   private static _instance: UsersService;
   private usersListStoreInited = false;
   private debouncedFetchUsersListStore: () => Promise<void>;
-  private currentUserInfoRequest?: Promise<UserInfo>;
+  private currentUserInfoRequest?: Promise<void>;
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
@@ -51,13 +51,16 @@ class UsersService {
   }
 
   async fetchCurrent() {
-    if (!this.currentUserInfoRequest) {
-      await services.provided;
-      const url = (await serverProperties.usersUrl) + '/current';
-      this.currentUserInfoRequest = http.get<UserInfo>(url);
+    if (currentUser.userName) {
+      return;
     }
 
-    currentUser.setUser(await this.currentUserInfoRequest);
+    if (!this.currentUserInfoRequest) {
+      this.currentUserInfoRequest = this.fetchingCurrent();
+    }
+
+    await this.currentUserInfoRequest;
+    delete this.currentUserInfoRequest;
   }
 
   dropCurrent() {
@@ -83,7 +86,6 @@ class UsersService {
   }
 
   async delete(user: CrgUser) {
-    await services.provided;
     const url = await serverProperties.usersUrl;
 
     await http.delete(`${url}/${user.id}`);
@@ -99,6 +101,15 @@ class UsersService {
     this.usersListStoreInited = true;
 
     await this.fetchUsersListStore();
+  }
+
+  private async fetchingCurrent(): Promise<void> {
+    const url = (await serverProperties.usersUrl) + '/current';
+    try {
+      currentUser.setUser(await http.get<UserInfo>(url));
+    } catch (e) {
+      currentUser.setUser();
+    }
   }
 
   private async fetchUsersListStore() {

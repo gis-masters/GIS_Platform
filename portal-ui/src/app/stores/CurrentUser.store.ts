@@ -27,7 +27,7 @@ class CurrentUser implements UserInfo {
   }
 
   @action
-  setUser(user: UserInfo) {
+  setUser(user?: UserInfo) {
     Object.assign(this, emptyUser, user);
   }
 
