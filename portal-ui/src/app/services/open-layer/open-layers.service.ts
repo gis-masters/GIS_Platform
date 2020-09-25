@@ -34,6 +34,7 @@ import {
 } from '../geoserver/projections.service';
 import { WfsFeature } from '../geoserver/wfs-models';
 import { serverProperties } from '../server-properties.service';
+import { currentMap } from '../../stores/CurrentMap.store';
 import { services } from '../services';
 import { Emitter } from '../util/Emitter';
 import { MapperUtil } from './MapperUtil';
@@ -555,6 +556,7 @@ class OpenLayersService {
   }
 
   private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
+    currentMap.enrollLoadingStart();
     let data: Blob | any;
     try {
       data = await http.get<Blob>(url, { responseType: 'blob' });
@@ -563,9 +565,11 @@ class OpenLayersService {
     }
     const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
+    currentMap.enrollLoadingFinish();
   }
 
   private async arcGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
+    currentMap.enrollLoadingStart();
     let data: Blob | any;
 
     const replacedUrl = url
@@ -585,6 +589,7 @@ class OpenLayersService {
 
     const blob = new Blob([data], { type: 'image/vnd.jpeg-png8' });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
+    currentMap.enrollLoadingFinish();
   }
 
   /**

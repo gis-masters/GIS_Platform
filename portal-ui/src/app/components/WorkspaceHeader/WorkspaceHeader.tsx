@@ -5,6 +5,7 @@ import { WorkspaceHeaderBurger } from './Burger/WorkspaceHeader-Burger';
 import { WorkspaceHeaderOrganisation } from './Organisation/WorkspaceHeader-Organisation';
 import { WorkspaceHeaderBreadcrumbs } from './Breadcrumbs/WorkspaceHeader-Breadcrumbs';
 import { WorkspaceHeaderButtons } from './Buttons/WorkspaceHeader-Buttons';
+import { WorkspaceHeaderLoader } from './Loader/WorkspaceHeader-Loader';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader.scss';
 
@@ -18,6 +19,7 @@ export class WorkspaceHeader extends Component {
         <WorkspaceHeaderOrganisation />
         <WorkspaceHeaderBreadcrumbs />
         <WorkspaceHeaderButtons />
+        <WorkspaceHeaderLoader />
       </div>
     );
   }
