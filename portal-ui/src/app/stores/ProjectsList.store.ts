@@ -1,10 +1,10 @@
 import { observable, computed, action } from 'mobx';
 
-import { Project } from '../services/crg/projects.models';
+import { CrgProject } from '../services/crg/projects.models';
 
 class ProjectsList {
   private static _instance: ProjectsList;
-  @observable private _list?: Project[];
+  @observable private _list?: CrgProject[];
   @observable private deleted: number[] = [];
 
   private constructor() { }
@@ -14,7 +14,7 @@ class ProjectsList {
   }
 
   @action
-  setList(list: Project[]) {
+  setList(list: CrgProject[]) {
     this._list = list;
   }
 
@@ -24,7 +24,7 @@ class ProjectsList {
   }
 
   @computed
-  get list(): Project[] {
+  get list(): CrgProject[] {
     return (this._list || [])
       .filter(p => !this.deleted.includes(p.id))
       .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());

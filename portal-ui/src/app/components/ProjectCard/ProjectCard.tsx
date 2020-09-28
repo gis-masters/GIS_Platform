@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { Project } from '../../services/crg/projects.models';
+import { CrgProject } from '../../services/crg/projects.models';
 
 import { ProjectCardAdd } from './Add/ProjectCard-Add';
 import { ProjectCardCard } from './Card/ProjectCard-Card';
@@ -15,7 +15,7 @@ const cnProjectCard = cn('ProjectCard');
 export type CardTyp = 'card' | 'add';
 
 interface ProjectCardProps {
-  project?: Project;
+  project?: CrgProject;
   className?: string;
   typ: CardTyp;
 }

@@ -4,13 +4,13 @@ import { permissionsList } from '../../stores/PermissionsList.store';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { getPermissions, RoleAssignmentBody } from './permissions.service';
 import { communicationService } from '../communication.service';
-import { Project, CrgLayer, CrgLayerType } from './projects.models';
+import { CrgProject, CrgLayer, CrgLayerType } from './projects.models';
 import { projectsService } from './projects.service';
 import { services } from '../services';
 import { Toast } from '../../components/Toast/Toast';
 
 export interface PermissionsListItem {
-  project: Project;
+  project: CrgProject;
   layer?: CrgLayer;
   permissions: RoleAssignmentBody[];
   broken?: boolean;
@@ -60,15 +60,13 @@ class PermissionsListService {
 
     const permissions: PermissionsListItem[] = [];
     let itemCounter = 0;
-    const items = projectsList.list
-      .map(project =>
-        //undefined нужен для обозначения собственно проекта
-        [undefined]
-          .concat(project.layers)
-          .filter(layer => !layer || layer.type === CrgLayerType.VECTOR)
-          .map(layer => [project, layer])
-      )
-      .flat();
+    const items = [];
+
+    for (let project of projectsList.list) {
+      const layers = await projectsService.getProjectLayers(project.id);
+      items.push([project]);
+      items.concat(layers.filter(layer => layer.type === CrgLayerType.VECTOR).map(layer => [project, layer]));
+    }
 
     for (let [project, layer] of items) {
       let broken = false;

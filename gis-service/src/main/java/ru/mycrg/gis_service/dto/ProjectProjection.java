@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.dto;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.gis_service.entity.Project;
 
@@ -25,9 +26,8 @@ public interface ProjectProjection {
 
     LocalDateTime getCreatedAt();
 
-    List<LayerProjection> getLayers();
-
-    List<GroupProjection> getGroups();
+    @Value("#{target.layers.size()}")
+    Long getLayersCount();
 
     List<BaseMapProjection> getBaseMaps();
 

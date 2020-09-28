@@ -24,6 +24,7 @@ import ru.mycrg.gis_service.repository.LayerRepository;
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
@@ -56,8 +57,10 @@ public class LayerService {
 
     public List<LayerProjection> findAll(long projectId, Authentication authentication) {
         return projectService
-                .getProjectionById(projectId, authentication)
-                .getLayers();
+                .getById(projectId, authentication)
+                .getLayers().stream()
+                .map(layer -> factory.createProjection(LayerProjection.class, layer))
+                .collect(Collectors.toList());
     }
 
     public LayerProjection findById(long projectId, long layerId, Authentication authentication) {

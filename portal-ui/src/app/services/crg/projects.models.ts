@@ -35,7 +35,6 @@ export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
   legend?: RuleWithLegend[];
   legendIsFetching?: boolean;
-  sourceData?: CrgSource;
 }
 
 export interface CrgSource {
@@ -60,7 +59,7 @@ export interface TreeItem<T = CrgLayer | CrgLayersGroup> {
   actualTransparency?: number;
 }
 
-export interface Project {
+export interface CrgProject {
   id: number;
   name: string;
   internalName: string;
@@ -68,10 +67,9 @@ export interface Project {
   default: boolean;
   order: number;
   organizationId: number;
-  layers: CrgLayer[];
-  groups: CrgLayersGroup[];
   createdAt: string;
   baseMaps: CrgProjectBaseMap[];
+  layersCount: number;
 }
 
 export interface Rule {

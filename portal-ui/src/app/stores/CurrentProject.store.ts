@@ -2,16 +2,35 @@ import { action, computed, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, Project, TreeItem } from '../services/crg/projects.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject, TreeItem } from '../services/crg/projects.models';
 
 const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 
-class CurrentProject {
+interface CrgProjectData extends CrgProject {
+  layers: CrgLayer[];
+  groups: CrgLayersGroup[];
+}
+
+const emptyProject: CrgProjectData = {
+  id: 0,
+  baseMaps: [],
+  bbox: '',
+  createdAt: '',
+  default: false,
+  name: '',
+  order: 0,
+  organizationId: 0,
+  internalName: '',
+  layersCount: 0,
+  layers: [],
+  groups: []
+};
+
+class CurrentProject implements CrgProjectData {
   private static _instance: CurrentProject;
 
   @observable bbox: string;
   @observable createdAt: string;
-  @observable groups: CrgLayersGroup[];
   @observable id: number;
   @observable internalName: string;
   @observable name: string;
@@ -19,7 +38,9 @@ class CurrentProject {
   @observable organizationId: number;
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
-  @observable layers?: CrgLayer[];
+  @observable layers: CrgLayer[];
+  @observable groups: CrgLayersGroup[];
+  @observable layersCount: number;
   @observable _maxLayersInBatch?: number;
 
   @observable viewZoom: number;
@@ -112,17 +133,13 @@ class CurrentProject {
   }
 
   @action
-  setProject(project: Project | null) {
-    this.bbox = project && project.bbox;
-    this.createdAt = project && project.createdAt;
-    this.id = project && project.id;
-    this.internalName = project && project.internalName;
-    this.groups = project ? project.groups : [];
-    this.name = project && project.name;
-    this.order = project && project.order;
-    this.organizationId = project && project.organizationId;
-    this.baseMaps = project && project.baseMaps;
-    this.layers = project ? project.layers : [];
+  setProject(project: CrgProject, layers: CrgLayer[], groups: CrgLayersGroup[]) {
+    Object.assign(this, emptyProject, { ...project, layers, groups });
+  }
+
+  @action
+  dropProject() {
+    Object.assign(this, emptyProject);
   }
 
   @computed

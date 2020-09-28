@@ -1,4 +1,4 @@
-import { CrgLayer, Project } from './projects.models';
+import { CrgLayer, CrgProject, CrgSource } from './projects.models';
 import { schemaService } from './schema.service';
 import { CrgApiPageableResponse } from './models';
 import { services } from '../services';
@@ -71,7 +71,9 @@ async function isAllowed(layer: CrgLayer, targetPoint: PermissionPoint): Promise
     return true;
   }
 
-  if (!layer || !targetPoint || !layer.sourceData) {
+  const sourceData = await getLayerSourceData(layer);
+
+  if (!layer || !targetPoint || !sourceData) {
     return false;
   }
 
@@ -85,7 +87,7 @@ async function isAllowed(layer: CrgLayer, targetPoint: PermissionPoint): Promise
   if (readOnly) {
     return permissions.get(Role.VIEWER).includes(targetPoint);
   } else {
-    return permissions.get(layer.sourceData.permission).includes(targetPoint);
+    return permissions.get(sourceData.permission).includes(targetPoint);
   }
 }
 
@@ -109,13 +111,23 @@ export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.EXPORT);
 }
 
-async function getPermissionsUrl(project: Project, layer?: CrgLayer): Promise<string> {
+async function getPermissionsUrl(project: CrgProject, layer?: CrgLayer): Promise<string> {
   if (layer) {
     const dataServerUrl = await serverProperties.dataServerUrl;
+
     return `${dataServerUrl}/schemas/${project.internalName}/tables/${layer.internalName}/roleAssignment`;
   } else {
     const projectsUrl = await serverProperties.projectsUrl;
+
     return `${projectsUrl}/${project.id}/permissions`;
+  }
+}
+
+async function getLayerSourceData(layer: CrgLayer): Promise<CrgSource | null> {
+  try {
+    return await http.get<CrgSource>(`${await serverProperties.baseUrl}${layer.dataSourceUri}`);
+  } catch (e) {
+    return null;
   }
 }
 
@@ -123,7 +135,7 @@ function handleSavingError(
   e: any,
   actionType: string,
   payload: RoleAssignmentBody,
-  project: Project,
+  project: CrgProject,
   layer?: CrgLayer
 ) {
   const errText =
@@ -135,7 +147,7 @@ function handleSavingError(
   services.logger.error(errText, e);
 }
 
-export async function getPermissions(project: Project, layer?: CrgLayer): Promise<RoleAssignmentBody[]> {
+export async function getPermissions(project: CrgProject, layer?: CrgLayer): Promise<RoleAssignmentBody[]> {
   const url = await getPermissionsUrl(project, layer);
 
   if (layer) {
@@ -148,7 +160,7 @@ export async function getPermissions(project: Project, layer?: CrgLayer): Promis
   }
 }
 
-export async function addPermission(payload: RoleAssignmentBody, project: Project, layer?: CrgLayer) {
+export async function addPermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
   const url = await getPermissionsUrl(project, layer);
 
   try {
@@ -158,7 +170,7 @@ export async function addPermission(payload: RoleAssignmentBody, project: Projec
   }
 }
 
-export async function removePermission(payload: RoleAssignmentBody, project: Project, layer?: CrgLayer) {
+export async function removePermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
   const url = await getPermissionsUrl(project, layer);
 
   try {

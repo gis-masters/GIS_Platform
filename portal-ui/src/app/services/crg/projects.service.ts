@@ -4,9 +4,8 @@ import { TaskImport } from '../geoserver/import/taskImport';
 import { getRoute, services } from '../services';
 import { wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
-import { getSourceInfo } from './data.service';
 import { CrgApiResponse, Process } from './models';
-import { CrgLayerType, Project } from './projects.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject, CrgSource } from './projects.models';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { isReadAllowed } from './permissions.service';
@@ -15,7 +14,7 @@ import { http } from '../http.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
-  private fetchingCurrentProject?: Promise<Project>;
+  private fetchingCurrentProject?: Promise<CrgProject>;
 
   private constructor() {
     reaction(
@@ -35,7 +34,7 @@ class ProjectsService {
     const url = await serverProperties.projectsUrl;
     const params = { size: '1000' };
 
-    const response = await http.get<CrgApiResponse<{ projects: Project[] }>>(url, { params });
+    const response = await http.get<CrgApiResponse<{ projects: CrgProject[] }>>(url, { params });
 
     if (response && response._embedded) {
       projectsList.setList(response._embedded.projects);
@@ -45,7 +44,7 @@ class ProjectsService {
   }
 
   clearCurrent() {
-    currentProject.setProject(null);
+    currentProject.dropProject();
     delete this.fetchingCurrentProject;
   }
 
@@ -70,7 +69,11 @@ class ProjectsService {
     const project = await this.fetchingCurrentProject;
 
     if (project.id === id) {
-      currentProject.setProject(project);
+      currentProject.setProject(
+        project,
+        await this.getProjectLayers(project.id),
+        await this.getProjectGroups(project.id)
+      );
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
@@ -112,28 +115,23 @@ class ProjectsService {
     return http.post<Process>(url, payload);
   }
 
-  private async getById(id: number): Promise<Project> {
+  private async getById(id: number): Promise<CrgProject> {
     await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
-    const project = await http.get<Project>(url);
-
-    await this.handleLayers(project);
+    const project = await http.get<CrgProject>(url);
 
     return project;
   }
 
-  private async handleLayers(project: Project) {
-    await Promise.all(
-      project.layers.map(async layer => {
-        if (layer.type === CrgLayerType.VECTOR && layer.dataSourceUri) {
-          layer.sourceData = await getSourceInfo(layer.dataSourceUri);
-        }
-      })
-    );
+  async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
+    const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
+    const layersPermissions = await Promise.all(layers.map(isReadAllowed));
 
-    const layersPermissions = await Promise.all(project.layers.map(isReadAllowed));
+    return layers.filter((layer, i) => layersPermissions[i]);
+  }
 
-    project.layers = project.layers.filter((layer, i) => layersPermissions[i]);
+  async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
+    return await http.get<CrgLayersGroup[]>(`${await serverProperties.projectsUrl}/${projectId}/groups`);
   }
 }
 

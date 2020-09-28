@@ -23,7 +23,7 @@ import {
   removePermission,
   PrincipalType
 } from '../../services/crg/permissions.service';
-import { Project, CrgLayer } from '../../services/crg/projects.models';
+import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
 import { communicationService } from '../../services/communication.service';
 import { FilterParams, filterObjects } from '../../services/util/filterObjects';
 import { PermissionsListItem } from '../../services/crg/permissionsList.service';
@@ -46,7 +46,7 @@ import '!style-loader!css-loader!sass-loader!./PermissionsListDialog.scss';
 
 const cnPermissionsListDialog = cn('PermissionsListDialog');
 
-type ApiArgs = [RoleAssignmentBody, Project, CrgLayer];
+type ApiArgs = [RoleAssignmentBody, CrgProject, CrgLayer];
 
 interface PermissionsListProps {
   principalId: number;

@@ -3,7 +3,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Project } from '../../../services/crg/projects.models';
+import { CrgProject } from '../../../services/crg/projects.models';
 import { Link } from '../../Link/Link';
 
 import { ProjectCardName } from '../Name/ProjectCard-Name';
@@ -14,7 +14,7 @@ import '!style-loader!css-loader!sass-loader!./ProjectCard-Card.scss';
 const cnProjectCard = cn('ProjectCard');
 
 interface ProjectCardCardProps {
-  project: Project;
+  project: CrgProject;
 }
 
 @observer
@@ -32,8 +32,8 @@ export class ProjectCardCard extends Component<ProjectCardCardProps> {
 
   @computed
   private get url(): string {
-    const { id, layers } = this.props.project;
+    const { id, layersCount } = this.props.project;
 
-    return layers.length ? `/projects/${id}/map` : `/projects/${id}/import`;
+    return layersCount ? `/projects/${id}/map` : `/projects/${id}/import`;
   }
 }
