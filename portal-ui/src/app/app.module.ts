@@ -23,7 +23,7 @@ import { FilterLayersPipe } from './pipes/filter-layers.pipe';
 
 import { AppComponent } from './pages/_app/app.component';
 
-import { ProjectsListComponent } from './components/projects-list/projects-list.component';
+import { ProjectsComponent } from './components/projects/projects.component';
 import { HeaderComponent } from './components/header/header.component';
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
 import { MappingCardComponent } from './components/mapping-card/mapping-card.component';
@@ -90,7 +90,7 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
-    ProjectsListComponent,
+    ProjectsComponent,
     ConfirmDialogComponent,
     EditFeaturesSidebarComponent,
     EditFeatureComponent,

@@ -8,41 +8,35 @@
   height: 0;
   padding-bottom: 50%;
 
+  transition: background-size 0.3s, opacity 0.3s;
   vertical-align: top;
 
   border-radius: 6px;
   background: aliceblue;
+  background-image: url(ProjectCard-Inner.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
 
-  &_typ {
-    &_card {
-      transition: background-size 0.3s, opacity 0.3s;
+  &:hover {
+    background-size: 110% 110%;
+  }
 
-      background-image: url(ProjectCard-Inner_typ_card.png);
-      background-position: 50% 50%;
-      background-size: 100% 100%;
+  .ProjectCard-Footer {
+    display: block;
 
-      &:hover {
-        background-size: 110% 110%;
-      }
+    height: 30px;
 
-      .ProjectCard-Footer {
-        display: block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
 
-        height: 30px;
+    background: rgba(255,255,255,0.6);
 
-        cursor: pointer;
-        transition: background-color 0.3s;
-        text-align: center;
+    font-weight: 500;
+    line-height: 28px;
 
-        background: rgba(255,255,255,0.6);
-
-        font-weight: 500;
-        line-height: 28px;
-
-        &:hover {
-          background: rgba(255,255,255,0.7);
-        }
-      }
+    &:hover {
+      background: rgba(255,255,255,0.7);
     }
 
     &_loader,

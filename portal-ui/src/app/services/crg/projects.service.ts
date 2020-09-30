@@ -80,7 +80,7 @@ class ProjectsService {
     }
   }
 
-  async create(name: string): Promise<Process> {
+  async create(name: string): Promise<CrgProject> {
     await services.provided;
     const url = await serverProperties.projectsUrl;
 
@@ -88,14 +88,14 @@ class ProjectsService {
       projectName: name
     };
 
-    return http.post<Process>(url, payload);
+    return http.post<CrgProject>(url, payload);
   }
 
   async delete(id: number) {
     await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
     await http.delete(url);
-    projectsList.considerDeleted(id);
+    projectsList.delete(id);
   }
 
   /**

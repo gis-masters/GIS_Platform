@@ -12,7 +12,7 @@ function compare<T>(
   field: keyof T,
   asc: boolean,
   customFieldsPrep?: CustomSortFieldsPrep<T>,
-  baseSortField?: keyof T
+  fallBackSortField?: keyof T
 ) {
   let fieldA: T[keyof T] | number | string = a[field];
   let fieldB: T[keyof T] | number | string = b[field];
@@ -34,17 +34,17 @@ function compare<T>(
     result = -result;
   }
 
-  return result || (baseSortField ? compare(a, b, baseSortField, asc, customFieldsPrep) : 0);
+  return result || (fallBackSortField ? compare(a, b, fallBackSortField, asc, customFieldsPrep) : 0);
 }
 
 export function sortObjects<T>(
   arr: T[],
   field: keyof T,
   asc: boolean,
-  baseSortField: keyof T,
+  fallBackSortField: keyof T,
   customFieldsPrep?: CustomSortFieldsPrep<T>
 ): T[] {
   return arr.slice().sort((a, b) => {
-    return compare(a, b, field, asc, customFieldsPrep, baseSortField);
+    return compare(a, b, field, asc, customFieldsPrep, fallBackSortField);
   });
 }

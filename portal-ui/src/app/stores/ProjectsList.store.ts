@@ -1,16 +1,34 @@
 import { observable, computed, action } from 'mobx';
 
 import { CrgProject } from '../services/crg/projects.models';
+import { filterObjects } from '../services/util/filterObjects';
+import { sortObjects } from '../services/util/sortObjects';
 
 class ProjectsList {
   private static _instance: ProjectsList;
   @observable private _list?: CrgProject[];
-  @observable private deleted: number[] = [];
 
-  private constructor() { }
+  @observable nameFilter = '';
+  @observable sortBy: keyof CrgProject = 'createdAt';
+  @observable sortAsc = true;
+
+  private constructor() {}
 
   static get instance() {
     return this._instance || (this._instance = new this());
+  }
+
+  @computed
+  get list(): CrgProject[] {
+    const filtered = filterObjects(this._list || [], { name: this.nameFilter });
+    const sorted = sortObjects(filtered, this.sortBy, this.sortAsc, 'id');
+
+    return sorted;
+  }
+
+  @computed
+  get isLoaded(): boolean {
+    return Boolean(this._list);
   }
 
   @action
@@ -19,20 +37,25 @@ class ProjectsList {
   }
 
   @action
-  considerDeleted(id: number) {
-    this.deleted.push(id);
+  delete(id: number) {
+    const index = this._list.findIndex(project => project.id === id);
+
+    this._list.splice(index, 1);
   }
 
-  @computed
-  get list(): CrgProject[] {
-    return (this._list || [])
-      .filter(p => !this.deleted.includes(p.id))
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  @action
+  setNameFilter(titleFilter: string) {
+    this.nameFilter = titleFilter;
   }
 
-  @computed
-  get isLoaded(): boolean {
-    return Boolean(this._list);
+  @action
+  setSortBy(fieldName: keyof CrgProject) {
+    this.sortBy = fieldName;
+  }
+
+  @action
+  setSortAsc(isAsc: boolean) {
+    this.sortAsc = isAsc;
   }
 }
 

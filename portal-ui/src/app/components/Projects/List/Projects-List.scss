@@ -1,8 +1,8 @@
-.ProjectsList {
+.Projects-List {
   display: grid;
   justify-content: center;
 
-  padding: 35px 40px;
+  padding: 0 40px;
 
   grid-template-columns: repeat(var(--ProjectsListColumns), minmax(310px, 410px));
   --ProjectsListColumns: 3;
@@ -13,11 +13,5 @@
 
   @media(max-width: 670px) {
     --ProjectsListColumns: 1;
-  }
-
-  &-Card {
-    min-width: 300px;
-    max-width: 400px;
-    margin: 0 5px 10px;
   }
 }

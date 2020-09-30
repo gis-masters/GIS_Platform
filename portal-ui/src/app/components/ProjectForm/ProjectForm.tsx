@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import TextField from '@material-ui/core/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { TextField } from '@material-ui/core';
 
-import { projectsService } from '../../../services/crg/projects.service';
-import { Button } from '../../Button/Button';
-import { Loading } from '../../Loading/Loading';
+import { communicationService } from '../../services/communication.service';
+import { projectsService } from '../../services/crg/projects.service';
+import { Loading } from '../Loading/Loading';
+import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./ProjectCard-Form.scss';
+import '!style-loader!css-loader!sass-loader!./ProjectForm.scss';
 
-const cnProjectCard = cn('ProjectCard');
+const cnProjectForm = cn('ProjectForm');
 
-interface ProjectCardFormProps {
-  onCancel: () => void;
+interface ProjectFormProps {
+  onClose: () => void;
 }
 
 @observer
-export class ProjectCardForm extends Component<ProjectCardFormProps> {
+export class ProjectForm extends Component<ProjectFormProps> {
   @observable private newProjectName = '';
   @observable private error = '';
   @observable private busy = false;
@@ -27,27 +29,27 @@ export class ProjectCardForm extends Component<ProjectCardFormProps> {
 
   render() {
     return (
-      <form className={cnProjectCard('Form')} onSubmit={this.handleSubmit} noValidate autoComplete='off'>
+      <form className={cnProjectForm({ busy: this.busy })} onSubmit={this.handleSubmit} noValidate autoComplete='off'>
         <TextField
           label='Название проекта'
-          className={cnProjectCard('FormField')}
+          className={cnProjectForm('Input')}
           helperText={`${this.newProjectName.length}/${this.maxLength}`}
-          autoFocus={true}
+          autoFocus
           inputProps={{ maxLength: this.maxLength }}
-          FormHelperTextProps={{ className: cnProjectCard('FormHelperText') }}
+          FormHelperTextProps={{ className: cnProjectForm('HelperText') }}
           onChange={this.handleChange}
         />
 
-        {this.error ? <div className={cnProjectCard('FormError')}>{this.error}</div> : null}
+        <div className={cnProjectForm('Error')}>{this.error}</div>
 
-        {this.busy ? <Loading noBackdrop={true} /> : null}
+        {this.busy ? <Loading global /> : null}
 
-        <div className={cnProjectCard('Footer')}>
-          <Button type='button' onClick={this.props.onCancel} className={cnProjectCard('FormButton')} variant='text'>
-            Отмена
+        <div className={cnProjectForm('Footer')}>
+          <Button type='submit' disabled={!this.newProjectName} className={cnProjectForm('Button')} color='primary'>
+            Создать
           </Button>
-          <Button type='submit' disabled={!this.newProjectName} className={cnProjectCard('FormButton')} variant='text'>
-            Сохранить
+          <Button type='button' onClick={this.props.onClose} className={cnProjectForm('Button')}>
+            Отмена
           </Button>
         </div>
       </form>
@@ -82,10 +84,11 @@ export class ProjectCardForm extends Component<ProjectCardFormProps> {
     this.setBusy(true);
 
     try {
-      await projectsService.create(this.newProjectName);
+      const newProject = await projectsService.create(this.newProjectName);
       await projectsService.fetchProjects();
-
-      this.props.onCancel();
+      Toast.success('Проект создан');
+      communicationService.projectCreated.emit(newProject);
+      this.props.onClose();
     } catch (err) {
       if (err.response && err.response.status === 409) {
         this.setError(err.message);

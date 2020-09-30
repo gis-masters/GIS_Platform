@@ -7,6 +7,7 @@ import { CrgProject } from '../../../services/crg/projects.models';
 import { Link } from '../../Link/Link';
 
 import { ProjectCardName } from '../Name/ProjectCard-Name';
+import { ProjectCardCount } from '../Count/ProjectCard-Count';
 import { ProjectCardFooter } from '../Footer/ProjectCard-Footer';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Card.scss';
@@ -25,6 +26,7 @@ export class ProjectCardCard extends Component<ProjectCardCardProps> {
     return (
       <Link className={cnProjectCard('Card')} url={this.url}>
         <ProjectCardName>{project.name}</ProjectCardName>
+        <ProjectCardCount count={project.layersCount} />
         <ProjectCardFooter />
       </Link>
     );

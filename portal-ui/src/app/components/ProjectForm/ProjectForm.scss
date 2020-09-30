@@ -1,0 +1,31 @@
+body .ProjectForm {
+  padding: 20px;
+
+  &_busy {
+    &::after {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      content: '';
+    }
+  }
+
+  &-Footer {
+    display: flex;
+
+    gap: 15px;
+  }
+
+  &-Error {
+    height: 20px;
+    margin-bottom: 5px;
+
+    color: var(--danger);
+
+    font-size: 14px;
+    line-height: 1;
+  }
+}

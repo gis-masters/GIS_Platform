@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 
 import { GmlDialogData } from '../components/export/export-dilog/export-dialog.component';
 import { ValidationDialogData } from '../components/validation/validation-dialog/validation-dialog.component';
-import { CrgLayer } from '../services/crg/projects.models';
+import { CrgLayer, CrgProject } from '../services/crg/projects.models';
 import { Emitter } from './util/Emitter';
 
 export interface ObjectDto {
@@ -17,6 +17,7 @@ class CommunicationService {
 
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
+  projectCreated = new Emitter<CrgProject>();
 
   // TODO: избавиться от EventEmitter rxjs тут
   validationDialog = new EventEmitter<ValidationDialogData>();
