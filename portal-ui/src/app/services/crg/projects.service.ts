@@ -1,7 +1,6 @@
 import { reaction } from 'mobx';
 
 import { TaskImport } from '../geoserver/import/taskImport';
-import { getRoute, services } from '../services';
 import { wsService } from '../ws.service';
 import { serverProperties } from '../server-properties.service';
 import { CrgApiResponse, Process } from './models';
@@ -11,10 +10,11 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { isReadAllowed } from './permissions.service';
 import { route } from '../../stores/Route.store';
 import { http } from '../http.service';
+import { Toast } from '../../components/Toast/Toast';
 
 class ProjectsService {
   private static _instance: ProjectsService;
-  private fetchingCurrentProject?: Promise<CrgProject>;
+  private fetchingCurrentProject?: Promise<CrgProject | void>;
 
   private constructor() {
     reaction(
@@ -30,7 +30,6 @@ class ProjectsService {
   }
 
   async fetchProjects() {
-    await services.provided;
     const url = await serverProperties.projectsUrl;
     const params = { size: '1000' };
 
@@ -50,7 +49,7 @@ class ProjectsService {
 
   async fetchCurrent(id?: number) {
     if (!id) {
-      id = Number(getRoute().snapshot.params.projectId);
+      id = Number(route.params.projectId);
     }
 
     if (!id) {
@@ -68,6 +67,12 @@ class ProjectsService {
 
     const project = await this.fetchingCurrentProject;
 
+    if (!project) {
+      this.clearCurrent();
+
+      return;
+    }
+
     if (project.id === id) {
       currentProject.setProject(
         project,
@@ -81,7 +86,6 @@ class ProjectsService {
   }
 
   async create(name: string): Promise<CrgProject> {
-    await services.provided;
     const url = await serverProperties.projectsUrl;
 
     const payload = {
@@ -92,7 +96,6 @@ class ProjectsService {
   }
 
   async delete(id: number) {
-    await services.provided;
     const url = `${await serverProperties.projectsUrl}/${id}`;
     await http.delete(url);
     projectsList.delete(id);
@@ -104,7 +107,6 @@ class ProjectsService {
    * Организация, а соответственно и название БД есть на сервере.
    */
   async doWorkImport(tasks: TaskImport[], projectId: number, workspaceName: string): Promise<Process> {
-    await services.provided;
     const url = `${await serverProperties.apiUrl}/${projectId}/import`;
     const payload = {
       wsUiId: wsService.getId(),
@@ -115,12 +117,18 @@ class ProjectsService {
     return http.post<Process>(url, payload);
   }
 
-  private async getById(id: number): Promise<CrgProject> {
-    await services.provided;
-    const url = `${await serverProperties.projectsUrl}/${id}`;
-    const project = await http.get<CrgProject>(url);
+  private async getById(id: number): Promise<CrgProject | void> {
+    try {
+      const url = `${await serverProperties.projectsUrl}/${id}`;
 
-    return project;
+      return await http.get<CrgProject>(url);
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        Toast.warn('Не найден проект id: ' + id);
+      } else {
+        throw e;
+      }
+    }
   }
 
   async getProjectLayers(projectId: number): Promise<CrgLayer[]> {

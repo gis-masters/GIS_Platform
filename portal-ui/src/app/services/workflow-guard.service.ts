@@ -9,8 +9,7 @@ import { projectsService } from './crg/projects.service';
   providedIn: 'root'
 })
 export class WorkflowGuardService implements CanActivate {
-  constructor(private logger: NGXLogger,
-              private router: Router) { }
+  constructor(private logger: NGXLogger, private router: Router) {}
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {
@@ -21,12 +20,14 @@ export class WorkflowGuardService implements CanActivate {
         return true;
       } else {
         this.router.navigateByUrl('/projects');
+
         return false;
       }
     } catch (err) {
-        this.router.navigateByUrl('/projects');
-        this.logger.warn('Wrong workflow: empty project', err);
-        return false;
+      this.router.navigateByUrl('/projects');
+      this.logger.warn('Wrong workflow: empty project', err);
+
+      return false;
     }
   }
 }
