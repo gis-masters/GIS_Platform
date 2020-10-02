@@ -17,7 +17,7 @@ interface LayersTreeItemProps {
 @observer
 export class LayersTreeItem extends Component<LayersTreeItemProps> {
   render() {
-    const { isGroup, payload, depth, visible, hiddenByZoom } = this.props.item;
+    const { isGroup, payload, depth, visible, hiddenByZoom, errors } = this.props.item;
 
     return (
       <Layer
@@ -28,6 +28,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
         visible={visible}
         hiddenByZoom={hiddenByZoom}
         onEyeClick={this.eyeHandler}
+        errors={errors}
       />
     );
   }

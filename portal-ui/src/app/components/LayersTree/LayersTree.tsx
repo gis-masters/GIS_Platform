@@ -4,6 +4,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { currentProject } from '../../stores/CurrentProject.store';
+import { projectsService } from '../../services/crg/projects.service';
 import { CrgLayersGroup, TreeItem } from '../../services/crg/projects.models';
 
 import { LayersTreeItem } from './Item/LayersTree-Item';
@@ -14,6 +15,10 @@ const cnLayersTree = cn('LayersTree');
 
 @observer
 export class LayersTree extends Component {
+  componentDidMount() {
+    projectsService.testCurrentProjectLayers();
+  }
+
   render() {
     return (
       <div className={cnLayersTree()}>

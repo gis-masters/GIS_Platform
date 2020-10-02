@@ -57,6 +57,7 @@ export interface TreeItem<T = CrgLayer | CrgLayersGroup> {
   hiddenByZoom?: boolean;
   parent?: TreeItem<CrgLayersGroup>;
   actualTransparency?: number;
+  errors?: string[];
 }
 
 export interface CrgProject {

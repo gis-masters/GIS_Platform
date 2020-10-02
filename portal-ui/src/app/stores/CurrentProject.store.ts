@@ -9,6 +9,7 @@ const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 interface CrgProjectData extends CrgProject {
   layers: CrgLayer[];
   groups: CrgLayersGroup[];
+  layersErrors: { [key: string]: string[] };
 }
 
 const emptyProject: CrgProjectData = {
@@ -23,6 +24,7 @@ const emptyProject: CrgProjectData = {
   internalName: '',
   layersCount: 0,
   layers: [],
+  layersErrors: {},
   groups: []
 };
 
@@ -42,6 +44,7 @@ class CurrentProject implements CrgProjectData {
   @observable groups: CrgLayersGroup[];
   @observable layersCount: number;
   @observable _maxLayersInBatch?: number;
+  @observable layersErrors: { [key: string]: string[] };
 
   @observable viewZoom: number;
 
@@ -62,7 +65,8 @@ class CurrentProject implements CrgProjectData {
       ...this.vectorLayers.map(layer => ({
         id: layer.id,
         payload: layer,
-        isGroup: false
+        isGroup: false,
+        errors: this.layersErrors[layer.complexName]
       })),
       ...this.rasterLayers.map(layer => ({
         id: layer.id,
@@ -86,7 +90,7 @@ class CurrentProject implements CrgProjectData {
       })
       .map(item => {
         item.depth = this.getDept(item);
-        item.visible = this.getGenusVisibility(item);
+        item.visible = !(item.errors && item.errors.length) && this.getGenusVisibility(item);
         item.hiddenByZoom = this.isHiddenByZoom(item);
 
         if (!item.isGroup) {
@@ -244,6 +248,11 @@ class CurrentProject implements CrgProjectData {
   @action.bound
   setMaxLayersInBatch(count: number) {
     this._maxLayersInBatch = count;
+  }
+
+  @action
+  setLayerError(layerComplexName: string, errors: string[]) {
+    this.layersErrors[layerComplexName] = errors;
   }
 
   private isHiddenByZoom(treeItem: TreeItem): boolean {

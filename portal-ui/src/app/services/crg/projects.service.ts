@@ -1,16 +1,17 @@
 import { reaction } from 'mobx';
 
-import { TaskImport } from '../geoserver/import/taskImport';
+import { services } from '../services';
 import { wsService } from '../ws.service';
+import { TaskImport } from '../geoserver/import/taskImport';
 import { serverProperties } from '../server-properties.service';
-import { CrgApiResponse, Process } from './models';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject, CrgSource } from './projects.models';
-import { projectsList } from '../../stores/ProjectsList.store';
+import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { projectsList } from '../../stores/ProjectsList.store';
 import { isReadAllowed } from './permissions.service';
+import { Toast } from '../../components/Toast/Toast';
+import { CrgApiResponse, Process } from './models';
 import { route } from '../../stores/Route.store';
 import { http } from '../http.service';
-import { Toast } from '../../components/Toast/Toast';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -82,6 +83,44 @@ class ProjectsService {
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
+    }
+  }
+
+  async testCurrentProjectLayers() {
+    const testingProjectId = currentProject.id;
+
+    for (let layer of currentProject.layers) {
+      // если пользователь успел убежать из проекта, пока мы слои щупали
+      if (currentProject.id !== testingProjectId) {
+        break;
+      }
+
+      const url = new URL(await serverProperties.wmsUrl);
+
+      url.searchParams.set('SERVICE', 'WMS');
+      url.searchParams.set('VERSION', '1.3.0');
+      url.searchParams.set('REQUEST', 'GetMap');
+      url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
+      url.searchParams.set('TRANSPARENT', 'true');
+      url.searchParams.set('LAYERS', layer.complexName);
+      url.searchParams.set('CRS', 'EPSG:3857');
+      url.searchParams.set('STYLES', '');
+      url.searchParams.set('WIDTH', '300');
+      url.searchParams.set('HEIGHT', '300');
+      url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
+
+      const result = await http.get<string>(url.toString());
+
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(result, 'text/xml');
+      const errors = Array.from(xmlDoc.querySelectorAll('ServiceException')).map(
+        n => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
+      );
+
+      if (errors.length) {
+        currentProject.setLayerError(layer.complexName, errors);
+        services.logger.error(errors);
+      }
     }
   }
 

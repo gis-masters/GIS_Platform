@@ -1,10 +1,9 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../stores/Sidebars.store';
-import { BaseMapsSelect } from '../BaseMapsSelect/BaseMapsSelect';
 import { LayersTree } from '../LayersTree/LayersTree';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar.scss';

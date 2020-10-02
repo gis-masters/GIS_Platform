@@ -34,6 +34,7 @@ export interface LayerProps extends IClassNameProps {
   depth: number;
   visible: boolean;
   hiddenByZoom: boolean;
+  errors: string[];
   onEyeClick: () => void;
 }
 
@@ -44,7 +45,7 @@ export class Layer extends Component<LayerProps> {
   @observable private menuX = 0;
   @observable private menuY = 0;
   @observable private iconType: IconType = 'unknown';
-  @observable private errors: string[] = [];
+  @observable private _errors: string[] = [];
   private menuAnchor?: HTMLElement;
 
   constructor(props: LayerProps) {
@@ -103,6 +104,15 @@ export class Layer extends Component<LayerProps> {
     const { isGroup, data } = this.props;
 
     return isGroup ? (data as CrgLayersGroup).expanded : this._open;
+  }
+
+  @computed
+  private get errors(): string[] {
+    if (this.props.errors) {
+      return this._errors.concat(this.props.errors);
+    }
+
+    return this._errors;
   }
 
   @computed
