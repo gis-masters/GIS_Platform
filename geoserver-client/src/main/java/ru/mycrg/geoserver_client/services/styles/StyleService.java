@@ -10,16 +10,17 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class StyleService extends GeoServerBaseService {
 
+    public StyleService(String accessToken) {
+        super(accessToken);
+    }
+
     /**
      * Привязать стиль к слою. (Устанавливает слой по-умолчанию)
      *
      * @param complexLayerName Название слоя
      * @param styleName        Название стиля
-     * @throws GeoserverClientException
-     * @return
      */
-    public GeoserverClientResponse associate(String complexLayerName, String styleName)
-            throws GeoserverClientException {
+    public GeoserverClientResponse associate(String complexLayerName, String styleName) {
 
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
                 "{\n" +
@@ -34,8 +35,7 @@ public class StyleService extends GeoServerBaseService {
                 .append("/styles")
                 .append("?default=true").toString();
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(url)
                 .post(body)
                 .build();

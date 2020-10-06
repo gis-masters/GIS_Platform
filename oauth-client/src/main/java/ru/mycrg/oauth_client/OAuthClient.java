@@ -3,6 +3,8 @@ package ru.mycrg.oauth_client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -10,6 +12,8 @@ import java.net.URL;
 import java.util.Optional;
 
 public class OAuthClient {
+
+    private static final Logger log = LoggerFactory.getLogger(OAuthClient.class);
 
     private static final String TOKEN_PATH = "/oauth/token";
 
@@ -27,7 +31,9 @@ public class OAuthClient {
         this.baseUrl = url;
     }
 
-    public Optional<JwtToken> getToken(String userName, String password) throws OAuthClientException {
+    public Optional<JwtToken> getToken(String userName, String password) {
+        log.debug("OAuthClient get token");
+
         try {
             RequestBody body = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -44,11 +50,12 @@ public class OAuthClient {
                     .post(body)
                     .build();
 
-            return doRequest(request, "authorize by user/login");
+            return doRequest(request);
         } catch (Exception e) {
-            throw new OAuthClientException("Ошибка получения токена: " + e.getMessage(), e.getCause());
-        }
+            log.error("Ошибка получения токена: {}" + e.getMessage());
 
+            return Optional.empty();
+        }
     }
 
     /**
@@ -71,32 +78,26 @@ public class OAuthClient {
                     .post(requestBody)
                     .build();
 
-            return doRequest(request, "refreshToken");
+            return doRequest(request);
         } catch (MalformedURLException e) {
             throw new OAuthClientException("Ошибка рефреша токена: " + e.getMessage(), e.getCause());
         }
     }
 
-    private Optional<JwtToken> doRequest(Request request, String reason) {
+    private Optional<JwtToken> doRequest(Request request) {
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                // log.error("{} request failed: {}", reason, response.body().string());
-
-                response.close();
+                log.error("Request failed: {}", response.body().string());
 
                 return Optional.empty();
             } else {
-                // log.debug("Success authorize");
-
                 ObjectMapper mapper = new ObjectMapper();
                 JwtToken tokenHolder = mapper.readValue(response.body().string(), JwtToken.class);
-
-                response.close();
 
                 return Optional.of(tokenHolder);
             }
         } catch (IOException e) {
-            // log.error("Cant execute request:", e);
+             log.error("Cant execute request:", e);
 
             return Optional.empty();
         }

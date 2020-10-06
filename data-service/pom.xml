@@ -121,12 +121,6 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${swagger.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <version>1.0.2</version>
-        </dependency>
     </dependencies>
 
     <distributionManagement>

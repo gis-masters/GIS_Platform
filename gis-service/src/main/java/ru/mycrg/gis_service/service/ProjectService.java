@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
-import ru.mycrg.geoserver_client.services.projects.IProject;
+import ru.mycrg.geoserver_client.services.projects.GeoserverProjectService;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.entity.Permission;
@@ -22,33 +23,36 @@ import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.UserDetails;
+import ru.mycrg.oauth_client.OAuthClient;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis_service.security.CrgClaimsParser.*;
 
 @Service
 @Transactional
 public class ProjectService {
 
-    private static Logger log = LoggerFactory.getLogger(ProjectService.class);
+    private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
-    private final IProject geoserverClient;
+    private final Environment environment;
     private final ProjectionFactory factory;
     private final ProjectRepository projectRepository;
 
     public static final String DEFAULT_PROJECT_NAME = "workspace";
 
     public ProjectService(ProjectionFactory factory,
+                          Environment environment,
                           ProjectRepository projectRepository) {
         this.factory = factory;
+        this.environment = environment;
         this.projectRepository = projectRepository;
-
-        this.geoserverClient = new ru.mycrg.geoserver_client.services.projects.ProjectService();
     }
 
     public Page<ProjectProjection> getAll(Pageable pageable, Authentication authentication) {
@@ -139,7 +143,9 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public ProjectProjection create(Long orgId, ProjectRequestDto dto) {
+    public ProjectProjection create(ProjectRequestDto dto, Authentication authentication) {
+        Long orgId = getOrganizationId(authentication);
+
         log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
 
         Optional<Project> projectWithSameName =
@@ -156,7 +162,8 @@ public class ProjectService {
         projectRepository.save(savedProject);
 
         try {
-            geoserverClient.createProject(savedProject.getInternalName(), orgId);
+            new GeoserverProjectService(getRootAccessToken())
+                    .createProject(savedProject.getInternalName(), orgId);
 
             projectRepository.save(savedProject);
         } catch (GeoserverClientException e) {
@@ -166,7 +173,12 @@ public class ProjectService {
         return factory.createProjection(ProjectProjection.class, savedProject);
     }
 
-    public void delete(Long orgId, Long projectId) {
+    public void delete(Long projectId, Authentication authentication) {
+        // TODO: Переделать удаление(вместе с созданием) проекта как процесс при удалении:
+        //  - удаление данных из БД
+        //  - удаление потрахов с геосервера: рабочей области и прав на нее (нужен рут токен для удаления прав)
+
+        Long orgId = getOrganizationId(authentication);
         Project project = projectRepository
                 .findByIdAndOrganizationId(projectId, orgId)
                 .orElseThrow(() -> new NotFoundException(projectId));
@@ -174,7 +186,8 @@ public class ProjectService {
         try {
             projectRepository.delete(project);
 
-            geoserverClient.deleteProject(project.getInternalName());
+            new GeoserverProjectService(getToken(authentication))
+                    .deleteProject(project.getInternalName());
         } catch (GeoserverClientException e) {
             throw new GisServiceException("Не удалось удалить проект на геосервере: " + projectId, e.getCause());
         } catch (Exception e) {
@@ -207,5 +220,26 @@ public class ProjectService {
                     return isExist;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private String getRootAccessToken() {
+        try {
+            String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
+            String clientId = environment.getRequiredProperty("crg-options.client_id");
+            String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
+            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+
+            return OAuthClient.builder()
+                    .url(new URL(authServiceUrl))
+                    .clientId(clientId)
+                    .clientSecret(clientSecret)
+                    .build()
+                    .getToken(rootUserName, rootUserPass)
+                    .orElseThrow(() -> new GisServiceException("Error get root token"))
+                    .getAccess_token();
+        } catch (Exception e) {
+            throw new GisServiceException("Error get root token");
+        }
     }
 }

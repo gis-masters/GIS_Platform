@@ -17,11 +17,9 @@ public class CreateUserRequestHandler implements IUserRequestHandler {
     private final Logger log = LoggerFactory.getLogger(CreateUserRequestHandler.class);
 
     private final MqSender mqSender;
-    private final UsersAndRolesService usersAndRolesService;
 
     public CreateUserRequestHandler(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.usersAndRolesService = new UsersAndRolesService();
     }
 
     @Override
@@ -31,6 +29,7 @@ public class CreateUserRequestHandler implements IUserRequestHandler {
 
             log.debug("userCreatedEvent. {}", event.getLogin());
 
+            UsersAndRolesService usersAndRolesService = new UsersAndRolesService(event.getToken());
             usersAndRolesService.createUser(event.getLogin(), event.getPassword());
             usersAndRolesService.associateUserWithRole(event.getLogin(), event.getRole());
 

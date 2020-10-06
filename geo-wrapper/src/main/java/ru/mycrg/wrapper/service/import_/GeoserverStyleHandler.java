@@ -22,11 +22,9 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(GeoserverStyleHandler.class);
 
     private final MqSender mqSender;
-    private final StyleService styleService;
 
     public GeoserverStyleHandler(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.styleService = new StyleService();
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
@@ -35,7 +33,8 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
 
         log.debug("Add style to layer: {}", layerName);
         try {
-            styleService.associate(importTask.getTargetResource().getSchemaName() + ":" + layerName, layerName);
+            new StyleService(importTask.getUserToken())
+                    .associate(importTask.getTargetResource().getSchemaName() + ":" + layerName, layerName);
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
@@ -44,7 +43,7 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
             }
-        } catch (GeoserverClientException e) {
+        } catch (Exception e) {
             String msg = "Не удалось прикрепить стиль к слою: " + layerName;
             log.error(msg, e);
 

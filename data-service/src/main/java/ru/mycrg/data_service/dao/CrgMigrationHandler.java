@@ -43,15 +43,17 @@ public class CrgMigrationHandler {
     }
 
     public void initMigration(String dbName) {
-        log.debug("Initialize service tables for: {}", dbName);
+        try {
+            HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
 
-        HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(tempDataSource);
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(tempDataSource);
+            serviceTablesInitializer.initialize(jdbcTemplate);
+            baseMapsService.initDefault(jdbcTemplate);
 
-        serviceTablesInitializer.initialize(jdbcTemplate);
-        baseMapsService.initDefault(jdbcTemplate);
-
-        tempDataSource.close();
+            tempDataSource.close();
+        } catch (Exception e) {
+            log.error("Cant initialize service tables for: " + dbName, e.getMessage());
+        }
     }
 }

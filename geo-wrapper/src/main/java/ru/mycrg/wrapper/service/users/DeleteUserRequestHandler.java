@@ -12,16 +12,11 @@ public class DeleteUserRequestHandler implements IUserRequestHandler {
 
     private final Logger log = LoggerFactory.getLogger(DeleteUserRequestHandler.class);
 
-    private final UsersAndRolesService usersAndRolesService;
-
-    public DeleteUserRequestHandler() {
-        this.usersAndRolesService = new UsersAndRolesService();
-    }
-
     @Override
     public void handle(IUserEvent mqEvent) {
         try {
-            usersAndRolesService.deleteUser(mqEvent.getLogin());
+            new UsersAndRolesService(mqEvent.getToken())
+                    .deleteUser(mqEvent.getLogin());
         } catch (Exception e) {
             log.error("Не удалось удалить пользователя на геосервере: ", e);
 

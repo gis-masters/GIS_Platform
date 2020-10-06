@@ -9,7 +9,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.mycrg.geoserver_client.AuthServiceInfo;
 import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
@@ -35,17 +34,9 @@ public class GeoServerWrapperApplication {
     public void initGeoserverClient() {
         log.info("initGeoserverClient");
 
-        AuthServiceInfo authServiceInfo = AuthServiceInfo.builder()
-                .url(properties.getAuthServiceUrl())
-                .clientId(properties.getClientId())
-                .clientSecret(properties.getClientSecret())
-                .build();
-
         GeoserverInfo geoserverInfo = GeoserverInfo.builder()
                 .host(properties.getGeoserverHost().split(":")[0])
                 .port(Integer.parseInt(properties.getGeoserverHost().split(":")[1]))
-                .rootUserName(properties.getRootUserName())
-                .rootUserPassword(properties.getRootUserPassword())
                 .userServiceName(properties.getUserServiceName())
                 .build();
 
@@ -61,6 +52,6 @@ public class GeoServerWrapperApplication {
                 .dbOwnerPassword(environment.getRequiredProperty("spring.datasource.password"))
                 .build();
 
-        GeoserverClient.initialize(authServiceInfo, geoserverInfo, dbInfo);
+        GeoserverClient.initialize(geoserverInfo, dbInfo);
     }
 }

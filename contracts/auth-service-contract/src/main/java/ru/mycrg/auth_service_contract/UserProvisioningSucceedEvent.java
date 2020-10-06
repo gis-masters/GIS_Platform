@@ -6,7 +6,7 @@ public class UserProvisioningSucceedEvent extends UserBaseEvent {
     }
 
     public UserProvisioningSucceedEvent(IUserEvent mqEvent) {
-        super(mqEvent.getLogin());
+        super(mqEvent.getLogin(), mqEvent.getToken());
     }
 
 }

@@ -39,18 +39,6 @@ public class EventDispatcher {
         }
     }
 
-    public void handleOrganizationEvent(@NotNull IOrganizationEvent mqEvent) {
-        log.debug("handle organization event: {}", mqEvent.getOrgId());
-
-        try {
-            requestHandlerFactory
-                    .getOrgHandler(mqEvent)
-                    .handle(mqEvent);
-        } catch (Exception e) {
-            mqSender.sendOrgEvent(new OrganizationDependencyProvisionFailedEvent(mqEvent));
-        }
-    }
-
     public void handleUserEvent(@NotNull IUserEvent mqEvent) {
         log.debug("handle user event: {}", mqEvent.getLogin());
 

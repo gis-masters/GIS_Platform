@@ -27,7 +27,9 @@ interface AuthenticationResult {
 }
 
 axios.interceptors.request.use(config => {
-  config.headers.Authorization = 'Bearer ' + authService.token;
+  if (authService.token) {
+    config.headers.Authorization = 'Bearer ' + authService.token;
+  }
 
   return config;
 });

@@ -5,11 +5,16 @@ import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Ignore;
+import org.junit.Test;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.hasItems;
 
 public class BaseStepsDefinitions {
 
@@ -20,11 +25,10 @@ public class BaseStepsDefinitions {
 
     public static RequestSpecification request;
     public static Response response;
-    public static Cookie adminCookie;
-    public static Cookie userCookie;
+    public static Cookie cookie;
     public static JsonPath jsonPath;
 
-    public static Map<String, OrganizationCreateDto> orgs = new HashMap<>();
+    public static Map<String, OrganizationCreateDto> orgPool = new HashMap<>();
     public static Map<String, UserCreateDto> users = new HashMap<>();
 
     public void setup() {
@@ -37,10 +41,26 @@ public class BaseStepsDefinitions {
                 ".ROOT_NAME', ROOT_PASS as '-Denv.ROOT_PASS'";
         testServerPort = Integer.parseInt(System.getProperty("env.PORT"));
 
-        request = RestAssured.given();
-        request.baseUri(testServerHost);
-        request.port(testServerPort);
-        request.basePath("/");
+        request = getBaseRequest();
+    }
+
+    public RequestSpecification getBaseRequest() {
+        return RestAssured
+                .given().
+                        log().ifValidationFails().
+                        baseUri(testServerHost).
+                        port(testServerPort).
+                        basePath("");
+    }
+
+    public RequestSpecification getBaseRequestWithCurrentCookie() {
+        return RestAssured
+                .given().
+                        log().ifValidationFails().
+                        baseUri(testServerHost).
+                        port(testServerPort).
+                        basePath("").
+                        cookie(cookie);
     }
 
     public static String replaceString(String input) {
@@ -94,5 +114,29 @@ public class BaseStepsDefinitions {
             default:
                 return input;
         }
+    }
+
+    @Test
+    @Ignore
+    public void templateForManualTesting() {
+        final String accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJh" +
+                "ZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJncm91cHMiOltdLCJleHAiOjE2" +
+                "MDE0NjU0NzksImF1dGhvcml0aWVzIjpbIkdMT0JBTF9BRE1JTiJdLCJqdGkiOiJmMmZlZWM0ZC0wODBlLTRmNWYtOTJk" +
+                "OS0xYWJiZWE1OWJjMDEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.TXw7kkct4KFcnmhx7EfBiCGgwqwfi3ghF3mRK9yJ8j8";
+
+        String userName = "test_2_3@fiz";
+
+        given().
+                       log().ifValidationFails().
+                       baseUri("http://localhost").
+                       port(8080).
+                       basePath("/").
+                       headers("Authorization", "Bearer " + accessToken)
+               .when().
+                       get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+               .then().
+                       log().ifValidationFails().
+                       statusCode(200).
+                       body("users.findAll { it.enabled == true }.userName", hasItems(userName));
     }
 }

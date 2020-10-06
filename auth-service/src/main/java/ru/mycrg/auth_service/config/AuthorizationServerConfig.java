@@ -15,6 +15,10 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.mycrg.auth_service.security.CustomTokenConverter;
+import ru.mycrg.oauth_client.OAuthClient;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Log4j2
 @Configuration
@@ -85,4 +89,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JwtTokenStore(accessTokenConverter());
     }
 
+    @Bean
+    public OAuthClient oAuthClient() throws MalformedURLException {
+        return OAuthClient.builder()
+                .url(new URL("http://localhost:9000"))
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .build();
+    }
 }

@@ -1,13 +1,11 @@
 package ru.mycrg.auth_service.queue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import ru.mycrg.auth_service.exeptions.AuthServiceException;
-import ru.mycrg.auth_service.service.OrganizationEventHandler;
-import ru.mycrg.auth_service.service.UserEventHandler;
-import ru.mycrg.auth_service_contract.IOrganizationEvent;
-import ru.mycrg.auth_service_contract.IUserEvent;
+import ru.mycrg.auth_service_contract.IAuthServiceEvent;
 
 import static ru.mycrg.auth_service.config.RabbitConfiguration.ORG_RESPONSE_QUEUE;
 import static ru.mycrg.auth_service.config.RabbitConfiguration.USER_RESPONSE_QUEUE;
@@ -16,29 +14,22 @@ import static ru.mycrg.auth_service.config.RabbitConfiguration.USER_RESPONSE_QUE
 @EnableRabbit
 public class MessageBusListener {
 
-    private final UserEventHandler userEventHandler;
-    private final OrganizationEventHandler orgEventHandler;
+    private final Logger log = LoggerFactory.getLogger(MessageBusListener.class);
 
-    public MessageBusListener(OrganizationEventHandler orgEventHandler, UserEventHandler userEventHandler) {
-        this.orgEventHandler = orgEventHandler;
-        this.userEventHandler = userEventHandler;
+    private final ResponseHandlerFactory responseHandlerFactory;
+
+    public MessageBusListener(ResponseHandlerFactory responseHandlerFactory) {
+        this.responseHandlerFactory = responseHandlerFactory;
     }
 
-    @RabbitListener(queues = {ORG_RESPONSE_QUEUE})
-    public void catchOrganizationEvents(IOrganizationEvent event) {
+    @RabbitListener(queues = {ORG_RESPONSE_QUEUE, USER_RESPONSE_QUEUE})
+    public void catchEvents(IAuthServiceEvent event) {
         try {
-            orgEventHandler.handle(event);
+            responseHandlerFactory
+                    .getHandler(event)
+                    .handle(event);
         } catch (Exception e) {
-            throw new AuthServiceException("Error handle organization event", e.getCause());
-        }
-    }
-
-    @RabbitListener(queues = {USER_RESPONSE_QUEUE})
-    public void catchUsersEvents(IUserEvent event) {
-        try {
-            userEventHandler.handle(event);
-        } catch (Exception e) {
-            throw new AuthServiceException("Error handle user event", e.getCause());
+            log.error("Error handle response event: {}", e.getMessage());
         }
     }
 

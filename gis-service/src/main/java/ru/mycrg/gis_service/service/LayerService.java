@@ -38,7 +38,6 @@ public class LayerService {
     private final ProjectionFactory factory;
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
-    private final LayersService geoserverLayers;
     private final JsonPatcher jsonPatcher;
 
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
@@ -51,8 +50,6 @@ public class LayerService {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
-
-        this.geoserverLayers = new LayersService();
     }
 
     public List<LayerProjection> findAll(long projectId, Authentication authentication) {
@@ -102,7 +99,7 @@ public class LayerService {
 
         layerRepository.deleteLayerById(layer.getId());
 
-        GeoserverClientResponse response = geoserverLayers.delete(complexLayerName, getToken(authentication));
+        GeoserverClientResponse response = new LayersService(getToken(authentication)).delete(complexLayerName);
         if (!response.isSuccessful()) {
             if (response.isNotFound()) {
                 log.warn("Layer not exist on geoserver");

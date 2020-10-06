@@ -60,23 +60,23 @@ public class PermissionController {
 
     @PatchMapping(path = "/permissions/{id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus updatePermission(@PathVariable(name = "project_id") long projectId,
-                                       @PathVariable(name = "id") long permissionId,
-                                       @RequestBody JsonMergePatch patchDto,
-                                       Authentication authentication) {
+    public ResponseEntity<Object> updatePermission(@PathVariable(name = "project_id") long projectId,
+                                                   @PathVariable(name = "id") long permissionId,
+                                                   @RequestBody JsonMergePatch patchDto,
+                                                   Authentication authentication) {
         permissionsService.update(projectId, permissionId, patchDto, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/permissions/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> deletePermission(@PathVariable(name = "project_id") long projectId,
-                                                 @PathVariable(name = "id") long permissionId,
-                                                 Authentication authentication) {
+    public ResponseEntity<Object> deletePermission(@PathVariable(name = "project_id") long projectId,
+                                                   @PathVariable(name = "id") long permissionId,
+                                                   Authentication authentication) {
         permissionsService.delete(projectId, permissionId, authentication);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -6,14 +6,17 @@ import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 public class LayersService extends GeoServerBaseService {
 
-    public GeoserverClientResponse delete(String layerName, String jwtToken) {
+    public LayersService(String accessToken) {
+        super(accessToken);
+    }
+
+    public GeoserverClientResponse delete(String layerName) {
         String url = getGeoserverRestUrl()
                 .append("/layers/")
                 .append(layerName)
                 .toString();
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + jwtToken)
+        Request request = builderWithBearerAuth
                 .url(url)
                 .delete()
                 .build();

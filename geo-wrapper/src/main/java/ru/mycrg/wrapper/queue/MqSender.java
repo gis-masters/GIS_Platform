@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.IOrganizationEvent;
 import ru.mycrg.auth_service_contract.IUserEvent;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 
 import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
-import static ru.mycrg.wrapper.config.RabbitConfig.*;
+import static ru.mycrg.wrapper.config.RabbitConfig.USER_RESPONSE_FANOUT;
+import static ru.mycrg.wrapper.config.RabbitConfig.USER_RESPONSE_KEY;
 
 @Service
 public class MqSender {
@@ -33,10 +33,6 @@ public class MqSender {
                 log.warn("Unsupported mqResponse type: {}", mqResponse.getType());
         }
 
-    }
-
-    public void sendOrgEvent(IOrganizationEvent mqEvent) {
-        rabbitTemplate.convertAndSend(ORG_RESPONSE_FANOUT, ORG_RESPONSE_KEY, mqEvent);
     }
 
     public void sendUserEvent(IUserEvent mqEvent) {

@@ -1,16 +1,19 @@
 package ru.mycrg.data_service.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.DatabaseCreateDto;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DatabaseService;
+
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
+import static ru.mycrg.data_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class DatabasesController {
@@ -21,6 +24,17 @@ public class DatabasesController {
         this.databaseService = databaseService;
     }
 
+    @GetMapping("/databases/{dbName}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<DatabaseCreateDto> getDb(@PathVariable String dbName,
+                                                   Authentication authentication) {
+        if (databaseService.isExist(dbName, authentication)) {
+            return ResponseEntity.status(OK).body(new DatabaseCreateDto(dbName));
+        }
+
+        throw new NotFoundException(dbName);
+    }
+
     @PreAuthorize("hasAuthority('GLOBAL_ADMIN')")
     @PostMapping("/databases")
     public ResponseEntity<Object> createDb(@Valid @RequestBody DatabaseCreateDto dto) {
@@ -29,4 +43,11 @@ public class DatabasesController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @DeleteMapping("/databases/{dbName}")
+    public ResponseEntity<Object> deleteDb(@PathVariable String dbName, Authentication authentication) {
+        databaseService.delete(dbName, authentication);
+
+        return ResponseEntity.noContent().build();
+    }
 }

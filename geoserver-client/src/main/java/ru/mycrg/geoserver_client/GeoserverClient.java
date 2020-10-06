@@ -2,7 +2,6 @@ package ru.mycrg.geoserver_client;
 
 import okhttp3.MediaType;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
-import ru.mycrg.oauth_client.OAuthClient;
 
 public class GeoserverClient {
 
@@ -13,16 +12,9 @@ public class GeoserverClient {
     private GeoserverClient() {
     }
 
-    public static void initialize(AuthServiceInfo authServiceInfo,
-                                  GeoserverInfo geoserverInfo,
+    public static void initialize(GeoserverInfo geoserverInfo,
                                   DbInfo dbInfo) {
         GeoServerBaseService.geoserverInfo = geoserverInfo;
         GeoServerBaseService.dbInfo = dbInfo;
-
-        GeoServerBaseService.oAuthClient = OAuthClient.builder()
-                .url(authServiceInfo.getUrl())
-                .clientId(authServiceInfo.getClientId())
-                .clientSecret(authServiceInfo.getClientSecret())
-                .build();
     }
 }

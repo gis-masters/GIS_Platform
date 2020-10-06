@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1hgw2fz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="gis_deleteOrgOnGeoserver" name="Delete org on Geoserver" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_14ri3p3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_14ri3p3" sourceRef="StartEvent_1" targetRef="Activity_1e2817z" />
+    <bpmn:serviceTask id="Activity_1e2817z" name="delete workspace and storage" camunda:asyncBefore="true" camunda:delegateExpression="${deleteWorkspaceAndStorage}">
+      <bpmn:incoming>Flow_14ri3p3</bpmn:incoming>
+      <bpmn:outgoing>Flow_10c7bud</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_10c7bud" sourceRef="Activity_1e2817z" targetRef="Activity_1fdm2n4" />
+    <bpmn:serviceTask id="Activity_1fdm2n4" name="delete user and role" camunda:asyncBefore="true" camunda:delegateExpression="${deleteUserAndRole}">
+      <bpmn:incoming>Flow_10c7bud</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ciekcf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ciekcf" sourceRef="Activity_1fdm2n4" targetRef="Activity_09sd7bd" />
+    <bpmn:serviceTask id="Activity_09sd7bd" name="delete rules" camunda:asyncBefore="true" camunda:delegateExpression="${deleteRules}">
+      <bpmn:incoming>Flow_1ciekcf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0apgkez</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0emv0kc">
+      <bpmn:incoming>Flow_0apgkez</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0apgkez" sourceRef="Activity_09sd7bd" targetRef="Event_0emv0kc" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="gis_deleteOrgOnGeoserver">
+      <bpmndi:BPMNEdge id="Flow_0apgkez_di" bpmnElement="Flow_0apgkez">
+        <di:waypoint x="690" y="117" />
+        <di:waypoint x="752" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ciekcf_di" bpmnElement="Flow_1ciekcf">
+        <di:waypoint x="530" y="117" />
+        <di:waypoint x="590" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10c7bud_di" bpmnElement="Flow_10c7bud">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14ri3p3_di" bpmnElement="Flow_14ri3p3">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1x6n0ot_di" bpmnElement="Activity_1e2817z">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1o3326f_di" bpmnElement="Activity_1fdm2n4">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mwu21u_di" bpmnElement="Activity_09sd7bd">
+        <dc:Bounds x="590" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0emv0kc_di" bpmnElement="Event_0emv0kc">
+        <dc:Bounds x="752" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

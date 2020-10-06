@@ -5,24 +5,30 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.GeoserverInfo;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
-import ru.mycrg.oauth_client.OAuthClient;
-import ru.mycrg.oauth_client.OAuthClientException;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GeoServerBaseService {
 
-    public static OAuthClient oAuthClient;
+    private static final Logger log = LoggerFactory.getLogger(GeoServerBaseService.class);
+
     public static GeoserverInfo geoserverInfo;
     public static DbInfo dbInfo;
 
     protected final OkHttpClient httpClient = new OkHttpClient();
     protected final ObjectMapper mapper = new ObjectMapper();
+
+    protected final Request.Builder builderWithBearerAuth;
+
+    public GeoServerBaseService(String accessToken) {
+        this.builderWithBearerAuth = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + accessToken);
+    }
 
     protected GeoserverClientResponse doRequest(Request request) {
         try (Response response = httpClient.newCall(request).execute()) {
@@ -32,16 +38,17 @@ public class GeoServerBaseService {
         }
     }
 
-    protected String getRootAccessToken() throws GeoserverClientException {
-        AtomicReference<String> accessToken = new AtomicReference<>("");
-        try {
-            oAuthClient
-                    .getToken(geoserverInfo.getRootUserName(), geoserverInfo.getRootUserPassword())
-                    .ifPresent(jwt -> accessToken.set(jwt.getAccess_token()));
-
-            return accessToken.get();
-        } catch (OAuthClientException e) {
-            throw new GeoserverClientException(e.getMessage(), e.getCause());
+    protected void doRequest(Request request, String description) {
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                final String message = response.message();
+                log.warn("Request: '{}' not successful, Code: {}, Reason: {}",
+                        description,
+                        response.code(),
+                        message);
+            }
+        } catch (IOException e) {
+            log.error("Can't execute request: '{}', Reason: {}", description, e.getMessage());
         }
     }
 

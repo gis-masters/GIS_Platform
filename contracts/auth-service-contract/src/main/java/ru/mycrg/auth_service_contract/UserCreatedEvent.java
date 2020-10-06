@@ -9,8 +9,8 @@ public class UserCreatedEvent extends UserBaseEvent {
     public UserCreatedEvent() {
     }
 
-    public UserCreatedEvent(String login, String password, boolean isEnabled, String role) {
-        super(login);
+    public UserCreatedEvent(String login, String token, String password, boolean isEnabled, String role) {
+        super(login, token);
 
         this.password = password;
         this.isEnabled = isEnabled;

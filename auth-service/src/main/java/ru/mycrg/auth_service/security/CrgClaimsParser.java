@@ -36,6 +36,16 @@ public class CrgClaimsParser {
     }
 
     @NotNull
+    public static String getToken(@NotNull Authentication authentication) {
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
+        if (details != null) {
+            return details.getTokenValue();
+        } else {
+            return "";
+        }
+    }
+
+    @NotNull
     public static Long getOrganizationId(Principal principal) {
         long orgId = -1;
 

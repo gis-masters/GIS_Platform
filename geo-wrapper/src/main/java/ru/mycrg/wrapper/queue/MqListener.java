@@ -2,13 +2,11 @@ package ru.mycrg.wrapper.queue;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.IOrganizationEvent;
 import ru.mycrg.auth_service_contract.IUserEvent;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.wrapper.service.requests_handler.EventDispatcher;
 
 import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
-import static ru.mycrg.wrapper.config.RabbitConfig.ORG_REQUEST_QUEUE;
 import static ru.mycrg.wrapper.config.RabbitConfig.USER_REQUEST_QUEUE;
 
 @Service
@@ -27,11 +25,6 @@ public class MqListener {
     })
     public void catchEvents(final BaseMqProcessRequest mqRequest) {
         eventDispatcher.handleEvent(mqRequest);
-    }
-
-    @RabbitListener(queues = {ORG_REQUEST_QUEUE})
-    public void catchOrganizationEvents(final IOrganizationEvent mqEvent) {
-        eventDispatcher.handleOrganizationEvent(mqEvent);
     }
 
     @RabbitListener(queues = {USER_REQUEST_QUEUE})

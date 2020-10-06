@@ -84,25 +84,26 @@ public class LayerController {
 
     @PatchMapping(path = "/layers/{layer_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus updateLayer(@PathVariable(name = "project_id") long projectId,
-                                  @PathVariable(name = "layer_id") long layerId,
-                                  @RequestBody JsonMergePatch patchDto,
-                                  Authentication authentication) {
+    public ResponseEntity<Object> updateLayer(@PathVariable(name = "project_id") long projectId,
+                                              @PathVariable(name = "layer_id") long layerId,
+                                              @RequestBody JsonMergePatch patchDto,
+                                              Authentication authentication) {
         log.debug("update layer: {} To: {}", layerId, patchDto.toJsonValue());
 
         layerService.update(projectId, layerId, patchDto, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/layers/{layer_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> deleteLayer(@PathVariable(name = "project_id") long projectId,
-                                            @PathVariable(name = "layer_id") long layerId,
-                                            Authentication authentication) {
+    public ResponseEntity<Object> deleteLayer(@PathVariable(name = "project_id") long projectId,
+                                              @PathVariable(name = "layer_id") long layerId,
+                                              Authentication authentication) {
         log.debug("Request for deletion layer: {}", layerId);
 
-        Layer layer = projectService.getById(projectId, authentication)
+        Layer layer = projectService
+                .getById(projectId, authentication)
                 .getLayers().stream()
                 .filter(l -> layerId == l.getId())
                 .findFirst()
@@ -110,7 +111,7 @@ public class LayerController {
 
         layerService.delete(layer, projectId, authentication);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }

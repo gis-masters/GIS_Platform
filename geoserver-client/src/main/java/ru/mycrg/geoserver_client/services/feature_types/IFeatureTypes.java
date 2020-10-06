@@ -5,10 +5,10 @@ import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 
 public interface IFeatureTypes {
 
-    GeoserverClientResponse create(String workspaceName, String dataStoreName, String featureName, String jwtToken, Integer srs)
+    GeoserverClientResponse create(String workspaceName, String dataStoreName, String featureName, Integer srs)
             throws GeoserverClientException;
 
-    void delete(String workspaceName, String dataStoreName, String featureName, String jwtToken)
+    void delete(String workspaceName, String dataStoreName, String featureName)
             throws GeoserverClientException;
 
 }

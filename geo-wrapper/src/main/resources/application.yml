@@ -20,13 +20,6 @@ spring:
     password: 314
 
 crg-options:
-  client-id: admin
-  client-secret: geoserver
-
-  root-user-name: admin@mail.ru
-  root-user-password: geoserver
-
-  auth-service-url: http://127.0.0.1:9000
   gis_service_url: http://127.0.0.1:8082
   data_service_url: http://127.0.0.1:8084
   geoserver-host: 127.0.0.1:8080

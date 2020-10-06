@@ -2,8 +2,9 @@ package ru.mycrg.geoserver_client.services.user_role;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.GeoserverClientResponse;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
@@ -11,14 +12,16 @@ import static ru.mycrg.geoserver_client.GeoserverClient.XML_ATOM_MEDIA_TYPE;
 
 public class UsersAndRolesService extends GeoServerBaseService {
 
-    public UsersAndRolesService() {
+    private static final Logger log = LoggerFactory.getLogger(UsersAndRolesService.class);
+
+    public UsersAndRolesService(String accessToken) {
+        super(accessToken);
     }
 
-    public GeoserverClientResponse createRole(String role) throws GeoserverClientException {
+    public GeoserverClientResponse createRole(String role) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role)
                 .post(body)
                 .build();
@@ -26,7 +29,16 @@ public class UsersAndRolesService extends GeoServerBaseService {
         return doRequest(request);
     }
 
-    public GeoserverClientResponse createUser(String user, String password) throws GeoserverClientException {
+    public void deleteRole(String roleName) {
+        Request request = builderWithBearerAuth
+                .url(getGeoserverRestUrl() + "/security/roles/role/" + roleName)
+                .delete()
+                .build();
+
+        doRequest(request, "delete role");
+    }
+
+    public void createUser(String user, String password) {
         RequestBody body = RequestBody.create(XML_ATOM_MEDIA_TYPE,
                 "<user>\n" +
                 "    <enabled>true</enabled>\n" +
@@ -37,21 +49,19 @@ public class UsersAndRolesService extends GeoServerBaseService {
         String url = String.format("%s/security/usergroup/service/%s/users",
                 getGeoserverRestUrl(), geoserverInfo.getUserServiceName());
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(url)
                 .post(body)
                 .build();
 
-        return doRequest(request);
+        doRequest(request, "create user: " + user);
     }
 
-    public GeoserverClientResponse deleteUser(String userName) throws GeoserverClientException {
+    public GeoserverClientResponse deleteUser(String userName) {
         String url = String.format("%s/security/usergroup/service/%s/user/%s",
                 getGeoserverRestUrl(), geoserverInfo.getUserServiceName(), userName);
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(url)
                 .delete()
                 .build();
@@ -61,13 +71,12 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
-    public GeoserverClientResponse associateUserWithRole(String userName, String role) throws GeoserverClientException {
+    public GeoserverClientResponse associateUserWithRole(String userName, String role) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
         String cName = prepareUserNameForGeoserver(userName);
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + cName)
                 .post(body)
                 .build();
@@ -95,5 +104,4 @@ public class UsersAndRolesService extends GeoServerBaseService {
             return userName;
         }
     }
-
 }

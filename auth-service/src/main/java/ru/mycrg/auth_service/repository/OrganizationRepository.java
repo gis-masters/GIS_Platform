@@ -7,7 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import ru.mycrg.auth_service.dto.OrganizationProjection;
+import ru.mycrg.auth_service.dto.OrganizationCommonProjection;
 import ru.mycrg.auth_service.entity.Organization;
 
 import java.util.Optional;
@@ -16,7 +16,7 @@ import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
 
 @RepositoryRestResource(collectionResourceRel = "organizations",
                         path = "organizations",
-                        excerptProjection = OrganizationProjection.class)
+                        excerptProjection = OrganizationCommonProjection.class)
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
 
     @Override
@@ -31,17 +31,19 @@ public interface OrganizationRepository extends PagingAndSortingRepository<Organ
     @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
     Iterable<Organization> findAll(Sort sort);
 
+    // NOT Exported
     @Override
+    @RestResource(exported = false)
     Optional<Organization> findById(Long aLong);
 
     @Override
+    @RestResource(exported = false)
     <S extends Organization> S save(S entity);
 
     @Override
-    @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
+    @RestResource(exported = false)
     void deleteById(Long aLong);
 
-    // NOT Exported
     @Override
     @RestResource(exported = false)
     <S extends Organization> Iterable<S> saveAll(Iterable<S> entities);

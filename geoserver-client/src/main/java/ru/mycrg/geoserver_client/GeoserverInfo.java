@@ -9,8 +9,6 @@ public class GeoserverInfo {
 
     private String host;
     private int port;
-    private String rootUserName;
-    private String rootUserPassword;
     private String userServiceName;
 
 }

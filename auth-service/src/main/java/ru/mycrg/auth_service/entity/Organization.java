@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING;
+
 @Entity
 @Table(name = "organizations")
 public class Organization {
@@ -23,7 +25,7 @@ public class Organization {
     private String phone;
 
     @Column
-    private String status = "PROVISIONING";
+    private String status = PROVISIONING.toString();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

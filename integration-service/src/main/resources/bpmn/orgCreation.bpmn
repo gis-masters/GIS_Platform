@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_08axrmb" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="integration_createOrganizationProcess" name="Organization creation" isExecutable="true">
+    <bpmn:serviceTask id="ServiceTask_RollbackDb_0sfz9g8" name="Delete DB" camunda:asyncBefore="true" camunda:delegateExpression="${deleteDbDelegate}">
+      <bpmn:incoming>Flow_0moqihe</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pr0ww7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_RollBackGeoserver_1q2tzzq" name="Delete all from geoserver" camunda:asyncBefore="true" camunda:delegateExpression="${geoserverDeleteOrgOperationsDelegate}">
+      <bpmn:incoming>Flow_0qqhzzj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0moqihe</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_Success_1tr89i8" name="Send success event" camunda:delegateExpression="${organizationProvisionSuccessEventDelegate}">
+      <bpmn:incoming>Flow_1rsqahp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0k60yix</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_01une73" name="Success&#10;&#10;">
+      <bpmn:incoming>Flow_0k60yix</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_03vmbui">
+      <bpmn:incoming>Flow_09osg67</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rsqahp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0o5xb3g</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ujib7t</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Activity_CreateAllOnGeoserver_1uthaaa" name="Create all on geoserver" camunda:asyncBefore="true" camunda:delegateExpression="${geoserverCreateOrgOperationsDelegate}">
+      <bpmn:incoming>Flow_192ysge</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cd8vr9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_CreateDb_frtytha" name="Create DB" camunda:asyncBefore="true" camunda:delegateExpression="${createDbDelegate}">
+      <bpmn:incoming>Flow_1tqkgh1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0oygz1x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="Event_0y2pc7t" name="Start">
+      <bpmn:outgoing>Flow_1tqkgh1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1rsqahp" name="yes" sourceRef="Gateway_03vmbui" targetRef="Activity_Success_1tr89i8">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'SUCCESS'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0k60yix" sourceRef="Activity_Success_1tr89i8" targetRef="Event_01une73" />
+    <bpmn:sequenceFlow id="Flow_0oygz1x" sourceRef="Activity_CreateDb_frtytha" targetRef="Gateway_0wtmx8x" />
+    <bpmn:sequenceFlow id="Flow_1tqkgh1" sourceRef="Event_0y2pc7t" targetRef="Activity_CreateDb_frtytha" />
+    <bpmn:exclusiveGateway id="Gateway_0wtmx8x">
+      <bpmn:incoming>Flow_0oygz1x</bpmn:incoming>
+      <bpmn:outgoing>Flow_192ysge</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1lskmrb</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_192ysge" name="yes" sourceRef="Gateway_0wtmx8x" targetRef="Activity_CreateAllOnGeoserver_1uthaaa">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isCreated == 'true'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1lskmrb" name="no" sourceRef="Gateway_0wtmx8x" targetRef="Activity_CreateDbFailed_1cajhmq">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isCreated == 'false'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1iedtzr" name="Failed">
+      <bpmn:incoming>Flow_00d0ccl</bpmn:incoming>
+      <bpmn:incoming>Flow_1pr0ww7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0o5xb3g" name="no" sourceRef="Gateway_03vmbui" targetRef="Activity_FailOnGeoserver_1nlcylg">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'FAILED'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0moqihe" sourceRef="ServiceTask_RollBackGeoserver_1q2tzzq" targetRef="ServiceTask_RollbackDb_0sfz9g8" />
+    <bpmn:serviceTask id="Activity_CreateDbFailed_1cajhmq" name="Send fail event" camunda:delegateExpression="${organizationProvisionFailedEventDelegate}">
+      <bpmn:incoming>Flow_1lskmrb</bpmn:incoming>
+      <bpmn:outgoing>Flow_00d0ccl</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_FailOnGeoserver_1nlcylg" name="Send fail event" camunda:delegateExpression="${organizationProvisionFailedEventDelegate}">
+      <bpmn:incoming>Flow_0o5xb3g</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qqhzzj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0qqhzzj" sourceRef="Activity_FailOnGeoserver_1nlcylg" targetRef="ServiceTask_RollBackGeoserver_1q2tzzq" />
+    <bpmn:sequenceFlow id="Flow_0cd8vr9" sourceRef="Activity_CreateAllOnGeoserver_1uthaaa" targetRef="Activity_CheckResults_12aigkf" />
+    <bpmn:sequenceFlow id="Flow_09osg67" sourceRef="Activity_CheckResults_12aigkf" targetRef="Gateway_03vmbui" />
+    <bpmn:serviceTask id="Activity_CheckResults_12aigkf" name="check results" camunda:asyncBefore="true" camunda:delegateExpression="${checkResultsDelegate}">
+      <bpmn:incoming>Flow_0cd8vr9</bpmn:incoming>
+      <bpmn:incoming>Flow_1ujib7t</bpmn:incoming>
+      <bpmn:outgoing>Flow_09osg67</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ujib7t" name="repeat" sourceRef="Gateway_03vmbui" targetRef="Activity_CheckResults_12aigkf">
+      <bpmn:documentation>${checkStatus == 'REPEAT'}</bpmn:documentation>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_00d0ccl" sourceRef="Activity_CreateDbFailed_1cajhmq" targetRef="Event_1iedtzr" />
+    <bpmn:sequenceFlow id="Flow_1pr0ww7" sourceRef="ServiceTask_RollbackDb_0sfz9g8" targetRef="Event_1iedtzr" />
+  </bpmn:process>
+  <bpmn:error id="Error_0xcv6z8" name="balanceError" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="integration_createOrganizationProcess">
+      <bpmndi:BPMNEdge id="Flow_1ujib7t_di" bpmnElement="Flow_1ujib7t">
+        <di:waypoint x="900" y="165" />
+        <di:waypoint x="900" y="120" />
+        <di:waypoint x="800" y="120" />
+        <di:waypoint x="800" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="834" y="102" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09osg67_di" bpmnElement="Flow_09osg67">
+        <di:waypoint x="850" y="190" />
+        <di:waypoint x="875" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cd8vr9_di" bpmnElement="Flow_0cd8vr9">
+        <di:waypoint x="660" y="190" />
+        <di:waypoint x="750" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qqhzzj_di" bpmnElement="Flow_0qqhzzj">
+        <di:waypoint x="900" y="350" />
+        <di:waypoint x="900" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pr0ww7_di" bpmnElement="Flow_1pr0ww7">
+        <di:waypoint x="1150" y="440" />
+        <di:waypoint x="1232" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0moqihe_di" bpmnElement="Flow_0moqihe">
+        <di:waypoint x="950" y="440" />
+        <di:waypoint x="1050" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0o5xb3g_di" bpmnElement="Flow_0o5xb3g">
+        <di:waypoint x="900" y="215" />
+        <di:waypoint x="900" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="909" y="214" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lskmrb_di" bpmnElement="Flow_1lskmrb">
+        <di:waypoint x="450" y="215" />
+        <di:waypoint x="450" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="459" y="219" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_192ysge_di" bpmnElement="Flow_192ysge">
+        <di:waypoint x="475" y="190" />
+        <di:waypoint x="560" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="172" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tqkgh1_di" bpmnElement="Flow_1tqkgh1">
+        <di:waypoint x="195" y="190" />
+        <di:waypoint x="250" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0oygz1x_di" bpmnElement="Flow_0oygz1x">
+        <di:waypoint x="350" y="190" />
+        <di:waypoint x="425" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k60yix_di" bpmnElement="Flow_0k60yix">
+        <di:waypoint x="1150" y="190" />
+        <di:waypoint x="1232" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rsqahp_di" bpmnElement="Flow_1rsqahp">
+        <di:waypoint x="925" y="190" />
+        <di:waypoint x="1050" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="979" y="172" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00d0ccl_di" bpmnElement="Flow_00d0ccl">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="520" />
+        <di:waypoint x="1250" y="520" />
+        <di:waypoint x="1250" y="458" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_01une73_di" bpmnElement="Event_01une73">
+        <dc:Bounds x="1232" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1230" y="215" width="43" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uthaaa_di" bpmnElement="Activity_CreateAllOnGeoserver_1uthaaa">
+        <dc:Bounds x="560" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0iv7ilu_di" bpmnElement="Activity_CreateDb_frtytha">
+        <dc:Bounds x="250" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0y2pc7t_di" bpmnElement="Event_0y2pc7t">
+        <dc:Bounds x="159" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="208" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0wtmx8x_di" bpmnElement="Gateway_0wtmx8x" isMarkerVisible="true">
+        <dc:Bounds x="425" y="165" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="625" y="255" width="31" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cajhmq_di" bpmnElement="Activity_CreateDbFailed_1cajhmq">
+        <dc:Bounds x="400" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_036s9ub_di" bpmnElement="Activity_CheckResults_12aigkf">
+        <dc:Bounds x="750" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0wplv2a_di" bpmnElement="Event_1iedtzr">
+        <dc:Bounds x="1232" y="422" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1235" y="398" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_03vmbui_di" bpmnElement="Gateway_03vmbui" isMarkerVisible="true">
+        <dc:Bounds x="875" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nlcylg_di" bpmnElement="Activity_FailOnGeoserver_1nlcylg">
+        <dc:Bounds x="850" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1q2tzzq_di" bpmnElement="ServiceTask_RollBackGeoserver_1q2tzzq">
+        <dc:Bounds x="850" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tr89i8_di" bpmnElement="Activity_Success_1tr89i8">
+        <dc:Bounds x="1050" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0sfz9g8_di" bpmnElement="ServiceTask_RollbackDb_0sfz9g8">
+        <dc:Bounds x="1050" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

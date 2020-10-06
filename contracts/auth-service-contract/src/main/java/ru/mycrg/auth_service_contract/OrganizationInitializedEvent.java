@@ -9,8 +9,9 @@ public class OrganizationInitializedEvent extends OrganizationBaseEvent {
     public OrganizationInitializedEvent() {
     }
 
-    public OrganizationInitializedEvent(Long orgId, String ownerRawPassword, String ownerEmail, String ownerUserName) {
-        super(orgId);
+    public OrganizationInitializedEvent(Long orgId, String token,
+                                        String ownerRawPassword, String ownerEmail, String ownerUserName) {
+        super(orgId, token);
 
         this.ownerRawPassword = ownerRawPassword;
         this.ownerEmail = ownerEmail;

@@ -31,8 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.auth_service.security.CrgClaimsParser.isGeoserverAdmin;
-import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
+import static ru.mycrg.auth_service.security.CrgClaimsParser.*;
 import static ru.mycrg.auth_service.service.AuthorityService.USER;
 
 @Service
@@ -78,7 +77,7 @@ public class UserService {
         return new UserInfoModel(userName);
     }
 
-    public UserProjection create(UserCreateDto dto, Long orgId) {
+    public UserProjection create(UserCreateDto dto, Long orgId, Authentication authentication) {
         log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
@@ -107,6 +106,7 @@ public class UserService {
         messageBus.sendUserEvent(
                 new UserCreatedEvent(
                         savedUser.getUsername(),
+                        getToken(authentication),
                         dto.getPassword(),
                         true,
                         "admin_" + orgId)
@@ -184,7 +184,8 @@ public class UserService {
         log.debug("Try delete user: {}", userProjection.getEmail());
 
         userRepository.findById(id).ifPresent(user -> {
-            messageBus.sendUserEvent(new UserDeletedEvent(user.getUsername()));
+            messageBus.sendUserEvent(
+                    new UserDeletedEvent(user.getUsername(), getToken(authentication)));
 
             user.getOrganizations().forEach(org -> org.getUsers().remove(user));
             userRepository.deleteById(user.getId());

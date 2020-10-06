@@ -10,7 +10,7 @@ public class PrepareNameGeoserverWorkaround {
 
     @Test
     public void shouldDuplicateDomain() {
-        UsersAndRolesService service = new UsersAndRolesService();
+        UsersAndRolesService service = new UsersAndRolesService("");
 
         assertNull(service.prepareUserNameForGeoserver(null));
         assertEquals("fiz@mail.ru.ru", service.prepareUserNameForGeoserver("fiz@mail.ru"));

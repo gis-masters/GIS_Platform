@@ -11,9 +11,12 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
+    public FeatureTypeService(String accessToken) {
+        super(accessToken);
+    }
+
     @Override
-    public GeoserverClientResponse create(String workspaceName, String dataStoreName, String featureName,
-                                          String jwtToken, Integer srs) {
+    public GeoserverClientResponse create(String workspaceName, String dataStoreName, String featureName, Integer srs) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
                 "{\"featureType\": " +
                     "{" +
@@ -27,8 +30,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .append("/datastores/").append(dataStoreName)
                 .append("/featuretypes").toString();
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + jwtToken)
+        Request request = builderWithBearerAuth
                 .url(url)
                 .post(body)
                 .build();
@@ -37,7 +39,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     }
 
     @Override
-    public void delete(String workspaceName, String dataStoreName, String featureName, String jwtToken)
+    public void delete(String workspaceName, String dataStoreName, String featureName)
             throws GeoserverClientException {
 
         String url = getGeoserverRestUrl()
@@ -46,8 +48,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                 .append("/featuretypes/").append(featureName)
                 .toString();
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + jwtToken)
+        Request request = builderWithBearerAuth
                 .url(url)
                 .delete()
                 .build();

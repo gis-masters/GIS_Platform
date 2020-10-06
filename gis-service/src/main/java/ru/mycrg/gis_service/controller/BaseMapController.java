@@ -23,7 +23,7 @@ import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATC
 @RequestMapping("/projects/{project_id}")
 public class BaseMapController {
 
-    private static Logger log = LoggerFactory.getLogger(BaseMapController.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseMapController.class);
 
     private final BaseMapService baseMapService;
 
@@ -52,35 +52,35 @@ public class BaseMapController {
 
     @PostMapping("/basemaps")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus addBaseMap(@PathVariable(name = "project_id") long projectId,
-                                 @Valid @RequestBody BaseMapCreateDto dto,
-                                 Authentication authentication) {
+    public ResponseEntity<Object> addBaseMap(@PathVariable(name = "project_id") long projectId,
+                                             @Valid @RequestBody BaseMapCreateDto dto,
+                                             Authentication authentication) {
         baseMapService.create(projectId, dto, authentication);
 
-        return HttpStatus.CREATED;
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping(path = "/basemaps/{base_map_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus updateBaseMap(@PathVariable(name = "project_id") long projectId,
-                                    @PathVariable(name = "base_map_id") long baseMapId,
-                                    @RequestBody JsonMergePatch patchDto,
-                                    Authentication authentication) {
+    public ResponseEntity<Object> updateBaseMap(@PathVariable(name = "project_id") long projectId,
+                                                @PathVariable(name = "base_map_id") long baseMapId,
+                                                @RequestBody JsonMergePatch patchDto,
+                                                Authentication authentication) {
         log.info("patch update baseMap: {}", patchDto.toJsonValue());
 
         baseMapService.update(projectId, baseMapId, patchDto, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/basemaps")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus deleteBaseMap(@PathVariable(name = "project_id") long projectId,
-                                    @RequestParam(name = "baseMapId") long baseMapId,
-                                    Authentication authentication) {
+    public ResponseEntity<Object> deleteBaseMap(@PathVariable(name = "project_id") long projectId,
+                                                @RequestParam(name = "baseMapId") long baseMapId,
+                                                Authentication authentication) {
         baseMapService.delete(projectId, baseMapId, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -11,9 +11,12 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class StorageService extends GeoServerBaseService {
 
+    public StorageService(String accessToken) {
+        super(accessToken);
+    }
+
     public GeoserverClientResponse createStorage(final String databaseName, final String schemaName,
-                                                 final String workspaceName, final String dataStoreName)
-            throws GeoserverClientException {
+                                                 final String workspaceName, final String dataStoreName) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "{\n" +
                 "\t\"dataStore\": {\n" +
                 "\t\t\"name\": \"" + dataStoreName + "\",\n" +
@@ -29,8 +32,7 @@ public class StorageService extends GeoServerBaseService {
                 "\t}\n" +
                 "}");
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/workspaces/" + workspaceName + "/datastores")
                 .post(body)
                 .build();
@@ -39,8 +41,7 @@ public class StorageService extends GeoServerBaseService {
     }
 
     public DataStores getStores(final String workspaceName) throws GeoserverClientException {
-        Request getStores = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request getStores = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/workspaces/" + workspaceName + "/datastores")
                 .get()
                 .build();
@@ -63,10 +64,8 @@ public class StorageService extends GeoServerBaseService {
         }
     }
 
-    public GeoserverClientResponse deleteStorage(final String workspaceName, final String dataStoreName)
-            throws GeoserverClientException {
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+    public GeoserverClientResponse deleteStorage(final String workspaceName, final String dataStoreName) {
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/workspaces/" + workspaceName + "/datastores/" + dataStoreName + "?recurse=true")
                 .delete()
                 .build();

@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.controller;
 
-import jakarta.inject.Inject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -20,6 +19,7 @@ import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
@@ -90,7 +90,7 @@ public class UserController {
             organizationId = getOrganizationId(authentication);
         }
 
-        UserProjection user = userService.create(userCreateDto, organizationId);
+        UserProjection user = userService.create(userCreateDto, organizationId, authentication);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

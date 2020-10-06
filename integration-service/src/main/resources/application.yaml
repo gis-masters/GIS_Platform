@@ -4,8 +4,7 @@ spring:
 
 logging:
   file:
-    name: data-service.log
-    path: /opt/logs
+    name: /opt/logs/integration-service.log
   level:
     ru.mycrg: DEBUG
 
@@ -25,7 +24,16 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: update
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
 
 camunda.bpm.admin-user:
   id: demo
   password: demo
+
+crg-options:
+  gis_service_url: http://127.0.0.1:8082
+  data_service_url: http://127.0.0.1:8084

@@ -155,13 +155,8 @@
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
-            <artifactId>oauth-client</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.mycrg</groupId>
             <artifactId>geoserver-client</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

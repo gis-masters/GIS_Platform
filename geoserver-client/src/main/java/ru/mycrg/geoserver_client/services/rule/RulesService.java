@@ -3,19 +3,28 @@ package ru.mycrg.geoserver_client.services.rule;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.GeoserverClientResponse;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.geoserver_client.GeoserverClient.XML_MEDIA_TYPE;
+import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;
+import static ru.mycrg.geoserver_client.services.rule.RulesUtil.*;
 
 public class RulesService extends GeoServerBaseService {
+
+    private static final Logger log = LoggerFactory.getLogger(RulesService.class);
+
+    public RulesService(String accessToken) {
+        super(accessToken);
+    }
 
     /**
      * Добавить правило доступа роли к определенному ресурсу.
@@ -25,13 +34,15 @@ public class RulesService extends GeoServerBaseService {
      * @param role Роль
      */
     public void addLayersRule(String rule, String role) throws Exception {
-        Request getLayersRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request getLayersRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .get()
                 .build();
 
         Response response = httpClient.newCall(getLayersRoles).execute();
+
+        log.debug("addLayersRule: {} - {} / code: {}", rule, role, response.code());
+
         if (response.isSuccessful()) {
             Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
             String valueByKey = oldRules.get("scratch_workspace.*.a");
@@ -51,6 +62,20 @@ public class RulesService extends GeoServerBaseService {
     }
 
     /**
+     * Delete all: admin, read and write rules by workspaceName
+     * @param workspaceName
+     */
+    public void deleteResourceRule(String workspaceName) {
+        String adminRule = buildRule(workspaceName, ADMIN);
+        String readRule = buildRule(workspaceName, READ);
+        String writeRule = buildRule(workspaceName, WRITE);
+
+        deleteRule(adminRule);
+        deleteRule(readRule);
+        deleteRule(writeRule);
+    }
+
+    /**
      * Роль будет добавлена в два существующих на геосерве правила: <p>
      * <p>
      * "/**:POST,DELETE,PUT": "ROLE_ADMINISTRATOR", <br>
@@ -58,22 +83,44 @@ public class RulesService extends GeoServerBaseService {
      *
      * @param role Наименование роли
      */
-    public void addRestRule(String role) throws Exception {
-        Request getRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+    public void addRestRule(String role) {
+        Request getRestRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
                 .get()
                 .build();
 
-        Response response = httpClient.newCall(getRestRoles).execute();
-        if (response.isSuccessful()) {
+        try (Response response = httpClient.newCall(getRestRoles).execute()) {
+            if (response.isSuccessful()) {
 
-            Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
-            Map<String, String> newRules = insertNewRole(oldRules, role, null);
+                Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
+                Map<String, String> newRules = insertNewRole(oldRules, role, null);
 
-            updateRestRoles(newRules);
-        } else {
-            response.close();
+                updateRestRoles(newRules);
+            }
+        } catch (IOException e) {
+            log.error("Can't add rest roles");
+        }
+    }
+
+    public void deleteRestRule(String role) {
+        Request getRestRoles = builderWithBearerAuth
+                .url(getGeoserverRestUrl() + "/security/acl/rest")
+                .get()
+                .build();
+
+        try (Response response = httpClient.newCall(getRestRoles).execute()) {
+            if (response.isSuccessful()) {
+                Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
+                Map<String, String> newRules = deleteRole(oldRules, role);
+
+                updateRestRoles(newRules);
+            } else {
+                log.warn("Can't get rest rules, Code: {}, Reason: {}",
+                        response.code(),
+                        response.message());
+            }
+        } catch (IOException e) {
+            log.error("Can't delete rest roles");
         }
     }
 
@@ -84,8 +131,7 @@ public class RulesService extends GeoServerBaseService {
      * @param role        Наименование роли
      */
     public void addServiceRule(ServiceKeys serviceKeys, String role) throws Exception {
-        Request getServiceRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request getServiceRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .get()
                 .build();
@@ -112,43 +158,44 @@ public class RulesService extends GeoServerBaseService {
         }
     }
 
-    /**
-     * Добавить роль к правилу доступа.
-     * Если указана ключевое правило то работаем только с ним, если не указано то роль добавляется ко всем правилам.
-     * <p>
-     * Examples:
-     * "/**:POST,DELETE,PUT":"ROLE_ADMINISTRATOR,admin_workspace_1",
-     * "/**:GET":"ROLE_ADMINISTRATOR,admin_workspace_1",
-     * "scratch_workspace.*.a": "admin_2,admin_1"
-     */
-    public Map<String, String> insertNewRole(Map<String, String> oldRules, @NotNull String newRole, String keyRule) {
-        if (keyRule != null) {
-            oldRules.entrySet().forEach(item -> {
-                if (keyRule.equals(item.getKey())) {
-                    String oldRoles = item.getValue();
+    public void deleteServiceRule(String role) {
+        Request getServiceRoles = builderWithBearerAuth
+                .url(getGeoserverRestUrl() + "/security/acl/services")
+                .get()
+                .build();
 
-                    item.setValue(oldRoles + "," + newRole);
-                }
-            });
-        } else {
-            oldRules.entrySet().forEach(item -> {
-                String oldRoles = item.getValue();
+        try (Response response = httpClient.newCall(getServiceRoles).execute()) {
+            if (response.isSuccessful()) {
+                Map<String, String> oldRules = mapper.readValue(response.body().string(), HashMap.class);
+                Map<String, String> newRules = deleteRole(oldRules, role);
 
-                item.setValue(oldRoles + "," + newRole);
-            });
+                updateServiceRoles(newRules);
+            } else {
+                log.warn("Can't get service rules, Code: {}, Reason: {}",
+                        response.code(),
+                        response.message());
+            }
+        } catch (IOException e) {
+            log.error("Can't delete services roles");
         }
-
-        return oldRules;
     }
 
-    private GeoserverClientResponse createRule(String rule, String role) throws GeoserverClientException {
+    private void deleteRule(String rule) {
+        Request request = builderWithBearerAuth
+                .url(getGeoserverRestUrl() + "/security/acl/layers/" + rule)
+                .delete()
+                .build();
+
+        doRequest(request, "delete layers rule: " + rule);
+    }
+
+    private GeoserverClientResponse createRule(String rule, String role) {
         RequestBody body = RequestBody.create(XML_MEDIA_TYPE,
                 "<rules>\n" +
-                        "   <rule resource=\"" + rule + "\">" + role + "</rule>\n" +
-                        "</rules>");
+                "   <rule resource=\"" + rule + "\">" + role + "</rule>\n" +
+                "</rules>");
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .post(body)
                 .build();
@@ -156,10 +203,9 @@ public class RulesService extends GeoServerBaseService {
         return doRequest(request);
     }
 
-    private GeoserverClientResponse updateRestRoles(Map<String, String> newRules) throws GeoserverClientException {
+    private GeoserverClientResponse updateRestRoles(Map<String, String> newRules) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
-        Request setRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request setRestRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/rest")
                 .put(body)
                 .build();
@@ -167,11 +213,10 @@ public class RulesService extends GeoServerBaseService {
         return doRequest(setRestRoles);
     }
 
-    private GeoserverClientResponse updateServiceRoles(Map<String, String> newRules) throws GeoserverClientException {
+    private GeoserverClientResponse updateServiceRoles(Map<String, String> newRules) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
 
-        Request setServiceRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request setServiceRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .put(body)
                 .build();
@@ -179,11 +224,10 @@ public class RulesService extends GeoServerBaseService {
         return doRequest(setServiceRoles);
     }
 
-    private GeoserverClientResponse createServiceRoles(Map<String, String> rule) throws GeoserverClientException {
+    private GeoserverClientResponse createServiceRoles(Map<String, String> rule) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(rule).toString());
 
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/services")
                 .post(body)
                 .build();
@@ -191,14 +235,14 @@ public class RulesService extends GeoServerBaseService {
         return doRequest(request);
     }
 
-    private GeoserverClientResponse updateLayersRoles(Map<String, String> newRules) throws GeoserverClientException {
+    private GeoserverClientResponse updateLayersRoles(Map<String, String> newRules) {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject(newRules).toString());
-        Request setRestRoles = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + getRootAccessToken())
+        Request setRestRoles = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/acl/layers")
                 .put(body)
                 .build();
 
         return doRequest(setRestRoles);
     }
+
 }

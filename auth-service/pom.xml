@@ -136,9 +136,17 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <version>1.0.2</version>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- CRG -->
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>oauth-client</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

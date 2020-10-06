@@ -3,11 +3,11 @@ package ru.mycrg.data_service.dao;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.INITIAL_SCHEMA_NAME;
@@ -35,16 +35,12 @@ public class DatabaseDDL {
      * @param dbName Название БД
      */
     public void create(final String dbName) {
-        if (isDatabaseExist(dbName)) {
-            throw new ConflictException("Database "+ dbName + " exist");
-        }
-
         HikariDataSource newDataSource = null;
         try {
             log.debug("Try create db: {}", dbName);
 
             final String sql = "CREATE DATABASE " + dbName + " WITH " +
-                    " OWNER = " + crgDataSourcesPool.getInitialUser()  +
+                    " OWNER = " + crgDataSourcesPool.getInitialUser() +
                     " ENCODING = 'UTF8'" +
                     " LC_COLLATE = 'en_US.UTF-8'" +
                     " LC_CTYPE = 'en_US.UTF-8'" +
@@ -72,6 +68,24 @@ public class DatabaseDDL {
         }
     }
 
+    public void delete(String dbName) {
+        final MapSqlParameterSource source = new MapSqlParameterSource().addValue("dbName", dbName);
+
+        // Предотвращаем возможность новых подключений
+        parameterJdbcTemplate
+                .update("UPDATE pg_database SET datallowconn = 'false' WHERE datname = :dbName", source);
+
+        // Закрываем текущие сессии
+        parameterJdbcTemplate.query(
+                "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity " +
+                        "WHERE pg_stat_activity.datname = :dbName AND pid <> pg_backend_pid()",
+                source,
+                new SingleColumnRowMapper<>());
+
+        // Удаляем
+        jdbcTemplate.update("DROP DATABASE " + dbName);
+    }
+
     public boolean isDatabaseExist(String dbName) {
         try {
             return parameterJdbcTemplate.queryForObject(
@@ -82,5 +96,4 @@ public class DatabaseDDL {
             throw new BadRequestException(e.getMessage());
         }
     }
-
 }

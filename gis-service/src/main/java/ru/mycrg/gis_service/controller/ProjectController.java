@@ -9,15 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.dto.ProjectProjection;
+import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
 
 import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
 
 @RestController
 @RequestMapping(value = "/projects")
@@ -34,7 +33,7 @@ public class ProjectController {
 
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> getProjects(Pageable pageable, Authentication authentication) {
+    public ResponseEntity<Object> getProjects(Pageable pageable, Authentication authentication) {
         Page<ProjectProjection> projects = projectService.getAll(pageable, authentication);
 
         return ResponseEntity.ok(assembler.toResource(projects));
@@ -50,34 +49,30 @@ public class ProjectController {
 
     @PostMapping
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> createProject(@Valid @RequestBody ProjectRequestDto projectDto,
-                                              Authentication authentication) {
-        Long organizationId = getOrganizationId(authentication);
+    public ResponseEntity<ProjectProjection> createProject(@Valid @RequestBody ProjectRequestDto projectDto,
+                                                           Authentication authentication) {
+        ProjectProjection project = projectService.create(projectDto, authentication);
 
-        ProjectProjection project = projectService.create(organizationId, projectDto);
-
-        return new ResponseEntity(project, HttpStatus.CREATED);
+        return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
     @PutMapping("/{projectId}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus updateProject(@PathVariable long projectId,
-                                    @Valid @RequestBody ProjectRequestDto projectDto,
-                                    Authentication authentication) {
+    public ResponseEntity<Object> updateProject(@PathVariable long projectId,
+                                                @Valid @RequestBody ProjectRequestDto projectDto,
+                                                Authentication authentication) {
         projectService.update(projectId, projectDto.getProjectName(), authentication);
 
-        return HttpStatus.OK;
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{projectId}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> deleteProject(@PathVariable long projectId,
-                                              Authentication authentication) {
-        Long organizationId = getOrganizationId(authentication);
+    public ResponseEntity<Object> deleteProject(@PathVariable long projectId,
+                                                Authentication authentication) {
+        projectService.delete(projectId, authentication);
 
-        projectService.delete(organizationId, projectId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -3,14 +3,12 @@ package ru.mycrg.gateway.filters;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.gateway.config.CrgProperties;
 import ru.mycrg.gateway.domain.CookieHandler;
 import ru.mycrg.gateway.domain.TokenHandler;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
-import ru.mycrg.oauth_client.OAuthClientException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -34,7 +32,8 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         this.properties = properties;
         this.cookieHandler = cookieHandler;
         this.bearerHandler = bearerHandler;
-        this.authClient = OAuthClient.builder()
+        this.authClient = OAuthClient
+                .builder()
                 .url(properties.getAuthServiceUrl())
                 .clientId(properties.getClientId())
                 .clientSecret(properties.getClientSecret())
@@ -55,16 +54,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             if (username == null || password == null) {
                 sendError(response);
             } else {
-                try {
-                    authClient
-                            .getToken(username, password)
-                            .ifPresentOrElse(
-                                    jwtToken -> prepareResponse(response, jwtToken),
-                                    () -> sendError(response)
-                            );
-                } catch (OAuthClientException e) {
-                    sendError(response);
-                }
+                authClient
+                        .getToken(username, password)
+                        .ifPresentOrElse(
+                                jwtToken -> prepareResponse(response, jwtToken),
+                                () -> sendError(response)
+                        );
             }
         } else if (isAllowedPaths(request)) {
             log.debug("Request to: {} Method: {}. Allow without auth", request.getServletPath(), request.getMethod());
@@ -135,7 +130,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 sendError(response);
             }
         } catch (Exception e) {
-            clearContext(e, "Not authenticated");
+            sendError(response);
         }
     }
 
@@ -165,10 +160,8 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
             return token[0];
         } catch (Exception e) {
-            clearContext(e, "Cant refresh token");
+            throw new RuntimeException("Failed refresh token");
         }
-
-        return null;
     }
 
     private boolean isAllowedPaths(HttpServletRequest request) {
@@ -183,15 +176,6 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         } catch (IOException | ServletException e) {
             log.error("Error goto the next filter", e);
         }
-    }
-
-    /**
-     * In case of failure. Make sure it's clear; so guarantee user won't be authenticated
-     */
-    private void clearContext(Exception e, String s) {
-        log.error(s, e);
-
-        SecurityContextHolder.clearContext();
     }
 
     private void sendError(@NotNull HttpServletResponse response) {

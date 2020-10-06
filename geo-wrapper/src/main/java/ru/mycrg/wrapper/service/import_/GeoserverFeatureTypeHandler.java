@@ -23,11 +23,9 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(GeoserverFeatureTypeHandler.class);
 
     private final MqSender mqSender;
-    private final IFeatureTypes featureTypesService;
 
     public GeoserverFeatureTypeHandler(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.featureTypesService = new FeatureTypeService();
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
@@ -37,17 +35,16 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
         try {
             featureDescription = importTask.getFeatureDescription();
 
-            featureTypesService.delete(
+            FeatureTypeService featureTypeService = new FeatureTypeService(importTask.getUserToken());
+            featureTypeService.delete(
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
-                    featureDescription.getName(),
-                    importTask.getUserToken());
+                    featureDescription.getName());
 
-            featureTypesService.create(
+            featureTypeService.create(
                     importTask.getTargetResource().getSchemaName(),
                     importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
                     featureDescription.getName(),
-                    importTask.getUserToken(),
                     importTask.getSrs());
 
             if (nextImporter != null) {

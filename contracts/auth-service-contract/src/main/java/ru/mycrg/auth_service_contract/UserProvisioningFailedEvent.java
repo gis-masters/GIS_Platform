@@ -6,6 +6,6 @@ public class UserProvisioningFailedEvent extends UserBaseEvent {
     }
 
     public UserProvisioningFailedEvent(IUserEvent mqEvent) {
-        super(mqEvent.getLogin());
+        super(mqEvent.getLogin(), mqEvent.getToken());
     }
 }

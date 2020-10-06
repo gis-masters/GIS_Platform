@@ -24,7 +24,7 @@ import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATC
 @RequestMapping("/projects/{project_id}")
 public class GroupController {
 
-    private static Logger log = LoggerFactory.getLogger(GroupController.class);
+    private static final Logger log = LoggerFactory.getLogger(GroupController.class);
 
     private final GroupService groupService;
 
@@ -43,12 +43,12 @@ public class GroupController {
 
     @PostMapping("/groups")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> createGroup(@PathVariable(name = "project_id") long projectId,
-                                            @Valid @RequestBody GroupCreateDto dto,
-                                            Authentication authentication) {
+    public ResponseEntity<GroupProjection> createGroup(@PathVariable(name = "project_id") long projectId,
+                                                       @Valid @RequestBody GroupCreateDto dto,
+                                                       Authentication authentication) {
         GroupProjection groupProjection = groupService.create(projectId, dto, authentication);
 
-        return new ResponseEntity(groupProjection, HttpStatus.CREATED);
+        return new ResponseEntity<>(groupProjection, HttpStatus.CREATED);
     }
 
     @GetMapping("/groups/{group_id}")
@@ -63,25 +63,25 @@ public class GroupController {
 
     @PatchMapping(path = "/groups/{group_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public HttpStatus updateGroup(@PathVariable(name = "project_id") long projectId,
-                                  @PathVariable(name = "group_id") long groupId,
-                                  @RequestBody JsonMergePatch patchDto,
-                                  Authentication authentication) {
+    public ResponseEntity<Object> updateGroup(@PathVariable(name = "project_id") long projectId,
+                                              @PathVariable(name = "group_id") long groupId,
+                                              @RequestBody JsonMergePatch patchDto,
+                                              Authentication authentication) {
         log.info("patch update group: {}", patchDto.toJsonValue());
 
         groupService.update(projectId, groupId, patchDto, authentication);
 
-        return HttpStatus.NO_CONTENT;
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/groups/{group_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Void> deleteGroup(@PathVariable(name = "project_id") long projectId,
-                                            @PathVariable(name = "group_id") long groupId,
-                                            Authentication authentication) {
+    public ResponseEntity<Object> deleteGroup(@PathVariable(name = "project_id") long projectId,
+                                              @PathVariable(name = "group_id") long groupId,
+                                              Authentication authentication) {
         groupService.delete(projectId, groupId, authentication);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -24,11 +24,9 @@ public class GeoserverStorageHandler extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(GeoserverStorageHandler.class);
 
     private final MqSender mqSender;
-    private final StorageService storageService;
 
     public GeoserverStorageHandler(MqSender mqSender) {
         this.mqSender = mqSender;
-        this.storageService = new StorageService();
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
@@ -44,6 +42,7 @@ public class GeoserverStorageHandler extends AbstractImportChainItem {
             String projectName = targetResource.getSchemaName();
             String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
+            StorageService storageService = new StorageService(importTask.getUserToken());
             DataStores dataStores = storageService.getStores(projectName);
             if (dataStores.getDataStore().isEmpty() && isStoreNotExist(dataStores, projectName)) {
                 log.debug("Create storage: {}", storeName);

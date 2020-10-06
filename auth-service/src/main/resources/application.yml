@@ -36,6 +36,9 @@ security:
     client_secret: geoserver
     access_token_validity_seconds: 86400
     refresh_token_validity_seconds: 1209600
+crg-options:
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver
 
 server:
   port: 9000

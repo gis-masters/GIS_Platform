@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
@@ -70,6 +73,13 @@ public class User {
         this.enabled = false;
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
+    }
+
+    public boolean isOwner() {
+        return authorities.stream()
+                .map(Authorities::getAuthority)
+                .collect(Collectors.toList())
+                .contains(ORG_ADMIN);
     }
 
     public Long getId() {
