@@ -12,10 +12,10 @@ import ImageWrapper from 'ol/Image';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
-import { Image as ImageLayer, Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
 import { get as getProjection } from 'ol/proj';
-import { ImageWMS, OSM, TileArcGISRest, TileImage, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
+import { OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import { Options as XYZOptions } from 'ol/source/XYZ';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
@@ -235,15 +235,14 @@ class OpenLayersService {
     } else {
       const params: CrgWmsParams = {
         LAYERS: resultName,
-        FORMAT: 'image/vnd.jpeg-png8'
+        FORMAT: 'image/vnd.jpeg-png8',
       };
 
-      const imageLayer = new ImageLayer({
-        source: new ImageWMS({
+      const layer = new TileLayer({
+        source: new TileWMS({
           url: await serverProperties.wmsUrl,
           params: params,
-          imageLoadFunction: this.crgImageLoadFunction,
-          ratio: 1,
+          tileLoadFunction: this.crgImageLoadFunction,
           serverType: 'geoserver',
           crossOrigin: 'anonymous'
         }),
@@ -256,9 +255,9 @@ class OpenLayersService {
         [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
       };
 
-      imageLayer.setProperties(props);
+      layer.setProperties(props);
 
-      this._map.addLayer(imageLayer);
+      this._map.addLayer(layer);
     }
   }
 
@@ -319,9 +318,9 @@ class OpenLayersService {
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  getLayerByName(complexLayerName: string): ImageLayer | undefined {
+  getLayerByName(complexLayerName: string): TileLayer | undefined {
     return this.getUserLayers().find(layer => {
-      const source = layer.getSource() as ImageWMS;
+      const source = layer.getSource() as TileWMS;
 
       return source && source.getParams().LAYERS === complexLayerName;
     });
@@ -595,11 +594,11 @@ class OpenLayersService {
   /**
    * Все слои которые являются пользовательскими
    */
-  private getUserLayers(): ImageLayer[] {
+  private getUserLayers(): TileLayer[] {
     return this._map
       .getLayers()
       .getArray()
-      .filter(layer => this.isUserLayer(layer)) as ImageLayer[];
+      .filter(layer => this.isUserLayer(layer)) as TileLayer[];
   }
 
   private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
