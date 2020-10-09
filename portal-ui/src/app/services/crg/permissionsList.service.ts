@@ -65,7 +65,7 @@ class PermissionsListService {
     for (let project of projectsList.list) {
       const layers = await projectsService.getProjectLayers(project.id);
       items.push([project]);
-      items.concat(layers.filter(layer => layer.type === CrgLayerType.VECTOR).map(layer => [project, layer]));
+      items.splice(0, 0, ...layers.filter(layer => layer.type === CrgLayerType.VECTOR).map(layer => [project, layer]));
     }
 
     for (let [project, layer] of items) {
