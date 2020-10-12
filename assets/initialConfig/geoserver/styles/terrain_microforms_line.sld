@@ -3274,7 +3274,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3308,7 +3308,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3342,7 +3342,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3376,7 +3376,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3410,7 +3410,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3671,7 +3671,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3712,7 +3712,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3753,7 +3753,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3794,7 +3794,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3835,7 +3835,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3876,7 +3876,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3917,7 +3917,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3958,7 +3958,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -3999,7 +3999,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4040,7 +4040,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4075,7 +4075,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4109,7 +4109,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4143,7 +4143,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4177,7 +4177,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4211,7 +4211,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4245,7 +4245,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4279,7 +4279,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4313,7 +4313,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4347,7 +4347,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
@@ -4381,7 +4381,7 @@
               <se:GraphicStroke>
                 <se:Graphic>
                   <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.PNG" />
+                    <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>
