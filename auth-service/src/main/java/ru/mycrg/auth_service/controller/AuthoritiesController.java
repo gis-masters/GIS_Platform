@@ -26,5 +26,4 @@ public class AuthoritiesController {
     public ResponseEntity<List<String>> getAuthorities() {
         return ResponseEntity.ok(authorityService.getAuthorities());
     }
-
 }

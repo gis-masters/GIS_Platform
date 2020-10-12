@@ -22,13 +22,13 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
                 .then().
                         log().ifValidationFails().
                         statusCode(200).
                         body("dataStore.name", equalTo(store),
-                                "dataStore.type", equalTo("PostGIS"),
-                                "dataStore.enabled", is(true));
+                             "dataStore.type", equalTo("PostGIS"),
+                             "dataStore.enabled", is(true));
     }
 
     @And("На Геосервере отсутствует scratch рабочая область")
@@ -37,7 +37,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/workspaces/" + workspace)
+                get("/geoserver/rest/workspaces/" + workspace)
                 .then().
                         log().ifValidationFails().
                         statusCode(404);
@@ -47,11 +47,11 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
     public void checkGeoserverUser(String userName) {
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+                get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
                 .then().
                         log().ifValidationFails().
                         statusCode(200).
-                        body("users.findAll { it.enabled == true }.userName", hasItems(userName));
+                        body("users.findAll { it.enabled == true }.userName", hasItems(replaceString(userName)));
     }
 
     @And("На Геосервере создана роль")
@@ -60,7 +60,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/security/roles.json")
+                get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
                         statusCode(200).

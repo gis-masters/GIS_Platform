@@ -1,4 +1,4 @@
-Feature: Добавление нового пользователя
+Feature: Действия с пользователем
 
   Background: Проверка организации
     Given Существует организация
@@ -34,16 +34,16 @@ Feature: Добавление нового пользователя
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | userName       | userSurname     | userEmail          | userPassword | reason                        |
-      | testUserName   | testUserSurname | user1              | testtestQ1   | Невалидный email пользователя |
-      |                | testUserSurname | user2@user.com     | testtestQ1   | Пустое имя пользователя       |
-      | te             | testUserSurname | user3@user.com     | testtestQ1   | Короткое имя пользователя     |
-      | LONG_STRING_60 | testUserSurname | user4@user.com     | testtestQ1   | Длинное имя пользователя      |
-      | testUserName   | LONG_STRING_100 | user5@user.com     | testtestQ1   | Длинная фамилия пользователя  |
-      | testUserName   |                 | user6@user.com     | testtestQ1   | Пустая фамилия пользователя   |
-      | testUserName   | testUserSurname |                    | testtestQ1   | Нет email пользователя        |
-      | testUserName   | testUserSurname | LONG_USER_EMAIL_60 | testtestQ1   | Длинный email пользователя    |
-      | testUserName   | testUserSurname | user9@user.com     | testtest     | Простой пароль пользователя   |
+      | userName     | userSurname     | userEmail      | userPassword | reason                        |
+      | testUserName | testUserSurname | user1          | testtestQ1   | Невалидный email пользователя |
+      | STRING_0     | testUserSurname | user2@user.com | testtestQ1   | Пустое имя пользователя       |
+      | STRING_2     | testUserSurname | user3@user.com | testtestQ1   | Короткое имя пользователя     |
+      | STRING_61    | testUserSurname | user4@user.com | testtestQ1   | Длинное имя пользователя      |
+      | testUserName | STRING_101      | user5@user.com | testtestQ1   | Длинная фамилия пользователя  |
+      | testUserName | STRING_0        | user6@user.com | testtestQ1   | Пустая фамилия пользователя   |
+      | testUserName | testUserSurname | STRING_0       | testtestQ1   | Нет email пользователя        |
+      | testUserName | testUserSurname | EMAIL_61       | testtestQ1   | Длинный email пользователя    |
+      | testUserName | testUserSurname | user9@user.com | STRING_2     | Простой пароль пользователя   |
 
   Scenario Outline: Выборка всех пользователей
     Given Существует пользователь
@@ -76,7 +76,7 @@ Feature: Добавление нового пользователя
   Scenario Outline: Выборка всех пользователей постранично (<usersPerPage> page/pages)
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    When Администратор делает постраничный запрос на всех пользователей "<usersPerPage>"
+    When Администратор делает постраничный запрос на всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And Количество страниц пропорционально "<usersPerPage>"
     And На всех страницах есть пользователи "<usersPerPage>"

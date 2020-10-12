@@ -26,14 +26,14 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Авторизируемся владельцем организации {string} {string}")
     public void tryToGetAuthorizeAdmin(String login, String password) throws InterruptedException {
-        response = authorizeUser(login, password);
+        response = authorizeUser(replaceString(login), replaceString(password));
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     @When("Авторизируемся пользователем {string} {string}")
     public void tryToAuthorizeUser(String login, String password) throws InterruptedException {
-        response = authorizeUser(login, password);
+        response = authorizeUser(replaceString(login), replaceString(password));
 
         checkCookieAndWriteAsCurrent(response);
     }
@@ -41,8 +41,8 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @When("Пытаемся авторизоваться пользователем {string} {string}")
     public void tryToAuthorize(String login, String password) throws InterruptedException {
         Map<String, String> queryParams = new HashMap<String, String>() {{
-            put("username", login);
-            put("password", password);
+            put("username", replaceString(login));
+            put("password", replaceString(password));
             put("grant_type", "password");
         }};
 

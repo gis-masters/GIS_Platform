@@ -10,5 +10,4 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     public void assertResponseCode(int status) {
         assertEquals(status, response.getStatusCode());
     }
-
 }

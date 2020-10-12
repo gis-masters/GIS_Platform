@@ -28,7 +28,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static int MAX_RETRY_ATTEMPT = 50;
     public static int RETRY_DELAY = 6000;
 
-    public static String currentOrgId;
+    public static Integer currentOrgId;
     public static OrganizationCreateDto currentOrgDto;
 
     @Before
@@ -50,7 +50,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         Matcher matcher = pattern.matcher(header);
 
         while (matcher.find()) {
-            currentOrgId = matcher.group();
+            currentOrgId = Integer.parseInt(matcher.group());
         }
 
         assertNotNull(currentOrgId);
@@ -92,11 +92,11 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         JsonPath jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), data.get(0));
-        assertEquals(jsonPath.get("phone"), data.get(1));
-        assertEquals(jsonPath.getList("users.name").get(0), data.get(2));
-        assertEquals(jsonPath.getList("users.surName").get(0), data.get(3));
-        assertEquals(jsonPath.getList("users.email").get(0), data.get(4));
+        assertEquals(jsonPath.get("name"), replaceString(data.get(0)));
+        assertEquals(jsonPath.get("phone"), replaceString(data.get(1)));
+        assertEquals(jsonPath.getList("users.name").get(0), replaceString(data.get(2)));
+        assertEquals(jsonPath.getList("users.surName").get(0), replaceString(data.get(3)));
+        assertEquals(jsonPath.getList("users.email").get(0), replaceString(data.get(4)));
     }
 
     /**
@@ -108,7 +108,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      */
     @Given("Существует организация")
     public void createOrganization(DataTable dataTable) throws InterruptedException {
-        String eMail = dataTable.asList().get(4);
+        String eMail = replaceString(dataTable.asList().get(4));
 
         if (!isOrgExistInPool(eMail)) {
             OrganizationCreateDto dto = mapToOrgDto(dataTable);
@@ -117,7 +117,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             assertEquals(SC_ACCEPTED, createResponse.getStatusCode());
 
             response = createResponse;
-            String id = extractOrgId(createResponse);
+            Integer id = extractOrgId(createResponse);
 
             Cookie cookie = new AuthorizationStepDefinitions().getRootAuthority();
             waitUntilOrganizationSuccessfullyCreated(id, cookie);
@@ -128,20 +128,20 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @When("Послылается запрос на удаление текущей организации")
+    @When("Посылается запрос на удаление текущей организации")
     public void deleteCurrentOrganization() {
         assertNotNull(currentOrgId);
 
         deleteOrganization(currentOrgId);
     }
 
-    @When("Послылается запрос на удаление организации {string}")
+    @When("Посылается запрос на удаление организации {string}")
     public void deleteOrganizationByEmail(String eMail) {
-        String orgId = null;
-        for (Map.Entry<String, OrganizationCreateDto> entry : orgPool.entrySet()) {
-            String id = entry.getKey();
+        Integer orgId = null;
+        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+            Integer id = entry.getKey();
             OrganizationCreateDto dto = entry.getValue();
-            if (eMail.equals(dto.getOwner().getEmail())) {
+            if (replaceString(eMail).equals(dto.getOwner().getEmail())) {
                 orgId = id;
             }
         }
@@ -173,7 +173,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, 200);
     }
 
-    private void deleteOrganization(String orgId) {
+    private void deleteOrganization(Integer orgId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete("/organizations/" + orgId);
@@ -185,14 +185,14 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .anyMatch(dto -> eMail.equals(dto.getOwner().getEmail()));
     }
 
-    private String extractOrgId(Response response) {
+    private Integer extractOrgId(Response response) {
         String header = response.getHeader("Location");
         Pattern pattern = Pattern.compile("\\d+$");
         Matcher matcher = pattern.matcher(header);
 
-        String id = null;
+        Integer id = null;
         while (matcher.find()) {
-            id = matcher.group();
+            id = Integer.parseInt(matcher.group());
         }
 
         assertNotNull(id);
@@ -200,7 +200,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         return id;
     }
 
-    private void waitUntilOrganizationSuccessfullyCreated(String id, Cookie cookie) throws InterruptedException {
+    private void waitUntilOrganizationSuccessfullyCreated(Integer id, Cookie cookie) throws InterruptedException {
         System.out.println("check status org: " + id);
 
         int currentAttempt = 0;
@@ -222,7 +222,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         throw new RuntimeException("Organization not created: " + id);
     }
 
-    private void waitUntilOrganizationSuccessfullyDeleted(String id, Cookie cookie) throws InterruptedException {
+    private void waitUntilOrganizationSuccessfullyDeleted(Integer id, Cookie cookie) throws InterruptedException {
         System.out.println("check status org: " + id);
 
         int currentAttempt = 0;
@@ -259,7 +259,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private OrganizationCreateDto mapToOrgDto(DataTable dataTable) {
         List<String> data = dataTable.asList();
         UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
-                replaceString(data.get(4)), replaceString(data.get(5)));
+                                                replaceString(data.get(4)), replaceString(data.get(5)));
 
         return new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)), owner);
     }

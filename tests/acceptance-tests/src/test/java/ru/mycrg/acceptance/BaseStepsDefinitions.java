@@ -7,14 +7,19 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BaseStepsDefinitions {
 
@@ -28,8 +33,12 @@ public class BaseStepsDefinitions {
     public static Cookie cookie;
     public static JsonPath jsonPath;
 
-    public static Map<String, OrganizationCreateDto> orgPool = new HashMap<>();
-    public static Map<String, UserCreateDto> users = new HashMap<>();
+    public static int totalPages;
+    public static String sessionId = UUID.randomUUID().toString().substring(0, 7);
+
+    public static Map<Integer, OrganizationCreateDto> orgPool = new HashMap<>();
+    public static Map<Integer, UserCreateDto> userPool = new HashMap<>();
+    public static Map<Integer, GroupCreateDto> usersGroupPool = new HashMap<>();
 
     public void setup() {
         testServerHost = System.getProperty("env.HOST");
@@ -64,57 +73,46 @@ public class BaseStepsDefinitions {
     }
 
     public static String replaceString(String input) {
-        if (input == null) return "";
+        String[] params = input.split("_");
+        String type = params[0];
+        int length;
 
-        switch (input) {
-            case "LONG_STRING_60":
-                return "3QH98MuCSR" +
-                        "N6087ZKrHF" +
-                        "WsNXDQXCgK" +
-                        "E0xAq4Vtwg" +
-                        "ySpRc0Kl0O" +
-                        "9FFqy6VoZa" +
-                        "a";
-            case "LONG_STRING_100":
-                return "srzMpSkdGvlAyjWACxeWwx7NiMGscfHyCKlLWabKJCMMJgP9DW" +
-                        "Vxo8sAxIjJGUdwgLElaqyI1x44AIfNNrxnF6GdoSybRkQdSugs" +
-                        "a";
-            case "LONG_STRING_500":
-                return "7FhLY9W1MmOjpT7wuY5PBbH8x0bNs0VpFL8jenIyyXYTXVEDDH" +
-                        "cNU0xduYPfjN46A89tK00ptSuJWcaioDT4DmOmuOY8gjFBB1vx" +
-                        "mI8WfyPlvqLX1ncwbOQtDnOEsCK4AMJjRYC1JltiuZq4QuqD01" +
-                        "q13iuGvlPb0DRLwk0WA28dLsqBWuXmIQ1q74ltpVUbSHnPFQpK" +
-                        "QYTBCMfpcgVwcs9hVuiWXJPzWt6Cp0yK8nuriH7mlsCiHkSofq" +
-                        "GKZU9KtCyVXkuCSW9P9Cwtq98o3MTANB6DPT98RSKSUBDFxjSU" +
-                        "6KNNpDCYtPjhHKzkNVxYKFgnem1Kt17KPJe06PrcaLWNzwMr1k" +
-                        "tCUeRF6jhDz5ijqlI8W0DVwAng4nKdhzSv8wK6OHfzZpPjQay2" +
-                        "XE3GXvGQZV704JIST4EuAnOSi3yA1PelgjWhUEYcXHxlIiyBGw" +
-                        "jecjGe7BlTZhKU7QOdCATCVkrWhavtKJDGW3OJBvdB9CXlJ44N" +
-                        "a";
-            case "LONG_NUMBER_20":
-                return "1234567890" +
-                        "1234567890" +
-                        "1";
-            case "LONG_ADMIN_EMAIL_60":
-                return "3QH98MuCSR" +
-                        "N6087ZKrHF" +
-                        "WsNXDQXCgK" +
-                        "E0xAq4Vtwg" +
-                        "ySpRc0Kl0O" +
-                        "9FFqy6VoZa" +
-                        "@admin.com";
-            case "LONG_USER_EMAIL_60":
-                return "3QH98MfCSR" +
-                        "N6087ZKrHF" +
-                        "WsNXDQXCgK" +
-                        "E0xAq4Vtwg" +
-                        "ySpRc0Kl0O" +
-                        "9FFqy6VoZa" +
-                        "@user.com";
+        try {
+            length = Integer.parseInt(params[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            length = 0;
+        }
+
+        switch (type) {
+            case "STRING":
+                return random(length, true, true);
+            case "NUMBER":
+                return random(length, false, true);
+            case "EMAIL":
+                return random((length - 9), true, true) + "@test.com";
             default:
                 return input;
         }
     }
+
+    @Test
+    public void shouldReplaceStringCorrectly() {
+        String test_10 = replaceString("STRING_10");
+        assertEquals(10, test_10.length());
+
+        String number_10 = replaceString("NUMBER_10");
+        assertEquals(10, number_10.length());
+
+        String test_0 = replaceString("STRING_0");
+        assertTrue(test_0.isEmpty());
+
+        String email_20 = replaceString("EMAIL_20");
+        assertEquals(20, email_20.length());
+
+        String testCustom = replaceString("MyCustomString_DontTuchME!");
+        assertEquals("MyCustomString_DontTuchME!", testCustom);
+    }
+
 
     @Test
     @Ignore

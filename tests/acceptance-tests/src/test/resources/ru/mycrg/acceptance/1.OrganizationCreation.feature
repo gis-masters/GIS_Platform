@@ -39,16 +39,16 @@ Feature: Регистрация новой организации
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | orgName         | orgPhone       | adminName      | adminSurname    | adminEmail          | adminPassword | reason                             |
-      | testOrg         | 123456789      | testName       | testSurname     | admin1              | testtestQ1    | Невалидный email                   |
-      | te              | 1234567890     | testName       | testSurname     | admin2@email.com    | testtestQ1    | Короткое название организации      |
-      | LONG_STRING_500 | 1234567890     | testName       | testSurname     | admin3@email.com    | testtestQ1    | Длинное название организации       |
-      | testOrg         | LONG_NUMBER_20 | testName       | testSurname     | admin4@email.com    | testtestQ1    | Длинный номер телефона организации |
-      | testOrg         | 1234567890     |                | testSurname     | admin5@email.com    | testtestQ1    | Пустое имя админа                  |
-      | testOrg         | 1234567890     | te             | testSurname     | admin6@email.com    | testtestQ1    | Короткое имя админа                |
-      | testOrg         | 1234567890     | LONG_STRING_60 | testSurname     | admin7@email.com    | testtestQ1    | Длинное имя админа                 |
-      | testOrg         | 1234567890     | testName       |                 | admin8@email.com    | testtestQ1    | Пустая фамилия админа              |
-      | testOrg         | 1234567890     | testName       | LONG_STRING_100 | admin9@email.com    | testtestQ1    | Длинная фамилия админа             |
-      | testOrg         | 1234567890     | testName       | testSurname     |                     | testtestQ1    | Нет email админа                   |
-      | testOrg         | 1234567890     | testName       | testSurname     | LONG_ADMIN_EMAIL_60 | testtestQ1    | Длинный email админа               |
-      | testOrg         | 1234567890     | testName       | testSurname     | admin12@email.com   | testtest      | Простой пароль                     |
+      | orgName    | orgPhone   | adminName | adminSurname | adminEmail        | adminPassword | reason                            |
+      | testOrg    | 123456789  | testName  | testSurname  | admin1            | testtestQ1    | Невалидный email                  |
+      | STRING_2   | 1234567890 | testName  | testSurname  | admin2@email.com  | testtestQ1    | Короткое название организации     |
+      | STRING_501 | 1234567890 | testName  | testSurname  | admin3@email.com  | testtestQ1    | Длинное названиеорганизации       |
+      | testOrg    | NUMBER_21  | testName  | testSurname  | admin4@email.com  | testtestQ1    | Длинный номертелефона организации |
+      | testOrg    | 1234567890 | STRING_0  | testSurname  | admin5@email.com  | testtestQ1    | Пустое имя админа                 |
+      | testOrg    | 1234567890 | STRING_2  | testSurname  | admin6@email.com  | testtestQ1    | Короткое имя админа               |
+      | testOrg    | 1234567890 | STRING_61 | testSurname  | admin7@email.com  | testtestQ1    | Длинное имя админа                |
+      | testOrg    | 1234567890 | testName  | STRING_0     | admin8@email.com  | testtestQ1    | Пустая фамилия админа             |
+      | testOrg    | 1234567890 | testName  | STRING_101   | admin9@email.com  | testtestQ1    | Длинная фамилияадмина             |
+      | testOrg    | 1234567890 | testName  | testSurname  | STRING_0          | testtestQ1    | Нет email админа                  |
+      | testOrg    | 1234567890 | testName  | testSurname  | EMAIL_61          | testtestQ1    | Длинный email админа              |
+      | testOrg    | 1234567890 | testName  | testSurname  | admin12@email.com | STRING_2      | Простой пароль                    |
