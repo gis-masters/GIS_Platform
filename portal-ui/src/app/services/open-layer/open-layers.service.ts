@@ -15,11 +15,12 @@ import { ModifyEvent } from 'ol/interaction/Modify';
 import { Layer, Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
 import { get as getProjection } from 'ol/proj';
-import { OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
+import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import { Options as XYZOptions } from 'ol/source/XYZ';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import ImageLayer from 'ol/layer/Image';
 
 import { CrgLayer } from '../../services/crg/projects.models';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
@@ -54,6 +55,7 @@ class OpenLayersService {
   private static _instance: OpenLayersService;
 
   private CRG_INFO_PROP_NAME = 'crgInfo';
+  private readonly isTiledWms;
 
   private readonly debouncedZoomEvent: () => void;
 
@@ -77,6 +79,8 @@ class OpenLayersService {
     );
 
     this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view.getZoom()), 100);
+
+    this.isTiledWms = localStorage.getItem('tiledWms');
   }
 
   public static get instance() {
@@ -238,18 +242,35 @@ class OpenLayersService {
         FORMAT: 'image/vnd.jpeg-png8',
       };
 
-      const layer = new TileLayer({
-        source: new TileWMS({
-          url: await serverProperties.wmsUrl,
-          params: params,
-          tileLoadFunction: this.crgImageLoadFunction,
-          serverType: 'geoserver',
-          crossOrigin: 'anonymous'
-        }),
-        visible: true,
-        opacity,
-        zIndex
-      });
+      let layer: ImageLayer | TileLayer;
+      if (this.isTiledWms) {
+        layer = new TileLayer({
+          source: new TileWMS({
+            url: await serverProperties.wmsUrl,
+            params: params,
+            tileLoadFunction: this.crgLayersLoadFunction,
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+          }),
+          visible: true,
+          opacity,
+          zIndex
+        });
+      } else {
+        layer = new ImageLayer({
+          source: new ImageWMS({
+            url: await serverProperties.wmsUrl,
+            params: params,
+            imageLoadFunction: this.crgLayersLoadFunction,
+            ratio: 1,
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+          }),
+          visible: true,
+          opacity,
+          zIndex
+        });
+      }
 
       const props: { [key: string]: CrgAdditionalLayerInfo } = {
         [this.CRG_INFO_PROP_NAME]: { isUserLayer: true }
@@ -318,7 +339,7 @@ class OpenLayersService {
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  getLayerByName(complexLayerName: string): TileLayer | undefined {
+  getLayerByName(complexLayerName: string): ImageLayer | TileLayer | undefined {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
 
@@ -519,17 +540,19 @@ class OpenLayersService {
         if (canvas.width > 0) {
           const opacity = canvas.parentElement.style.opacity;
           mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-          const transform = canvas.style.transform;
+
           // Get the transform parameters from the style's transform matrix
-          const matrix = transform
+          const matrix = canvas.style.transform
             .match(/^matrix\(([^\(]*)\)$/)[1]
             .split(',')
             .map(Number);
+
           // Apply the transform to the export map context
           CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
           mapContext.drawImage(canvas, 0, 0);
         }
       });
+
       const pdf = new jsPDF(printSettings.orientation, undefined, pageFormat.id);
       pdf.addImage(mapCanvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pageWidth, pageHeight);
       pdf.save('map.pdf');
@@ -554,7 +577,7 @@ class OpenLayersService {
     this.markersSource.clear();
   }
 
-  private async crgImageLoadFunction(tile: Tile | ImageWrapper, url: string) {
+  private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
     currentMap.enrollLoadingStart();
     let data: Blob | any;
     try {
@@ -635,7 +658,7 @@ class OpenLayersService {
       }
 
       return new WMTS({
-        tileLoadFunction: this.crgImageLoadFunction,
+        tileLoadFunction: this.crgLayersLoadFunction,
         urls: [baseMap.url],
         tileGrid: new WMTSTileGrid({
           origin: getTopLeft(projectionExtent),
