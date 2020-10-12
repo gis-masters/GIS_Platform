@@ -31,19 +31,6 @@ public class CrgDaoGeometryHelper {
         }
     }
 
-    public Integer countWithoutGeometry(JdbcTemplate jdbcTemplate, String schema, String table) throws DaoException {
-        try {
-            String sql = String.format("SELECT COUNT(*) FROM %s.%s WHERE %s IS NULL",
-                    schema, table, DEFAULT_GEOMETRY_COLUMN_NAME);
-
-            return jdbcTemplate.queryForObject(sql, Integer.class);
-        } catch (Exception e) {
-            String msg = "Не удалось выполнить подсчет объектов без геометрии для: " + schema + "." + table;
-
-            throw new DaoException(msg, e.getCause());
-        }
-    }
-
     public void makeValid(JdbcTemplate jdbcTemplate, String schema, String table) throws DaoException {
         try {
             String geometryColumnName = DEFAULT_GEOMETRY_COLUMN_NAME;

@@ -146,28 +146,6 @@ public class BaseDaoService {
     }
 
     /**
-     * Подразумевает очистку таблиц впаре с таблицей "_extension"
-     *
-     * @param jdbcTemplate Коннекшн к БД
-     * @param targets      Описание ресурсов к которым нужно применить очистку
-     */
-    @Transactional
-    public void truncate(JdbcTemplate jdbcTemplate, List<ResourceProjection> targets) {
-        targets.forEach(target -> {
-            log.debug("Try truncate: {}", target.toString());
-
-            jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), target.getTableName()));
-
-            String extensionTable = target.getTableName() + EXTENSION_POSTFIX;
-            try {
-                jdbcTemplate.execute(String.format("TRUNCATE %s.%s", target.getSchemaName(), extensionTable));
-            } catch (Exception e) {
-                log.warn("Cant truncate table: {} Error: {}", extensionTable, e.getLocalizedMessage());
-            }
-        });
-    }
-
-    /**
      * Удалить таблицу. <br>
      * Удаляется также *_extension таблица
      *
@@ -208,6 +186,7 @@ public class BaseDaoService {
         jdbcTemplate.execute(
                 "ALTER TABLE ONLY " + target + " ALTER COLUMN objectid " +
                         "SET DEFAULT nextval('" + targetSchema + "." + targetTable + "_objectid_seq'::regclass);");
+        jdbcTemplate.execute("CREATE INDEX " + targetTable + "_shape_indx ON " + target + " USING gist (shape)");
     }
 
     /**
