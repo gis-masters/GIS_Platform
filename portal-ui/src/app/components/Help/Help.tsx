@@ -52,7 +52,7 @@ export class Help extends Component<HelpProps> {
           />
         ) : null}
 
-        <div className={cnHelp('Content')} dangerouslySetInnerHTML={{ __html: this.currentItem.content }} />
+        <div className={cnHelp('Content', ['scroll'])} dangerouslySetInnerHTML={{ __html: this.currentItem.content }} />
       </div>
     );
   }
