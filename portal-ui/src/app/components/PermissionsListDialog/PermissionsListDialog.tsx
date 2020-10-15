@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
+import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 import {
   TableContainer,
@@ -280,7 +281,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   private handleDelete(item: PermissionsListItem) {
     this.initChangedList();
 
-    this.changedList.splice(this.changedList.indexOf(item), 1);
+    this.changedList.splice(
+      this.changedList.findIndex(listItem => isEqual(listItem, item)),
+      1
+    );
   }
 
   @action.bound
