@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Cookie;
@@ -9,9 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Thread.sleep;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertNotNull;
-import static ru.mycrg.acceptance.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.OrganizationStepsDefinitions.RETRY_DELAY;
+import static ru.mycrg.acceptance.OrganizationStepsDefinitions.*;
+import static ru.mycrg.acceptance.UserStepsDefinitions.currentUserDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
@@ -38,8 +41,15 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         checkCookieAndWriteAsCurrent(response);
     }
 
+    @When("Авторизируемся пользователем")
+    public void tryToAuthorizeUser() throws InterruptedException {
+        response = authorizeUser(currentUserDto.getEmail(), currentUserDto.getPassword());
+
+        checkCookieAndWriteAsCurrent(response);
+    }
+
     @When("Пытаемся авторизоваться пользователем {string} {string}")
-    public void tryToAuthorize(String login, String password) throws InterruptedException {
+    public void tryToAuthorize(String login, String password) {
         Map<String, String> queryParams = new HashMap<String, String>() {{
             put("username", replaceString(login));
             put("password", replaceString(password));
@@ -56,6 +66,31 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @Then("Сервер авторизует пользователя")
     public void serverAuthorizeUser() {
         checkCookieAndWriteAsCurrent(response);
+    }
+
+    @When("Авторизируемся владельцем организации")
+    public void tryToGetAuthorizeAdmin() throws InterruptedException {
+        response = authorizeUser(currentOrgDto.getOwner().getEmail(), currentOrgDto.getOwner().getPassword());
+
+        checkCookieAndWriteAsCurrent(response);
+    }
+
+    @And("Пользователь не может авторизоваться")
+    public void notPossibleToLogin() {
+        Map<String, String> queryParams = new HashMap<String, String>() {{
+            put("username", currentUserDto.getEmail());
+            put("password", currentUserDto.getPassword());
+            put("grant_type", "password");
+        }};
+
+        getBaseRequest()
+                .given().
+                formParams(queryParams)
+                .when().
+                        post("/oauth/token")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_UNAUTHORIZED);
     }
 
     private Response authorizeUser(String login, String password) throws InterruptedException {
@@ -78,7 +113,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
                     .when().
                             post("/oauth/token");
 
-            if (authResponse.statusCode() == 200) {
+            if (authResponse.statusCode() == SC_OK) {
                 return authResponse;
             } else {
                 sleep(RETRY_DELAY);

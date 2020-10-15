@@ -1,33 +1,31 @@
-Feature: Действия с пользователем
+Feature: Действия с пользователями
 
   Background: Проверка организации
     Given Существует организация
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | admin@email.ru | testPassword1 |
-    When Авторизируемся владельцем организации "admin@email.ru" "testPassword1"
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    When Авторизируемся владельцем организации
 
   Scenario Outline: Создание пользователя c валидными данными
     When Администратор создает пользователя
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     Then Сервер отвечает со статус-кодом 202
     And в заголовке Location передает ID созданного пользователя
-    When Администратор делает запрос на указанного пользователя
-    Then Поля пользователя совпадают с переданными "<userName>", "<userSurname>", "<userEmail>"
+    When Администратор делает запрос на созданного пользователя
+    Then Поля пользователя совпадают с переданными
     And Пользователю присвоена роль = "USER"
-    When Авторизируемся пользователем "<userEmail>" "<userPassword>"
-    Then Сервер авторизует пользователя
+    When Авторизируемся пользователем
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword |
+      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
 
   Scenario Outline: Повторное создание пользователя c валидными данными
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    When Администратор создает пользователя
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    When Администратор повторно создает пользователя
     Then Сервер отвечает со статус-кодом 409
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword |
+      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
@@ -52,47 +50,58 @@ Feature: Действия с пользователем
     Then Сервер отвечает со статус-кодом 200
     And В ответе есть пункт users
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword |
+      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
 
   Scenario Outline: Выборка всех пользователей c сортировкой (<sorting factor>|<sorting direction>)
-    Given Существует пользователь
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    Given Существуют пользователи
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And В ответе есть пункт users
     And Данные отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword | sorting factor | sorting direction |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | email          | asc               |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | username       | asc               |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | surName        | asc               |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | createdAt      | asc               |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | email          | desc              |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | username       | desc              |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | surName        | desc              |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | createdAt      | desc              |
+      | sorting factor | sorting direction |
+      | email          | asc               |
+      | username       | asc               |
+      | surName        | asc               |
+      | createdAt      | asc               |
+      | email          | desc              |
+      | username       | desc              |
+      | surName        | desc              |
+      | createdAt      | desc              |
 
   Scenario Outline: Выборка всех пользователей постранично (<usersPerPage> page/pages)
-    Given Существует пользователь
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    Given Существуют пользователи
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
     When Администратор делает постраничный запрос на всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And Количество страниц пропорционально "<usersPerPage>"
     And На всех страницах есть пользователи "<usersPerPage>"
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword | usersPerPage |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | 1            |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | 2            |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   | 3            |
+      | usersPerPage |
+      | 1            |
+      | 2            |
+      | 3            |
 
   Scenario Outline: Удаление пользователя
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор организации удаляет пользователя
     Then Сервер отвечает со статус-кодом 204
-    When Пытаемся авторизоваться пользователем "<userEmail>" "<userPassword>"
-    Then Сервер отвечает со статус-кодом 401
+    And Пользователь не может авторизоваться
     Examples:
-      | userName     | userSurname     | userEmail     | userPassword |
-      | testUserName | testUserSurname | user@user.com | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword |
+      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |

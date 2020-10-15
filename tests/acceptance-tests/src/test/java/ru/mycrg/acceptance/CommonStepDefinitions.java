@@ -1,10 +1,16 @@
 package ru.mycrg.acceptance;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 
 import static org.junit.Assert.assertEquals;
 
 public class CommonStepDefinitions extends BaseStepsDefinitions {
+
+    @Before
+    public void setup() {
+        super.setup();
+    }
 
     @Then("Сервер отвечает со статус-кодом {int}")
     public void assertResponseCode(int status) {

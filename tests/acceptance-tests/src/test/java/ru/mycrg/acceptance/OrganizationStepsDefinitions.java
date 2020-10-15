@@ -1,9 +1,9 @@
 package ru.mycrg.acceptance;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
@@ -19,9 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
-import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.apache.http.HttpStatus.*;
+import static org.junit.Assert.*;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
@@ -31,10 +30,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static Integer currentOrgId;
     public static OrganizationCreateDto currentOrgDto;
 
-    @Before
-    public void setup() {
-        super.setup();
-    }
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
@@ -87,16 +82,14 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Поля совпадают с переданными")
-    public void checkIsOrgProvisioned(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-
+    public void checkOrgData() {
         JsonPath jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), replaceString(data.get(0)));
-        assertEquals(jsonPath.get("phone"), replaceString(data.get(1)));
-        assertEquals(jsonPath.getList("users.name").get(0), replaceString(data.get(2)));
-        assertEquals(jsonPath.getList("users.surName").get(0), replaceString(data.get(3)));
-        assertEquals(jsonPath.getList("users.email").get(0), replaceString(data.get(4)));
+        assertEquals(jsonPath.get("name"), currentOrgDto.getName());
+        assertEquals(jsonPath.get("phone"), currentOrgDto.getPhone());
+        assertEquals(jsonPath.getList("users.name").get(0), currentOrgDto.getOwner().getName());
+        assertEquals(jsonPath.getList("users.surName").get(0), currentOrgDto.getOwner().getSurName());
+        assertEquals(jsonPath.getList("users.email").get(0), currentOrgDto.getOwner().getEmail());
     }
 
     /**
@@ -108,6 +101,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      */
     @Given("Существует организация")
     public void createOrganization(DataTable dataTable) throws InterruptedException {
+        if (takeAnyOrgFromPoll()) return;
+
         String eMail = replaceString(dataTable.asList().get(4));
 
         if (!isOrgExistInPool(eMail)) {
@@ -151,6 +146,22 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         deleteOrganization(orgId);
     }
 
+    @When("Посылается запрос на удаление чужой организации")
+    public void deleteOtherOrganizationByEmail() {
+        Integer orgId = null;
+        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+            Integer id = entry.getKey();
+            OrganizationCreateDto dto = entry.getValue();
+            if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
+                orgId = id;
+            }
+        }
+
+        assertNotNull(orgId);
+
+        deleteOrganization(orgId);
+    }
+
     @And("Удалена БД организации")
     public void isOrgDbNotExist() {
         String dbName = "database_" + currentOrgId;
@@ -159,7 +170,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         get("/api/data/databases/" + dbName);
 
-        checkStatusCodeIs(response, 404);
+        checkStatusCodeIs(response, SC_NOT_FOUND);
     }
 
     @And("Существует база данных")
@@ -170,19 +181,139 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         get("/api/data/databases/" + dbName);
 
-        checkStatusCodeIs(response, 200);
+        checkStatusCodeIs(response, SC_OK);
     }
 
-    private void deleteOrganization(Integer orgId) {
+    @And("В ответе передает orgId")
+    public void isOrgInResponse() {
+        currentOrgId = jsonPath.get("orgId");
+    }
+
+    @When("Администратор запрашивает данные об организации с orgId  = {int}")
+    public void checkSomeOrg(int orgId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/organizations/" + orgId);
+                        get("/organizations/" + orgId);
     }
 
-    private boolean isOrgExistInPool(String eMail) {
-        return orgPool
-                .values().stream()
-                .anyMatch(dto -> eMail.equals(dto.getOwner().getEmail()));
+    @When("Пользователь делает запрос на все организации")
+    public void checkAllOrganizationsByRoot() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/");
+    }
+
+    @When("Администратор запрашивает данные об организации {string}")
+    public void checkOrgInfo(String ownerEmail) {
+        Integer orgId = null;
+        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+            Integer id = entry.getKey();
+            OrganizationCreateDto dto = entry.getValue();
+            if (replaceString(ownerEmail).equals(dto.getOwner().getEmail())) {
+                orgId = id;
+                break;
+            }
+        }
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/" + orgId);
+
+        assertNotNull(orgId);
+    }
+
+    @And("Представление организации корректно")
+    public void isOrgDataPresentedCorrectly() {
+        Map<String, String> presentedData = response
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
+
+        assertTrue(presentedData.containsKey("status"));
+        assertTrue(presentedData.containsKey("groups"));
+        assertTrue(presentedData.containsKey("phone"));
+        assertTrue(presentedData.containsKey("createdAt"));
+        assertTrue(presentedData.containsKey("users"));
+    }
+
+    @Then("Представление всех организаций корректно")
+    public void areOrgDataPresentedCorrectly() {
+        jsonPath = response.jsonPath();
+
+        Map<String, String> presentedData = jsonPath.getMap("");
+        Map<String, String> links = jsonPath.getMap("_links");
+        Map<String, String> page = jsonPath.getMap("page");
+
+        assertTrue(presentedData.containsKey("_embedded"));
+        assertTrue(presentedData.containsKey("_links"));
+        assertTrue(presentedData.containsKey("page"));
+
+        assertTrue(links.containsKey("self"));
+        assertTrue(links.containsKey("profile"));
+
+        assertTrue(page.containsKey("size"));
+        assertTrue(page.containsKey("totalElements"));
+        assertTrue(page.containsKey("totalPages"));
+        assertTrue(page.containsKey("number"));
+    }
+
+    @When("Отправляется повторный запрос на создание организации")
+    public void sendAgainCreateOrganizationRequest() {
+        createOrganization(currentOrgDto);
+    }
+
+    @When("Администратор запрашивает данные о своей организации")
+    public void checkOrgInfo() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/" + currentOrgId);
+    }
+
+    @When("Администратор запрашивает данные о чужой организации")
+    public void checkOtherOrgInfo() {
+        Integer orgId = null;
+        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+            Integer id = entry.getKey();
+            OrganizationCreateDto dto = entry.getValue();
+            if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
+                orgId = id;
+                break;
+            }
+        }
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/" + orgId);
+
+        assertNotNull(orgId);
+    }
+
+    private void checkOrgData(DataTable dataTable) {
+        List<String> data = dataTable.asList();
+
+        JsonPath jsonPath = response.jsonPath();
+
+        assertEquals(jsonPath.get("name"), replaceString(data.get(0)));
+        assertEquals(jsonPath.get("phone"), replaceString(data.get(1)));
+        assertEquals(jsonPath.getList("users.name").get(0), replaceString(data.get(2)));
+        assertEquals(jsonPath.getList("users.surName").get(0), replaceString(data.get(3)));
+        assertEquals(jsonPath.getList("users.email").get(0), replaceString(data.get(4)));
+    }
+
+    private void checkStatusCodeIs(Response response, int code) {
+        response.then()
+                .assertThat().
+                        statusCode(code);
+    }
+
+    private OrganizationCreateDto mapToOrgDto(DataTable dataTable) {
+        List<String> data = dataTable.asList();
+        UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
+                                                replaceString(data.get(4)), replaceString(data.get(5)));
+
+        return new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)), owner);
     }
 
     private Integer extractOrgId(Response response) {
@@ -200,26 +331,16 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         return id;
     }
 
-    private void waitUntilOrganizationSuccessfullyCreated(Integer id, Cookie cookie) throws InterruptedException {
-        System.out.println("check status org: " + id);
+    private Response createOrganization(OrganizationCreateDto dto) {
+        response = getBaseRequest()
+                .given().
+                        body(new Gson().toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post("/organizations/init");
 
-        int currentAttempt = 0;
-        do {
-            System.out.println("attempt: " + currentAttempt);
-            currentAttempt++;
-
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/organizations/" + id);
-
-            if (response.statusCode() == 200 && "PROVISIONED".equals(response.jsonPath().get("status"))) {
-                return;
-            }
-
-            sleep(RETRY_DELAY);
-        } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-        throw new RuntimeException("Organization not created: " + id);
+        return response;
     }
 
     private void waitUntilOrganizationSuccessfullyDeleted(Integer id, Cookie cookie) throws InterruptedException {
@@ -234,7 +355,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                     .when().
                             get("/organizations/" + id);
 
-            if (response.statusCode() == 404) {
+            if (response.statusCode() == SC_NOT_FOUND) {
                 return;
             }
 
@@ -244,29 +365,49 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         throw new RuntimeException("Organization not created: " + id);
     }
 
-    private Response createOrganization(OrganizationCreateDto dto) {
-        response = getBaseRequest()
-                .given().
-                        body(new Gson().toJson(dto)).
-                        contentType(ContentType.JSON)
+    private void waitUntilOrganizationSuccessfullyCreated(Integer id, Cookie cookie) throws InterruptedException {
+        System.out.println("check status org: " + id);
+
+        int currentAttempt = 0;
+        do {
+            System.out.println("attempt: " + currentAttempt);
+            currentAttempt++;
+
+            Response response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get("/organizations/" + id);
+
+            if (response.statusCode() == SC_OK && "PROVISIONED".equals(response.jsonPath().get("status"))) {
+                return;
+            }
+
+            sleep(RETRY_DELAY);
+        } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+        throw new RuntimeException("Organization not created: " + id);
+    }
+
+    private boolean isOrgExistInPool(String eMail) {
+        return orgPool
+                .values().stream()
+                .anyMatch(dto -> eMail.equals(dto.getOwner().getEmail()));
+    }
+
+    private void deleteOrganization(Integer orgId) {
+        response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().ifValidationFails().
-                        post("/organizations/init");
-
-        return response;
+                        delete("/organizations/" + orgId);
     }
 
-    private OrganizationCreateDto mapToOrgDto(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-        UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
-                                                replaceString(data.get(4)), replaceString(data.get(5)));
-
-        return new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)), owner);
-    }
-
-    private void checkStatusCodeIs(Response response, int code) {
-        response.then()
-                .assertThat().
-                        statusCode(code);
+    private boolean takeAnyOrgFromPoll() {
+        if (!orgPool.isEmpty()) {
+            for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()
+            ) {
+                currentOrgId = entry.getKey();
+                currentOrgDto = entry.getValue();
+                return true;
+            }
+        }
+        return false;
     }
 }

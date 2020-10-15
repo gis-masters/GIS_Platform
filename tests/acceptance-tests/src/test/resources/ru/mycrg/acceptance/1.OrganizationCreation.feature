@@ -5,15 +5,14 @@ Feature: Регистрация новой организации
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
     Then Сервер отвечает со статус-кодом 202
     And в заголовке Location передает ID созданной организации
-    When Авторизируемся владельцем организации "<adminEmail>" "<adminPassword>"
+    When Авторизируемся владельцем организации
     When Проверяем создана ли организация
     Then Сервер отвечает со статус-кодом 200
     And Статус организации соответствует "PROVISIONED"
     And Поля совпадают с переданными
-      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> |
     And Существует база данных
     And На Геосервере существует scratch рабочая область и хранилище
-    And На Геосервере создан пользователь "<adminEmail>"
+    And На Геосервере создан пользователь
     And На Геосервере создана роль
     And На Геосервере пользователь имеет роль
     Then Авторизируемся под рутом
@@ -21,18 +20,17 @@ Feature: Регистрация новой организации
     And На Геосервере дан доступ к сервисам
     And На Геосервере дан доступ к rest
     Examples:
-      | orgName         | orgPhone   | adminName | adminSurname | adminEmail     | adminPassword |
-      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | admin@email.ru | testPassword1 |
+      | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
+      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
 
   Scenario Outline: Создание огранизации, которая уже существует
     Given Существует организация
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
-    When Отправляется запрос на создание организации
-      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
+    When Отправляется повторный запрос на создание организации
     Then Сервер отвечает со статус-кодом 409
     Examples:
-      | orgName         | orgPhone   | adminName | adminSurname | adminEmail     | adminPassword |
-      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | admin@email.ru | testPassword1 |
+      | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
+      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
 
   Scenario Outline: Создание организации с указанием невалидных данных (<reason>)
     When Отправляется запрос на создание организации

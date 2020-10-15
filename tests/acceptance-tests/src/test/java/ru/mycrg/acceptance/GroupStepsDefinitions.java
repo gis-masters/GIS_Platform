@@ -1,13 +1,12 @@
 package ru.mycrg.acceptance;
 
-import io.cucumber.java.Before;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookie;
 import io.restassured.response.Response;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
@@ -28,11 +27,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     public static int MAX_RETRY_ATTEMPT = 20;
     public static int RETRY_DELAY = 1000;
-
-    @Before
-    public void setup() {
-        super.setup();
-    }
 
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
@@ -62,12 +56,12 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     }
 
-    @Then("Поля группы совпадают с переданными {string}, {string}")
-    public void isDataCorrect(String groupName, String groupDescription) {
+    @Then("Поля группы совпадают с переданными")
+    public void isDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), replaceString(groupName));
-        assertEquals(jsonPath.get("description"), replaceString(groupDescription));
+        assertEquals(jsonPath.get("name"), currentUsersGroupDto.getName());
+        assertEquals(jsonPath.get("description"), currentUsersGroupDto.getDescription());
     }
 
     @Given("Существует пользовательская группа {string}, {string}")
@@ -89,59 +83,11 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void waitUntilUsersGroupSuccessfullyCreated(Integer id) throws InterruptedException {
-        System.out.println("check status users group: " + id);
-
-        int currentAttempt = 0;
-        do {
-            System.out.println("attempt: " + currentAttempt);
-            currentAttempt++;
-
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/groups/" + id);
-
-            if (response.statusCode() == 200) {
-                return;
-            }
-
-            sleep(RETRY_DELAY);
-        } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-        throw new RuntimeException("Users group was not created: " + id);
-    }
-
-    private Integer extractUsersGroupId(Response response) {
-        return response.jsonPath().get("id");
-    }
-
-    private boolean isUsersGroupExistInPool(String groupName) {
-        return usersGroupPool
-                .values().stream()
-                .anyMatch(dto -> groupName.equals(dto.getName()));
-    }
-
-    private GroupCreateDto mapToGroupDto(String groupName, String groupDescription) {
-        return new GroupCreateDto(groupName, groupDescription);
-    }
-
-    private Response createUsersGroup(GroupCreateDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(new Gson().toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("/groups");
-
-        return response;
-    }
-
     @When("Администратор делает запрос на все группы")
     public void getAllUsersGroups() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/groups");
+                        get("/groups?size=1000");
 
         assertEquals(SC_OK, response.statusCode());
     }
@@ -158,7 +104,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void getAllUsersGroupsSorted(String sortingFactor, String sortingDirection) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/groups?sort=%s,%s", sortingFactor, sortingDirection));
+                        get(String.format("/groups?sort=%s,%s&%s", sortingFactor, sortingDirection, "size=1000"));
     }
 
     @And("Данные групп отсортированы по {string} и {string}")
@@ -211,7 +157,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор изменяет поля группы {string}, {string}")
     public void updateUsersGroup(String newGroupName, String newGroupDescription) {
-
         currentUsersGroupDto = new GroupCreateDto(replaceString(newGroupName), replaceString(newGroupDescription));
         String payload = new Gson().toJson(currentUsersGroupDto);
 
@@ -244,7 +189,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 get("groups/" + currentUsersGroupId)
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("users.id", hasItems(UserStepsDefinitions.currentUserId));
     }
 
@@ -265,7 +210,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 get("groups/" + currentUsersGroupId)
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("users.id", not(hasItems(UserStepsDefinitions.currentUserId)));
     }
 
@@ -276,5 +221,80 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         delete("/groups/" + currentUsersGroupId);
 
         assertEquals(response.statusCode(), SC_NO_CONTENT);
+    }
+
+    @Given("Существуют пользовательские группы")
+    public void createMultipleUsersGroups(DataTable dataTable) {
+        List<List<String>> data = dataTable.asLists();
+        for (List<String> group: data) {
+            createUserGroup(group);
+        }
+    }
+
+    private Response createUsersGroup(GroupCreateDto dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(new Gson().toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post("/groups");
+
+        return response;
+    }
+
+    private void createUserGroup(List<String> group) {
+        currentUsersGroupDto = new GroupCreateDto(replaceString(group.get(0)), replaceString(group.get(1)));
+        String payload = new Gson().toJson(currentUsersGroupDto);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(payload).
+                        contentType(ContentType.JSON)
+                .when().
+                        post("/groups");
+    }
+
+    private void isDataCorrect(String groupName, String groupDescription) {
+        jsonPath = response.jsonPath();
+
+        assertEquals(jsonPath.get("name"), replaceString(groupName));
+        assertEquals(jsonPath.get("description"), replaceString(groupDescription));
+    }
+
+    private void waitUntilUsersGroupSuccessfullyCreated(Integer id) throws InterruptedException {
+        System.out.println("check status users group: " + id);
+
+        int currentAttempt = 0;
+        do {
+            System.out.println("attempt: " + currentAttempt);
+            currentAttempt++;
+
+            Response response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get("/groups/" + id);
+
+            if (response.statusCode() == SC_OK) {
+                return;
+            }
+
+            sleep(RETRY_DELAY);
+        } while (currentAttempt < MAX_RETRY_ATTEMPT);
+
+        throw new RuntimeException("Users group was not created: " + id);
+    }
+
+    private Integer extractUsersGroupId(Response response) {
+        return response.jsonPath().get("id");
+    }
+
+    private boolean isUsersGroupExistInPool(String groupName) {
+        return usersGroupPool
+                .values().stream()
+                .anyMatch(dto -> groupName.equals(dto.getName()));
+    }
+
+    private GroupCreateDto mapToGroupDto(String groupName, String groupDescription) {
+        return new GroupCreateDto(groupName, groupDescription);
     }
 }

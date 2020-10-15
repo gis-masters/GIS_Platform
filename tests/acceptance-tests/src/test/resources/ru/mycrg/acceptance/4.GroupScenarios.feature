@@ -2,8 +2,8 @@ Feature: Действия с пользовательскими группами
 
   Background: Проверка организации
     Given Существует организация
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | admin@email.ru | testPassword1 |
-    When Авторизируемся владельцем организации "admin@email.ru" "testPassword1"
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    When Авторизируемся владельцем организации
 
   Scenario Outline: Создание пользовательской группы c валидными данными
     When Администратор создает группу "<groupName>", "<groupDescription>"
@@ -11,10 +11,10 @@ Feature: Действия с пользовательскими группами
     Then Сервер передает ID созданный группы
     When Администратор делает запрос на указанную группу
     Then Сервер отвечает со статус-кодом 200
-    Then Поля группы совпадают с переданными "<groupName>", "<groupDescription>"
+    Then Поля группы совпадают с переданными
     Examples:
-      | groupName     | groupDescription     |
-      | testGroupName | testGroupDescription |
+      | groupName | groupDescription |
+      | STRING_15 | STRING_15        |
 
 #    TODO: Повторное создание пользовательской группы c валидными данными
 #  Scenario Outline: Повторное создание пользовательской группы c валидными данными
@@ -41,34 +41,46 @@ Feature: Действия с пользовательскими группами
     When Администратор делает запрос на все группы
     Then В ответе есть пункт groups
     Examples:
-      | groupName     | groupDescription     |
-      | testGroupName | testGroupDescription |
+      | groupName | groupDescription |
+      | STRING_15 | STRING_15        |
 
-  Scenario Outline: Выборка всех пользовательских групп c сортировкой (<sorting factor>|<sorting direction>)
-    Given Существует пользовательская группа "<groupName>", "<groupDescription>"
+  Scenario Outline: Выборка всех пользовательских групп c сортировкой (<sorting factor> | <sorting direction>)
+    Given Существуют пользовательские группы
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все пользовательские группы
     Then В ответе есть пункт groups
     And Данные групп отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
-      | groupName     | groupDescription     | sorting factor | sorting direction |
-      | testGroupName | testGroupDescription | createdAt      | asc               |
-      | testGroupName | testGroupDescription | name           | asc               |
-      | testGroupName | testGroupDescription | description    | asc               |
-      | testGroupName | testGroupDescription | createdAt      | desc              |
-      | testGroupName | testGroupDescription | name           | desc              |
-      | testGroupName | testGroupDescription | description    | desc              |
+      | sorting factor | sorting direction |
+      | createdAt      | asc               |
+      | name           | asc               |
+      | description    | asc               |
+      | createdAt      | desc              |
+      | name           | desc              |
+      | description    | desc              |
 
   Scenario Outline: Выборка всех пользовательских групп постранично (<groupsPerPage> page/pages)
-    Given Существует пользовательская группа "<groupName>", "<groupDescription>"
+    Given Существуют пользовательские группы
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
+      | STRING_15 | STRING_15 |
     When Администратор делает постраничный запрос на все пользовательские группы
     Then Сервер отвечает со статус-кодом 200
     And Количество страниц пропорционально количеству групп "<groupsPerPage>"
     And На всех страницах есть группы "<groupsPerPage>"
     Examples:
-      | groupName     | groupDescription     | groupsPerPage |
-      | testGroupName | testGroupDescription | 1             |
-      | testGroupName | testGroupDescription | 2             |
-      | testGroupName | testGroupDescription | 3             |
+      | groupsPerPage |
+      | 1             |
+      | 2             |
+      | 3             |
 
   Scenario Outline:Обновление данных пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
@@ -76,10 +88,10 @@ Feature: Действия с пользовательскими группами
     Then Сервер отвечает со статус-кодом 200
     When Администратор делает запрос на указанную группу
     Then Сервер отвечает со статус-кодом 200
-    And Поля группы совпадают с переданными "<newGroupName>", "<newGroupDescription>"
+    And Поля группы совпадают с переданными
     Examples:
-      | groupName     | groupDescription     | newGroupName    | newGroupDescription    |
-      | testGroupName | testGroupDescription | upTestGroupName | upTestGroupDescription |
+      | groupName | groupDescription | newGroupName | newGroupDescription |
+      | STRING_15 | STRING_15        | STRING_15    | STRING_15           |
 
   Scenario Outline: Добавление пользователя в пользовательскую группу
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
@@ -89,8 +101,8 @@ Feature: Действия с пользовательскими группами
     When Администратор делает запрос на указанную группу
     Then В пользовательской групппе присутствует указанный пользователь
     Examples:
-      | groupName     | groupDescription     | userName     | userSurname     | userEmail     | userPassword |
-      | testGroupName | testGroupDescription | testUserName | testUserSurname | user@user.com | testtestQ1   |
+      | groupName | groupDescription | userName     | userSurname     | userEmail | userPassword |
+      | STRING_15 | STRING_15        | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
 
   Scenario Outline: Удаление пользователя из пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
@@ -101,8 +113,8 @@ Feature: Действия с пользовательскими группами
     Then Сервер отвечает со статус-кодом 200
     And В пользовательской групппе отсутствует указанный пользователь
     Examples:
-      | groupName      | groupDescription      | userName      | userSurname      | userEmail      | userPassword |
-      | testGroupNameD | testGroupDescriptionD | testUserNameD | testUserSurnameD | userD@user.com | testtestQ1   |
+      | groupName | groupDescription | userName      | userSurname      | userEmail | userPassword |
+      | STRING_15 | STRING_15        | testUserNameD | testUserSurnameD | EMAIL_20  | testtestQ1   |
 
   Scenario Outline: Удаление пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
@@ -110,5 +122,5 @@ Feature: Действия с пользовательскими группами
     When Администратор делает запрос на указанную группу
     Then Сервер отвечает со статус-кодом 404
     Examples:
-      | groupName     | groupDescription     |
-      | testGroupName | testGroupDescription |
+      | groupName | groupDescription |
+      | STRING_15 | STRING_15        |

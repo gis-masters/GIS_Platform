@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -85,11 +86,11 @@ public class BaseStepsDefinitions {
 
         switch (type) {
             case "STRING":
-                return random(length, true, true);
+                return random(length, true, true).toLowerCase();
             case "NUMBER":
                 return random(length, false, true);
             case "EMAIL":
-                return random((length - 9), true, true) + "@test.com";
+                return String.format("%s@test.com", random((length - 9), true, true).toLowerCase());
             default:
                 return input;
         }
@@ -109,10 +110,9 @@ public class BaseStepsDefinitions {
         String email_20 = replaceString("EMAIL_20");
         assertEquals(20, email_20.length());
 
-        String testCustom = replaceString("MyCustomString_DontTuchME!");
-        assertEquals("MyCustomString_DontTuchME!", testCustom);
+        String testCustom = replaceString("MyCustomString_DontTouchME!");
+        assertEquals("MyCustomString_DontTouchME!", testCustom);
     }
-
 
     @Test
     @Ignore
@@ -134,7 +134,7 @@ public class BaseStepsDefinitions {
                        get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
                .then().
                        log().ifValidationFails().
-                       statusCode(200).
+                       statusCode(SC_OK).
                        body("users.findAll { it.enabled == true }.userName", hasItems(userName));
     }
 }

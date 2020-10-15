@@ -16,17 +16,17 @@ Feature: Удаление организации
     And На Геосервере дан доступ к сервисам. Роль пользователя отсутствует в списке
     And На Геосервере дан доступ к rest. Роль пользователя отсутствует в списке
     Examples:
-      | orgName         | orgPhone   | adminName | adminSurname | adminEmail    | adminPassword |
-      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | try3@delete.me | testPassword1 |
+      | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
+      | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
 
   @deletion
   Scenario: Удаление от имени владельца другой организации
     Given Существует организация
-      | ООО Быки    | 1111111111 | Иванов | Иван | bull@org.ru | testPassword1 |
-    And Существует организация
-      | ООО Медведи | 2222222222 | Иванов | Петр | bear@org.ru | testPassword1 |
-    And Авторизируемся пользователем "bear@org.ru" "testPassword1"
-    When Посылается запрос на удаление организации "bull@org.ru"
+      | ООО Быки | 1111111111 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    And Отправляется запрос на создание организации
+      | ООО Медведи | 2222222222 | Иванов | Петр | EMAIL_20 | testPassword1 |
+    And Авторизируемся владельцем организации
+    When Посылается запрос на удаление чужой организации
     Then Сервер отвечает со статус-кодом 403
 
   @deletion
@@ -42,5 +42,5 @@ Feature: Удаление организации
     Then Посылается запрос на удаление текущей организации
     And Сервер отвечает со статус-кодом 204
     Examples:
-      | orgName          | orgPhone   | adminName | adminSurname | adminEmail   | adminPassword |
-      | ООО TestDeletion | 1234567890 | Иванов    | Иван         | admin@del.me | testPassword1 |
+      | orgName          | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
+      | ООО TestDeletion | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |

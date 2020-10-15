@@ -8,9 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.OrganizationStepsDefinitions.currentOrgDto;
 import static ru.mycrg.acceptance.OrganizationStepsDefinitions.currentOrgId;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
@@ -25,7 +28,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("dataStore.name", equalTo(store),
                              "dataStore.type", equalTo("PostGIS"),
                              "dataStore.enabled", is(true));
@@ -40,7 +43,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/workspaces/" + workspace)
                 .then().
                         log().ifValidationFails().
-                        statusCode(404);
+                        statusCode(SC_NOT_FOUND);
     }
 
     @And("На Геосервере создан пользователь {string}")
@@ -50,8 +53,20 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("users.findAll { it.enabled == true }.userName", hasItems(replaceString(userName)));
+    }
+
+    @And("На Геосервере создан пользователь")
+    public void checkGeoserverUser() {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("users.findAll { it.enabled == true }.userName",
+                             hasItems(currentOrgDto.getOwner().getEmail()));
     }
 
     @And("На Геосервере создана роль")
@@ -63,7 +78,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("roles", hasItems(role));
     }
 
@@ -82,7 +97,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/rest")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
@@ -105,7 +120,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/layers")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
@@ -125,7 +140,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/services")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
@@ -145,7 +160,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("roles", not(hasItems(userRole)));
     }
 
@@ -158,7 +173,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         body("roles", not(hasItems(role)));
     }
 
@@ -171,7 +186,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/layers")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
@@ -189,7 +204,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/services")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
@@ -211,7 +226,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/security/acl/rest")
                 .then().
                         log().ifValidationFails().
-                        statusCode(200).
+                        statusCode(SC_OK).
                         extract().jsonPath().
                         getMap("");
 
