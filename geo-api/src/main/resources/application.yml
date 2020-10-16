@@ -40,3 +40,8 @@ crg-options:
   gisDbUrl: jdbc:postgresql://127.0.0.1:5434/
   gisDbUser: fiz
   gisDbPassword: 314
+  auth-service-url: http://127.0.0.1:9000
+  client_id: admin
+  client_secret: geoserver
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver

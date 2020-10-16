@@ -3,7 +3,6 @@ package ru.mycrg.geoserver_client.services.styles;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import ru.mycrg.geoserver_client.GeoserverClientResponse;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
@@ -42,5 +41,4 @@ public class StyleService extends GeoServerBaseService {
 
         return doRequest(request);
     }
-
 }

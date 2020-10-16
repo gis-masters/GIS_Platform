@@ -3,24 +3,27 @@ package ru.mycrg.gis.service.import_;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
+import ru.mycrg.gis.exceptions.FailedException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
-import ru.mycrg.gis.service.CrgAuthHelper;
 import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.gis.service.WsNotificationService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.enums.ProcessType;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.oauth_client.OAuthClient;
 
+import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +35,22 @@ import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 @Service
 public class ImportService extends BaseProcessService {
 
-    private static Logger log = LoggerFactory.getLogger(ImportService.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
+    private final Environment environment;
     private final SchemaService schemaService;
     private final MqSender mqSender;
     private final WsNotificationService wsNotificationService;
 
     public ImportService(MqSender mqSender,
+                         Environment environment,
                          SchemaService schemaService,
                          ProcessRepository processRepository,
                          WsNotificationService wsNotificationService) {
         super(processRepository);
 
         this.mqSender = mqSender;
+        this.environment = environment;
         this.schemaService = schemaService;
         this.wsNotificationService = wsNotificationService;
     }
@@ -82,7 +88,7 @@ public class ImportService extends BaseProcessService {
                             featureDescription.getTableName()),
                     uiTask.getPairs(),
                     uiTask.getSrs(),
-                    CrgAuthHelper.getToken(principal)
+                    getRootAccessToken()
             );
 
             importMqRequest.add(importMqTask);
@@ -136,4 +142,24 @@ public class ImportService extends BaseProcessService {
         }
     }
 
+    private String getRootAccessToken() {
+        try {
+            String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
+            String clientId = environment.getRequiredProperty("crg-options.client_id");
+            String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
+            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+
+            return OAuthClient.builder()
+                              .url(new URL(authServiceUrl))
+                              .clientId(clientId)
+                              .clientSecret(clientSecret)
+                              .build()
+                              .getToken(rootUserName, rootUserPass)
+                              .orElseThrow(() -> new FailedException("Error get root token"))
+                              .getAccess_token();
+        } catch (Exception e) {
+            throw new FailedException("Error get root token");
+        }
+    }
 }

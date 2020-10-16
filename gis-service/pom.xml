@@ -135,12 +135,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.mycrg</groupId>
-            <artifactId>geoserver-client</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.6.2</version>
@@ -162,13 +156,18 @@
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>
-            <artifactId>auth-service-contract</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>geoserver-client</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>oauth-client</artifactId>
             <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>auth-service-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

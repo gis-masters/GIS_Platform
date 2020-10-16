@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
@@ -33,8 +33,11 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
 
         log.debug("Add style to layer: {}", layerName);
         try {
-            new StyleService(importTask.getUserToken())
+            final GeoserverClientResponse response = new StyleService(importTask.getUserToken())
                     .associate(importTask.getTargetResource().getSchemaName() + ":" + layerName, layerName);
+            if (!response.isSuccessful()) {
+                log.warn("Style not associated: {}", response);
+            }
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
