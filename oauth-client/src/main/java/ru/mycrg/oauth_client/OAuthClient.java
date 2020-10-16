@@ -19,16 +19,15 @@ public class OAuthClient {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
 
-    private String clientId;
-    private String clientSecret;
-
-    private URL baseUrl;
+    private final URL baseUrl;
+    private final String clientId;
+    private final String clientSecret;
 
     @Builder
-    public OAuthClient(String clientId, String clientSecret, URL url) {
+    public OAuthClient(URL url, String clientId, String clientSecret) {
+        this.baseUrl = url;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.baseUrl = url;
     }
 
     public Optional<JwtToken> getToken(String userName, String password) {
@@ -102,5 +101,4 @@ public class OAuthClient {
             return Optional.empty();
         }
     }
-
 }

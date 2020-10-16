@@ -25,7 +25,6 @@ import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.UserDetails;
 import ru.mycrg.oauth_client.OAuthClient;
 
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +40,7 @@ public class ProjectService {
 
     private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
+    private final OAuthClient oAuthClient;
     private final Environment environment;
     private final ProjectionFactory factory;
     private final ProjectRepository projectRepository;
@@ -49,8 +49,10 @@ public class ProjectService {
 
     public ProjectService(ProjectionFactory factory,
                           Environment environment,
-                          ProjectRepository projectRepository) {
+                          ProjectRepository projectRepository,
+                          OAuthClient oAuthClient) {
         this.factory = factory;
+        this.oAuthClient = oAuthClient;
         this.environment = environment;
         this.projectRepository = projectRepository;
     }
@@ -65,8 +67,9 @@ public class ProjectService {
             if (isOrganizationAdmin(authentication)) {
                 projects = projectRepository.findAllByOrganizationId(orgId, pageable);
             } else {
-                final List<Project> organizationProjects = projectRepository.findAllByOrganizationId(orgId, pageable)
-                        .stream().collect(Collectors.toList());
+                final List<Project> organizationProjects = projectRepository
+                        .findAllByOrganizationId(orgId, pageable).stream()
+                        .collect(Collectors.toList());
                 final List<Project> filteredProjects = filterByPermissions(organizationProjects, userDetails);
 
                 projects = new PageImpl<>(filteredProjects, pageable, filteredProjects.size());
@@ -201,7 +204,8 @@ public class ProjectService {
 
         // Нужно просмотреть все пермишены проекта, там должны быть какието касательно пользователя или его группы,
         // если таковых нет то нет доступа, отфильтровываем
-        return projects.stream()
+        return projects
+                .stream()
                 .filter(project -> {
                     final List<Permission> permissions = project.getPermissions();
                     boolean isExist = false;
@@ -223,21 +227,13 @@ public class ProjectService {
     }
 
     private String getRootAccessToken() {
-        try {
-            String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
-            String clientId = environment.getRequiredProperty("crg-options.client_id");
-            String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
-            String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-            String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
+        String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
+        String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
 
-            return OAuthClient.builder()
-                    .url(new URL(authServiceUrl))
-                    .clientId(clientId)
-                    .clientSecret(clientSecret)
-                    .build()
-                    .getToken(rootUserName, rootUserPass)
-                    .orElseThrow(() -> new GisServiceException("Error get root token"))
-                    .getAccess_token();
+        try {
+            return oAuthClient.getToken(rootUserName, rootUserPass)
+                              .orElseThrow(() -> new GisServiceException("Error get root token"))
+                              .getAccess_token();
         } catch (Exception e) {
             throw new GisServiceException("Error get root token");
         }

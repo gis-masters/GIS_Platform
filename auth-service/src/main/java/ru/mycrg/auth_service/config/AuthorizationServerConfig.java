@@ -92,9 +92,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public OAuthClient oAuthClient() throws MalformedURLException {
         return OAuthClient.builder()
-                .url(new URL("http://localhost:9000"))
-                .clientId(CLIENT_ID)
-                .clientSecret(CLIENT_SECRET)
-                .build();
+                          .url(new URL("http://localhost:9000"))
+                          .clientId(CLIENT_ID)
+                          .clientSecret(CLIENT_SECRET)
+                          .build();
     }
 }

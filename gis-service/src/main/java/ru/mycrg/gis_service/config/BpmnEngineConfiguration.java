@@ -5,19 +5,29 @@ import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.impl.jobexecutor.DefaultJobExecutor;
 import org.camunda.bpm.engine.spring.ProcessEngineFactoryBean;
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
+import org.camunda.bpm.spring.boot.starter.actuator.JobExecutorHealthIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import ru.mycrg.gis_service.bpmn.CrgJobExecutorHealthIndicator;
 
 @Configuration
 public class BpmnEngineConfiguration {
 
     @Autowired
     private Environment environment;
+
+    @Bean
+    @Primary
+    public JobExecutorHealthIndicator jobExecutorHealthIndicator() {
+        return new CrgJobExecutorHealthIndicator(new DefaultJobExecutor());
+    }
 
     @Bean
     public SpringProcessEngineConfiguration processEngineConfiguration() {

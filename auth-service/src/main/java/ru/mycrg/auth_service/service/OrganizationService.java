@@ -110,9 +110,9 @@ public class OrganizationService {
         organizationRepository.save(organization);
 
         final List<String> owners = organization.getUsers().stream()
-                .filter(User::isOwner)
-                .map(User::getUsername)
-                .collect(Collectors.toList());
+                                                .filter(User::isOwner)
+                                                .map(User::getUsername)
+                                                .collect(Collectors.toList());
 
         messageBus.sendOrgEvent(
                 new OrganizationRemovedEvent(orgId, getToken(authentication), owners));
@@ -146,7 +146,8 @@ public class OrganizationService {
         String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
         String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
 
-        return oAuthClient.getToken(rootUserName, rootUserPass)
+        return oAuthClient
+                .getToken(rootUserName, rootUserPass)
                 .orElseThrow(() -> new AuthServiceException("Error get root token"))
                 .getAccess_token();
     }

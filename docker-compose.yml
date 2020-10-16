@@ -52,6 +52,12 @@ services:
     container_name: geoserver
     image: $DOCKER_CRG_HOST/geoserver:$GEOSERVER_TAG
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1"]
+      interval: 10s
+      timeout: 30s
+      retries: 6
+      start_period: 120s
     ports:
       - "8080:8080"
     volumes:
@@ -210,11 +216,6 @@ services:
       CRG_OPTIONS_GIS_DB_USER: $CRG_USER
       CRG_OPTIONS_GIS_DB_PASSWORD: $DB_PASS
       CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://geo-api:8088/actuator/health"]
-      interval: 30s
-      timeout: 60s
-      retries: 5
     ports:
       - "8088:8088"
     volumes:
