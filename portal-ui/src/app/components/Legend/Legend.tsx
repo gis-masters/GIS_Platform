@@ -11,15 +11,26 @@ interface LegendProps {
   rules: RuleWithLegend[];
 }
 
-export const Legend: FC<LegendProps> = ({ rules }) => (
-  <div className={cnLegend()}>
-    {rules.map(({ legend, title }, i) => (
-      <div className={cnLegend('Rule')} key={i}>
-        <img src={legend} className={cnLegend('Img')} />
-        <div className={cnLegend('Title')}>
-          {title}
-        </div>
-      </div>
-    ))}
-  </div>
-);
+export const Legend: FC<LegendProps> = ({ rules }) => {
+  const rulesTitlesRegistry: { [key: string]: boolean } = {};
+
+  return (
+    <div className={cnLegend()}>
+      {rules
+        .filter(({ title }) => {
+          if (rulesTitlesRegistry[title]) {
+            return false;
+          }
+          rulesTitlesRegistry[title] = true;
+
+          return true;
+        })
+        .map(({ legend, title }, i) => (
+          <div className={cnLegend('Rule')} key={i}>
+            <img src={legend} className={cnLegend('Img')} />
+            <div className={cnLegend('Title')}>{title}</div>
+          </div>
+        ))}
+    </div>
+  );
+};
