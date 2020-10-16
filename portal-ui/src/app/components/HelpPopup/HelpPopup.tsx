@@ -19,7 +19,7 @@ export const HelpPopup: FC<HelpPopupProps> = ({ items, onSelect, onClose }) => (
   <div className={cnHelpPopup()}>
     <div className={cnHelpPopup('Title')}>Справка:</div>
 
-    <HelpToc items={items} onSelect={onSelect} />
+    <HelpToc items={items} onSelect={onSelect} className={cnHelpPopup('Content', ['scroll'])} />
 
     <div className={cnHelpPopup('Actions')}>
       <Button onClick={onClose}>Закрыть</Button>

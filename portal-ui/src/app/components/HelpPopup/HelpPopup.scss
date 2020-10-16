@@ -8,6 +8,12 @@
     font-size: 20px;
   }
 
+  &-Content {
+    overflow: auto;
+
+    max-height: calc(100vh - 200px);
+  }
+
   &-Actions {
     padding-top: 10px;
 
