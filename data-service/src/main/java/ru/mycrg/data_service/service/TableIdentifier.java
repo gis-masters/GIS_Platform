@@ -17,6 +17,11 @@ public class TableIdentifier {
         this.table = table;
     }
 
+    public TableIdentifier(String identifier) {
+        this.schema = extractSchemaName(identifier);
+        this.table = extractTableName(identifier);
+    }
+
     public String getSchema() {
         return schema;
     }

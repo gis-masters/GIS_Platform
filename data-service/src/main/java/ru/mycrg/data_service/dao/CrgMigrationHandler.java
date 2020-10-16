@@ -32,7 +32,8 @@ public class CrgMigrationHandler {
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(crgDataSourcesPool.getInitialDataSource());
 
-            String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" + DEFAULT_DB_NAME + "%'";
+            String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" +
+                    DEFAULT_DB_NAME + "%'";
 
             jdbcTemplate
                     .queryForList(selectAllOrganizationsDb, String.class)

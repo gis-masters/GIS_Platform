@@ -1,5 +1,5 @@
 Feature: API Документов
-  Background: Корневой эндпоинт для документов "/api/data/schemas/{schemaName}/tables/{tableName}"
+  Background: Корневой эндпоинт для документов "/api/data/datasets/{schemaName}/tables/{tableName}"
               Запросы выполняются от авторизированного пользователя, если потребуются специфичные права на отдельные
               эндпоинты - они будут указаны в сценарии.
 
@@ -47,17 +47,17 @@ Feature: API Документов
 
   Scenario: Получить инфо о документе
     Given Существует документ с id: "c6969704-3c08-47e8-ae39-5713153efb3c"
-    When Отправляется GET запрос "/api/data/schemas/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb3c"
+    When Отправляется GET запрос "/api/data/datasets/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb3c"
     Then сервер отвечает 200 с телом сущности
 
   Scenario: Удаление
     Given Существует документ с id: "c6969704-3c08-47e8-ae39-5713153efb31"
-    When Запросы DELETE на "/api/data/schemas/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
+    When Запросы DELETE на "/api/data/datasets/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
     Then сервер отвечает 204
 
   Scenario: Выборка/Удаление не существующего документа
     Given Документа с id: "c6969704-3c08-47e8-ae39-5713153efb31" в базе нет
-    When Отправляется GET запрос "/api/data/schemas/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
+    When Отправляется GET запрос "/api/data/datasets/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
     Then сервер отвечает 404
-    When Отправляется DELETE запрос "/api/data/schemas/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
+    When Отправляется DELETE запрос "/api/data/datasets/data/tables/documents/c6969704-3c08-47e8-ae39-5713153efb31"
     Then сервер отвечает 404

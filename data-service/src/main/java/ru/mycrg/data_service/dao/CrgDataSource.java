@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.dao;
 
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -8,7 +9,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
 
 import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
 
@@ -16,8 +16,9 @@ import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
  * Наш декоратор над DataSource.
  * В нем мы подменяем базу данных исходя из инфы в токене пользователя.
  */
-@Log
 public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
+
+    public static final Logger log = LoggerFactory.getLogger(CrgDataSource.class);
 
     private final DataSource dataSource;
     private final HttpServletRequest httpServletRequest;
@@ -30,7 +31,13 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
     @Override
     public Connection getConnection() throws SQLException {
         Long orgId = getOrganizationId(httpServletRequest.getUserPrincipal());
-        String dbName = orgId < 1 ? INITIAL_DB_NAME : DEFAULT_DB_NAME + orgId;
+        String dbName;
+        if (orgId < 1) {
+            dbName = INITIAL_DB_NAME;
+            log.info("Selected initial db: {}", dbName);
+        } else {
+            dbName = DEFAULT_DB_NAME + orgId;
+        }
 
         return getDataSource(dbName).getConnection();
     }
@@ -61,7 +68,7 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
     }
 
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return dataSource.getParentLogger();
     }
 

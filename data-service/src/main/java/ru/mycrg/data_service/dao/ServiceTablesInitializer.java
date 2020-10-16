@@ -84,6 +84,17 @@ public class ServiceTablesInitializer {
                 ")" +
                 "TABLESPACE pg_default; ALTER TABLE data.documents OWNER to " + dbUser;
 
+        String resourceDescriptionTable = "CREATE TABLE IF NOT EXISTS data.resource_description" +
+                "(" +
+                " title               character varying         NOT NULL," +
+                " details             character varying(1024)," +
+                " type                character varying(20)     NOT NULL," +
+                " resource_identifier character varying         NOT NULL," +
+                " created_at          timestamp without time zone," +
+                " last_modified       timestamp without time zone," +
+                " CONSTRAINT resource_description_unique_constr UNIQUE (type, resource_identifier)" +
+                ") TABLESPACE pg_default; ALTER TABLE data.resource_description OWNER to " + dbUser;
+
         try {
             jdbcTemplate.execute(createSchema);
 
@@ -92,6 +103,7 @@ public class ServiceTablesInitializer {
             jdbcTemplate.execute(resourcesTable);
             jdbcTemplate.execute(resourcePermissionsTable);
             jdbcTemplate.execute(documentsTable);
+            jdbcTemplate.execute(resourceDescriptionTable);
         } catch (DataAccessException e) {
             log.error("Error generate service tables: {}", e.getMessage());
         }

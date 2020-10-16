@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.PermissionWithoutResourceProjection;
-import ru.mycrg.data_service.dto.TableDto;
+import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
@@ -48,11 +48,11 @@ public class PermissionsService {
         return permissionsRepository.getAllByResourceIdentifier(resource.toString(), pageable);
     }
 
-    public List<TableDto> getAllByResource(String schemaName, List<Long> ids) {
+    public List<TableModel> getAllByResource(String schemaName, List<Long> ids) {
         return permissionsRepository
                 .getAllByResourceIdentifierAndPrincipalIds(schemaName, ids).stream()
                 .map(TableIdentifier::extractTableName)
-                .map(TableDto::new)
+                .map(TableModel::new)
                 .collect(Collectors.toList());
     }
 

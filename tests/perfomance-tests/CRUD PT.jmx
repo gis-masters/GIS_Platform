@@ -1432,7 +1432,7 @@
                   <stringProp name="HTTPSampler.port">8100</stringProp>
                   <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
                   <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-                  <stringProp name="HTTPSampler.path">/api/data/schemas/workspace_${project_id}/tables/${shp_archive_name}/roleAssignment</stringProp>
+                  <stringProp name="HTTPSampler.path">/api/data/datasets/workspace_${project_id}/tables/${shp_archive_name}/roleAssignment</stringProp>
                   <stringProp name="HTTPSampler.method">POST</stringProp>
                   <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                   <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

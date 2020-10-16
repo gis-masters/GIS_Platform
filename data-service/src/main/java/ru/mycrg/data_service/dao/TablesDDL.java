@@ -10,7 +10,7 @@ import ru.mycrg.data_service.service.TableIdentifier;
 @Service
 public class TablesDDL {
 
-    private static Logger log = LoggerFactory.getLogger(TablesDDL.class);
+    private static final Logger log = LoggerFactory.getLogger(TablesDDL.class);
 
     private final JdbcTemplate jdbcTemplate;
 

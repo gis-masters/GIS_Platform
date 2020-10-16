@@ -65,13 +65,13 @@ public class TablesDao {
         }
     }
 
-    public Optional<LinkedHashMap> findById(TableIdentifier tableIdentifier, UUID id) {
+    public Optional<Map<String, Object>> findById(TableIdentifier tableIdentifier, UUID id) {
         try {
             final var object = jdbcTemplate.queryForObject(
                     String.format("SELECT * FROM %s WHERE id = :id", tableIdentifier.toSqlQueryId()),
                     new MapSqlParameterSource("id", id),
                     (rs, rowNum) -> {
-                        final LinkedHashMap<String, Object> selectedRow = new LinkedHashMap<>();
+                        final Map<String, Object> selectedRow = new LinkedHashMap<>();
 
                         final ResultSetMetaData metaData = rs.getMetaData();
                         final int columnCount = metaData.getColumnCount();
