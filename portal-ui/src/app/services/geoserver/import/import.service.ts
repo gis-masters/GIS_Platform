@@ -1,6 +1,5 @@
 import { GeoUtil } from '../../util/GeoUtil';
 import { serverProperties } from '../../server-properties.service';
-import { services } from '../../services';
 import {
   ImportLayer,
   ImportTaskResponse,
@@ -29,41 +28,35 @@ interface ImportRequestData {
   };
 }
 
-export const fetchCurrentImport = async (importId: string) => {
+export async function fetchCurrentImport(importId: string) {
   currentImport.fit({ scratch: await getById(importId) });
   fillTasks();
-};
+}
 
-export const getById = async (id: string) => {
-  await services.provided;
+export async function getById(id: string) {
   const url = `${await getImportUrl()}/${id}`;
   return (await http.get<InputStartResponseDto>(url)).import;
-};
+}
 
-export const checkImportStatus = async () => {
-  await services.provided;
+export async function checkImportStatus() {
   const { href } = currentImport.scratch;
   const { import: scratch } = await http.get<InputStartResponseDto>(href);
-
   currentImport.fit({ scratch });
   fillTasks();
-};
+}
 
-const getImportLayer = async (task: ImportTaskShort): Promise<ImportLayer> => {
-  await services.provided;
-
+async function getImportLayer(task: ImportTaskShort): Promise<ImportLayer> {
   return http.get<ImportLayer>(task.href + '/layer');
-};
+}
 
-export const getAllImportLayers = (): Promise<ImportLayer[]> => {
+export async function getAllImportLayers(): Promise<ImportLayer[]> {
   return Promise.all(currentImport.tasks.map(getImportLayer));
-};
+}
 
 /**
  * Инициируем импорт во временное хранилище.
  */
-export const initScratchImport = async (file: File): Promise<ScratchImport> => {
-  await services.provided;
+export async function initScratchImport(file: File): Promise<ScratchImport> {
   currentImport.reset({ file });
 
   const workspace = 'scratch_database_' + currentUser.orgId;
@@ -100,14 +93,13 @@ export const initScratchImport = async (file: File): Promise<ScratchImport> => {
 
     return Promise.reject(err);
   }
-};
+}
 
-const getImportUrl = async (): Promise<string> => {
+async function getImportUrl(): Promise<string> {
   return (await serverProperties.geoServerUrl) + '/rest/imports';
-};
+}
 
-const uploadTasks = async (url: string, file: File) => {
-  await services.provided;
+async function uploadTasks(url: string, file: File) {
   const tasksUrl = url + '/tasks';
 
   const formData = new FormData();
@@ -126,44 +118,44 @@ const uploadTasks = async (url: string, file: File) => {
     currentImport.setError(err);
     return Promise.reject(err);
   }
-};
+}
 
 /**
  * Последний шаг, после всех приготовлений, стартуем импорт.
  */
-const uploadToScratch = async () => {
-  return http.post(`${await getImportUrl()}/${currentImport.id}`, {}).catch(err => {
-    // Geoserver "держит" этот запрос до самого конца импорта соответственно в зависимости от обьема ответ может
-    // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
-    // ошибкой, ретраи здесь также не нужны.
-    if (err && err.status !== 504) {
-      currentImport.setError(err);
+async function uploadToScratch() {
+  // Geoserver "держит" этот запрос до самого конца импорта соответственно в зависимости от обьема ответ может
+  // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
+  // ошибкой, ретраи здесь также не нужны.
+  try {
+    return await http.post(`${await getImportUrl()}/${currentImport.id}`, {});
+  } catch (e) {
+    if (!e.response || e.response.status !== 504) {
+      currentImport.setError(e);
     }
-  });
-};
+  }
+}
 
-export const fillTasks = async () => {
+export async function fillTasks() {
   const tasks = currentImport.notFullfilledTasks;
   tasks.forEach(async task => currentImport.setFullTasks([await getFullImportTask(task)]));
-};
+}
 
-export const updateProgress = async () => {
-  await services.provided;
+export async function updateProgress() {
   const firstTask = currentImport.tasks[0];
 
   if (firstTask && firstTask.progress) {
     currentImport.setProgress(await http.get<ImportTaskProgress>(firstTask.progress));
   }
-};
+}
 
-const getFullImportTask = async (shortTask: ImportTaskShort): Promise<ImportTaskFull> => {
-  await services.provided;
+async function getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
   const { task } = await http.get<{ task: ImportTaskFull }>(shortTask.href);
-  return task;
-};
 
-export const deleteTask = async (task: ImportTaskShort) => {
-  await services.provided;
+  return task;
+}
+
+export async function deleteTask(task: ImportTaskShort) {
   await http.delete(task.href);
   await checkImportStatus();
-};
+}

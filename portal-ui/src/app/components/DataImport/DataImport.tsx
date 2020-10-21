@@ -50,20 +50,18 @@ export class DataImport extends Component {
     // прогреем схемы, понадобятся на следующем шаге
     schemaService.getAllSchemas();
   }
-  
+
   async componentDidMount() {
-    await services.provided;
-    
     const urlImportId = route.params.importId;
-    
+
     if (urlImportId) {
       if (currentImport.id && currentImport.id !== urlImportId) {
         this.reset();
       }
-      
+
       try {
         await fetchCurrentImport(urlImportId);
-        this.launchPolling();
+        this.startPolling();
       } catch (err) {
         this.reset();
       }
@@ -141,12 +139,12 @@ export class DataImport extends Component {
       if (currentImport.file) {
         // if was not reseted
         await services.router.navigate([`${this.importUrl}/${id}`]);
-        this.launchPolling();
+        this.startPolling();
       }
     });
   }
 
-  private launchPolling() {
+  private startPolling() {
     this.pollingOn = true;
     this.poll();
   }
