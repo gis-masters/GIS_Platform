@@ -13,12 +13,12 @@ import ru.mycrg.data_service.security.UserDetails;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.TableIdentifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.security.CrgClaimsParser.*;
-import static ru.mycrg.data_service.service.PageHandler.getPageableResource;
 
 @Service
 public class TableService implements ITableService {
@@ -43,18 +43,16 @@ public class TableService implements ITableService {
         if (isRoot(authentication)) {
             return new PageImpl<>(new ArrayList<>());
         } else if (isOrganizationAdmin(authentication)) {
-            final Set<TableModel> datasets = new LinkedHashSet<>();
+            return rdRepository
+                    .findByTypeAndResourceIdentifierStartingWithAndTitleContaining(TABLE.name(), schemaName, title,
+                            pageable)
+                    .map(description -> {
+                        final TableModel tableModel = new TableModel(description, OWNER.name());
+                        tableModel.setResourceIdentifier(
+                                new TableIdentifier(tableModel.getResourceIdentifier()).getTable());
 
-            // Таблицы с описанием
-            rdRepository.findByTypeAndTitleContaining(TABLE.name(), title, pageable)
-                        .forEach(description -> datasets.add(new TableModel(description, OWNER.name())));
-
-            datasets.forEach(tableModel -> {
-                tableModel.setResourceIdentifier(
-                        new TableIdentifier(tableModel.getResourceIdentifier()).getTable());
-            });
-
-            return (Page<TableModel>) getPageableResource(Arrays.asList(datasets.toArray()), pageable);
+                        return tableModel;
+                    });
         } else {
             final UserDetails userDetails = getUserDetails(authentication);
 

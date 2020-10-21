@@ -8,8 +8,6 @@ import ru.mycrg.data_service.entity.ResourceDescription;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class DatasetModel extends BaseModel {
 
-    private Integer tableCount;
-
     public DatasetModel() {
         super();
     }
@@ -19,14 +17,7 @@ public class DatasetModel extends BaseModel {
     }
 
     public DatasetModel(ResourceDescription rd, String permission) {
-        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getCreatedAt(), permission);
-    }
-
-    public Integer getTableCount() {
-        return tableCount;
-    }
-
-    public void setTableCount(Integer tableCount) {
-        this.tableCount = tableCount;
+        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getItemsCount(), permission,
+                rd.getCreatedAt());
     }
 }

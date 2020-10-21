@@ -90,6 +90,7 @@ public class ServiceTablesInitializer {
                 " details             character varying(1024)," +
                 " type                character varying(20)     NOT NULL," +
                 " resource_identifier character varying         NOT NULL," +
+                " items_count         integer                   DEFAULT 0," +
                 " created_at          timestamp without time zone," +
                 " last_modified       timestamp without time zone," +
                 " CONSTRAINT resource_description_unique_constr UNIQUE (type, resource_identifier)" +

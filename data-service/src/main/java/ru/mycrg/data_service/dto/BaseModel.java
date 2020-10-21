@@ -9,6 +9,7 @@ public class BaseModel {
     private String details;
     private String type;
     private String resourceIdentifier;
+    private Integer itemsCount;
     private String permission;
     private LocalDateTime createdAt;
 
@@ -24,14 +25,15 @@ public class BaseModel {
         this.permission = permission;
     }
 
-    public BaseModel(String title, String details, String type, String resourceIdentifier, LocalDateTime createdAt,
-                     String permission) {
+    public BaseModel(String title, String details, String type, String resourceIdentifier, Integer itemsCount,
+                     String permission, LocalDateTime createdAt) {
         this.title = title;
         this.details = details;
         this.type = type;
         this.resourceIdentifier = resourceIdentifier;
-        this.createdAt = createdAt;
+        this.itemsCount = itemsCount;
         this.permission = permission;
+        this.createdAt = createdAt;
     }
 
     public String getPermission() {
@@ -80,6 +82,14 @@ public class BaseModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getItemsCount() {
+        return itemsCount;
+    }
+
+    public void setItemsCount(Integer itemsCount) {
+        this.itemsCount = itemsCount;
     }
 
     @Override

@@ -30,8 +30,8 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(entities.size() >= 2);
     }
 
-    @Then("Общее представление корректно")
-    public void isOverallStructureCorrect() {
+    @Then("Ответ имеет стандартное тело с паджинацией")
+    public void isPagingStructureCorrect() {
         jsonPath = response.jsonPath();
 
         Map<String, String> presentedData = jsonPath.getMap("");
@@ -42,7 +42,6 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("page"));
 
         assertTrue(links.containsKey("self"));
-        assertTrue(links.containsKey("profile"));
 
         assertTrue(page.containsKey("size"));
         assertTrue(page.containsKey("totalElements"));

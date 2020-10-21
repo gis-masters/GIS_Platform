@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dao.SchemasDDL;
 import ru.mycrg.data_service.dto.DatasetModel;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.datasets.DatasetService;
 import ru.mycrg.data_service.service.datasets.IDatasetService;
 
@@ -54,7 +55,7 @@ public class DatasetsController {
     public ResponseEntity<Object> getSchema(@PathVariable String dataSetName,
                                             Authentication authentication) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("Not found: " + dataSetName);
         }
 
         final DatasetModel dto = datasetService.getByName(dataSetName, authentication);

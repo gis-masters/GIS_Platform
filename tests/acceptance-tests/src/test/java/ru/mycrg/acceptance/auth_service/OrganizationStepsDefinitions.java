@@ -242,7 +242,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         int currentAttempt = 0;
         do {
-            System.out.println("attempt: " + currentAttempt);
+            System.out.println("attempt delete org: " + currentAttempt);
             currentAttempt++;
 
             Response response = getBaseRequestWithCurrentCookie()
@@ -264,7 +264,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         int currentAttempt = 0;
         do {
-            System.out.println("attempt: " + currentAttempt);
+            System.out.println("attempt create org: " + currentAttempt);
             currentAttempt++;
 
             Response response = getBaseRequestWithCurrentCookie()

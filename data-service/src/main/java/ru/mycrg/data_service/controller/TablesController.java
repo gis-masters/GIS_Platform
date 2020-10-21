@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dao.SchemasDDL;
 import ru.mycrg.data_service.dao.TablesDDL;
 import ru.mycrg.data_service.dto.TableModel;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.TableIdentifier;
 import ru.mycrg.data_service.service.tables.ITableService;
 import ru.mycrg.data_service.service.tables.TableService;
@@ -47,7 +48,7 @@ public class TablesController {
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("Not found: " + dataSetName);
         }
 
         final Page<TableModel> tables = tableService.getAllByTitle(dataSetName, title, pageable, authentication);
@@ -65,12 +66,12 @@ public class TablesController {
                                            @PathVariable String tableName,
                                            Authentication authentication) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("Not found: " + dataSetName);
         }
 
         TableIdentifier identifier = new TableIdentifier(dataSetName, tableName);
         if (!tablesDDL.isTableExist(identifier)) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("Not found: " + identifier);
         }
 
         final TableModel dto = tableService.getByName(identifier, authentication);

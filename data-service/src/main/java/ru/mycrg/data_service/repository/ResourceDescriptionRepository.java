@@ -13,5 +13,12 @@ public interface ResourceDescriptionRepository extends PagingAndSortingRepositor
 
     Page<ResourceDescription> findByTypeAndTitleContaining(String type, String title, Pageable pageable);
 
+    Page<ResourceDescription> findByTypeAndResourceIdentifierStartingWithAndTitleContaining(String type,
+                                                                                            String resourceIdentifier,
+                                                                                            String title,
+                                                                                            Pageable pageable);
+
     Optional<ResourceDescription> findByTypeAndResourceIdentifier(String type, String resourceIdentifier);
+
+    Long countAllByTypeAndResourceIdentifierStartingWith(String type, String resourceIdentifier);
 }

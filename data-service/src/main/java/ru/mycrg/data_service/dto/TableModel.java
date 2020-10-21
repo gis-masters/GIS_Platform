@@ -21,6 +21,7 @@ public class TableModel extends BaseModel {
     }
 
     public TableModel(ResourceDescription rd, String permission) {
-        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getCreatedAt(), permission);
+        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getItemsCount(), permission,
+                rd.getCreatedAt());
     }
 }

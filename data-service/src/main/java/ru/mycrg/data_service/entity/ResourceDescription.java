@@ -27,6 +27,9 @@ public class ResourceDescription {
     @Column(insertable = false, updatable = false, nullable = false)
     private String resourceIdentifier;
 
+    @Column(name = "items_count")
+    private Integer itemsCount;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -90,5 +93,13 @@ public class ResourceDescription {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Integer getItemsCount() {
+        return itemsCount;
+    }
+
+    public void setItemsCount(Integer countEntities) {
+        this.itemsCount = countEntities;
     }
 }
