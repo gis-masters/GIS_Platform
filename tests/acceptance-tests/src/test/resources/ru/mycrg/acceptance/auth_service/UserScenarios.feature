@@ -63,8 +63,8 @@ Feature: Действия с пользователями
       | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на всех пользователей
     Then Сервер отвечает со статус-кодом 200
-    And В ответе есть пункт users
-    And Данные отсортированы по "<sorting factor>" и "<sorting direction>"
+    And В ответе есть пункт "users"
+    And Данные "users" отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | email          | asc               |
@@ -88,8 +88,8 @@ Feature: Действия с пользователями
       | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
     When Администратор делает постраничный запрос на всех пользователей
     Then Сервер отвечает со статус-кодом 200
-    And Количество страниц пропорционально "<usersPerPage>"
-    And На всех страницах есть пользователи "<usersPerPage>"
+    And Количество страниц пользователей пропорционально "<usersPerPage>"
+    And На всех страницах пользователей "users" есть "<usersPerPage>"
     Examples:
       | usersPerPage |
       | 1            |

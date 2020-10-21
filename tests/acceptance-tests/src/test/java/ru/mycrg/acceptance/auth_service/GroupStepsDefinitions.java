@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance;
+package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -8,25 +8,33 @@ import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     public static GroupCreateDto currentUsersGroupDto;
     public static Integer currentUsersGroupId;
-    public static int usersGroupsCount;
 
-    public static int MAX_RETRY_ATTEMPT = 20;
-    public static int RETRY_DELAY = 1000;
+    @Override
+    public RequestSpecification getBaseRequest() {
+        return super.getBaseRequest().basePath("/groups");
+    }
+
+    @Override
+    public RequestSpecification getBaseRequestWithCurrentCookie() {
+        return super.getBaseRequestWithCurrentCookie().basePath("/groups");
+    }
 
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
@@ -38,11 +46,11 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/groups");
+                        post("");
     }
 
     @Then("Сервер передает ID созданный группы")
-    public void extractUsersGroupId() {
+    public void extractUsersGroupIdFromResponseBody() {
         currentUsersGroupId = response.jsonPath().get("id");
 
         assertNotNull(currentUsersGroupId);
@@ -52,12 +60,11 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void getExactUsersGroup() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/groups/" + currentUsersGroupId);
-
+                        get("/" + currentUsersGroupId);
     }
 
     @Then("Поля группы совпадают с переданными")
-    public void isDataCorrect() {
+    public void isUsersGroupDataCorrect() {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), currentUsersGroupDto.getName());
@@ -65,7 +72,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользовательская группа {string}, {string}")
-    public void checkUsersGroup(String groupName, String groupDescription) throws InterruptedException {
+    public void checkUsersGroup(String groupName, String groupDescription) {
         if (!isUsersGroupExistInPool(replaceString(groupName))) {
             GroupCreateDto dto = mapToGroupDto(replaceString(groupName), replaceString(groupDescription));
             Response createResponse = createUsersGroup(dto);
@@ -74,8 +81,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
             response = createResponse;
             Integer id = extractUsersGroupId(createResponse);
-
-            waitUntilUsersGroupSuccessfullyCreated(id);
 
             currentUsersGroupId = id;
             currentUsersGroupDto = dto;
@@ -87,72 +92,23 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void getAllUsersGroups() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/groups?size=1000");
+                        get("/?size=1000");
 
         assertEquals(SC_OK, response.statusCode());
-    }
-
-    @Then("В ответе есть пункт groups")
-    public void areUsersGroups() {
-        jsonPath = response.jsonPath();
-        List<String> groups = jsonPath.get("_embedded.groups.name");
-
-        assertTrue(groups.size() >= 1);
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все пользовательские группы")
     public void getAllUsersGroupsSorted(String sortingFactor, String sortingDirection) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/groups?sort=%s,%s&%s", sortingFactor, sortingDirection, "size=1000"));
-    }
-
-    @And("Данные групп отсортированы по {string} и {string}")
-    public void areUsersGroupsSorted(String sortingFactor, String sortingDirection) {
-        List<String> sorted = jsonPath.getList("_embedded.groups." + sortingFactor);
-        for (int i = 1; i < sorted.size(); i++) {
-            if (sortingDirection.equals("asc")) {
-                assertTrue(sorted.get(i - 1).compareTo(sorted.get(i)) < 1);
-            } else if (sortingDirection.equals("desc")) {
-                assertTrue(sorted.get(i - 1).compareTo(sorted.get(i)) > -1);
-            }
-        }
+                        get(String.format("/?sort=%s,%s&%s", sortingFactor, sortingDirection, "size=1000"));
     }
 
     @When("Администратор делает постраничный запрос на все пользовательские группы")
     public void usersGroupsPerPage() {
         getAllUsersGroups();
         jsonPath = response.jsonPath();
-        usersGroupsCount = jsonPath.getList("_embedded.groups.id").size();
-    }
-
-    @And("Количество страниц пропорционально количеству групп {string}")
-    public void checkUsersGroupsPagesCount(String usersPerPage) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/groups?size=" + usersPerPage);
-
-        jsonPath = response.jsonPath();
-
-        double usersGroupsPerPageDouble = Integer.parseInt(usersPerPage);
-        int estimatedPages = (int) Math.ceil(usersGroupsCount / usersGroupsPerPageDouble);
-        totalPages = jsonPath.get("page.totalPages");
-
-        assertEquals(totalPages, estimatedPages);
-    }
-
-    @And("На всех страницах есть группы {string}")
-    public void isUsersGroupsOnPages(String usersGroupsPerPage) {
-        for (int i = 0; i < totalPages; i++) {
-            response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get(String.format("/groups?size=%s&page=%s", usersGroupsPerPage, i));
-
-            jsonPath = response.jsonPath();
-            List<String> usersEmails = response.jsonPath().getList("_embedded.groups.name");
-
-            assertNotEquals(0, usersEmails.size());
-        }
+        entityCount = jsonPath.getList("_embedded.groups.id").size();
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")
@@ -165,7 +121,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         body(payload).
-                        patch("groups/" + currentUsersGroupId);
+                        patch("/" + currentUsersGroupId);
     }
 
     @When("Администратор добавляет пользователя в пользовательскую группу")
@@ -175,7 +131,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 contentType(ContentType.JSON)
                 .when().
                         body("{}").
-                        post(String.format("/groups/%s/users/%s", currentUsersGroupId,
+                        post(String.format("/%s/users/%s", currentUsersGroupId,
                                            UserStepsDefinitions.currentUserId))
                 .then().
                         log().ifValidationFails().
@@ -186,7 +142,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void isUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("groups/" + currentUsersGroupId)
+                get("/" + currentUsersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -197,7 +153,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUserToUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                delete(String.format("/groups/%s/users/%s", currentUsersGroupId, UserStepsDefinitions.currentUserId))
+                delete(String.format("/%s/users/%s", currentUsersGroupId, UserStepsDefinitions.currentUserId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
@@ -207,7 +163,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void isNotUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("groups/" + currentUsersGroupId)
+                get("/" + currentUsersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -218,7 +174,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUsersGroup() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/groups/" + currentUsersGroupId);
+                        delete("/" + currentUsersGroupId);
 
         assertEquals(response.statusCode(), SC_NO_CONTENT);
     }
@@ -231,6 +187,16 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @And("Количество страниц групп пропорционально {string}")
+    public void checkUsersGroupPagesCount(String entitiesPerPage) {
+        super.checkPagesCount(entitiesPerPage);
+    }
+
+    @And("На всех страницах групп {string} есть {string}")
+    public void isBaseMapsOnPages(String checkType, String entitiesPerPage) {
+        super.isSomethingOnPages(checkType, entitiesPerPage);
+    }
+
     private Response createUsersGroup(GroupCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -238,7 +204,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
-                        post("/groups");
+                        post("");
 
         return response;
     }
@@ -252,36 +218,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/groups");
-    }
-
-    private void isDataCorrect(String groupName, String groupDescription) {
-        jsonPath = response.jsonPath();
-
-        assertEquals(jsonPath.get("name"), replaceString(groupName));
-        assertEquals(jsonPath.get("description"), replaceString(groupDescription));
-    }
-
-    private void waitUntilUsersGroupSuccessfullyCreated(Integer id) throws InterruptedException {
-        System.out.println("check status users group: " + id);
-
-        int currentAttempt = 0;
-        do {
-            System.out.println("attempt: " + currentAttempt);
-            currentAttempt++;
-
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/groups/" + id);
-
-            if (response.statusCode() == SC_OK) {
-                return;
-            }
-
-            sleep(RETRY_DELAY);
-        } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-        throw new RuntimeException("Users group was not created: " + id);
+                        post("");
     }
 
     private Integer extractUsersGroupId(Response response) {

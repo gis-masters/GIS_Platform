@@ -1,10 +1,10 @@
-package ru.mycrg.acceptance;
+package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
+import ru.mycrg.acceptance.BaseStepsDefinitions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,8 @@ import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertNotNull;
-import static ru.mycrg.acceptance.OrganizationStepsDefinitions.*;
-import static ru.mycrg.acceptance.UserStepsDefinitions.currentUserDto;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.*;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.currentUserDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
@@ -45,26 +45,6 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     public void tryToAuthorizeUser() throws InterruptedException {
         response = authorizeUser(currentUserDto.getEmail(), currentUserDto.getPassword());
 
-        checkCookieAndWriteAsCurrent(response);
-    }
-
-    @When("Пытаемся авторизоваться пользователем {string} {string}")
-    public void tryToAuthorize(String login, String password) {
-        Map<String, String> queryParams = new HashMap<String, String>() {{
-            put("username", replaceString(login));
-            put("password", replaceString(password));
-            put("grant_type", "password");
-        }};
-
-        response = getBaseRequest()
-                .given().
-                        formParams(queryParams)
-                .when().
-                        post("/oauth/token");
-    }
-
-    @Then("Сервер авторизует пользователя")
-    public void serverAuthorizeUser() {
         checkCookieAndWriteAsCurrent(response);
     }
 

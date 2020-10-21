@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance;
+package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -7,27 +7,31 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookie;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer currentUserId;
     public static UserCreateDto currentUserDto;
-    public static int usersCount;
 
-    public static int MAX_RETRY_ATTEMPT = 10;
-    public static int RETRY_DELAY = 1000;
+    @Override
+    public RequestSpecification getBaseRequest() {
+        return super.getBaseRequest().basePath("/users");
+    }
+
+    @Override
+    public RequestSpecification getBaseRequestWithCurrentCookie() {
+        return super.getBaseRequestWithCurrentCookie().basePath("/users");
+    }
 
     @When("Администратор создает пользователя")
     public void createUser(DataTable dataTable) {
@@ -43,7 +47,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/users");
+                        post("");
     }
 
     @When("Администратор повторно создает пользователя")
@@ -53,14 +57,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         body(new Gson().toJson(currentUserDto)).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/users");
+                        post("");
     }
 
     @Then("Пользователю присвоена роль = {string}")
     public void isUserRoleIsUser(String role) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/users/" + currentUserId);
+                        get("/" + currentUserId);
 
         jsonPath = response.jsonPath();
 
@@ -68,7 +72,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользователь")
-    public void checkUser(DataTable dataTable) throws InterruptedException {
+    public void checkUser(DataTable dataTable) {
         String eMail = replaceString(dataTable.asList().get(2));
 
         if (!isUserExistInPool(eMail)) {
@@ -78,9 +82,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             assertEquals(SC_ACCEPTED, createResponse.getStatusCode());
 
             response = createResponse;
-            Integer id = extractUserId(createResponse);
-
-            waitUntilUserSuccessfullyCreated(id, cookie);
+            Integer id = extractIdFromLocation(createResponse);
 
             currentUserId = id;
             currentUserDto = dto;
@@ -92,30 +94,21 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUser() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/users/" + currentUserId);
+                        delete("/" + currentUserId);
 
         userPool.remove(currentUserId);
     }
 
     @And("в заголовке Location передает ID созданного пользователя")
-    public Integer extractLocation() {
-        String header = response.getHeader("Location");
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
-
-        while (matcher.find()) {
-            currentUserId = Integer.parseInt(matcher.group());
-        }
-
-        assertNotNull(currentUserId);
-        return currentUserId;
+    public void extractUserIdFromLocation() {
+        currentUserId = extractIdFromLocation();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
     public void getAllUsersSorted(String sortingType, String sortingDirection) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/users?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
+                        get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
     }
 
     @And("В ответе есть пункт users")
@@ -126,9 +119,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(users.size() >= 2);
     }
 
-    @Then("Данные отсортированы по {string} и {string}")
-    public void isUsersSorted(String sortingType, String sortingDirection) {
-        List<String> sorted = jsonPath.getList("_embedded.users." + sortingType);
+    @Then("Данные {string} отсортированы по {string} и {string}")
+    public void isUsersSorted(String checkType, String sortingType, String sortingDirection) {
+        List<String> sorted = jsonPath.getList(String.format("_embedded.%s.%s", checkType, sortingType));
         for (int i = 1; i < sorted.size(); i++) {
             if (sortingDirection.equals("asc")) {
                 assertTrue(sorted.get(i - 1).compareTo(sorted.get(i)) < 1);
@@ -142,47 +135,26 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void getExactUser() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/users/" + currentUserId);
+                        get("/" + currentUserId);
     }
 
     @When("Администратор делает запрос на всех пользователей")
     public void getAllUsers() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/users?size=1000");
+                        get("/?size=1000");
     }
-
 
     @When("Администратор делает постраничный запрос на всех пользователей")
     public void getAllUsersPaginated() {
         getAllUsers();
         jsonPath = response.jsonPath();
-        usersCount = jsonPath.getList("_embedded.users.id").size();
+        entityCount = jsonPath.getList("_embedded.users.id").size();
     }
 
-    @And("Количество страниц пропорционально {string}")
-    public void checkPagesCount(String usersPerPage) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/users?size=" + usersPerPage);
-        jsonPath = response.jsonPath();
-
-        double usersPerPageDouble = Integer.parseInt(usersPerPage);
-        int estimatedPages = (int) Math.ceil(usersCount / usersPerPageDouble);
-        totalPages = jsonPath.get("page.totalPages");
-
-        assertEquals(totalPages, estimatedPages);
-    }
-
-    @Then("Поля пользователя совпадают с переданными {string}, {string}, {string}")
-    public void isDataCorrect(String userName, String userSurname, String userEmail) {
-        jsonPath = response.jsonPath();
-
-        assertEquals(jsonPath.get("name"), replaceString(userName));
-        assertEquals(jsonPath.get("surName"), replaceString(userSurname));
-        assertEquals(jsonPath.get("email"), replaceString(userEmail));
-
-        userPool.put(currentUserId, currentUserDto);
+    @And("Количество страниц пользователей пропорционально {string}")
+    public void checkUserPagesCount(String entitiesPerPage) {
+        super.checkPagesCount(entitiesPerPage);
     }
 
     @Then("Поля пользователя совпадают с переданными")
@@ -196,18 +168,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userPool.put(currentUserId, currentUserDto);
     }
 
-    @And("На всех страницах есть пользователи {string}")
-    public void isUsersOnPages(String usersPerPage) {
-        for (int i = 0; i < totalPages; i++) {
-            response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get(String.format("/users?size=%s&page=%s", usersPerPage, i));
-
-            jsonPath = response.jsonPath();
-            List<String> usersEmails = response.jsonPath().getList("_embedded.users.email");
-
-            assertNotEquals(0, usersEmails.size());
-        }
+    @And("На всех страницах пользователей {string} есть {string}")
+    public void isUsersOnPages(String checkType, String entitiesPerPage) {
+        super.isSomethingOnPages(checkType, entitiesPerPage);
     }
 
     @Given("Существуют пользователи")
@@ -229,7 +192,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        post("/users");
+                        post("");
     }
 
     private boolean isUserExistInPool(String eMail) {
@@ -251,45 +214,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
-                        post("/users");
+                        post("");
 
         return response;
-    }
-
-    private void waitUntilUserSuccessfullyCreated(Integer id, Cookie cookie) throws InterruptedException {
-        System.out.println("check status user: " + id);
-
-        int currentAttempt = 0;
-        do {
-            System.out.println("attempt: " + currentAttempt);
-            currentAttempt++;
-
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/users/" + id);
-
-            if (response.statusCode() == SC_OK) {
-                return;
-            }
-
-            sleep(RETRY_DELAY);
-        } while (currentAttempt < MAX_RETRY_ATTEMPT);
-
-        throw new RuntimeException("User was not created: " + id);
-    }
-
-    private Integer extractUserId(Response response) {
-        String header = response.getHeader("Location");
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
-
-        Integer id = null;
-        while (matcher.find()) {
-            id = Integer.parseInt(matcher.group());
-        }
-
-        assertNotNull(id);
-
-        return id;
     }
 }

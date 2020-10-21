@@ -13,8 +13,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.OrganizationStepsDefinitions.currentOrgDto;
-import static ru.mycrg.acceptance.OrganizationStepsDefinitions.currentOrgId;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.currentOrgDto;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.currentOrgId;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
@@ -44,17 +44,6 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NOT_FOUND);
-    }
-
-    @And("На Геосервере создан пользователь {string}")
-    public void checkGeoserverUser(String userName) {
-        getBaseRequestWithCurrentCookie()
-                .when().
-                get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("users.findAll { it.enabled == true }.userName", hasItems(replaceString(userName)));
     }
 
     @And("На Геосервере создан пользователь")

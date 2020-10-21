@@ -1,22 +1,20 @@
-package ru.mycrg.acceptance;
+package ru.mycrg.acceptance.auth_service;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
@@ -24,12 +22,11 @@ import static org.junit.Assert.*;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
-    public static int MAX_RETRY_ATTEMPT = 50;
-    public static int RETRY_DELAY = 6000;
+    public static final int MAX_RETRY_ATTEMPT = 50;
+    public static final int RETRY_DELAY = 6000;
 
     public static Integer currentOrgId;
     public static OrganizationCreateDto currentOrgDto;
-
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
@@ -39,16 +36,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("в заголовке Location передает ID созданной организации")
-    public void extractLocation() {
-        String header = response.getHeader("Location");
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
-
-        while (matcher.find()) {
-            currentOrgId = Integer.parseInt(matcher.group());
-        }
-
-        assertNotNull(currentOrgId);
+    public void extractOrgIdFromLocation() {
+        currentOrgId = extractIdFromLocation();
     }
 
     @When("Проверяем создана ли организация")
@@ -112,7 +101,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             assertEquals(SC_ACCEPTED, createResponse.getStatusCode());
 
             response = createResponse;
-            Integer id = extractOrgId(createResponse);
+            Integer id = extractIdFromLocation(createResponse);
 
             Cookie cookie = new AuthorizationStepDefinitions().getRootAuthority();
             waitUntilOrganizationSuccessfullyCreated(id, cookie);
@@ -130,26 +119,10 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         deleteOrganization(currentOrgId);
     }
 
-    @When("Посылается запрос на удаление организации {string}")
-    public void deleteOrganizationByEmail(String eMail) {
-        Integer orgId = null;
-        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
-            Integer id = entry.getKey();
-            OrganizationCreateDto dto = entry.getValue();
-            if (replaceString(eMail).equals(dto.getOwner().getEmail())) {
-                orgId = id;
-            }
-        }
-
-        assertNotNull(orgId);
-
-        deleteOrganization(orgId);
-    }
-
     @When("Посылается запрос на удаление чужой организации")
     public void deleteOtherOrganizationByEmail() {
         Integer orgId = null;
-        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
             Integer id = entry.getKey();
             OrganizationCreateDto dto = entry.getValue();
             if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
@@ -184,42 +157,11 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, SC_OK);
     }
 
-    @And("В ответе передает orgId")
-    public void isOrgInResponse() {
-        currentOrgId = jsonPath.get("orgId");
-    }
-
-    @When("Администратор запрашивает данные об организации с orgId  = {int}")
-    public void checkSomeOrg(int orgId) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations/" + orgId);
-    }
-
     @When("Пользователь делает запрос на все организации")
     public void checkAllOrganizationsByRoot() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/organizations/");
-    }
-
-    @When("Администратор запрашивает данные об организации {string}")
-    public void checkOrgInfo(String ownerEmail) {
-        Integer orgId = null;
-        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
-            Integer id = entry.getKey();
-            OrganizationCreateDto dto = entry.getValue();
-            if (replaceString(ownerEmail).equals(dto.getOwner().getEmail())) {
-                orgId = id;
-                break;
-            }
-        }
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations/" + orgId);
-
-        assertNotNull(orgId);
     }
 
     @And("Представление организации корректно")
@@ -238,27 +180,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("users"));
     }
 
-    @Then("Представление всех организаций корректно")
-    public void areOrgDataPresentedCorrectly() {
-        jsonPath = response.jsonPath();
-
-        Map<String, String> presentedData = jsonPath.getMap("");
-        Map<String, String> links = jsonPath.getMap("_links");
-        Map<String, String> page = jsonPath.getMap("page");
-
-        assertTrue(presentedData.containsKey("_embedded"));
-        assertTrue(presentedData.containsKey("_links"));
-        assertTrue(presentedData.containsKey("page"));
-
-        assertTrue(links.containsKey("self"));
-        assertTrue(links.containsKey("profile"));
-
-        assertTrue(page.containsKey("size"));
-        assertTrue(page.containsKey("totalElements"));
-        assertTrue(page.containsKey("totalPages"));
-        assertTrue(page.containsKey("number"));
-    }
-
     @When("Отправляется повторный запрос на создание организации")
     public void sendAgainCreateOrganizationRequest() {
         createOrganization(currentOrgDto);
@@ -274,7 +195,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор запрашивает данные о чужой организации")
     public void checkOtherOrgInfo() {
         Integer orgId = null;
-        for (Map.Entry<Integer, OrganizationCreateDto> entry : orgPool.entrySet()) {
+        for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
             Integer id = entry.getKey();
             OrganizationCreateDto dto = entry.getValue();
             if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
@@ -290,18 +211,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(orgId);
     }
 
-    private void checkOrgData(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-
-        JsonPath jsonPath = response.jsonPath();
-
-        assertEquals(jsonPath.get("name"), replaceString(data.get(0)));
-        assertEquals(jsonPath.get("phone"), replaceString(data.get(1)));
-        assertEquals(jsonPath.getList("users.name").get(0), replaceString(data.get(2)));
-        assertEquals(jsonPath.getList("users.surName").get(0), replaceString(data.get(3)));
-        assertEquals(jsonPath.getList("users.email").get(0), replaceString(data.get(4)));
-    }
-
     private void checkStatusCodeIs(Response response, int code) {
         response.then()
                 .assertThat().
@@ -314,21 +223,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                                                 replaceString(data.get(4)), replaceString(data.get(5)));
 
         return new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)), owner);
-    }
-
-    private Integer extractOrgId(Response response) {
-        String header = response.getHeader("Location");
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
-
-        Integer id = null;
-        while (matcher.find()) {
-            id = Integer.parseInt(matcher.group());
-        }
-
-        assertNotNull(id);
-
-        return id;
     }
 
     private Response createOrganization(OrganizationCreateDto dto) {
@@ -397,6 +291,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete("/organizations/" + orgId);
+
+        orgPool.remove(currentOrgId);
     }
 
     private boolean takeAnyOrgFromPoll() {

@@ -1,0 +1,69 @@
+Feature: Выборка подложек
+
+  Background: Проверка организации
+    Given Существует организация
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    When Авторизируемся владельцем организации
+
+  Scenario: Проверка представления всех подложек организации
+    When Пользователь делает запрос на все подложки организации
+    Then Общее представление корректно
+
+  Scenario Outline: Проверка представления созданной подложки
+    When Существует подложка
+      | <name> | <title> | <thumbnailUrn> | <type> |
+    Then Сервер передает ID созданной подложки
+    When Пользователь делает запрос на указанную подложку
+    And Представление подложки корректно
+    Examples:
+      | name | title     | thumbnailUrn                     | type |
+      | wmts | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS |
+
+  Scenario Outline: Выборка всех подложек c сортировкой (<sorting factor>|<sorting direction>)
+    When Существует подложка
+      | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
+    When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все подложки
+    Then Сервер отвечает со статус-кодом 200
+    And В ответе есть пункт "basemaps"
+    And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "basemaps"
+    Examples:
+      | name   | title     | thumbnailUrn                     | type | url                                              | layerName | style  | projection  | format    | size | resolution | matrixIDs | sorting factor | sorting direction |
+      | wmts1  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | name           | asc               |
+      | wmts2  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | title          | asc               |
+      | wmts3  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | thumbnailUrn   | asc               |
+      | wmts4  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | type           | asc               |
+      | wmts5  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | url            | asc               |
+      | wmts6  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | layerName      | asc               |
+      | wmts7  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | style          | asc               |
+      | wmts8  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | projection     | asc               |
+      | wmts9  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | format         | asc               |
+      | wmts10 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | resolution     | asc               |
+      | wmts11 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | matrixIds      | asc               |
+      | wmts12 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | createdAt      | asc               |
+      | wmts13 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | lastModified   | asc               |
+      | wmts14 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | name           | desc              |
+      | wmts15 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | title          | desc              |
+      | wmts16 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | thumbnailUrn   | desc              |
+      | wmts17 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | type           | desc              |
+      | wmts18 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | url            | desc              |
+      | wmts19 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | layerName      | desc              |
+      | wmts20 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | style          | desc              |
+      | wmts21 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | projection     | desc              |
+      | wmts22 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | format         | desc              |
+      | wmts23 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | resolution     | desc              |
+      | wmts24 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | matrixIds      | desc              |
+      | wmts25 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | createdAt      | desc              |
+      | wmts26 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | lastModified   | desc              |
+
+  Scenario Outline: Выборка всех подложек постранично (<baseMapsPerPage> page/pages)
+    When Существует подложка
+      | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
+    When Администратор делает постраничный запрос на все подложки
+    Then Сервер отвечает со статус-кодом 200
+    And Количество страниц подложек пропорционально "<baseMapsPerPage>"
+    And На всех страницах подложек "basemaps" есть "<baseMapsPerPage>"
+    Examples:
+      | name  | title     | thumbnailUrn                     | type | url                                              | layerName | style  | projection  | format    | size | resolution | matrixIDs | baseMapsPerPage |
+      | wmts1 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | 1               |
+      | wmts2 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | 2               |
+      | wmts3 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | 3               |

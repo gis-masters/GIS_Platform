@@ -7,20 +7,22 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.mycrg.acceptance.data_service.dto.BaseMapCreateDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.given;
 import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseStepsDefinitions {
 
@@ -35,11 +37,12 @@ public class BaseStepsDefinitions {
     public static JsonPath jsonPath;
 
     public static int totalPages;
-    public static String sessionId = UUID.randomUUID().toString().substring(0, 7);
+    public static int entityCount;
 
     public static Map<Integer, OrganizationCreateDto> orgPool = new HashMap<>();
     public static Map<Integer, UserCreateDto> userPool = new HashMap<>();
     public static Map<Integer, GroupCreateDto> usersGroupPool = new HashMap<>();
+    public static Map<Integer, BaseMapCreateDto> baseMapsPool = new HashMap<>();
 
     public void setup() {
         testServerHost = System.getProperty("env.HOST");
@@ -73,14 +76,48 @@ public class BaseStepsDefinitions {
                         cookie(cookie);
     }
 
-    public static String replaceString(String input) {
+    public Integer extractIdFromLocation() {
+        String header = response.getHeader("Location");
+        Pattern pattern = Pattern.compile("\\d+$");
+        Matcher matcher = pattern.matcher(header);
+
+        Integer id = null;
+
+        while (matcher.find()) {
+            id = Integer.parseInt(matcher.group());
+        }
+
+        assertNotNull(id);
+        return id;
+    }
+
+    public Integer extractIdFromLocation(Response response) {
+        String header = response.getHeader("Location");
+        Pattern pattern = Pattern.compile("\\d+$");
+        Matcher matcher = pattern.matcher(header);
+
+        Integer id = null;
+        while (matcher.find()) {
+            id = Integer.parseInt(matcher.group());
+        }
+
+        assertNotNull(id);
+
+        return id;
+    }
+
+    public String replaceString(String input) {
         String[] params = input.split("_");
         String type = params[0];
         int length;
 
         try {
-            length = Integer.parseInt(params[1]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            if (params.length == 1) {
+                return input;
+            } else {
+                length = Integer.parseInt(params[1]);
+            }
+        } catch (NumberFormatException e) {
             length = 0;
         }
 
@@ -90,9 +127,35 @@ public class BaseStepsDefinitions {
             case "NUMBER":
                 return random(length, false, true);
             case "EMAIL":
-                return String.format("%s@test.com", random((length - 9), true, true).toLowerCase());
+                return String.format("%s@t", random((length - 2), true, true).toLowerCase());
             default:
                 return input;
+        }
+    }
+
+    public void checkPagesCount(String entitiesPerPage) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/?size=" + entitiesPerPage);
+        jsonPath = response.jsonPath();
+
+        double entitiesPerPageDouble = Integer.parseInt(entitiesPerPage);
+        int estimatedPages = (int) Math.ceil(entityCount / entitiesPerPageDouble);
+        totalPages = jsonPath.get("page.totalPages");
+
+        assertEquals(totalPages, estimatedPages);
+    }
+
+    public void isSomethingOnPages(String checkType, String entitiesPerPage) {
+        for (int i = 0; i < totalPages; i++) {
+            response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
+
+            jsonPath = response.jsonPath();
+            List<String> entitiesIds = response.jsonPath().getList(String.format("_embedded.%s.id", checkType));
+
+            assertNotEquals(0, entitiesIds.size());
         }
     }
 
@@ -106,6 +169,9 @@ public class BaseStepsDefinitions {
 
         String test_0 = replaceString("STRING_0");
         assertTrue(test_0.isEmpty());
+
+        String email_3 = replaceString("EMAIL_3");
+        assertEquals(3, email_3.length());
 
         String email_20 = replaceString("EMAIL_20");
         assertEquals(20, email_20.length());
