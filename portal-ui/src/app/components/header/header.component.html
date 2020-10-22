@@ -1,0 +1,12 @@
+<div class="header">
+  <div class="header__logo">
+    <img src="../../../assets/images/logo.svg" alt="logo" height="41" width="86" />
+  </div>
+  <div *ngIf="envPlatform === 'conv'" class="header__buttons">
+    <button class="header__button header__button_type_how" mat-raised-button (click)="how()">Как это работает?</button>
+    <button class="header__button header__button_type_login" mat-raised-button (click)="login()">Войти</button>
+    <button class="header__button header__button_type_reg" mat-raised-button (click)="register()">
+      Зарегистрироваться
+    </button>
+  </div>
+</div>

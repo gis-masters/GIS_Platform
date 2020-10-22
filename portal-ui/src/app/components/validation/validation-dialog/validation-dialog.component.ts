@@ -11,7 +11,7 @@ import { CrgLayer } from '../../../services/crg/projects.models';
   styleUrls: ['./validation-dialog.component.css']
 })
 export class ValidationDialogComponent {
-  @ViewChild(MatSelectionList, { static: false }) layers: MatSelectionList;
+  @ViewChild(MatSelectionList) layers: MatSelectionList;
   @Input() data: ValidationDialogData;
 
   filterTerm: string;

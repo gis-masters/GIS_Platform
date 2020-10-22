@@ -12,25 +12,25 @@ import { ProcessStatus, ProcessType } from '../../../services/crg/models';
 import { Toast } from '../../Toast/Toast';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
-
 @Component({
   selector: 'crg-report-sidebar',
   templateUrl: './report-sidebar.component.html',
   styleUrls: ['./report-sidebar.component.css']
 })
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() isActive: boolean;
   layers: CrgLayer[];
-
+  
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
-
+  
   step = 0;
   isValidationInited = false;
-
+  
   isEditMode = false;
   objectsToEdit: ObjectDto[] = [];
-
+  
   commonProgress = 0;
-
+  
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger, private validationService: ValidationService) {

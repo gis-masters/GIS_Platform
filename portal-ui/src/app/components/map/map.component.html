@@ -10,7 +10,12 @@
   </crg-edit-features-sidebar>
   <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isFeaturesSidebarActive">
   </crg-features-list-sidebar>
-  <crg-report-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isBugReportSidebarActive"> </crg-report-sidebar>
+  <crg-report-sidebar
+    [class]="cn('bar', { dir: 'right' })"
+    *ngIf="isBugReportSidebarActive"
+    [isActive]="isBugReportSidebarActive"
+  >
+  </crg-report-sidebar>
 
   <crg-attributes-bar [class]="cn('bar', { dir: 'bottom' })" *ngIf="isAttrSidebarActive"> </crg-attributes-bar>
 </div>

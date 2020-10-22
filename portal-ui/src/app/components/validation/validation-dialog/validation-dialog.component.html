@@ -1,32 +1,36 @@
 <div *ngIf="data">
   <mat-form-field style="width: 100%">
-    <input matInput type="text" placeholder="Фильтр" [(ngModel)]="filterTerm">
-    <button mat-button *ngIf="filterTerm" matSuffix mat-icon-button aria-label="Clear" (click)="filterTerm=''">
+    <input matInput type="text" placeholder="Фильтр" [(ngModel)]="filterTerm" />
+    <button mat-button *ngIf="filterTerm" matSuffix mat-icon-button aria-label="Clear" (click)="filterTerm = ''">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
 
   <div class="select-all">
     <mat-checkbox [labelPosition]="'before'" (click)="selectAll()" [(ngModel)]="isAllSelected">
-      {{isAllSelected ? 'Снять выделение' : 'Выделить всё'}}
+      {{ isAllSelected ? 'Снять выделение' : 'Выделить всё' }}
     </mat-checkbox>
   </div>
   <mat-divider></mat-divider>
-  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange()"
-                      dense style="height: 330px">
-    <mat-list-option *ngFor="let layer of data.layers | filterLayers:filterTerm" [value]="layer">
+  <mat-selection-list class="scroll" #fizLayers (selectionChange)="onChange()" dense style="height: 255px">
+    <mat-list-option *ngFor="let layer of data.layers | filterLayers: filterTerm" [value]="layer">
       <span class="cut-text">
-        {{handleTitle(layer)}}
+        {{ handleTitle(layer) }}
       </span>
     </mat-list-option>
   </mat-selection-list>
   <mat-divider></mat-divider>
 
-  <button mat-raised-button color="primary" class="float-right mat-primary" style="margin-top: 10px"
-          [disabled]="fizLayers.selectedOptions.selected.length < 1"
-          (click)="initValidation()">Проверить</button>
+  <button
+    mat-raised-button
+    color="primary"
+    class="float-right mat-primary"
+    style="margin-top: 10px"
+    [disabled]="fizLayers.selectedOptions.selected.length < 1"
+    (click)="initValidation()"
+  >
+    Проверить
+  </button>
 </div>
 
-<div *ngIf="!data || !data.layers">
-  Нет данных
-</div>
+<div *ngIf="!data || !data.layers">Нет данных</div>

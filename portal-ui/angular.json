@@ -25,16 +25,9 @@
             "extractLicenses": true,
             "buildOptimizer": false,
             "vendorChunk": true,
-            "aot": false,
+            "aot": true,
             "extractCss": true,
             "namedChunks": false,
-
-            "lazyModules": [
-              "./src/app/components/header/header@conv.module",
-              "./src/app/components/header/header@simf.module",
-              "./src/app/components/home/home@conv.module",
-              "./src/app/components/home/home@simf.module"
-            ],
 
             "assets": [
               "src/assets",
@@ -43,7 +36,7 @@
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "./node_modules/primeng/resources/themes/nova-light/theme.css",
+              "./node_modules/primeng/resources/themes/nova-alt/theme.css",
               "./node_modules/primeng/resources/primeng.min.css",
               "./node_modules/primeicons/primeicons.css",
               "./node_modules/primeflex/primeflex.css",
@@ -53,67 +46,118 @@
           },
           "configurations": {
             "convProduction": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convProd.json"
               }]
             },
             "convTest": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convTest.json"
               }]
             },
             "convStaging": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convStaging.json"
               }]
             },
             "convLocal": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": false,
               "sourceMap": true,
-              "aot": false,
               "buildOptimizer": false,
               "extractCss": false
             },
             "convDev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convDev.json"
               }],
               "optimization": false,
               "sourceMap": true,
-              "aot": false,
               "buildOptimizer": false,
               "extractCss": false
             },
             "simfProduction": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfProd.json"
               }]
             },
             "simfTest": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfTest.json"
               }]
             },
             "simfStaging": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfStaging.json"
               }]
             },
             "simfDev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfDev.json"
               }],
               "optimization": false,
               "sourceMap": true,
-              "aot": false,
               "buildOptimizer": false,
               "extractCss": false
             }

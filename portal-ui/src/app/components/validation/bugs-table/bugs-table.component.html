@@ -1,11 +1,12 @@
 <div *ngIf="data.results.length < 1 && data.validated && !isLoadingResults">
   <div *ngIf="data.status === 'DONE'">
-    <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
-        *ngIf="!!data.validated">Ошибок нет</h6>
-    <h6 class="float-left" style="font-size: inherit; padding-left: 10px"
-        *ngIf="!data.validated">Проверка данных не выполнялась</h6>
-    <h6 class="float-right" style="font-size: inherit; padding-right: 10px"
-        *ngIf="!!data.lastValidated">Время последней проверки: {{data.lastValidated}}</h6>
+    <h6 class="float-left" style="font-size: inherit; padding-left: 10px" *ngIf="!!data.validated">Ошибок нет</h6>
+    <h6 class="float-left" style="font-size: inherit; padding-left: 10px" *ngIf="!data.validated">
+      Проверка данных не выполнялась
+    </h6>
+    <h6 class="float-right" style="font-size: inherit; padding-right: 10px" *ngIf="!!data.lastValidated">
+      Время последней проверки: {{ data.lastValidated }}
+    </h6>
   </div>
   <div *ngIf="data.status === 'ERROR'">
     <h6 class="float-left" style="font-size: inherit">Ошибка проверки данных</h6>
@@ -19,10 +20,14 @@
 
   <div [hidden]="data.results?.length === 0">
     <div class="validation-results-table-container scroll">
-
-      <table mat-table [dataSource]="data.results" class="example-table" multiTemplateDataRows
-             matSort matSortActive="objectid">
-
+      <table
+        mat-table
+        [dataSource]="data.results"
+        class="example-table"
+        multiTemplateDataRows
+        matSort
+        matSortActive="objectid"
+      >
         <ng-container matColumnDef="objectid">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-left: 34px">ID</th>
           <td mat-cell *matCellDef="let element">
@@ -32,23 +37,25 @@
             <button mat-icon-button (click)="editObject($event, element.objectId)">
               <mat-icon style="color: darkgrey">edit</mat-icon>
             </button>
-            {{element.objectId}}
+            {{ element.objectId }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="classid">
           <th mat-header-cell *matHeaderCellDef style="padding-left: 10px">Название</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{element.title}}</td>
+          <td mat-cell *matCellDef="let element" style="padding-left: 10px">{{ element.title }}</td>
         </ng-container>
 
         <ng-container matColumnDef="violationsCounter">
           <th mat-header-cell *matHeaderCellDef>Ошибок</th>
           <td mat-cell *matCellDef="let element">
             <span class="violations-counter">
-              {{element.propertyViolations.length + element.objectViolations.length}}
+              {{ element.propertyViolations.length + element.objectViolations.length }}
             </span>
             <div class="float-right" style="color: grey">
-              <button mat-icon-button *ngIf="element != expandedElement"><mat-icon>keyboard_arrow_down</mat-icon></button>
+              <button mat-icon-button *ngIf="element != expandedElement">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
               <button mat-icon-button *ngIf="element == expandedElement"><mat-icon>keyboard_arrow_up</mat-icon></button>
             </div>
           </td>
@@ -57,23 +64,20 @@
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
         <ng-container matColumnDef="expandedDetail">
           <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-            <div class="example-element-detail"
-                 [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-              <crg-violations-view [data]="element"
-                                   [layer]="crgLayer"
-                                   style="width: 100%"></crg-violations-view>
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <crg-violations-view [data]="element" [layer]="crgLayer" style="width: 100%"></crg-violations-view>
             </div>
           </td>
         </ng-container>
 
-        <tr mat-header-row
-            *matHeaderRowDef="displayedColumns; sticky: true"
-            style="height: 20px"></tr>
-        <tr mat-row *matRowDef="let element; columns: displayedColumns;"
-            class="example-element-row"
-            [class.example-expanded-row]="expandedElement === element"
-            (click)="expandedElement = expandedElement === element ? null : element">
-        </tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="height: 20px"></tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: displayedColumns"
+          class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element"
+        ></tr>
 
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
       </table>

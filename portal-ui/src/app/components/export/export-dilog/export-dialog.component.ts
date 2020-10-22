@@ -29,7 +29,7 @@ export enum ActionType {
   styleUrls: ['./export-dialog.component.css']
 })
 export class ExportDialogComponent implements OnDestroy {
-  @ViewChild(MatSelectionList, { static: false }) list: MatSelectionList;
+  @ViewChild(MatSelectionList) list: MatSelectionList;
 
   layers: CrgLayer[];
 

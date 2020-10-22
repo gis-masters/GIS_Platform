@@ -13,7 +13,7 @@
         <div class="row">
           <crg-loading *ngIf="isValidationInited" [percents]="commonProgress"></crg-loading>
 
-          <div class="h-100" style="width: 100%;">
+          <div class="h-100" style="width: 100%">
             <ng-container *ngIf="layers; else layersLoading">
               <mat-accordion class="validation_accordion">
                 <mat-expansion-panel
@@ -24,22 +24,22 @@
                 >
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      <div style="position: relative; top: 4px;">
-                        <mat-icon *ngIf="commonInfo.get(layer.internalName)?.totalViolations > 0" style="color: tomato;"
+                      <div style="position: relative; top: 4px">
+                        <mat-icon *ngIf="commonInfo.get(layer.internalName)?.totalViolations > 0" style="color: tomato"
                           >error</mat-icon
                         >
-                        <mat-icon *ngIf="!commonInfo.get(layer.internalName)?.validated" style="color: lightgrey;"
+                        <mat-icon *ngIf="!commonInfo.get(layer.internalName)?.validated" style="color: lightgrey"
                           >warning</mat-icon
                         >
-                        <mat-icon *ngIf="isDone(layer.internalName)" style="color: forestgreen;">done</mat-icon>
+                        <mat-icon *ngIf="isDone(layer.internalName)" style="color: forestgreen">done</mat-icon>
                       </div>
-                      <span style="padding-left: 10px;">{{ layer.title }} ({{ layer.geometryType }})</span>
+                      <span style="padding-left: 10px">{{ layer.title }} ({{ layer.geometryType }})</span>
                     </mat-panel-title>
 
                     <div class="float-right" *ngIf="!!commonInfo.get(layer.internalName)">
                       <div *ngIf="commonInfo.get(layer.internalName)?.totalViolations">
                         <mat-chip-list>
-                          <mat-chip style="color: tomato;">{{
+                          <mat-chip style="color: tomato">{{
                             commonInfo.get(layer.internalName)?.totalViolations
                           }}</mat-chip>
                         </mat-chip-list>
@@ -55,7 +55,7 @@
                     [isActive]="isActive"
                   ></crg-bugs-table>
 
-                  <mat-action-row style="padding: 0;">
+                  <mat-action-row style="padding: 0">
                     <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
                     <button mat-button *ngIf="index < layers.length - 1" color="primary" (click)="nextStep()">
                       Следующий
@@ -78,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div style="height: 70px; width: 100%;" *ngIf="!isEditMode"></div>
+    <div style="height: 70px; width: 100%" *ngIf="!isEditMode"></div>
 
     <div *ngIf="isEditMode">
       <crg-edit-bug-object [data]="objectsToEdit" (closeMe)="switchMode()"></crg-edit-bug-object>
