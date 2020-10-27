@@ -11,7 +11,6 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.projects.GeoserverProjectService;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
@@ -23,6 +22,7 @@ import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.UserDetails;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import java.time.LocalDateTime;
@@ -84,7 +84,9 @@ public class ProjectService {
      *
      * @param id             must not be null
      * @param authentication Authenticated principal info, must not be null
+     *
      * @return the entity with the given id.
+     *
      * @throws NotFoundException if entity not exist or user not have permissions.
      */
     @NotNull
@@ -119,9 +121,8 @@ public class ProjectService {
     }
 
     /**
-     * Обновление проекта.
-     * До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не меняя названия
-     * рабочей области на геосервере и схемы в БД.
+     * Обновление проекта. До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не
+     * меняя названия рабочей области на геосервере и схемы в БД.
      *
      * @param id          Идентификатор проекта.
      * @param projectName Новое название проекта.
@@ -169,7 +170,7 @@ public class ProjectService {
                     .createProject(savedProject.getInternalName(), orgId);
 
             projectRepository.save(savedProject);
-        } catch (GeoserverClientException e) {
+        } catch (HttpClientException e) {
             throw new ConflictException("Не удалось создать проект на геосервере", e.getCause());
         }
 
@@ -191,7 +192,7 @@ public class ProjectService {
 
             new GeoserverProjectService(getToken(authentication))
                     .deleteProject(project.getInternalName());
-        } catch (GeoserverClientException e) {
+        } catch (HttpClientException e) {
             throw new GisServiceException("Не удалось удалить проект на геосервере: " + projectId, e.getCause());
         } catch (Exception e) {
             throw new GisServiceException("Не удалось удалить проект: " + projectId, e.getCause());
@@ -209,7 +210,7 @@ public class ProjectService {
                 .filter(project -> {
                     final List<Permission> permissions = project.getPermissions();
                     boolean isExist = false;
-                    for (Permission permission : permissions) {
+                    for (Permission permission: permissions) {
                         if (permission.getPrincipalType().equals("user")) {
                             if (permission.getPrincipalId().equals(userId)) {
                                 isExist = true;
@@ -232,7 +233,6 @@ public class ProjectService {
 
         try {
             return oAuthClient.getToken(rootUserName, rootUserPass)
-                              .orElseThrow(() -> new GisServiceException("Error get root token"))
                               .getAccess_token();
         } catch (Exception e) {
             throw new GisServiceException("Error get root token");

@@ -18,15 +18,15 @@ public class DeleteWorkspaceAndStorage implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(DeleteWorkspaceAndStorage.class);
 
     @Override
-    public void execute(DelegateExecution execution) {
+    public void execute(DelegateExecution execution) throws Exception {
         final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
         List<String> workspaces = (List<String>) execution.getVariable(WORKSPACES_VAR_NAME);
 
         final WorkspacesService workspacesService = new WorkspacesService(accessToken);
-        workspaces.forEach(workspaceName -> {
+        for (String workspaceName: workspaces) {
             log.debug("try delete workspaceName: {}", workspaceName);
 
             workspacesService.deleteWorkspace(workspaceName);
-        });
+        }
     }
 }

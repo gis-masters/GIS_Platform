@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
 import ru.mycrg.geoserver_client.services.storage.DataStores;
 import ru.mycrg.geoserver_client.services.storage.StorageService;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
@@ -53,7 +53,7 @@ public class GeoserverStorageHandler extends AbstractImportChainItem {
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
             }
-        } catch (GeoserverClientException e) {
+        } catch (HttpClientException e) {
             String msg = "Не удалось проверить/создать хранилище на геосервере: " + featureDescription.getName();
             log.error(msg, e);
 

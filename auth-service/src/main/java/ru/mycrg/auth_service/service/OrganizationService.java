@@ -18,6 +18,7 @@ import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.OrganizationRemovedEvent;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.transaction.Transactional;
@@ -146,9 +147,11 @@ public class OrganizationService {
         String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
         String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
 
-        return oAuthClient
-                .getToken(rootUserName, rootUserPass)
-                .orElseThrow(() -> new AuthServiceException("Error get root token"))
-                .getAccess_token();
+        try {
+            return oAuthClient.getToken(rootUserName, rootUserPass)
+                              .getAccess_token();
+        } catch (HttpClientException e) {
+            throw new AuthServiceException("Error get root token");
+        }
     }
 }

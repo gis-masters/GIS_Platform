@@ -30,6 +30,8 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(GisServiceLayerHandler.class);
 
+    private final JSONObject json = new JSONObject();
+
     private final MqSender mqSender;
     protected final OkHttpClient httpClient;
     private final CrgProperties properties;
@@ -43,14 +45,13 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
         SchemaDto featureDescription = importTask.getFeatureDescription();
         String layerName = featureDescription.getName();
-        String title = featureDescription.getTitle() == null ? layerName : featureDescription.getTitle();
+        String title = featureDescription.getTitle() == null ? layerName: featureDescription.getTitle();
 
         log.debug("Add layer {} to crg-gis-service", layerName);
 
         String databaseName = importTask.getTargetResource().getDbName();
         String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
-        final JSONObject json = new JSONObject();
         json.put("title", title);
         json.put("internalName", layerName);
         json.put("schemaId", layerName);
@@ -73,7 +74,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
-                            new ImportMqResponse(importTask), TASK_DONE, "Готово", -1));
+                                              new ImportMqResponse(importTask), TASK_DONE, "Готово", -1));
 
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
@@ -84,7 +85,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
             mqSender.send(
                     new BaseMqProcessResponse(mqRequest,
-                            new ImportMqResponse(importTask), TASK_ERROR, "", msg));
+                                              new ImportMqResponse(importTask), TASK_ERROR, "", msg));
 
             if (previousImporter != null) {
                 previousImporter.rollback(importTask);
@@ -102,5 +103,4 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
             throw new ImportException("Failed build url to layers", e.getCause());
         }
     }
-
 }

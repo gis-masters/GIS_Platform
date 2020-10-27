@@ -20,9 +20,9 @@ public class DeleteRules implements JavaDelegate {
         List<String> workspaces = (List<String>) execution.getVariable(WORKSPACES_VAR_NAME);
 
         final RulesService rulesService = new RulesService(accessToken);
-        workspaces.forEach(workspaceName -> {
+        for (String workspaceName: workspaces) {
             rulesService.deleteResourceRule(workspaceName);
-        });
+        }
 
         rulesService.deleteRestRule(DEFAULT_ROLE_NAME + orgId);
         rulesService.deleteServiceRule(DEFAULT_ROLE_NAME + orgId);

@@ -156,7 +156,6 @@ public class ImportService extends BaseProcessService {
                               .clientSecret(clientSecret)
                               .build()
                               .getToken(rootUserName, rootUserPass)
-                              .orElseThrow(() -> new FailedException("Error get root token"))
                               .getAccess_token();
         } catch (Exception e) {
             throw new FailedException("Error get root token");

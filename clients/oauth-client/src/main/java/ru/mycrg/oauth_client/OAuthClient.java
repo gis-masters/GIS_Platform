@@ -1,0 +1,132 @@
+package ru.mycrg.oauth_client;
+
+import okhttp3.*;
+import ru.mycrg.http_client.*;
+import ru.mycrg.http_client.config.RetryConfig;
+import ru.mycrg.http_client.exceptions.HttpClientException;
+import ru.mycrg.http_client.handlers.BaseRequestHandler;
+import ru.mycrg.http_client.handlers.IHttpRequestHandler;
+import ru.mycrg.http_client.handlers.RetryableRequestHandler;
+
+import java.io.IOException;
+import java.net.URL;
+
+public class OAuthClient {
+
+    private static final String TOKEN_PATH = "/oauth/token";
+
+    private final HttpClient httpClient;
+
+    private final URL baseUrl;
+    private final String clientId;
+    private final String clientSecret;
+
+    public OAuthClient(URL url, String clientId, String clientSecret) {
+        this.baseUrl = url;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+
+        RetryConfig config = RetryConfig.builder()
+                                        .maxAttempts(10)
+                                        .waitDuration(60_000L)
+                                        .build();
+        IHttpRequestHandler requestHandler = new RetryableRequestHandler(
+                new BaseRequestHandler(new OkHttpClient()),
+                config
+        );
+
+        this.httpClient = new HttpClient(baseUrl, requestHandler);
+    }
+
+    public static OAuthClientBuilder builder() {
+        return new OAuthClientBuilder();
+    }
+
+    public JwtToken getToken(String userName, String password) throws HttpClientException {
+        try {
+            RequestBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("grant_type", "password")
+                    .addFormDataPart("username", userName)
+                    .addFormDataPart("password", password)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(new URL(baseUrl, TOKEN_PATH))
+                    .header("Authorization", Credentials.basic(clientId, clientSecret))
+                    .header("Content-type", "multipart/form-data")
+                    .header("cache-control", "no-cache")
+                    .post(body)
+                    .build();
+
+            return httpClient.handleRequest(request, JwtToken.class)
+                             .getBody();
+        } catch (Exception e) {
+            throw new HttpClientException("Ошибка получения токена: " + e.getMessage(), e.getCause());
+        }
+    }
+
+    /**
+     * Получить новую пару access and refresh ключей по refresh токену.
+     *
+     * @param refreshToken Рефреш токен.
+     *
+     * @return Новая пара ключей. {@link JwtToken}
+     */
+    public JwtToken refreshToken(String refreshToken) throws HttpClientException {
+        try {
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("grant_type", "refresh_token")
+                    .addFormDataPart("refresh_token", refreshToken)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(new URL(baseUrl, TOKEN_PATH))
+                    .addHeader("Authorization", "Basic YWRtaW46Z2Vvc2VydmVy")
+                    .post(requestBody)
+                    .build();
+
+            return httpClient.handleRequest(request, JwtToken.class)
+                             .getBody();
+        } catch (HttpClientException | IOException e) {
+            throw new HttpClientException("Ошибка рефреша токена: " + e.getMessage(), e.getCause());
+        }
+    }
+
+    public static class OAuthClientBuilder {
+
+        private URL url;
+        private String clientId;
+        private String clientSecret;
+
+        OAuthClientBuilder() {
+        }
+
+        public OAuthClientBuilder url(URL url) {
+            this.url = url;
+            return this;
+        }
+
+        public OAuthClientBuilder clientId(String clientId) {
+            this.clientId = clientId;
+            return this;
+        }
+
+        public OAuthClientBuilder clientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+            return this;
+        }
+
+        public OAuthClient build() {
+            return new OAuthClient(url, clientId, clientSecret);
+        }
+
+        public String toString() {
+            return "OAuthClient(" +
+                    "url=" + this.url + ", " +
+                    "clientId=" + this.clientId + ", " +
+                    "clientSecret=" + this.clientSecret + ")";
+        }
+    }
+}

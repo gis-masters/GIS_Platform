@@ -14,6 +14,8 @@ import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.wrapper.config.CrgProperties;
 
+import java.net.MalformedURLException;
+
 @SpringBootApplication
 @EnableTransactionManagement
 public class GeoServerWrapperApplication {
@@ -31,7 +33,7 @@ public class GeoServerWrapperApplication {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initGeoserverClient() {
+    public void initGeoserverClient() throws MalformedURLException {
         log.info("initGeoserverClient");
 
         GeoserverInfo geoserverInfo = GeoserverInfo.builder()

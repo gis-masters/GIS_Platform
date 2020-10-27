@@ -7,6 +7,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.gateway.config.CrgProperties;
 import ru.mycrg.gateway.domain.CookieHandler;
 import ru.mycrg.gateway.domain.TokenHandler;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 
@@ -54,12 +55,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             if (username == null || password == null) {
                 sendError(response);
             } else {
-                authClient
-                        .getToken(username, password)
-                        .ifPresentOrElse(
-                                jwtToken -> prepareResponse(response, jwtToken),
-                                () -> sendError(response)
-                        );
+                try {
+                    final JwtToken token = authClient.getToken(username, password);
+                    prepareResponse(response, token);
+                } catch (HttpClientException e) {
+                    sendError(response);
+                }
             }
         } else if (isAllowedPaths(request)) {
             log.debug("Request to: {} Method: {}. Allow without auth", request.getServletPath(), request.getMethod());
@@ -149,17 +150,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             }
 
             log.debug("Try use refresh token");
-            final JwtToken[] token = new JwtToken[1];
-            authClient
-                    .refreshToken(tokenModel.getRefresh_token())
-                    .ifPresent(newToken -> {
-                        authenticate(newToken, properties.getSecret());
+            final JwtToken newToken = authClient.refreshToken(tokenModel.getRefresh_token());
 
-                        token[0] = newToken;
-                    });
+            authenticate(newToken, properties.getSecret());
 
-            return token[0];
-        } catch (Exception e) {
+            return newToken;
+        } catch (HttpClientException e) {
             throw new RuntimeException("Failed refresh token");
         }
     }

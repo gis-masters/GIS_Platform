@@ -14,7 +14,7 @@ import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 public class DeleteUserAndRole implements JavaDelegate {
 
     @Override
-    public void execute(DelegateExecution execution) {
+    public void execute(DelegateExecution execution) throws Exception {
         final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
         final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
         List<String> users = (List<String>) execution.getVariable(USERS_VAR_NAME);
@@ -23,9 +23,9 @@ public class DeleteUserAndRole implements JavaDelegate {
 
         String roleName = DEFAULT_ROLE_NAME + orgId;
 
-        users.forEach(userName -> {
+        for (String userName: users) {
             usersAndRolesService.deleteUser(userName);
-        });
+        }
 
         usersAndRolesService.deleteRole(roleName);
     }

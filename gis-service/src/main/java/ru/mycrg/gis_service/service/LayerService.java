@@ -6,7 +6,6 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.geoserver_client.GeoserverClientResponse;
 import ru.mycrg.geoserver_client.services.layers.LayersService;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
@@ -20,6 +19,8 @@ import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.LayerRepository;
+import ru.mycrg.http_client.ResponseModel;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -93,20 +94,19 @@ public class LayerService {
     }
 
     public void delete(Layer layer, long projectId, Authentication authentication) {
-        String complexLayerName = getComplexLayerName(layer, projectId);
+        try {
+            String complexLayerName = getComplexLayerName(layer, projectId);
 
-        log.debug("Try delete layer: {}", complexLayerName);
+            log.debug("Try delete layer: {}", complexLayerName);
 
-        layerRepository.deleteLayerById(layer.getId());
+            layerRepository.deleteLayerById(layer.getId());
 
-        GeoserverClientResponse response = new LayersService(getToken(authentication)).delete(complexLayerName);
-        if (!response.isSuccessful()) {
-            if (response.isNotFound()) {
+            ResponseModel<Object> response = new LayersService(getToken(authentication)).delete(complexLayerName);
+            if (!response.isSuccessful()) {
                 log.warn("Layer not exist on geoserver");
-            } else {
-                log.debug("Geoserver response: {}", response.toString());
-                throw new GisServiceException("Не удалось удалить слой с геосервера. " + response.getMsg());
             }
+        } catch (HttpClientException e) {
+            throw new GisServiceException("Не удалось удалить слой с геосервера. ", e.getCause());
         }
     }
 
