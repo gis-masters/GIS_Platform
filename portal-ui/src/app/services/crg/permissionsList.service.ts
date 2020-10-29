@@ -78,7 +78,7 @@ class PermissionsListService {
 
       try {
         // если слой не указан (undefined), вернёт результат для самого проекта
-        layerPermissions = (await getPermissions(project, layer)) || [];
+        layerPermissions = await getPermissions(project, layer);
       } catch (e) {
         broken = true;
         let errText =

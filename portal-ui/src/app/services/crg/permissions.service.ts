@@ -1,6 +1,6 @@
 import { CrgLayer, CrgProject, CrgSource } from './projects.models';
 import { schemaService } from './schema.service';
-import { PageableResponse2 } from '../models';
+import { PageableResponse } from '../models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
 import { Toast } from '../../components/Toast/Toast';
@@ -151,11 +151,14 @@ export async function getPermissions(project: CrgProject, layer?: CrgLayer): Pro
   const url = await getPermissionsUrl(project, layer);
 
   if (layer) {
-    const response = await http.get<PageableResponse2<RoleAssignmentBody>>(url, { params: { size: '10000' } });
+    const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
+      params: { size: '10000' }
+    });
 
-    return response.content;
+    return response._embedded?.permissions || [];
   } else {
     const response = await http.get<RoleAssignmentBody[]>(url);
+
     return response;
   }
 }
