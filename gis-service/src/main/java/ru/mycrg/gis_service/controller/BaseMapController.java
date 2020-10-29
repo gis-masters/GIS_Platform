@@ -15,8 +15,8 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
-import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
@@ -82,5 +82,4 @@ public class BaseMapController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

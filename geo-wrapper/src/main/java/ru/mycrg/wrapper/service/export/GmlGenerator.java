@@ -44,7 +44,9 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
-    private WKBReader wkb = new WKBReader();
+    private static final String GML_ID = "gml:id";
+
+    private final WKBReader wkb = new WKBReader();
     private long idCounter = 1;
     private long totalRows = 0;
     private long processedRows = 0;
@@ -53,6 +55,9 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     private final FileService fileService;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
+
+    private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     public GmlGenerator(FileService fileService,
                         MqSender mqSender,
@@ -68,6 +73,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * Генерируем GML.
      *
      * @param mqRequest Запрос с данными
+     *
      * @return Ссылку на сгенерированный файл
      */
     public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
@@ -88,10 +94,11 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * Сгенерируем dom модели основного файла с данными и лога с ошибками, предварительно проведя валидацию.
      *
      * @param mqRequest Запрос
+     *
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    private GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
+    public GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
         try {
             MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
@@ -107,9 +114,8 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
             processedRows = 0;
             totalRows = calculateTotalRows(request);
-            request
-                    .getResourceProjections()
-                    .forEach(resource -> handleResource(mqRequest, docHolder, resource));
+            request.getResourceProjections()
+                   .forEach(resource -> handleResource(mqRequest, docHolder, resource));
 
             return docHolder;
         } catch (ParserConfigurationException e) {
@@ -118,16 +124,16 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     }
 
     private long calculateTotalRows(MqExportProcessRequest request) {
-        return request
-                .getResourceProjections().stream()
-                .mapToLong(baseDaoService::countTotalRows)
-                .sum();
+        return request.getResourceProjections().stream()
+                      .mapToLong(baseDaoService::countTotalRows)
+                      .sum();
     }
 
-    private void handleResource(BaseMqProcessRequest mqRequest, GmlDocumentHolder docHolder, ResourceProjection resource) {
+    private void handleResource(BaseMqProcessRequest mqRequest, GmlDocumentHolder docHolder,
+                                ResourceProjection resource) {
         MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
-        log.debug("Handle source: {}", resource.toString());
+        log.debug("Handle source: {}", resource);
 
         try {
             SchemaDto feature = getRuleByTableName(request.getFgistpRules(), resource.getTableName());
@@ -136,7 +142,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
             int offset = 0;
             while (true) {
                 List<Map<String, Object>> batch = baseDaoService.fetchBatch(jdbcTemplate, resource, PRIMARY_KEY,
-                        BATCH_SIZE, offset);
+                                                                            BATCH_SIZE, offset);
                 if (batch.isEmpty()) {
                     break;
                 }
@@ -147,16 +153,16 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
                     // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
                     feature.getProperties().stream()
-                            .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                            .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
-                                    propFromDb, simplePropertyDto));
+                           .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
+                           .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
+                                                                           propFromDb, simplePropertyDto));
 
                     // Отдельно обрабатываем геометрию
-                    Object crg_b_geometry = propFromDb.get("crg_b_geometry");
-                    if (crg_b_geometry != null) {
+                    Object crgBGeometry = propFromDb.get("crg_b_geometry");
+                    if (crgBGeometry != null) {
                         Geometry geometry;
                         try {
-                            geometry = wkb.read((byte[]) crg_b_geometry);
+                            geometry = wkb.read((byte[]) crgBGeometry);
 
                             generateGeometry(geometry, docHolder.getGmlDocument(), featureMember);
                         } catch (ParseException e) {
@@ -179,7 +185,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                 offset++;
             }
         } catch (Exception e) {
-            log.error("Ошибка при обработке ресурса: " + resource.toString(), e.getMessage());
+            log.error("Ошибка при обработке ресурса: {} / {}", resource, e.getMessage());
 
             BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
             mqResponse.setProgress(calculatePercent(processedRows, totalRows));
@@ -191,7 +197,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         }
     }
 
-    private void addObjectMember(GmlDocumentHolder docHolder, String id, String description, Object classid) {
+    private void addObjectMember(GmlDocumentHolder docHolder, String id, String description, Object classId) {
         Document gmlDocument = docHolder.getGmlDocument();
         Element objectCollection = docHolder.getObjectCollection();
 
@@ -207,7 +213,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         objectNode.appendChild(nameNode);
 
         Element classIdNode = gmlDocument.createElement("ClassID");
-        classIdNode.setTextContent(classid.toString());
+        classIdNode.setTextContent(classId.toString());
         objectNode.appendChild(classIdNode);
 
         objectCollection.appendChild(objectNode);
@@ -219,7 +225,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     private void fillFeatureMember(Element featureMember, Document document,
                                    Map<String, Object> dbProp, SimplePropertyDto targetProperty) {
         dbProp.forEach((key, value) -> {
-            if (targetProperty.getName().toLowerCase().equals(key.toLowerCase())) {
+            if (targetProperty.getName().toLowerCase().equalsIgnoreCase(key)) {
                 Element prop = document.createElement(key.toUpperCase());
                 if (value != null && !value.toString().isEmpty()) {
                     prop.setTextContent(getString(value));
@@ -238,28 +244,32 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     private void generateGeometry(Geometry geometry, Document document, Element featureMember) {
         String geometryType = geometry.getGeometryType();
 
+        final String geometrySRSName = "srsName";
+        final String geometrySRSValue = "urn:ogc:def:crs:EPSG:28406";
+        final String gmlCoordinates = "gml:coordinates";
+
         if ("Point".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:Point");
-            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
-            geometryElement.setAttribute("gml:id", generateId());
+            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
+            geometryElement.setAttribute(GML_ID, generateId());
             featureMember.appendChild(geometryElement);
 
-            Element coordinate = document.createElement("gml:coordinates");
+            Element coordinate = document.createElement(gmlCoordinates);
             coordinate.setTextContent(convertToString(geometry.getCoordinates()));
             geometryElement.appendChild(coordinate);
         } else if ("MultiLineString".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:LineString");
-            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
-            geometryElement.setAttribute("gml:id", generateId());
+            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
+            geometryElement.setAttribute(GML_ID, generateId());
             featureMember.appendChild(geometryElement);
 
-            Element coordinate = document.createElement("gml:coordinates");
+            Element coordinate = document.createElement(gmlCoordinates);
             coordinate.setTextContent(convertToString(geometry.getCoordinates()));
             geometryElement.appendChild(coordinate);
         } else if ("MultiPolygon".equals(geometryType)) {
             Element geometryElement = document.createElement("gml:Polygon");
-            geometryElement.setAttribute("srsName", "urn:ogc:def:crs:EPSG:28406");
-            geometryElement.setAttribute("gml:id", generateId());
+            geometryElement.setAttribute(geometrySRSName, geometrySRSValue);
+            geometryElement.setAttribute(GML_ID, generateId());
             featureMember.appendChild(geometryElement);
 
             Polygon onlyFirstGeometry = (Polygon) geometry.getGeometryN(0);
@@ -271,7 +281,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                 Element linearRing = document.createElement("gml:LinearRing");
                 exterior.appendChild(linearRing);
 
-                Element coordinate = document.createElement("gml:coordinates");
+                Element coordinate = document.createElement(gmlCoordinates);
                 coordinate.setTextContent(convertToString(exteriorRing.getCoordinates()));
                 linearRing.appendChild(coordinate);
             }
@@ -287,7 +297,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                     Element linearRing = document.createElement("gml:LinearRing");
                     interior.appendChild(linearRing);
 
-                    Element coordinate = document.createElement("gml:coordinates");
+                    Element coordinate = document.createElement(gmlCoordinates);
                     coordinate.setTextContent(convertToString(hole.getCoordinates()));
                     linearRing.appendChild(coordinate);
                 }
@@ -304,7 +314,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         documentHolder.getGmlFeatureCollection().appendChild(gmlFeatureMember);
 
         Element featureNode = document.createElement(name);
-        featureNode.setAttribute("gml:id", id);
+        featureNode.setAttribute(GML_ID, id);
 
         gmlFeatureMember.appendChild(featureNode);
 
@@ -312,12 +322,14 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     }
 
     /**
-     * Создаем xml document заполняем шапку, создаем корневую и основные ноды для основного файла
-     * и пустую ноду для лог файла.
+     * Создаем xml document заполняем шапку, создаем корневую и основные ноды для основного файла и пустую ноду для лог
+     * файла.
      *
      * @param docSchema Схема документов территориального планирования: <ul>
-     *                  <li> Doc.10501010100 – Положение о территориальном планировании в области федерального транспорта;
-     *                  <li> Doc.10502010100 – Положение о территориальном планировании в области федерального транспорта (в части трубопроводного транспорта)
+     *                  <li> Doc.10501010100 – Положение о территориальном планировании в области федерального
+     *                  транспорта;
+     *                  <li> Doc.10502010100 – Положение о территориальном планировании в области федерального
+     *                  транспорта (в части трубопроводного транспорта)
      *                  <li> Doc.10504010100 – Положение о территориальном планировании в области энергетики
      *                  <li> Doc.10505010100 – Положение о территориальном планировании в области высшего образования
      *                  <li> Doc.10506010100 – Положение о территориальном планировании в области здравоохранения
@@ -325,12 +337,12 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      *                  <li> Doc.20101010000 – Положение о территориальном планировании муниципального района
      *                  <li> Doc.20201010000 – Положение о территориальном планировании поселения
      *                  <li> Doc.20301010000 – Положение о территориальном планировании городского округа.<ul>
+     *
      * @return Обьект содержащий document и все ключевые ноды.
      */
     private GmlDocumentHolder createXmlDocument(String docSchema) throws ParserConfigurationException {
         log.debug("create xml document");
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document mainDoc = builder.newDocument();
 
@@ -345,7 +357,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         rootNode.appendChild(featureCollection);
 
         Element gmlFeatureCollection = mainDoc.createElement("gml:FeatureCollection");
-        gmlFeatureCollection.setAttribute("gml:id", "featureID1");
+        gmlFeatureCollection.setAttribute(GML_ID, "featureID1");
         featureCollection.appendChild(gmlFeatureCollection);
 
         // Base node
@@ -367,6 +379,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      *
      * @param document Сгенерированный xml
      * @param fileName Название файла
+     *
      * @return Путь к сохраненному файлу
      */
     private String saveXml(Document document, String fileName) throws ExportException {
@@ -375,7 +388,6 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         try {
             DOMSource source = new DOMSource(document);
 
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             StreamResult result = new StreamResult(fileService.getExportStoragePath() + separator + fileName);
             transformer.transform(source, result);
@@ -385,5 +397,4 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
         return fileService.getPathToFile(fileName);
     }
-
 }

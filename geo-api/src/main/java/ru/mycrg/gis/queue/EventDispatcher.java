@@ -16,7 +16,7 @@ import ru.mycrg.mq_queue_contract.enums.ProcessType;
 @Service
 public class EventDispatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(MqListener.class);
+    private static final Logger log = LoggerFactory.getLogger(EventDispatcher.class);
 
     private final ValidationService validationService;
     private final ImportService importService;
@@ -41,9 +41,12 @@ public class EventDispatcher {
 
     private Processable getHandler(ProcessType type) throws Exception {
         switch (type) {
-            case IMPORT:            return importService;
-            case EXPORT:            return exportService;
-            case VALIDATION:        return validationService;
+            case IMPORT:
+                return importService;
+            case EXPORT:
+                return exportService;
+            case VALIDATION:
+                return validationService;
             default:
                 throw new Exception("Not processable event type");
         }

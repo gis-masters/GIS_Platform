@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
 import java.util.Optional;
 
 @Component

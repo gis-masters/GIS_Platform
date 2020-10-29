@@ -8,6 +8,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class StringDecoder {
 
+    private StringDecoder() {
+        throw new IllegalStateException("Utility class");
+    }
+
     @NotNull
     public static String decode(@NotNull String text) {
         char[] chars = text.toCharArray();
@@ -23,8 +27,8 @@ public class StringDecoder {
     }
 
     private static boolean isNeedDecode(char[] chars) {
-        for (int i = 0; i < chars.length; i++) {
-            if (LATIN_1_SUPPLEMENT.equals(Character.UnicodeBlock.of(chars[i]))) {
+        for (char aChar: chars) {
+            if (LATIN_1_SUPPLEMENT.equals(Character.UnicodeBlock.of(aChar))) {
                 return true;
             }
         }

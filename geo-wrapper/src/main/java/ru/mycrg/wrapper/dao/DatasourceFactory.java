@@ -17,7 +17,7 @@ public class DatasourceFactory {
 
     private static final Logger log = LoggerFactory.getLogger(DatasourceFactory.class);
 
-    private Map<String, HikariDataSource> dataSources = new HashMap<>();
+    private final Map<String, HikariDataSource> dataSources = new HashMap<>();
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;
@@ -26,29 +26,6 @@ public class DatasourceFactory {
     public DatasourceFactory(Environment environment, JdbcTemplate jdbcTemplate) {
         this.environment = environment;
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    synchronized
-    public HikariDataSource getDatasource(String dbName) {
-        log.trace("Try get datasource for DB: {}", dbName);
-
-        if (dataSources.containsKey(dbName)) {
-            log.trace("Get from pool");
-
-            return dataSources.get(dbName);
-        } else {
-            log.debug("Try create new dataSource");
-
-            HikariDataSource newDataSource = new HikariDataSource();
-            newDataSource.setJdbcUrl(getConnectionUrl(dbName));
-            newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
-            newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
-            newDataSource.setMaximumPoolSize(2);
-
-            dataSources.put(dbName, newDataSource);
-
-            return newDataSource;
-        }
     }
 
     public JdbcTemplate getInitialJdbcTemplate() {
@@ -70,6 +47,28 @@ public class DatasourceFactory {
             }
 
             dataSources.remove(name);
+        }
+    }
+
+    private synchronized HikariDataSource getDatasource(String dbName) {
+        log.trace("Try get datasource for DB: {}", dbName);
+
+        if (dataSources.containsKey(dbName)) {
+            log.trace("Get from pool");
+
+            return dataSources.get(dbName);
+        } else {
+            log.debug("Try create new dataSource");
+
+            HikariDataSource newDataSource = new HikariDataSource();
+            newDataSource.setJdbcUrl(getConnectionUrl(dbName));
+            newDataSource.setUsername(environment.getProperty("spring.datasource.username"));
+            newDataSource.setPassword(environment.getProperty("spring.datasource.password"));
+            newDataSource.setMaximumPoolSize(2);
+
+            dataSources.put(dbName, newDataSource);
+
+            return newDataSource;
         }
     }
 

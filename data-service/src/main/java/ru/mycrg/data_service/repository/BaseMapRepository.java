@@ -11,7 +11,7 @@ import ru.mycrg.data_service.entity.BaseMap;
 
 import java.util.Collection;
 
-import static ru.mycrg.data_service.config.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @PreAuthorize(HAS_ANY_AUTHORITY)
 @RepositoryRestResource(collectionResourceRel = "basemaps",
@@ -21,5 +21,4 @@ public interface BaseMapRepository extends PagingAndSortingRepository<BaseMap, L
 
     // Do not remove. Method used: "/api/data/basemaps/search/findByIdIn?ids="
     Page<BaseMap> findByIdIn(@Param("ids") Collection<Long> ids, Pageable p);
-
 }

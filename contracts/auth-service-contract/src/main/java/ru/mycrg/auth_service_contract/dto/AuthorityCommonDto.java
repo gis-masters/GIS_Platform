@@ -4,9 +4,6 @@ public class AuthorityCommonDto {
 
     private String authority;
 
-    public AuthorityCommonDto() {
-    }
-
     public String getAuthority() {
         return this.authority;
     }

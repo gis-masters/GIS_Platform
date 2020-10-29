@@ -15,11 +15,11 @@ public class GeoserverTests {
 
     @Test
     public void shouldGetCorrectPermissions() {
-        assertEquals("workspace.*.w",       RulesUtil.buildRule("workspace", WRITE));
-        assertEquals("workspace.*.a",       RulesUtil.buildRule("workspace", "*", ADMIN));
-        assertEquals("workspace.*.r",       RulesUtil.buildRule("workspace", "*", READ));
-        assertEquals("workspace.*.w",       RulesUtil.buildRule("workspace", "*", WRITE));
-        assertEquals("workspace.layer1.w",  RulesUtil.buildRule("workspace", "layer1", WRITE));
+        assertEquals("workspace.*.w", RulesUtil.buildRule("workspace", WRITE));
+        assertEquals("workspace.*.a", RulesUtil.buildRule("workspace", "*", ADMIN));
+        assertEquals("workspace.*.r", RulesUtil.buildRule("workspace", "*", READ));
+        assertEquals("workspace.*.w", RulesUtil.buildRule("workspace", "*", WRITE));
+        assertEquals("workspace.layer1.w", RulesUtil.buildRule("workspace", "layer1", WRITE));
     }
 
     @Test
@@ -57,5 +57,4 @@ public class GeoserverTests {
         assertEquals("ROLE_ADMIN,admin_1,admin_2,admin_37,admin_38,admin_39", result2.get("/**:POST,DELETE,PUT"));
         assertEquals("ROLE_ADMIN,admin_1,admin_2,admin_37,admin_38,admin_39", result3.get("/**:POST,DELETE,PUT"));
     }
-
 }

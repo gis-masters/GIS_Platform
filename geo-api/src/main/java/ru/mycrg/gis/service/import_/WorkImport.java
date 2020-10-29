@@ -3,7 +3,6 @@ package ru.mycrg.gis.service.import_;
 import ru.mycrg.gis.dto.BaseRequest;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class WorkImport extends BaseRequest {

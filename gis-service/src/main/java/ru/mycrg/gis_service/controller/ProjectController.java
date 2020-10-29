@@ -15,8 +15,8 @@ import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
 
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
-import static ru.mycrg.gis_service.config.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/projects")
@@ -74,5 +74,4 @@ public class ProjectController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

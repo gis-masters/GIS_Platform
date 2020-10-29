@@ -15,20 +15,21 @@ import java.nio.file.Paths;
 @Service
 public class StorageService {
 
-    private static Logger log = LoggerFactory.getLogger(StorageService.class);
+    private static final Logger log = LoggerFactory.getLogger(StorageService.class);
 
     private final Path exportStoragePath;
 
     public StorageService(CrgProperties properties) {
         this.exportStoragePath = Paths.get(properties.getExportStoragePath())
-                .toAbsolutePath()
-                .normalize();
+                                      .toAbsolutePath()
+                                      .normalize();
     }
 
     /**
      * Загрузка файла.
      *
      * @param fileName Имя файла.
+     *
      * @return Файл как ресурс.
      */
     public Resource load(String fileName) {
@@ -43,12 +44,11 @@ public class StorageService {
                 return resource;
             } else {
                 log.error("Resource not exist");
-                throw new NotFoundException("Resource not exist: " + fileName);
+                throw new NotFoundException(fileName);
             }
         } catch (MalformedURLException e) {
             log.error("File not found", e);
-            throw new NotFoundException("File not found: " + fileName);
+            throw new NotFoundException(fileName);
         }
     }
-
 }

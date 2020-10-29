@@ -15,8 +15,8 @@ import ru.mycrg.gis_service.service.OrganizationService;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/geoserver/organizations")

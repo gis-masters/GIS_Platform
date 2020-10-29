@@ -15,10 +15,13 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.mycrg.auth_service.security.CustomTokenConverter;
+import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.oauth_client.OAuthClient;
 
+import javax.crypto.NoSuchPaddingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 
 @Log4j2
 @Configuration
@@ -26,21 +29,21 @@ import java.net.URL;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
-    private String SECRET;
+    private String secret;
 
     @Value("${security.jwt.client_id:admin}")
-    private String CLIENT_ID;
+    private String clientId;
 
     @Value("${security.jwt.client_secret:geoserver}")
-    private String CLIENT_SECRET;
+    private String clientSecret;
 
     @Value("#{ '${security.jwt.access_token_validity_seconds}'.isEmpty() " +
             "? 86400 : '${security.jwt.access_token_validity_seconds}' }")
-    private Integer ACCESS_TOKEN_VALIDITY_TIME;
+    private Integer accessTokenValidityTime;
 
     @Value("#{ '${security.jwt.refresh_token_validity_seconds}'.isEmpty() " +
             "? 1209600 : '${security.jwt.refresh_token_validity_seconds}' }")
-    private Integer REFRESH_TOKEN_VALIDITY_TIME;
+    private Integer refreshTokenValidityTime;
 
     private final BCryptPasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
@@ -55,15 +58,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         log.debug("Setup access/refresh tokens time in sec: {} / {}",
-                ACCESS_TOKEN_VALIDITY_TIME,
-                REFRESH_TOKEN_VALIDITY_TIME);
+                  accessTokenValidityTime,
+                  refreshTokenValidityTime);
 
         clients
                 .inMemory()
-                .withClient(CLIENT_ID)
-                .secret(encoder.encode(CLIENT_SECRET))
-                .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_TIME)
-                .refreshTokenValiditySeconds(REFRESH_TOKEN_VALIDITY_TIME)
+                .withClient(clientId)
+                .secret(encoder.encode(clientSecret))
+                .accessTokenValiditySeconds(accessTokenValidityTime)
+                .refreshTokenValiditySeconds(refreshTokenValidityTime)
                 .scopes("crg")
                 .authorizedGrantTypes("password", "refresh_token");
     }
@@ -79,7 +82,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         CustomTokenConverter converter = new CustomTokenConverter();
-        converter.setSigningKey(SECRET);
+        converter.setSigningKey(secret);
 
         return converter;
     }
@@ -93,8 +96,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public OAuthClient oAuthClient() throws MalformedURLException {
         return OAuthClient.builder()
                           .url(new URL("http://localhost:9000"))
-                          .clientId(CLIENT_ID)
-                          .clientSecret(CLIENT_SECRET)
+                          .clientId(clientId)
+                          .clientSecret(clientSecret)
                           .build();
+    }
+
+    @Bean
+    AESCryptor aes() throws NoSuchAlgorithmException, NoSuchPaddingException {
+        return new AESCryptor(clientSecret);
     }
 }

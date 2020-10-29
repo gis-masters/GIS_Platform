@@ -13,9 +13,10 @@ import ru.mycrg.wrapper.queue.MqSender;
 import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.requests_handler.IRequestHandler;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
@@ -35,11 +36,6 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
     private final DatasourceFactory datasourceFactory;
 
     private int totalRows = 0;
-    private int processedRows = 0;
-
-    private Map<String, LocalDateTime> lastCalculatedValidation = new HashMap<>();
-    private long totalViolations;
-    private boolean isNotValidatedYet = true;
 
     @Autowired
     public ValidationService(IValidator validator, MqSender mqSender,
@@ -56,13 +52,14 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         log.debug("Start validation");
 
         try {
-            ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
+            ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(),
+                                                                     ValidationMqProcessRequest.class);
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING, "Инициализация...", 0));
 
             totalRows = (int) calculateTotalRows(payload.getResourceProjections());
             payload.getResourceProjections()
-                   .forEach(resource -> validateResource(mqRequest, resource, processedRows));
+                   .forEach(resource -> validateResource(mqRequest, resource));
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, DONE, "", 100));
         } catch (Exception e) {
@@ -72,26 +69,17 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         }
     }
 
-    private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource, int processedRows) {
+    private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource) {
         log.debug("Validate resource: {}", resource.getResourceId());
+        int processedRows = 0;
         LocalTime startTime = LocalTime.now();
 
-        ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), ValidationMqProcessRequest.class);
+        ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(),
+                                                                 ValidationMqProcessRequest.class);
         try {
             SchemaDto feature = getRuleByTableName(payload.getFeatures(), resource.getTableName());
 
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
-
-            // определим как будем подсчитывать общее кол-во ошибок в слое.
-            if (baseDaoService.isValidated(jdbcTemplate, resource)) {
-                totalViolations = baseDaoService.countTotalViolations(jdbcTemplate, resource);
-                isNotValidatedYet = false;
-            } else {
-                totalViolations = 0;
-                isNotValidatedYet = true;
-            }
-
-            lastCalculatedValidation.put(resource.getResourceId(), LocalDateTime.now());
 
             List<Map<String, Object>> nextBatch;
             int batchSize = DaoProperties.BATCH_SIZE;
@@ -105,21 +93,23 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
                 baseDaoService.saveValidationResults(jdbcTemplate, resource, validationResults);
 
                 mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
-                        "Обработано: " + feature.getTitle(), calculatePercent(processedRows, totalRows)));
+                                                        "Обработано: " + feature.getTitle(),
+                                                        calculatePercent(processedRows, totalRows)));
 
                 processedRows += batchSize;
             }
 
             LocalTime endTime = LocalTime.now();
             log.debug("Validation time for resource: {} is: {} seconds",
-                    resource.getResourceId(), SECONDS.between(startTime, endTime));
+                      resource.getResourceId(), SECONDS.between(startTime, endTime));
 
             mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_DONE, "Готово", -1));
         } catch (Exception e) {
             log.error("Не удалось провалидировать: " + resource.getTableName(), e);
 
             mqSender.send(
-                    new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка", e.getMessage()));
+                    new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка",
+                                              e.getMessage()));
         }
     }
 
@@ -142,26 +132,9 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
         return validationResults;
     }
 
-    private long countCorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
-        return validationResult
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(objectViolation -> objectViolation.getPropertyViolations().isEmpty())
-                .count();
-    }
-
-    private long countIncorrectObjects(Queue<List<ObjectValidationResult>> validationResult) {
-        return validationResult
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(objectViolation -> !objectViolation.getPropertyViolations().isEmpty())
-                .count();
-    }
-
     private long calculateTotalRows(List<ResourceProjection> resources) {
         return resources.stream()
-                .mapToLong(baseDaoService::countTotalRows)
-                .sum();
+                        .mapToLong(baseDaoService::countTotalRows)
+                        .sum();
     }
-
 }

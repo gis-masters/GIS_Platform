@@ -1,11 +1,12 @@
 package ru.mycrg.gis.exceptions;
 
-import javax.persistence.EntityNotFoundException;
+public class NotFoundException extends RuntimeException {
 
-public class NotFoundException extends EntityNotFoundException {
-
-	public NotFoundException(String msg) {
-		super(msg);
+	public NotFoundException(Object id) {
+		super("Ресурс не найден по идентификатору: " + id.toString());
 	}
 
+	public NotFoundException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

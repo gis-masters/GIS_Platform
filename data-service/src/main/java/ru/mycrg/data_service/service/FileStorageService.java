@@ -19,7 +19,7 @@ public class FileStorageService {
 
     private final Path documentStorageLocation;
 
-    private final String FILE_EXTENSION = ".blob";
+    private static final String FILE_EXTENSION = ".blob";
 
     @Autowired
     public FileStorageService(Environment environment) {
@@ -55,10 +55,10 @@ public class FileStorageService {
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new NotFoundException("File not found " + fileName);
+                throw new NotFoundException(fileName);
             }
         } catch (MalformedURLException ex) {
-            throw new NotFoundException("File not found " + fileName, ex);
+            throw new NotFoundException(fileName, ex);
         }
     }
 

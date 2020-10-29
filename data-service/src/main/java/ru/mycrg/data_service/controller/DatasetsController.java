@@ -55,7 +55,7 @@ public class DatasetsController {
     public ResponseEntity<Object> getSchema(@PathVariable String dataSetName,
                                             Authentication authentication) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException("Not found: " + dataSetName);
+            throw new NotFoundException(dataSetName);
         }
 
         final DatasetModel dto = datasetService.getByName(dataSetName, authentication);

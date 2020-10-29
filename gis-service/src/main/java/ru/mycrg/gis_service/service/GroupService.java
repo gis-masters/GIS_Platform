@@ -29,7 +29,7 @@ import static ru.mycrg.gis_service.service.GroupValidator.isInvalidGroupRelation
 @Transactional
 public class GroupService {
 
-    private static Logger log = LoggerFactory.getLogger(GroupService.class);
+    private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 
     private final ProjectionFactory projectionFactory;
     private final ProjectService projectService;
@@ -139,5 +139,4 @@ public class GroupService {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(groupId));
     }
-
 }

@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import ru.mycrg.data_service.config.Authorities;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 
 import java.security.Principal;
@@ -15,6 +14,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
+
 public class CrgClaimsParser {
 
     private static final String CLAIM_USER_ID = "user_id";
@@ -22,11 +24,11 @@ public class CrgClaimsParser {
     private static final String CLAIM_GROUPS = "groups";
 
     public static boolean isRoot(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.GLOBAL_ADMIN);
+        return isUserHasAuthority(authentication, GLOBAL_ADMIN);
     }
 
     public static boolean isOrganizationAdmin(Authentication authentication) {
-        return isUserHasAuthority(authentication, Authorities.ORG_ADMIN);
+        return isUserHasAuthority(authentication, ORG_ADMIN);
     }
 
     @NotNull
@@ -84,7 +86,7 @@ public class CrgClaimsParser {
     }
 
     private static Optional<Object> getValue(Map<String, Object> data, String target) {
-        for (Map.Entry<String, Object> e : data.entrySet()) {
+        for (Map.Entry<String, Object> e: data.entrySet()) {
             if (target.equals(e.getKey())) {
                 return Optional.of(e.getValue());
             }
@@ -98,5 +100,4 @@ public class CrgClaimsParser {
 
         return authorities.contains(new SimpleGrantedAuthority(authority));
     }
-
 }

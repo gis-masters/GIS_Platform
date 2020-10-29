@@ -59,17 +59,16 @@ public class UserService {
 
     @NotNull
     public UserInfoModel getCurrent(String userName) {
-        User user = userRepository
-                .findByUsername(userName)
-                .orElseThrow(() -> new NotFoundException("Not found user: " + userName));
+        User user = userRepository.findByUsername(userName)
+                                  .orElseThrow(() -> new NotFoundException(userName));
 
         Set<Organization> organizations = user.getOrganizations();
         if (!organizations.isEmpty()) {
             Organization organization = organizations.iterator().next();
 
             final List<String> roles = user.getAuthorities().stream()
-                    .map(Authorities::getAuthority)
-                    .collect(Collectors.toList());
+                                           .map(Authorities::getAuthority)
+                                           .collect(Collectors.toList());
 
             return new UserInfoModel(userName, organization.getName(), organization.getId(), roles);
         }
@@ -87,7 +86,7 @@ public class UserService {
 
         Organization organization = orgRepository
                 .findById(orgId)
-                .orElseThrow(() -> new NotFoundException("Не найдена организация"));
+                .orElseThrow(() -> new NotFoundException(orgId));
 
         User newUser = new User(
                 bCrypt.encode(dto.getPassword()),
@@ -130,9 +129,8 @@ public class UserService {
         } else if (isGeoserverAdmin(authentication)) {
             String ownerName = authentication.getName();
 
-            User owner = userRepository
-                    .findByUsername(ownerName)
-                    .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+            User owner = userRepository.findByUsername(ownerName)
+                                       .orElseThrow(() -> new NotFoundException(ownerName));
 
             Set<Organization> organizations = owner.getOrganizations();
             if (!organizations.isEmpty()) {
@@ -147,8 +145,8 @@ public class UserService {
 
     /**
      * Возвращает пользователя если запрос пришел от root пользователя или запрашиваемый пользователь состоит в
-     * организации, владелец которой запрашивает данные.
-     * Метод вызывает NotFoundException в случае отсутствия пользователя или доступа к пользователю.
+     * организации, владелец которой запрашивает данные. Метод вызывает NotFoundException в случае отсутствия
+     * пользователя или доступа к пользователю.
      *
      * @param id             User id
      * @param authentication Authenticated principal info
@@ -162,7 +160,7 @@ public class UserService {
 
             User owner = userRepository
                     .findByUsername(ownerName)
-                    .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+                    .orElseThrow(() -> new NotFoundException(ownerName));
 
             Set<Organization> organizations = owner.getOrganizations();
             Organization organization = organizations.iterator().next();
@@ -175,7 +173,7 @@ public class UserService {
         if (oUser.isPresent()) {
             return projectionFactory.createProjection(UserProjection.class, oUser.get());
         } else {
-            throw new NotFoundException("Пользователь не найден");
+            throw new NotFoundException(id);
         }
     }
 
@@ -206,7 +204,7 @@ public class UserService {
         if (isUserHasAuthority(userProjection, authority)) {
             userRepository.findById(userProjection.getId()).ifPresent(user -> user.removeAuthority(authority));
         } else {
-            throw new NotFoundException("Role not assigned to user");
+            throw new NotFoundException(id);
         }
     }
 

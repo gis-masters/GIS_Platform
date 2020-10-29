@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RequiredValidation implements CrgConstraintValidator {
 
-    private final String type = "required";
+    private static final String TYPE = "required";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -20,7 +20,7 @@ public class RequiredValidation implements CrgConstraintValidator {
     @Override
     public void validate(Object value, SimplePropertyDto context, List<String> violations) {
         if (!isValid(value, context)) {
-            violations.add(type);
+            violations.add(TYPE);
         }
     }
 }

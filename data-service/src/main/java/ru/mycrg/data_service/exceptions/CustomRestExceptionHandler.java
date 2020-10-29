@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.exceptions;
 
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -155,7 +154,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex,
                                                                    final WebRequest request) {
-        final String errorMsg = ex.getName() + " should be of type " + ex.getRequiredType().getName();
+        String typeName = "";
+        final Class<?> requiredType = ex.getRequiredType();
+        if (requiredType != null) {
+            typeName = requiredType.getName();
+        }
+
+        final String errorMsg = ex.getName() + " should be of type " + typeName;
         ErrorInfo error = new ErrorInfo(ex.getName(), errorMsg);
         final ApiErrorModel errorModel = new ApiErrorModel(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
 

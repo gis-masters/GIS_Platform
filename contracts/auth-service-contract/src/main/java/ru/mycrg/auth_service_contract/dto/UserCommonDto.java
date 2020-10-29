@@ -14,9 +14,6 @@ public class UserCommonDto {
     private int authoritiesCount;
     private Set<AuthorityCommonDto> authorities = new HashSet<>();
 
-    public UserCommonDto() {
-    }
-
     public Long getId() {
         return this.id;
     }

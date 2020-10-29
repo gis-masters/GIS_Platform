@@ -23,13 +23,13 @@ import java.util.Collections;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.datasource.url:jdbc:postgresql://127.0.0.1:5432/gis_portal}")
-    private String JDBC_URL;
+    private String jdbcUrl;
 
     @Value("${spring.datasource.username:postgres}")
-    private String USERNAME;
+    private String username;
 
     @Value("${spring.datasource.password:314}")
-    private String PASSWORD;
+    private String password;
 
     @Bean
     public BCryptPasswordEncoder encoder() {
@@ -46,9 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
-        driverManagerDataSource.setUrl(JDBC_URL);
-        driverManagerDataSource.setUsername(USERNAME);
-        driverManagerDataSource.setPassword(PASSWORD);
+        driverManagerDataSource.setUrl(jdbcUrl);
+        driverManagerDataSource.setUsername(username);
+        driverManagerDataSource.setPassword(password);
 
         return driverManagerDataSource;
     }
@@ -60,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource())
                 .usersByUsernameQuery("SELECT username,password,enabled FROM users WHERE username=?")
                 .authoritiesByUsernameQuery("SELECT U.username, A.authority FROM users AS U " +
-                        "INNER JOIN authorities AS A ON U.id = A.user_id WHERE U.username = ?");
+                        "INNER JOIN authorities AS A ON U.id = A.user_id WHERE U.username = ?")
+                .passwordEncoder(encoder());
     }
 
     @Bean
@@ -76,5 +77,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         return source;
     }
-
 }

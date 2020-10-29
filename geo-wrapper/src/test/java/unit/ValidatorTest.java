@@ -219,5 +219,4 @@ public class ValidatorTest {
         assertFalse(minLengthValidation.isValid("not", someAttr));
         assertTrue(minLengthValidation.isValid("equal", someAttr));
     }
-
 }

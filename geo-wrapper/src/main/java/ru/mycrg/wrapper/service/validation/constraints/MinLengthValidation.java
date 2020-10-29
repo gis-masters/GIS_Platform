@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MinLengthValidation implements CrgConstraintValidator {
 
-    private final String type = "minLength";
+    private static final String TYPE = "minLength";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -20,7 +20,7 @@ public class MinLengthValidation implements CrgConstraintValidator {
     @Override
     public void validate(Object value, SimplePropertyDto context, List<String> violations) {
         if (!isValid(value, context)) {
-            violations.add(type + ":" + context.getMinLength());
+            violations.add(TYPE + ":" + context.getMinLength());
         }
     }
 }

@@ -22,7 +22,7 @@ import java.util.Set;
 @Service
 public abstract class BaseProcessService implements Processable {
 
-    private static Logger log = LoggerFactory.getLogger(BaseProcessService.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseProcessService.class);
 
     private final ProcessRepository processRepository;
 
@@ -50,7 +50,6 @@ public abstract class BaseProcessService implements Processable {
                 .findById(taskId)
                 .orElseThrow(() -> new FailedException("Not found process by id: " + taskId));
     }
-
 
     public Process getProcessById(Long id) {
         Optional<Process> processFromCache = getProcessFromCache(id);
@@ -122,8 +121,7 @@ public abstract class BaseProcessService implements Processable {
 
     private Optional<Process> getProcessFromCache(Long id) {
         return processesCache.stream()
-                .filter(process -> process.getId() == id)
-                .findFirst();
+                             .filter(process -> process.getId().equals(id))
+                             .findFirst();
     }
-
 }

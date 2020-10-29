@@ -15,7 +15,7 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @Log4j2
@@ -78,5 +78,4 @@ public class PermissionController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

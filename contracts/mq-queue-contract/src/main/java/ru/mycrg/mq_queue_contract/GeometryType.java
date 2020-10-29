@@ -13,7 +13,7 @@ public enum GeometryType {
     @JsonProperty("MultiPolygon")
     MULTI_POLYGON("MultiPolygon");
 
-    private String geometryType;
+    private final String geometryType;
 
     GeometryType(String geometryType) {
         this.geometryType = geometryType;
@@ -21,9 +21,5 @@ public enum GeometryType {
 
     public String getType() {
         return geometryType;
-    }
-
-    public void setType(String geometryType) {
-        this.geometryType = geometryType;
     }
 }

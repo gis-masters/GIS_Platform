@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +17,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
-    private String SECRET;
+    private String secret;
 
-    @Autowired
-    private CustomAccessTokenConverter customAccessTokenConverter;
+    private final CustomAccessTokenConverter customAccessTokenConverter;
 
     private static final String[] SWAGGER_WHITELIST = {
             "/v2/api-docs",
@@ -32,6 +30,10 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
             "/swagger-ui.html",
             "/webjars/**"
     };
+
+    public ResourceServerSecurityConfig(CustomAccessTokenConverter customAccessTokenConverter) {
+        this.customAccessTokenConverter = customAccessTokenConverter;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -48,7 +50,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setAccessTokenConverter(customAccessTokenConverter);
-        converter.setSigningKey(SECRET);
+        converter.setSigningKey(secret);
 
         return converter;
     }
@@ -64,5 +66,4 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .resourceId("data-service")
                 .tokenStore(tokenStore());
     }
-
 }

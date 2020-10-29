@@ -13,12 +13,16 @@ import java.util.List;
 
 public class GmlUtil {
 
+    private GmlUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static SchemaDto getRuleByTableName(List<SchemaDto> featuresDescription,
                                                String tableName) {
         return featuresDescription.stream()
-                .filter(fDescription -> fDescription.getTableName().equalsIgnoreCase(tableName))
-                .findFirst()
-                .orElseThrow(() -> new RuleNotFoundException(tableName));
+                                  .filter(fDescription -> fDescription.getTableName().equalsIgnoreCase(tableName))
+                                  .findFirst()
+                                  .orElseThrow(() -> new RuleNotFoundException(tableName));
     }
 
     public static int calculatePercent(long processedRows, long totalRows) {
@@ -31,7 +35,7 @@ public class GmlUtil {
     @NotNull
     static String convertToString(@NotNull Coordinate[] coordinates) {
         StringBuilder result = new StringBuilder();
-        for (Coordinate coordinate : coordinates) {
+        for (Coordinate coordinate: coordinates) {
             result
                     .append(trimCoordinate(coordinate.y))
                     .append(",")
@@ -68,5 +72,4 @@ public class GmlUtil {
     private static String trimCoordinate(double d) {
         return new DecimalFormat("#0.00").format(d).replace(",", ".");
     }
-
 }

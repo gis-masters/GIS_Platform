@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TotalDigitsValidation implements CrgConstraintValidator {
 
-    private final String type = "totalDigits";
+    private static final String TYPE = "totalDigits";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -20,7 +20,7 @@ public class TotalDigitsValidation implements CrgConstraintValidator {
     @Override
     public void validate(Object value, SimplePropertyDto context, List<String> violations) {
         if (!isValid(value, context)) {
-            violations.add(type + ":" + context.getTotalDigits());
+            violations.add(TYPE + ":" + context.getTotalDigits());
         }
     }
 }

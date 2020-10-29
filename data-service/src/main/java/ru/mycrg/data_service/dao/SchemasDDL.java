@@ -17,8 +17,9 @@ public class SchemasDDL {
 
     private static final Logger log = LoggerFactory.getLogger(SchemasDDL.class);
 
+    private static final String EXTENSION_POSTFIX = "_extension";
+
     private final List<String> systemSchemas = List.of("data");
-    private final String EXTENSION_POSTFIX = "_extension";
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;

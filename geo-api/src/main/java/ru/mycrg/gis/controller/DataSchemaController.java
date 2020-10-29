@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class DataSchemaController {
 
-    private static Logger log = LoggerFactory.getLogger(DataSchemaController.class);
+    private static final Logger log = LoggerFactory.getLogger(DataSchemaController.class);
 
     private final SchemaService schemaService;
 

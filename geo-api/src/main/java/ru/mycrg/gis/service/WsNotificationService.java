@@ -9,7 +9,7 @@ import ru.mycrg.gis.dto.WsMessageDto;
 @Service
 public class WsNotificationService {
 
-    private static Logger log = LoggerFactory.getLogger(WsNotificationService.class);
+    private static final Logger log = LoggerFactory.getLogger(WsNotificationService.class);
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -22,5 +22,4 @@ public class WsNotificationService {
 
         log.trace("WS. Type: {} To: {}", payload.getType(), "/topic/" + userId + "/events");
     }
-
 }

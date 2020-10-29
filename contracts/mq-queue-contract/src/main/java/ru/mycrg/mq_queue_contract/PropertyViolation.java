@@ -41,6 +41,6 @@ public class PropertyViolation {
     }
 
     public boolean hasErrors() {
-        return errorTypes.size() > 0;
+        return !errorTypes.isEmpty();
     }
 }

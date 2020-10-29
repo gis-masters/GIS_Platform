@@ -33,10 +33,10 @@ public class ValidationUtilTest {
         JsonNode jsonNode = Util.convertToJson(object);
 
         assertEquals("{\"objectId\":\"objectid\",\"classId\":\"classid\",\"xMin\":\"xmin\",\"" +
-                        "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
-                        "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":" +
-                        "[{\"attribute\":\"status\",\"error\":\"some text\"}]}",
-                jsonNode.toString());
+                             "propertyViolations\":[{\"name\":\"pName\",\"value\":\"pValue\",\"" +
+                             "errorTypes\":[\"INT\",\"CHOICE\",\"DOUBLE\"]}],\"objectViolations\":" +
+                             "[{\"attribute\":\"status\",\"error\":\"some text\"}]}",
+                     jsonNode.toString());
     }
 
     @Test
@@ -50,5 +50,4 @@ public class ValidationUtilTest {
         assertEquals("{\"text\":\"Регламенты\"}", decode("{\"text\":\"Регламенты\"}"));
         assertEquals("{можно}", decode("{Ð¼Ð¾Ð¶Ð½Ð¾}"));
     }
-
 }

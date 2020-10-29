@@ -10,8 +10,6 @@ public class MqExportProcessRequest {
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
     private List<SchemaDto> fgistpRules = new ArrayList<>();
 
-    public MqExportProcessRequest() {}
-
     public String getDocSchema() {
         return docSchema;
     }

@@ -12,9 +12,13 @@ import java.util.Map;
 
 public class Util {
 
-    private static Logger log = LoggerFactory.getLogger(Util.class);
+    private static final Logger log = LoggerFactory.getLogger(Util.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    private Util() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String getPropertyByKey(Map<String, Object> data, String keyFiled) {
         if (data.containsKey(keyFiled)) {
@@ -34,8 +38,8 @@ public class Util {
     public static JsonNode convertToJson(ObjectValidationResult object) {
         try {
             String asString = mapper.writer()
-                    .withDefaultPrettyPrinter()
-                    .writeValueAsString(object);
+                                    .withDefaultPrettyPrinter()
+                                    .writeValueAsString(object);
             return JacksonUtil.toJsonNode(asString);
         } catch (JsonProcessingException e) {
             log.error("Failed convert to json: {}", e.getMessage());
@@ -43,5 +47,4 @@ public class Util {
             return JacksonUtil.toJsonNode("");
         }
     }
-
 }

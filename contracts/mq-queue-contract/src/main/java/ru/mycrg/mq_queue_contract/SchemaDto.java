@@ -16,8 +16,6 @@ public class SchemaDto {
     private boolean readOnly;
     private GeometryType geometryType;
 
-    public SchemaDto() {}
-
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
     }

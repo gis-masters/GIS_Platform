@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.entity.TableObjectImpl;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,8 +20,6 @@ public class ObjectService {
     private final TablesDDL tablesDDL;
     private final TablesDao tablesDao;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     public ObjectService(TablesDao tablesDao,
                          TablesDDL tablesDDL) {
         this.tablesDao = tablesDao;
@@ -32,7 +28,7 @@ public class ObjectService {
 
     public Map<String, Object> getById(TableIdentifier table, UUID id, Authentication authentication) {
         if (!tablesDDL.isTableExist(table)) {
-            throw new NotFoundException("No found table: " + table.toString());
+            throw new NotFoundException(table.toString());
         }
 
         return tablesDao
@@ -46,7 +42,7 @@ public class ObjectService {
                                      Map<String, Object> body,
                                      Authentication authentication) throws CrgDaoException {
         if (!tablesDDL.isTableExist(resource)) {
-            throw new NotFoundException("No found table: " + resource.toString());
+            throw new NotFoundException(resource.toString());
         }
 
         UUID id = tablesDao.addRecord(resource, body);
@@ -56,7 +52,7 @@ public class ObjectService {
 
     public void deleteObject(TableIdentifier tableIdentifier, UUID id, Authentication authentication) {
         if (!tablesDDL.isTableExist(tableIdentifier)) {
-            throw new NotFoundException("No found table: " + tableIdentifier.toString());
+            throw new NotFoundException(tableIdentifier.toString());
         }
 
         tablesDao.removeRecord(tableIdentifier, id);

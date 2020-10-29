@@ -2,8 +2,12 @@ package ru.mycrg.wrapper.dao;
 
 public class DaoProperties {
 
-    public static short BATCH_SIZE = 100;
-    public static String NULL_MARKER = "crg-null";
+    private DaoProperties() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static final short BATCH_SIZE = 100;
+    public static final String NULL_MARKER = "crg-null";
 
     /**
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой

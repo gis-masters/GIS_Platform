@@ -48,7 +48,7 @@ public class TablesController {
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException("Not found: " + dataSetName);
+            throw new NotFoundException(dataSetName);
         }
 
         final Page<TableModel> tables = tableService.getAllByTitle(dataSetName, title, pageable, authentication);
@@ -66,12 +66,12 @@ public class TablesController {
                                            @PathVariable String tableName,
                                            Authentication authentication) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException("Not found: " + dataSetName);
+            throw new NotFoundException(dataSetName);
         }
 
         TableIdentifier identifier = new TableIdentifier(dataSetName, tableName);
         if (!tablesDDL.isTableExist(identifier)) {
-            throw new NotFoundException("Not found: " + identifier);
+            throw new NotFoundException(identifier.toString());
         }
 
         final TableModel dto = tableService.getByName(identifier, authentication);

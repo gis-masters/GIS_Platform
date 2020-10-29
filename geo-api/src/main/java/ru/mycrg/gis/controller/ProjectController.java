@@ -18,7 +18,7 @@ import java.security.Principal;
 @RequestMapping(value = "/api")
 public class ProjectController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(ProjectController.class);
+    private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 
     private final ImportService importService;
     private final ExportService exportService;
@@ -48,5 +48,4 @@ public class ProjectController extends BaseController {
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
-
 }

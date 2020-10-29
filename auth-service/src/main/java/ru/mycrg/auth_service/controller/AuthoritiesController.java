@@ -9,7 +9,7 @@ import ru.mycrg.auth_service.service.AuthorityService;
 
 import java.util.List;
 
-import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/roles")

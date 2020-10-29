@@ -38,7 +38,7 @@ public class DatabaseService {
 
     public void delete(String dbName, Authentication authentication) {
         if (!databaseDDL.isDatabaseExist(dbName)) {
-            throw new NotFoundException("The database "+ dbName + " is not exist");
+            throw new NotFoundException(dbName);
         }
 
         if (isRoot(authentication)) {

@@ -88,7 +88,7 @@ public class PermissionsService {
         permissionsRepository
                 .getByIdWithSpecificResource(permissionId, resource.toString(), TABLE.toString())
                 .ifPresentOrElse(permission -> deleteResource(permission, resource.toString()), () -> {
-                    throw new NotFoundException("Not found permission: " + permissionId);
+                    throw new NotFoundException(permissionId);
                 });
     }
 
@@ -97,7 +97,7 @@ public class PermissionsService {
                 .getAllByResourceIdentifierAndType(tableIdentifier.toString(), TABLE.toString());
 
         if (permissions.isEmpty()) {
-            throw new NotFoundException("Not found permissions for: " + tableIdentifier.toString());
+            throw new NotFoundException(tableIdentifier.toString());
         }
 
         // Delete Resource from all permissions
@@ -170,7 +170,7 @@ public class PermissionsService {
                         permissionsRepository.delete(permission);
                     }
                 }, () -> {
-                    throw new NotFoundException("Not found resource: " + identifier);
+                    throw new NotFoundException(identifier);
                 });
     }
 

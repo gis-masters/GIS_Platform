@@ -11,9 +11,8 @@ import ru.mycrg.data_service.service.DatabaseService;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import static ru.mycrg.data_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class DatabasesController {

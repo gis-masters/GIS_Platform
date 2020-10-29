@@ -1,9 +1,9 @@
 package ru.mycrg.gis_service.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -12,16 +12,19 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import ru.mycrg.auth_service_contract.AESCryptor;
+
+import javax.crypto.NoSuchPaddingException;
+import java.security.NoSuchAlgorithmException;
 
 @Configuration
 @EnableResourceServer
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
-    private String SECRET;
+    private String secret;
 
-    @Autowired
-    private CustomAccessTokenConverter customAccessTokenConverter;
+    private final CustomAccessTokenConverter customAccessTokenConverter;
 
     private static final String[] SWAGGER_WHITELIST = {
             "/v2/api-docs",
@@ -32,6 +35,10 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
             "/swagger-ui.html",
             "/webjars/**"
     };
+
+    public ResourceServerSecurityConfig(CustomAccessTokenConverter customAccessTokenConverter) {
+        this.customAccessTokenConverter = customAccessTokenConverter;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -48,7 +55,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setAccessTokenConverter(customAccessTokenConverter);
-        converter.setSigningKey(SECRET);
+        converter.setSigningKey(secret);
 
         return converter;
     }
@@ -65,4 +72,10 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .tokenStore(tokenStore());
     }
 
+    @Bean
+    AESCryptor aes(Environment environment) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        final String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+
+        return new AESCryptor(clientSecret);
+    }
 }

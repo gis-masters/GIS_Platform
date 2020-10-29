@@ -11,8 +11,8 @@ import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import java.security.Principal;
 import java.util.*;
 
-import static ru.mycrg.gis_service.config.Authorities.GLOBAL_ADMIN;
-import static ru.mycrg.gis_service.config.Authorities.ORG_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 
 public class CrgClaimsParser {
 
@@ -119,5 +119,4 @@ public class CrgClaimsParser {
 
         return authorities.contains(new SimpleGrantedAuthority(authority));
     }
-
 }

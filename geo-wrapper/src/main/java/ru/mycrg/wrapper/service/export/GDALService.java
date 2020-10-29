@@ -60,8 +60,18 @@ public class GDALService extends BaseRequestHandler implements IExporter {
 
     /**
      * Экспорт в шейп.
+     * <p>
+     * Выполняются следующие команды <p>
+     *     - mkdir SOME_DIR; <p>
+     *     - cd SOME_DIR; <p>
+     *     - ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434 user=fiz password=314
+     *       dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING UTF-8; <p>
+     *     - zip -r ../agriculture.zip *; <p>
+     *     - cd ..; <p>
+     *     - rm -rf SOME_DIR
      *
      * @param resource Ресурс для экспорта
+     *
      * @return Path к архиву
      */
     private String exportToShape(ResourceProjection resource) {
@@ -78,21 +88,16 @@ public class GDALService extends BaseRequestHandler implements IExporter {
             String schemaName = resource.getSchemaName();
             String tableNAme = resource.getTableName();
 
-            // mkdir SOME_DIR; cd SOME_DIR;
-            // ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434 user=fiz password=314 dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING UTF-8;
-            // zip -r ../agriculture.zip *;
-            // cd ..;
-            // rm -rf SOME_DIR
-            String allInOneCommand_test = "mkdir " + randomDirName + "; cd " + randomDirName + "; " +
+            String allInOneCommandTest = "mkdir " + randomDirName + "; cd " + randomDirName + "; " +
                     "ogr2ogr -f \"ESRi Shapefile\" " + resource.getTableName() + ".shp PG:\"host=" + host + " port=" + port + " " +
                     "user=" + userName + " password=" + password + " dbname=" + dbName + "\" -sql \"SELECT * from " + schemaName + "." + tableNAme + "\" --config SHAPE_ENCODING UTF-8; " +
                     "zip -r ../" + resource.getTableName() + ".zip *; cd ..; rm -rf " + randomDirName;
 
-            log.debug("execute command: {}", allInOneCommand_test);
+            log.debug("execute command: {}", allInOneCommandTest);
 
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(rootPath));
-            processBuilder.command("sh", "-c", allInOneCommand_test);
+            processBuilder.command("sh", "-c", allInOneCommandTest);
             Process process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -112,6 +117,9 @@ public class GDALService extends BaseRequestHandler implements IExporter {
                 throw new ExportException("Не удалось выполнить консольную команду");
             }
         } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+
             throw new ExportException(e.getMessage(), e);
         }
     }

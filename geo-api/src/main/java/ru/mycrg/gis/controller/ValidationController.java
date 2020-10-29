@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class ValidationController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(ValidationController.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidationController.class);
 
     private final ValidationService validationService;
     private final ViolationService violationService;
@@ -79,5 +79,4 @@ public class ValidationController extends BaseController {
 
         return ResponseEntity.ok(result);
     }
-
 }

@@ -19,7 +19,7 @@ import java.net.URI;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/organizations")

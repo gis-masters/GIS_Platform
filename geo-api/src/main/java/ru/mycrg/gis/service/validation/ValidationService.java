@@ -28,7 +28,7 @@ import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 @Service
 public class ValidationService extends BaseProcessService {
 
-    private static Logger log = LoggerFactory.getLogger(ValidationService.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
 
     private final MqSender mqSender;
     private final SchemaService schemaService;

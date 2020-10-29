@@ -18,7 +18,7 @@ import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 
 @RepositoryRestController
@@ -93,5 +93,4 @@ public class GroupController {
     public ResponseEntity<Object> updateGroups(@PathVariable String id) {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
-
 }

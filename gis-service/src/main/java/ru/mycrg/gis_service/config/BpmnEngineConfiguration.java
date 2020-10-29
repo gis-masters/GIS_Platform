@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.impl.jobexecutor.DefaultJobExecutor;
 import org.camunda.bpm.engine.spring.ProcessEngineFactoryBean;
 import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
 import org.camunda.bpm.spring.boot.starter.actuator.JobExecutorHealthIndicator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,8 +19,11 @@ import ru.mycrg.gis_service.bpmn.CrgJobExecutorHealthIndicator;
 @Configuration
 public class BpmnEngineConfiguration {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public BpmnEngineConfiguration(Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
     @Primary
@@ -33,7 +35,8 @@ public class BpmnEngineConfiguration {
     public SpringProcessEngineConfiguration processEngineConfiguration() {
         SpringProcessEngineConfiguration config = new SpringProcessEngineConfiguration();
 
-        final String camundaDbJdbcUrl = environment.getRequiredProperty("spring.datasource.url")
+        final String camundaDbJdbcUrl = environment
+                .getRequiredProperty("spring.datasource.url")
                 .replace("crg_gis_service", "bpmn_camunda");
 
         HikariDataSource dataSource = new HikariDataSource();

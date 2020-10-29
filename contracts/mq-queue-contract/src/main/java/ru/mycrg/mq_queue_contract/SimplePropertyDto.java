@@ -48,8 +48,6 @@ public class SimplePropertyDto {
     private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
 
-    public SimplePropertyDto() {}
-
     public String getName() {
         return name;
     }

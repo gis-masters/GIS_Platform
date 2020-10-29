@@ -8,7 +8,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.service.StorageService;
 
@@ -18,7 +20,7 @@ import java.io.IOException;
 @RestController
 public class ExportController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(ExportController.class);
+    private static final Logger log = LoggerFactory.getLogger(ExportController.class);
 
     private final StorageService storageService;
 
@@ -49,7 +51,7 @@ public class ExportController extends BaseController {
         } catch (IOException e) {
             log.error("Wrong file URL", e);
 
-            throw new NotFoundException("Wrong file URL");
+            throw new NotFoundException("Wrong file URL", e.getCause());
         }
 
         if (contentType == null) {
@@ -58,5 +60,4 @@ public class ExportController extends BaseController {
 
         return contentType;
     }
-
 }

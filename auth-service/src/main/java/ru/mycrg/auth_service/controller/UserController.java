@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-import static ru.mycrg.auth_service.config.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
 
@@ -141,5 +141,4 @@ public class UserController {
     public ResponseEntity<Object> updateUsers(@PathVariable String id) {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
-
 }

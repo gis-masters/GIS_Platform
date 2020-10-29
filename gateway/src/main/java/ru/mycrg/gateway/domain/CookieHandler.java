@@ -14,9 +14,9 @@ import static java.lang.Integer.MAX_VALUE;
 @Service
 public class CookieHandler implements TokenHandler {
 
-    public final int COOKIE_VERSION = 1;
-    public final String COOKIE_NAME = "crgAuthCookie";
-    public final String SEPARATOR = "---crg---";
+    public static final int COOKIE_VERSION = 1;
+    public static final String COOKIE_NAME = "crgAuthCookie";
+    public static final String SEPARATOR = "---crg---";
 
     @NotNull
     public Cookie makeCookie(JwtToken tokenModel) {

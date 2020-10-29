@@ -13,7 +13,7 @@ import ru.mycrg.auth_service.exeptions.*;
 import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.auth_service.security.AES;
+import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.OrganizationRemovedEvent;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
@@ -38,6 +38,7 @@ public class OrganizationService {
 
     private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
+    private final AESCryptor aesCryptor;
     private final MessageBus messageBus;
     private final Environment environment;
     private final OAuthClient oAuthClient;
@@ -51,13 +52,15 @@ public class OrganizationService {
                                MessageBus messageBus,
                                Environment environment,
                                ProjectionFactory projectionFactory,
-                               OAuthClient oAuthClient) {
+                               OAuthClient oAuthClient,
+                               AESCryptor aesCryptor) {
         this.organizationRepository = organizationRepository;
         this.projectionFactory = projectionFactory;
         this.userRepository = userRepository;
         this.messageBus = messageBus;
         this.environment = environment;
         this.oAuthClient = oAuthClient;
+        this.aesCryptor = aesCryptor;
     }
 
     /**
@@ -66,6 +69,7 @@ public class OrganizationService {
      * Вместе с организацией создается первоначальный пользователь (супер админ).
      *
      * @param createDto {@link OrganizationCreateDto}
+     *
      * @return {@link Organization}
      */
     public Organization create(@Valid OrganizationCreateDto createDto) {
@@ -88,10 +92,11 @@ public class OrganizationService {
         newUser.addAuthority(ORG_ADMIN);
 
         messageBus.sendOrgEvent(
-                new OrganizationInitializedEvent(newOrganization.getId(), getRootAccessToken(),
-                        AES.encrypt(owner.getPassword(), owner.getEmail()),
-                        owner.getEmail(),
-                        newUser.getUsername()));
+                new OrganizationInitializedEvent(newOrganization.getId(),
+                                                 getRootAccessToken(),
+                                                 aesCryptor.encrypt(owner.getPassword()),
+                                                 owner.getEmail(),
+                                                 newUser.getUsername()));
 
         return newOrganization;
     }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class IsDoubleTypeValidation implements CrgConstraintValidator {
 
-    private final String type = "notDoubleType";
+    private static final String TYPE = "notDoubleType";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -26,7 +26,7 @@ public class IsDoubleTypeValidation implements CrgConstraintValidator {
     @Override
     public void validate(Object value, SimplePropertyDto context, List<String> violations) {
         if (!isValid(value, context)) {
-            violations.add(type);
+            violations.add(TYPE);
         }
     }
 }

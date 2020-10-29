@@ -32,7 +32,7 @@ import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.PENDING;
 @Service
 public class ExportService extends BaseProcessService {
 
-    private static Logger log = LoggerFactory.getLogger(ExportService.class);
+    private static final Logger log = LoggerFactory.getLogger(ExportService.class);
 
     private final MqSender mqSender;
     private final SchemaService schemaService;

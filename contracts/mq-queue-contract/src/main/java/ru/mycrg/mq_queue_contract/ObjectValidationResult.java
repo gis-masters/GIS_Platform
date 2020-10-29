@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс используется для передачи через очередь и для вывода инфы на UI.
- * Если на UI не хочется получать лишней инфы (типа поля xMin) то нуно заюзать отдельную DTO
- * В данном классе никаких JsonIgnore не тыкать
+ * Класс используется для передачи через очередь и для вывода инфы на UI. Если на UI не хочется получать лишней инфы
+ * (типа поля xMin) то нуно заюзать отдельную DTO В данном классе никаких JsonIgnore не тыкать
  */
 public class ObjectValidationResult {
 
@@ -14,9 +13,7 @@ public class ObjectValidationResult {
     private String classId;
     private String xMin;
     private List<PropertyViolation> propertyViolations = new ArrayList<>();
-    private List<ErrorDescription> objectViolations = new ArrayList<>();
-
-    public ObjectValidationResult() {}
+    private final List<ErrorDescription> objectViolations = new ArrayList<>();
 
     public void addPropertyViolation(PropertyViolation propertyViolation) {
         this.propertyViolations.add(propertyViolation);
@@ -61,5 +58,4 @@ public class ObjectValidationResult {
     public List<ErrorDescription> getObjectViolations() {
         return objectViolations;
     }
-
 }

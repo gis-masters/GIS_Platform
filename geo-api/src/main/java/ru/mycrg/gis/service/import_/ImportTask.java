@@ -4,7 +4,6 @@ import ru.mycrg.mq_queue_contract.import_.MatchingPair;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**

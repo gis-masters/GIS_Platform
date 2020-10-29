@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 public class JsonConverter {
 
-    private static Logger log = LoggerFactory.getLogger(JsonConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonConverter.class);
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static JsonNode toJsonNode(Object object) {
         try {
@@ -27,8 +27,7 @@ public class JsonConverter {
     @Nullable
     static private String getJsonString(Object classType) throws JsonProcessingException {
         return mapper.writer()
-                .withDefaultPrettyPrinter()
-                .writeValueAsString(classType);
+                     .withDefaultPrettyPrinter()
+                     .writeValueAsString(classType);
     }
-
 }

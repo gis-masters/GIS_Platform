@@ -6,7 +6,6 @@ import ru.mycrg.gis.entity.DataSchemaDescription;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface DataSchemaRepository extends PagingAndSortingRepository<DataSchemaDescription, Long> {

@@ -1,7 +1,5 @@
 package ru.mycrg.wrapper.service.validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.mq_queue_contract.*;
 import ru.mycrg.mq_queue_contract.enums.ValueType;
@@ -15,8 +13,6 @@ import java.util.stream.Stream;
 
 @Service
 public class ValidatorImpl implements IValidator {
-
-    private static Logger log = LoggerFactory.getLogger(ValidatorImpl.class);
 
     private final CrgScriptEngine scriptEngine;
 
@@ -41,20 +37,20 @@ public class ValidatorImpl implements IValidator {
 
         Object fResult = scriptEngine.invokeFunction(fObject, schemaDto.getCustomRuleFunction());
         Stream.of(fResult)
-                .map(next -> {
-                    Map<String, Object> item = (Map<String, Object>) next;
+              .map(next -> {
+                  Map<String, Object> item = (Map<String, Object>) next;
 
-                    List<ErrorDescription> result = new ArrayList<>();
+                  List<ErrorDescription> result = new ArrayList<>();
 
-                    item.forEach((key, value) -> {
-                        Map<String, String> obj = (Map<String, String>) value;
+                  item.forEach((key, value) -> {
+                      Map<String, String> obj = (Map<String, String>) value;
 
-                        result.add(new ErrorDescription(obj.get("attribute"), obj.get("error")));
-                    });
+                      result.add(new ErrorDescription(obj.get("attribute"), obj.get("error")));
+                  });
 
-                    return result;
-                })
-                .forEach(errorDescriptions -> errorDescriptions.forEach(validationResult::addObjectViolation));
+                  return result;
+              })
+              .forEach(errorDescriptions -> errorDescriptions.forEach(validationResult::addObjectViolation));
 
         schemaDto.getProperties().forEach(propertySchema -> {
             String name = propertySchema.getName();
@@ -102,5 +98,4 @@ public class ValidatorImpl implements IValidator {
 
         return violations;
     }
-
 }

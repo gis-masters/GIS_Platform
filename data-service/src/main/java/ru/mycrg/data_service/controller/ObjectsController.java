@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
-import static ru.mycrg.data_service.config.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 public class ObjectsController {

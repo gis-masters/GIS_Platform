@@ -120,7 +120,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                    final WebRequest request) {
         logger.info(ex.getClass().getName());
 
-        final String error = ex.getName() + " should be of type " + ex.getRequiredType().getName();
+        String typeName = "";
+        final Class<?> requiredType = ex.getRequiredType();
+        if (requiredType != null) {
+            typeName = requiredType.getName();
+        }
+
+        final String error = ex.getName() + " should be of type " + typeName;
 
         final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
 

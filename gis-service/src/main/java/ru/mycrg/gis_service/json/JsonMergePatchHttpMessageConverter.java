@@ -18,7 +18,7 @@ import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_MERGE_PATCH_VAL
 @Component
 public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConverter<JsonMergePatch> {
 
-    private static Logger log = LoggerFactory.getLogger(JsonMergePatchHttpMessageConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonMergePatchHttpMessageConverter.class);
 
     public JsonMergePatchHttpMessageConverter() {
         super(APPLICATION_MERGE_PATCH_VALUE);
@@ -30,7 +30,8 @@ public class JsonMergePatchHttpMessageConverter extends AbstractHttpMessageConve
     }
 
     @Override
-    protected JsonMergePatch readInternal(@NotNull Class<? extends JsonMergePatch> clazz, HttpInputMessage inputMessage) {
+    protected JsonMergePatch readInternal(@NotNull Class<? extends JsonMergePatch> clazz,
+                                          HttpInputMessage inputMessage) {
         try (JsonReader reader = Json.createReader(inputMessage.getBody())) {
             return Json.createMergePatch(reader.readValue());
         } catch (Exception e) {

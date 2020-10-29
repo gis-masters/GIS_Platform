@@ -46,12 +46,12 @@ public class TablesDao {
                         .append(key);
             });
 
-            String INSERT_QUERY = String.format("%s (%s) values (%s)",
+            String insertQuery = String.format("%s (%s) values (%s)",
                     initialPart.toString(), propertiesPart.toString(), valuesPart.toString());
 
-            log.debug("INSERT_QUERY: {}", INSERT_QUERY);
+            log.debug("INSERT_QUERY: {}", insertQuery);
 
-            jdbcTemplate.update(INSERT_QUERY, body);
+            jdbcTemplate.update(insertQuery, body);
 
             return id;
         } catch (DataAccessException e) {

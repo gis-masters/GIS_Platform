@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.mycrg.gis_service.service.GroupValidator.isInvalidGroupRelation;
 
-public class GroupsTest {
+class GroupsTest {
 
     @Test
-    public void shouldCheckLayersGroups() {
+    void shouldCheckLayersGroups() {
         List<Group> groups = prepareGroups();
 
         Group rootGroup = new Group();
@@ -67,5 +67,4 @@ public class GroupsTest {
 
         return Arrays.asList(root, level11, level12, level21, level31);
     }
-
 }

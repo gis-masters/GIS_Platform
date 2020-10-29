@@ -12,6 +12,7 @@ import ru.mycrg.gis.dto.ValidationInfo;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
 import ru.mycrg.gis.exceptions.FailedException;
+import ru.mycrg.gis.exceptions.NotFoundException;
 import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.mq_queue_contract.ObjectValidationResult;
 
@@ -29,7 +30,7 @@ import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
 @Service
 public class ViolationService {
 
-    private static Logger log = LoggerFactory.getLogger(ViolationService.class);
+    private static final Logger log = LoggerFactory.getLogger(ViolationService.class);
 
     private final SchemaService schemaService;
     private final CrgProperties crgProperties;
@@ -47,6 +48,7 @@ public class ViolationService {
      * @param layerName   Название слоя
      * @param pIndex      индекс страницы
      * @param pSize       размер старницы
+     *
      * @return {@link ValidationResponseDto}
      */
     public ValidationResponseDto getViolations(Principal principal, String projectName, String layerName, int pIndex,
@@ -54,7 +56,9 @@ public class ViolationService {
             throws FailedException {
         long orgId = getOrganizationId(principal);
 
-        schemaService.checkFeatureByName(layerName);
+        if (!schemaService.isSchemaExist(layerName)) {
+            throw new NotFoundException(layerName);
+        }
 
         String dbName = DEFAULT_DB_NAME + orgId;
         ValidationResponseDto response = new ValidationResponseDto();
@@ -67,7 +71,7 @@ public class ViolationService {
             Long totalViolations = countTotalViolations(jdbcTemplate, projectName, layerName);
             if (totalViolations > 0) {
                 List<Map<String, Object>> violations = getViolations(jdbcTemplate, projectName,
-                        layerName, pSize, pIndex);
+                                                                     layerName, pSize, pIndex);
 
                 log.info("Found {} violations", violations.size());
                 response.setResults(mapToViolations(violations));
@@ -77,7 +81,7 @@ public class ViolationService {
             response.setTotal(totalViolations);
             response.setStatus(DONE);
         } catch (Exception e) {
-            log.error("Не удалось выбрать результаты валидации для: " + layerName, e);
+            log.error("Не удалось выбрать результаты валидации для: {}", layerName, e);
             response.setStatus(ERROR);
             response.setError(e.getMessage());
 
@@ -92,9 +96,10 @@ public class ViolationService {
     /**
      * Выборка общей инфы по провалидированным слоям
      *
-     * @param principal
+     * @param principal   Пользователь
      * @param projectName Проект
      * @param request     Список слоев {@link ValidationRequestDto}
+     *
      * @return list of {@link ValidationInfo}
      */
     public List<ValidationInfo> getShortInfo(Principal principal, String projectName, ValidationRequestDto request) {
@@ -163,7 +168,7 @@ public class ViolationService {
         String extensionTableName = layerName + "_extension";
 
         String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
-                schemaName, extensionTableName);
+                                          schemaName, extensionTableName);
 
         return jdbcTemplate.queryForObject(sqlRequest, Long.class);
     }
@@ -173,7 +178,7 @@ public class ViolationService {
         String extensionTableName = layerName + "_extension";
 
         String sqlRequest = String.format("SELECT * FROM %s.%s where valid is false LIMIT ? OFFSET ?",
-                schemaName, extensionTableName);
+                                          schemaName, extensionTableName);
 
         return jdbcTemplate.queryForList(sqlRequest, limit, limit * offset);
     }
@@ -202,5 +207,4 @@ public class ViolationService {
 
         return newDataSource;
     }
-
 }

@@ -7,7 +7,7 @@ public enum OrganizationStatus {
     PROVISIONING_FAILED("PROVISIONING_FAILED"),
     DELETING("DELETING");
 
-    private String status;
+    private final String status;
 
     OrganizationStatus(String status) {
         this.status = status;
@@ -15,9 +15,5 @@ public enum OrganizationStatus {
 
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

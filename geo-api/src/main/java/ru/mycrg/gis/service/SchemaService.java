@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @Service
 public class SchemaService {
 
-    private static Logger log = LoggerFactory.getLogger(SchemaService.class);
+    private static final Logger log = LoggerFactory.getLogger(SchemaService.class);
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private final DataSchemaRepository schemaRepository;
 
@@ -32,28 +32,28 @@ public class SchemaService {
     public List<SchemaDto> getSchemas(List<String> featureNames) {
         if (featureNames.isEmpty()) {
             return schemaRepository.findAll().stream()
-                    .map(this::mapToSchemaDto)
-                    .collect(Collectors.toList());
+                                   .map(this::mapToSchemaDto)
+                                   .collect(Collectors.toList());
         } else {
             return schemaRepository.findByNameIn(featureNames).stream()
-                    .map(this::mapToSchemaDto)
-                    .collect(Collectors.toList());
+                                   .map(this::mapToSchemaDto)
+                                   .collect(Collectors.toList());
         }
     }
 
     public Optional<SchemaDto> getSchemaByLayerName(@NotNull String name) {
-        final DataSchemaDescription schemaDescription = schemaRepository.findByName(name).stream()
+        final DataSchemaDescription schemaDescription = schemaRepository
+                .findByName(name).stream()
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Not found schema by name:" + name));
+                .orElseThrow(() -> new NotFoundException(name));
 
         return Optional.ofNullable(mapToSchemaDto(schemaDescription));
     }
 
-    public void checkFeatureByName(String name) {
-        schemaRepository
-                .findByName(name).stream()
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Not found schema by name:" + name));
+    public boolean isSchemaExist(String name) {
+        return schemaRepository.findByName(name).stream()
+                               .findFirst()
+                               .isPresent();
     }
 
     private SchemaDto mapToSchemaDto(DataSchemaDescription dataSchemaDescription) {
@@ -72,5 +72,4 @@ public class SchemaService {
 
         return null;
     }
-
 }

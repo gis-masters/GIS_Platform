@@ -23,9 +23,8 @@ public class ProcessService {
 
     @NotNull
     public Process findById(long id) {
-        return processRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("Not found process with id: " + id));
+        return processRepository.findById(id)
+                                .orElseThrow(() -> new NotFoundException(id));
     }
 
     /**
@@ -34,6 +33,7 @@ public class ProcessService {
      *
      * @param pageable  Pagination information
      * @param principal User claims
+     *
      * @return a page of entities
      */
     public Page<Process> findAll(Pageable pageable, Principal principal) {

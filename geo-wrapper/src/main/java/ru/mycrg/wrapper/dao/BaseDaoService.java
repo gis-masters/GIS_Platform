@@ -86,17 +86,6 @@ public class BaseDaoService {
                         });
     }
 
-    @Transactional
-    public Long countTotalViolations(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
-        String schemaName = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
-
-        String sqlRequest = String.format("SELECT count(*) FROM %s.%s where valid is false",
-                schemaName, extensionTableName);
-
-        return jdbcTemplate.queryForObject(sqlRequest, Long.class);
-    }
-
     public Long countTotalRows(ResourceProjection resource) {
         try {
             String schemaName = resource.getSchemaName();
@@ -106,20 +95,6 @@ public class BaseDaoService {
         } catch (Exception e) {
             return 0L;
         }
-    }
-
-    @Transactional
-    public boolean isValidated(JdbcTemplate jdbcTemplate, ResourceProjection resource) {
-        String schemaName = resource.getSchemaName();
-        String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
-
-        String sqlRequest = String.format("SELECT * FROM %s.%s LIMIT 1", schemaName, extensionTableName);
-
-        List<Map<String, Object>> result = jdbcTemplate.queryForList(sqlRequest);
-
-        log.info("isValidated for table: {} / result: {}", extensionTableName, result.isEmpty());
-
-        return !result.isEmpty();
     }
 
     /**
@@ -252,9 +227,9 @@ public class BaseDaoService {
                 targetColumns.append(tName).append(", ");
             }
 
-            if ("length".equals(sName.toLowerCase())) {
+            if ("length".equalsIgnoreCase(sName)) {
                 sourceColumns.append("st_length(the_geom), ");
-            } else if ("area".equals(sName.toLowerCase())) {
+            } else if ("area".equalsIgnoreCase(sName)) {
                 sourceColumns.append("st_area(the_geom), ");
             } else {
                 sourceColumns.append("\"").append(sName).append("\", ");
@@ -270,5 +245,4 @@ public class BaseDaoService {
     private boolean isValid(@NotNull ObjectValidationResult result) {
         return result.getPropertyViolations().isEmpty() && result.getObjectViolations().isEmpty();
     }
-
 }

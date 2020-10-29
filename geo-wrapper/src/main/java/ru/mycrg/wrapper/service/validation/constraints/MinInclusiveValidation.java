@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MinInclusiveValidation extends IsLongTypeValidation implements CrgConstraintValidator {
 
-    private final String type = "minInclusive";
+    private static final String TYPE = "minInclusive";
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
@@ -17,7 +17,7 @@ public class MinInclusiveValidation extends IsLongTypeValidation implements CrgC
         if (!super.isValid(value, context)) {
             return false;
         } else {
-            Long valueAsLong = Long.valueOf(String.valueOf(value));
+            long valueAsLong = Long.parseLong(String.valueOf(value));
 
             return valueAsLong >= context.getMinInclusive();
         }
@@ -26,8 +26,7 @@ public class MinInclusiveValidation extends IsLongTypeValidation implements CrgC
     @Override
     public void validate(Object value, SimplePropertyDto context, List<String> violations) {
         if (!isValid(value, context)) {
-            violations.add(type + ":" + context.getMinInclusive());
+            violations.add(TYPE + ":" + context.getMinInclusive());
         }
     }
-
 }

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
 
-	public NotFoundException(String msg) {
-		super(msg);
+	public NotFoundException(Object id) {
+		super("Сущность не найдена по идентификатору: " + id.toString());
 	}
 
-	public NotFoundException(long id) {
-		super("Сущность не найдена по идентификатору: " + id);
+	public NotFoundException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 }

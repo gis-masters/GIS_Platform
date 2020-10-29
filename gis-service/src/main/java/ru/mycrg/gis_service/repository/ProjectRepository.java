@@ -8,7 +8,6 @@ import ru.mycrg.gis_service.entity.Project;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RepositoryRestResource(collectionResourceRel = "projects", path = "projects")
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
