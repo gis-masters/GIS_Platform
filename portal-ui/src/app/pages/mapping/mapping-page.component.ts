@@ -11,7 +11,7 @@ import {
 } from '../../services/geoserver/import/import-data-holder.service';
 import { getAllImportLayers } from '../../services/geoserver/import/import.service';
 import { projectsService } from '../../services/crg/projects.service';
-import { Process, ProcessStatus } from '../../services/crg/models';
+import { Process, ProcessStatus } from '../../services/models';
 import { OrganizationService } from '../../services/crg/organization.service';
 import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/models';
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';

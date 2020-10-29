@@ -6,7 +6,7 @@ import {
 } from '../../services/crg/schema.service';
 import {Subject} from 'rxjs';
 import {ImportLayerItem} from '../../services/geoserver/import/models';
-import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/crg/models';
+import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/models';
 import {ImportDataHolderService, InputDataMetrics} from '../../services/geoserver/import/import-data-holder.service';
 import {FeatureUtil} from '../../services/util/FeatureUtil';
 

@@ -1,7 +1,7 @@
 import { PropertySchema } from '../crg/schema.service';
 import { CrgComparison } from '../properties-comparator.service';
 import { LayerAttribute } from '../geoserver/import/models';
-import { AS_IS, NOT_IMPORT } from '../crg/models';
+import { AS_IS, NOT_IMPORT } from '../models';
 
 /**
  * Первый и самый простой компаратор.

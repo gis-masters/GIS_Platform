@@ -17,6 +17,7 @@ import { WorkflowGuardService } from './services/workflow-guard.service';
 import { ProjectsGuardService } from './services/projects-guard.service';
 import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
 import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
+import { DataManagementPageComponent } from './pages/data-management/data-management-page.component';
 
 export enum Pages {
   HOME = 'home',
@@ -27,7 +28,8 @@ export enum Pages {
   PROJECTS = 'projects',
   IMPORT = 'import',
   MAP = 'map',
-  ORG_ADMIN = 'org-admin'
+  ORG_ADMIN = 'org-admin',
+  DATA_MANAGEMENT = 'data-management'
 }
 
 export interface AppRouteData extends Data {
@@ -152,6 +154,15 @@ const routes: AppRoutes = [
     data: { page: Pages.ORG_ADMIN }
   },
   {
+    path: 'data-management',
+    component: DataManagementPageComponent,
+    canActivate: [OrgAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.DATA_MANAGEMENT }
+  },
+  {
     path: '**',
     redirectTo: ''
   }
@@ -174,5 +185,6 @@ export const routingComponents = [
   ImportPageComponent,
   MappingPageComponent,
   ProjectsPageComponent,
-  OrgAdminPageComponent
+  OrgAdminPageComponent,
+  DataManagementPageComponent
 ];

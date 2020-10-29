@@ -7,7 +7,7 @@ import { PropertiesComparatorService } from '../../services/properties-comparato
 import { LayerAttribute } from '../../services/geoserver/import/models';
 import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
 import { MatchingPair } from '../../services/geoserver/import/taskImport';
-import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/crg/models';
+import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/models';
 
 @Component({
   selector: 'crg-mapping-pair',

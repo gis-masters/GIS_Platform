@@ -9,8 +9,8 @@ class ServerProperties {
   private _wsPort: number;
   private _baseUrl: string;
   private _geoServerUrl: string;
-  private _authServerUrl: string;
-  private _dataServerUrl: string;
+  private _authUrl: string;
+  private _dataUrl: string;
   private _projectsUrl: string;
   private _apiUrl: string;
   private _organizationsUrl: string;
@@ -65,15 +65,15 @@ class ServerProperties {
     });
   }
 
-  get authServerUrl(): Promise<string> {
+  get authUrl(): Promise<string> {
     return this.getEnv().then(() => {
-      return this._authServerUrl;
+      return this._authUrl;
     });
   }
 
-  get dataServerUrl(): Promise<string> {
+  get dataUrl(): Promise<string> {
     return this.getEnv().then(() => {
-      return this._dataServerUrl;
+      return this._dataUrl;
     });
   }
 
@@ -133,8 +133,8 @@ class ServerProperties {
     this._wsPort = environment.ws_port;
     this._baseUrl = this._host + ':' + this._port;
     this._geoServerUrl = this._baseUrl + '/geoserver';
-    this._authServerUrl = this._baseUrl + '/oauth/token';
-    this._dataServerUrl = this._baseUrl + '/api/data';
+    this._authUrl = this._baseUrl + '/oauth/token';
+    this._dataUrl = this._baseUrl + '/api/data';
     this._projectsUrl = this._baseUrl + '/projects';
     this._apiUrl = this._baseUrl + '/api';
     this._organizationsUrl = this._baseUrl + '/organizations';

@@ -4,7 +4,7 @@ import { ValueType } from './FeaturePropertyValidators';
 import { FeatureDescription, PropertySchema } from '../crg/schema.service';
 import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 import { ImportLayerItem, LayerAttribute } from '../geoserver/import/models';
-import { AS_IS, NOT_IMPORT } from '../crg/models';
+import { AS_IS, NOT_IMPORT } from '../models';
 
 export class FeatureUtil {
 

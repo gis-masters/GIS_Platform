@@ -1,19 +1,26 @@
 import GeometryType from 'ol/geom/GeometryType';
 
-import { FeatureDescription, PropertySchema } from './schema.service';
+import { FeatureDescription, PropertySchema } from './crg/schema.service';
 
-export interface CrgApiLink {
+interface PageableLink {
   href: string;
   templated?: boolean;
 }
 
-export interface CrgApiResponse<T> {
-  _embedded?: T;
-  _links: CrgApiLink[];
-  page: CrgApiPageable;
+interface PageablePage {
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
-export interface CrgApiPageableResponse<T> {
+export interface PageableResponse<T> {
+  _embedded?: T;
+  _links: PageableLink[] | { [key: string]: PageableLink };
+  page: PageablePage;
+}
+
+export interface PageableResponse2<T> {
   content: T[];
   first: boolean;
   last: boolean;
@@ -43,13 +50,6 @@ export interface CrgModels {
   page?: Pageable;
   sort?: Sortable;
   filter?: FilterEvent[];
-}
-
-export interface CrgApiPageable {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 }
 
 export interface Pageable {
@@ -142,3 +142,8 @@ export const NOT_IMPORT_LAYER: FeatureDescription = {
   geometryType: GeometryType.POINT,
   properties: []
 };
+
+export enum SortDir {
+  ASC = 'asc',
+  DESC = 'desc'
+}

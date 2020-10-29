@@ -1,4 +1,4 @@
-import { debounce, Cancelable } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 import { Toast } from '../../components/Toast/Toast';
 
@@ -87,7 +87,7 @@ class SchemaService {
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
   private fetchingNow = 0;
-  private readonly debouncedFetch: ((fetchAll?: boolean) => Promise<void>) & Cancelable;
+  private readonly debouncedFetch: DebouncedFunc<((fetchAll?: boolean) => Promise<void>)>;
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);

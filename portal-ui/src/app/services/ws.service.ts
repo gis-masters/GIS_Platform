@@ -6,7 +6,7 @@ import { Stomp, CompatClient } from '@stomp/stompjs';
 import { generateRandomId } from './util/stringUtil';
 import { BugObject } from './crg/validation.service';
 import { serverProperties } from './server-properties.service';
-import { ProcessType } from './crg/models';
+import { ProcessType } from './models';
 
 export interface IWsMessage {
   type: ProcessType;

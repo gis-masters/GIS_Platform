@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { serverProperties } from '../server-properties.service';
 import { http } from '../http.service';
-import { Process } from './models';
+import { Process } from '../models';
 
 @Injectable({
   providedIn: 'root'

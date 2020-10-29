@@ -4,7 +4,7 @@ import { serverProperties } from '../server-properties.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { usersList } from '../../stores/UsersList.store';
 import { BuildInRole } from './permissions.service';
-import { CrgApiResponse } from './models';
+import { PageableResponse } from '../models';
 import { services } from '../services';
 import { http } from '../http.service';
 
@@ -73,7 +73,7 @@ class UsersService {
     const url = await serverProperties.usersUrl;
     const params = { size: '10000' };
 
-    return (await http.get<CrgApiResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
+    return (await http.get<PageableResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
   }
 
   async create(userData: NewUserData) {

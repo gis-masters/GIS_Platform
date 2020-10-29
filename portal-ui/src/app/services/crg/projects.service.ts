@@ -9,7 +9,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { isReadAllowed } from './permissions.service';
 import { Toast } from '../../components/Toast/Toast';
-import { CrgApiResponse, Process } from './models';
+import { PageableResponse, Process } from '../models';
 import { route } from '../../stores/Route.store';
 import { http } from '../http.service';
 
@@ -34,7 +34,7 @@ class ProjectsService {
     const url = await serverProperties.projectsUrl;
     const params = { size: '1000' };
 
-    const response = await http.get<CrgApiResponse<{ projects: CrgProject[] }>>(url, { params });
+    const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(url, { params });
 
     if (response && response._embedded) {
       projectsList.setList(response._embedded.projects);

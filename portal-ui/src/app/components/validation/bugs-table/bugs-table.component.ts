@@ -15,7 +15,7 @@ import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
-import { ProcessStatus } from '../../../services/crg/models';
+import { ProcessStatus } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
 
 @Component({

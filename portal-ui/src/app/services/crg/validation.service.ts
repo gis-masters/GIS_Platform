@@ -5,7 +5,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { serverProperties } from '../server-properties.service';
 import { ValidationWsMsg, wsService } from '../ws.service';
 import { CrgLayer } from '../crg/projects.models';
-import { ProcessStatus } from './models';
+import { ProcessStatus } from '../models';
 import { http } from '../http.service';
 
 export interface ValidationResultsResponse {

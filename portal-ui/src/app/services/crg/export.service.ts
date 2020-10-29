@@ -1,4 +1,4 @@
-import { Process } from './models';
+import { Process } from '../models';
 import { http } from '../http.service';
 import { wsService } from '../ws.service';
 import { projectsService } from './projects.service';

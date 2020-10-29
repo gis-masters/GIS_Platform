@@ -7,7 +7,7 @@ import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
 import { communicationService } from '../../../services/communication.service';
 import { exportService } from '../../../services/crg/export.service';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { Process } from '../../../services/crg/models';
+import { Process } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
 

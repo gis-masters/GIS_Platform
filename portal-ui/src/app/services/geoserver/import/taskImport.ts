@@ -1,5 +1,5 @@
 import {LayerAttribute} from './models';
-import {ImportTargetType} from '../../crg/models';
+import {ImportTargetType} from '../../models';
 
 // Править в соответствии с моделью ru/mycrg/gis/service/import_/ImportTask.java
 export class TaskImport {

@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Menu, MenuItem, ListItemIcon } from '@material-ui/core';
-import { Menu as MenuIcon, Map as MapIcon, ViewModule, Business, CloudDownload } from '@material-ui/icons';
+import { Menu as MenuIcon, Map as MapIcon, ViewModule, Business, CloudDownload, Storage } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { flags } from '../../../services/feature-flags';
 import { route } from '../../../stores/Route.store';
 import { Pages } from '../../../app-routing.module';
 import { Link } from '../../Link/Link';
@@ -62,6 +63,17 @@ export class WorkspaceHeaderBurger extends Component {
               Проекты
             </MenuItem>
           </Link>
+
+          {currentUser.isAdmin && flags.dataManagement && (
+            <Link url='/data-management' theme='none' delay={300}>
+              <MenuItem onClick={this.close}>
+                <ListItemIcon>
+                  <Storage />
+                </ListItemIcon>
+                Управление данными
+              </MenuItem>
+            </Link>
+          )}
 
           {currentUser.isAdmin && (
             <Link url='/org-admin' theme='none' delay={300}>

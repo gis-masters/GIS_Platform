@@ -46,60 +46,30 @@
           },
           "configurations": {
             "convProduction": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convProd.json"
               }]
             },
             "convTest": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convTest.json"
               }]
             },
             "convStaging": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convStaging.json"
               }]
             },
             "convLocal": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "optimization": false,
               "sourceMap": true,
               "buildOptimizer": false,
               "extractCss": false
             },
             "convDev": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.convDev.json"
@@ -110,48 +80,24 @@
               "extractCss": false
             },
             "simfProduction": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfProd.json"
               }]
             },
             "simfTest": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfTest.json"
               }]
             },
             "simfStaging": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfStaging.json"
               }]
             },
             "simfDev": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
               "fileReplacements": [{
                 "replace": "src/assets/config/environment.json",
                 "with": "src/assets/config/environment.simfDev.json"

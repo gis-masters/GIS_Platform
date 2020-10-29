@@ -20,10 +20,18 @@ export const WorkspaceHeaderBreadcrumbs: FC = observer(() => {
     name = currentProject.name;
   }
 
-  const root =
-    route.data.page === Pages.ORG_ADMIN
-      ? { url: '/org-admin', title: 'Управление организацией' }
-      : { url: '/projects', title: 'Проекты' };
+  let root: { url: string; title: string };
+
+  switch (route.data.page) {
+    case Pages.ORG_ADMIN:
+      root = { url: '/org-admin', title: 'Управление организацией' };
+      break;
+    case Pages.DATA_MANAGEMENT:
+      root = { url: '/data-management', title: 'Управление данными' };
+      break;
+    default:
+      root = { url: '/projects', title: 'Проекты' };
+  }
 
   return (
     <div className={cnWorkspaceHeaderBreadcrumbs()}>

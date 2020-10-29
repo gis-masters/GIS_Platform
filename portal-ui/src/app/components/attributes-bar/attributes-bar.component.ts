@@ -24,7 +24,7 @@ import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/crg/models';
+import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
 import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';

@@ -1,6 +1,6 @@
 import { CrgLayer, CrgProject, CrgSource } from './projects.models';
 import { schemaService } from './schema.service';
-import { CrgApiPageableResponse } from './models';
+import { PageableResponse2 } from '../models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
 import { Toast } from '../../components/Toast/Toast';
@@ -113,7 +113,7 @@ export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
 
 async function getPermissionsUrl(project: CrgProject, layer?: CrgLayer): Promise<string> {
   if (layer) {
-    const dataServerUrl = await serverProperties.dataServerUrl;
+    const dataServerUrl = await serverProperties.dataUrl;
 
     return `${dataServerUrl}/datasets/${project.internalName}/tables/${layer.internalName}/roleAssignment`;
   } else {
@@ -151,7 +151,7 @@ export async function getPermissions(project: CrgProject, layer?: CrgLayer): Pro
   const url = await getPermissionsUrl(project, layer);
 
   if (layer) {
-    const response = await http.get<CrgApiPageableResponse<RoleAssignmentBody>>(url, { params: { size: '10000' } });
+    const response = await http.get<PageableResponse2<RoleAssignmentBody>>(url, { params: { size: '10000' } });
 
     return response.content;
   } else {

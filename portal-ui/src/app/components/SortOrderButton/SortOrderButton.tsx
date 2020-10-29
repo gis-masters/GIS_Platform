@@ -1,0 +1,22 @@
+import React, { FC } from 'react';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { Sort } from '@material-ui/icons';
+import { IClassNameProps } from '@bem-react/core';
+import { cn } from '@bem-react/classname';
+
+import '!style-loader!css-loader!sass-loader!./SortOrderButton.scss';
+
+const cnSortOrderButton = cn('SortOrderButton');
+
+interface SortOrderButtonProps extends IClassNameProps {
+  asc: boolean;
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
+
+export const SortOrderButton: FC<SortOrderButtonProps> = ({ asc, onClick, className }) => (
+  <Tooltip title={asc ? 'По возрастанию' : 'По убыванию'}>
+    <IconButton className={cnSortOrderButton({ asc }, [className])} onClick={onClick}>
+      <Sort />
+    </IconButton>
+  </Tooltip>
+);

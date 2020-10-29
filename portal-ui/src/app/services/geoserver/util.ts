@@ -1,4 +1,4 @@
-import {FilterEvent, CrgModels} from '../crg/models';
+import {FilterEvent, CrgModels} from '../models';
 
 export class Util {
 

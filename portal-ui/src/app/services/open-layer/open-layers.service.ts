@@ -41,6 +41,12 @@ import { Emitter } from '../util/Emitter';
 import { MapperUtil } from './MapperUtil';
 import { http } from '../http.service';
 
+// исправление ошибки в типах openlayers
+// актуально для ol: 6.4.3, @types/ol: ^6.4.1, typescript: ~3.8.3
+declare module '../../../../node_modules/@types/ol/Geolocation' {
+  type GeolocationPositionError = any;
+}
+
 // WMS request parameters. At least a LAYERS param is required.
 export interface CrgWmsParams {
   LAYERS: string;

@@ -8,7 +8,7 @@ import { communicationService, ObjectDto } from '../../../services/communication
 import { ValidationBrieflyInfo, ValidationService } from '../../../services/crg/validation.service';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { ProcessStatus, ProcessType } from '../../../services/crg/models';
+import { ProcessStatus, ProcessType } from '../../../services/models';
 import { Toast } from '../../Toast/Toast';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';

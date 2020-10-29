@@ -4,6 +4,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { configure } from 'mobx';
+configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
+
 import { MaterialModule } from './material.module';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { PrimeNgModule } from './prime-ng.module';
@@ -67,9 +70,7 @@ import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { SearchComponent } from './components/search/search.component';
 import { BaseMapsSelectComponent } from './components/base-maps-select/base-maps-select.component';
-
-import { configure } from 'mobx';
-configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
+import { DataManagementComponent } from './components/data-management/data-management.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
     OrgAdminComponent,
     EditFeatureConfirmComponent,
     SearchComponent,
-    BaseMapsSelectComponent
+    BaseMapsSelectComponent,
+    DataManagementComponent
   ],
   imports: [
     HttpClientModule,

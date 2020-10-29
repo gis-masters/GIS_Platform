@@ -1,10 +1,5 @@
 {
-  "exclude": [
-    ".git/**",
-    "node_modules/**",
-    "build/**",
-    "dist/**"
-  ],
+  "exclude": [".git/**", "node_modules/**", "build/**", "dist/**"],
   "always-semicolon": true,
   "block-indent": 2,
   "color-case": "lower",
@@ -36,7 +31,14 @@
       "top",
       "right",
       "bottom",
-      "left"
+      "left",
+      "grid-area",
+      "grid-row",
+      "grid-column",
+      "grid-row-start",
+      "grid-row-end",
+      "grid-column-start",
+      "grid-column-end"
     ],
     [
       "display",
@@ -99,7 +101,17 @@
       "-webkit-order",
       "-moz-box-ordinal-group",
       "-ms-flex-order",
-      "order"
+      "order",
+      "gap",
+      "row-gap",
+      "column-gap",
+      "grid",
+      "grid-template",
+      "grid-template-rows",
+      "grid-template-columns",
+      "grid-template-areas",
+      "grid-auto-rows",
+      "grid-auto-flow"
     ],
     [
       "-webkit-box-sizing",

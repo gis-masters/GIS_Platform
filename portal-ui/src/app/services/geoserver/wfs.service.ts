@@ -3,7 +3,7 @@ import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 import { isEqual } from 'lodash';
 
-import { CrgModels } from '../crg/models';
+import { CrgModels } from '../models';
 import { Util } from './util';
 import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs-models';
 import { services } from '../services';

@@ -1,3 +1,5 @@
+import { FlagsList } from './feature-flags';
+
 export type Platform = 'conv' | 'simf';
 
 export interface EnvironmentServer {
@@ -11,6 +13,7 @@ export interface Environment {
   server: EnvironmentServer;
   ws_port: number;
   scratchWorkspaceName: string;
+  flags?: FlagsList;
 }
 
 const fetchEnv = async (): Promise<Environment> => {
@@ -22,6 +25,6 @@ const fetchEnv = async (): Promise<Environment> => {
 
 const envPromise: Promise<Environment> = fetchEnv();
 
-export const getEnvironment = (): Promise<Environment> => {
+export function getEnvironment(): Promise<Environment> {
   return envPromise;
-};
+}

@@ -42,7 +42,7 @@ axios.interceptors.response.use(
     if (
       e.response &&
       e.response.status === 401 &&
-      !(e.config && e.config.url === (await serverProperties.authServerUrl)) &&
+      !(e.config && e.config.url === (await serverProperties.authUrl)) &&
       !(e.config && e.config.url === (await serverProperties.usersUrl) + '/current')
     ) {
       await authService.logout();
@@ -78,7 +78,7 @@ class AuthService {
     };
 
     const options = { withCredentials: true, headers };
-    const url = await serverProperties.authServerUrl;
+    const url = await serverProperties.authUrl;
     try {
       this.token = await http.post(url, params.toString(), options);
       localStorage.setItem(TOKEN_KEY, this.token);

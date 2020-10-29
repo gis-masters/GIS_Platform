@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 
 import { http } from '../http.service';
 import { services } from '../services';
-import { CrgApiResponse } from './models';
+import { PageableResponse } from '../models';
 import { ApiLink, CrgUser } from './users.service';
 import { groupsList } from '../../stores/GroupsList.store';
 import { serverProperties } from '../server-properties.service';
@@ -35,7 +35,7 @@ class GroupsService {
     await services.provided;
     const url = await serverProperties.groupsUrl;
     const params = { size: '10000' };
-    const response = await http.get<CrgApiResponse<{ groups: CrgGroup[] }>>(url, { params });
+    const response = await http.get<PageableResponse<{ groups: CrgGroup[] }>>(url, { params });
 
     return response._embedded ? response._embedded.groups : [];
   }
