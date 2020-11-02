@@ -20,6 +20,9 @@ public class Layer implements Identifiable<Long> {
     private String title;
 
     @Column
+    private String dataset;
+
+    @Column
     private String internalName;
 
     @Column
@@ -73,6 +76,7 @@ public class Layer implements Identifiable<Long> {
 
     public Layer(LayerCreateDto dto) {
         title = dto.getTitle();
+        dataset = dto.getDataset();
         internalName = dto.getInternalName();
         type = dto.getType();
         schemaId = dto.getSchemaId();
@@ -234,5 +238,13 @@ public class Layer implements Identifiable<Long> {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(String datasets) {
+        this.dataset = datasets;
     }
 }

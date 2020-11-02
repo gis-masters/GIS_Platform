@@ -19,6 +19,10 @@ public class LayerUpdateDto {
     @Length(min = 2, max = 255)
     private String title;
 
+    @NotBlank
+    @Length(min = 2, max = 255)
+    private String dataset;
+
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
     private String enabled;
 

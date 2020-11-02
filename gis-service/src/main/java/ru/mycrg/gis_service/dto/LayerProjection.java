@@ -6,7 +6,7 @@ import ru.mycrg.gis_service.entity.Layer;
 
 @Projection(
         name = "layerProjection",
-        types = { Layer.class })
+        types = {Layer.class})
 public interface LayerProjection {
 
     Long getId();
@@ -14,6 +14,8 @@ public interface LayerProjection {
     String getTitle();
 
     String getType();
+
+    String getDataset();
 
     String getInternalName();
 
@@ -35,10 +37,9 @@ public interface LayerProjection {
 
     String getDataSourceUri();
 
-    @Value("#{target.project.internalName + ':' + target.internalName}")
+    @Value("#{target.dataset + ':' + target.internalName}")
     String getComplexName();
 
     @Value("#{target.group != null ? target.group.id : null}")
     Long getGroupId();
-
 }

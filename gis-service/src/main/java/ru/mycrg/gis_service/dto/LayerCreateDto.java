@@ -19,6 +19,10 @@ public class LayerCreateDto {
 
     @NotBlank
     @Length(min = 2, max = 255)
+    private String dataset;
+
+    @NotBlank
+    @Length(min = 2, max = 255)
     private String internalName;
 
     @NotBlank
@@ -36,5 +40,4 @@ public class LayerCreateDto {
 
     @Length(min = 6, max = 255)
     private String dataSourceUri;
-    
 }

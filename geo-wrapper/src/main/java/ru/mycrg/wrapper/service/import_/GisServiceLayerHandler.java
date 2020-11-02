@@ -50,9 +50,11 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
         log.debug("Add layer {} to crg-gis-service", layerName);
 
         String databaseName = importTask.getTargetResource().getDbName();
+        String datasetName = importTask.getTargetResource().getSchemaName();
         String storeName = databaseName + DEFAULT_STORE_POSTFIX;
 
         json.put("title", title);
+        json.put("dataset", datasetName);
         json.put("internalName", layerName);
         json.put("schemaId", layerName);
         json.put("dataStoreName", storeName);

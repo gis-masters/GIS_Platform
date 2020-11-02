@@ -18,6 +18,7 @@ interface CrgEntity {
 
 // layer from api
 interface BaseCrgLayer extends CrgEntity {
+  dataset: string;
   internalName: string;
   type: CrgLayerType;
   maxZoom: number;

@@ -115,7 +115,7 @@ async function getPermissionsUrl(project: CrgProject, layer?: CrgLayer): Promise
   if (layer) {
     const dataServerUrl = await serverProperties.dataUrl;
 
-    return `${dataServerUrl}/datasets/${project.internalName}/tables/${layer.internalName}/roleAssignment`;
+    return `${dataServerUrl}/datasets/${layer.dataset}/tables/${layer.internalName}/roleAssignment`;
   } else {
     const projectsUrl = await serverProperties.projectsUrl;
 
