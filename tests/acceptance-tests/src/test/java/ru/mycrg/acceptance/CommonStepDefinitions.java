@@ -6,7 +6,14 @@ import io.cucumber.java.en.Then;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -52,19 +59,44 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     @And("Данные отсортированы по {string} и {string} в {string}")
     public void isDataSorted(String sortingType, String sortingDirection, String entity) {
         List<Object> sorted = jsonPath.getList(String.format("_embedded.%s.%s", entity, sortingType));
+        sorted.removeIf(Objects::isNull);
+
         for (int i = 1; i < sorted.size(); i++) {
-            String next = String.valueOf(sorted.get(i));
-            String prev = String.valueOf(sorted.get(i - 1));
+            if (sorted.get(i) instanceof String) {
+                String next = String.valueOf(sorted.get(i));
+                String prev = String.valueOf(sorted.get(i - 1));
 
-            if (next.equals("null") || prev.equals("null")) {
-                continue;
-            }
+                if (sortingDirection.equals("asc")) {
+                    assertThat(prev, lessThanOrEqualTo(next));
+                } else if (sortingDirection.equals("desc")) {
+                    assertThat(prev, greaterThanOrEqualTo(next));
+                }
+            } else if (sorted.get(i) instanceof Integer) {
+                Integer next = (Integer) sorted.get(i);
+                Integer prev = (Integer) sorted.get(i - 1);
 
-            if (sortingDirection.equals("asc")) {
-                assertTrue(prev.compareTo(next) < 1);
-            } else if (sortingDirection.equals("desc")) {
-                assertTrue(prev.compareTo(next) > -1);
+                if (sortingDirection.equals("asc")) {
+                    assertThat(prev, lessThanOrEqualTo(next));
+                } else if (sortingDirection.equals("desc")) {
+                    assertThat(prev, greaterThanOrEqualTo(next));
+                }
             }
         }
+    }
+
+    @And("В ответе сервере в {string} отсутствует пункт {string}")
+    public void checkNonExistentField(String checkType, String field) {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get(String.format("%s/", checkType))
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("", not(hasItems(field)));
+    }
+
+    @Then("В ответе пункт {string} имеет значение {string}")
+    public void checkValueInTheField(String field, String value) {
+        assertEquals(value, jsonPath.get(field));
     }
 }

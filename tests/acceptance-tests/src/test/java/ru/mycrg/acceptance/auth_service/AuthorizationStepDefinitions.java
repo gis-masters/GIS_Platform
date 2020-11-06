@@ -14,7 +14,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.*;
-import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.currentUserDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
@@ -43,7 +42,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Авторизируемся пользователем")
     public void tryToAuthorizeUser() throws InterruptedException {
-        response = authorizeUser(currentUserDto.getEmail(), currentUserDto.getPassword());
+        response = authorizeUser(UserStepsDefinitions.currentDto.getEmail(), UserStepsDefinitions.currentDto.getPassword());
 
         checkCookieAndWriteAsCurrent(response);
     }
@@ -58,8 +57,8 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @And("Пользователь не может авторизоваться")
     public void notPossibleToLogin() {
         Map<String, String> queryParams = new HashMap<String, String>() {{
-            put("username", currentUserDto.getEmail());
-            put("password", currentUserDto.getPassword());
+            put("username", UserStepsDefinitions.currentDto.getEmail());
+            put("password", UserStepsDefinitions.currentDto.getPassword());
             put("grant_type", "password");
         }};
 

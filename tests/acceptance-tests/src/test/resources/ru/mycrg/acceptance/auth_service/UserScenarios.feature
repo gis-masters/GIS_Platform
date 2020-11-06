@@ -48,7 +48,7 @@ Feature: Действия с пользователями
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор делает запрос на всех пользователей
     Then Сервер отвечает со статус-кодом 200
-    And В ответе есть пункт users
+    And В ответе есть пункт "users"
     Examples:
       | userName     | userSurname     | userEmail | userPassword |
       | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
@@ -64,7 +64,7 @@ Feature: Действия с пользователями
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And В ответе есть пункт "users"
-    And Данные "users" отсортированы по "<sorting factor>" и "<sorting direction>"
+    And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "users"
     Examples:
       | sorting factor | sorting direction |
       | email          | asc               |
@@ -86,9 +86,9 @@ Feature: Действия с пользователями
       | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
       | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
       | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-    When Администратор делает постраничный запрос на всех пользователей
+    When Администратор делает постраничный запрос на пользователей "users"
     Then Сервер отвечает со статус-кодом 200
-    And Количество страниц пользователей пропорционально "<usersPerPage>"
+    And Количество страниц пользователей "users" пропорционально "<usersPerPage>"
     And На всех страницах пользователей "users" есть "<usersPerPage>"
     Examples:
       | usersPerPage |

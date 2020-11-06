@@ -4,7 +4,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -21,8 +20,16 @@ import static org.junit.Assert.assertTrue;
 
 public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
-    public static Integer currentBaseMapId;
-    public static BaseMapCreateDto currentBaseMapDto;
+    public static Integer currentId;
+    public static BaseMapCreateDto currentDto;
+
+    public Integer getCurrentId() {
+        return currentId;
+    }
+
+    public void setCurrentId(Integer currentId) {
+        BaseMapsStepsDefinitions.currentId = currentId;
+    }
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -36,9 +43,9 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание подложки")
     public void createBaseMap(DataTable dataTable) {
-        currentBaseMapDto = mapToBaseMapDto(dataTable);
+        currentDto = mapToBaseMapDto(dataTable);
 
-        String payload = new Gson().toJson(currentBaseMapDto);
+        String payload = gson.toJson(currentDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -52,27 +59,27 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     public void getExactBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("" + currentBaseMapId);
+                        get("" + currentId);
     }
 
     @And("Поля подложки совпадают с переданными")
     public void isBaseMapDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentBaseMapDto.getName());
-        assertEquals(jsonPath.get("title"), currentBaseMapDto.getTitle());
-        assertEquals(jsonPath.get("thumbnailUrn"), currentBaseMapDto.getThumbnailUrn());
-        assertEquals(jsonPath.get("type"), currentBaseMapDto.getType());
-        assertEquals(jsonPath.get("url"), currentBaseMapDto.getUrl());
-        assertEquals(jsonPath.get("layerName"), currentBaseMapDto.getLayerName());
-        assertEquals(jsonPath.get("style"), currentBaseMapDto.getStyle());
-        assertEquals(jsonPath.get("projection"), currentBaseMapDto.getProjection());
-        assertEquals(jsonPath.get("format"), currentBaseMapDto.getFormat());
-        assertEquals(jsonPath.get("size"), currentBaseMapDto.getSize());
-        assertEquals(jsonPath.get("resolution"), currentBaseMapDto.getResolution());
-        assertEquals(jsonPath.get("matrixIds"), currentBaseMapDto.getMatrixIds());
+        assertEquals(jsonPath.get("name"), currentDto.getName());
+        assertEquals(jsonPath.get("title"), currentDto.getTitle());
+        assertEquals(jsonPath.get("thumbnailUrn"), currentDto.getThumbnailUrn());
+        assertEquals(jsonPath.get("type"), currentDto.getType());
+        assertEquals(jsonPath.get("url"), currentDto.getUrl());
+        assertEquals(jsonPath.get("layerName"), currentDto.getLayerName());
+        assertEquals(jsonPath.get("style"), currentDto.getStyle());
+        assertEquals(jsonPath.get("projection"), currentDto.getProjection());
+        assertEquals(jsonPath.get("format"), currentDto.getFormat());
+        assertEquals(jsonPath.get("size"), currentDto.getSize());
+        assertEquals(jsonPath.get("resolution"), currentDto.getResolution());
+        assertEquals(jsonPath.get("matrixIds"), currentDto.getMatrixIds());
 
-        baseMapsPool.put(currentBaseMapId, currentBaseMapDto);
+        baseMapsPool.put(currentId, currentDto);
     }
 
     @When("Пользователь делает запрос на все подложки организации")
@@ -95,24 +102,24 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
             response = createResponse;
             Integer id = extractIdFromLocation(createResponse);
 
-            currentBaseMapId = id;
-            currentBaseMapDto = dto;
+            currentId = id;
+            currentDto = dto;
             baseMapsPool.put(id, dto);
         }
     }
 
     @When("Пользователь делает запрос на обновление полей подложки")
     public void updateExactBaseMap(DataTable dataTable) {
-        currentBaseMapDto = mapToBaseMapDto(dataTable);
+        currentDto = mapToBaseMapDto(dataTable);
 
-        String payload = new Gson().toJson(currentBaseMapDto);
+        String payload = gson.toJson(currentDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        patch("" + currentBaseMapId);
+                        patch("" + currentId);
     }
 
     @And("Поля подложки совпадают с переданными {string}, {string}, {string}, {string}")
@@ -129,9 +136,9 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     public void deleteExactBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("" + currentBaseMapId);
+                        delete("" + currentId);
 
-        baseMapsPool.remove(currentBaseMapId);
+        baseMapsPool.remove(currentId);
     }
 
     @And("Представление подложки корректно")
@@ -162,7 +169,7 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передает ID созданной подложки")
     public void extractBaseMapIdFromLocation() {
-        currentBaseMapId = extractIdFromLocation();
+        currentId = extractIdFromLocation();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки")
@@ -172,16 +179,9 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
                         get(String.format("?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
     }
 
-    @When("Администратор делает постраничный запрос на все подложки")
-    public void getAllBaseMapsPaginated() {
-        getAllBaseMaps();
-        jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList("_embedded.basemaps.id").size();
-    }
-
-    @And("Количество страниц подложек пропорционально {string}")
-    public void checkBaseMapsPagesCount(String entitiesPerPage) {
-        super.checkPagesCount(entitiesPerPage);
+    @And("Количество страниц подложек {string} пропорционально {string}")
+    public void checkBaseMapsPagesCount(String checkType, String entitiesPerPage) {
+        super.checkPagesCount(checkType, entitiesPerPage);
     }
 
     @And("На всех страницах подложек {string} есть {string}")
@@ -218,12 +218,17 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     private Response createBaseMap(BaseMapCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(new Gson().toJson(dto)).
+                        body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
                         post("");
 
         return response;
+    }
+
+    @And("В ответе на подложки есть упоминание ID")
+    public void checkIdInResponse() {
+        super.checkIdInResponse();
     }
 }

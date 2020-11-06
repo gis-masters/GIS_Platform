@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -39,7 +38,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
         currentUsersGroupDto = new GroupCreateDto(replaceString(groupName), replaceString(groupDescription));
-        String payload = new Gson().toJson(currentUsersGroupDto);
+        String payload = gson.toJson(currentUsersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -72,7 +71,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользовательская группа {string}, {string}")
-    public void checkUsersGroup(String groupName, String groupDescription) {
+    public void isUsersGroupExist(String groupName, String groupDescription) {
         if (!isUsersGroupExistInPool(replaceString(groupName))) {
             GroupCreateDto dto = mapToGroupDto(replaceString(groupName), replaceString(groupDescription));
             Response createResponse = createUsersGroup(dto);
@@ -80,7 +79,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
             assertEquals(SC_OK, createResponse.getStatusCode());
 
             response = createResponse;
-            Integer id = extractUsersGroupId(createResponse);
+            Integer id = extractEntityIdFromResponse(createResponse);
 
             currentUsersGroupId = id;
             currentUsersGroupDto = dto;
@@ -104,17 +103,15 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         get(String.format("/?sort=%s,%s&%s", sortingFactor, sortingDirection, "size=1000"));
     }
 
-    @When("Администратор делает постраничный запрос на все пользовательские группы")
-    public void usersGroupsPerPage() {
-        getAllUsersGroups();
-        jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList("_embedded.groups.id").size();
+    @When("Администратор делает постраничный запрос на группы {string}")
+    public void getUsersGroupCount(String entity) {
+        getEntityCount(entity);
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")
     public void updateUsersGroup(String newGroupName, String newGroupDescription) {
         currentUsersGroupDto = new GroupCreateDto(replaceString(newGroupName), replaceString(newGroupDescription));
-        String payload = new Gson().toJson(currentUsersGroupDto);
+        String payload = gson.toJson(currentUsersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -132,7 +129,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         body("{}").
                         post(String.format("/%s/users/%s", currentUsersGroupId,
-                                           UserStepsDefinitions.currentUserId))
+                                           UserStepsDefinitions.currentId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
@@ -146,14 +143,14 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
-                        body("users.id", hasItems(UserStepsDefinitions.currentUserId));
+                        body("users.id", hasItems(UserStepsDefinitions.currentId));
     }
 
     @When("Администратор удаляет пользователя из пользовательской группы")
     public void deleteUserToUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                delete(String.format("/%s/users/%s", currentUsersGroupId, UserStepsDefinitions.currentUserId))
+                delete(String.format("/%s/users/%s", currentUsersGroupId, UserStepsDefinitions.currentId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
@@ -167,7 +164,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
-                        body("users.id", not(hasItems(UserStepsDefinitions.currentUserId)));
+                        body("users.id", not(hasItems(UserStepsDefinitions.currentId)));
     }
 
     @When("Администратор организации удаляет пользовательскую группу")
@@ -176,7 +173,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         delete("/" + currentUsersGroupId);
 
-        assertEquals(response.statusCode(), SC_NO_CONTENT);
+        assertEquals(SC_NO_CONTENT, response.statusCode());
     }
 
     @Given("Существуют пользовательские группы")
@@ -187,20 +184,20 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @And("Количество страниц групп пропорционально {string}")
-    public void checkUsersGroupPagesCount(String entitiesPerPage) {
-        super.checkPagesCount(entitiesPerPage);
+    @And("Количество страниц групп {string} пропорционально {string}")
+    public void checkUsersGroupPagesCount(String checkType, String entitiesPerPage) {
+        super.checkPagesCount(checkType, entitiesPerPage);
     }
 
     @And("На всех страницах групп {string} есть {string}")
-    public void isBaseMapsOnPages(String checkType, String entitiesPerPage) {
+    public void areUsersGroupOnPages(String checkType, String entitiesPerPage) {
         super.isSomethingOnPages(checkType, entitiesPerPage);
     }
 
     private Response createUsersGroup(GroupCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(new Gson().toJson(dto)).
+                        body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
@@ -211,7 +208,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     private void createUserGroup(List<String> group) {
         currentUsersGroupDto = new GroupCreateDto(replaceString(group.get(0)), replaceString(group.get(1)));
-        String payload = new Gson().toJson(currentUsersGroupDto);
+        String payload = gson.toJson(currentUsersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -219,10 +216,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("");
-    }
-
-    private Integer extractUsersGroupId(Response response) {
-        return response.jsonPath().get("id");
     }
 
     private boolean isUsersGroupExistInPool(String groupName) {

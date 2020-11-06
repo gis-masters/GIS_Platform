@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance;
 
+import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
@@ -8,6 +9,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.mycrg.acceptance.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -35,6 +37,7 @@ public class BaseStepsDefinitions {
     public static Response response;
     public static Cookie cookie;
     public static JsonPath jsonPath;
+    public static Gson gson = new Gson();
 
     public static int totalPages;
     public static int entityCount;
@@ -43,6 +46,18 @@ public class BaseStepsDefinitions {
     public static Map<Integer, UserCreateDto> userPool = new HashMap<>();
     public static Map<Integer, GroupCreateDto> usersGroupPool = new HashMap<>();
     public static Map<Integer, BaseMapCreateDto> baseMapsPool = new HashMap<>();
+    public static Map<Integer, ProjectRequestDto> projectPool = new HashMap<>();
+
+    public static Object currentDto;
+    public static Integer currentId;
+
+    public Integer getCurrentId() {
+        return currentId;
+    }
+
+    public void setCurrentId(Integer currentId) {
+        BaseStepsDefinitions.currentId = currentId;
+    }
 
     public void setup() {
         testServerHost = System.getProperty("env.HOST");
@@ -123,7 +138,7 @@ public class BaseStepsDefinitions {
 
         switch (type) {
             case "STRING":
-                return random(length, true, true).toLowerCase();
+                return random(length, true, false).toLowerCase();
             case "NUMBER":
                 return random(length, false, true);
             case "EMAIL":
@@ -133,7 +148,11 @@ public class BaseStepsDefinitions {
         }
     }
 
-    public void checkPagesCount(String entitiesPerPage) {
+    public void checkPagesCount(String checkType, String entitiesPerPage) {
+        getAllEntities();
+        jsonPath = response.jsonPath();
+        entityCount = jsonPath.getList(String.format("_embedded.%s.id", checkType)).size();
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/?size=" + entitiesPerPage);
@@ -202,5 +221,52 @@ public class BaseStepsDefinitions {
                        log().ifValidationFails().
                        statusCode(SC_OK).
                        body("users.findAll { it.enabled == true }.userName", hasItems(userName));
+    }
+
+    public void getCurrentEntityInfoById() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + getCurrentId());
+    }
+
+    public Integer extractEntityIdFromResponse(Response response) {
+        return response.jsonPath().get("id");
+    }
+
+    public void extractAndSetEntityIdFromBody() {
+        setCurrentId(extractEntityIdFromResponse(response));
+
+        assertNotNull(getCurrentId());
+    }
+
+    public void getAllEntities() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/?size=1000");
+    }
+
+    public void getAllEntitiesSorted(String sortingType, String sortingDirection) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
+    }
+
+    public void getCurrentEntity() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + getCurrentId());
+    }
+
+    public void getEntityCount(String entity) {
+        getAllEntities();
+        jsonPath = response.jsonPath();
+        entityCount = jsonPath.getList(String.format("_embedded.%s.id",entity)).size();
+    }
+
+    public void checkIdInResponse() {
+        jsonPath = response.jsonPath();
+        String message = jsonPath.get("message");
+
+        assertTrue(message.contains(getCurrentId().toString()));
     }
 }

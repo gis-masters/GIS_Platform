@@ -4,7 +4,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
@@ -82,15 +81,18 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     /**
-     * Гарантирует создание огранизации, если таковая не была найдена в пуле.
-     * Добавляет созданную орг. в пул и "current" переменные
+     * Гарантирует создание огранизации, если таковая не была найдена в пуле. Добавляет созданную орг. в пул и "current"
+     * переменные
      *
      * @param dataTable Параметры организации.
+     *
      * @throws InterruptedException
      */
     @Given("Существует организация")
     public void createOrganization(DataTable dataTable) throws InterruptedException {
-        if (takeAnyOrgFromPoll()) return;
+        if (takeAnyOrgFromPoll()) {
+            return;
+        }
 
         String eMail = replaceString(dataTable.asList().get(4));
 
@@ -228,7 +230,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private Response createOrganization(OrganizationCreateDto dto) {
         response = getBaseRequest()
                 .given().
-                        body(new Gson().toJson(dto)).
+                        body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().

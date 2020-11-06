@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -16,12 +15,19 @@ import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
-    public static Integer currentUserId;
-    public static UserCreateDto currentUserDto;
+    public static Integer currentId;
+    public static UserCreateDto currentDto;
+
+    public Integer getCurrentId() {
+        return currentId;
+    }
+
+    public void setCurrentId(Integer currentId) {
+        UserStepsDefinitions.currentId = currentId;
+    }
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -37,10 +43,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createUser(DataTable dataTable) {
         List<String> data = dataTable.asList();
 
-        currentUserDto = new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                           replaceString(data.get(2)), replaceString(data.get(3)));
+        currentDto = new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
+                                       replaceString(data.get(2)), replaceString(data.get(3)));
 
-        String payload = new Gson().toJson(currentUserDto);
+        String payload = gson.toJson(currentDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -54,7 +60,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createAgainUser() {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(new Gson().toJson(currentUserDto)).
+                        body(gson.toJson(currentDto)).
                         contentType(ContentType.JSON)
                 .when().
                         post("");
@@ -64,7 +70,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void isUserRoleIsUser(String role) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentUserId);
+                        get("/" + currentId);
 
         jsonPath = response.jsonPath();
 
@@ -84,8 +90,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             response = createResponse;
             Integer id = extractIdFromLocation(createResponse);
 
-            currentUserId = id;
-            currentUserDto = dto;
+            currentId = id;
+            currentDto = dto;
             userPool.put(id, dto);
         }
     }
@@ -94,55 +100,29 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUser() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/" + currentUserId);
+                        delete("/" + currentId);
 
-        userPool.remove(currentUserId);
+        userPool.remove(currentId);
     }
 
     @And("в заголовке Location передает ID созданного пользователя")
     public void extractUserIdFromLocation() {
-        currentUserId = extractIdFromLocation();
+        currentId = extractIdFromLocation();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
     public void getAllUsersSorted(String sortingType, String sortingDirection) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
-    }
-
-    @And("В ответе есть пункт users")
-    public void isUsers() {
-        jsonPath = response.jsonPath();
-        List<String> users = jsonPath.get("_embedded.users.email");
-
-        assertTrue(users.size() >= 2);
-    }
-
-    @Then("Данные {string} отсортированы по {string} и {string}")
-    public void isUsersSorted(String checkType, String sortingType, String sortingDirection) {
-        List<String> sorted = jsonPath.getList(String.format("_embedded.%s.%s", checkType, sortingType));
-        for (int i = 1; i < sorted.size(); i++) {
-            if (sortingDirection.equals("asc")) {
-                assertTrue(sorted.get(i - 1).compareTo(sorted.get(i)) < 1);
-            } else if (sortingDirection.equals("desc")) {
-                assertTrue(sorted.get(i - 1).compareTo(sorted.get(i)) > -1);
-            }
-        }
+        super.getAllEntitiesSorted(sortingType, sortingDirection);
     }
 
     @When("Администратор делает запрос на созданного пользователя")
     public void getExactUser() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + currentUserId);
+        getCurrentEntityInfoById();
     }
 
     @When("Администратор делает запрос на всех пользователей")
     public void getAllUsers() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/?size=1000");
+        getAllEntities();
     }
 
     @When("Администратор делает постраничный запрос на всех пользователей")
@@ -152,24 +132,24 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         entityCount = jsonPath.getList("_embedded.users.id").size();
     }
 
-    @And("Количество страниц пользователей пропорционально {string}")
-    public void checkUserPagesCount(String entitiesPerPage) {
-        super.checkPagesCount(entitiesPerPage);
+    @And("Количество страниц пользователей {string} пропорционально {string}")
+    public void checkUserPagesCount(String checkType, String entitiesPerPage) {
+        super.checkPagesCount(checkType, entitiesPerPage);
     }
 
     @Then("Поля пользователя совпадают с переданными")
     public void isDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentUserDto.getName());
-        assertEquals(jsonPath.get("surName"), currentUserDto.getSurName());
-        assertEquals(jsonPath.get("email"), currentUserDto.getEmail());
+        assertEquals(jsonPath.get("name"), currentDto.getName());
+        assertEquals(jsonPath.get("surName"), currentDto.getSurName());
+        assertEquals(jsonPath.get("email"), currentDto.getEmail());
 
-        userPool.put(currentUserId, currentUserDto);
+        userPool.put(currentId, currentDto);
     }
 
     @And("На всех страницах пользователей {string} есть {string}")
-    public void isUsersOnPages(String checkType, String entitiesPerPage) {
+    public void areUsersOnPages(String checkType, String entitiesPerPage) {
         super.isSomethingOnPages(checkType, entitiesPerPage);
     }
 
@@ -182,10 +162,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createUser(List<String> user) {
-        currentUserDto = new UserCreateDto(replaceString(user.get(0)), replaceString(user.get(1)),
-                                           replaceString(user.get(2)), replaceString(user.get(3)));
+        currentDto = new UserCreateDto(replaceString(user.get(0)), replaceString(user.get(1)),
+                                       replaceString(user.get(2)), replaceString(user.get(3)));
 
-        String payload = new Gson().toJson(currentUserDto);
+        String payload = gson.toJson(currentDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -210,12 +190,17 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     private Response createUser(UserCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(new Gson().toJson(dto)).
+                        body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
                         post("");
 
         return response;
+    }
+
+    @When("Администратор делает постраничный запрос на пользователей {string}")
+    public void getUsersCount(String entity) {
+        getEntityCount(entity);
     }
 }

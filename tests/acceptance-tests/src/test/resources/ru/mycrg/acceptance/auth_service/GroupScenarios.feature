@@ -54,7 +54,7 @@ Feature: Действия с пользовательскими группами
       | STRING_15 | STRING_15 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все пользовательские группы
     Then В ответе есть пункт "groups"
-    And Данные "groups" отсортированы по "<sorting factor>" и "<sorting direction>"
+    And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "groups"
     Examples:
       | sorting factor | sorting direction |
       | createdAt      | asc               |
@@ -72,9 +72,9 @@ Feature: Действия с пользовательскими группами
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
-    When Администратор делает постраничный запрос на все пользовательские группы
+    When Администратор делает постраничный запрос на группы "groups"
     Then Сервер отвечает со статус-кодом 200
-    And Количество страниц групп пропорционально "<groupsPerPage>"
+    And Количество страниц групп "groups" пропорционально "<groupsPerPage>"
     And На всех страницах групп "groups" есть "<groupsPerPage>"
     Examples:
       | groupsPerPage |
