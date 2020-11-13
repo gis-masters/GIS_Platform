@@ -251,11 +251,15 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   onActivate(event: any) {
     if (event.type === 'dblclick') {
-      this.currentPositionFeature = event.row;
-
-      const projection = getProjection(this.layer.nativeCRS);
-      openLayersService.highlightFeatures(event.row, projection);
-      openLayersService.positionToFeature(event.row, projection);
+      const feature: WfsFeature = event.row;
+      if (feature.geometry) {
+        this.currentPositionFeature = feature;
+        const projection = getProjection(this.layer.nativeCRS);
+        openLayersService.highlightFeatures([feature], projection);
+        openLayersService.positionToFeature(feature, projection);
+      } else {
+        Toast.info(`У объекта [id:${feature.id}] отсутствует геометрия`);
+      }
     }
   }
 

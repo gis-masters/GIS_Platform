@@ -245,7 +245,7 @@ class OpenLayersService {
     } else {
       const params: CrgWmsParams = {
         LAYERS: resultName,
-        FORMAT: 'image/vnd.jpeg-png8',
+        FORMAT: 'image/vnd.jpeg-png8'
       };
 
       let layer: ImageLayer | TileLayer;
@@ -374,10 +374,13 @@ class OpenLayersService {
    * Подсвечивает обьект. (очищает черновой слой)
    */
   highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
-    const featuresInOlProjection: WfsFeature[] = [].concat(features).map((feature: WfsFeature) => ({
-      ...feature,
-      geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)
-    }));
+    const featuresInOlProjection: WfsFeature[] = []
+      .concat(features)
+      .filter(({ geometry }) => geometry)
+      .map((feature: WfsFeature) => ({
+        ...feature,
+        geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)
+      }));
 
     this.clearDraft();
 

@@ -24,6 +24,7 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-di
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
+import { getEmptyGeometry } from '../../services/geoserver/wfs.service';
 
 export interface Properties {
   [key: string]: any;
@@ -154,10 +155,13 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isGeometryChanged = false;
         await this.checkPermissions();
 
+        if (this.updatingAllowed && this.mode === EditFeatureMode.single && !this.features[0].geometry) {
+          this.features[0].geometry = getEmptyGeometry(this.featureDescription.geometryType);
+        }
         this.editGeometryStore.initGeometry(this.features[0].geometry, getFeatureProjection(this.features[0]));
 
         if (this.updatingAllowed) {
-          fromMobx(() => this.editGeometryStore.geometry.coordinates.flat(5), false)
+          fromMobx(() => this.editGeometryStore.geometry?.coordinates.flat(5), false)
             .pipe(first())
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
