@@ -52,12 +52,12 @@ public class BaseMapController {
 
     @PostMapping("/basemaps")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> addBaseMap(@PathVariable(name = "project_id") long projectId,
-                                             @Valid @RequestBody BaseMapCreateDto dto,
-                                             Authentication authentication) {
-        baseMapService.create(projectId, dto, authentication);
+    public ResponseEntity<BaseMapProjection> addBaseMap(@PathVariable(name = "project_id") long projectId,
+                                                        @Valid @RequestBody BaseMapCreateDto dto,
+                                                        Authentication authentication) {
+        BaseMapProjection baseMap = baseMapService.create(projectId, dto, authentication);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(baseMap, HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/basemaps/{base_map_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
@@ -73,10 +73,10 @@ public class BaseMapController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/basemaps")
+    @DeleteMapping("/basemaps/{base_map_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteBaseMap(@PathVariable(name = "project_id") long projectId,
-                                                @RequestParam(name = "baseMapId") long baseMapId,
+                                                @PathVariable(name = "base_map_id") long baseMapId,
                                                 Authentication authentication) {
         baseMapService.delete(projectId, baseMapId, authentication);
 

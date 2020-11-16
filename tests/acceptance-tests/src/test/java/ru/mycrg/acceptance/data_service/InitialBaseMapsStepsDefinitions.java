@@ -8,7 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.acceptance.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 
 import java.util.List;
 import java.util.Map;
@@ -18,17 +18,17 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
+public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
-    public static Integer currentId;
-    public static BaseMapCreateDto currentDto;
+    public static Integer baseMapId;
+    public static InitialBaseMapCreateDto baseMapDto;
 
     public Integer getCurrentId() {
-        return currentId;
+        return baseMapId;
     }
 
     public void setCurrentId(Integer currentId) {
-        BaseMapsStepsDefinitions.currentId = currentId;
+        InitialBaseMapsStepsDefinitions.baseMapId = currentId;
     }
 
     @Override
@@ -43,9 +43,9 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание подложки")
     public void createBaseMap(DataTable dataTable) {
-        currentDto = mapToBaseMapDto(dataTable);
+        baseMapDto = mapToBaseMapDto(dataTable);
 
-        String payload = gson.toJson(currentDto);
+        String payload = gson.toJson(baseMapDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -59,27 +59,27 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     public void getExactBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("" + currentId);
+                        get("" + baseMapId);
     }
 
     @And("Поля подложки совпадают с переданными")
     public void isBaseMapDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentDto.getName());
-        assertEquals(jsonPath.get("title"), currentDto.getTitle());
-        assertEquals(jsonPath.get("thumbnailUrn"), currentDto.getThumbnailUrn());
-        assertEquals(jsonPath.get("type"), currentDto.getType());
-        assertEquals(jsonPath.get("url"), currentDto.getUrl());
-        assertEquals(jsonPath.get("layerName"), currentDto.getLayerName());
-        assertEquals(jsonPath.get("style"), currentDto.getStyle());
-        assertEquals(jsonPath.get("projection"), currentDto.getProjection());
-        assertEquals(jsonPath.get("format"), currentDto.getFormat());
-        assertEquals(jsonPath.get("size"), currentDto.getSize());
-        assertEquals(jsonPath.get("resolution"), currentDto.getResolution());
-        assertEquals(jsonPath.get("matrixIds"), currentDto.getMatrixIds());
+        assertEquals(jsonPath.get("name"), baseMapDto.getName());
+        assertEquals(jsonPath.get("title"), baseMapDto.getTitle());
+        assertEquals(jsonPath.get("thumbnailUrn"), baseMapDto.getThumbnailUrn());
+        assertEquals(jsonPath.get("type"), baseMapDto.getType());
+        assertEquals(jsonPath.get("url"), baseMapDto.getUrl());
+        assertEquals(jsonPath.get("layerName"), baseMapDto.getLayerName());
+        assertEquals(jsonPath.get("style"), baseMapDto.getStyle());
+        assertEquals(jsonPath.get("projection"), baseMapDto.getProjection());
+        assertEquals(jsonPath.get("format"), baseMapDto.getFormat());
+        assertEquals(jsonPath.get("size"), baseMapDto.getSize());
+        assertEquals(jsonPath.get("resolution"), baseMapDto.getResolution());
+        assertEquals(jsonPath.get("matrixIds"), baseMapDto.getMatrixIds());
 
-        baseMapsPool.put(currentId, currentDto);
+        baseMapsPool.put(baseMapId, baseMapDto);
     }
 
     @When("Пользователь делает запрос на все подложки организации")
@@ -94,7 +94,7 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
         String name = replaceString(dataTable.asList().get(0));
 
         if (!isBaseMapExistInPool(name)) {
-            BaseMapCreateDto dto = mapToBaseMapDto(dataTable);
+            InitialBaseMapCreateDto dto = mapToBaseMapDto(dataTable);
             Response createResponse = createBaseMap(dto);
 
             assertEquals(SC_CREATED, createResponse.getStatusCode());
@@ -102,24 +102,24 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
             response = createResponse;
             Integer id = extractIdFromLocation(createResponse);
 
-            currentId = id;
-            currentDto = dto;
+            baseMapId = id;
+            baseMapDto = dto;
             baseMapsPool.put(id, dto);
         }
     }
 
     @When("Пользователь делает запрос на обновление полей подложки")
     public void updateExactBaseMap(DataTable dataTable) {
-        currentDto = mapToBaseMapDto(dataTable);
+        baseMapDto = mapToBaseMapDto(dataTable);
 
-        String payload = gson.toJson(currentDto);
+        String payload = gson.toJson(baseMapDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(payload).
                         contentType(ContentType.JSON)
                 .when().
-                        patch("" + currentId);
+                        patch("" + baseMapId);
     }
 
     @And("Поля подложки совпадают с переданными {string}, {string}, {string}, {string}")
@@ -136,9 +136,9 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     public void deleteExactBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("" + currentId);
+                        delete("" + baseMapId);
 
-        baseMapsPool.remove(currentId);
+        baseMapsPool.remove(baseMapId);
     }
 
     @And("Представление подложки корректно")
@@ -169,7 +169,7 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передает ID созданной подложки")
     public void extractBaseMapIdFromLocation() {
-        currentId = extractIdFromLocation();
+        baseMapId = extractIdFromLocation();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки")
@@ -196,26 +196,27 @@ public class BaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     //TODO: Переделать создание объектов
-    private BaseMapCreateDto mapToBaseMapDto(DataTable dataTable) {
+    private InitialBaseMapCreateDto mapToBaseMapDto(DataTable dataTable) {
         List<String> data = dataTable.asList();
         switch (data.size()) {
             case 4:
-                return new BaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                            replaceString(data.get(2)), replaceString(data.get(3)));
+                return new InitialBaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
+                                                   replaceString(data.get(2)), replaceString(data.get(3)));
             case 12:
-                return new BaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                            replaceString(data.get(2)), replaceString(data.get(3)),
-                                            replaceString(data.get(4)), replaceString(data.get(5)),
-                                            replaceString(data.get(6)), replaceString(data.get(7)),
-                                            replaceString(data.get(8)), Integer.parseInt(replaceString(data.get(9))),
-                                            Integer.parseInt(replaceString(data.get(10))),
-                                            Integer.parseInt(replaceString(data.get(11))));
+                return new InitialBaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
+                                                   replaceString(data.get(2)), replaceString(data.get(3)),
+                                                   replaceString(data.get(4)), replaceString(data.get(5)),
+                                                   replaceString(data.get(6)), replaceString(data.get(7)),
+                                                   replaceString(data.get(8)),
+                                                   Integer.parseInt(replaceString(data.get(9))),
+                                                   Integer.parseInt(replaceString(data.get(10))),
+                                                   Integer.parseInt(replaceString(data.get(11))));
             default:
-                return new BaseMapCreateDto();
+                return new InitialBaseMapCreateDto();
         }
     }
 
-    private Response createBaseMap(BaseMapCreateDto dto) {
+    private Response createBaseMap(InitialBaseMapCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).

@@ -14,6 +14,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.*;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
@@ -42,14 +43,14 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Авторизируемся пользователем")
     public void tryToAuthorizeUser() throws InterruptedException {
-        response = authorizeUser(UserStepsDefinitions.currentDto.getEmail(), UserStepsDefinitions.currentDto.getPassword());
+        response = authorizeUser(userDto.getEmail(), userDto.getPassword());
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     @When("Авторизируемся владельцем организации")
     public void tryToGetAuthorizeAdmin() throws InterruptedException {
-        response = authorizeUser(currentOrgDto.getOwner().getEmail(), currentOrgDto.getOwner().getPassword());
+        response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword());
 
         checkCookieAndWriteAsCurrent(response);
     }
@@ -57,8 +58,8 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @And("Пользователь не может авторизоваться")
     public void notPossibleToLogin() {
         Map<String, String> queryParams = new HashMap<String, String>() {{
-            put("username", UserStepsDefinitions.currentDto.getEmail());
-            put("password", UserStepsDefinitions.currentDto.getPassword());
+            put("username", userDto.getEmail());
+            put("password", userDto.getPassword());
             put("grant_type", "password");
         }};
 

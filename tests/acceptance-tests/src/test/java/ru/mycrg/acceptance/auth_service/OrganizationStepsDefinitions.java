@@ -24,40 +24,40 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static final int MAX_RETRY_ATTEMPT = 50;
     public static final int RETRY_DELAY = 6000;
 
-    public static Integer currentOrgId;
-    public static OrganizationCreateDto currentOrgDto;
+    public static Integer orgId;
+    public static OrganizationCreateDto orgDto;
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
-        currentOrgDto = mapToOrgDto(dataTable);
+        orgDto = mapToOrgDto(dataTable);
 
-        createOrganization(currentOrgDto);
+        createOrganization(orgDto);
     }
 
     @And("в заголовке Location передает ID созданной организации")
     public void extractOrgIdFromLocation() {
-        currentOrgId = extractIdFromLocation();
+        orgId = extractIdFromLocation();
     }
 
     @When("Проверяем создана ли организация")
     public void getOrgInfoByAdmin() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/organizations/" + currentOrgId);
+                        get("/organizations/" + orgId);
     }
 
     @When("Ждем окончания процесса создания организации")
     public void waitUntilOrganizationSuccessfullyCreated() throws InterruptedException {
-        waitUntilOrganizationSuccessfullyCreated(currentOrgId, cookie);
+        waitUntilOrganizationSuccessfullyCreated(orgId, cookie);
 
-        orgPool.put(currentOrgId, currentOrgDto);
+        orgPool.put(orgId, orgDto);
     }
 
     @When("Ждем окончания процесса удаления организации")
     public void waitUntilOrganizationSuccessfullyDeleted() throws InterruptedException {
-        waitUntilOrganizationSuccessfullyDeleted(currentOrgId, cookie);
+        waitUntilOrganizationSuccessfullyDeleted(orgId, cookie);
 
-        orgPool.put(currentOrgId, currentOrgDto);
+        orgPool.put(orgId, orgDto);
     }
 
     @And("Статус организации соответствует {string}")
@@ -66,18 +66,18 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         assertEquals(jsonPath.get("status"), status);
 
-        orgPool.put(currentOrgId, currentOrgDto);
+        orgPool.put(orgId, orgDto);
     }
 
     @And("Поля совпадают с переданными")
     public void checkOrgData() {
         JsonPath jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentOrgDto.getName());
-        assertEquals(jsonPath.get("phone"), currentOrgDto.getPhone());
-        assertEquals(jsonPath.getList("users.name").get(0), currentOrgDto.getOwner().getName());
-        assertEquals(jsonPath.getList("users.surName").get(0), currentOrgDto.getOwner().getSurName());
-        assertEquals(jsonPath.getList("users.email").get(0), currentOrgDto.getOwner().getEmail());
+        assertEquals(jsonPath.get("name"), orgDto.getName());
+        assertEquals(jsonPath.get("phone"), orgDto.getPhone());
+        assertEquals(jsonPath.getList("users.name").get(0), orgDto.getOwner().getName());
+        assertEquals(jsonPath.getList("users.surName").get(0), orgDto.getOwner().getSurName());
+        assertEquals(jsonPath.getList("users.email").get(0), orgDto.getOwner().getEmail());
     }
 
     /**
@@ -108,17 +108,17 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             Cookie cookie = new AuthorizationStepDefinitions().getRootAuthority();
             waitUntilOrganizationSuccessfullyCreated(id, cookie);
 
-            currentOrgId = id;
-            currentOrgDto = dto;
+            orgId = id;
+            orgDto = dto;
             orgPool.put(id, dto);
         }
     }
 
     @When("Посылается запрос на удаление текущей организации")
     public void deleteCurrentOrganization() {
-        assertNotNull(currentOrgId);
+        assertNotNull(orgId);
 
-        deleteOrganization(currentOrgId);
+        deleteOrganization(orgId);
     }
 
     @When("Посылается запрос на удаление чужой организации")
@@ -127,7 +127,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
             Integer id = entry.getKey();
             OrganizationCreateDto dto = entry.getValue();
-            if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
+            if (!orgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
                 orgId = id;
             }
         }
@@ -139,7 +139,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Удалена БД организации")
     public void isOrgDbNotExist() {
-        String dbName = "database_" + currentOrgId;
+        String dbName = "database_" + orgId;
 
         Response response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -150,7 +150,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Существует база данных")
     public void isOrgDbExist() {
-        String dbName = "database_" + currentOrgId;
+        String dbName = "database_" + orgId;
 
         Response response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -184,14 +184,14 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Отправляется повторный запрос на создание организации")
     public void sendAgainCreateOrganizationRequest() {
-        createOrganization(currentOrgDto);
+        createOrganization(orgDto);
     }
 
     @When("Администратор запрашивает данные о своей организации")
     public void checkOrgInfo() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/organizations/" + currentOrgId);
+                        get("/organizations/" + orgId);
     }
 
     @When("Администратор запрашивает данные о чужой организации")
@@ -200,7 +200,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
             Integer id = entry.getKey();
             OrganizationCreateDto dto = entry.getValue();
-            if (!currentOrgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
+            if (!orgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
                 orgId = id;
                 break;
             }
@@ -289,23 +289,24 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .anyMatch(dto -> eMail.equals(dto.getOwner().getEmail()));
     }
 
-    private void deleteOrganization(Integer orgId) {
+    private void deleteOrganization(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/organizations/" + orgId);
+                        delete("/organizations/" + id);
 
-        orgPool.remove(currentOrgId);
+        orgPool.remove(orgId);
     }
 
     private boolean takeAnyOrgFromPoll() {
         if (!orgPool.isEmpty()) {
-            for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()
-            ) {
-                currentOrgId = entry.getKey();
-                currentOrgDto = entry.getValue();
+            for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
+                orgId = entry.getKey();
+                orgDto = entry.getValue();
+
                 return true;
             }
         }
+
         return false;
     }
 }

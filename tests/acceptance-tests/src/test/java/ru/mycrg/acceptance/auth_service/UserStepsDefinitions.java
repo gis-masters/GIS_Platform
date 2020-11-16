@@ -18,15 +18,15 @@ import static org.junit.Assert.assertEquals;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
-    public static Integer currentId;
-    public static UserCreateDto currentDto;
+    public static Integer userId;
+    public static UserCreateDto userDto;
 
     public Integer getCurrentId() {
-        return currentId;
+        return userId;
     }
 
     public void setCurrentId(Integer currentId) {
-        UserStepsDefinitions.currentId = currentId;
+        UserStepsDefinitions.userId = currentId;
     }
 
     @Override
@@ -43,10 +43,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createUser(DataTable dataTable) {
         List<String> data = dataTable.asList();
 
-        currentDto = new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                       replaceString(data.get(2)), replaceString(data.get(3)));
+        userDto = new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
+                                    replaceString(data.get(2)), replaceString(data.get(3)));
 
-        String payload = gson.toJson(currentDto);
+        String payload = gson.toJson(userDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -60,7 +60,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createAgainUser() {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(gson.toJson(currentDto)).
+                        body(gson.toJson(userDto)).
                         contentType(ContentType.JSON)
                 .when().
                         post("");
@@ -70,7 +70,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void isUserRoleIsUser(String role) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentId);
+                        get("/" + userId);
 
         jsonPath = response.jsonPath();
 
@@ -90,8 +90,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             response = createResponse;
             Integer id = extractIdFromLocation(createResponse);
 
-            currentId = id;
-            currentDto = dto;
+            userId = id;
+            userDto = dto;
             userPool.put(id, dto);
         }
     }
@@ -100,14 +100,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUser() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/" + currentId);
+                        delete("/" + userId);
 
-        userPool.remove(currentId);
+        userPool.remove(userId);
     }
 
     @And("в заголовке Location передает ID созданного пользователя")
     public void extractUserIdFromLocation() {
-        currentId = extractIdFromLocation();
+        userId = extractIdFromLocation();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
@@ -141,11 +141,11 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void isDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentDto.getName());
-        assertEquals(jsonPath.get("surName"), currentDto.getSurName());
-        assertEquals(jsonPath.get("email"), currentDto.getEmail());
+        assertEquals(jsonPath.get("name"), userDto.getName());
+        assertEquals(jsonPath.get("surName"), userDto.getSurName());
+        assertEquals(jsonPath.get("email"), userDto.getEmail());
 
-        userPool.put(currentId, currentDto);
+        userPool.put(userId, userDto);
     }
 
     @And("На всех страницах пользователей {string} есть {string}")
@@ -162,10 +162,10 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createUser(List<String> user) {
-        currentDto = new UserCreateDto(replaceString(user.get(0)), replaceString(user.get(1)),
-                                       replaceString(user.get(2)), replaceString(user.get(3)));
+        userDto = new UserCreateDto(replaceString(user.get(0)), replaceString(user.get(1)),
+                                    replaceString(user.get(2)), replaceString(user.get(3)));
 
-        String payload = gson.toJson(currentDto);
+        String payload = gson.toJson(userDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

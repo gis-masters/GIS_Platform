@@ -19,11 +19,12 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
-    public static GroupCreateDto currentUsersGroupDto;
-    public static Integer currentUsersGroupId;
+    public static GroupCreateDto usersGroupDto;
+    public static Integer usersGroupId;
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -37,8 +38,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
-        currentUsersGroupDto = new GroupCreateDto(replaceString(groupName), replaceString(groupDescription));
-        String payload = gson.toJson(currentUsersGroupDto);
+        usersGroupDto = new GroupCreateDto(replaceString(groupName), replaceString(groupDescription));
+        String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -50,24 +51,24 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @Then("Сервер передает ID созданный группы")
     public void extractUsersGroupIdFromResponseBody() {
-        currentUsersGroupId = response.jsonPath().get("id");
+        usersGroupId = response.jsonPath().get("id");
 
-        assertNotNull(currentUsersGroupId);
+        assertNotNull(usersGroupId);
     }
 
     @When("Администратор делает запрос на указанную группу")
     public void getExactUsersGroup() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentUsersGroupId);
+                        get("/" + usersGroupId);
     }
 
     @Then("Поля группы совпадают с переданными")
     public void isUsersGroupDataCorrect() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), currentUsersGroupDto.getName());
-        assertEquals(jsonPath.get("description"), currentUsersGroupDto.getDescription());
+        assertEquals(jsonPath.get("name"), usersGroupDto.getName());
+        assertEquals(jsonPath.get("description"), usersGroupDto.getDescription());
     }
 
     @Given("Существует пользовательская группа {string}, {string}")
@@ -81,8 +82,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
             response = createResponse;
             Integer id = extractEntityIdFromResponse(createResponse);
 
-            currentUsersGroupId = id;
-            currentUsersGroupDto = dto;
+            usersGroupId = id;
+            usersGroupDto = dto;
             usersGroupPool.put(id, dto);
         }
     }
@@ -110,15 +111,15 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор изменяет поля группы {string}, {string}")
     public void updateUsersGroup(String newGroupName, String newGroupDescription) {
-        currentUsersGroupDto = new GroupCreateDto(replaceString(newGroupName), replaceString(newGroupDescription));
-        String payload = gson.toJson(currentUsersGroupDto);
+        usersGroupDto = new GroupCreateDto(replaceString(newGroupName), replaceString(newGroupDescription));
+        String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType(ContentType.JSON)
                 .when().
                         body(payload).
-                        patch("/" + currentUsersGroupId);
+                        patch("/" + usersGroupId);
     }
 
     @When("Администратор добавляет пользователя в пользовательскую группу")
@@ -128,8 +129,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 contentType(ContentType.JSON)
                 .when().
                         body("{}").
-                        post(String.format("/%s/users/%s", currentUsersGroupId,
-                                           UserStepsDefinitions.currentId))
+                        post(String.format("/%s/users/%s", usersGroupId, userId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
@@ -139,18 +139,18 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void isUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + currentUsersGroupId)
+                get("/" + usersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
-                        body("users.id", hasItems(UserStepsDefinitions.currentId));
+                        body("users.id", hasItems(userId));
     }
 
     @When("Администратор удаляет пользователя из пользовательской группы")
     public void deleteUserToUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                delete(String.format("/%s/users/%s", currentUsersGroupId, UserStepsDefinitions.currentId))
+                delete(String.format("/%s/users/%s", usersGroupId, userId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
@@ -160,18 +160,18 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void isNotUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + currentUsersGroupId)
+                get("/" + usersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
-                        body("users.id", not(hasItems(UserStepsDefinitions.currentId)));
+                        body("users.id", not(hasItems(userId)));
     }
 
     @When("Администратор организации удаляет пользовательскую группу")
     public void deleteUsersGroup() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/" + currentUsersGroupId);
+                        delete("/" + usersGroupId);
 
         assertEquals(SC_NO_CONTENT, response.statusCode());
     }
@@ -207,8 +207,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createUserGroup(List<String> group) {
-        currentUsersGroupDto = new GroupCreateDto(replaceString(group.get(0)), replaceString(group.get(1)));
-        String payload = gson.toJson(currentUsersGroupDto);
+        usersGroupDto = new GroupCreateDto(replaceString(group.get(0)), replaceString(group.get(1)));
+        String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

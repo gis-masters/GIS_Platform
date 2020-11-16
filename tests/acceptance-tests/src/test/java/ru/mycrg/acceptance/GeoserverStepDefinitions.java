@@ -13,14 +13,14 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.currentOrgDto;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.currentOrgId;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере существует scratch рабочая область и хранилище")
     public void checkGeoserverScratchWorkspaceAndStorage() {
-        String workspace = "scratch_database_" + currentOrgId;
+        String workspace = "scratch_database_" + orgId;
         String store = workspace + "_store";
 
         getBaseRequestWithCurrentCookie()
@@ -36,7 +36,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере отсутствует scratch рабочая область")
     public void checkGeoserverScratchWorkspaceDeleted() {
-        String workspace = "scratch_database_" + currentOrgId;
+        String workspace = "scratch_database_" + orgId;
 
         getBaseRequestWithCurrentCookie()
                 .when().
@@ -55,12 +55,12 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         statusCode(SC_OK).
                         body("users.findAll { it.enabled == true }.userName",
-                             hasItems(currentOrgDto.getOwner().getEmail()));
+                             hasItems(orgDto.getOwner().getEmail()));
     }
 
     @And("На Геосервере создана роль")
     public void checkGeoserverRole() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         getBaseRequestWithCurrentCookie()
                 .when().
@@ -79,7 +79,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к rest")
     public void checkGeoserverRestRules() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         final Map<Object, Object> restRules = getBaseRequestWithCurrentCookie()
                 .when().
@@ -99,10 +99,10 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к слоям")
     public void checkGeoserverLayersRules() {
-        String role = "admin_" + currentOrgId;
-        String rRuleKey = "scratch_database_" + currentOrgId + ".*.r";
-        String wRuleKey = "scratch_database_" + currentOrgId + ".*.w";
-        String aRuleKey = "scratch_database_" + currentOrgId + ".*.a";
+        String role = "admin_" + orgId;
+        String rRuleKey = "scratch_database_" + orgId + ".*.r";
+        String wRuleKey = "scratch_database_" + orgId + ".*.w";
+        String aRuleKey = "scratch_database_" + orgId + ".*.a";
 
         final Map<Object, Object> layersRules = getBaseRequestWithCurrentCookie()
                 .when().
@@ -122,7 +122,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к сервисам")
     public void checkGeoserverServiceRules() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         final Map<Object, Object> servicesRules = getBaseRequestWithCurrentCookie()
                 .when().
@@ -155,7 +155,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере отсутствует роль")
     public void checkGeoserverRoleIsAbsent() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         getBaseRequestWithCurrentCookie()
                 .when().
@@ -168,7 +168,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере доступ к слоям. Роль пользователя отсутствует в списке")
     public void checkGeoserverLayersRulesIfUserIsAbsent() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         final Map<Object, Object> layersRules = getBaseRequestWithCurrentCookie()
                 .when().
@@ -186,7 +186,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к сервисам. Роль пользователя отсутствует в списке")
     public void checkGeoserverServiceRulesIfUserIsAbsent() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         final Map<Object, Object> servicesRules = getBaseRequestWithCurrentCookie()
                 .when().
@@ -208,7 +208,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("На Геосервере дан доступ к rest. Роль пользователя отсутствует в списке")
     public void checkGeoserverRestRulesIfUserIsAbsent() {
-        String role = "admin_" + currentOrgId;
+        String role = "admin_" + orgId;
 
         final Map<Object, Object> restRules = getBaseRequestWithCurrentCookie()
                 .when().

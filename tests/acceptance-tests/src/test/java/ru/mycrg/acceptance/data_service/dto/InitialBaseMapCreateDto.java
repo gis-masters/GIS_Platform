@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service.dto;
 
-public class BaseMapCreateDto {
+public class InitialBaseMapCreateDto {
+
     private String name;
     private String title;
     private String thumbnailUrn;
@@ -14,9 +15,9 @@ public class BaseMapCreateDto {
     private Integer resolution;
     private Integer matrixIds;
 
-    public BaseMapCreateDto(String name, String title, String thumbnailUrn, String type, String url,
-                            String layerName, String style, String projection, String format, Integer size,
-                            Integer resolution, Integer matrixIds) {
+    public InitialBaseMapCreateDto(String name, String title, String thumbnailUrn, String type, String url,
+                                   String layerName, String style, String projection, String format, Integer size,
+                                   Integer resolution, Integer matrixIds) {
         this.name = name;
         this.title = title;
         this.thumbnailUrn = thumbnailUrn;
@@ -31,14 +32,15 @@ public class BaseMapCreateDto {
         this.matrixIds = matrixIds;
     }
 
-    public BaseMapCreateDto(String name, String title, String thumbnailUrn, String type) {
+    public InitialBaseMapCreateDto(String name, String title, String thumbnailUrn, String type) {
         this.name = name;
         this.title = title;
         this.thumbnailUrn = thumbnailUrn;
         this.type = type;
     }
 
-    public BaseMapCreateDto() {}
+    public InitialBaseMapCreateDto() {
+    }
 
     public String getName() {
         return name;

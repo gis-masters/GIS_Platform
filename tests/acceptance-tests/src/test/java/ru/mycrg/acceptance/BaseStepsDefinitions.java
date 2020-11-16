@@ -8,7 +8,8 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
-import ru.mycrg.acceptance.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
+import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
@@ -45,8 +46,9 @@ public class BaseStepsDefinitions {
     public static Map<Integer, OrganizationCreateDto> orgPool = new HashMap<>();
     public static Map<Integer, UserCreateDto> userPool = new HashMap<>();
     public static Map<Integer, GroupCreateDto> usersGroupPool = new HashMap<>();
-    public static Map<Integer, BaseMapCreateDto> baseMapsPool = new HashMap<>();
+    public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new HashMap<>();
     public static Map<Integer, ProjectRequestDto> projectPool = new HashMap<>();
+    public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new HashMap<>();
 
     public static Object currentDto;
     public static Integer currentId;
@@ -103,6 +105,7 @@ public class BaseStepsDefinitions {
         }
 
         assertNotNull(id);
+
         return id;
     }
 
@@ -260,7 +263,7 @@ public class BaseStepsDefinitions {
     public void getEntityCount(String entity) {
         getAllEntities();
         jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList(String.format("_embedded.%s.id",entity)).size();
+        entityCount = jsonPath.getList(String.format("_embedded.%s.id", entity)).size();
     }
 
     public void checkIdInResponse() {

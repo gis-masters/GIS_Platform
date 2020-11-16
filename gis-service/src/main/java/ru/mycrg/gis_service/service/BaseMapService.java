@@ -42,32 +42,35 @@ public class BaseMapService {
     }
 
     public List<BaseMapProjection> getAll(long projectId, Authentication authentication) {
-        return getBaseMaps(projectId, authentication).stream()
+        return getBaseMaps(projectId, authentication)
+                .stream()
                 .map(baseMap -> projectionFactory.createProjection(BaseMapProjection.class, baseMap))
                 .collect(Collectors.toList());
     }
 
-    public void create(long projectId, BaseMapCreateDto dto, Authentication authentication) {
+    public BaseMapProjection create(long projectId, BaseMapCreateDto dto, Authentication authentication) {
         Project project = projectService.getById(projectId, authentication);
         project.getBaseMaps().stream()
-                .filter(baseMap -> baseMap.getBaseMapId().equals(dto.getBaseMapId()))
-                .findFirst()
-                .ifPresent(baseMap -> {
-                    throw new ConflictException("Basemap " + dto.getBaseMapId() + " already joined");
-                });
+               .filter(baseMap -> baseMap.getBaseMapId().equals(dto.getBaseMapId()))
+               .findFirst()
+               .ifPresent(baseMap -> {
+                   throw new ConflictException("Basemap " + dto.getBaseMapId() + " already joined");
+               });
 
         BaseMap baseMap = new BaseMap(dto);
 
-        baseMapRepository.save(baseMap);
+        BaseMap newBaseMap = baseMapRepository.save(baseMap);
 
         project.addBaseMap(baseMap);
+
+        return projectionFactory.createProjection(BaseMapProjection.class, newBaseMap);
     }
 
     public void delete(long projectId, Long baseMapId, Authentication authentication) {
         Project project = projectService.getById(projectId, authentication);
 
         BaseMap baseMap = baseMapRepository.findByBaseMapId(baseMapId)
-                .orElseThrow(() -> new BadRequestException("Id of basemap incorrect"));
+                                           .orElseThrow(() -> new BadRequestException("Id of basemap incorrect"));
 
         project.getBaseMaps().remove(baseMap);
     }
@@ -101,9 +104,8 @@ public class BaseMapService {
 
     private BaseMap getBaseMapById(Set<BaseMap> baseMaps, Long baseMapId) {
         return baseMaps.stream()
-                .filter(baseMap -> baseMap.getId().equals(baseMapId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(baseMapId));
+                       .filter(baseMap -> baseMap.getId().equals(baseMapId))
+                       .findFirst()
+                       .orElseThrow(() -> new NotFoundException(baseMapId));
     }
-
 }
