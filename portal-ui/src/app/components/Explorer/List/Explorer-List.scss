@@ -1,3 +1,5 @@
 .Explorer-List {
   grid-area: list;
+
+  min-height: calc(var(--ExplorerPageSize) * 72px);
 }

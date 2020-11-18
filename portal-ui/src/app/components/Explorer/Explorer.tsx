@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
@@ -18,9 +18,9 @@ import {
 } from './Adapter/Explorer-Adapter';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
+import { ExplorerInfo } from './Info/Explorer-Info.composed';
 import { ExplorerTitle } from './Title/Explorer-Title';
 import { ExplorerList } from './List/Explorer-List';
-import { ExplorerInfo } from './Info/Explorer-Info';
 import { ExplorerStore } from './Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
@@ -74,11 +74,16 @@ export class Explorer extends Component<ExplorerProps> {
 
   render() {
     return (
-      <div className={cnExplorer()} onKeyDown={this.keyDownHandler} tabIndex={0}>
+      <div
+        className={cnExplorer()}
+        onKeyDown={this.keyDownHandler}
+        tabIndex={0}
+        style={{ '--ExplorerPageSize': this.store.pageSize } as CSSProperties}
+      >
         <ExplorerTitle store={this.store} onOpen={this.openItem} />
         <ExplorerList store={this.store} onOpen={this.openItem} />
         <ExplorerToolbar store={this.store} onChange={this.handleQueryChange} />
-        <ExplorerInfo store={this.store} />
+        <ExplorerInfo store={this.store} type={this.store.selectedItem.type} />
         <ExplorerPagination store={this.store} onChange={this.paginate} />
         <Loading visible={this.busy} noBackdrop />
       </div>
@@ -128,7 +133,7 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    const { path, page, totalPages } = this.store;
+    const { path, selectedItem, currentItem, page, totalPages } = this.store;
     const action = (Object.keys(keyActions) as (keyof typeof keyActions)[]).find(key =>
       keyActions[key].includes(e.key)
     );
@@ -146,34 +151,30 @@ export class Explorer extends Component<ExplorerProps> {
     }
 
     if (action === KeyAction.PREV || action === KeyAction.NEXT) {
-      const currentSelectionId = getId(path[path.length - 1]);
-      const currentSelectionIndex = path[path.length - 2].children.findIndex(
-        item => getId(item) === currentSelectionId
-      );
+      const currentSelectionId = getId(selectedItem);
+      const currentSelectionIndex = currentItem.children.findIndex(item => getId(item) === currentSelectionId);
 
       const newSelectionIndex = action === KeyAction.NEXT ? currentSelectionIndex + 1 : currentSelectionIndex - 1;
 
-      if (newSelectionIndex >= 0 && newSelectionIndex < path[path.length - 2].children.length) {
-        this.store.selectItem(path[path.length - 2].children[newSelectionIndex]);
+      if (newSelectionIndex >= 0 && newSelectionIndex < currentItem.children.length) {
+        this.store.selectItem(currentItem.children[newSelectionIndex]);
       }
     }
 
     if (action === KeyAction.OPEN) {
-      this.openItem(path[path.length - 1], 0);
+      this.openItem(selectedItem, 0);
     }
   }
 
   @boundMethod
   private paginate(page: number) {
-    const { path } = this.store;
-    const currentItem = path[path.length - 2];
+    const { path, currentItem } = this.store;
     this.openItem(currentItem, page, path.length - 2);
   }
 
   @boundMethod
   private handleQueryChange() {
-    const { path } = this.store;
-    const currentItem = path[path.length - 2];
+    const { path, currentItem } = this.store;
     this.openItem(currentItem, 0, path.length - 2);
   }
 

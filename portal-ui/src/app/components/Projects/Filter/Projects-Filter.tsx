@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { TextField } from '@material-ui/core';
 
-import { projectsList } from '../../../stores/ProjectsList.store';
+import { allProjects } from '../../../stores/AllProjects.store';
 
 import '!style-loader!css-loader!sass-loader!./Projects-Filter.scss';
 
@@ -12,14 +12,14 @@ const cnProjectsFilter = cn('Projects', 'Filter');
 @observer
 export class ProjectsFilter extends Component {
   componentWillUnmount() {
-    projectsList.setNameFilter('');
+    allProjects.setNameFilter('');
   }
 
   render() {
     return (
       <TextField
         label='Поиск по названию'
-        value={projectsList.nameFilter}
+        value={allProjects.nameFilter}
         className={cnProjectsFilter()}
         onChange={this.handleChange}
         InputProps={{
@@ -30,6 +30,6 @@ export class ProjectsFilter extends Component {
   }
 
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    projectsList.setNameFilter(e.target.value);
+    allProjects.setNameFilter(e.target.value);
   }
 }

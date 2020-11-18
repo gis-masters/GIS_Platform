@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tabs, Tab } from '@material-ui/core';
+import { cn } from '@bem-react/classname';
 
-import { permissionsList } from '../../stores/PermissionsList.store';
-import { groupsList } from '../../stores/GroupsList.store';
-import { usersList } from '../../stores/UsersList.store';
+import { allPermissions } from '../../stores/AllPermissions.store';
+import { allGroups } from '../../stores/AllGroups.store';
+import { allUsers } from '../../stores/AllUsers.store';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
 import { Loading } from '../Loading/Loading';
@@ -41,14 +41,14 @@ export class OrgAdmin extends Component {
           ))}
         </Tabs>
         <ChildComponent />
-        <Loading global visible={this.loading} value={permissionsList.fetchingProgress} />
+        <Loading global visible={this.loading} value={allPermissions.fetchingProgress} />
       </div>
     );
   }
 
   @computed
   private get loading(): boolean {
-    return usersList.fetching || groupsList.fetching || permissionsList.fetching;
+    return allUsers.fetching || allGroups.fetching || allPermissions.fetching;
   }
 
   @action.bound

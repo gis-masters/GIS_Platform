@@ -15,6 +15,13 @@ export class ExplorerStore {
   @observable filter: { [key: string]: string } = {};
 
   @computed
+  get selectedItem(): ExplorerItemData {
+    const { path } = this;
+
+    return path[path.length - 1];
+  }
+
+  @computed
   get currentItem(): ExplorerItemData {
     const { path } = this;
 

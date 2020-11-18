@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 
 import { serverProperties } from '../server-properties.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { usersList } from '../../stores/UsersList.store';
+import { allUsers } from '../../stores/AllUsers.store';
 import { BuildInRole } from './permissions.service';
 import { PageableResponse } from '../models';
 import { services } from '../services';
@@ -117,15 +117,15 @@ class UsersService {
       return;
     }
 
-    if (usersList.fetching) {
+    if (allUsers.fetching) {
       this.debouncedFetchUsersListStore();
       return;
     }
 
-    usersList.setFetching(true);
+    allUsers.setFetching(true);
     const users = (await this.getAll()).filter(user => user.username !== currentUser.userName);
-    usersList.setList(users);
-    usersList.setFetching(false);
+    allUsers.setList(users);
+    allUsers.setFetching(false);
   }
 }
 

@@ -12,11 +12,11 @@ function lsKey(key: string) {
 
 class Flags implements FlagsList {
   private static _instance: Flags;
-  dataManagement = false;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  dataManagement = false;
 
   private constructor() {
     this.init();
@@ -36,13 +36,15 @@ class Flags implements FlagsList {
     });
   }
 
-  set<T extends keyof FlagsList>(flag: T, value: FlagsList[T]) {
+  set<T extends keyof FlagsList>(flag: T, value: FlagsList[T]): string {
     if (!keys.includes(flag)) {
       throw new Error(`Нет такого флага "${flag}"`);
     }
 
     this[flag] = value;
     localStorage.setItem(lsKey(flag), JSON.stringify(value));
+
+    return this.list;
   }
 
   get list(): string {

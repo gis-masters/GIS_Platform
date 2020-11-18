@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { MenuItem, Paper, TextField } from '@material-ui/core';
+import { MenuItem, Paper as div, TextField } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { SortDir } from '../../../services/models';
@@ -26,12 +26,11 @@ export class ExplorerToolbar extends Component<ExplorerToolbarProps> {
     const filterField = getChildrenFilterField(currentItem);
 
     return (
-      <Paper className={cnExplorerToolbar()} square>
+      <div className={cnExplorerToolbar()}>
         {filterField && (
           <TextField
             label={getChildrenFilterLabel(currentItem) || 'Поиск'}
             value={filter[filterField] || ''}
-            fullWidth
             onChange={this.handleFilterChange}
             InputProps={{
               startAdornment: ' '
@@ -39,7 +38,7 @@ export class ExplorerToolbar extends Component<ExplorerToolbarProps> {
           />
         )}
 
-        <TextField label='Сортировать по' value={sort} onChange={this.handleSortChange} fullWidth select>
+        <TextField label='Сортировать по' value={sort} onChange={this.handleSortChange} select>
           {sortItems.map(({ label, value }, i) => (
             <MenuItem value={value} key={i}>
               {label}
@@ -48,7 +47,7 @@ export class ExplorerToolbar extends Component<ExplorerToolbarProps> {
         </TextField>
 
         <SortOrderButton asc={sortDir === SortDir.ASC} onClick={this.handleSortOrderClick} />
-      </Paper>
+      </div>
     );
   }
 

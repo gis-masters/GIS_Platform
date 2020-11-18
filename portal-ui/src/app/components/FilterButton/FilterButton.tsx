@@ -7,16 +7,16 @@ import { IClassNameProps } from '@bem-react/core';
 const cnFilterButton = cn('TableOverHead', 'FilterButton');
 
 interface FilterButtonProps extends IClassNameProps {
-  filterEnabled: boolean;
+  filterActive: boolean;
   onClick: () => void;
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ filterEnabled, onClick, className }) => (
+export const FilterButton: FC<FilterButtonProps> = ({ filterActive, onClick, className }) => (
   <Tooltip title='Фильтр'>
     <IconButton
       className={cnFilterButton(null, [className])}
       onClick={onClick}
-      color={filterEnabled ? 'secondary' : 'default'}
+      color={filterActive ? 'secondary' : 'default'}
     >
       <FilterList />
     </IconButton>

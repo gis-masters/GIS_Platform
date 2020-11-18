@@ -4,8 +4,8 @@
   display: grid;
   align-items: flex-start;
   gap: 20px;
-  grid-template: auto max-content auto auto / 3fr 2fr;
-  grid-template-areas: 'head head' 'list toolbar' 'list info' 'pagination info';
+  grid-template: auto auto auto auto / 3fr 2fr;
+  grid-template-areas: 'head head' 'toolbar info' 'list info' 'pagination info';
 
   &:focus {
     outline: none;

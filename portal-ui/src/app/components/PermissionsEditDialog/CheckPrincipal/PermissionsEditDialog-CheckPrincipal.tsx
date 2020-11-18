@@ -1,0 +1,55 @@
+import React, { Component } from 'react';
+import { action, computed } from 'mobx';
+import { observer } from 'mobx-react';
+import { Checkbox } from '@material-ui/core';
+import { cn } from '@bem-react/classname';
+
+import { CrgGroup } from '../../../services/crg/groups.service';
+import { CrgUser } from '../../../services/crg/users.service';
+
+const cnPermissionsEditDialogCheckPrincipal = cn('PermissionsEditDialog', 'CheckPrincipal');
+
+interface PermissionsEditDialogCheckPrincipalProps {
+  principal: CrgGroup | CrgUser;
+  selectedPrincipals: (CrgGroup | CrgUser)[];
+  avaiablePrincipals: (CrgGroup | CrgUser)[];
+}
+
+@observer
+export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEditDialogCheckPrincipalProps> {
+  render() {
+    return (
+      <Checkbox
+        className={cnPermissionsEditDialogCheckPrincipal()}
+        checked={this.selected || this.alreadyAdded}
+        onChange={this.changeHandler}
+        disabled={this.alreadyAdded}
+      />
+    );
+  }
+
+  @computed
+  private get selected(): boolean {
+    const { principal, selectedPrincipals } = this.props;
+
+    return selectedPrincipals.some(({ id }) => principal.id === id);
+  }
+
+  @computed
+  private get alreadyAdded(): boolean {
+    const { principal, avaiablePrincipals } = this.props;
+
+    return !avaiablePrincipals.some(({ id }) => principal.id === id);
+  }
+
+  @action.bound
+  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+    const { principal, selectedPrincipals } = this.props;
+
+    if (checked) {
+      selectedPrincipals.push(principal);
+    } else {
+      selectedPrincipals.splice(selectedPrincipals.indexOf(principal), 1);
+    }
+  }
+}

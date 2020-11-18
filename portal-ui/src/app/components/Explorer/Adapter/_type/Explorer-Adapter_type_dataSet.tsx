@@ -26,13 +26,16 @@ export class ExplorerAdapterTypeDataSet {
     return item.payload.title;
   }
 
-  static getMeta(item: ExplorerItemData<DataSet>) {
-    const { itemsCount: tableCount, createdAt } = item.payload;
-    moment.locale('ru');
+  static getDetails(item: ExplorerItemData<DataSet>) {
+    return item.payload.details;
+  }
 
-    return `${tableCount} ${pluralize(tableCount, 'таблица', 'таблицы', 'таблиц')}${
-      createdAt ? `, ${moment(createdAt).format('LL')}` : ''
-    }`;
+  static getMeta(item: ExplorerItemData<DataSet>) {
+    const { itemsCount, createdAt, resourceIdentifier } = item.payload;
+    moment.locale('ru');
+    const date = createdAt ? `, ${moment(createdAt).format('LL')}` : '';
+
+    return `${itemsCount} ${pluralize(itemsCount, 'таблица', 'таблицы', 'таблиц')}${date} (${resourceIdentifier})`;
   }
 
   static getIcon() {

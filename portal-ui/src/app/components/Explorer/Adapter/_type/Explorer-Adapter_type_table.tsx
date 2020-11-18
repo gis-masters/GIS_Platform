@@ -17,17 +17,21 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
   static getId(item: ExplorerItemData<DataTable>) {
-    return `${item.type}:${item.payload.resourceIdentifier}.${item.payload.title}`;
+    return `${item.type}:${item.payload.resourceIdentifier}`;
   }
 
   static getTitle(item: ExplorerItemData<DataTable>) {
     return item.payload.title;
   }
 
-  static getMeta(item: ExplorerItemData<DataTable>) {
-    const { createdAt } = item.payload;
+  static getDetails(item: ExplorerItemData<DataTable>) {
+    return item.payload.details;
+  }
 
-    return createdAt ? moment(createdAt).format('LL') : '';
+  static getMeta(item: ExplorerItemData<DataTable>) {
+    const { createdAt, resourceIdentifier } = item.payload;
+
+    return `${createdAt ? moment(createdAt).format('LL') : ''} (${resourceIdentifier})`;
   }
 
   static getIcon() {

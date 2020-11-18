@@ -1,23 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TableContainer,
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Checkbox,
-  Select,
-  MenuItem
-} from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
 import {
@@ -28,26 +13,17 @@ import {
   PrincipalType
 } from '../../services/crg/permissions.service';
 import { PermissionsListItem } from '../../services/crg/permissionsList.service';
-import { permissionsList } from '../../stores/PermissionsList.store';
-import { filterObjects } from '../../services/util/filterObjects';
-import { sortObjects } from '../../services/util/sortObjects';
-import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
-import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
-import { FilterButton } from '../FilterButton/FilterButton';
+import { allPermissions } from '../../stores/AllPermissions.store';
+import { FilterParams } from '../../services/util/filterObjects';
 import { Highlight } from '../Highlight/Highlight';
 import { IdBadge } from '../IdBadge/IdBadge';
 import { Button } from '../Button/Button';
-import {
-  ListSortParams,
-  ListFilterParams,
-  PermissionsListItemWrapped
-} from '../PermissionsListDialog/PermissionsListDialog';
+import { PermissionsListItemWrapped } from '../PermissionsListDialog/PermissionsListDialog';
+import { XTable } from '../XTable/XTable';
 
-import { PermissionsAddDialogTable } from './Table/PermissionsAddDialog-Table';
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';
 
-import '!style-loader!css-loader!sass-loader!./PermissionsAddDialog.scss';
-import '!style-loader!css-loader!sass-loader!./FilterButton/PermissionsAddDialog-FilterButton.scss';
+import '!style-loader!css-loader!sass-loader!./Paper/PermissionsAddDialog-Paper.scss';
 
 const cnPermissionsAddDialog = cn('PermissionsAddDialog');
 
@@ -64,14 +40,9 @@ interface PermissionsAddDialogProps {
 export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   @observable selectedList: PermissionsListItem[] = [];
   @observable role: Role = Role.VIEWER;
-  @observable private sortParams: ListSortParams = { field: 'synteticId', asc: true };
-  @observable private filterParams: ListFilterParams = {};
-  @observable private filterEnabled = false;
-  @observable private _page = 1;
-  private rowsPerPage = 20;
 
   render() {
-    const { open, currentList } = this.props;
+    const { open } = this.props;
 
     return (
       <Dialog
@@ -81,96 +52,47 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         maxWidth='xl'
         PaperProps={{ className: cnPermissionsAddDialog('Paper') }}
       >
-        <DialogTitle>
-          Добавление разрешений
-          <FilterButton
-            className={cnPermissionsAddDialog('FilterButton')}
-            filterEnabled={this.filterEnabled}
-            onClick={this.toggleFilter}
-          />
-        </DialogTitle>
         <DialogContent>
-          {permissionsList.list.length ? (
-            <>
-              <TableContainer component={PermissionsAddDialogTable}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          indeterminate={this.selectedList.length > 0 && !this.allSelected}
-                          checked={this.allSelected}
-                          onChange={this.handleSelectAll}
-                        />
-                      </TableCell>
-                      <TableHeadCell
-                        field='projectTitle'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Проект
-                      </TableHeadCell>
-                      <TableHeadCell
-                        field='layerTitle'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Слой
-                      </TableHeadCell>
-                      <TableHeadCell
-                        field='schemaId'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Схема
-                      </TableHeadCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {this.listPaged.map(({ synteticId, projectTitle, layerTitle, schemaId, origin }) => (
-                      <TableRow key={synteticId} hover>
-                        <TableCell padding='checkbox'>
-                          <PermissionsAddDialogItemCheck
-                            item={origin}
-                            selectedList={this.selectedList}
-                            currentList={currentList}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Highlight word={this.filterParams.projectTitle} enabled={this.filterEnabled}>
-                            {projectTitle}
-                          </Highlight>
-                          <IdBadge id={origin.project.id} />
-                        </TableCell>
-                        <TableCell>
-                          <Highlight word={this.filterParams.layerTitle} enabled={this.filterEnabled}>
-                            {layerTitle}
-                          </Highlight>
-                          {origin.layer && <IdBadge id={origin.layer.id} />}
-                        </TableCell>
-                        <TableCell>
-                          <Highlight word={this.filterParams.layerTitle} enabled={this.filterEnabled}>
-                            {schemaId}
-                          </Highlight>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TableUnderFooter>
-                <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
-              </TableUnderFooter>
-            </>
-          ) : (
-            'Ничего нет.'
-          )}
+          <XTable
+            title='Добавление разрешений'
+            data={this.list}
+            cols={[
+              {
+                title: (
+                  <Checkbox
+                    indeterminate={this.selectedList.length > 0 && !this.allSelected}
+                    checked={this.allSelected}
+                    onChange={this.handleSelectAll}
+                  />
+                ),
+                cellProps: { padding: 'checkbox' },
+                renderCellContent: this.renderCheckbox
+              },
+              {
+                title: 'Проект',
+                field: 'projectTitle',
+                filtering: true,
+                sorting: true,
+                getIdBadge: ({ origin }) => origin.project.id
+              },
+              {
+                title: 'Слой',
+                field: 'layerTitle',
+                filtering: true,
+                sorting: true,
+                renderCellContent: this.renderLayerTitle
+              },
+              {
+                title: 'Схема',
+                field: 'schemaId',
+                filtering: true,
+                sorting: true
+              }
+            ]}
+            defaultSort={{ field: 'synteticId', asc: true }}
+            secondarySortField='synteticId'
+            filterable
+          />
         </DialogContent>
         <DialogActions>
           <Select value={this.role} onChange={this.handleRoleChange}>
@@ -193,7 +115,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   private get avaiableList(): PermissionsListItem[] {
     const { currentList } = this.props;
 
-    return permissionsList.list.filter(
+    return allPermissions.list.filter(
       item =>
         !item.broken &&
         !currentList.some(
@@ -205,46 +127,18 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
 
   @computed
   private get list(): PermissionsListItemWrapped[] {
-    const { field, asc } = this.sortParams;
-
-    let preparedList = permissionsList.list.map(item => ({
+    return allPermissions.list.map(item => ({
       synteticId: `${item.project.name}|${item.project.id}|${item.layer ? `${item.layer.title}|${item.layer.id}` : ''}`,
       projectTitle: item.project.name,
       layerTitle: item.layer ? item.layer.title : '\u2014',
       schemaId: item.layer ? item.layer.schemaId : '\u2014',
       origin: item
     }));
-
-    if (this.filterEnabled) {
-      preparedList = filterObjects(preparedList, this.filterParams);
-    }
-
-    return sortObjects(preparedList, field, asc, 'synteticId');
-  }
-
-  @computed
-  private get pagesCount(): number {
-    return Math.ceil(this.list.length / this.rowsPerPage);
-  }
-
-  @computed
-  private get page(): number {
-    return Math.min(this._page, this.pagesCount);
-  }
-
-  @computed
-  private get listPaged(): PermissionsListItemWrapped[] {
-    return this.list.slice((this.page - 1) * this.rowsPerPage, (this.page - 1) * this.rowsPerPage + this.rowsPerPage);
   }
 
   @computed
   private get allSelected(): boolean {
     return this.avaiableList.length > 0 && this.selectedList.length === this.avaiableList.length;
-  }
-
-  @action.bound
-  private toggleFilter() {
-    this.filterEnabled = !this.filterEnabled;
   }
 
   @boundMethod
@@ -254,7 +148,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
     onAdd(
       this.selectedList.map(item => ({
         ...item,
-        permissions: getSetOfRoleAssignments(principalId, principalType, this.role, Boolean(item.layer))
+        permissions: getSetOfRoleAssignments(principalId, principalType, this.role, !item.layer)
       }))
     );
     this.close();
@@ -274,12 +168,34 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   }
 
   @action.bound
-  handleRoleChange(e: React.ChangeEvent<{ name?: string; value: Role }>) {
+  private handleRoleChange(e: React.ChangeEvent<{ name?: string; value: Role }>) {
     this.role = e.target.value;
   }
 
-  @action.bound
-  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this._page = value;
+  @boundMethod
+  private renderCheckbox(item: PermissionsListItemWrapped): ReactNode {
+    return (
+      <PermissionsAddDialogItemCheck
+        item={item.origin}
+        selectedList={this.selectedList}
+        currentList={this.props.currentList}
+      />
+    );
+  }
+
+  @boundMethod
+  private renderLayerTitle(
+    item: PermissionsListItemWrapped,
+    filterActive: boolean,
+    filterParams: FilterParams<PermissionsListItemWrapped>
+  ) {
+    return (
+      <>
+        <Highlight word={filterParams.layerTitle} enabled={filterActive}>
+          {item.layerTitle}
+        </Highlight>
+        {item.origin.layer && <IdBadge id={item.origin.layer.id} />}
+      </>
+    );
   }
 }

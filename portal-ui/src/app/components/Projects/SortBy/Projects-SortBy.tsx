@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
 
-import { projectsList } from '../../../stores/ProjectsList.store';
+import { allProjects } from '../../../stores/AllProjects.store';
 import { CrgProject } from '../../../services/crg/projects.models';
 
 import '!style-loader!css-loader!sass-loader!./Projects-SortBy.scss';
@@ -13,14 +13,14 @@ const cnProjectsSortBy = cn('Projects', 'SortBy');
 @observer
 export class ProjectsSortBy extends Component {
   componentWillUnmount() {
-    projectsList.setSortBy('createdAt');
+    allProjects.setSortBy('createdAt');
   }
 
   render() {
     return (
       <TextField
         label='Сортировать по'
-        value={projectsList.sortBy}
+        value={allProjects.sortBy}
         className={cnProjectsSortBy()}
         onChange={this.handleChange}
         select
@@ -33,6 +33,6 @@ export class ProjectsSortBy extends Component {
   }
 
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    projectsList.setSortBy(e.target.value as keyof CrgProject);
+    allProjects.setSortBy(e.target.value as keyof CrgProject);
   }
 }

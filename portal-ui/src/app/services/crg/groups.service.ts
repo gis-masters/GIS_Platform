@@ -4,7 +4,7 @@ import { http } from '../http.service';
 import { services } from '../services';
 import { PageableResponse } from '../models';
 import { ApiLink, CrgUser } from './users.service';
-import { groupsList } from '../../stores/GroupsList.store';
+import { allGroups } from '../../stores/AllGroups.store';
 import { serverProperties } from '../server-properties.service';
 
 export interface CrgGroup {
@@ -91,15 +91,15 @@ class GroupsService {
       return;
     }
 
-    if (groupsList.fetching) {
+    if (allGroups.fetching) {
       this.debouncedFetchGroupsListStore();
       return;
     }
 
-    groupsList.setFetching(true);
+    allGroups.setFetching(true);
     const groups = await groupsService.getAll();
-    groupsList.setList(groups);
-    groupsList.setFetching(false);
+    allGroups.setList(groups);
+    allGroups.setFetching(false);
   }
 }
 

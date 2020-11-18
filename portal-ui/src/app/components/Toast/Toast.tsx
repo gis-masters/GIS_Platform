@@ -2,7 +2,7 @@ import React, { Component, FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { toast, ToastId, ToastOptions } from 'react-toastify';
+import { toast, Id, ToastOptions } from 'react-toastify';
 import nl2br from 'react-nl2br';
 import { IconButton } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -30,7 +30,7 @@ interface ToastErrorOpts extends ToastOpts {
 
 interface ToastProps extends ToastOpts {
   toastInfo: {
-    id: ToastId;
+    id: Id;
   };
   icon: JSX.Element;
 }
@@ -52,7 +52,7 @@ export class Toast extends Component<ToastProps> {
   static show(message: JSX.Element | string | ToastOpts, opts?: ToastOpts) {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type] || null;
-    const toastInfo: { id: ToastId } = { id: '0' };
+    const toastInfo: { id: Id } = { id: '0' };
     const closeHandler = () => {
       toast.dismiss(toastInfo.id);
     };

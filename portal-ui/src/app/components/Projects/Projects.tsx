@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { communicationService } from '../../services/communication.service';
 import { projectsService } from '../../services/crg/projects.service';
 import { CrgProject } from '../../services/crg/projects.models';
-import { projectsList } from '../../stores/ProjectsList.store';
+import { allProjects } from '../../stores/AllProjects.store';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { sleep } from '../../services/util/sleep';
 
@@ -38,13 +38,13 @@ export class Projects extends Component {
   render() {
     return (
       <div className={cnProjects(null, ['scroll'])} ref={this.thisRef}>
-        {!projectsList.isLoaded ? (
+        {!allProjects.isLoaded ? (
           <ProjectsLoader />
         ) : (
           <>
             <ProjectsHeader />
             <ProjectsList>
-              {projectsList.list.map((project, i) => (
+              {allProjects.list.map((project, i) => (
                 <ProjectCard
                   className={cnProjects('Card')}
                   project={project}

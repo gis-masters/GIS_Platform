@@ -1,49 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
-} from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import { Dialog, DialogContent, DialogActions } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
 import {
   RoleAssignmentBody,
-  addPermission,
-  removePermission,
-  PrincipalType
+  PrincipalType,
+  addTablePermission,
+  addProjectPermission,
+  removeTablePermission,
+  removeProjectPermission
 } from '../../services/crg/permissions.service';
 import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
 import { communicationService } from '../../services/communication.service';
-import { FilterParams, filterObjects } from '../../services/util/filterObjects';
+import { FilterParams } from '../../services/util/filterObjects';
 import { PermissionsListItem } from '../../services/crg/permissionsList.service';
-import { SortParams, sortObjects } from '../../services/util/sortObjects';
-import { permissionsList } from '../../stores/PermissionsList.store';
-import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
-import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
+import { allPermissions } from '../../stores/AllPermissions.store';
 import { Highlight } from '../Highlight/Highlight';
 import { Loading } from '../Loading/Loading';
 import { IdBadge } from '../IdBadge/IdBadge';
 import { Button } from '../Button/Button';
+import { XTable } from '../XTable/XTable';
 
-import { PermissionsListEmpty } from './Empty/PermissionsListDialog-Empty';
-import { PermissionsListDialogTable } from './Table/PermissionsListDialog-Table';
+import { PermissionsListDialogAdd } from './Add/PermissionsListDialog-Add';
 import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
-import { PermissionsListDialogTitle } from './Title/PermissionsListDialog-Title';
 import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
 
-import '!style-loader!css-loader!sass-loader!./PermissionsListDialog.scss';
+import '!style-loader!css-loader!sass-loader!./Table/PermissionsListDialog-Table.scss';
+import '!style-loader!css-loader!sass-loader!./Paper/PermissionsListDialog-Paper.scss';
 
 const cnPermissionsListDialog = cn('PermissionsListDialog');
 
@@ -65,18 +52,10 @@ export interface PermissionsListItemWrapped {
   origin: PermissionsListItem;
 }
 
-export type ListSortParams = SortParams<PermissionsListItemWrapped>;
-export type ListFilterParams = FilterParams<PermissionsListItemWrapped>;
-
 @observer
 export class PermissionsListDialog extends Component<PermissionsListProps> {
   @observable private loading = false;
   @observable private changedList?: PermissionsListItem[];
-  @observable private sortParams: ListSortParams = { field: 'synteticId', asc: true };
-  @observable private filterParams: ListFilterParams = {};
-  @observable private filterEnabled = false;
-  @observable private _page = 1;
-  private rowsPerPage = 20;
 
   render() {
     const { principalId, principalType, principalName, open } = this.props;
@@ -89,98 +68,65 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         className={cnPermissionsListDialog()}
         PaperProps={{ className: cnPermissionsListDialog('Paper') }}
       >
-        <DialogTitle>
-          <PermissionsListDialogTitle
-            principalId={principalId}
-            principalType={principalType}
-            principalName={principalName}
-            currentList={this.currentList}
-            onAdd={this.handleAdd}
-            filterEnabled={this.filterEnabled}
-            onFilterClick={this.toggleFilter}
-          />
-        </DialogTitle>
         <DialogContent>
-          {this.currentList.length ? (
-            <>
-              <TableContainer component={PermissionsListDialogTable}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableHeadCell
-                        field='projectTitle'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Проект
-                      </TableHeadCell>
-                      <TableHeadCell
-                        field='layerTitle'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Слой
-                      </TableHeadCell>
-                      <TableHeadCell
-                        field='schemaId'
-                        sorting
-                        sortParams={this.sortParams}
-                        filtering={this.filterEnabled}
-                        filterParams={this.filterParams}
-                      >
-                        Схема
-                      </TableHeadCell>
-                      <TableCell align='right'>Разрешения</TableCell>
-                      <TableCell align='right'>Действия</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {this.listPaged.map(({ synteticId, projectTitle, layerTitle, schemaId, origin }) => (
-                      <TableRow key={synteticId} hover>
-                        <TableCell>
-                          <Highlight word={this.filterParams.projectTitle} enabled={this.filterEnabled}>
-                            {projectTitle}
-                          </Highlight>
-                          <IdBadge id={origin.project.id} />
-                        </TableCell>
-                        <TableCell>
-                          <Highlight word={this.filterParams.layerTitle} enabled={this.filterEnabled}>
-                            {layerTitle}
-                          </Highlight>
-                          {origin.layer && <IdBadge id={origin.layer.id} />}
-                        </TableCell>
-                        <TableCell>
-                          <Highlight word={this.filterParams.schemaId} enabled={this.filterEnabled}>
-                            {schemaId}
-                          </Highlight>
-                        </TableCell>
-                        <TableCell align='right' padding='checkbox'>
-                          <PermissionsListRoleSelect
-                            listItem={origin}
-                            onChange={this.handleRolesChange}
-                            principalId={principalId}
-                            principalType={principalType}
-                          />
-                        </TableCell>
-                        <TableCell align='right' padding='checkbox'>
-                          <PermissionsListActions item={origin} onDelete={this.handleDelete} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TableUnderFooter>
-                <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
-              </TableUnderFooter>
-            </>
-          ) : (
-            !this.loading && <PermissionsListEmpty />
-          )}
+          <XTable
+            className={cnPermissionsListDialog('Table')}
+            title={
+              <>
+                Разрешения
+                {principalType === PrincipalType.USER && ' пользователя '}
+                {principalType === PrincipalType.GROUP && ' группы '}
+                {principalName}
+                <IdBadge id={principalId} />
+              </>
+            }
+            headerActions={
+              <PermissionsListDialogAdd
+                onAdd={this.handleAdd}
+                currentList={this.currentList}
+                principalId={principalId}
+                principalType={principalType}
+              />
+            }
+            data={this.list}
+            cols={[
+              {
+                title: 'Проект',
+                field: 'projectTitle',
+                filtering: true,
+                sorting: true,
+                getIdBadge: ({ origin }) => origin.project.id
+              },
+              {
+                title: 'Слой',
+                field: 'layerTitle',
+                filtering: true,
+                sorting: true,
+                renderCellContent: this.renderLayerTitle
+              },
+              {
+                title: 'Схема',
+                field: 'schemaId',
+                filtering: true,
+                sorting: true
+              },
+              {
+                title: 'Разрешения',
+                cellProps: { padding: 'checkbox' },
+                align: 'right',
+                renderCellContent: this.renderRoleSelect
+              },
+              {
+                title: 'Действия',
+                cellProps: { padding: 'checkbox' },
+                align: 'right',
+                renderCellContent: this.renderActions
+              }
+            ]}
+            defaultSort={{ field: 'synteticId', asc: true }}
+            secondarySortField='synteticId'
+            filterable
+          />
 
           <Loading noBackdrop visible={this.loading} />
         </DialogContent>
@@ -211,7 +157,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   private get existingList(): PermissionsListItem[] {
     const { principalId, principalType } = this.props;
 
-    return permissionsList.list
+    return allPermissions.list
       .map(item => ({
         ...item,
         permissions: item.permissions.filter(
@@ -228,41 +174,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @computed
   private get list(): PermissionsListItemWrapped[] {
-    const { field, asc } = this.sortParams;
-
-    let preparedList = this.currentList.map(item => ({
+    return this.currentList.map(item => ({
       synteticId: `${item.project.name}|${item.project.id}|${item.layer ? `${item.layer.title}|${item.layer.id}` : ''}`,
       projectTitle: item.project.name,
       layerTitle: item.layer ? item.layer.title : '\u2014',
       schemaId: item.layer ? item.layer.schemaId : '\u2014',
       origin: item
     }));
-
-    if (this.filterEnabled) {
-      preparedList = filterObjects(preparedList, this.filterParams);
-    }
-
-    return sortObjects(preparedList, field, asc, 'synteticId');
-  }
-
-  @computed
-  private get listPaged(): PermissionsListItemWrapped[] {
-    return this.list.slice((this.page - 1) * this.rowsPerPage, (this.page - 1) * this.rowsPerPage + this.rowsPerPage);
-  }
-
-  @computed
-  private get pagesCount(): number {
-    return Math.ceil(this.list.length / this.rowsPerPage);
-  }
-
-  @computed
-  private get page(): number {
-    return Math.min(this._page, this.pagesCount);
-  }
-
-  @action.bound
-  private toggleFilter() {
-    this.filterEnabled = !this.filterEnabled;
   }
 
   @action
@@ -316,11 +234,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
     this.changedList = undefined;
   }
 
-  @action.bound
-  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this._page = value;
-  }
-
   @boundMethod
   private async save() {
     this.setLoading(true);
@@ -343,12 +256,20 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       }
     });
 
-    for (let item of toCreate) {
-      await addPermission(...item);
+    for (let [permission, project, layer] of toCreate) {
+      if (layer) {
+        await addTablePermission(permission, layer.dataset, layer.internalName);
+      } else {
+        await addProjectPermission(permission, project);
+      }
     }
 
-    for (let item of existing) {
-      await removePermission(...item);
+    for (let [permission, project, layer] of existing) {
+      if (layer) {
+        await removeTablePermission(permission, layer.dataset, layer.internalName);
+      } else {
+        await removeProjectPermission(permission, project);
+      }
     }
 
     communicationService.permissionsUpdated.emit();
@@ -365,5 +286,40 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         });
       })
       .flat();
+  }
+
+  @boundMethod
+  private renderLayerTitle(
+    item: PermissionsListItemWrapped,
+    filterActive: boolean,
+    filterParams: FilterParams<PermissionsListItemWrapped>
+  ) {
+    return (
+      <>
+        <Highlight word={filterParams.layerTitle} enabled={filterActive}>
+          {item.layerTitle}
+        </Highlight>
+        {item.origin.layer && <IdBadge id={item.origin.layer.id} />}
+      </>
+    );
+  }
+
+  @boundMethod
+  private renderRoleSelect(item: PermissionsListItemWrapped): ReactNode {
+    const { principalId, principalType } = this.props;
+
+    return (
+      <PermissionsListRoleSelect
+        listItem={item.origin}
+        onChange={this.handleRolesChange}
+        principalId={principalId}
+        principalType={principalType}
+      />
+    );
+  }
+
+  @boundMethod
+  private renderActions(item: PermissionsListItemWrapped): ReactNode {
+    return <PermissionsListActions item={item.origin} onDelete={this.handleDelete} />;
   }
 }

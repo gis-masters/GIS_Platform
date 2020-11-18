@@ -1,19 +1,18 @@
 import { reaction } from 'mobx';
 
-import { services } from '../services';
-import { wsService } from '../ws.service';
-import { TaskImport } from '../geoserver/import/taskImport';
-import { serverProperties } from '../server-properties.service';
-import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { projectsList } from '../../stores/ProjectsList.store';
-import { isReadAllowed } from './permissions.service';
-import { Toast } from '../../components/Toast/Toast';
-import { PageableResponse, Process } from '../models';
 import { route } from '../../stores/Route.store';
-import { http } from '../http.service';
+import { allProjects } from '../../stores/AllProjects.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
+import { serverProperties } from '../server-properties.service';
+import { TaskImport } from '../geoserver/import/taskImport';
+import { isReadAllowed } from './permissions.service';
+import { PageableResponse, Process } from '../models';
 import { usersService } from './users.service';
+import { wsService } from '../ws.service';
+import { services } from '../services';
+import { http } from '../http.service';
+import { Toast } from '../../components/Toast/Toast';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -39,9 +38,9 @@ class ProjectsService {
     const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(url, { params });
 
     if (response && response._embedded) {
-      projectsList.setList(response._embedded.projects);
+      allProjects.setList(response._embedded.projects);
     } else {
-      projectsList.setList([]);
+      allProjects.setList([]);
     }
   }
 
@@ -139,7 +138,7 @@ class ProjectsService {
   async delete(id: number) {
     const url = `${await serverProperties.projectsUrl}/${id}`;
     await http.delete(url);
-    projectsList.delete(id);
+    allProjects.delete(id);
   }
 
   /**

@@ -15,6 +15,7 @@ export interface Adapter {
   getId: (item: ExplorerItemData) => string;
   getTitle: (item: ExplorerItemData) => string;
   getMeta: (item: ExplorerItemData) => string;
+  getDetails?: (item: ExplorerItemData) => string;
   getIcon?: (item: ExplorerItemData) => ReactNode;
   isFolder: (item: ExplorerItemData) => boolean;
   getChildren?: (
@@ -50,6 +51,10 @@ export function getTitle(item: ExplorerItemData): string {
 
 export function getMeta(item: ExplorerItemData): string {
   return adapters[item.type].getMeta(item);
+}
+
+export function getDetails(item: ExplorerItemData): string | undefined {
+  return adapters[item.type].getDetails && adapters[item.type].getDetails(item);
 }
 
 export function getIcon(item: ExplorerItemData): ReactNode {

@@ -1,8 +1,8 @@
 import { debounce } from 'lodash';
 
-import { permissionsList } from '../../stores/PermissionsList.store';
-import { projectsList } from '../../stores/ProjectsList.store';
-import { getPermissions, RoleAssignmentBody } from './permissions.service';
+import { allPermissions } from '../../stores/AllPermissions.store';
+import { allProjects } from '../../stores/AllProjects.store';
+import { getProjectPermissions, getTablePermissions, RoleAssignmentBody } from './permissions.service';
 import { communicationService } from '../communication.service';
 import { CrgProject, CrgLayer, CrgLayerType } from './projects.models';
 import { projectsService } from './projects.service';
@@ -52,17 +52,17 @@ class PermissionsListService {
     const operationId = Symbol();
     this.fetchingOperationId = operationId;
 
-    permissionsList.setFetching(true);
+    allPermissions.setFetching(true);
 
-    if (!projectsList.isLoaded) {
+    if (!allProjects.isLoaded) {
       await projectsService.fetchProjects();
     }
 
-    const permissions: PermissionsListItem[] = [];
+    const list: PermissionsListItem[] = [];
     let itemCounter = 0;
     const items = [];
 
-    for (let project of projectsList.list) {
+    for (const project of allProjects.list) {
       const layers = await projectsService.getProjectLayers(project.id);
       items.splice(
         items.length,
@@ -72,13 +72,14 @@ class PermissionsListService {
       );
     }
 
-    for (let [project, layer] of items) {
+    for (const [project, layer] of items) {
       let broken = false;
-      let layerPermissions: RoleAssignmentBody[] = [];
+      let permissions: RoleAssignmentBody[] = [];
 
       try {
-        // если слой не указан (undefined), вернёт результат для самого проекта
-        layerPermissions = await getPermissions(project, layer);
+        permissions = layer
+          ? await getTablePermissions(project.internalName, layer.internalName)
+          : await getProjectPermissions(project);
       } catch (e) {
         broken = true;
         let errText =
@@ -95,19 +96,19 @@ class PermissionsListService {
       }
 
       itemCounter++;
-      permissionsList.setFetchingProgress((itemCounter / items.length) * 100);
+      allPermissions.setFetchingProgress((itemCounter / items.length) * 100);
 
-      permissions.push({
+      list.push({
         project,
         layer,
-        permissions: layerPermissions,
+        permissions,
         broken
       });
     }
 
-    permissionsList.setList(permissions);
-    permissionsList.setFetching(false);
-    permissionsList.setFetchingProgress(null);
+    allPermissions.setList(list);
+    allPermissions.setFetching(false);
+    allPermissions.setFetchingProgress(null);
   }
 }
 

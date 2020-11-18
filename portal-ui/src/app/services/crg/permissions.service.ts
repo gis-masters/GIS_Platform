@@ -111,18 +111,6 @@ export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
   return isAllowed(layer, PermissionPoint.EXPORT);
 }
 
-async function getPermissionsUrl(project: CrgProject, layer?: CrgLayer): Promise<string> {
-  if (layer) {
-    const dataServerUrl = await serverProperties.dataUrl;
-
-    return `${dataServerUrl}/datasets/${layer.dataset}/tables/${layer.internalName}/roleAssignment`;
-  } else {
-    const projectsUrl = await serverProperties.projectsUrl;
-
-    return `${projectsUrl}/${project.id}/permissions`;
-  }
-}
-
 async function getLayerSourceData(layer: CrgLayer): Promise<CrgSource | null> {
   try {
     return await http.get<CrgSource>(`${await serverProperties.baseUrl}${layer.dataSourceUri}`);
@@ -133,53 +121,64 @@ async function getLayerSourceData(layer: CrgLayer): Promise<CrgSource | null> {
 
 function handleSavingError(
   e: any,
-  actionType: string,
   payload: RoleAssignmentBody,
-  project: CrgProject,
-  layer?: CrgLayer
+  actionType: string,
+  entityType: string,
+  entityName: string
 ) {
-  const errText =
-    `Не удалось ${actionType} разрешение "${payload.role}" для ` +
-    (layer
-      ? `для слоя "${layer.title}" в проекте "${project.name}" (${layer.complexName})`
-      : `для проекта "${project.name}"`);
+  const errText = `Не удалось ${actionType} разрешение "${payload.role}" для ${entityType} "${entityName}"`;
   Toast.warn(errText);
   services.logger.error(errText, e);
 }
 
-export async function getPermissions(project: CrgProject, layer?: CrgLayer): Promise<RoleAssignmentBody[]> {
-  const url = await getPermissionsUrl(project, layer);
+export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
+  const dataServerUrl = await serverProperties.dataUrl;
+  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
+  const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
+    params: { size: '10000' }
+  });
 
-  if (layer) {
-    const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
-      params: { size: '10000' }
-    });
+  return response._embedded?.permissions || [];
+}
 
-    return response._embedded?.permissions || [];
-  } else {
-    const response = await http.get<RoleAssignmentBody[]>(url);
+export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
+  return await http.get<RoleAssignmentBody[]>(`${await serverProperties.projectsUrl}/${project.id}/permissions`);
+}
 
-    return response;
+export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
+  try {
+    await http.post(`${await serverProperties.projectsUrl}/${project.id}/permissions`, payload);
+  } catch (e) {
+    handleSavingError(e, payload, 'добавить', 'проекта', project.name);
   }
 }
 
-export async function addPermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
-  const url = await getPermissionsUrl(project, layer);
+export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
+  const url = `${await serverProperties.dataUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
 
   try {
     await http.post(url, payload);
   } catch (e) {
-    handleSavingError(e, 'добавить', payload, project, layer);
+    handleSavingError(e, payload, 'добавить', 'таблицы', `${datasetId}:${tableId}`);
   }
 }
 
-export async function removePermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
-  const url = await getPermissionsUrl(project, layer);
+export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
+  try {
+    await http.delete(`${await serverProperties.projectsUrl}/${project.id}/permissions/${payload.id}`);
+  } catch (e) {
+    handleSavingError(e, payload, 'удалить', 'проекта', project.name);
+  }
+}
+
+export async function removeTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
+  const dataServerUrl = await serverProperties.dataUrl;
+  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
 
   try {
     await http.delete(`${url}/${payload.id}`);
   } catch (e) {
-    handleSavingError(e, 'удалить', payload, project, layer);
+    handleSavingError(e, payload, 'удалить', 'таблицы', `${datasetId}:${tableId}`);
   }
 }
 
@@ -187,13 +186,13 @@ export function getSetOfRoleAssignments(
   principalId: number,
   principalType: PrincipalType,
   role: Role,
-  isProject: boolean
+  isProject?: boolean
 ): RoleAssignmentBody[] {
-  if (!isProject && projectRoles.indexOf(role) === -1) {
+  if (isProject && !projectRoles.includes(role)) {
     role = projectRoles[0];
   }
 
-  const currRoles = isProject ? roles.slice(0, roles.indexOf(role) + 1) : [role];
+  const currRoles = isProject ? [role] : roles.slice(0, roles.indexOf(role) + 1);
 
   return currRoles.map(roleName => ({
     principalType,

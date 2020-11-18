@@ -1,0 +1,76 @@
+body .PermissionsWidget {
+  position: relative;
+
+  padding: 10px 0 6px;
+
+  &-Edit {
+    margin-left: 10px;
+
+    vertical-align: bottom;
+  }
+
+  &-Header {
+    margin-left: -8px;
+
+    color: #666;
+  }
+
+  &-List {
+    margin-bottom: 5px;
+
+    line-height: 1.2;
+  }
+
+  &-ListTitle {
+    margin-right: 2px;
+
+    color: #666;
+
+    font-size: 14px;
+  }
+
+  &-ListItems {
+    display: contents;
+  }
+
+  &-Item {
+    display: inline-block;
+    overflow: hidden;
+
+    max-width: 170px;
+    margin-right: 7px;
+
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+
+    &::after {
+      content: ',';
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+  }
+
+  &-ItemIcon {
+    margin-top: -2px;
+    margin-right: 2px;
+
+    color: #666;
+
+    font-size: 16px;
+  }
+
+  &-Moar {
+    font-size: 14px;
+  }
+
+  &-MoarLink {
+    margin-left: 5px;
+
+    white-space: nowrap;
+  }
+}

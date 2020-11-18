@@ -1,20 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  Tooltip,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Paper,
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  DialogActions
-} from '@material-ui/core';
+import { Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 import { People } from '@material-ui/icons';
@@ -22,10 +9,10 @@ import { boundMethod } from 'autobind-decorator';
 
 import { CrgUser } from '../../../services/crg/users.service';
 import { CrgGroup, groupsService } from '../../../services/crg/groups.service';
-import { groupsList } from '../../../stores/GroupsList.store';
+import { allGroups } from '../../../stores/AllGroups.store';
 import { Loading } from '../../Loading/Loading';
-import { IdBadge } from '../../IdBadge/IdBadge';
 import { Button } from '../../Button/Button';
+import { XTable } from '../../XTable/XTable';
 
 import { OrgActionsUserGroupCheck } from '../UserGroupCheck/OrgActions-UserGroupCheck';
 
@@ -54,27 +41,27 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
         </Tooltip>
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-          <DialogTitle>Группы пользователя {user.username}</DialogTitle>
           <DialogContent>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableBody>
-                  {groupsList.list.map(group => {
-                    return (
-                      <TableRow key={group.id}>
-                        <TableCell padding='checkbox'>
-                          <OrgActionsUserGroupCheck group={group} selectedList={this.selected} />
-                        </TableCell>
-                        <TableCell>
-                          {group.name}
-                          <IdBadge id={group.id} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <XTable
+              title={`Группы пользователя ${user.username}`}
+              data={allGroups.list}
+              cols={[
+                {
+                  cellProps: { padding: 'checkbox' },
+                  renderCellContent: this.renderCheckbox
+                },
+                {
+                  title: 'Название',
+                  field: 'name',
+                  getIdBadge: ({ id }) => id,
+                  filtering: true,
+                  sorting: true
+                }
+              ]}
+              defaultSort={{ field: 'name', asc: true }}
+              secondarySortField='id'
+              filterable
+            />
           </DialogContent>
           <DialogActions>
             {this.groupsChanged && (
@@ -131,7 +118,12 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
   }
 
   @action
-  setLoading(loading: boolean) {
+  private setLoading(loading: boolean) {
     this.loading = loading;
+  }
+
+  @boundMethod
+  private renderCheckbox(group: CrgGroup): ReactNode {
+    return <OrgActionsUserGroupCheck group={group} selectedList={this.selected} />;
   }
 }

@@ -1,24 +1,16 @@
-import React, { Component } from 'react';
-import { observable, action, computed } from 'mobx';
+import React, { Component, ReactNode } from 'react';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { groupsList } from '../../stores/GroupsList.store';
-import { permissionsList } from '../../stores/PermissionsList.store';
+import { allGroups } from '../../stores/AllGroups.store';
+import { allPermissions } from '../../stores/AllPermissions.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { PrincipalType } from '../../services/crg/permissions.service';
 import { permissionsListService } from '../../services/crg/permissionsList.service';
-import { FilterParams, filterObjects } from '../../services/util/filterObjects';
-import { SortParams, sortObjects } from '../../services/util/sortObjects';
-import { TableUnderFooter } from '../TableUnderFooter/TableUnderFooter';
-import { TableOverHead } from '../TableOverHead/TableOverHead';
-import { TableHeadCell } from '../TableHeadCell/TableHeadCell';
-import { FilterButton } from '../FilterButton/FilterButton';
 import { OrgActions } from '../OrgActions/OrgActions';
-import { Highlight } from '../Highlight/Highlight';
-import { IdBadge } from '../IdBadge/IdBadge';
+import { XTable } from '../XTable/XTable';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 
@@ -31,17 +23,8 @@ interface CrgGroupExtended extends CrgGroup {
   permissionsCount: number;
 }
 
-type GroupSortParams = SortParams<CrgGroupExtended>;
-type GroupFilterParams = FilterParams<CrgGroupExtended>;
-
 @observer
 export class OrgGroups extends Component {
-  @observable private sortParams: GroupSortParams = { field: 'name', asc: true };
-  @observable private filterParams: GroupFilterParams = {};
-  @observable private filterEnabled = false;
-  @observable private _page = 1;
-  private rowsPerPage = 20;
-
   componentDidMount() {
     groupsService.initGroupsListStore();
     permissionsListService.initGroupsListStore();
@@ -49,102 +32,59 @@ export class OrgGroups extends Component {
 
   render() {
     return (
-      <div className={cnOrgGroups()}>
-        <TableOverHead>
-          <OrgGroupsCreate />
-          <FilterButton filterEnabled={this.filterEnabled} onClick={this.toggleFilter} />
-        </TableOverHead>
-        <TableContainer component={Paper} className='scroll'>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableHeadCell
-                  field='name'
-                  sorting
-                  sortParams={this.sortParams}
-                  filtering={this.filterEnabled}
-                  filterParams={this.filterParams}
-                >
-                  Название
-                </TableHeadCell>
-                <TableHeadCell
-                  field='description'
-                  sorting
-                  sortParams={this.sortParams}
-                  filtering={this.filterEnabled}
-                  filterParams={this.filterParams}
-                  align='right'
-                >
-                  Описание
-                </TableHeadCell>
-                <TableHeadCell
-                  field='usersCount'
-                  sorting
-                  sortParams={this.sortParams}
-                  filtering={this.filterEnabled}
-                  filterParams={this.filterParams}
-                  align='right'
-                >
-                  Пользователей
-                </TableHeadCell>
-                <TableHeadCell
-                  field='permissionsCount'
-                  sorting
-                  sortParams={this.sortParams}
-                  filtering={this.filterEnabled}
-                  filterParams={this.filterParams}
-                  align='right'
-                >
-                  Разрешений
-                </TableHeadCell>
-                <TableCell align='right'>Действия</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.pagedGroups.map(group => (
-                <TableRow key={group.id} hover>
-                  <TableCell component='th' scope='row'>
-                    <Highlight word={this.filterParams.name} enabled={this.filterEnabled}>
-                      {group.name}
-                    </Highlight>
-                    <IdBadge id={group.id} />
-                  </TableCell>
-                  <TableCell align='right'>
-                    <Highlight word={this.filterParams.description} enabled={this.filterEnabled}>
-                      {group.description}
-                    </Highlight>
-                  </TableCell>
-                  <TableCell align='right'>
-                    <Highlight word={this.filterParams.usersCount} enabled={this.filterEnabled}>
-                      {group.usersCount}
-                    </Highlight>
-                  </TableCell>
-                  <TableCell align='right'>
-                    <Highlight word={this.filterParams.permissionsCount} enabled={this.filterEnabled}>
-                      {group.permissionsCount}
-                    </Highlight>
-                  </TableCell>
-                  <TableCell align='right' padding='checkbox'>
-                    <OrgActions group={group} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TableUnderFooter>
-          <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
-        </TableUnderFooter>
-      </div>
+      <XTable
+        className={cnOrgGroups()}
+        headerActions={<OrgGroupsCreate />}
+        data={this.groups}
+        cols={[
+          {
+            title: 'Название',
+            field: 'name',
+            filtering: true,
+            sorting: true,
+            getIdBadge: ({ id }) => id
+          },
+          {
+            title: 'Описание',
+            field: 'description',
+            filtering: true,
+            sorting: true,
+            align: 'right'
+          },
+          {
+            title: 'Пользователей',
+            field: 'usersCount',
+            filtering: true,
+            sorting: true,
+            align: 'right'
+          },
+          {
+            title: 'Разрешений',
+            field: 'permissionsCount',
+            filtering: true,
+            sorting: true,
+            align: 'right'
+          },
+          {
+            title: 'Действия',
+            align: 'right',
+            cellProps: { padding: 'checkbox' },
+            renderCellContent: this.renderGroupActions
+          }
+        ]}
+        defaultSort={{ field: 'name', asc: true }}
+        secondarySortField='id'
+        filterable
+      />
     );
   }
 
   @computed
   private get groups(): CrgGroupExtended[] {
-    return groupsList.list.map(group => ({
+    return allGroups.list.map(group => ({
       ...group,
       usersCount: group.users.length,
-      permissionsCount: permissionsList.list.filter(item =>
+      permissionsCount: allPermissions.list.filter(item =>
         item.permissions.find(
           ({ principalId, principalType }) => Number(principalId) === group.id && principalType === PrincipalType.GROUP
         )
@@ -152,43 +92,8 @@ export class OrgGroups extends Component {
     }));
   }
 
-  @computed
-  private get filteredAndSortedGroups(): CrgGroupExtended[] {
-    const { field, asc } = this.sortParams;
-    let groups = this.groups;
-
-    if (this.filterEnabled) {
-      groups = filterObjects(groups, this.filterParams);
-    }
-
-    return sortObjects(groups, field, asc, 'id');
-  }
-
-  @computed
-  private get pagedGroups(): CrgGroupExtended[] {
-    return this.filteredAndSortedGroups.slice(
-      (this.page - 1) * this.rowsPerPage,
-      (this.page - 1) * this.rowsPerPage + this.rowsPerPage
-    );
-  }
-
-  @computed
-  private get pagesCount(): number {
-    return Math.ceil(this.filteredAndSortedGroups.length / this.rowsPerPage);
-  }
-
-  @computed
-  private get page(): number {
-    return Math.min(this._page, this.pagesCount);
-  }
-
-  @action.bound
-  private toggleFilter() {
-    this.filterEnabled = !this.filterEnabled;
-  }
-
-  @action.bound
-  private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
-    this._page = value;
+  @boundMethod
+  private renderGroupActions(group: CrgGroupExtended): ReactNode {
+    return <OrgActions group={group} />;
   }
 }

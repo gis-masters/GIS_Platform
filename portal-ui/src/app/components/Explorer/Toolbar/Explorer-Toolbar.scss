@@ -1,8 +1,9 @@
 .Explorer-Toolbar {
-  display: flex;
-
-  padding: 15px;
-
   grid-area: toolbar;
-  gap: 15px;
+
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+
+  font-size: 10px;
 }

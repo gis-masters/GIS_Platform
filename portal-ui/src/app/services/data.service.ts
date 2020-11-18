@@ -10,11 +10,11 @@ export interface DataEntity {
   details?: string;
   type: 'SCHEMA' | 'TABLE';
   createdAt?: string;
+  itemsCount: number;
 }
 
 export interface DataSet extends DataEntity {
   type: 'SCHEMA';
-  itemsCount: number;
 }
 
 export interface DataTable extends DataEntity {

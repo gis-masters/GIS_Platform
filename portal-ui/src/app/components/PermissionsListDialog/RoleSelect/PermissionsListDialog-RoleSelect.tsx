@@ -54,8 +54,9 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
   @action.bound
   private handleChange(e: React.ChangeEvent<{ value: Role }>) {
     const { listItem, onChange, principalId, principalType } = this.props;
-    const newPermissions = getSetOfRoleAssignments(principalId, principalType, e.target.value, Boolean(listItem.layer));
-
-    onChange({ ...listItem, permissions: newPermissions });
+    onChange({
+      ...listItem,
+      permissions: getSetOfRoleAssignments(principalId, principalType, e.target.value, !listItem.layer)
+    });
   }
 }

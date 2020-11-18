@@ -31,7 +31,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
 
   render() {
     return (
-      <List className={cnExplorerList()}>
+      <List className={cnExplorerList()} disablePadding>
         {this.currentList.map(this.getItemProps).map(props => (
           <ExplorerItem {...props} key={getId(props.item)} />
         ))}
@@ -41,11 +41,9 @@ export class ExplorerList extends Component<ExplorerListProps> {
 
   @computed
   private get currentList(): ExplorerItemData[] {
-    const { store } = this.props;
+    const { path, currentItem } = this.props.store;
 
-    return store.path.length >= 2 && store.path[store.path.length - 2].children
-      ? store.path[store.path.length - 2].children
-      : [];
+    return path.length >= 2 && currentItem.children ? currentItem.children : [];
   }
 
   @boundMethod
@@ -70,9 +68,8 @@ export class ExplorerList extends Component<ExplorerListProps> {
     }
 
     const { store } = this.props;
-    const { path } = store;
-    const currtentPathItem = path[path.length - 1];
+    const { selectedItem } = store;
 
-    return currtentPathItem && getId(currtentPathItem) === getId(item);
+    return selectedItem && getId(selectedItem) === getId(item);
   }
 }
