@@ -30,6 +30,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { HeaderComponent } from './components/header/header.component';
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
 import { MappingCardComponent } from './components/mapping-card/mapping-card.component';
+import { PickupDatasetsComponent } from './components/pickup-datasets/pickup-datasets.component';
 import { MappingPairComponent } from './components/mapping-pair/mapping-pair.component';
 import { BugsTableComponent } from './components/validation/bugs-table/bugs-table.component';
 import { ReportSidebarComponent } from './components/validation/report-sidebar/report-sidebar.component';
@@ -64,7 +65,6 @@ import { WorkspaceComponent } from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
-import { FeaturesListComponent } from './components/features-list/features-list.component';
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
@@ -78,6 +78,7 @@ import { DataManagementComponent } from './components/data-management/data-manag
     AppComponent,
     HeaderComponent,
     MappingCardComponent,
+    PickupDatasetsComponent,
     MappingPairComponent,
     BugsTableComponent,
     ReportSidebarComponent,
@@ -113,7 +114,6 @@ import { DataManagementComponent } from './components/data-management/data-manag
     EditFeatureFieldComponent,
     EditFeatureGeometryComponent,
     FeaturesListSidebarComponent,
-    FeaturesListComponent,
     EditFeatureGeometryComponent,
     ZoomToFeatureComponent,
     OrgAdminComponent,

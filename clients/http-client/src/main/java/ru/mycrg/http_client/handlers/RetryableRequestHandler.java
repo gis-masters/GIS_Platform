@@ -47,7 +47,6 @@ public class RetryableRequestHandler implements IHttpRequestHandler {
                     return response;
                 }
 
-                log.debug("Request failed: {}", response);
                 if (config.getRetryCodes().contains(response.code())) {
                     resultResponse = response;
 

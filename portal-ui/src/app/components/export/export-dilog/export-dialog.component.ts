@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 
 import { addGeometryTypeToTitle } from '../../../services/util/stringUtil';
 import { communicationService } from '../../../services/communication.service';
-import { exportService } from '../../../services/crg/export.service';
+import { ExportResourceModel, exportService } from '../../../services/crg/export.service';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { Process } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
@@ -21,7 +21,6 @@ export enum ActionType {
   CLOSE,
   SWITCH
 }
-
 
 @Component({
   selector: 'crg-export-dialog',
@@ -99,11 +98,15 @@ export class ExportDialogComponent implements OnDestroy {
   async initValidation() {
     this.isExportInited = true;
 
-    const layerNames = this.selectedLayers.map((crgLayer: CrgLayer) => crgLayer.internalName);
-    const process: Process = await exportService.export({
-      layers: layerNames,
-      docSchema: this.selectedDocSchema
+    const resources: ExportResourceModel[] = this.selectedLayers.map((layer: CrgLayer) => {
+      return {
+        dataset: layer.dataset,
+        table: layer.internalName,
+        schemaId: layer.schemaId
+      };
     });
+
+    const process: Process = await exportService.exportAsGML(this.selectedDocSchema, resources);
     // TODO: Ответ пойдет по вебсокету, но здесь его нужно подстраховать
     this.logger.info('export to GML response', process);
     this.isExportInited = false;

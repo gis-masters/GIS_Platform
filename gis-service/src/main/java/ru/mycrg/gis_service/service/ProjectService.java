@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.service;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,19 +10,16 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.geoserver_client.services.projects.GeoserverProjectService;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
-import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.UserDetails;
-import ru.mycrg.http_client.exceptions.HttpClientException;
-import ru.mycrg.oauth_client.OAuthClient;
+import ru.mycrg.gis_service.service.geoserver.GeoserverLayersHandler;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -31,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis_service.security.CrgClaimsParser.*;
 
 @Service
@@ -40,21 +35,18 @@ public class ProjectService {
 
     private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
-    private final OAuthClient oAuthClient;
-    private final Environment environment;
-    private final ProjectionFactory factory;
+    private final ProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
+    private final GeoserverLayersHandler geoserverLayersHandler;
 
     public static final String DEFAULT_PROJECT_NAME = "workspace";
 
-    public ProjectService(ProjectionFactory factory,
-                          Environment environment,
-                          ProjectRepository projectRepository,
-                          OAuthClient oAuthClient) {
-        this.factory = factory;
-        this.oAuthClient = oAuthClient;
-        this.environment = environment;
+    public ProjectService(ProjectionFactory projectionFactory,
+                          GeoserverLayersHandler geoserverLayersHandler,
+                          ProjectRepository projectRepository) {
+        this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
+        this.geoserverLayersHandler = geoserverLayersHandler;
     }
 
     public Page<ProjectProjection> getAll(Pageable pageable, Authentication authentication) {
@@ -76,7 +68,7 @@ public class ProjectService {
             }
         }
 
-        return projects.map(project -> factory.createProjection(ProjectProjection.class, project));
+        return projects.map(project -> projectionFactory.createProjection(ProjectProjection.class, project));
     }
 
     /**
@@ -117,7 +109,7 @@ public class ProjectService {
     }
 
     public ProjectProjection getProjectionById(Long id, Authentication authentication) {
-        return factory.createProjection(ProjectProjection.class, getById(id, authentication));
+        return projectionFactory.createProjection(ProjectProjection.class, getById(id, authentication));
     }
 
     /**
@@ -165,38 +157,19 @@ public class ProjectService {
 
         projectRepository.save(savedProject);
 
-        try {
-            new GeoserverProjectService(getRootAccessToken())
-                    .createProject(savedProject.getInternalName(), orgId);
-
-            projectRepository.save(savedProject);
-        } catch (HttpClientException e) {
-            throw new ConflictException("Не удалось создать проект на геосервере", e.getCause());
-        }
-
-        return factory.createProjection(ProjectProjection.class, savedProject);
+        return projectionFactory.createProjection(ProjectProjection.class, savedProject);
     }
 
     public void delete(Long projectId, Authentication authentication) {
-        // TODO: Переделать удаление(вместе с созданием) проекта как процесс при удалении:
-        //  - удаление данных из БД
-        //  - удаление потрахов с геосервера: рабочей области и прав на нее (нужен рут токен для удаления прав)
-
         Long orgId = getOrganizationId(authentication);
         Project project = projectRepository
                 .findByIdAndOrganizationId(projectId, orgId)
                 .orElseThrow(() -> new NotFoundException(projectId));
 
-        try {
-            projectRepository.delete(project);
+        project.getLayers()
+               .forEach(layer -> geoserverLayersHandler.deleteLayer(layer, authentication));
 
-            new GeoserverProjectService(getToken(authentication))
-                    .deleteProject(project.getInternalName());
-        } catch (HttpClientException e) {
-            throw new GisServiceException("Не удалось удалить проект на геосервере: " + projectId, e.getCause());
-        } catch (Exception e) {
-            throw new GisServiceException("Не удалось удалить проект: " + projectId, e.getCause());
-        }
+        projectRepository.delete(project);
     }
 
     private List<Project> filterByPermissions(List<Project> projects, UserDetails userDetails) {
@@ -225,17 +198,5 @@ public class ProjectService {
                     return isExist;
                 })
                 .collect(Collectors.toList());
-    }
-
-    private String getRootAccessToken() {
-        String rootUserName = environment.getRequiredProperty("crg-options.root-user-name");
-        String rootUserPass = environment.getRequiredProperty("crg-options.root-user-password");
-
-        try {
-            return oAuthClient.getToken(rootUserName, rootUserPass)
-                              .getAccess_token();
-        } catch (Exception e) {
-            throw new GisServiceException("Error get root token");
-        }
     }
 }

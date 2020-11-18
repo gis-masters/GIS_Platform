@@ -1,7 +1,10 @@
 package ru.mycrg.geoserver_client.services.feature_types;
 
+import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -10,38 +13,69 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
+    public static final Logger log = LoggerFactory.getLogger(FeatureTypeService.class);
+
+    public static final String WORKSPACES = "/workspaces/";
+    public static final String DATASTORES = "/datastores/";
+
     public FeatureTypeService(String accessToken) {
         super(accessToken);
+    }
+
+    public FeatureTypes getFeatures(String workspaceName, String dataStoreName) throws HttpClientException {
+        log.debug("try get all features from workspace: {} dataset: {}", workspaceName, dataStoreName);
+
+        String url = getGeoserverRestUrl()
+                .append(WORKSPACES).append(workspaceName)
+                .append(DATASTORES).append(dataStoreName)
+                .append("/featuretypes.json").toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .get().build();
+
+        try {
+            return httpClient.handleRequest(request, FeaturesResponse.class)
+                             .getBody()
+                             .getFeatureTypes();
+        } catch (JsonSyntaxException e) {
+            return new FeatureTypes();
+        }
     }
 
     @Override
     public void create(String workspaceName, String dataStoreName, String featureName, Integer srs)
             throws HttpClientException {
+        log.debug("try create feature: {} in: {}", featureName, workspaceName);
+
         RequestBody body = RequestBody.create(
                 JSON_MEDIA_TYPE,
                 "{\"featureType\": " +
-                "{" +
-                "\"name\": \"" + featureName + "\"," +
-                "\"nativeCRS\": \"EPSG:" + srs.toString() + "\"" +
-                "}" +
+                    "{" +
+                        "\"name\": \"" + featureName + "\"," +
+                        "\"nativeCRS\": \"EPSG:" + srs.toString() + "\"" +
+                    "}" +
                 "}");
 
         String url = getGeoserverRestUrl()
-                .append("/workspaces/").append(workspaceName)
-                .append("/datastores/").append(dataStoreName)
+                .append(WORKSPACES).append(workspaceName)
+                .append(DATASTORES).append(dataStoreName)
                 .append("/featuretypes").toString();
 
         Request request = builderWithBearerAuth.url(url)
                                                .post(body).build();
+
+        log.debug("create feature: {} on datastore: {}", featureName, dataStoreName);
 
         httpClient.handleRequest(request);
     }
 
     @Override
     public void delete(String workspaceName, String dataStoreName, String featureName) throws HttpClientException {
+        log.debug("try delete feature: {} in: {}", featureName, workspaceName);
+
         String url = getGeoserverRestUrl()
-                .append("/workspaces/").append(workspaceName)
-                .append("/datastores/").append(dataStoreName)
+                .append(WORKSPACES).append(workspaceName)
+                .append(DATASTORES).append(dataStoreName)
                 .append("/featuretypes/").append(featureName)
                 .toString();
 

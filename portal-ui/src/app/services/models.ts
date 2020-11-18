@@ -7,7 +7,7 @@ interface PageableLink {
   templated?: boolean;
 }
 
-interface PageablePage {
+export interface PageablePage {
   number: number;
   size: number;
   totalElements: number;
@@ -18,32 +18,6 @@ export interface PageableResponse<T> {
   _embedded?: T;
   _links: PageableLink[] | { [key: string]: PageableLink };
   page: PageablePage;
-}
-
-export interface PageableResponse2<T> {
-  content: T[];
-  first: boolean;
-  last: boolean;
-  number: number;
-  numberOfElements: number;
-  pageable: {
-    offset: number;
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-    sort: {
-      unsorted: boolean;
-      sorted: boolean;
-    };
-  };
-  size: number;
-  sort: {
-    unsorted: boolean;
-    sorted: boolean;
-  };
-  totalElements: number;
-  totalPages: number;
 }
 
 export interface CrgModels {

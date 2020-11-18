@@ -28,6 +28,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
@@ -55,37 +56,41 @@ public class ImportService extends BaseProcessService {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process initProcess(String projectName, WorkImport workImport, Principal principal) {
+    public Process initProcess(long projectId, String datasetName, WorkImport workImport, Principal principal) {
         long orgId = getOrganizationId(principal);
 
         Process process = create(principal.getName(),
-                String.format("Импорт %d слоя(ёв) в проект: %s", workImport.getImportTasks().size(), projectName),
+                String.format("Импорт %d слоя(ёв) в dataset: %s", workImport.getImportTasks().size(), datasetName),
                 ProcessType.IMPORT, workImport.getWsUiId());
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
         workImport.getImportTasks().forEach(uiTask -> {
             String workTableName = uiTask.getWorkTableName().toLowerCase();
 
-            SchemaDto featureDescription = new SchemaDto();
-            Optional<SchemaDto> oDescription = schemaService.getSchemaByLayerName(uiTask.getSchemaName());
+            SchemaDto schemaDto = new SchemaDto();
+            Optional<SchemaDto> oDescription = schemaService.getSchemaByName(uiTask.getSchemaName());
             if (oDescription.isPresent()) {
-                featureDescription = oDescription.get();
+                schemaDto = oDescription.get();
 
-                log.debug("Import by schema: {}", featureDescription.getName());
+                log.debug("Import by schema: {}", schemaDto.getName());
             } else {
-                featureDescription.setName(workTableName);
-                featureDescription.setTableName(workTableName);
+                schemaDto.setName(workTableName);
+                schemaDto.setTableName(workTableName);
 
                 log.debug("Import AsIs, workTableName: {}", workTableName);
             }
 
             String dbName = DEFAULT_DB_NAME + orgId;
-            ImportMqTask importMqTask = new ImportMqTask(featureDescription,
+            String layerName = String.format("%s_%d_%s", schemaDto.getName(), projectId,
+                                      UUID.randomUUID().toString().substring(0, 4));
+
+            ImportMqTask importMqTask = new ImportMqTask(layerName,
+                    schemaDto.getName(),
+                    "scratch_database_" + orgId,
+                    projectId,
+                    schemaDto,
                     new ResourceProjection(dbName, "public", uiTask.getLayerName()),
-                    new ResourceProjection(
-                            dbName,
-                            projectName,
-                            featureDescription.getTableName()),
+                    new ResourceProjection(dbName, datasetName, layerName, schemaDto),
                     uiTask.getPairs(),
                     uiTask.getSrs(),
                     getRootAccessToken()

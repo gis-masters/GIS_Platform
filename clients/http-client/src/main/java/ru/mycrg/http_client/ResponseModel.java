@@ -41,4 +41,15 @@ public class ResponseModel<T> {
     public void setBody(T body) {
         this.body = body;
     }
+
+    @Override
+    public String toString() {
+        return "ResponseModel{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", headers=" + headers +
+                ", successful=" + successful +
+                ", body=" + body +
+                '}';
+    }
 }

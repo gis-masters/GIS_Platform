@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { interval, Subject } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { Toast } from '../../components/Toast/Toast';
+import { DataSet } from '../../services/data.service';
 import {
   ComparableLayersPair,
   ImportDataHolderService
@@ -26,8 +28,8 @@ import { schemaService, FeatureDescription } from '../../services/crg/schema.ser
 })
 export class MappingPageComponent implements OnInit, OnDestroy {
   selectedLayer: ImportLayerItem;
-  isImportFinished = false;
   isWorkImportInited = false;
+  selectedDataset: DataSet;
   comparableLayers: ComparableLayersPair[];
   prevLink: string;
   nextLink: string;
@@ -37,12 +39,14 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   private CHECK_STATUS_INTERVAL = 1000;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private dialog: MatDialog,
-              private organizationService: OrganizationService,
-              private router: Router,
-              private route: ActivatedRoute,
-              private importData: ImportDataHolderService,
-              private logger: NGXLogger) {}
+  constructor(
+    private dialog: MatDialog,
+    private organizationService: OrganizationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private importData: ImportDataHolderService,
+    private logger: NGXLogger
+  ) {}
 
   async ngOnInit() {
     this.schemas = await schemaService.getAllSchemas();
@@ -79,9 +83,9 @@ export class MappingPageComponent implements OnInit, OnDestroy {
     this.selectedLayer = comparableLayersPair.originalLayer;
   }
 
-  async startWorkImport () {
+  async startWorkImport() {
     if (!this.importData.isWorkImportReady) {
-      this.dialog.open(AlertDialogComponent, {data: {message: 'Есть не обработанные слои'}});
+      this.dialog.open(AlertDialogComponent, { data: { message: 'Есть не обработанные слои' } });
 
       return;
     }
@@ -90,44 +94,47 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
     const workTasks = this.importData.getWorkTasks();
 
-     await projectsService.fetchCurrent();
+    await projectsService.fetchCurrent();
 
     // TODO: Нельзя чтобы в рпбочем импорте такси ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
-    projectsService
-        .doWorkImport(workTasks, currentProject.id, currentProject.internalName)
-        .then((crgProcess: Process) => {
+    projectsService.doWorkImport(workTasks, currentProject.id, this.selectedDataset.resourceIdentifier).then(
+      (crgProcess: Process) => {
+        interval(this.CHECK_STATUS_INTERVAL)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(async () => {
+            const response: Process = await this.organizationService.getProcessById(crgProcess.id);
+            if (response.status === ProcessStatus.DONE) {
+              this.unsubscribe$.next();
+              projectsService.clearCurrent();
 
-          interval(this.CHECK_STATUS_INTERVAL)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(async () => {
-              const response: Process = await this.organizationService.getProcessById(crgProcess.id);
-              if (response.status === ProcessStatus.DONE) {
-                // this.layersService.fetchLayers(project);
+              const { projectId } = this.route.snapshot.params;
+              this.router.navigateByUrl(`/projects/${projectId}/map`);
 
-                this.isWorkImportInited = false;
-                this.isImportFinished = true;
+              Toast.success('Импортировано успешно');
+            } else if (response.status === ProcessStatus.ERROR) {
+              this.isWorkImportInited = false;
 
-                this.unsubscribe$.next();
-                projectsService.clearCurrent();
-              } else if (response.status === ProcessStatus.ERROR) {
-                this.isWorkImportInited = false;
-                this.isImportFinished = false;
+              this.unsubscribe$.next();
+              projectsService.clearCurrent();
+            }
+          });
+      },
+      errorResponse => {
+        this.logger.info('ERROR: ', errorResponse);
 
-                this.unsubscribe$.next();
-                projectsService.clearCurrent();
-              }
-            });
-        }, errorResponse => {
-          this.logger.info('ERROR: ', errorResponse);
+        this.isWorkImportInited = false;
 
-          this.isWorkImportInited = false;
-
-          projectsService.clearCurrent();
-        });
+        projectsService.clearCurrent();
+      }
+    );
   }
 
   isActive(comparablePair: ComparableLayersPair) {
     return this.selectedLayer ? this.selectedLayer.name === comparablePair.originalLayer.name : false;
+  }
+
+  onDatasetSelected(dataset: DataSet) {
+    this.selectedDataset = dataset;
   }
 }

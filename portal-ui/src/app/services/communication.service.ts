@@ -17,6 +17,7 @@ class CommunicationService {
 
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
+  datasetsUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
 
   // TODO: избавиться от EventEmitter rxjs тут

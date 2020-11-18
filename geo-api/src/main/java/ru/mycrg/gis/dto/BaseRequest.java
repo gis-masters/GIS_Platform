@@ -3,6 +3,7 @@ package ru.mycrg.gis.dto;
 public class BaseRequest {
 
     private String wsUiId;
+    private String targetSchema;
 
     public BaseRequest() {}
 
@@ -12,5 +13,13 @@ public class BaseRequest {
 
     public void setWsUiId(String wsUiId) {
         this.wsUiId = wsUiId;
+    }
+
+    public String getTargetSchema() {
+        return targetSchema;
+    }
+
+    public void setTargetSchema(String targetSchema) {
+        this.targetSchema = targetSchema;
     }
 }

@@ -7,19 +7,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dao.SchemasDDL;
+import ru.mycrg.data_service.dto.DatasetCreateDto;
 import ru.mycrg.data_service.dto.DatasetModel;
+import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.datasets.DatasetService;
 import ru.mycrg.data_service.service.datasets.IDatasetService;
 
+import javax.validation.Valid;
+import java.net.URI;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.OK;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class DatasetsController {
@@ -36,14 +41,15 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets")
-    public ResponseEntity<PagedResources<DatasetModel>> getSchemas(
+    public ResponseEntity<PagedResources<DatasetModel>> getDatasets(
             @RequestParam(required = false, defaultValue = "") String title,
             Authentication authentication,
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
-        final Page<DatasetModel> datasets = datasetService.getAllByTitle(title, pageable, authentication);
+        final Page<DatasetModel> datasets = datasetService.getPaged(title, pageable, authentication);
 
-        PagedResources<DatasetModel> pagedResources = pageAssembler.toResource(datasets,
+        PagedResources<DatasetModel> pagedResources = pageAssembler.toResource(
+                datasets,
                 linkTo(DatasetsController.class)
                         .slash("/api/data/datasets")
                         .withSelfRel());
@@ -52,8 +58,8 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets/{dataSetName}")
-    public ResponseEntity<Object> getSchema(@PathVariable String dataSetName,
-                                            Authentication authentication) {
+    public ResponseEntity<DatasetModel> getDataset(@PathVariable String dataSetName,
+                                                   Authentication authentication) {
         if (!schemasDDL.isSchemaExist(dataSetName)) {
             throw new NotFoundException(dataSetName);
         }
@@ -61,5 +67,24 @@ public class DatasetsController {
         final DatasetModel dto = datasetService.getByName(dataSetName, authentication);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/datasets")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> createDataset(@Valid @RequestBody DatasetCreateDto dto,
+                                                Authentication authentication) {
+        if (schemasDDL.isSchemaExist(dto.getName())) {
+            throw new ConflictException("The dataset " + dto.getName() + " already exist");
+        }
+
+        DatasetModel newDataset = datasetService.create(dto, authentication);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/{dataSetName}")
+                .buildAndExpand(newDataset.getResourceIdentifier())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 }

@@ -55,21 +55,17 @@ class ClientTest {
         // Arrange server stub
         stubFor(get(urlEqualTo("/some/thing"))
                         .willReturn(aResponse()
-                                            .withBody("Hello wiremock!")));
+                                            .withBody("Hello_wiremock!")));
 
         // Arrange client
-        HttpClient httpClient = new HttpClient(
-                new URL("http://localhost:" + port),
-                new BaseRequestHandler(new OkHttpClient())
-        );
+        HttpClient httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
 
         // Act
-        ResponseModel<String> response = httpClient.get("/some/thing", String.class);
+        URL baseUrl = new URL("http://localhost:" + port);
+        ResponseModel<String> response = httpClient.get(new URL(baseUrl, "/some/thing"), String.class);
 
         // Assert
         assertEquals(200, response.getCode());
-        assertEquals("Hello wiremock!", response.getBody());
-
-        assertEquals(404, httpClient.get("/some/wrong/thing", String.class).getCode());
+        assertEquals("Hello_wiremock!", response.getBody());
     }
 }

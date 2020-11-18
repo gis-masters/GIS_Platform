@@ -15,8 +15,6 @@ import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.gis_service.config.CrgProperties;
 
-import java.net.MalformedURLException;
-
 @SpringBootApplication
 @EnableProcessApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -39,28 +37,28 @@ public class GisServiceApplication {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initGeoserverClient() throws MalformedURLException {
+    public void initGeoserverClient() {
         log.info("initGeoserverClient");
 
-        GeoserverInfo geoserverInfo = GeoserverInfo.builder()
+        GeoserverInfo geoserverInfo = GeoserverInfo
+                .builder()
                 .host(properties.getGeoserverHost().split(":")[0])
                 .port(Integer.parseInt(properties.getGeoserverHost().split(":")[1]))
                 .userServiceName(properties.getUserServiceName())
                 .build();
 
-
-        String postGis = environment.getRequiredProperty("spring.datasource.url")
+        String postGis = environment
+                .getRequiredProperty("spring.datasource.url")
                 .split("//")[1]
                 .split("/")[0];
 
         DbInfo dbInfo = DbInfo.builder()
-                .dbHost(postGis.split(":")[0])
-                .dbPort(Integer.parseInt(postGis.split(":")[1]))
-                .dbOwnerUser(environment.getRequiredProperty("spring.datasource.username"))
-                .dbOwnerPassword(environment.getRequiredProperty("spring.datasource.password"))
-                .build();
+                              .dbHost(postGis.split(":")[0])
+                              .dbPort(Integer.parseInt(postGis.split(":")[1]))
+                              .dbOwnerUser(environment.getRequiredProperty("spring.datasource.username"))
+                              .dbOwnerPassword(environment.getRequiredProperty("spring.datasource.password"))
+                              .build();
 
         GeoserverClient.initialize(geoserverInfo, dbInfo);
     }
-
 }

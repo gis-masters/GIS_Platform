@@ -43,9 +43,11 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
-        SchemaDto featureDescription = importTask.getFeatureDescription();
-        String layerName = featureDescription.getName();
-        String title = featureDescription.getTitle() == null ? layerName: featureDescription.getTitle();
+        SchemaDto schemaDto = importTask.getFeatureDescription();
+        String layerName = importTask.getLayerName();
+        String styleName = importTask.getStyleName();
+        String title = schemaDto.getTitle() == null ? layerName: schemaDto.getTitle();
+        String schemaId = schemaDto.getName();
 
         log.debug("Add layer {} to crg-gis-service", layerName);
 
@@ -56,10 +58,11 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
         json.put("title", title);
         json.put("dataset", datasetName);
         json.put("internalName", layerName);
-        json.put("schemaId", layerName);
+        json.put("schemaId", schemaId);
         json.put("dataStoreName", storeName);
         json.put("nativeCRS", "EPSG:" + importTask.getSrs());
         json.put("type", "vector");
+        json.put("styleName", styleName);
 
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json.toString());
 
@@ -98,9 +101,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
     @NotNull
     private URL getLayersUrl(@NotNull ImportMqTask importTask) {
         try {
-            long projectId = Long.parseLong(importTask.getTargetResource().getSchemaName().split("_")[1]);
-
-            return new URL(properties.getGisServiceUrl(), "/projects/" + projectId + "/layers");
+            return new URL(properties.getGisServiceUrl(), "/projects/" + importTask.getProjectId() + "/layers");
         } catch (Exception e) {
             throw new ImportException("Failed build url to layers", e.getCause());
         }

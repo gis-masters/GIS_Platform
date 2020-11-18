@@ -11,5 +11,4 @@ public class RestConfig {
     public SpelAwareProxyProjectionFactory projectionFactory() {
         return new SpelAwareProxyProjectionFactory();
     }
-
 }

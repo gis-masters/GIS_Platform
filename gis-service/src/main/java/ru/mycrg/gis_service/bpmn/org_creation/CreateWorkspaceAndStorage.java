@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.services.storage.StorageService;
+import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
@@ -29,7 +29,7 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
         // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
         new WorkspacesService(accessToken)
                 .createWorkspace(scratchWorkspaceName);
-        new StorageService(accessToken)
-                .createStorage(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + DEFAULT_STORE_POSTFIX);
+        new VectorStorage(accessToken)
+                .create(dbName, "public", scratchWorkspaceName, scratchWorkspaceName + DEFAULT_STORE_POSTFIX);
     }
 }

@@ -23,7 +23,6 @@ import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.CLASS_ID;
 import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
-import static ru.mycrg.wrapper.service.export.GmlUtil.getRuleByTableName;
 
 @Service
 public class ValidationService extends BaseRequestHandler implements IRequestHandler {
@@ -71,14 +70,12 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
 
     private void validateResource(BaseMqProcessRequest mqRequest, ResourceProjection resource) {
         log.debug("Validate resource: {}", resource.getResourceId());
+
+        final SchemaDto schema = resource.getSchema();
+
         int processedRows = 0;
-        LocalTime startTime = LocalTime.now();
-
-        ValidationMqProcessRequest payload = mapper.convertValue(mqRequest.getPayload(),
-                                                                 ValidationMqProcessRequest.class);
         try {
-            SchemaDto feature = getRuleByTableName(payload.getFeatures(), resource.getTableName());
-
+            LocalTime startTime = LocalTime.now();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
             List<Map<String, Object>> nextBatch;
@@ -89,27 +86,26 @@ public class ValidationService extends BaseRequestHandler implements IRequestHan
                     break;
                 }
 
-                List<ObjectValidationResult> validationResults = validateBatch(nextBatch, feature);
+                List<ObjectValidationResult> validationResults = validateBatch(nextBatch, schema);
                 baseDaoService.saveValidationResults(jdbcTemplate, resource, validationResults);
 
                 mqSender.send(new BaseMqProcessResponse(mqRequest, PENDING,
-                                                        "Обработано: " + feature.getTitle(),
+                                                        "Обработано: " + schema.getTitle(),
                                                         calculatePercent(processedRows, totalRows)));
 
                 processedRows += batchSize;
             }
 
             LocalTime endTime = LocalTime.now();
-            log.debug("Validation time for resource: {} is: {} seconds",
-                      resource.getResourceId(), SECONDS.between(startTime, endTime));
-
-            mqSender.send(new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_DONE, "Готово", -1));
-        } catch (Exception e) {
-            log.error("Не удалось провалидировать: " + resource.getTableName(), e);
+            log.debug("Validation time for resource: {} is: {} seconds", resource, SECONDS.between(startTime, endTime));
 
             mqSender.send(
-                    new BaseMqProcessResponse(mqRequest, resource.getTableName(), TASK_ERROR, "Ошибка",
-                                              e.getMessage()));
+                    new BaseMqProcessResponse(mqRequest, resource.toString(), TASK_DONE, "Готово", -1));
+        } catch (Exception e) {
+            log.error("Не удалось провалидировать: {}", resource, e);
+
+            mqSender.send(
+                    new BaseMqProcessResponse(mqRequest, resource.toString(), TASK_ERROR, "Ошибка", e.getMessage()));
         }
     }
 

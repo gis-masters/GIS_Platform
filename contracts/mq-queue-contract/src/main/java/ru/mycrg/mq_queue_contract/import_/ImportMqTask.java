@@ -7,6 +7,10 @@ import java.util.List;
 
 public class ImportMqTask {
 
+    private String layerName;
+    private String styleName;
+    private String workspaceName;
+    private long projectId;
     private SchemaDto featureDescription;
     private ResourceProjection sourceResource;
     private ResourceProjection targetResource;
@@ -16,12 +20,20 @@ public class ImportMqTask {
 
     public ImportMqTask() {}
 
-    public ImportMqTask(SchemaDto featureDescription,
+    public ImportMqTask(String layerName,
+                        String styleName,
+                        String workspaceName,
+                        long projectId,
+                        SchemaDto featureDescription,
                         ResourceProjection sourceResource,
                         ResourceProjection targetResource,
                         List<MatchingPair> pairs,
                         Integer srs,
                         String userToken) {
+        this.layerName = layerName;
+        this.styleName = styleName;
+        this.workspaceName = workspaceName;
+        this.projectId = projectId;
         this.featureDescription = featureDescription;
         this.sourceResource = sourceResource;
         this.targetResource = targetResource;
@@ -54,14 +66,6 @@ public class ImportMqTask {
         this.pairs = pairs;
     }
 
-    public String printSource() {
-        return String.join(".", sourceResource.getDbName(), sourceResource.getSchemaName(), sourceResource.getTableName());
-    }
-
-    public String printTarget() {
-        return String.join(".", targetResource.getDbName(), targetResource.getSchemaName(), targetResource.getTableName());
-    }
-
     public SchemaDto getFeatureDescription() {
         return featureDescription;
     }
@@ -84,5 +88,37 @@ public class ImportMqTask {
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    public String getWorkspaceName() {
+        return workspaceName;
+    }
+
+    public void setWorkspaceName(String workspaceName) {
+        this.workspaceName = workspaceName;
     }
 }

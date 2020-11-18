@@ -8,7 +8,6 @@ import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
@@ -28,13 +27,14 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
-        SchemaDto featureDescription = importTask.getFeatureDescription();
-        String layerName = featureDescription.getName();
+        final String layerName = importTask.getLayerName();
+        final String styleName = importTask.getStyleName();
+        final String workspaceName = importTask.getWorkspaceName();
 
-        log.debug("Add style to layer: {}", layerName);
+        log.debug("Add style: {} to layer: {}", styleName, layerName);
         try {
             ResponseModel<Object> response = new StyleService(importTask.getUserToken())
-                    .associate(importTask.getTargetResource().getSchemaName() + ":" + layerName, layerName);
+                    .associate(workspaceName + ":" + layerName, styleName);
             if (!response.isSuccessful()) {
                 log.warn("Style not associated: {}", response);
             }

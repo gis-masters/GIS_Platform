@@ -5,16 +5,13 @@ import java.util.List;
 
 public class ValidationMqProcessRequest {
 
-    private int page = 0;
-    private int size = 25;
-    private List<ResourceProjection> resourceProjections = new ArrayList<>();
-    private List<SchemaDto> features = new ArrayList<>();
+    private int page;
+    private int size;
+    private final List<ResourceProjection> resourceProjections = new ArrayList<>();
 
-    public ValidationMqProcessRequest() {}
-
-    public ValidationMqProcessRequest(int page, int size) {
-        this.page = page;
-        this.size = size;
+    public ValidationMqProcessRequest() {
+        this.page = 0;
+        this.size = 25;
     }
 
     public int getPage() {
@@ -33,23 +30,11 @@ public class ValidationMqProcessRequest {
         this.size = size;
     }
 
-    public void addFeatureProjections(SchemaDto featureProjection) {
-        this.features.add(featureProjection);
-    }
-
     public List<ResourceProjection> getResourceProjections() {
         return resourceProjections;
     }
 
     public void addResourceProjections(ResourceProjection resourceProjection) {
         this.resourceProjections.add(resourceProjection);
-    }
-
-    public List<SchemaDto> getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(List<SchemaDto> features) {
-        this.features = features;
     }
 }

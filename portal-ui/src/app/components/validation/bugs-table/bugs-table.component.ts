@@ -84,7 +84,11 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
           this.isLoadingResults = true;
           if (this.isActive) {
             return this.validationService.getValidationResults(
-              this.crgLayer.internalName,
+              {
+                dataset: this.crgLayer.dataset,
+                table: this.crgLayer.internalName,
+                schemaId: this.crgLayer.schemaId
+              },
               this.paginator.pageIndex,
               this.paginator.pageSize,
               this.sort.active,
@@ -106,7 +110,11 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   async getValidation() {
     const response: ValidationResultsResponse = await this.validationService.getValidationResults(
-      this.crgLayer.internalName,
+      {
+        dataset: this.crgLayer.dataset,
+        table: this.crgLayer.internalName,
+        schemaId: this.crgLayer.schemaId
+      },
       0,
       this.defaultPageSize,
       '',

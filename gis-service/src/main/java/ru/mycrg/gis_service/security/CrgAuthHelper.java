@@ -8,6 +8,10 @@ import java.security.Principal;
 
 public class CrgAuthHelper {
 
+    private CrgAuthHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     @NotNull
     public static String getToken(@NotNull Principal principal) {
         Object details = ((OAuth2Authentication) principal).getDetails();

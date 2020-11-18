@@ -72,18 +72,18 @@ public class BaseDaoService {
 
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
-                        (ps, violation) -> {
-                            int objectId = Integer.parseInt(violation.getObjectId());
-                            int classId = Integer.parseInt(violation.getClassId());
-                            int xMin = Integer.parseInt(violation.getxMin());
-                            JsonNode json = Util.convertToJson(violation);
+                             (ps, violation) -> {
+                                 int objectId = Integer.parseInt(violation.getObjectId());
+                                 int classId = Integer.parseInt(violation.getClassId());
+                                 int xMin = Integer.parseInt(violation.getxMin());
+                                 JsonNode json = Util.convertToJson(violation);
 
-                            ps.setInt(1, objectId);
-                            ps.setString(2, json.toString());
-                            ps.setInt(3, xMin);
-                            ps.setBoolean(4, isValid(violation));
-                            ps.setInt(5, classId);
-                        });
+                                 ps.setInt(1, objectId);
+                                 ps.setString(2, json.toString());
+                                 ps.setInt(3, xMin);
+                                 ps.setBoolean(4, isValid(violation));
+                                 ps.setInt(5, classId);
+                             });
     }
 
     public Long countTotalRows(ResourceProjection resource) {
@@ -98,9 +98,8 @@ public class BaseDaoService {
     }
 
     /**
-     * Импорт. <p>
-     * Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт,
-     * в схему которая определена как рабочая, но все это в пределах одной БД. <p>
+     * Импорт. <p> Подразумевается копирование таблицы из схемы, в которую выполняется черновой импорт, в схему которая
+     * определена как рабочая, но все это в пределах одной БД. <p>
      *
      * @param jdbcTemplate Коннекшн к БД
      * @param request      Даные для импорта
@@ -122,25 +121,20 @@ public class BaseDaoService {
 
     /**
      * Удалить таблицу. <br>
-     * Удаляется также *_extension таблица
      *
      * @param jdbcTemplate Коннекшн к БД
-     * @param target       Описание ресурса
+     * @param schema       Название схемы
+     * @param table        Название таблицы
      */
     @Transactional
-    public void delete(JdbcTemplate jdbcTemplate, ResourceProjection target) {
-        log.debug("Try delete: {}", target.toString());
+    public void delete(JdbcTemplate jdbcTemplate, String schema, String table) {
+        log.debug("Try delete: {}:{}", schema, table);
 
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                target.getSchemaName(), target.getTableName().toLowerCase()));
-
-        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
-                target.getSchemaName(), target.getTableName().toLowerCase() + EXTENSION_POSTFIX));
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"", schema, table));
     }
 
     /**
-     * Создаем таблицу исходя из схемы фичи.
-     * Создает также таблицу "*_extension"
+     * Создаем таблицу исходя из схемы фичи. Создает также таблицу "*_extension"
      */
     public void createTable(JdbcTemplate jdbcTemplate, ImportMqTask importTask) {
         String targetSchema = importTask.getTargetResource().getSchemaName();
@@ -165,8 +159,7 @@ public class BaseDaoService {
     }
 
     /**
-     * Получить партию данных.
-     * Геометрию в бинарном формате сетим в "crg_b_geometry"
+     * Получить партию данных. Геометрию в бинарном формате сетим в "crg_b_geometry"
      *
      * @param jdbcTemplate Коннекш к БД
      * @param source       Данные ресурса из которого производится выборка
@@ -206,7 +199,7 @@ public class BaseDaoService {
 
         StringBuilder targetColumns = new StringBuilder();
         StringBuilder sourceColumns = new StringBuilder("SELECT ");
-        for (MatchingPair matchingPair : mapping) {
+        for (MatchingPair matchingPair: mapping) {
             TargetAttribute target = matchingPair.getTarget();
             if (target.getType().equals("serial") || target.getType().equals(DaoProperties.NOT_IMPORT)) {
                 continue;

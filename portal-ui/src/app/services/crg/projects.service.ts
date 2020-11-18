@@ -6,12 +6,14 @@ import { TaskImport } from '../geoserver/import/taskImport';
 import { serverProperties } from '../server-properties.service';
 import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { projectsList } from '../../stores/ProjectsList.store';
 import { isReadAllowed } from './permissions.service';
 import { Toast } from '../../components/Toast/Toast';
 import { PageableResponse, Process } from '../models';
 import { route } from '../../stores/Route.store';
 import { http } from '../http.service';
+import { usersService } from './users.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -89,7 +91,7 @@ class ProjectsService {
   async testCurrentProjectLayers() {
     const testingProjectId = currentProject.id;
 
-    for (let layer of currentProject.layers) {
+    for (const layer of currentProject.layers) {
       // если пользователь успел убежать из проекта, пока мы слои щупали
       if (currentProject.id !== testingProjectId) {
         break;
@@ -145,15 +147,35 @@ class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  async doWorkImport(tasks: TaskImport[], projectId: number, workspaceName: string): Promise<Process> {
+  async doWorkImport(tasks: TaskImport[], projectId: number, targetSchema: string): Promise<Process> {
     const url = `${await serverProperties.apiUrl}/${projectId}/import`;
     const payload = {
       wsUiId: wsService.getId(),
-      targetSchema: workspaceName,
+      targetSchema: targetSchema,
       importTasks: tasks
     };
 
     return http.post<Process>(url, payload);
+  }
+
+  async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
+    await usersService.fetchCurrent();
+
+    const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
+
+    const layersPermissions = await Promise.all(layers.map(isReadAllowed));
+
+    return layers.filter((layer, i) => layersPermissions[i]);
+  }
+
+  async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
+    return await http.get<CrgLayersGroup[]>(`${await serverProperties.projectsUrl}/${projectId}/groups`);
+  }
+
+  async createDataset(title: string, details: string) {
+    const url = `${await serverProperties.projectsUrl}/${currentProject.id}/datasets`;
+
+    await http.post(url, { title, details });
   }
 
   private async getById(id: number): Promise<CrgProject | void> {
@@ -168,17 +190,6 @@ class ProjectsService {
         throw e;
       }
     }
-  }
-
-  async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
-    const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
-    const layersPermissions = await Promise.all(layers.map(isReadAllowed));
-
-    return layers.filter((layer, i) => layersPermissions[i]);
-  }
-
-  async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
-    return await http.get<CrgLayersGroup[]>(`${await serverProperties.projectsUrl}/${projectId}/groups`);
   }
 }
 

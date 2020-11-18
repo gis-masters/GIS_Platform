@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
+import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.CrgDaoGeometryHelper;
@@ -34,9 +35,10 @@ public class GeometryHandler extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
         log.debug("Validate / fix geometry");
 
+        final ResourceProjection target = importTask.getTargetResource();
         try {
-            String targetTableName = importTask.getTargetResource().getTableName();
-            String targetSchemaName = importTask.getTargetResource().getSchemaName();
+            String targetTableName = target.getTableName();
+            String targetSchemaName = target.getSchemaName();
 
             String sourceDbName = importTask.getSourceResource().getDbName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
@@ -52,7 +54,7 @@ public class GeometryHandler extends AbstractImportChainItem {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить исправление геометрии для: %s", importTask.printTarget());
+            String msg = String.format("Не удалось выполнить исправление геометрии для: %s", target.toString());
 
             log.error(msg, e);
 

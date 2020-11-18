@@ -11,6 +11,12 @@ public class TypeResourceIdentifierKey implements Serializable {
     private String resourceIdentifier;
 
     public TypeResourceIdentifierKey() {
+        // Required by framework
+    }
+
+    public TypeResourceIdentifierKey(String type, String resourceIdentifier) {
+        this.type = type;
+        this.resourceIdentifier = resourceIdentifier;
     }
 
     public String getType() {

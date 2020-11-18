@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SqlGeneratorTest {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private static ImportMqTask importModel;
 

@@ -1,0 +1,10 @@
+body .PickupDatasets {
+  &-DialogTitle {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-DialogBody {
+    min-height: 400px;
+  }
+}

@@ -1,16 +1,23 @@
 package ru.mycrg.gis_service.validators;
 
-import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 
-@Log4j2
 @Service
 public class CrgLayerValidator implements Validator {
+
+    public static final Logger log = LoggerFactory.getLogger(CrgLayerValidator.class);
+
+    public static final String NATIVE_CRS = "nativeCRS";
+    public static final String DATA_STORE_NAME = "dataStoreName";
+    public static final String DEFAULT_V_MESSAGE = "Для векторного слоя является обязательным";
+    public static final String DEFAULT_R_MESSAGE = "Для растрового слоя является обязательным";
 
     private final SpringValidatorAdapter validator;
 
@@ -30,30 +37,54 @@ public class CrgLayerValidator implements Validator {
         validator.validate(target, errors);
 
         LayerCreateDto dto = (LayerCreateDto) target;
+        String type = dto.getType();
+        if (type == null) {
+            return;
+        }
 
-        if ("vector".equals(dto.getType())) {
-            if (dto.getNativeCRS() == null) {
-                errors.rejectValue("nativeCRS", "nativeCRS", "Для векторного слоя является обязательным");
-            }
-            if (dto.getDataStoreName() == null) {
-                errors.rejectValue("dataStoreName", "dataStoreName", "Для векторного слоя является обязательным");
-            }
-            if (dto.getSchemaId() == null) {
-                errors.rejectValue("schemaId", "schemaId", "Для векторного слоя является обязательным");
-            }
-        } else if ("raster".equals(dto.getType())) {
-            if (dto.getNativeCRS() == null) {
-                errors.rejectValue("nativeCRS", "nativeCRS", "Для растрового слоя является обязательным");
-            }
-            if (dto.getDataStoreName() == null) {
-                errors.rejectValue("dataStoreName", "dataStoreName", "Для растрового слоя является обязательным");
-            }
-        } else if ("external".equals(dto.getType())) {
-            if (dto.getDataSourceUri() == null) {
-                errors.rejectValue("dataSourceUri", "dataSourceUri", "Для внешнего слоя является обязательным");
-            }
-        } else {
-            log.warn("Unsupported layer type: {}", dto.getType());
+        switch (type) {
+            case "vector":
+                validateAsVector(errors, dto);
+                break;
+            case "raster":
+                validateAsRaster(errors, dto);
+                break;
+            case "external":
+                validateAsExternal(errors, dto);
+                break;
+            default:
+                log.warn("Unsupported layer type: {}", type);
+                break;
+        }
+    }
+
+    private void validateAsVector(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getNativeCRS() == null) {
+            errors.rejectValue(NATIVE_CRS, NATIVE_CRS, DEFAULT_V_MESSAGE);
+        }
+        if (dto.getDataStoreName() == null) {
+            errors.rejectValue(DATA_STORE_NAME, DATA_STORE_NAME, DEFAULT_V_MESSAGE);
+        }
+        if (dto.getSchemaId() == null) {
+            errors.rejectValue("schemaId", "schemaId", DEFAULT_V_MESSAGE);
+        }
+        if (dto.getStyleName() == null) {
+            errors.rejectValue("styleName", "styleName", DEFAULT_V_MESSAGE);
+        }
+    }
+
+    private void validateAsRaster(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getNativeCRS() == null) {
+            errors.rejectValue(NATIVE_CRS, NATIVE_CRS, DEFAULT_R_MESSAGE);
+        }
+        if (dto.getDataStoreName() == null) {
+            errors.rejectValue(DATA_STORE_NAME, DATA_STORE_NAME, DEFAULT_R_MESSAGE);
+        }
+    }
+
+    private void validateAsExternal(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getDataSourceUri() == null) {
+            errors.rejectValue("dataSourceUri", "dataSourceUri", "Для внешнего слоя является обязательным");
         }
     }
 }

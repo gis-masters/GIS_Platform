@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.gis.dto.ExportResourceModel;
 import ru.mycrg.gis.dto.ValidationInfo;
 import ru.mycrg.gis.dto.ValidationRequestDto;
 import ru.mycrg.gis.dto.ValidationResponseDto;
@@ -32,25 +33,22 @@ public class ValidationController extends BaseController {
         this.violationService = violationService;
     }
 
-    @PostMapping("/{projectId}/validation")
-    public ResponseEntity<Process> initValidation(@PathVariable long projectId,
-                                                  @Valid @RequestBody ValidationRequestDto request,
+    @PostMapping("/validation")
+    public ResponseEntity<Process> initValidation(@Valid @RequestBody ValidationRequestDto dto,
                                                   Principal principal) {
-        log.debug("Init validation for: {} resources", request.getLayers().size());
+        log.debug("Init validation for: {} resources", dto.getResources().size());
 
-        Process process = validationService.validate(DEFAULT_PROJECT_NAME + "_" + projectId, principal, request);
+        Process process = validationService.validate(dto, principal);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{projectId}/validation")
+    @PostMapping("/validation/results")
     public ResponseEntity<ValidationResponseDto> getValidationResults(
-            @PathVariable long projectId,
-            @RequestParam String layerName,
             @RequestParam(required = false, name = "page", defaultValue = "0") String page,
             @RequestParam(required = false, name = "size", defaultValue = "25") String size,
+            @Valid @RequestBody ExportResourceModel dto,
             Principal principal) {
-        log.info("Request get validation results for layer: {} - {}/{}", layerName, page, size);
 
         // TODO: Use "org.springframework.data.domain.Pageable;" instead manual
         int nPage;
@@ -62,20 +60,17 @@ public class ValidationController extends BaseController {
             throw new BadRequestException(e.getLocalizedMessage());
         }
 
-        ValidationResponseDto result = violationService
-                .getViolations(principal, DEFAULT_PROJECT_NAME + "_" + projectId, layerName, nPage, nSize);
+        ValidationResponseDto result = violationService.getViolations(dto, nPage, nSize, principal);
 
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{projectId}/validation/short")
-    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@PathVariable long projectId,
-                                                                  @Valid @RequestBody ValidationRequestDto request,
+    @PostMapping("/validation/short")
+    public ResponseEntity<List<ValidationInfo>> getValidationInfo(@Valid @RequestBody ValidationRequestDto request,
                                                                   Principal principal) {
         log.debug("Request get short validation info");
 
-        List<ValidationInfo> result = violationService
-                .getShortInfo(principal, DEFAULT_PROJECT_NAME + "_" + projectId, request);
+        List<ValidationInfo> result = violationService.getShortInfo(request, principal);
 
         return ResponseEntity.ok(result);
     }

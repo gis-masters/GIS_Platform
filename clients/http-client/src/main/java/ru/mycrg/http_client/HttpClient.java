@@ -10,7 +10,6 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.IHttpRequestHandler;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpClient {
@@ -18,11 +17,9 @@ public class HttpClient {
     public static final Logger log = LoggerFactory.getLogger(HttpClient.class);
 
     private static final Gson gson = new Gson();
-    private final URL baseUrl;
     private final IHttpRequestHandler requestHandler;
 
-    public HttpClient(URL url, IHttpRequestHandler requestHandler) {
-        this.baseUrl = url;
+    public HttpClient(IHttpRequestHandler requestHandler) {
         this.requestHandler = requestHandler;
     }
 
@@ -40,7 +37,7 @@ public class HttpClient {
 
                 return model;
             } else {
-                log.error("Request failed: {}", response);
+                log.error("Request failed: {} / Body: {}", response, body);
 
                 return new ResponseModel<>(response);
             }
@@ -49,18 +46,11 @@ public class HttpClient {
         }
     }
 
-    public void handleRequest(Request request) throws HttpClientException {
-        handleRequest(request, Object.class);
+    public ResponseModel<Object> handleRequest(Request request) throws HttpClientException {
+        return handleRequest(request, Object.class);
     }
 
-    public <T> ResponseModel<T> get(String path, Class<T> type) throws HttpClientException {
-        final URL url;
-        try {
-            url = new URL(baseUrl, path);
-        } catch (MalformedURLException e) {
-            throw new HttpClientException("Failed build URL: ", e.getCause());
-        }
-
+    public <T> ResponseModel<T> get(URL url, Class<T> type) throws HttpClientException {
         Request request = new Request.Builder().url(url)
                                                .get().build();
 

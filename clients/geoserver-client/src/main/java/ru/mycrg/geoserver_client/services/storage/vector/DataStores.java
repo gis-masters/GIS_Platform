@@ -1,4 +1,4 @@
-package ru.mycrg.geoserver_client.services.storage;
+package ru.mycrg.geoserver_client.services.storage.vector;
 
 import java.util.ArrayList;
 import java.util.List;

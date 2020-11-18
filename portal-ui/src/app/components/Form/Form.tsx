@@ -10,12 +10,6 @@ export { FormControl } from './Control/Form-Control';
 
 export const cnForm = cn('Form');
 
-interface FormProps extends IClassNameProps {
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-}
-
-export const Form: FC<FormProps> = ({ onSubmit, className, children }) => (
-  <form className={cnForm(null, [className])} onSubmit={onSubmit}>
-    {children}
-  </form>
+export const Form: FC<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>> = props => (
+  <form action='#' {...props} className={cnForm(null, [props.className])} />
 );

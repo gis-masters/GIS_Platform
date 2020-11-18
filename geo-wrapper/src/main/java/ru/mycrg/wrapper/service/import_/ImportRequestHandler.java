@@ -47,7 +47,6 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
                                 GisServiceLayerHandler gisServiceLayerHandler,
                                 PostImportService postImporter,
                                 GeoserverFeatureTypeHandler featureTypeHandler,
-                                GeoserverStorageHandler storageHandler,
                                 GeoserverStyleHandler styleHandler,
                                 ScratchImportCleaner importCleaner,
                                 MqSender mqSender) {
@@ -58,9 +57,8 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
         this.initialImportService.setHandlers(geometryHandler, null);
         geometryHandler.setHandlers(gisServiceLayerHandler, initialImportService);
         gisServiceLayerHandler.setHandlers(postImporter, geometryHandler);
-        postImporter.setHandlers(storageHandler, gisServiceLayerHandler);
-        storageHandler.setHandlers(featureTypeHandler, postImporter);
-        featureTypeHandler.setHandlers(styleHandler, storageHandler);
+        postImporter.setHandlers(featureTypeHandler, gisServiceLayerHandler);
+        featureTypeHandler.setHandlers(styleHandler, postImporter);
         styleHandler.setHandlers(importCleaner, featureTypeHandler);
         importCleaner.setHandlers(null, styleHandler);
     }

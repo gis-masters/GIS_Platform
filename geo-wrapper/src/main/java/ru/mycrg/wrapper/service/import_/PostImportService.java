@@ -46,14 +46,12 @@ public class PostImportService extends AbstractImportChainItem {
 
         try {
             String sourceDbName = importTask.getSourceResource().getDbName();
-            String targetTableName = importTask.getTargetResource().getTableName();
-            String targetSchemaName = importTask.getTargetResource().getSchemaName();
-            SchemaDto fDescription = importTask.getFeatureDescription();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
 
             log.debug("start postHandle");
 
-            ResourceProjection resProjection = new ResourceProjection(null, targetSchemaName, targetTableName);
+            ResourceProjection resProjection = importTask.getTargetResource();
+            final SchemaDto schema = importTask.getTargetResource().getSchema();
 
             int offset = 0;
             while (true) {
@@ -67,7 +65,7 @@ public class PostImportService extends AbstractImportChainItem {
                 // Обрабатываем
                 List<Map<String, Object>> handledBatch = batch.stream()
                         // .stream().parallel()
-                        .map(dbRow -> dataHandler.handle(dbRow, fDescription))
+                        .map(dbRow -> dataHandler.handle(dbRow, schema))
                         .collect(Collectors.toList());
 
                 // Сохраняем
@@ -82,7 +80,7 @@ public class PostImportService extends AbstractImportChainItem {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (Exception e) {
-            String msg = "Не удалось выполнить доп. обработку ресурса: " + importTask.printTarget();
+            String msg = "Не удалось выполнить доп. обработку ресурса: " + importTask.getTargetResource().toString();
             log.error(msg, e);
 
             mqSender.send(

@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.controller.geoserver;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +23,12 @@ public class OrganizationController {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
-    @Autowired
-    private OrganizationService organizationService;
+    private final OrganizationService organizationService;
+
+    public OrganizationController(
+            OrganizationService organizationService) {
+        this.organizationService = organizationService;
+    }
 
     @PostMapping
     @PreAuthorize(GLOBAL_ADMIN_AUTHORITY)
@@ -43,7 +46,7 @@ public class OrganizationController {
     public ResponseEntity<Object> deleteOrganizationOnGeoserver(@PathVariable Long id,
                                                                 @RequestBody List<String> users,
                                                                 Authentication authentication) {
-        log.debug("deleteOrganizationOnGeoserver: {}", users.toString());
+        log.debug("deleteOrganizationOnGeoserver: {}", users);
 
         organizationService.delete(id, users, authentication);
 

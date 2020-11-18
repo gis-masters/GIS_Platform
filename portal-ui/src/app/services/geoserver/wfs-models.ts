@@ -1,6 +1,8 @@
 import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 
+export const WFS_FEATURE_ID_DELIMITER = '.';
+
 export type CoordinateEdited = (number | string)[];
 
 export type SupportedGeometryType = GeometryType.POINT | GeometryType.MULTI_LINE_STRING | GeometryType.MULTI_POLYGON;
@@ -40,9 +42,10 @@ interface OtherGeometry<T = Coordinate> extends Geometry {
   coordinates: T | T[][] | T[][][];
 }
 
-export type SupportedWfsGeometry<T = Coordinate> = WfsPointGeometry<T> |
-                                                   WfsMultiLineStringGeometry<T> |
-                                                   WfsMultiPolygonGeometry<T>;
+export type SupportedWfsGeometry<T = Coordinate> =
+  | WfsPointGeometry<T>
+  | WfsMultiLineStringGeometry<T>
+  | WfsMultiPolygonGeometry<T>;
 
 export type WfsGeometry<T = Coordinate | CoordinateEdited> = SupportedWfsGeometry<T> | OtherGeometry<T>;
 

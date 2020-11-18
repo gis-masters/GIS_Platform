@@ -129,14 +129,13 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                       .sum();
     }
 
-    private void handleResource(BaseMqProcessRequest mqRequest, GmlDocumentHolder docHolder,
+    private void handleResource(BaseMqProcessRequest mqRequest,
+                                GmlDocumentHolder docHolder,
                                 ResourceProjection resource) {
-        MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
-
         log.debug("Handle source: {}", resource);
 
         try {
-            SchemaDto feature = getRuleByTableName(request.getFgistpRules(), resource.getTableName());
+            SchemaDto schema = resource.getSchema();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(resource.getDbName());
 
             int offset = 0;
@@ -149,10 +148,10 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
                 batch.forEach(propFromDb -> {
                     String id = generateId();
-                    Element featureMember = addFeatureMember(docHolder, feature.getOriginName(), id);
+                    Element featureMember = addFeatureMember(docHolder, schema.getOriginName(), id);
 
-                    // Выгружаются только те свойства что прописаны в 10 приказе, тобишь feature.getProperties()
-                    feature.getProperties().stream()
+                    // Выгружаются только те свойства что прописаны в 10 приказе, тобишь schema.getProperties()
+                    schema.getProperties().stream()
                            .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
                            .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
                                                                            propFromDb, simplePropertyDto));
@@ -170,14 +169,14 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
                         }
                     }
 
-                    addObjectMember(docHolder, id, feature.getDescription(), propFromDb.get("classid"));
+                    addObjectMember(docHolder, id, schema.getDescription(), propFromDb.get("classid"));
                 });
 
                 processedRows += batch.size();
 
                 BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
                 mqResponse.setProgress(calculatePercent(processedRows, totalRows));
-                mqResponse.setDescription("Обработка " + feature.getTitle());
+                mqResponse.setDescription("Обработка " + schema.getTitle());
                 mqResponse.setStatus(TASK_DONE);
 
                 mqSender.send(mqResponse);

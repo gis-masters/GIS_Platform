@@ -25,6 +25,9 @@ public class LayerCreateDto {
     @Length(min = 2, max = 255)
     private String internalName;
 
+    @Length(min = 2, max = 255)
+    private String styleName;
+
     @NotBlank
     @Pattern(regexp = "^(vector|raster|external)$", message = "Допустимые значения поля type: vector/raster/external")
     private String type;
@@ -35,7 +38,7 @@ public class LayerCreateDto {
     @Length(min = 3, max = 100)
     private String dataStoreName;
 
-    @Length(min = 6, max = 255)
+    @Length(min = 8, max = 50, message = "Ожидается строка вида: 'EPSG:28406'")
     private String nativeCRS;
 
     @Length(min = 6, max = 255)

@@ -1,26 +1,21 @@
 package ru.mycrg.gis.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationRequestDto extends BaseRequest {
 
-    @NotEmpty // Мы не владеем информацией о том какие слоя есть в проекте. Чтобы принять пустой массив за сигнал к
-    // тому чтобы провалидировать весь проект.
-    private List<String> layers = new ArrayList<>();
+    @Valid
+    @NotEmpty
+    private List<ExportResourceModel> resources = new ArrayList<>();
 
-    public ValidationRequestDto() {}
-
-    public ValidationRequestDto(String layerName) {
-        this.layers.add(layerName);
+    public List<ExportResourceModel> getResources() {
+        return resources;
     }
 
-    public List<String> getLayers() {
-        return layers;
-    }
-
-    public void setLayers(List<String> layers) {
-        this.layers = layers;
+    public void setResources(List<ExportResourceModel> resources) {
+        this.resources = resources;
     }
 }

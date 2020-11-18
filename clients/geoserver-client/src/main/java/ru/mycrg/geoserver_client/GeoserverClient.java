@@ -3,15 +3,10 @@ package ru.mycrg.geoserver_client;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
-import ru.mycrg.http_client.*;
+import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.config.RetryConfig;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import ru.mycrg.http_client.handlers.RetryableRequestHandler;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static ru.mycrg.geoserver_client.services.GeoServerBaseService.getGeoserverRestUrl;
 
 public class GeoserverClient {
 
@@ -22,7 +17,7 @@ public class GeoserverClient {
     private GeoserverClient() {
     }
 
-    public static void initialize(GeoserverInfo geoserverInfo, DbInfo dbInfo) throws MalformedURLException {
+    public static void initialize(GeoserverInfo geoserverInfo, DbInfo dbInfo) {
         GeoServerBaseService.geoserverInfo = geoserverInfo;
         GeoServerBaseService.dbInfo = dbInfo;
 
@@ -36,9 +31,12 @@ public class GeoserverClient {
                 config
         );
 
-        GeoServerBaseService.httpClient = new HttpClient(
-                new URL(getGeoserverRestUrl().toString()),
-                requestHandler
-        );
+        GeoServerBaseService.httpClient = new HttpClient(requestHandler);
+    }
+
+    public static void initialize(GeoserverInfo geoserverInfo, DbInfo dbInfo, HttpClient httpClient) {
+        GeoServerBaseService.geoserverInfo = geoserverInfo;
+        GeoServerBaseService.dbInfo = dbInfo;
+        GeoServerBaseService.httpClient = httpClient;
     }
 }

@@ -30,8 +30,25 @@ public class SchemasDDL {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void create(String schemaName) {
+        final String dbOwner = environment.getRequiredProperty("spring.datasource.username");
+        try {
+            log.debug("Создание схемы {}", schemaName);
+
+            jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + schemaName + "; " +
+                                         "ALTER SCHEMA " + schemaName + " OWNER TO " + dbOwner);
+        } catch (DataAccessException e) {
+            String msg = "Не удалось создать схему: " + schemaName;
+
+            log.error(msg);
+
+            throw new DataServiceException(msg, e.getCause());
+        }
+    }
+
     /**
      * Возвращает все схемы за исключением служебных {@link #systemSchemas}
+     *
      * @return список названий схемм
      */
     public List<String> getAll() {
@@ -48,14 +65,16 @@ public class SchemasDDL {
             final String msg = "Get schemas failed: " + e.getMessage();
             log.error(msg);
 
-            throw new DataServiceException(msg);
+            throw new DataServiceException(msg, e.getCause());
         }
     }
 
     /**
-     * Находит все таблицы заданной схемы исключая служебные. <br>
-     * Служебными считаются таблицы с постфиксом {@link #EXTENSION_POSTFIX}
+     * Находит все таблицы заданной схемы исключая служебные. <br> Служебными считаются таблицы с постфиксом {@link
+     * #EXTENSION_POSTFIX}
+     *
      * @param schemaName Название схемы
+     *
      * @return Список идентификаторов таблиц в виде "schemaName:tableName"
      */
     public List<String> getTables(String schemaName) {
@@ -72,7 +91,7 @@ public class SchemasDDL {
             final String msg = "Get tables from schema: " + schemaName + " failed: " + e.getMessage();
             log.error(msg);
 
-            throw new DataServiceException(msg);
+            throw new DataServiceException(msg, e.getCause());
         }
     }
 
@@ -86,7 +105,7 @@ public class SchemasDDL {
             final String msg = "Count tables in schema: " + schemaName + " failed: " + e.getMessage();
             log.error(msg);
 
-            throw new DataServiceException(msg);
+            throw new DataServiceException(msg, e.getCause());
         }
     }
 
@@ -102,9 +121,24 @@ public class SchemasDDL {
         try {
             return jdbcTemplate.queryForObject(sql, Boolean.class);
         } catch (DataAccessException e) {
-            log.warn("Check schema: {} failed: {}", schemaName, e.getMessage());
+            final String msg = "Check schema: " + schemaName + " failed: " + e.getMessage();
+            log.error(msg);
 
-            return false;
+            throw new DataServiceException(msg, e.getCause());
+        }
+    }
+
+    public void delete(String schemaName) {
+        try {
+            log.debug("Удаление схемы {}", schemaName);
+
+            jdbcTemplate.execute("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE");
+        } catch (DataAccessException e) {
+            String msg = "Не удалось удалить схему: " + schemaName;
+
+            log.error(msg);
+
+            throw new DataServiceException(msg, e.getCause());
         }
     }
 }

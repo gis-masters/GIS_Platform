@@ -9,8 +9,6 @@ import java.net.URI;
 
 public class BaseController {
 
-    protected final String DEFAULT_PROJECT_NAME = "workspace";
-
     @NotNull
     HttpHeaders createHeadersWithLinkToProcess(Process process) {
         URI location = ServletUriComponentsBuilder
@@ -23,5 +21,4 @@ public class BaseController {
 
         return headers;
     }
-
 }

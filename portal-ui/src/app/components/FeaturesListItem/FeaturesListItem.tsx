@@ -8,7 +8,9 @@ import { boundMethod } from 'autobind-decorator';
 
 import { schemaService } from '../../services/crg/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
+import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs-models';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
@@ -55,14 +57,15 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   private async fetchSchema() {
-    const { id, properties } = this.props.feature;
-    const featureName = id.split('.')[0];
-    const schema = await schemaService.getSchemaByLayerName(featureName);
+    const { properties, id } = this.props.feature;
+    const tableName = this.extractTableName(id);
+    const { schemaId } = currentProject.layers.find(layer => layer.internalName === tableName);
+    const schema = await schemaService.getSchemaBySchemaId(schemaId);
 
     if (schema) {
       let title = '';
 
-      const property = schema.properties.find(property => property.objectIdentityOnUi);
+      const property = schema.properties.find(prop => prop.objectIdentityOnUi);
 
       if (property) {
         const { name, enumerations, valueType } = property;
@@ -101,5 +104,14 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   @boundMethod
   private zoomHandler() {
     this.props.onHighlight(this.props.feature);
+  }
+
+  private extractTableName(id: string) {
+    const string = id.split(WFS_FEATURE_ID_DELIMITER)[0];
+    if (!string) {
+      throw Error('Incorrect wfs feature id: ' + id);
+    }
+
+    return string;
   }
 }

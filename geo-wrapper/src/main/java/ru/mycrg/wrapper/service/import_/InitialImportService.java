@@ -9,15 +9,13 @@ import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.import_.*;
 import ru.mycrg.wrapper.dao.BaseDaoService;
-import ru.mycrg.wrapper.dao.CrgDaoSchemas;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.queue.MqSender;
 
 import java.util.List;
 
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
-import static ru.mycrg.wrapper.dao.DaoProperties.AS_IS;
-import static ru.mycrg.wrapper.dao.DaoProperties.RULE_ID;
+import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 /**
  * Класс "делает" первый шаг в процессе импорта.
@@ -31,34 +29,28 @@ public class InitialImportService extends AbstractImportChainItem {
     private final MqSender mqSender;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
-    private final CrgDaoSchemas daoSchemas;
 
     public InitialImportService(BaseDaoService baseDaoService,
-                                CrgDaoSchemas daoSchemas,
                                 MqSender mqSender,
                                 DatasourceFactory datasourceFactory) {
         this.mqSender = mqSender;
-        this.daoSchemas = daoSchemas;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
 
     /**
      * Первый этап импорта
-     * - Удаление целевой таблицы и таблицы с данными валидации (*_extension)
      * - Генерирование новой таблицы
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
-        log.debug("=== Start first stage. Import. From: {} to: {}", importTask.printSource(), importTask.printTarget());
+        final String resource = importTask.getSourceResource().getResourceId();
+        final String target = importTask.getTargetResource().getResourceId();
+        log.debug("=== Start first stage. Import. From: {} to: {}", resource, target);
 
         try {
             String sourceDbName = importTask.getSourceResource().getDbName();
-            String targetTableName = importTask.getTargetResource().getTableName();
-            String targetSchemaName = importTask.getTargetResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(sourceDbName);
-
-            ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
             List<MatchingPair> mapping = importTask.getPairs();
             MatchingPair ruleIdMapping = new MatchingPair(
@@ -70,8 +62,6 @@ public class InitialImportService extends AbstractImportChainItem {
                 mapping.add(ruleIdMapping);
             }
 
-            daoSchemas.create(jdbcTemplate, targetSchemaName);
-            baseDaoService.delete(jdbcTemplate, targetResource);
             baseDaoService.createTable(jdbcTemplate, importTask);
 
             mapping.remove(ruleIdMapping);
@@ -82,9 +72,7 @@ public class InitialImportService extends AbstractImportChainItem {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (Exception e) {
-            String msg = String.format("Не удалось перенести данные из: %s в: %s", importTask.printSource(),
-                    importTask.printTarget());
-
+            String msg = String.format("Не удалось перенести данные из: %s в: %s", resource, target);
             log.error(msg, e);
 
             mqSender.send(
@@ -106,7 +94,9 @@ public class InitialImportService extends AbstractImportChainItem {
 
         ResourceProjection targetResource = new ResourceProjection(sourceDbName, targetSchemaName, targetTableName);
 
-        baseDaoService.delete(jdbcTemplate, targetResource);
+        final String tableName = targetResource.getTableName().toLowerCase();
+        baseDaoService.delete(jdbcTemplate, targetResource.getSchemaName(), tableName);
+        baseDaoService.delete(jdbcTemplate, targetResource.getSchemaName(), tableName + EXTENSION_POSTFIX);
     }
 
     private boolean ruleIdNotExist(List<MatchingPair> pairs) {
@@ -114,5 +104,4 @@ public class InitialImportService extends AbstractImportChainItem {
                 .stream()
                 .noneMatch(pair -> RULE_ID.equalsIgnoreCase(pair.getSource().getName()));
     }
-
 }

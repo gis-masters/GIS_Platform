@@ -49,25 +49,27 @@ public class ValidationService extends BaseProcessService {
     /**
      * Запустить процесс валидации.
      *
-     * @param projectName internalName проекта
-     * @param principal   Пользователь
-     * @param request     Список ресурсов {@link ValidationRequestDto}
+     * @param principal Пользователь
+     * @param request   Список ресурсов {@link ValidationRequestDto}
      */
-    public Process validate(String projectName, Principal principal, ValidationRequestDto request) {
+    public Process validate(ValidationRequestDto request, Principal principal) {
         long orgId = getOrganizationId(principal);
 
         Process process = create(
                 principal.getName(),
-                String.format("Валидация %d слоёв(я) Проекта: %s", request.getLayers().size(), projectName),
-                ProcessType.VALIDATION, request);
+                String.format("Валидация %d слоёв(я) Организации: %s", request.getResources().size(), orgId),
+                ProcessType.VALIDATION,
+                request);
 
-        ValidationMqProcessRequest payload = new ValidationMqProcessRequest(0, 25);
+        ValidationMqProcessRequest payload = new ValidationMqProcessRequest();
 
-        request.getLayers().forEach(layerName -> {
-            schemaService.getSchemaByLayerName(layerName).ifPresent(schema -> {
-                payload.addFeatureProjections(schema);
+        request.getResources().forEach(resourceModel -> {
+            schemaService.getSchemaByName(resourceModel.getSchemaId()).ifPresent(schema -> {
                 payload.addResourceProjections(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId,
+                                               resourceModel.getDataset(),
+                                               resourceModel.getTable(),
+                                               schema));
             });
         });
 
@@ -122,5 +124,4 @@ public class ValidationService extends BaseProcessService {
             log.error("Failed add subStep to process / Error: {}", e.getMessage());
         }
     }
-
 }

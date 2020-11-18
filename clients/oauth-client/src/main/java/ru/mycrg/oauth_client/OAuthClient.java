@@ -35,7 +35,7 @@ public class OAuthClient {
                 config
         );
 
-        this.httpClient = new HttpClient(baseUrl, requestHandler);
+        this.httpClient = new HttpClient(requestHandler);
     }
 
     public static OAuthClientBuilder builder() {

@@ -41,7 +41,7 @@ public class SchemaService {
         }
     }
 
-    public Optional<SchemaDto> getSchemaByLayerName(@NotNull String name) {
+    public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
         final DataSchemaDescription schemaDescription = schemaRepository
                 .findByName(name).stream()
                 .findFirst()

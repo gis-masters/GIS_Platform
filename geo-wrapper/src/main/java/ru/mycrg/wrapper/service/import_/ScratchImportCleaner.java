@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
+import ru.mycrg.geoserver_client.services.layers.LayersService;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
@@ -28,18 +31,27 @@ public class ScratchImportCleaner extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
         log.debug("Try cleanUp after import");
 
+        String dbName = importTask.getSourceResource().getDbName();
+        String sourceTableName = importTask.getSourceResource().getTableName();
+        String sourceSchemaName = importTask.getSourceResource().getSchemaName();
         try {
-            String dbName = importTask.getSourceResource().getDbName();
-            String sourceTableName = importTask.getSourceResource().getTableName();
-            String sourceSchemaName = importTask.getSourceResource().getSchemaName();
             JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
 
             ResourceProjection sourceResource = new ResourceProjection(dbName, sourceSchemaName, sourceTableName);
 
-            baseDaoService.delete(jdbcTemplate, sourceResource);
+            baseDaoService.delete(jdbcTemplate, sourceResource.getSchemaName(), sourceResource.getTableName());
         } catch (Exception e) {
             log.error("Ошибка при попытке удалить черновую таблицу из БД после импорта: {}", e.getMessage(), e);
         }
-    }
 
+        try {
+            final String workspaceName = importTask.getWorkspaceName();
+            final String dataStoreName = workspaceName + "_store";
+
+            new LayersService(importTask.getUserToken()).delete(workspaceName, sourceTableName);
+            new FeatureTypeService(importTask.getUserToken()).delete(workspaceName, dataStoreName, sourceTableName);
+        } catch (HttpClientException e) {
+            log.warn("Cant cleanUp geoserver featureTypes");
+        }
+    }
 }

@@ -27,6 +27,7 @@ spring:
 
 crg-options:
   auth-service-url: http://127.0.0.1:9000
+  data-service-url: http://127.0.0.1:8084
   geoserver-host: 127.0.0.1:8080
   userServiceName: postgres_db_user_service
   client_id: admin

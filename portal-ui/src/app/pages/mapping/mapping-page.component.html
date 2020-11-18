@@ -20,13 +20,15 @@
                   mat-list-icon
                   *ngIf="!comparablePair.isDisabled && comparablePair.isMapped"
                   style="color: green;"
-                  >done</mat-icon
+                >done
+                </mat-icon
                 >
                 <mat-icon
                   mat-list-icon
                   *ngIf="!comparablePair.isDisabled && !comparablePair.isMapped"
                   style="color: tomato;"
-                  >warning</mat-icon
+                >warning
+                </mat-icon
                 >
                 <mat-icon mat-list-icon *ngIf="comparablePair.isDisabled">cancel</mat-icon>
 
@@ -47,18 +49,11 @@
         <button mat-stroked-button class="float-left crg-card-footer-b" [routerLink]="prevLink">
           Назад
         </button>
-        <button
-          mat-raised-button
-          class="float-right crg-card-footer-b mat-primary"
-          [routerLink]="nextLink"
-          *ngIf="isImportFinished"
-        >
-          &nbsp;&nbsp;&nbsp;Готово&nbsp;&nbsp;&nbsp;
-        </button>
+
         <button
           mat-stroked-button
           class="float-right crg-card-footer-b"
-          *ngIf="!isImportFinished"
+          [disabled]="!selectedDataset"
           (click)="startWorkImport()"
         >
           <span *ngIf="!isWorkImportInited">Импортировать</span>
@@ -72,6 +67,11 @@
             width="27"
           />
         </button>
+
+        <pickup-datasets
+          class="float-right crg-card-footer-b"
+          (datasetSelect)="this.onDatasetSelected($event)">
+        </pickup-datasets>
       </mat-card-footer>
     </mat-card>
   </div>

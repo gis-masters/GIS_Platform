@@ -3,19 +3,19 @@ package ru.mycrg.gis.service.export;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis.dto.DetailsModel;
 import ru.mycrg.gis.dto.ExportRequestModel;
 import ru.mycrg.gis.dto.TaskModel;
 import ru.mycrg.gis.dto.WsMessageDto;
 import ru.mycrg.gis.entity.Process;
-import ru.mycrg.gis.exceptions.ConflictException;
 import ru.mycrg.gis.queue.MqSender;
 import ru.mycrg.gis.repository.ProcessRepository;
 import ru.mycrg.gis.service.BaseProcessService;
+import ru.mycrg.gis.service.JsonConverter;
 import ru.mycrg.gis.service.SchemaService;
 import ru.mycrg.gis.service.WsNotificationService;
-import ru.mycrg.gis.service.JsonConverter;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
 import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
@@ -23,7 +23,6 @@ import ru.mycrg.mq_queue_contract.ResourceProjection;
 import ru.mycrg.mq_queue_contract.enums.ProcessType;
 
 import java.io.IOException;
-import java.security.Principal;
 
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
@@ -49,26 +48,25 @@ public class ExportService extends BaseProcessService {
         this.wsNotificationService = wsNotificationService;
     }
 
-    public Process export(String projectName, ExportRequestModel request, Principal principal) {
-        long orgId = getOrganizationId(principal);
+    public Process export(ExportRequestModel request, Authentication authentication) {
+        long orgId = getOrganizationId(authentication);
 
-        if (request.getFormat() != null && !request.getFormat().equals("ESRI Shapefile")) {
-            throw new ConflictException("Формат: " + request.getFormat() + ", не поддерживается");
-        }
-
-        Process process = create(principal.getName(),
-                String.format("Экспорт. Проект: %s. Кол-во слоев: %d", projectName, request.getLayers().size()),
-                ProcessType.EXPORT, request);
+        Process process = create(authentication.getName(),
+                                 String.format("Экспорт. Кол-во слоев: %d", request.getResources().size()),
+                                 ProcessType.EXPORT,
+                                 request);
 
         MqExportProcessRequest payload = new MqExportProcessRequest();
         payload.setFormat(request.getFormat());
         payload.setDocSchema(request.getDocSchema());
 
-        request.getLayers().forEach(layerName -> {
-            schemaService.getSchemaByLayerName(layerName).ifPresent(schema -> {
-                payload.addRule(schema);
+        request.getResources().forEach(resourceModel -> {
+            schemaService.getSchemaByName(resourceModel.getSchemaId()).ifPresent(schema -> {
                 payload.addResource(
-                        new ResourceProjection(DEFAULT_DB_NAME + orgId, projectName, layerName));
+                        new ResourceProjection(DEFAULT_DB_NAME + orgId,
+                                               resourceModel.getDataset(),
+                                               resourceModel.getTable(),
+                                               schema));
             });
         });
 
@@ -97,9 +95,15 @@ public class ExportService extends BaseProcessService {
         switch (mqResponse.getStatus()) {
             case PENDING:
             case TASK_ERROR:
-            case TASK_DONE:  addSubStep(process, mqResponse);        break;
-            case ERROR:     error(process, mqResponse.getError());  break;
-            case DONE:      complete(process, pathToFile);          break;
+            case TASK_DONE:
+                addSubStep(process, mqResponse);
+                break;
+            case ERROR:
+                error(process, mqResponse.getError());
+                break;
+            case DONE:
+                complete(process, pathToFile);
+                break;
             default:
                 log.warn("Not supported process status. {}", process);
         }
@@ -126,7 +130,7 @@ public class ExportService extends BaseProcessService {
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
 
             TaskModel subProcess = new TaskModel(tableName, mqResponse.getStatus(),
-                    mqResponse.getError());
+                                                 mqResponse.getError());
 
             details.addTask(subProcess);
 
@@ -139,5 +143,4 @@ public class ExportService extends BaseProcessService {
 
         log.debug("Add subStep to process: {}", process.getId());
     }
-
 }

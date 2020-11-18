@@ -8,12 +8,10 @@ import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
 import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
 import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.queue.MqSender;
 
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_STORE_POSTFIX;
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
@@ -30,27 +28,21 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
         log.debug("Publish feature on geoserver");
 
-        SchemaDto featureDescription = null;
+        String layerName = "";
         try {
-            featureDescription = importTask.getFeatureDescription();
+            layerName = importTask.getLayerName();
 
-            FeatureTypeService featureTypeService = new FeatureTypeService(importTask.getUserToken());
-            featureTypeService.delete(
+            new FeatureTypeService(importTask.getUserToken()).create(
+                    importTask.getWorkspaceName(),
                     importTask.getTargetResource().getSchemaName(),
-                    importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
-                    featureDescription.getName());
-
-            featureTypeService.create(
-                    importTask.getTargetResource().getSchemaName(),
-                    importTask.getTargetResource().getDbName() + DEFAULT_STORE_POSTFIX,
-                    featureDescription.getName(),
+                    layerName,
                     importTask.getSrs());
 
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (HttpClientException e) {
-            String msg = "Не удалось опубликовать слой на геосервере: " + featureDescription.getName();
+            String msg = "Не удалось опубликовать слой на геосервере: " + layerName;
             log.error(msg, e);
 
             mqSender.send(

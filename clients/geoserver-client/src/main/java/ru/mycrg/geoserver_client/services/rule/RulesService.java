@@ -1,6 +1,5 @@
 package ru.mycrg.geoserver_client.services.rule;
 
-import com.google.gson.Gson;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -24,8 +23,6 @@ public class RulesService extends GeoServerBaseService {
     public static final String LAYERS_URL = getGeoserverRestUrl() + "/security/acl/layers/";
     public static final String REST_URL = getGeoserverRestUrl() + "/security/acl/rest";
     public static final String SERVICES_URL = getGeoserverRestUrl() + "/security/acl/services";
-
-    private final Gson gson = new Gson();
 
     public RulesService(String accessToken) {
         super(accessToken);

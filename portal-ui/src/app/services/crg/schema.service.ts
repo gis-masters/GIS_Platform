@@ -1,17 +1,17 @@
-import { debounce, DebouncedFunc } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
-import { Toast } from '../../components/Toast/Toast';
+import { debounce, DebouncedFunc } from 'lodash';
 
-import { serverProperties } from '../server-properties.service';
-import { FeatureUtil } from '../util/FeatureUtil';
-import { getEmptyGeometry } from '../geoserver/wfs.service';
-import { WfsFeature, CoordinateEdited, SupportedGeometryType } from '../geoserver/wfs-models';
-import { ImportLayerItem } from '../geoserver/import/models';
-import { BugObject } from './validation.service';
-import { CrgLayer } from '../crg/projects.models';
-import { services } from '../services';
+import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { ImportLayerItem } from '../geoserver/import/models';
+import { CoordinateEdited, SupportedGeometryType, WfsFeature } from '../geoserver/wfs-models';
+import { getEmptyGeometry } from '../geoserver/wfs.service';
 import { http } from '../http.service';
+import { serverProperties } from '../server-properties.service';
+import { services } from '../services';
+import { FeatureUtil } from '../util/FeatureUtil';
+import { CrgLayer } from './projects.models';
+import { BugObject } from './validation.service';
 
 export interface FeatureDescription {
   name: string;
@@ -81,13 +81,14 @@ export interface EditedField {
 
 class SchemaService {
   private static _instance: SchemaService;
+
   private schemas: { [key: string]: Promise<FeatureDescription> } = {};
   private schemasResolvers: { [key: string]: (value?: FeatureDescription) => void } = {};
   private schemasRejecters: { [key: string]: () => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
   private fetchingNow = 0;
-  private readonly debouncedFetch: DebouncedFunc<((fetchAll?: boolean) => Promise<void>)>;
+  private readonly debouncedFetch: DebouncedFunc<(fetchAll?: boolean) => Promise<void>>;
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);
@@ -127,20 +128,16 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
-  /**
-   * Возвращает описание фичи.
-   * @param layerName Название слоя
-   */
-  async getSchemaByLayerName(layerName: string, global?: boolean): Promise<FeatureDescription | undefined> {
-    if (!layerName) {
+  async getSchemaBySchemaId(schemaId: string, global?: boolean): Promise<FeatureDescription | undefined> {
+    if (!schemaId) {
       return;
     }
 
     const schemas = global ? await this.getAllSchemas() : await this.getCurrentProjectSchemas();
 
     return (
-      schemas.find(schema => schema.name.toLowerCase() === layerName.toLowerCase()) ||
-      schemas.find(schema => schema.name.toLowerCase().includes(layerName.toLowerCase()))
+      schemas.find(schema => schema.name.toLowerCase() === schemaId.toLowerCase()) ||
+      schemas.find(schema => schema.name.toLowerCase().includes(schemaId.toLowerCase()))
     );
   }
 
@@ -165,8 +162,7 @@ class SchemaService {
     }
 
     return (
-      (await this.getSchemaByLayerName(layerNameWithGeomType, true)) ||
-      (await this.getSchemaByLayerName(layerName, true))
+      (await this.getSchemaBySchemaId(layerNameWithGeomType, true)) || (await this.getSchemaBySchemaId(layerName, true))
     );
   }
 

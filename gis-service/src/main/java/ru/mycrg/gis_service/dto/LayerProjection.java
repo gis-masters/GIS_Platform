@@ -1,45 +1,106 @@
 package ru.mycrg.gis_service.dto;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.gis_service.entity.Layer;
 
-@Projection(
-        name = "layerProjection",
-        types = {Layer.class})
-public interface LayerProjection {
+public class LayerProjection {
 
-    Long getId();
+    private final Long id;
+    private final String title;
+    private final String type;
+    private final String dataset;
+    private final String internalName;
+    private final boolean enabled;
+    private final Integer position;
+    private final int transparency;
+    private final int maxZoom;
+    private final int minZoom;
+    private final String styleName;
+    private final String nativeCRS;
+    private final String schemaId;
+    private final String dataSourceUri;
+    private final Long groupId;
+    private final String complexName;
 
-    String getTitle();
+    public LayerProjection(Layer layer, String orgWorkspaceName) {
+        this.id = layer.getId();
+        this.title = layer.getTitle();
+        this.type = layer.getType();
+        this.dataset = layer.getDataset();
+        this.internalName = layer.getInternalName();
+        this.enabled = layer.isEnabled();
+        this.position = layer.getPosition();
+        this.transparency = layer.getTransparency();
+        this.maxZoom = layer.getMaxZoom();
+        this.minZoom = layer.getMinZoom();
+        this.styleName = layer.getStyleName();
+        this.nativeCRS = layer.getNativeCRS();
+        this.schemaId = layer.getSchemaId();
+        this.dataSourceUri = layer.getDataSourceUri();
+        this.groupId = layer.getGroup() != null ? layer.getGroup().getId(): null;
+        this.complexName = orgWorkspaceName + ":" + internalName;
+    }
 
-    String getType();
+    public Long getId() {
+        return id;
+    }
 
-    String getDataset();
+    public String getTitle() {
+        return title;
+    }
 
-    String getInternalName();
+    public String getType() {
+        return type;
+    }
 
-    boolean isEnabled();
+    public String getDataset() {
+        return dataset;
+    }
 
-    Integer getPosition();
+    public String getInternalName() {
+        return internalName;
+    }
 
-    int getTransparency();
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-    int getMaxZoom();
+    public Integer getPosition() {
+        return position;
+    }
 
-    int getMinZoom();
+    public int getTransparency() {
+        return transparency;
+    }
 
-    String getStyleName();
+    public int getMaxZoom() {
+        return maxZoom;
+    }
 
-    String getNativeCRS();
+    public int getMinZoom() {
+        return minZoom;
+    }
 
-    String getSchemaId();
+    public String getStyleName() {
+        return styleName;
+    }
 
-    String getDataSourceUri();
+    public String getNativeCRS() {
+        return nativeCRS;
+    }
 
-    @Value("#{target.dataset + ':' + target.internalName}")
-    String getComplexName();
+    public String getSchemaId() {
+        return schemaId;
+    }
 
-    @Value("#{target.group != null ? target.group.id : null}")
-    Long getGroupId();
+    public String getDataSourceUri() {
+        return dataSourceUri;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public String getComplexName() {
+        return complexName;
+    }
 }
