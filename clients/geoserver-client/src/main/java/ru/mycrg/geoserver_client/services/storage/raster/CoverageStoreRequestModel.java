@@ -1,13 +1,13 @@
 package ru.mycrg.geoserver_client.services.storage.raster;
 
-public class CoverageStore {
+public class CoverageStoreRequestModel {
     private final String name;
     private final String workspace;
     private final boolean enabled;
     private final String type;
     private final String url;
 
-    public CoverageStore(String name, String workspace, boolean enabled, String type, String url) {
+    public CoverageStoreRequestModel(String name, String workspace, boolean enabled, String type, String url) {
         this.name = name;
         this.workspace = workspace;
         this.enabled = enabled;

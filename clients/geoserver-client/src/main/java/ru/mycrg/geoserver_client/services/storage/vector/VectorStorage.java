@@ -12,7 +12,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 public class VectorStorage extends GeoServerBaseService {
 
     public static final String WORKSPACES = "/workspaces/";
-    public static final String DATASTORES = "/datastores/";
+    public static final String DATA_STORES = "/datastores/";
 
     public VectorStorage(String accessToken) {
         super(accessToken);
@@ -38,7 +38,7 @@ public class VectorStorage extends GeoServerBaseService {
         String json = gson.toJson(new DataStoreModel(dataStore));
 
         Request request = builderWithBearerAuth
-                .url(getGeoserverRestUrl() + WORKSPACES + workspaceName + DATASTORES)
+                .url(getGeoserverRestUrl() + WORKSPACES + workspaceName + DATA_STORES)
                 .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build();
 
@@ -52,7 +52,7 @@ public class VectorStorage extends GeoServerBaseService {
      */
     public DataStores getAll(final String workspaceName) throws HttpClientException {
         Request getStores = builderWithBearerAuth
-                .url(getGeoserverRestUrl() + WORKSPACES + workspaceName + DATASTORES)
+                .url(getGeoserverRestUrl() + WORKSPACES + workspaceName + DATA_STORES)
                 .get()
                 .build();
 
@@ -75,7 +75,7 @@ public class VectorStorage extends GeoServerBaseService {
                                         final String dataStoreName) throws HttpClientException {
         final String url = getGeoserverRestUrl() +
                 WORKSPACES + workspaceName +
-                DATASTORES + dataStoreName + "?recurse=true";
+                DATA_STORES + dataStoreName + "?recurse=true";
 
         Request request = builderWithBearerAuth.url(url).delete().build();
 

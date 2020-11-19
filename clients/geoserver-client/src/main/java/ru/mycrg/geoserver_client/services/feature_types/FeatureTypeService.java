@@ -16,7 +16,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     public static final Logger log = LoggerFactory.getLogger(FeatureTypeService.class);
 
     public static final String WORKSPACES = "/workspaces/";
-    public static final String DATASTORES = "/datastores/";
+    public static final String DATA_STORES = "/datastores/";
 
     public FeatureTypeService(String accessToken) {
         super(accessToken);
@@ -27,7 +27,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
-                .append(DATASTORES).append(dataStoreName)
+                .append(DATA_STORES).append(dataStoreName)
                 .append("/featuretypes.json").toString();
 
         Request request = builderWithBearerAuth.url(url)
@@ -58,7 +58,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
-                .append(DATASTORES).append(dataStoreName)
+                .append(DATA_STORES).append(dataStoreName)
                 .append("/featuretypes").toString();
 
         Request request = builderWithBearerAuth.url(url)
@@ -75,7 +75,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspaceName)
-                .append(DATASTORES).append(dataStoreName)
+                .append(DATA_STORES).append(dataStoreName)
                 .append("/featuretypes/").append(featureName)
                 .toString();
 
