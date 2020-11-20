@@ -25,8 +25,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         return userId;
     }
 
-    public void setCurrentId(Integer currentId) {
-        UserStepsDefinitions.userId = currentId;
+    public void setCurrentId(Integer id) {
+        userId = id;
     }
 
     @Override

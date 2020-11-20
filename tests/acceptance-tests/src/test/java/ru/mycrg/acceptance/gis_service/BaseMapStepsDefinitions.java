@@ -33,20 +33,14 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/projects/" + projectId + "/basemaps");
     }
 
+    @Override
     public Integer getCurrentId() {
         return baseMapId;
     }
 
-    public void setCurrentId(Integer currentId) {
-        BaseMapStepsDefinitions.baseMapId = currentId;
-    }
-
-    public BaseMapCreateDto getCurrentDto() {
-        return baseMapDto;
-    }
-
-    public void setCurrentDto(BaseMapCreateDto currentDto) {
-        BaseMapStepsDefinitions.baseMapDto = currentDto;
+    @Override
+    public void setCurrentId(Integer id) {
+        baseMapId = id;
     }
 
     @And("Сервер передает ID подложки проекта в ответе")
@@ -82,8 +76,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("");
-
-        projectBaseMapsPool.put(response.jsonPath().get("id"), baseMapDto);
     }
 
     @When("Пользователь делает запрос на текущую подложку {string}")

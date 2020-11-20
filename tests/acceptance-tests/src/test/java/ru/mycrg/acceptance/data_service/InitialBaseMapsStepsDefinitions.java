@@ -27,8 +27,8 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         return baseMapId;
     }
 
-    public void setCurrentId(Integer currentId) {
-        InitialBaseMapsStepsDefinitions.baseMapId = currentId;
+    public void setCurrentId(Integer id) {
+        baseMapId = id;
     }
 
     @Override

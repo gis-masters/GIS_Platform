@@ -50,15 +50,14 @@ public class BaseStepsDefinitions {
     public static Map<Integer, ProjectRequestDto> projectPool = new HashMap<>();
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new HashMap<>();
 
-    public static Object currentDto;
     public static Integer currentId;
 
     public Integer getCurrentId() {
         return currentId;
     }
 
-    public void setCurrentId(Integer currentId) {
-        BaseStepsDefinitions.currentId = currentId;
+    public void setCurrentId(Integer id) {
+        currentId = id;
     }
 
     public void setup() {

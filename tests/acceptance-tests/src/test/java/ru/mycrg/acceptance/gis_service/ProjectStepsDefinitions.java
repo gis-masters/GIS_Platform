@@ -26,12 +26,14 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public static Integer projectId;
     public static Integer permId;
 
+    @Override
     public Integer getCurrentId() {
         return projectId;
     }
 
-    public void setCurrentId(Integer currentId) {
-        ProjectStepsDefinitions.projectId = currentId;
+    @Override
+    public void setCurrentId(Integer id) {
+        projectId = id;
     }
 
     @Override
@@ -265,7 +267,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         if (!projectPool.isEmpty()) {
             for (Map.Entry<Integer, ProjectRequestDto> entry: projectPool.entrySet()) {
                 projectId = entry.getKey();
-                currentDto = entry.getValue();
+                projectDto = entry.getValue();
 
                 return true;
             }
