@@ -12,12 +12,13 @@ import {
   addTablePermission,
   addProjectPermission,
   removeTablePermission,
-  removeProjectPermission
+  removeProjectPermission,
+  projectRoles
 } from '../../services/crg/permissions.service';
 import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
 import { communicationService } from '../../services/communication.service';
 import { FilterParams } from '../../services/util/filterObjects';
-import { PermissionsListItem } from '../../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { Highlight } from '../Highlight/Highlight';
 import { Loading } from '../Loading/Loading';
@@ -88,7 +89,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
                 principalType={principalType}
               />
             }
-            data={this.list}
+            data={this.viewedList}
             cols={[
               {
                 title: 'Проект',
@@ -161,7 +162,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       .map(item => ({
         ...item,
         permissions: item.permissions.filter(
-          permission => Number(permission.principalId) === principalId && permission.principalType === principalType
+          permission => permission.principalId === principalId && permission.principalType === principalType
         )
       }))
       .filter(({ permissions }) => permissions.length);
@@ -173,7 +174,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @computed
-  private get list(): PermissionsListItemWrapped[] {
+  private get viewedList(): PermissionsListItemWrapped[] {
     return this.currentList.map(item => ({
       synteticId: `${item.project.name}|${item.project.id}|${item.layer ? `${item.layer.title}|${item.layer.id}` : ''}`,
       projectTitle: item.project.name,
@@ -210,8 +211,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
     this.initChangedList();
 
     const changedIndex = this.changedList.findIndex(
-      ({ project, layer }) =>
-        project.id === newItem.project.id && (layer && layer.id) === (newItem.layer && newItem.layer.id)
+      ({ project, layer }) => project.id === newItem.project.id && layer?.id === newItem.layer?.id
     );
 
     this.changedList.splice(changedIndex, 1, newItem);
@@ -220,6 +220,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   @action.bound
   private handleAdd(items: PermissionsListItem[]) {
     this.initChangedList();
+    items.forEach(item => {
+      item.permissions.forEach(permission => {
+        if (item.project && !item.layer && !projectRoles.includes(permission.role)) {
+          permission.role = projectRoles[0];
+        }
+      });
+    });
     this.changedList = this.changedList.concat(items);
   }
 
@@ -238,23 +245,61 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   private async save() {
     this.setLoading(true);
 
-    const existing = this.prepareList(this.existingList);
-    const changed = this.prepareList(this.changedList);
+    const existing = this.prepareApiArgsList(this.existingList);
+    const changed = this.prepareApiArgsList(this.changedList);
     const toCreate: ApiArgs[] = [];
+    const toDelete: ApiArgs[] = [];
 
-    changed.forEach(changedItem => {
+    changed.forEach(([changedPermission, changedProject, changedLayer]) => {
       const index = existing.findIndex(
-        existingItem =>
-          changedItem[0].role === existingItem[0].role &&
-          changedItem[1].id === existingItem[1].id &&
-          (changedItem[2] && changedItem[2].id) === (existingItem[2] && existingItem[2].id)
+        ([existingPermission, existingProject, existingLayer]) =>
+          changedPermission.role === existingPermission.role &&
+          changedProject.id === existingProject.id &&
+          changedLayer?.id === existingLayer?.id
       );
+
       if (index === -1) {
-        toCreate.push(changedItem);
+        toCreate.push([changedPermission, changedProject, changedLayer]);
       } else {
         existing.splice(index, 1);
       }
     });
+
+    toDelete.splice(toDelete.length, 0, ...existing);
+
+    console.log(
+      'this.prepareApiArgsList(this.existingList)',
+      this.prepareApiArgsList(this.existingList).map(([permission, project, layer]) => [
+        permission.principalId,
+        permission.role,
+        project.id,
+        layer?.id
+      ])
+    );
+    console.log(
+      'existing',
+      existing.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
+    );
+    console.log(
+      'changed',
+      changed.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
+    );
+    console.log(
+      'toDelete',
+      toDelete.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
+    );
+    console.log(
+      'toCreate',
+      toCreate.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
+    );
+
+    for (let [permission, project, layer] of toDelete) {
+      if (layer) {
+        await removeTablePermission(permission, layer.dataset, layer.internalName);
+      } else {
+        await removeProjectPermission(permission, project);
+      }
+    }
 
     for (let [permission, project, layer] of toCreate) {
       if (layer) {
@@ -264,27 +309,16 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       }
     }
 
-    for (let [permission, project, layer] of existing) {
-      if (layer) {
-        await removeTablePermission(permission, layer.dataset, layer.internalName);
-      } else {
-        await removeProjectPermission(permission, project);
-      }
-    }
-
     communicationService.permissionsUpdated.emit();
-
     this.setLoading(false);
     this.close();
   }
 
-  private prepareList(list: PermissionsListItem[]): ApiArgs[] {
+  private prepareApiArgsList(list: PermissionsListItem[]): ApiArgs[] {
     return list
-      .map(({ project, layer, permissions }) => {
-        return permissions.map(roleAssignment => {
-          return [roleAssignment, project, layer] as ApiArgs;
-        });
-      })
+      .map(({ project, layer, permissions }) =>
+        permissions.map(roleAssignment => [roleAssignment, project, layer] as ApiArgs)
+      )
       .flat();
   }
 

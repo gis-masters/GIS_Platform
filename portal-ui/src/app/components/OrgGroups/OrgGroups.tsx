@@ -8,7 +8,7 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { PrincipalType } from '../../services/crg/permissions.service';
-import { permissionsListService } from '../../services/crg/permissionsList.service';
+import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { OrgActions } from '../OrgActions/OrgActions';
 import { XTable } from '../XTable/XTable';
 
@@ -25,9 +25,8 @@ interface CrgGroupExtended extends CrgGroup {
 
 @observer
 export class OrgGroups extends Component {
-  componentDidMount() {
-    groupsService.initGroupsListStore();
-    permissionsListService.initGroupsListStore();
+  async componentDidMount() {
+    await groupsService.initGroupsListStore();
   }
 
   render() {

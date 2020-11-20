@@ -16,9 +16,9 @@ export interface PermissionsListItem {
   broken?: boolean;
 }
 
-class PermissionsListService {
-  private static _instance: PermissionsListService;
-  private groupsListStoreInited = false;
+class AllPermissionsService {
+  private static _instance: AllPermissionsService;
+  private allPermissionsStoreInited = false;
   private fetchingOperationId: Symbol;
   private debouncedFetchPermissionsListStore: () => Promise<void>;
 
@@ -30,22 +30,27 @@ class PermissionsListService {
     return this._instance || (this._instance = new this());
   }
 
-  async initGroupsListStore() {
-    if (this.groupsListStoreInited) {
+  async initAllPermissionsStore() {
+    if (this.allPermissionsStoreInited) {
       return;
     }
 
-    this.groupsListStoreInited = true;
+    this.allPermissionsStoreInited = true;
 
     communicationService.permissionsUpdated.on(() => {
       this.debouncedFetchPermissionsListStore();
-    });
+    }, this);
 
     await this.fetchPermissionsListStore();
   }
 
+  dropPermissionsListStore() {
+    communicationService.permissionsUpdated.scopeOff(this);
+    this.allPermissionsStoreInited = false;
+  }
+
   private async fetchPermissionsListStore() {
-    if (!this.groupsListStoreInited) {
+    if (!this.allPermissionsStoreInited) {
       return;
     }
 
@@ -60,7 +65,7 @@ class PermissionsListService {
 
     const list: PermissionsListItem[] = [];
     let itemCounter = 0;
-    const items = [];
+    const items: [CrgProject, CrgLayer?][] = [];
 
     for (const project of allProjects.list) {
       const layers = await projectsService.getProjectLayers(project.id);
@@ -68,7 +73,9 @@ class PermissionsListService {
         items.length,
         0,
         [project],
-        ...layers.filter(layer => layer.type === CrgLayerType.VECTOR).map(layer => [project, layer])
+        ...layers
+          .filter(layer => layer.type === CrgLayerType.VECTOR)
+          .map(layer => [project, layer] as [CrgProject, CrgLayer])
       );
     }
 
@@ -78,7 +85,7 @@ class PermissionsListService {
 
       try {
         permissions = layer
-          ? await getTablePermissions(project.internalName, layer.internalName)
+          ? await getTablePermissions(layer.dataset, layer.internalName)
           : await getProjectPermissions(project);
       } catch (e) {
         broken = true;
@@ -112,4 +119,4 @@ class PermissionsListService {
   }
 }
 
-export const permissionsListService = PermissionsListService.instance;
+export const allPermissionsService = AllPermissionsService.instance;

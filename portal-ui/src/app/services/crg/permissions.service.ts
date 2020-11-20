@@ -45,7 +45,7 @@ export enum PrincipalType {
 
 export interface RoleAssignmentBody {
   id?: number;
-  principalId: number | string;
+  principalId: number;
   principalType: PrincipalType;
   role: Role;
 }
@@ -142,7 +142,9 @@ export async function getTablePermissions(datasetId: string, tableId: string): P
 }
 
 export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
-  return await http.get<RoleAssignmentBody[]>(`${await serverProperties.projectsUrl}/${project.id}/permissions`);
+  const list = await http.get<RoleAssignmentBody[]>(`${await serverProperties.projectsUrl}/${project.id}/permissions`);
+
+  return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
 }
 
 export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
@@ -182,21 +184,22 @@ export async function removeTablePermission(payload: RoleAssignmentBody, dataset
   }
 }
 
-export function getSetOfRoleAssignments(
-  principalId: number,
-  principalType: PrincipalType,
-  role: Role,
-  isProject?: boolean
+export function filterOutPrincipal(
+  filteringPrincipalId: number,
+  filteringPrincipalType: PrincipalType,
+  permissions: RoleAssignmentBody[]
 ): RoleAssignmentBody[] {
-  if (isProject && !projectRoles.includes(role)) {
-    role = projectRoles[0];
-  }
+  return permissions.filter(
+    ({ principalId, principalType }) => principalId !== filteringPrincipalId || principalType !== filteringPrincipalType
+  );
+}
 
-  const currRoles = isProject ? [role] : roles.slice(0, roles.indexOf(role) + 1);
-
-  return currRoles.map(roleName => ({
-    principalType,
-    principalId,
-    role: roleName
-  }));
+export function filterByPrincipal(
+  filteringPrincipalId: number,
+  filteringPrincipalType: PrincipalType,
+  permissions: RoleAssignmentBody[]
+): RoleAssignmentBody[] {
+  return permissions.filter(
+    ({ principalId, principalType }) => principalId === filteringPrincipalId || principalType === filteringPrincipalType
+  );
 }

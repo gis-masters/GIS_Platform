@@ -6,7 +6,7 @@ import { Tooltip, IconButton } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 
 import { PrincipalType } from '../../../services/crg/permissions.service';
-import { PermissionsListItem } from '../../../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-Add.scss';

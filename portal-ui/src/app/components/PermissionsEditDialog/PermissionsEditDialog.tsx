@@ -13,7 +13,8 @@ import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { communicationService } from '../../services/communication.service';
 import {
   addTablePermission,
-  getSetOfRoleAssignments,
+  filterByPrincipal,
+  filterOutPrincipal,
   PrincipalType,
   removeTablePermission,
   Role,
@@ -215,9 +216,10 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   @boundMethod
   private async save() {
     const { dataSet, dataTable } = this.props;
-    const existing = this.props.permissions.slice();
+    let existing = this.props.permissions.slice();
     const changed = this.changedPermissions.slice();
     const toCreate: RoleAssignmentBody[] = [];
+    const toDelete: RoleAssignmentBody[] = [];
     this.setBusy(true);
 
     changed.forEach(changedItem => {
@@ -229,17 +231,25 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       );
       if (index === -1) {
         toCreate.push(changedItem);
+        toDelete.splice(
+          toDelete.length,
+          0,
+          ...filterByPrincipal(Number(changedItem.principalId), changedItem.principalType, existing)
+        );
+        existing = filterOutPrincipal(Number(changedItem.principalId), changedItem.principalType, existing);
       } else {
         existing.splice(index, 1);
       }
     });
 
-    for (const item of toCreate) {
-      await addTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
+    toDelete.splice(toDelete.length, 0, ...existing);
+
+    for (const item of toDelete) {
+      await removeTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
     }
 
-    for (const item of existing) {
-      await removeTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
+    for (const item of toCreate) {
+      await addTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
     }
 
     communicationService.permissionsUpdated.emit();
@@ -300,9 +310,11 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @action.bound
   private changeRoleHandler(principalId: number, principalType: PrincipalType, role: Role) {
-    this.changedPermissions = this.filterPrincipal(principalId, principalType).concat(
-      getSetOfRoleAssignments(principalId, principalType, role)
-    );
+    this.changedPermissions = filterOutPrincipal(principalId, principalType, this.currentPermissions).concat({
+      principalId,
+      principalType,
+      role
+    });
   }
 
   @action
@@ -312,12 +324,6 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   @action.bound
   private removePrincipal(principalId: number, principalType: PrincipalType) {
-    this.changedPermissions = this.filterPrincipal(principalId, principalType);
-  }
-
-  private filterPrincipal(principalId: number, principalType: PrincipalType) {
-    return this.currentPermissions.filter(
-      permission => !(permission.principalId === principalId && permission.principalType === principalType)
-    );
+    this.changedPermissions = filterOutPrincipal(principalId, principalType, this.currentPermissions);
   }
 }

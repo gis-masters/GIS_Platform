@@ -17,14 +17,7 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
-import {
-  getSetOfRoleAssignments,
-  PrincipalType,
-  Role,
-  RoleAssignmentBody,
-  roles,
-  rolesTitles
-} from '../../../services/crg/permissions.service';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.service';
 import { CrgGroup } from '../../../services/crg/groups.service';
 import { CrgUser } from '../../../services/crg/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
@@ -141,7 +134,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
   @boundMethod
   private handleAdd() {
     const { onAdd, principalType } = this.props;
-    onAdd(this.selectedPrincipals.map(({ id }) => getSetOfRoleAssignments(id, principalType, this.role)).flat());
+    onAdd(this.selectedPrincipals.map(({ id }) => ({ principalId: id, principalType, role: this.role })));
     this.close();
   }
 

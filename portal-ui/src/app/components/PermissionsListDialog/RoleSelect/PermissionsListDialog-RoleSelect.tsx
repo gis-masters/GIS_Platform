@@ -10,9 +10,9 @@ import {
   roles,
   projectRoles,
   rolesTitles,
-  getSetOfRoleAssignments
+  filterOutPrincipal
 } from '../../../services/crg/permissions.service';
-import { PermissionsListItem } from '../../../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';
 
@@ -56,7 +56,10 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
     const { listItem, onChange, principalId, principalType } = this.props;
     onChange({
       ...listItem,
-      permissions: getSetOfRoleAssignments(principalId, principalType, e.target.value, !listItem.layer)
+      permissions: [
+        ...filterOutPrincipal(principalId, principalType, listItem.permissions),
+        { principalId, principalType, role: e.target.value }
+      ]
     });
   }
 }

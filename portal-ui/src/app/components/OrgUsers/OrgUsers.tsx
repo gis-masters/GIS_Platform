@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { FilterParams } from '../../services/util/filterObjects';
-import { permissionsListService } from '../../services/crg/permissionsList.service';
+import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
 import { PrincipalType } from '../../services/crg/permissions.service';
@@ -32,10 +32,8 @@ interface CrgUserExtended extends CrgUser {
 
 @observer
 export class OrgUsers extends Component {
-  componentDidMount() {
-    usersService.initUsersListStore();
-    groupsService.initGroupsListStore();
-    permissionsListService.initGroupsListStore();
+  async componentDidMount() {
+    await Promise.all([await usersService.initUsersListStore(), await groupsService.initGroupsListStore()]);
   }
 
   render() {

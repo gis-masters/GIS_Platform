@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { PermissionsListItem } from '../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../services/crg/allPermissions.service';
 
 class AllPermissions {
   @observable fetching = false;

@@ -5,14 +5,8 @@ import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import {
-  Role,
-  roles,
-  rolesTitles,
-  getSetOfRoleAssignments,
-  PrincipalType
-} from '../../services/crg/permissions.service';
-import { PermissionsListItem } from '../../services/crg/permissionsList.service';
+import { Role, roles, rolesTitles, PrincipalType } from '../../services/crg/permissions.service';
+import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { FilterParams } from '../../services/util/filterObjects';
 import { Highlight } from '../Highlight/Highlight';
@@ -148,7 +142,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
     onAdd(
       this.selectedList.map(item => ({
         ...item,
-        permissions: getSetOfRoleAssignments(principalId, principalType, this.role, !item.layer)
+        permissions: [{ principalId, principalType, role: this.role }]
       }))
     );
     this.close();

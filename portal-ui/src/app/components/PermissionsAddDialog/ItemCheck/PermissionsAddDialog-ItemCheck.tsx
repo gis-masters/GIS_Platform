@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Checkbox } from '@material-ui/core';
 
-import { PermissionsListItem } from '../../../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 
 const cnPermissionsAddDialogItemCheck = cn('PermissionsAddDialog', 'ItemCheck');
 

@@ -6,7 +6,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
-import { PermissionsListItem } from '../../../services/crg/permissionsList.service';
+import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 
 const cnPermissionsListDialogActions = cn('PermissionsListDialog', 'Actions');
 
