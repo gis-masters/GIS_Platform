@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
+import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.dto.ResourceType;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 public class ResourceDescription {
 
     @EmbeddedId
-    private TypeResourceIdentifierKey key;
+    private ResourceKey key;
 
     @Column(nullable = false)
     private String title;
@@ -25,7 +27,10 @@ public class ResourceDescription {
     private String type;
 
     @Column(insertable = false, updatable = false, nullable = false)
-    private String resourceIdentifier;
+    private String identifier;
+
+    @Column
+    private String owner;
 
     @Column(name = "items_count")
     private Integer itemsCount;
@@ -37,13 +42,26 @@ public class ResourceDescription {
     private @LastModifiedDate LocalDateTime lastModified = LocalDateTime.now();
 
     public ResourceDescription() {
+        // Required by framework
     }
 
-    public TypeResourceIdentifierKey getKey() {
+    public ResourceDescription(ResourceType rType, ResourceCreateDto dto, String identifier, String owner) {
+        this.key = new ResourceKey(rType, identifier);
+        this.title = dto.getTitle();
+        this.details = dto.getDetails();
+        this.type = rType.name();
+        this.identifier = identifier;
+        this.itemsCount = 0;
+        this.owner = owner;
+        this.createdAt = LocalDateTime.now();
+        this.lastModified = LocalDateTime.now();
+    }
+
+    public ResourceKey getKey() {
         return key;
     }
 
-    public void setKey(TypeResourceIdentifierKey key) {
+    public void setKey(ResourceKey key) {
         this.key = key;
     }
 
@@ -67,16 +85,16 @@ public class ResourceDescription {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(ResourceType type) {
+        this.type = type.name();
     }
 
-    public String getResourceIdentifier() {
-        return resourceIdentifier;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setResourceIdentifier(String resourceIdentifier) {
-        this.resourceIdentifier = resourceIdentifier;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -101,5 +119,13 @@ public class ResourceDescription {
 
     public void setItemsCount(Integer countEntities) {
         this.itemsCount = countEntities;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

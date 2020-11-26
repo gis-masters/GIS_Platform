@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,11 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dao.SchemasDDL;
-import ru.mycrg.data_service.dto.DatasetCreateDto;
 import ru.mycrg.data_service.dto.DatasetModel;
-import ru.mycrg.data_service.exceptions.ConflictException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.service.datasets.DatasetService;
 import ru.mycrg.data_service.service.datasets.IDatasetService;
 
@@ -31,12 +29,9 @@ public class DatasetsController {
 
     public static final Logger log = LoggerFactory.getLogger(DatasetsController.class);
 
-    private final SchemasDDL schemasDDL;
     private final IDatasetService datasetService;
 
-    public DatasetsController(SchemasDDL schemasDDL,
-                              DatasetService datasetService) {
-        this.schemasDDL = schemasDDL;
+    public DatasetsController(DatasetService datasetService) {
         this.datasetService = datasetService;
     }
 
@@ -60,28 +55,23 @@ public class DatasetsController {
     @GetMapping("/datasets/{dataSetName}")
     public ResponseEntity<DatasetModel> getDataset(@PathVariable String dataSetName,
                                                    Authentication authentication) {
-        if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException(dataSetName);
-        }
-
         final DatasetModel dto = datasetService.getByName(dataSetName, authentication);
 
         return ResponseEntity.ok(dto);
     }
 
+    @ApiOperation(value = "Создание нового набора данных. ВНИМАНИЕ НЕ использовать напрямую!",
+                  notes = "Корректный эндпоинт для создания находится в gis-service. Оттуда будет создан storage на " +
+                          "геосервере и вызван данный эндпоинт для создания контейнера для данных.")
     @PostMapping("/datasets")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> createDataset(@Valid @RequestBody DatasetCreateDto dto,
+    public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto,
                                                 Authentication authentication) {
-        if (schemasDDL.isSchemaExist(dto.getName())) {
-            throw new ConflictException("The dataset " + dto.getName() + " already exist");
-        }
-
         DatasetModel newDataset = datasetService.create(dto, authentication);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/{dataSetName}")
+                .path("/datasets/{dataSetName}")
                 .buildAndExpand(newDataset.getResourceIdentifier())
                 .toUri();
 

@@ -91,7 +91,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует подложка")
     public void checkBaseMap(DataTable dataTable) {
-        String name = replaceString(dataTable.asList().get(0));
+        String name = generateString(dataTable.asList().get(0));
 
         if (!isBaseMapExistInPool(name)) {
             InitialBaseMapCreateDto dto = mapToBaseMapDto(dataTable);
@@ -200,17 +200,17 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         List<String> data = dataTable.asList();
         switch (data.size()) {
             case 4:
-                return new InitialBaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                                   replaceString(data.get(2)), replaceString(data.get(3)));
+                return new InitialBaseMapCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                                   generateString(data.get(2)), generateString(data.get(3)));
             case 12:
-                return new InitialBaseMapCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                                   replaceString(data.get(2)), replaceString(data.get(3)),
-                                                   replaceString(data.get(4)), replaceString(data.get(5)),
-                                                   replaceString(data.get(6)), replaceString(data.get(7)),
-                                                   replaceString(data.get(8)),
-                                                   Integer.parseInt(replaceString(data.get(9))),
-                                                   Integer.parseInt(replaceString(data.get(10))),
-                                                   Integer.parseInt(replaceString(data.get(11))));
+                return new InitialBaseMapCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                                   generateString(data.get(2)), generateString(data.get(3)),
+                                                   generateString(data.get(4)), generateString(data.get(5)),
+                                                   generateString(data.get(6)), generateString(data.get(7)),
+                                                   generateString(data.get(8)),
+                                                   Integer.parseInt(generateString(data.get(9))),
+                                                   Integer.parseInt(generateString(data.get(10))),
+                                                   Integer.parseInt(generateString(data.get(11))));
             default:
                 return new InitialBaseMapCreateDto();
         }

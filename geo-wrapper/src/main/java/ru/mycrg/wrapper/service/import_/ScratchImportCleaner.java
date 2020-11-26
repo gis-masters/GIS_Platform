@@ -48,8 +48,8 @@ public class ScratchImportCleaner extends AbstractImportChainItem {
             final String workspaceName = importTask.getWorkspaceName();
             final String dataStoreName = workspaceName + "_store";
 
-            new LayersService(importTask.getUserToken()).delete(workspaceName, sourceTableName);
-            new FeatureTypeService(importTask.getUserToken()).delete(workspaceName, dataStoreName, sourceTableName);
+            new LayersService(importTask.getRootToken()).delete(workspaceName, sourceTableName);
+            new FeatureTypeService(importTask.getRootToken()).delete(workspaceName, dataStoreName, sourceTableName);
         } catch (HttpClientException e) {
             log.warn("Cant cleanUp geoserver featureTypes");
         }

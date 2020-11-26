@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
@@ -49,6 +50,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new HashMap<>();
     public static Map<Integer, ProjectRequestDto> projectPool = new HashMap<>();
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new HashMap<>();
+    public static Map<String, DatasetCreateDto> datasetsPool = new HashMap<>();
 
     public static Integer currentId;
 
@@ -123,7 +125,7 @@ public class BaseStepsDefinitions {
         return id;
     }
 
-    public String replaceString(String input) {
+    public String generateString(String input) {
         String[] params = input.split("_");
         String type = params[0];
         int length;
@@ -182,22 +184,22 @@ public class BaseStepsDefinitions {
 
     @Test
     public void shouldReplaceStringCorrectly() {
-        String test_10 = replaceString("STRING_10");
+        String test_10 = generateString("STRING_10");
         assertEquals(10, test_10.length());
 
-        String number_10 = replaceString("NUMBER_10");
+        String number_10 = generateString("NUMBER_10");
         assertEquals(10, number_10.length());
 
-        String test_0 = replaceString("STRING_0");
+        String test_0 = generateString("STRING_0");
         assertTrue(test_0.isEmpty());
 
-        String email_3 = replaceString("EMAIL_3");
+        String email_3 = generateString("EMAIL_3");
         assertEquals(3, email_3.length());
 
-        String email_20 = replaceString("EMAIL_20");
+        String email_20 = generateString("EMAIL_20");
         assertEquals(20, email_20.length());
 
-        String testCustom = replaceString("MyCustomString_DontTouchME!");
+        String testCustom = generateString("MyCustomString_DontTouchME!");
         assertEquals("MyCustomString_DontTouchME!", testCustom);
     }
 

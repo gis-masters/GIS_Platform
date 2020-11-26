@@ -12,16 +12,16 @@ public class TableModel extends BaseModel {
         super();
     }
 
-    public TableModel(String tableName) {
-        super(tableName);
+    public TableModel(String id) {
+        super(id);
     }
 
-    public TableModel(String name, String permission) {
-        super(name, permission);
+    public TableModel(String name, Roles role) {
+        super(name, role.name());
     }
 
-    public TableModel(ResourceDescription rd, String permission) {
-        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getItemsCount(), permission,
-                rd.getCreatedAt());
+    public TableModel(ResourceDescription rd, Roles role) {
+        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getIdentifier(), rd.getItemsCount(), role.name(),
+              rd.getCreatedAt());
     }
 }

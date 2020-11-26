@@ -32,7 +32,7 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
         try {
             layerName = importTask.getLayerName();
 
-            new FeatureTypeService(importTask.getUserToken()).create(
+            new FeatureTypeService(importTask.getRootToken()).create(
                     importTask.getWorkspaceName(),
                     importTask.getTargetResource().getSchemaName(),
                     layerName,

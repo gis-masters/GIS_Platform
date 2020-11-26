@@ -1,13 +1,15 @@
 package ru.mycrg.data_service.dao;
 
-import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.service.TableIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import java.sql.ResultSetMetaData;
 import java.util.LinkedHashMap;
@@ -15,9 +17,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Log4j2
 @Service
+@Transactional
 public class TablesDao {
+
+    public static final Logger log = LoggerFactory.getLogger(TablesDao.class);
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -25,7 +29,7 @@ public class TablesDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public UUID addRecord(@NotNull TableIdentifier tableIdentifier,
+    public UUID addRecord(@NotNull ResourceIdentifier resourceIdentifier,
                           @NotNull Map<String, Object> body) throws CrgDaoException {
         try {
             UUID id = UUID.randomUUID();
@@ -34,7 +38,7 @@ public class TablesDao {
 
             StringBuilder initialPart = new StringBuilder()
                     .append("INSERT INTO ")
-                    .append(tableIdentifier.toSqlQueryId());
+                    .append(resourceIdentifier.toString());
 
             body.forEach((key, value) -> {
                 propertiesPart
@@ -47,7 +51,8 @@ public class TablesDao {
             });
 
             String insertQuery = String.format("%s (%s) values (%s)",
-                    initialPart.toString(), propertiesPart.toString(), valuesPart.toString());
+                                               initialPart.toString(), propertiesPart.toString(),
+                                               valuesPart.toString());
 
             log.debug("INSERT_QUERY: {}", insertQuery);
 
@@ -55,20 +60,16 @@ public class TablesDao {
 
             return id;
         } catch (DataAccessException e) {
-            log.error("Не удалось выполнить вставку в таблицу {}: {}", tableIdentifier.toString(), e.getLocalizedMessage());
-
-            throw new CrgDaoException(e.getCause().getLocalizedMessage());
+            throw new CrgDaoException("Не удалось выполнить вставку в таблицу: " + resourceIdentifier.toString());
         } catch (Exception e) {
-            log.error("Что то пошло не так при вставке в таблицу {}: {}", tableIdentifier.toString(), e.getLocalizedMessage());
-
-            throw new CrgDaoException("Что то пошло не так при вставке в таблицу: " + tableIdentifier.toString());
+            throw new CrgDaoException("Что то пошло не так при вставке в таблицу: " + resourceIdentifier.toString());
         }
     }
 
-    public Optional<Map<String, Object>> findById(TableIdentifier tableIdentifier, UUID id) {
+    public Optional<Map<String, Object>> findById(ResourceIdentifier rIdentifier, UUID id) {
         try {
             final var object = jdbcTemplate.queryForObject(
-                    String.format("SELECT * FROM %s WHERE id = :id", tableIdentifier.toSqlQueryId()),
+                    String.format("SELECT * FROM %s WHERE id = :id", rIdentifier.toString()),
                     new MapSqlParameterSource("id", id),
                     (rs, rowNum) -> {
                         final Map<String, Object> selectedRow = new LinkedHashMap<>();
@@ -88,9 +89,9 @@ public class TablesDao {
         }
     }
 
-    public void removeRecord(TableIdentifier tableIdentifier, UUID id) {
+    public void removeRecord(ResourceIdentifier rIdentifier, UUID id) {
         jdbcTemplate.update(
-                String.format("DELETE FROM %s WHERE id = :id", tableIdentifier.toSqlQueryId()),
+                String.format("DELETE FROM %s WHERE id = :id", rIdentifier.toString()),
                 new MapSqlParameterSource("id", id));
     }
 }

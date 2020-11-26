@@ -4,11 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class DatasetCreateDto {
+public class ResourceCreateDto {
 
     @NotBlank
     @Size(min = 3, max = 60)
-    @Pattern(regexp = "^[^\\d][a-zA-z0-9_$]*$", message = "Имя некорректно")
+    @Pattern(regexp = "^[a-z].[a-z0-9_]*$", message = "Название некорректно. Может содержать только: буквы " +
+            "латинского алфавита в нижнем регистре, цифры и символ '_'. Должно начинаться с букв.")
     private String name;
 
     @NotBlank

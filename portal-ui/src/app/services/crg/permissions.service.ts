@@ -39,8 +39,7 @@ enum PermissionPoint {
 
 export enum PrincipalType {
   USER = 'user',
-  GROUP = 'group',
-  WRONG = 'WRONG'
+  GROUP = 'group'
 }
 
 export interface RoleAssignmentBody {

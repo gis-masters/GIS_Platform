@@ -33,7 +33,7 @@ public class GeoserverStyleHandler extends AbstractImportChainItem {
 
         log.debug("Add style: {} to layer: {}", styleName, layerName);
         try {
-            ResponseModel<Object> response = new StyleService(importTask.getUserToken())
+            ResponseModel<Object> response = new StyleService(importTask.getRootToken())
                     .associate(workspaceName + ":" + layerName, styleName);
             if (!response.isSuccessful()) {
                 log.warn("Style not associated: {}", response);

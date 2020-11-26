@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static ru.mycrg.gis.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
@@ -84,7 +85,8 @@ public class ImportService extends BaseProcessService {
             String layerName = String.format("%s_%d_%s", schemaDto.getName(), projectId,
                                       UUID.randomUUID().toString().substring(0, 4));
 
-            ImportMqTask importMqTask = new ImportMqTask(layerName,
+            ImportMqTask importMqTask = new ImportMqTask(
+                    layerName,
                     schemaDto.getName(),
                     "scratch_database_" + orgId,
                     projectId,
@@ -93,7 +95,8 @@ public class ImportService extends BaseProcessService {
                     new ResourceProjection(dbName, datasetName, layerName, schemaDto),
                     uiTask.getPairs(),
                     uiTask.getSrs(),
-                    getRootAccessToken()
+                    getRootAccessToken(),
+                    getToken(principal)
             );
 
             importMqRequest.add(importMqTask);

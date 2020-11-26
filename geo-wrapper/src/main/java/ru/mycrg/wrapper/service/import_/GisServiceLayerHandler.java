@@ -22,7 +22,6 @@ import java.net.URL;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_STORE_POSTFIX;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
@@ -67,7 +66,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json.toString());
 
         Request createLayer = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + importTask.getUserToken())
+                .addHeader("Authorization", "Bearer " + importTask.getRootToken())
                 .url(getLayersUrl(importTask))
                 .post(body)
                 .build();
@@ -76,10 +75,6 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
             if (!response.isSuccessful()) {
                 throw new ImportException(response.body().string());
             }
-
-            mqSender.send(
-                    new BaseMqProcessResponse(mqRequest,
-                                              new ImportMqResponse(importTask), TASK_DONE, "Готово", -1));
 
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);

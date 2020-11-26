@@ -94,7 +94,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             return;
         }
 
-        String eMail = replaceString(dataTable.asList().get(4));
+        String eMail = generateString(dataTable.asList().get(4));
 
         if (!isOrgExistInPool(eMail)) {
             OrganizationCreateDto dto = mapToOrgDto(dataTable);
@@ -221,10 +221,10 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     private OrganizationCreateDto mapToOrgDto(DataTable dataTable) {
         List<String> data = dataTable.asList();
-        UserCreateDto owner = new UserCreateDto(replaceString(data.get(2)), replaceString(data.get(3)),
-                                                replaceString(data.get(4)), replaceString(data.get(5)));
+        UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
+                                                generateString(data.get(4)), generateString(data.get(5)));
 
-        return new OrganizationCreateDto(replaceString(data.get(0)), replaceString(data.get(1)), owner);
+        return new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
     }
 
     private Response createOrganization(OrganizationCreateDto dto) {

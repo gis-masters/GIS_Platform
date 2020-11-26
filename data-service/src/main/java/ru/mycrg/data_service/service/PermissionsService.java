@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.dto.PermissionWithoutResourceProjection;
-import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
@@ -18,11 +17,10 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionsRepository;
 import ru.mycrg.data_service.repository.ResourceRepository;
 import ru.mycrg.data_service.security.UserDetails;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -44,19 +42,11 @@ public class PermissionsService {
         this.permissionsRepository = permissionsRepository;
     }
 
-    public Page<PermissionWithoutResourceProjection> getForResource(TableIdentifier resource, Pageable pageable) {
+    public Page<PermissionWithoutResourceProjection> getForResource(ResourceIdentifier resource, Pageable pageable) {
         return permissionsRepository.getAllByResourceIdentifier(resource.toString(), pageable);
     }
 
-    public List<TableModel> getAllByResource(String schemaName, List<Long> ids) {
-        return permissionsRepository
-                .getAllByResourceIdentifierAndPrincipalIds(schemaName, ids).stream()
-                .map(TableIdentifier::extractTableName)
-                .map(TableModel::new)
-                .collect(Collectors.toList());
-    }
-
-    public PermissionProjection create(@NotNull TableIdentifier resource,
+    public PermissionProjection create(@NotNull ResourceIdentifier resource,
                                        @NotNull PermissionCreateDto dto) {
         String principalType = dto.getPrincipalType();
         Long principalId = dto.getPrincipalId();
@@ -69,7 +59,7 @@ public class PermissionsService {
         if (oPermission.isPresent()) {
             permissions[0] = oPermission.get();
 
-            joinResource(permissions[0], resource.toString());
+            joinResource(permissions[0], resource);
         } else {
             permissionsRepository
                     .findPermissionByPrincipal(principalType, principalId)
@@ -78,40 +68,40 @@ public class PermissionsService {
                         permissions[0] = permissionForUpdate;
 
                         permissionsRepository.updatePermissionRole(principalType, principalId, role);
-                    }, () -> permissions[0] = createNewPermission(dto, resource.toString()));
+                    }, () -> permissions[0] = createNewPermission(dto, resource));
         }
 
         return projectionFactory.createProjection(PermissionProjection.class, permissions[0]);
     }
 
-    public void deleteByPermissionId(TableIdentifier resource, Long permissionId) {
+    public void deleteByPermissionId(ResourceIdentifier resource, Long permissionId) {
         permissionsRepository
-                .getByIdWithSpecificResource(permissionId, resource.toString(), TABLE.toString())
+                .getByIdWithSpecificResource(permissionId, resource.toString(), resource.getType().toString())
                 .ifPresentOrElse(permission -> deleteResource(permission, resource.toString()), () -> {
                     throw new NotFoundException(permissionId);
                 });
     }
 
-    public void deleteAllByResourceIdentifier(TableIdentifier tableIdentifier) {
+    public void deleteAllByResourceIdentifier(ResourceIdentifier rIdentifier) {
         Set<Permission> permissions = permissionsRepository
-                .getAllByResourceIdentifierAndType(tableIdentifier.toString(), TABLE.toString());
+                .getAllByResourceIdentifierAndType(rIdentifier.toString(), rIdentifier.getType().toString());
 
         if (permissions.isEmpty()) {
-            throw new NotFoundException(tableIdentifier.toString());
+            throw new NotFoundException(rIdentifier.toString());
         }
 
         // Delete Resource from all permissions
-        for (Permission permission : permissions) {
+        for (Permission permission: permissions) {
             Set<Resource> resources = permission.getResources();
 
             resources.stream()
-                    .filter(resource -> resource.getIdentifier().equalsIgnoreCase(tableIdentifier.toString()))
-                    .findFirst()
-                    .ifPresent(resource -> {
-                        resources.remove(resource);
+                     .filter(resource -> resource.getIdentifier().equalsIgnoreCase(rIdentifier.toString()))
+                     .findFirst()
+                     .ifPresent(resource -> {
+                         resources.remove(resource);
 
-                        resourceRepository.delete(resource);
-                    });
+                         resourceRepository.delete(resource);
+                     });
 
             // Delete permission without resources
             if (resources.isEmpty()) {
@@ -121,26 +111,27 @@ public class PermissionsService {
     }
 
     public Optional<String> identifyPermission(UserDetails uDetails, String rIdentifier) {
-        return permissionsRepository.getRoleForUser(uDetails.getUserId(), rIdentifier, TABLE.toString())
+        return permissionsRepository
+                .getRoleForUser(uDetails.getUserId(), rIdentifier, TABLE.toString())
                 .or(() -> permissionsRepository.getRoleForGroups(uDetails.getGroups(), rIdentifier, TABLE.toString()))
                 .or(() -> permissionsRepository.getRoleForUser(uDetails.getUserId(), rIdentifier, SCHEMA.toString()))
                 .or(() -> permissionsRepository.getRoleForGroups(uDetails.getGroups(), rIdentifier, SCHEMA.toString()));
     }
 
-    private void joinResource(Permission permission, String identifier) {
+    private void joinResource(Permission permission, @NotNull ResourceIdentifier rIdentifier) {
         permission
                 .getResources().stream()
-                .filter(resource -> resource.getIdentifier().equalsIgnoreCase(identifier))
+                .filter(resource -> resource.getIdentifier().equalsIgnoreCase(rIdentifier.toString()))
                 .findFirst()
                 .ifPresentOrElse(resource -> { // Resource already joined
                     throw new ConflictException("This permission already joined");
                 }, () -> { // Create and join resource
-                    Resource newResource = createNewResource(identifier);
+                    Resource newResource = createNewResource(rIdentifier);
                     permission.addResource(newResource);
                 });
     }
 
-    private Permission createNewPermission(@NotNull PermissionCreateDto dto, @NotNull String identifier) {
+    private Permission createNewPermission(@NotNull PermissionCreateDto dto, @NotNull ResourceIdentifier rIdentifier) {
         Permission permission = new Permission();
         permission.setPrincipalType(dto.getPrincipalType());
         permission.setPrincipalId(dto.getPrincipalId());
@@ -148,7 +139,7 @@ public class PermissionsService {
 
         Permission savedPermission = permissionsRepository.save(permission);
 
-        Resource newResource = createNewResource(identifier);
+        Resource newResource = createNewResource(rIdentifier);
 
         savedPermission.addResource(newResource);
 
@@ -159,26 +150,26 @@ public class PermissionsService {
         Set<Resource> resources = permission.getResources();
 
         resources.stream()
-                .filter(resource -> resource.getIdentifier().equalsIgnoreCase(identifier))
-                .findFirst()
-                .ifPresentOrElse(resource -> {
-                    resources.remove(resource);
+                 .filter(resource -> resource.getIdentifier().equalsIgnoreCase(identifier))
+                 .findFirst()
+                 .ifPresentOrElse(resource -> {
+                     resources.remove(resource);
 
-                    resourceRepository.delete(resource);
+                     resourceRepository.delete(resource);
 
-                    if (resources.isEmpty()) {
-                        permissionsRepository.delete(permission);
-                    }
-                }, () -> {
-                    throw new NotFoundException(identifier);
-                });
+                     if (resources.isEmpty()) {
+                         permissionsRepository.delete(permission);
+                     }
+                 }, () -> {
+                     throw new NotFoundException(identifier);
+                 });
     }
 
-    private Resource createNewResource(@NotNull String identifier) {
+    private Resource createNewResource(@NotNull ResourceIdentifier rIdentifier) {
         Resource resource = Resource.builder()
-                .type(TABLE.toString())
-                .identifier(identifier)
-                .build();
+                                    .type(rIdentifier.getType().toString())
+                                    .identifier(rIdentifier.toString())
+                                    .build();
 
         return resourceRepository.save(resource);
     }

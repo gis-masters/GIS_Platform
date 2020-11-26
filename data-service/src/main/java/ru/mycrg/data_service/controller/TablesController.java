@@ -8,36 +8,42 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.dao.SchemasDDL;
-import ru.mycrg.data_service.dao.TablesDDL;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
-import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.TableIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.tables.ITableService;
 import ru.mycrg.data_service.service.tables.TableService;
 
+import javax.validation.Valid;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @RestController
 public class TablesController {
 
     public static final Logger log = LoggerFactory.getLogger(TablesController.class);
 
-    private final SchemasDDL schemasDDL;
-    private final TablesDDL tablesDDL;
     private final ITableService tableService;
 
-    public TablesController(SchemasDDL schemasDDL,
-                            TablesDDL tablesDDL,
-                            TableService tableService) {
-        this.tablesDDL = tablesDDL;
-        this.schemasDDL = schemasDDL;
+    public TablesController(TableService tableService) {
         this.tableService = tableService;
+    }
+
+    @PostMapping("/datasets/{dataSetName}/tables")
+    public ResponseEntity<TableModel> createTable(@PathVariable String dataSetName,
+                                                  @Valid @RequestBody ResourceCreateDto dto,
+                                                  Authentication authentication) {
+        ResourceIdentifier datasetId = new ResourceIdentifier(dataSetName, SCHEMA);
+        ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId);
+
+        TableModel tableModel = tableService.create(tableId, dto, authentication);
+
+        return new ResponseEntity<>(tableModel, CREATED);
     }
 
     @GetMapping("/datasets/{dataSetName}/tables")
@@ -47,11 +53,7 @@ public class TablesController {
             Authentication authentication,
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
-        if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException(dataSetName);
-        }
-
-        final Page<TableModel> tables = tableService.getAllByTitle(dataSetName, title, pageable, authentication);
+        final Page<TableModel> tables = tableService.getPaged(dataSetName, title, pageable, authentication);
 
         PagedResources<TableModel> pagedResources = pageAssembler.toResource(tables,
                 linkTo(TablesController.class)
@@ -65,16 +67,10 @@ public class TablesController {
     public ResponseEntity<Object> getTable(@PathVariable String dataSetName,
                                            @PathVariable String tableName,
                                            Authentication authentication) {
-        if (!schemasDDL.isSchemaExist(dataSetName)) {
-            throw new NotFoundException(dataSetName);
-        }
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
+                                                                new ResourceIdentifier(dataSetName, SCHEMA));
 
-        TableIdentifier identifier = new TableIdentifier(dataSetName, tableName);
-        if (!tablesDDL.isTableExist(identifier)) {
-            throw new NotFoundException(identifier.toString());
-        }
-
-        final TableModel dto = tableService.getByName(identifier, authentication);
+        final TableModel dto = tableService.getByIdentifier(rIdentifier, authentication);
 
         return ResponseEntity.ok(dto);
     }

@@ -64,8 +64,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
             return;
         }
 
-        if (!isProjectExistInPool(replaceString(projectName))) {
-            ProjectRequestDto dto = mapToProjectDto(replaceString(projectName));
+        if (!isProjectExistInPool(generateString(projectName))) {
+            ProjectRequestDto dto = mapToProjectDto(generateString(projectName));
             Response createResponse = createProject(dto);
 
             assertEquals(SC_CREATED, createResponse.getStatusCode());
@@ -112,7 +112,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание проекта {string}")
     public void createProject(String projectName) {
-        projectDto = new ProjectRequestDto(replaceString(projectName));
+        projectDto = new ProjectRequestDto(generateString(projectName));
 
         String payload = gson.toJson(projectDto);
 

@@ -19,13 +19,15 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceInternalException;
 import ru.mycrg.data_service.service.FileStorageService;
 import ru.mycrg.data_service.service.ObjectService;
-import ru.mycrg.data_service.service.TableIdentifier;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @RestController
 public class ObjectsController {
@@ -45,31 +47,33 @@ public class ObjectsController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/datasets/{dataSetName}/tables/{tableName}")
-    public List<ITableObject> createObject(@PathVariable String dataSetName,
-                                           @PathVariable String tableName,
-                                           @RequestParam(value = "files", required = false) MultipartFile[] files,
-                                           @RequestParam(value = "body", required = false) String jsonBody,
-                                           Authentication authentication) {
+    public Object createObject(@PathVariable String dataSetName,
+                               @PathVariable String tableName,
+                               @RequestParam(value = "files", required = false) MultipartFile[] files,
+                               @RequestParam(value = "body", required = false) String jsonBody,
+                               Authentication authentication) {
         try {
             List<ITableObject> objects = new ArrayList<>();
 
             Map<String, Object> body = deserializeBody(jsonBody);
 
-            final TableIdentifier tableIdentifier = new TableIdentifier(dataSetName, tableName);
+            ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
+                                                                    new ResourceIdentifier(dataSetName, SCHEMA));
+
             if (files.length > 0) {
-                for (MultipartFile file : files) {
+                for (MultipartFile file: files) {
                     if (file.isEmpty()) {
                         throw new BadRequestException("File is empty");
                     }
 
-                    ITableObject tableObject = objectService.createObject(tableIdentifier, body, authentication);
+                    ITableObject tableObject = objectService.createObject(rIdentifier, body, authentication);
 
                     fileStorageService.storeFile(file, tableObject.getId().toString());
 
                     objects.add(tableObject);
                 }
             } else {
-                ITableObject tableObject = objectService.createObject(tableIdentifier, body, authentication);
+                ITableObject tableObject = objectService.createObject(rIdentifier, body, authentication);
 
                 objects.add(tableObject);
             }
@@ -85,8 +89,10 @@ public class ObjectsController {
                                                        @PathVariable String tableName,
                                                        @PathVariable UUID id,
                                                        Authentication authentication) {
-        Map<String, Object> entity = objectService
-                .getById(new TableIdentifier(dataSetName, tableName), id, authentication);
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
+                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+
+        Map<String, Object> entity = objectService.getById(rIdentifier, id, authentication);
 
         return ResponseEntity.ok(entity);
     }
@@ -97,10 +103,12 @@ public class ObjectsController {
                                          @PathVariable String tableName,
                                          @PathVariable UUID id,
                                          Authentication authentication) {
-        final TableIdentifier tableIdentifier = new TableIdentifier(dataSetName, tableName);
-
         fileStorageService.removeFile(id.toString());
-        objectService.deleteObject(tableIdentifier, id, authentication);
+
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
+                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+
+        objectService.deleteObject(rIdentifier, id, authentication);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -130,7 +138,7 @@ public class ObjectsController {
         return ResponseEntity.ok()
                              .contentType(MediaType.parseMediaType(contentType))
                              .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"",
-                                     resource.getFilename()))
+                                                                                    resource.getFilename()))
                              .body(resource);
     }
 

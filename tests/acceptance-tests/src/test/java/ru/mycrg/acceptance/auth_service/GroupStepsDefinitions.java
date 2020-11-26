@@ -38,7 +38,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
-        usersGroupDto = new GroupCreateDto(replaceString(groupName), replaceString(groupDescription));
+        usersGroupDto = new GroupCreateDto(generateString(groupName), generateString(groupDescription));
         String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
@@ -73,8 +73,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует пользовательская группа {string}, {string}")
     public void isUsersGroupExist(String groupName, String groupDescription) {
-        if (!isUsersGroupExistInPool(replaceString(groupName))) {
-            GroupCreateDto dto = mapToGroupDto(replaceString(groupName), replaceString(groupDescription));
+        if (!isUsersGroupExistInPool(generateString(groupName))) {
+            GroupCreateDto dto = mapToGroupDto(generateString(groupName), generateString(groupDescription));
             Response createResponse = createUsersGroup(dto);
 
             assertEquals(SC_OK, createResponse.getStatusCode());
@@ -111,7 +111,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор изменяет поля группы {string}, {string}")
     public void updateUsersGroup(String newGroupName, String newGroupDescription) {
-        usersGroupDto = new GroupCreateDto(replaceString(newGroupName), replaceString(newGroupDescription));
+        usersGroupDto = new GroupCreateDto(generateString(newGroupName), generateString(newGroupDescription));
         String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()
@@ -207,7 +207,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createUserGroup(List<String> group) {
-        usersGroupDto = new GroupCreateDto(replaceString(group.get(0)), replaceString(group.get(1)));
+        usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
         String payload = gson.toJson(usersGroupDto);
 
         response = getBaseRequestWithCurrentCookie()

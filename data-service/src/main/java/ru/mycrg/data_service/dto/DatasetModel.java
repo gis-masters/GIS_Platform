@@ -12,12 +12,12 @@ public class DatasetModel extends BaseModel {
         super();
     }
 
-    public DatasetModel(String name, String permission) {
-        super(name, permission);
+    public DatasetModel(String name, Roles role) {
+        super(name, role.name());
     }
 
-    public DatasetModel(ResourceDescription rd, String permission) {
-        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getResourceIdentifier(), rd.getItemsCount(), permission,
-                rd.getCreatedAt());
+    public DatasetModel(ResourceDescription rd, Roles role) {
+        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getIdentifier(), rd.getItemsCount(), role.name(),
+              rd.getCreatedAt());
     }
 }

@@ -25,12 +25,11 @@ import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
  * <ul>
  *     <li>Копирование данных из чернового источника</li>
  *     <li>Постобработка данных</li>
- *     <li>Создание хранилища если нужно</li>
  *     <li>Создание фичи на геосервере</li>
  *     <li>Присоединение стиля к слою</li>
+ *     <li>Запрос к data-service на создание таблицы</li>
  *     <li>Очистка данных чернового импорта.<br>
  *         В случае, если импорт не удался, очистка не выполняется, чтобы можно было проанализировать ситауцию<br>
- *         Не очищаем слои на геосервере в рабочей области "scratch_" потому как туда доступ только у админа
 *      </li>
  * </ul>
  */
@@ -44,6 +43,7 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
     public ImportRequestHandler(InitialImportService initialImporter,
                                 GeometryHandler geometryHandler,
+                                DataServiceHandler dataServiceHandler,
                                 GisServiceLayerHandler gisServiceLayerHandler,
                                 PostImportService postImporter,
                                 GeoserverFeatureTypeHandler featureTypeHandler,
@@ -55,8 +55,9 @@ public class ImportRequestHandler extends BaseRequestHandler implements IRequest
 
         // Задаем цепочку отбработчиков
         this.initialImportService.setHandlers(geometryHandler, null);
-        geometryHandler.setHandlers(gisServiceLayerHandler, initialImportService);
-        gisServiceLayerHandler.setHandlers(postImporter, geometryHandler);
+        geometryHandler.setHandlers(dataServiceHandler, initialImportService);
+        dataServiceHandler.setHandlers(gisServiceLayerHandler, geometryHandler);
+        gisServiceLayerHandler.setHandlers(postImporter, dataServiceHandler);
         postImporter.setHandlers(featureTypeHandler, gisServiceLayerHandler);
         featureTypeHandler.setHandlers(styleHandler, postImporter);
         styleHandler.setHandlers(importCleaner, featureTypeHandler);

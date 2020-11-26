@@ -16,6 +16,7 @@ public class ImportMqTask {
     private ResourceProjection targetResource;
     private List<MatchingPair> pairs;
     private Integer srs;
+    private String rootToken;
     private String userToken;
 
     public ImportMqTask() {}
@@ -29,6 +30,7 @@ public class ImportMqTask {
                         ResourceProjection targetResource,
                         List<MatchingPair> pairs,
                         Integer srs,
+                        String rootToken,
                         String userToken) {
         this.layerName = layerName;
         this.styleName = styleName;
@@ -39,6 +41,7 @@ public class ImportMqTask {
         this.targetResource = targetResource;
         this.pairs = pairs;
         this.srs = srs;
+        this.rootToken = rootToken;
         this.userToken = userToken;
     }
 
@@ -82,12 +85,12 @@ public class ImportMqTask {
         this.srs = srs;
     }
 
-    public String getUserToken() {
-        return userToken;
+    public String getRootToken() {
+        return rootToken;
     }
 
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
+    public void setRootToken(String rootToken) {
+        this.rootToken = rootToken;
     }
 
     public long getProjectId() {
@@ -120,5 +123,9 @@ public class ImportMqTask {
 
     public void setWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
+    }
+
+    public String getUserToken() {
+        return userToken;
     }
 }

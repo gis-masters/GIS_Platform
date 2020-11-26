@@ -64,9 +64,9 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание подложки проекта {string}, {string}, {string}")
     public void createProjectBaseMap(String baseMapId, String title, String position) {
-        baseMapDto = new BaseMapCreateDto(Long.parseLong(replaceString(baseMapId)),
-                                          replaceString(title),
-                                          Integer.parseInt(replaceString(position)));
+        baseMapDto = new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)),
+                                          generateString(title),
+                                          Integer.parseInt(generateString(position)));
 
         String payload = gson.toJson(baseMapDto);
 
@@ -94,7 +94,7 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
             return;
         }
 
-        if (!isProjectBaseMapExistInPool(replaceString(baseMapId))) {
+        if (!isProjectBaseMapExistInPool(generateString(baseMapId))) {
             BaseMapCreateDto dto = mapToProjectBaseMapDto(baseMapId, title, position);
             Response createResponse = createProjectBaseMap(dto);
 
@@ -137,8 +137,8 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private BaseMapCreateDto mapToProjectBaseMapDto(String baseMapId, String title, String position) {
-        return new BaseMapCreateDto(Long.parseLong(replaceString(baseMapId)), replaceString(title),
-                                    Integer.parseInt(replaceString(position)));
+        return new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)), generateString(title),
+                                    Integer.parseInt(generateString(position)));
     }
 
     private boolean isProjectBaseMapExistInPool(String title) {

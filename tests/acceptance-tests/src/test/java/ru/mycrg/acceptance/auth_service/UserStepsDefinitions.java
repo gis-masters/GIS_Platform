@@ -43,8 +43,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createUser(DataTable dataTable) {
         List<String> data = dataTable.asList();
 
-        userDto = new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                    replaceString(data.get(2)), replaceString(data.get(3)));
+        userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                    generateString(data.get(2)), generateString(data.get(3)));
 
         String payload = gson.toJson(userDto);
 
@@ -79,7 +79,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует пользователь")
     public void checkUser(DataTable dataTable) {
-        String eMail = replaceString(dataTable.asList().get(2));
+        String eMail = generateString(dataTable.asList().get(2));
 
         if (!isUserExistInPool(eMail)) {
             UserCreateDto dto = mapToUserDto(dataTable);
@@ -162,8 +162,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createUser(List<String> user) {
-        userDto = new UserCreateDto(replaceString(user.get(0)), replaceString(user.get(1)),
-                                    replaceString(user.get(2)), replaceString(user.get(3)));
+        userDto = new UserCreateDto(generateString(user.get(0)), generateString(user.get(1)),
+                                    generateString(user.get(2)), generateString(user.get(3)));
 
         String payload = gson.toJson(userDto);
 
@@ -183,8 +183,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     private UserCreateDto mapToUserDto(DataTable dataTable) {
         List<String> data = dataTable.asList();
-        return new UserCreateDto(replaceString(data.get(0)), replaceString(data.get(1)),
-                                 replaceString(data.get(2)), replaceString(data.get(3)));
+        return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                 generateString(data.get(2)), generateString(data.get(3)));
     }
 
     private Response createUser(UserCreateDto dto) {
