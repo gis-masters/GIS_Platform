@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.gis_service;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -9,13 +10,16 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
@@ -41,25 +45,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     @Override
     public void setCurrentId(Integer id) {
         baseMapId = id;
-    }
-
-    @And("Сервер передает ID подложки проекта в ответе")
-    public void extractAndSetProjectIdFromBody() {
-        super.extractAndSetEntityIdFromBody();
-    }
-
-    @When("Пользователь делает запрос на текущую подложку")
-    public void getCurrentProjectBaseMapInfoById() {
-        super.getCurrentEntityInfoById();
-    }
-
-    @And("Поля подложки проекта совпадают с переданными")
-    public void isProjectBaseMapDataIsCorrect() {
-        jsonPath = response.jsonPath();
-
-        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(baseMapDto.getBaseMapId())));
-        assertThat(jsonPath.get("title"), equalTo(baseMapDto.getTitle()));
-        assertThat(jsonPath.get("position"), is(baseMapDto.getPosition()));
     }
 
     @When("Пользователь делает запрос на создание подложки проекта {string}, {string}, {string}")
@@ -129,11 +114,86 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         delete("/" + baseMapDto.getBaseMapId());
+
+        projectBaseMapsPool.remove(baseMapId);
+    }
+
+    @And("Представление подложки проекта корректно")
+    public void isProjectBaseMapPresentedCorrectly() {
+        Map<String, String> presentedData = response
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
+
+        assertTrue(presentedData.containsKey("baseMapId"));
+        assertTrue(presentedData.containsKey("title"));
+        assertTrue(presentedData.containsKey("position"));
+    }
+
+    @Given("Существуют подложки проектов")
+    public void createMultipleProjectBaseMaps(DataTable dataTable) {
+        List<List<String>> data = dataTable.asLists();
+        for (List<String> basemap: data) {
+            String baseMapId = basemap.get(0);
+            String title = basemap.get(1);
+            String position = basemap.get(2);
+
+            createProjectBaseMap(baseMapId, title, position);
+        }
+    }
+
+    @When("Пользователь делает запрос на обновление полей подложки проекта {string}, {string}, {string}")
+    public void updateProjectBaseMap(String newBaseMapId, String newTitle, String newPosition) {
+        baseMapDto = mapToProjectBaseMapDto(newBaseMapId, newTitle, newPosition);
+
+        String payload = gson.toJson(baseMapDto);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(payload).
+                        contentType("application/merge-patch+json")
+                .when().
+                        patch("" + baseMapId);
+    }
+
+    @And("Поля подложки проекта совпадают с переданными")
+    public void isProjectBaseMapDataIsCorrect() {
+        jsonPath = response.jsonPath();
+
+        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(baseMapDto.getBaseMapId())));
+        assertThat(jsonPath.get("title"), equalTo(baseMapDto.getTitle()));
+        assertThat(jsonPath.get("position"), is(baseMapDto.getPosition()));
+    }
+
+    @And("Поля подложки проекта совпадают с переданными {int}, {string}, {int}")
+    public void isProjectBaseMapDataIsCorrect(Integer newBaseMapId, String newTitle, Integer newPosition) {
+        jsonPath = response.jsonPath();
+
+        assertEquals(newBaseMapId, jsonPath.get("baseMapId"));
+        assertEquals(newTitle, jsonPath.get("title"));
+        assertEquals(newPosition, jsonPath.get("position"));
     }
 
     @And("В ответе на удаление подложки проекта есть упоминание ID")
     public void checkIdInResponse() {
         super.checkIdInResponse();
+    }
+
+    @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки проекта")
+    public void getAllProjectBaseMapsSorted(String sortingType, String sortingDirection) {
+        super.getAllEntitiesSorted(sortingType, sortingDirection);
+    }
+
+    @And("Сервер передает ID подложки проекта в ответе")
+    public void extractAndSetProjectIdFromBody() {
+        super.extractAndSetEntityIdFromBody();
+    }
+
+    @When("Пользователь делает запрос на текущую подложку")
+    public void getCurrentProjectBaseMapInfoById() {
+        super.getCurrentEntityInfoById();
     }
 
     private BaseMapCreateDto mapToProjectBaseMapDto(String baseMapId, String title, String position) {

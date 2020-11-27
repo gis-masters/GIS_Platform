@@ -15,7 +15,7 @@ Feature: Удаление подложек проектов
     And В ответе на удаление подложки проекта есть упоминание ID
     Examples:
       | baseMapId | title    | position |
-      | NUMBER_2  | STRING_5 | NUMBER_2 |
+      | NUMBER_5  | STRING_5 | NUMBER_2 |
 
   Scenario Outline: Удаление проекта пользователем организации
     Given Существует проект "STRING_15"
@@ -27,4 +27,4 @@ Feature: Удаление подложек проектов
     Then Сервер отвечает со статус-кодом 403
     Examples:
       | baseMapId | title    | position |
-      | NUMBER_2  | STRING_5 | NUMBER_2 |
+      | NUMBER_5  | STRING_5 | NUMBER_2 |

@@ -15,7 +15,7 @@ Feature: Создание подложек в проектах
     And Поля подложки проекта совпадают с переданными
     Examples:
       | baseMapId | title    | position |
-      | NUMBER_2  | STRING_5 | NUMBER_2 |
+      | NUMBER_5  | STRING_5 | NUMBER_2 |
 
   Scenario Outline: Повторное создание подложки проекта c валидными данными
     Given Существует проект "STRING_10"
@@ -24,7 +24,7 @@ Feature: Создание подложек в проектах
     Then Сервер отвечает со статус-кодом 409
     Examples:
       | baseMapId | title    | position |
-      | NUMBER_2  | STRING_5 | 1        |
+      | NUMBER_5  | STRING_5 | 1        |
 
   Scenario Outline: Создание подложки проекта c невалидными данными ("<reason>")
     When Пользователь делает запрос на создание подложки проекта "<baseMapId>", "<title>", "<position>"
@@ -32,6 +32,6 @@ Feature: Создание подложек в проектах
     Examples:
       | baseMapId | title      | position | reason            |
       | 0         | STRING_5   | 1        | Ноль в baseMapId  |
-      | NUMBER_2  | STRING_0   | 1        | Пустое описание   |
-      | NUMBER_2  | STRING_2   | 1        | Короткое описание |
-      | NUMBER_2  | STRING_257 | 1        | Длинное описание  |
+      | NUMBER_5  | STRING_0   | 1        | Пустое описание   |
+      | NUMBER_5  | STRING_2   | 1        | Короткое описание |
+      | NUMBER_5  | STRING_257 | 1        | Длинное описание  |
