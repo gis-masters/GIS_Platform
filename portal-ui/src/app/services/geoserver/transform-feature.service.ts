@@ -3,6 +3,9 @@ import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { usersService } from '../crg/users.service';
+import { getEnvironment } from '../environment';
 
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { WfsFeature, WfsGeometry } from './wfs-models';
@@ -10,7 +13,6 @@ import { serverProperties } from '../server-properties.service';
 import { FeatureDescription } from '../crg/schema.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getFeatureProjection } from './projections.service';
-import { currentProject } from '../../stores/CurrentProject.store';
 import { services } from '../services';
 import { http } from '../http.service';
 
@@ -41,13 +43,16 @@ export class TransformFeatureService {
     });
   }
 
-  updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
-    const projectName = currentProject.internalName;
+  async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
+    await usersService.fetchCurrent();
+
+    const { scratchWorkspaceName } = await getEnvironment();
+    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
 
     const payload = `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">
-        <Update typeName="${projectName}:${tableName}">
+        <Update typeName="${workspace}:${tableName}">
           <Property>
               <Name>${propName}</Name>
               <Value>${propValue}</Value>
@@ -61,13 +66,17 @@ export class TransformFeatureService {
     return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  updateFeatures(
+  async updateFeatures(
+    layerName: string,
     features: WfsFeature[],
     schema: FeatureDescription,
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ): Promise<string> {
-    const workspaceName = currentProject.internalName;
+    await usersService.fetchCurrent();
+
+    const { scratchWorkspaceName } = await getEnvironment();
+    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
 
     const featuresForUpdate: Feature[] = features.map(feature => {
       const calculated = FeatureUtil.calculateByFunction(
@@ -98,8 +107,8 @@ export class TransformFeatureService {
 
     const options: WriteTransactionOptions = {
       featureNS: 'castyl_for_remove',
-      featureType: schema.tableName,
-      featurePrefix: workspaceName,
+      featureType: layerName,
+      featurePrefix: workspace,
       nativeElements: [],
       gmlOptions: {
         srsName: getFeatureProjection(features[0]).id
@@ -108,17 +117,20 @@ export class TransformFeatureService {
 
     const payload = this.xs
       .serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
-      .replace(new RegExp(`xmlns:${workspaceName}="castyl_for_remove"`, 'g'), '')
+      .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
       .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
     return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
-    const workspaceName = currentProject.internalName;
+  async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
+    await usersService.fetchCurrent();
+
+    const { scratchWorkspaceName } = await getEnvironment();
+    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
 
     const options: WriteTransactionOptions = {
-      featureNS: workspaceName,
+      featureNS: workspace,
       featureType: layerName,
       featurePrefix: '',
       nativeElements: [],
@@ -141,12 +153,16 @@ export class TransformFeatureService {
     return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  deleteFeatures(featureIds: string[], layerName: string) {
-    const workspaceName = currentProject.internalName;
+  async deleteFeatures(featureIds: string[], layerName: string) {
+    await usersService.fetchCurrent();
+
+    const { scratchWorkspaceName } = await getEnvironment();
+    const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
+
     const options = {
       featureNS: 'castyl_for_remove',
       featureType: layerName,
-      featurePrefix: workspaceName,
+      featurePrefix: workspace,
       nativeElements: []
     } as WriteTransactionOptions;
 
@@ -159,7 +175,7 @@ export class TransformFeatureService {
 
     const payload = this.xs
       .serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
-      .replace(new RegExp(`xmlns:${workspaceName}="castyl_for_remove"`, 'g'), '');
+      .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
 
     return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }

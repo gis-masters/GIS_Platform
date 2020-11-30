@@ -18,7 +18,6 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./edit-bug-object.component.css']
 })
 export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit {
-
   @Input() data: ObjectDto[];
   @Output() closeMe = new EventEmitter<boolean>();
 
@@ -28,8 +27,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private object: ObjectDto;
 
-  constructor(private formBuilder: FormBuilder,
-              private logger: NGXLogger) {
+  constructor(private formBuilder: FormBuilder, private logger: NGXLogger) {
     super();
   }
 
@@ -55,9 +53,14 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   }
 
   async editFeature() {
+    const { crgLayer } = this.data[0];
     if (this.wfsFeature && this.wfsFeature.properties) {
-      const response = await transformFeature.updateFeatures([this.wfsFeature], this.featureDescription,
-        this.getActualValuesFromForm());
+      const response = await transformFeature.updateFeatures(
+        crgLayer.internalName,
+        [this.wfsFeature],
+        this.featureDescription,
+        this.getActualValuesFromForm()
+      );
 
       if (response.includes('<wfs:totalUpdated>1</wfs:totalUpdated>')) {
         this.closeMe.emit(true);
@@ -114,13 +117,13 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
       const propertySchema = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
       if (propertySchema) {
-
-        const formControl = new FormControl({value: currentValue, disabled: propertySchema.name === 'GLOBALID'}, {
-          validators: [
-            FeaturePropertyValidators.validate(propertySchema),
-          ],
-          // updateOn: 'blur'
-        });
+        const formControl = new FormControl(
+          { value: currentValue, disabled: propertySchema.name === 'GLOBALID' },
+          {
+            validators: [FeaturePropertyValidators.validate(propertySchema)]
+            // updateOn: 'blur'
+          }
+        );
 
         // Наполняем форму
         this.editFeatureForm.addControl(key, formControl);
@@ -137,7 +140,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
           property: {
             name: key,
             title: key,
-            valueType: 'STRING',
+            valueType: 'STRING'
           },
           value: currentValue,
           isFgistpProperty: false
@@ -151,5 +154,4 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.validateCustomRules(featureProperties);
     }, 22);
   }
-
 }

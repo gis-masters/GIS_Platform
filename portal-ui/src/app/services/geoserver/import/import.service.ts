@@ -1,3 +1,4 @@
+import { getEnvironment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
 import { serverProperties } from '../../server-properties.service';
 import {
@@ -11,6 +12,7 @@ import {
 } from './models';
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { usersService } from '../../../services/crg/users.service';
 import { http } from '../../http.service';
 
 interface ImportRequestData {
@@ -58,8 +60,10 @@ export async function getAllImportLayers(): Promise<ImportLayer[]> {
  */
 export async function initScratchImport(file: File): Promise<ScratchImport> {
   currentImport.reset({ file });
+  await usersService.fetchCurrent();
 
-  const workspace = 'scratch_database_' + currentUser.orgId;
+  const { scratchWorkspaceName } = await getEnvironment();
+  const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
   const storage = workspace + '_store';
 
   const payload: ImportRequestData = {

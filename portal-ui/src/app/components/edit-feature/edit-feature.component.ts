@@ -220,7 +220,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     if (this.isNew) {
       await transformFeature.insertFeatures(
         [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
-        this.featureDescription.tableName,
+        this.layer.internalName,
         this.layer.nativeCRS
       );
 
@@ -228,6 +228,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       communicationService.featuresUpdated.emit();
     } else {
       await this.batchUpdateFeatures(
+        this.layer.internalName,
         this.features,
         newProperties,
         this.isGeometryChanged ? this.changedGeometry : undefined
@@ -305,6 +306,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private async batchUpdateFeatures(
+    layerName: string,
     features: WfsFeature[],
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
@@ -313,7 +315,13 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     let percent = 0;
 
     for (let i = 0; i < batchModel.totalBatches; i++) {
-      await transformFeature.updateFeatures(batchModel.batches[i], this.featureDescription, newProperties, geometry);
+      await transformFeature.updateFeatures(
+        layerName,
+        batchModel.batches[i],
+        this.featureDescription,
+        newProperties,
+        geometry
+      );
       percent = Math.ceil(batchModel.percentOfOneBatch * i);
       this.loadPercent = percent > 100 ? 100 : percent;
     }
