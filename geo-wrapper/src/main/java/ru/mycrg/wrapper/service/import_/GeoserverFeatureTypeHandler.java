@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
+import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
 import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
@@ -26,32 +27,37 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
     }
 
     public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
-        log.debug("Publish feature on geoserver");
-
-        String layerName = "";
         try {
-            layerName = importTask.getLayerName();
+            final String layerName = importTask.getLayerName();
+            final String dataStoreName = importTask.getTargetResource().getSchemaName();
+            final String workspaceName = importTask.getWorkspaceName();
 
-            new FeatureTypeService(importTask.getRootToken()).create(
-                    importTask.getWorkspaceName(),
-                    importTask.getTargetResource().getSchemaName(),
-                    layerName,
-                    importTask.getSrs());
+            log.debug("Publish feature: {} on geoserver workspace: {} Datastore: {}",
+                      layerName, workspaceName, dataStoreName);
+
+            final ResponseModel<Object> responseModel = new FeatureTypeService(importTask.getRootToken())
+                    .create(workspaceName, dataStoreName, layerName, importTask.getSrs());
+            if (!responseModel.isSuccessful()) {
+                logAndInitRollback(mqRequest, importTask, responseModel.getBody().toString());
+            }
 
             if (nextImporter != null) {
                 nextImporter.handle(mqRequest, importTask);
             }
         } catch (HttpClientException e) {
-            String msg = "Не удалось опубликовать слой на геосервере: " + layerName;
-            log.error(msg, e);
+            logAndInitRollback(mqRequest, importTask, e.getMessage());
+        }
+    }
 
-            mqSender.send(
-                    new BaseMqProcessResponse(mqRequest,
-                                              new ImportMqResponse(importTask), TASK_ERROR, "", msg));
+    private void logAndInitRollback(BaseMqProcessRequest mqRequest, ImportMqTask importTask, String msg) {
+        log.error("Не удалось опубликовать слой {} на геосервере. Reason: {}", importTask.getLayerName(), msg);
 
-            if (previousImporter != null) {
-                previousImporter.rollback(importTask);
-            }
+        mqSender.send(
+                new BaseMqProcessResponse(mqRequest,
+                                          new ImportMqResponse(importTask), TASK_ERROR, "", msg));
+
+        if (previousImporter != null) {
+            previousImporter.rollback(importTask);
         }
     }
 }

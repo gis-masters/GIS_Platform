@@ -43,7 +43,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     }
 
     @Override
-    public void create(String workspaceName, String dataStoreName, String featureName, Integer srs)
+    public ResponseModel<Object> create(String workspaceName, String dataStoreName, String featureName, Integer srs)
             throws HttpClientException {
         log.debug("try create feature: {} in: {}", featureName, workspaceName);
 
@@ -66,7 +66,7 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         log.debug("create feature: {} on datastore: {}", featureName, dataStoreName);
 
-        httpClient.handleRequest(request);
+        return httpClient.handleRequest(request);
     }
 
     @Override

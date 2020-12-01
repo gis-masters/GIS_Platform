@@ -1,5 +1,6 @@
 package ru.mycrg.geoserver_client.services.feature_types;
 
+import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 public interface IFeatureTypes {
@@ -17,8 +18,9 @@ public interface IFeatureTypes {
      *
      * @throws HttpClientException If response not successful
      * @see <a href="https://docs.geoserver.org/latest/en/api/#1.0.0/featuretypes.yaml">FeatureType</a>
+     * @return
      */
-    void create(String workspaceName, String dataStoreName, String featureName, Integer srs) throws HttpClientException;
+    ResponseModel<Object> create(String workspaceName, String dataStoreName, String featureName, Integer srs) throws HttpClientException;
 
     /**
      * Удаление featureType. <p>
