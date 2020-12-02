@@ -71,33 +71,33 @@ export class XTable<T> extends Component<XTableProps<T>> {
             {filterable && <FilterButton filterActive={this.filterActive} onClick={this.toggleFilter} />}
           </XTableHeaderActions>
         </XTableHeader>
-        {!this.data.length ? (
-          <XTableEmpty />
-        ) : (
-          <>
-            <TableContainer component={XTableContainer}>
-              <Table stickyHeader>
-                {!headless && (
-                  <TableHead>
-                    <TableRow>
-                      {cols.map(({ field, title, sorting, filtering, align }, i) => (
-                        <TableHeadCell
-                          key={i}
-                          field={field}
-                          sorting={sorting}
-                          sortParams={this.sortParams}
-                          filterParams={this.filterParams}
-                          filtering={filterable && this.filterActive && filtering}
-                          align={align}
-                        >
-                          {title}
-                        </TableHeadCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                )}
-                <TableBody>
-                  {this.dataPaged.map((rowData, i) => (
+        <>
+          <TableContainer component={XTableContainer}>
+            <Table stickyHeader>
+              {!headless && (
+                <TableHead>
+                  <TableRow>
+                    {cols.map(({ field, title, sorting, filtering, align }, i) => (
+                      <TableHeadCell
+                        key={i}
+                        field={field}
+                        sorting={sorting}
+                        sortParams={this.sortParams}
+                        filterParams={this.filterParams}
+                        filtering={filterable && this.filterActive && filtering}
+                        align={align}
+                      >
+                        {title}
+                      </TableHeadCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+              )}
+              <TableBody>
+                {!this.data.length ? (
+                  <XTableEmpty colsCount={cols.length} />
+                ) : (
+                  this.dataPaged.map((rowData, i) => (
                     <TableRow key={i} hover>
                       {cols.map(({ field, renderCellContent, getIdBadge, cellProps, align }, i) => (
                         <TableCell key={i} align={align} {...(cellProps || {})}>
@@ -114,17 +114,17 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         </TableCell>
                       ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {this.pagesCount > 1 && (
-              <XTableFooter>
-                <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
-              </XTableFooter>
-            )}
-          </>
-        )}
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {this.pagesCount > 1 && (
+            <XTableFooter>
+              <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
+            </XTableFooter>
+          )}
+        </>
       </div>
     );
   }

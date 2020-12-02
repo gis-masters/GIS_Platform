@@ -1,8 +1,15 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
-
-import '!style-loader!css-loader!sass-loader!./XTable-Empty.scss';
+import { TableCell, TableRow } from '@material-ui/core';
 
 const cnXTableEmpty = cn('XTable', 'Empty');
 
-export const XTableEmpty: FC = () => <div className={cnXTableEmpty()}>Нет записей.</div>;
+interface XTableEmptyProps {
+  colsCount: number;
+}
+
+export const XTableEmpty: FC<XTableEmptyProps> = ({ colsCount }) => (
+  <TableRow className={cnXTableEmpty()}>
+    <TableCell colSpan={colsCount}>Нет записей.</TableCell>
+  </TableRow>
+);
