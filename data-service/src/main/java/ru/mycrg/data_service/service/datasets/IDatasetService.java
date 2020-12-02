@@ -13,4 +13,6 @@ public interface IDatasetService {
     DatasetModel getByName(String name, Authentication authentication);
 
     DatasetModel create(ResourceCreateDto dto, Authentication authentication);
+
+    void delete(String datasetId);
 }

@@ -6,7 +6,7 @@ import ru.mycrg.data_service.dto.ResourceType;
 
 public class ResourceIdentifier {
 
-    public static final String SEPARATOR = ".";
+    public static final String SEPARATOR = "\\.";
 
     @NotNull
     private final String id;
@@ -49,6 +49,6 @@ public class ResourceIdentifier {
 
     @NotNull
     public String toString() {
-        return parent == null ? id : parent.toString() + SEPARATOR + id;
+        return parent == null ? id : parent.toString() + SEPARATOR.charAt(1) + id;
     }
 }

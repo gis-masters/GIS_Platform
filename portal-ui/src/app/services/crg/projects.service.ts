@@ -172,7 +172,7 @@ class ProjectsService {
   }
 
   async createDataset(title: string, details: string) {
-    const url = `${await serverProperties.projectsUrl}/${currentProject.id}/datasets`;
+    const url = `${await serverProperties.projectsUrl}/datasets`;
 
     await http.post(url, { title, details });
   }

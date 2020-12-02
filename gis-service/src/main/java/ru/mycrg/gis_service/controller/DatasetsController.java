@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,10 +23,9 @@ public class DatasetsController {
         this.datasetService = datasetService;
     }
 
-    @PostMapping("/projects/{project_id}/datasets")
+    @PostMapping("/projects/datasets")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> createDataset(@PathVariable(name = "project_id") long projectId,
-                                                @Valid @RequestBody DatasetCreateDto dto,
+    public ResponseEntity<Object> createDataset(@Valid @RequestBody DatasetCreateDto dto,
                                                 Authentication authentication) {
         datasetService.create(dto, authentication);
 

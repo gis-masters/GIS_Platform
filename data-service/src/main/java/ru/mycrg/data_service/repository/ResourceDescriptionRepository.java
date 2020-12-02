@@ -27,4 +27,5 @@ public interface ResourceDescriptionRepository extends PagingAndSortingRepositor
     @Query("UPDATE ResourceDescription rd SET rd.itemsCount = rd.itemsCount + 1 WHERE rd.identifier = :identifier")
     void increaseItemsCounter(@Param("identifier") String identifier);
 
+    void deleteByIdentifierStartsWith(String identifier);
 }

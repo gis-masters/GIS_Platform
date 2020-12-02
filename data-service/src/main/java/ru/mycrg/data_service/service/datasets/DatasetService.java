@@ -9,6 +9,7 @@ import ru.mycrg.data_service.dao.SchemasManager;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.entity.ResourceDescription;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ResourceDescriptionRepository;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
@@ -79,5 +80,18 @@ public class DatasetService implements IDatasetService {
         final ResourceDescription newEntity = rdRepository.save(entity);
 
         return new DatasetModel(newEntity, OWNER);
+    }
+
+    @Override
+    public void delete(String datasetId) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(datasetId, SCHEMA);
+
+        schemasDDL.delete(rIdentifier);
+
+        rdRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetId)
+                    .ifPresentOrElse(res -> rdRepository.deleteByIdentifierStartsWith(res.getIdentifier()),
+                                     () -> {
+                                         throw new NotFoundException(datasetId);
+                                     });
     }
 }

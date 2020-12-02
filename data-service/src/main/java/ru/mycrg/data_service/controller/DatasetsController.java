@@ -61,8 +61,8 @@ public class DatasetsController {
     }
 
     @ApiOperation(value = "Создание нового набора данных. ВНИМАНИЕ НЕ использовать напрямую!",
-                  notes = "Корректный эндпоинт для создания находится в gis-service. Оттуда будет создан storage на " +
-                          "геосервере и вызван данный эндпоинт для создания контейнера для данных.")
+                  notes = "Корректный эндпоинт для создания находится в gis-service, вызов которого выполнит " +
+                          "необходимые действия на геосервере и 'дёрнет' данный эндпоинт")
     @PostMapping("/datasets")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto,
@@ -76,5 +76,16 @@ public class DatasetsController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @ApiOperation(value = "Удаление набора данных. ВНИМАНИЕ НЕ использовать напрямую!",
+                  notes = "Корректный эндпоинт для удаления находится в gis-service, вызов которого выполнит " +
+                          "необходимые действия на геосервере и 'дёрнет' данный эндпоинт")
+    @DeleteMapping("/datasets/{datasetId}")
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId, Authentication authentication) {
+        datasetService.delete(datasetId);
+
+        return ResponseEntity.noContent().build();
     }
 }
