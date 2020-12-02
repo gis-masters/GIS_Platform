@@ -77,6 +77,48 @@
     "contentUrl": "/assets/help/map/00map.html",
     "children": [
       {
+        "id": "projectManagement",
+        "title": "Управление проектом",
+        "contentUrl": "/assets/help/map/projectManagement/00projectManagement.html",
+        "children": [
+          {
+            "id": "changeOrderLayers",
+            "title": "Изменение порядка слоев/групп",
+            "contentUrl": "/assets/help/map/projectManagement/01changeOrderLayers.html"
+          },
+          {
+            "id": "createGroup",
+            "title": "Создание группы",
+            "contentUrl": "/assets/help/map/projectManagement/02createGroup.html"
+          },
+          {
+            "id": "renameGroup",
+            "title": "Переименование группы",
+            "contentUrl": "/assets/help/map/projectManagement/03renameGroup.html"
+          },
+          {
+            "id": "deleteGroup",
+            "title": "Удаление группы",
+            "contentUrl": "/assets/help/map/projectManagement/04deleteGroup.html"
+          },
+          {
+            "id": "clearGroup",
+            "title": "Пустая группа",
+            "contentUrl": "/assets/help/map/projectManagement/05clearGroup.html"
+          },
+          {
+            "id": "changeDisplayLayers",
+            "title": "Изменение отображения слоев и групп по умолчанию",
+            "contentUrl": "/assets/help/map/projectManagement/06changeDisplayLayers.html"
+          },
+          {
+            "id": "saveAbortChanges",
+            "title": "Сохранение и отмена изменений",
+            "contentUrl": "/assets/help/map/projectManagement/07saveAbortChanges.html"
+          }
+        ]
+      },
+      {
         "id": "controlLayers",
         "title": "Управление слоями",
         "contentUrl": "/assets/help/map/01controlLayers.html"
