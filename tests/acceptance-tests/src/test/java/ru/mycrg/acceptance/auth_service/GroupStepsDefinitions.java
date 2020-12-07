@@ -6,7 +6,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
@@ -18,7 +17,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class GroupStepsDefinitions extends BaseStepsDefinitions {
@@ -36,35 +34,37 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/groups");
     }
 
+    @Override
+    public Integer getCurrentId() {
+        return usersGroupId;
+    }
+
+    @Override
+    public void setCurrentId(Integer id) {
+        usersGroupId = id;
+    }
+
     @When("Администратор создает группу {string}, {string}")
     public void createUserGroup(String groupName, String groupDescription) {
         usersGroupDto = new GroupCreateDto(generateString(groupName), generateString(groupDescription));
-        String payload = gson.toJson(usersGroupDto);
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(usersGroupDto);
     }
 
     @Then("Сервер передает ID созданный группы")
     public void extractUsersGroupIdFromResponseBody() {
-        usersGroupId = response.jsonPath().get("id");
+        super.extractAndSetEntityIdFromBody();
 
-        assertNotNull(usersGroupId);
+        usersGroupPool.put(usersGroupId, usersGroupDto);
     }
 
     @When("Администратор делает запрос на указанную группу")
     public void getExactUsersGroup() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + usersGroupId);
+        super.getCurrentEntity();
     }
 
     @Then("Поля группы совпадают с переданными")
-    public void isUsersGroupDataCorrect() {
+    public void checkUsersGroupData() {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), usersGroupDto.getName());
@@ -73,40 +73,28 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует пользовательская группа {string}, {string}")
     public void isUsersGroupExist(String groupName, String groupDescription) {
-        if (!isUsersGroupExistInPool(generateString(groupName))) {
-            GroupCreateDto dto = mapToGroupDto(generateString(groupName), generateString(groupDescription));
-            Response createResponse = createUsersGroup(dto);
-
-            assertEquals(SC_OK, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractEntityIdFromResponse(createResponse);
-
-            usersGroupId = id;
-            usersGroupDto = dto;
-            usersGroupPool.put(id, dto);
+        if (isUsersGroupExistInPool(groupName)) {
+            makeExactUsersGroupAsCurrent(groupName);
+        } else {
+            createUserGroup(groupName, groupDescription);
+            assertEquals(SC_OK, response.getStatusCode());
+            extractUsersGroupIdFromResponseBody();
         }
     }
 
     @When("Администратор делает запрос на все группы")
     public void getAllUsersGroups() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/?size=1000");
-
-        assertEquals(SC_OK, response.statusCode());
+        super.getAllEntities();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все пользовательские группы")
     public void getAllUsersGroupsSorted(String sortingFactor, String sortingDirection) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("/?sort=%s,%s&%s", sortingFactor, sortingDirection, "size=1000"));
+        super.getAllEntitiesSorted(sortingFactor, sortingDirection);
     }
 
     @When("Администратор делает постраничный запрос на группы {string}")
     public void getUsersGroupCount(String entity) {
-        getEntityCount(entity);
+        super.getEntityCount(entity);
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")
@@ -169,9 +157,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор организации удаляет пользовательскую группу")
     public void deleteUsersGroup() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + usersGroupId);
+        super.deleteEntity(usersGroupId);
 
         assertEquals(SC_NO_CONTENT, response.statusCode());
     }
@@ -194,18 +180,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         super.isSomethingOnPages(checkType, entitiesPerPage);
     }
 
-    private Response createUsersGroup(GroupCreateDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("");
-
-        return response;
-    }
-
     private void createUserGroup(List<String> group) {
         usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
         String payload = gson.toJson(usersGroupDto);
@@ -224,7 +198,23 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .anyMatch(dto -> groupName.equals(dto.getName()));
     }
 
-    private GroupCreateDto mapToGroupDto(String groupName, String groupDescription) {
-        return new GroupCreateDto(groupName, groupDescription);
+    private void makeExactUsersGroupAsCurrent(String name) {
+        usersGroupPool.entrySet().stream()
+                      .filter(entry -> entry.getValue().getName().equals(name))
+                      .findFirst()
+                      .ifPresent(entry -> {
+                          usersGroupId = entry.getKey();
+                          usersGroupDto = entry.getValue();
+                      });
+    }
+
+    private void makeLastAvailableUsersGroupAsCurrent() {
+        usersGroupPool.entrySet().stream()
+                      .skip(usersGroupPool.size() - 1)
+                      .findFirst()
+                      .ifPresent(entry -> {
+                          usersGroupId = entry.getKey();
+                          usersGroupDto = entry.getValue();
+                      });
     }
 }

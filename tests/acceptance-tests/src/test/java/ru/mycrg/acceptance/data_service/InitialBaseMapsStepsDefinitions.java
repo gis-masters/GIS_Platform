@@ -45,14 +45,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     public void createBaseMap(DataTable dataTable) {
         baseMapDto = mapToBaseMapDto(dataTable);
 
-        String payload = gson.toJson(baseMapDto);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(baseMapDto);
     }
 
     @When("Пользователь делает запрос на указанную подложку")
@@ -63,7 +56,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Поля подложки совпадают с переданными")
-    public void isBaseMapDataCorrect() {
+    public void checkBaseMapData() {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), baseMapDto.getName());
@@ -90,21 +83,17 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует подложка")
-    public void checkBaseMap(DataTable dataTable) {
+    public void isBaseMapExist(DataTable dataTable) {
         String name = generateString(dataTable.asList().get(0));
 
-        if (!isBaseMapExistInPool(name)) {
-            InitialBaseMapCreateDto dto = mapToBaseMapDto(dataTable);
-            Response createResponse = createBaseMap(dto);
-
-            assertEquals(SC_CREATED, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractIdFromLocation(createResponse);
-
-            baseMapId = id;
-            baseMapDto = dto;
-            baseMapsPool.put(id, dto);
+        if (isBaseMapExistInPool(name)) {
+            makeExactBaseMapAsCurrent(name);
+        } else if (!baseMapsPool.isEmpty()) {
+            makeLastAvailableBasemapAsCurrent();
+        } else {
+            createBaseMap(dataTable);
+            assertEquals(SC_CREATED, response.getStatusCode());
+            extractBaseMapIdFromLocation();
         }
     }
 
@@ -142,7 +131,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Представление подложки корректно")
-    public void isBaseMapPresentedCorrectly() {
+    public void checkBaseMapDataStructure() {
         Map<String, String> presentedData = response
                 .then().
                         log().ifValidationFails().
@@ -170,6 +159,8 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     @And("Сервер передает ID созданной подложки")
     public void extractBaseMapIdFromLocation() {
         baseMapId = extractIdFromLocation();
+
+        baseMapsPool.put(baseMapId, baseMapDto);
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки")
@@ -189,13 +180,18 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         super.isSomethingOnPages(checkType, entitiesPerPage);
     }
 
+    @And("В ответе на подложки есть упоминание ID")
+    public void checkIdInResponse() {
+        super.checkIdInResponse();
+    }
+
     private boolean isBaseMapExistInPool(String name) {
         return baseMapsPool
                 .values().stream()
                 .anyMatch(dto -> name.equals(dto.getName()));
     }
-
     //TODO: Переделать создание объектов
+
     private InitialBaseMapCreateDto mapToBaseMapDto(DataTable dataTable) {
         List<String> data = dataTable.asList();
         switch (data.size()) {
@@ -228,8 +224,23 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         return response;
     }
 
-    @And("В ответе на подложки есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    private void makeExactBaseMapAsCurrent(String name) {
+        baseMapsPool.entrySet().stream()
+                    .filter(entry -> entry.getValue().getName().equals(name))
+                    .findFirst()
+                    .ifPresent(entry -> {
+                        baseMapId = entry.getKey();
+                        baseMapDto = entry.getValue();
+                    });
+    }
+
+    private void makeLastAvailableBasemapAsCurrent() {
+        baseMapsPool.entrySet().stream()
+                    .skip(baseMapsPool.size() - 1)
+                    .findFirst()
+                    .ifPresent(entry -> {
+                        baseMapId = entry.getKey();
+                        baseMapDto = entry.getValue();
+                    });
     }
 }

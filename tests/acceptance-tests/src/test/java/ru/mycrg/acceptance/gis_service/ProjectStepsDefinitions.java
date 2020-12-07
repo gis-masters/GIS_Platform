@@ -60,23 +60,14 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует проект {string}")
     public void isProjectExist(String projectName) {
-        if (takeAnyProjectFromPoll()) {
-            return;
-        }
-
-        if (!isProjectExistInPool(generateString(projectName))) {
-            ProjectRequestDto dto = mapToProjectDto(generateString(projectName));
-            Response createResponse = createProject(dto);
-
-            assertEquals(SC_CREATED, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractEntityIdFromResponse(createResponse);
-
-            projectDto = dto;
-            setCurrentId(id);
-
-            projectPool.put(id, dto);
+        if (isProjectExistInPool(projectName)) {
+            makeExactProjectAsCurrent(projectName);
+        } else if (!projectPool.isEmpty()) {
+            makeLastAvailableProjectAsCurrent();
+        } else {
+            createProject(projectName);
+            assertEquals(SC_CREATED, response.getStatusCode());
+            extractAndSetProjectIdFromBody();
         }
     }
 
@@ -114,14 +105,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void createProject(String projectName) {
         projectDto = new ProjectRequestDto(generateString(projectName));
 
-        String payload = gson.toJson(projectDto);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(projectDto);
     }
 
     @When("Пользователь делает запрос на обновление полей проекта {string}")
@@ -226,6 +210,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @And("Сервер передает ID проекта в ответе")
     public void extractAndSetProjectIdFromBody() {
         super.extractAndSetEntityIdFromBody();
+
+        projectPool.put(projectId, projectDto);
     }
 
     @When("Пользователь делает запрос на текущий проект")
@@ -250,7 +236,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Количество страниц проектов {string} пропорционально {string}")
     public void checkProjectPagesCount(String sortingType, String sortingDirection) {
-        super.getAllEntitiesSorted(sortingType, sortingDirection);
+        super.checkPagesCount(sortingType, sortingDirection);
     }
 
     @And("На всех страницах проектов {string} есть {string}")
@@ -261,19 +247,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор делает постраничный запрос на проекты {string}")
     public void getProjectCount(String entity) {
         getEntityCount(entity);
-    }
-
-    private boolean takeAnyProjectFromPoll() {
-        if (!projectPool.isEmpty()) {
-            for (Map.Entry<Integer, ProjectRequestDto> entry: projectPool.entrySet()) {
-                projectId = entry.getKey();
-                projectDto = entry.getValue();
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private boolean isProjectExistInPool(String projectName) {
@@ -295,5 +268,25 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         post("");
 
         return response;
+    }
+
+    private void makeExactProjectAsCurrent(String projectName) {
+        projectPool.entrySet().stream()
+                   .filter(entry -> entry.getValue().getProjectName().equals(projectName))
+                   .findFirst()
+                   .ifPresent(entry -> {
+                       projectId = entry.getKey();
+                       projectDto = entry.getValue();
+                   });
+    }
+
+    private void makeLastAvailableProjectAsCurrent() {
+        projectPool.entrySet().stream()
+                   .skip(projectPool.size() - 1)
+                   .findFirst()
+                   .ifPresent(entry -> {
+                       projectId = entry.getKey();
+                       projectDto = entry.getValue();
+                   });
     }
 }

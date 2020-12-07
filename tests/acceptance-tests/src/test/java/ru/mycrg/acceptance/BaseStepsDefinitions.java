@@ -2,6 +2,7 @@ package ru.mycrg.acceptance;
 
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -11,12 +12,13 @@ import org.junit.Test;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
+import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -44,15 +46,25 @@ public class BaseStepsDefinitions {
     public static int totalPages;
     public static int entityCount;
 
-    public static Map<Integer, OrganizationCreateDto> orgPool = new HashMap<>();
-    public static Map<Integer, UserCreateDto> userPool = new HashMap<>();
-    public static Map<Integer, GroupCreateDto> usersGroupPool = new HashMap<>();
-    public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new HashMap<>();
-    public static Map<Integer, ProjectRequestDto> projectPool = new HashMap<>();
-    public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new HashMap<>();
-    public static Map<String, DatasetCreateDto> datasetsPool = new HashMap<>();
+    public static Map<Integer, OrganizationCreateDto> orgPool = new LinkedHashMap<>();
+    public static Map<Integer, UserCreateDto> userPool = new LinkedHashMap<>();
+    public static Map<Integer, GroupCreateDto> usersGroupPool = new LinkedHashMap<>();
+    public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new LinkedHashMap<>();
+    public static Map<Integer, ProjectRequestDto> projectPool = new LinkedHashMap<>();
+    public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new LinkedHashMap<>();
+    public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
+    public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
 
     public static Integer currentId;
+    public static Object currentDto;
+
+    public static Object getCurrentDto() {
+        return currentDto;
+    }
+
+    public static void setCurrentDto(Object dto) {
+        currentDto = dto;
+    }
 
     public Integer getCurrentId() {
         return currentId;
@@ -233,6 +245,12 @@ public class BaseStepsDefinitions {
                         get("/" + getCurrentId());
     }
 
+    public void getCurrentEntityInfoById(String id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + id);
+    }
+
     public Integer extractEntityIdFromResponse(Response response) {
         return response.jsonPath().get("id");
     }
@@ -272,5 +290,42 @@ public class BaseStepsDefinitions {
         String message = jsonPath.get("message");
 
         assertTrue(message.contains(getCurrentId().toString()));
+    }
+
+    public void checkIdInResponse(String id) {
+        jsonPath = response.jsonPath();
+        String message = jsonPath.get("message");
+
+        assertTrue(message.contains(id));
+    }
+
+    public Response createEntity(Object dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post("");
+
+        return response;
+    }
+
+    public void deleteEntity() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + getCurrentId());
+    }
+
+    public void deleteEntity(String id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + id);
+    }
+
+    public void deleteEntity(Integer id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + id);
     }
 }

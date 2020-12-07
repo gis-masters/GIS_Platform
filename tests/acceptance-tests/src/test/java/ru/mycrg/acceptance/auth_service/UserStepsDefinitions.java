@@ -5,8 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -21,10 +19,12 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public static Integer userId;
     public static UserCreateDto userDto;
 
+    @Override
     public Integer getCurrentId() {
         return userId;
     }
 
+    @Override
     public void setCurrentId(Integer id) {
         userId = id;
     }
@@ -46,31 +46,17 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
                                     generateString(data.get(2)), generateString(data.get(3)));
 
-        String payload = gson.toJson(userDto);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(userDto);
     }
 
     @When("Администратор повторно создает пользователя")
     public void createAgainUser() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(userDto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(userDto);
     }
 
     @Then("Пользователю присвоена роль = {string}")
     public void isUserRoleIsUser(String role) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + userId);
+        getExactUser();
 
         jsonPath = response.jsonPath();
 
@@ -81,26 +67,18 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void checkUser(DataTable dataTable) {
         String eMail = generateString(dataTable.asList().get(2));
 
-        if (!isUserExistInPool(eMail)) {
-            UserCreateDto dto = mapToUserDto(dataTable);
-            Response createResponse = createUser(dto);
-
-            assertEquals(SC_ACCEPTED, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractIdFromLocation(createResponse);
-
-            userId = id;
-            userDto = dto;
-            userPool.put(id, dto);
+        if (isUserExistInPool(eMail)) {
+            makeExactUserAsCurrent(eMail);
+        } else {
+            createUser(dataTable);
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            extractUserIdFromLocation();
         }
     }
 
     @When("Администратор организации удаляет пользователя")
     public void deleteUser() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + userId);
+        super.deleteEntity(userId);
 
         userPool.remove(userId);
     }
@@ -108,6 +86,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     @And("в заголовке Location передает ID созданного пользователя")
     public void extractUserIdFromLocation() {
         userId = extractIdFromLocation();
+
+        userPool.put(userId, userDto);
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
@@ -117,12 +97,12 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на созданного пользователя")
     public void getExactUser() {
-        getCurrentEntityInfoById();
+        super.getCurrentEntityInfoById();
     }
 
     @When("Администратор делает запрос на всех пользователей")
     public void getAllUsers() {
-        getAllEntities();
+        super.getAllEntities();
     }
 
     @When("Администратор делает постраничный запрос на всех пользователей")
@@ -138,7 +118,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Поля пользователя совпадают с переданными")
-    public void isDataCorrect() {
+    public void checkUserData() {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), userDto.getName());
@@ -161,18 +141,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @When("Администратор делает постраничный запрос на пользователей {string}")
+    public void getUsersCount(String entity) {
+        getEntityCount(entity);
+    }
+
     private void createUser(List<String> user) {
         userDto = new UserCreateDto(generateString(user.get(0)), generateString(user.get(1)),
                                     generateString(user.get(2)), generateString(user.get(3)));
 
-        String payload = gson.toJson(userDto);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(userDto);
     }
 
     private boolean isUserExistInPool(String eMail) {
@@ -181,26 +159,23 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                 .anyMatch(dto -> eMail.equals(dto.getEmail()));
     }
 
-    private UserCreateDto mapToUserDto(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-        return new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
-                                 generateString(data.get(2)), generateString(data.get(3)));
+    private void makeExactUserAsCurrent(String email) {
+        userPool.entrySet().stream()
+                .filter(entry -> entry.getValue().getEmail().equals(email))
+                .findFirst()
+                .ifPresent(entry -> {
+                    userId = entry.getKey();
+                    userDto = entry.getValue();
+                });
     }
 
-    private Response createUser(UserCreateDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("");
-
-        return response;
-    }
-
-    @When("Администратор делает постраничный запрос на пользователей {string}")
-    public void getUsersCount(String entity) {
-        getEntityCount(entity);
+    private void makeLastAvailableUserAsCurrent() {
+        userPool.entrySet().stream()
+                .skip(userPool.size() - 1)
+                .findFirst()
+                .ifPresent(entry -> {
+                    userId = entry.getKey();
+                    userDto = entry.getValue();
+                });
     }
 }

@@ -58,14 +58,20 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
 
     @And("Данные отсортированы по {string} и {string} в {string}")
     public void isDataSorted(String sortingType, String sortingDirection, String entity) {
+        jsonPath = response.jsonPath();
         List<Object> sorted;
         try {
-            sorted = response.jsonPath().getList(String.format("_embedded.%s.%s", entity, sortingType));
+            sorted = jsonPath.getList(String.format("_embedded.%s.%s", entity, sortingType));
+            if (sorted.isEmpty()) {
+                sorted = jsonPath.get(sortingType);
+            }
         } catch (NullPointerException e) {
-            sorted = response.jsonPath().get();
+            sorted = jsonPath.get(sortingType);
         }
 
         sorted.removeIf(Objects::isNull);
+
+        assertThat(sorted, not(sorted.isEmpty()));
 
         for (int i = 1; i < sorted.size(); i++) {
             if (sorted.get(i) instanceof String) {

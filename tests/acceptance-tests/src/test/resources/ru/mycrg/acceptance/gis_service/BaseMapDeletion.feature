@@ -17,7 +17,9 @@ Feature: Удаление подложек проектов
       | baseMapId | title    | position |
       | NUMBER_5  | STRING_5 | NUMBER_2 |
 
-  Scenario Outline: Удаление проекта пользователем организации
+  Scenario Outline: Удаление подложки проекта пользователем организации
+    Given Существует организация
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     Given Существует проект "STRING_15"
     Given Существует подложкa проекта "<baseMapId>", "<title>", "<position>"
     Given Существует пользователь

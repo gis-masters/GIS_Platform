@@ -47,20 +47,34 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         baseMapId = id;
     }
 
+    @And("Сервер передает ID подложки проекта в ответе")
+    public void extractAndSetProjectBaseMapIdFromBody() {
+        super.extractAndSetEntityIdFromBody();
+
+        projectBaseMapsPool.put(baseMapId, baseMapDto);
+    }
+
+    @When("Пользователь делает запрос на текущую подложку")
+    public void getCurrentProjectBaseMapInfoById() {
+        super.getCurrentEntityInfoById();
+    }
+
+    @And("Поля подложки проекта совпадают с переданными")
+    public void checkProjectBaseMapData() {
+        jsonPath = response.jsonPath();
+
+        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(baseMapDto.getBaseMapId())));
+        assertThat(jsonPath.get("title"), equalTo(baseMapDto.getTitle()));
+        assertThat(jsonPath.get("position"), is(baseMapDto.getPosition()));
+    }
+
     @When("Пользователь делает запрос на создание подложки проекта {string}, {string}, {string}")
     public void createProjectBaseMap(String baseMapId, String title, String position) {
         baseMapDto = new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)),
                                           generateString(title),
                                           Integer.parseInt(generateString(position)));
 
-        String payload = gson.toJson(baseMapDto);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(baseMapDto);
     }
 
     @When("Пользователь делает запрос на текущую подложку {string}")
@@ -75,23 +89,14 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует подложкa проекта {string}, {string}, {string}")
     public void isProjectBaseMapExist(String baseMapId, String title, String position) {
-        if (takeAnyProjectBaseMapFromPoll()) {
-            return;
-        }
-
-        if (!isProjectBaseMapExistInPool(generateString(baseMapId))) {
-            BaseMapCreateDto dto = mapToProjectBaseMapDto(baseMapId, title, position);
-            Response createResponse = createProjectBaseMap(dto);
-
-            assertEquals(SC_CREATED, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractEntityIdFromResponse(createResponse);
-
-            baseMapDto = dto;
-            setCurrentId(id);
-
-            projectBaseMapsPool.put(id, dto);
+        if (isProjectBaseMapExistInPool(title)) {
+            makeExactProjectBaseMapAsCurrent(title);
+        } else if (!projectBaseMapsPool.isEmpty()) {
+            makeLastAvailableProjectBaseMapAsCurrent();
+        } else {
+            createProjectBaseMap(baseMapId, title, position);
+            assertEquals(SC_CREATED, response.getStatusCode());
+            extractAndSetProjectBaseMapIdFromBody();
         }
     }
 
@@ -158,17 +163,8 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                         patch("" + baseMapId);
     }
 
-    @And("Поля подложки проекта совпадают с переданными")
-    public void isProjectBaseMapDataIsCorrect() {
-        jsonPath = response.jsonPath();
-
-        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(baseMapDto.getBaseMapId())));
-        assertThat(jsonPath.get("title"), equalTo(baseMapDto.getTitle()));
-        assertThat(jsonPath.get("position"), is(baseMapDto.getPosition()));
-    }
-
     @And("Поля подложки проекта совпадают с переданными {int}, {string}, {int}")
-    public void isProjectBaseMapDataIsCorrect(Integer newBaseMapId, String newTitle, Integer newPosition) {
+    public void checkProjectBaseMapData(Integer newBaseMapId, String newTitle, Integer newPosition) {
         jsonPath = response.jsonPath();
 
         assertEquals(newBaseMapId, jsonPath.get("baseMapId"));
@@ -186,16 +182,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntitiesSorted(sortingType, sortingDirection);
     }
 
-    @And("Сервер передает ID подложки проекта в ответе")
-    public void extractAndSetProjectIdFromBody() {
-        super.extractAndSetEntityIdFromBody();
-    }
-
-    @When("Пользователь делает запрос на текущую подложку")
-    public void getCurrentProjectBaseMapInfoById() {
-        super.getCurrentEntityInfoById();
-    }
-
     private BaseMapCreateDto mapToProjectBaseMapDto(String baseMapId, String title, String position) {
         return new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)), generateString(title),
                                     Integer.parseInt(generateString(position)));
@@ -204,19 +190,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     private boolean isProjectBaseMapExistInPool(String title) {
         return projectBaseMapsPool.values().stream()
                                   .anyMatch(dto -> title.equals(dto.getTitle()));
-    }
-
-    private boolean takeAnyProjectBaseMapFromPoll() {
-        if (!projectBaseMapsPool.isEmpty()) {
-            for (Map.Entry<Integer, BaseMapCreateDto> entry: projectBaseMapsPool.entrySet()) {
-                baseMapId = entry.getKey();
-                baseMapDto = entry.getValue();
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private Response createProjectBaseMap(BaseMapCreateDto dto) {
@@ -229,5 +202,25 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                         post("");
 
         return response;
+    }
+
+    private void makeExactProjectBaseMapAsCurrent(String title) {
+        projectBaseMapsPool.entrySet().stream()
+                           .filter(entry -> entry.getValue().getTitle().equals(title))
+                           .findFirst()
+                           .ifPresent(entry -> {
+                               baseMapId = entry.getKey();
+                               baseMapDto = entry.getValue();
+                           });
+    }
+
+    private void makeLastAvailableProjectBaseMapAsCurrent() {
+        projectBaseMapsPool.entrySet().stream()
+                           .skip(projectBaseMapsPool.size() - 1)
+                           .findFirst()
+                           .ifPresent(entry -> {
+                               baseMapId = entry.getKey();
+                               baseMapDto = entry.getValue();
+                           });
     }
 }

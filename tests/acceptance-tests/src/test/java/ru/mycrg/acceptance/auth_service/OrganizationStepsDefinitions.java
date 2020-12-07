@@ -36,7 +36,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("в заголовке Location передает ID созданной организации")
     public void extractOrgIdFromLocation() {
-        orgId = extractIdFromLocation();
+        orgId = super.extractIdFromLocation();
+
+        orgPool.put(orgId, orgDto);
     }
 
     @When("Проверяем создана ли организация")
@@ -57,7 +59,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public void waitUntilOrganizationSuccessfullyDeleted() throws InterruptedException {
         waitUntilOrganizationSuccessfullyDeleted(orgId, cookie);
 
-        orgPool.put(orgId, orgDto);
+        orgPool.remove(orgId);
     }
 
     @And("Статус организации соответствует {string}")
@@ -89,28 +91,20 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      * @throws InterruptedException
      */
     @Given("Существует организация")
-    public void createOrganization(DataTable dataTable) throws InterruptedException {
-        if (takeAnyOrgFromPoll()) {
-            return;
-        }
-
+    public void isOrgExist(DataTable dataTable) throws InterruptedException {
         String eMail = generateString(dataTable.asList().get(4));
 
-        if (!isOrgExistInPool(eMail)) {
-            OrganizationCreateDto dto = mapToOrgDto(dataTable);
-            Response createResponse = createOrganization(dto);
-
-            assertEquals(SC_ACCEPTED, createResponse.getStatusCode());
-
-            response = createResponse;
-            Integer id = extractIdFromLocation(createResponse);
+        if (isOrgExistInPool(eMail)) {
+            makeExactOrgAsCurrent(eMail);
+        } else if (!orgPool.isEmpty()) {
+            makeFirstAvailableOrgAsCurrent();
+        } else {
+            sendCreateOrganizationRequest(dataTable);
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            extractOrgIdFromLocation();
 
             Cookie cookie = new AuthorizationStepDefinitions().getRootAuthority();
-            waitUntilOrganizationSuccessfullyCreated(id, cookie);
-
-            orgId = id;
-            orgDto = dto;
-            orgPool.put(id, dto);
+            waitUntilOrganizationSuccessfullyCreated(orgId, cookie);
         }
     }
 
@@ -297,16 +291,22 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         orgPool.remove(orgId);
     }
 
-    private boolean takeAnyOrgFromPoll() {
-        if (!orgPool.isEmpty()) {
-            for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
-                orgId = entry.getKey();
-                orgDto = entry.getValue();
+    private void makeExactOrgAsCurrent(String email) {
+        orgPool.entrySet().stream()
+               .filter(entry -> entry.getValue().getOwner().getEmail().equals(email))
+               .findFirst()
+               .ifPresent(entry -> {
+                   orgId = entry.getKey();
+                   orgDto = entry.getValue();
+               });
+    }
 
-                return true;
-            }
-        }
-
-        return false;
+    private void makeFirstAvailableOrgAsCurrent() {
+        orgPool.entrySet().stream()
+               .findFirst()
+               .ifPresent(entry -> {
+                   orgId = entry.getKey();
+                   orgDto = entry.getValue();
+               });
     }
 }
