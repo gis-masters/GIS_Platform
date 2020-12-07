@@ -1,12 +1,12 @@
 import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { cloneDeep } from 'lodash';
 import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import { GroupAdd } from '@material-ui/icons';
-import { HttpErrorResponse } from '@angular/common/http';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+import { cloneDeep } from 'lodash';
+import { AxiosError } from 'axios';
 
 import { NewGroupData, groupsService } from '../../../services/crg/groups.service';
 import { Form, FormField, FormLabel, FormControl } from '../../Form/Form';
@@ -35,12 +35,7 @@ export class OrgGroupsCreate extends Component {
 
     return (
       <>
-        <Button
-          className={cnOrgGroups()}
-          startIcon={<GroupAdd />}
-          onClick={this.openDialog}
-          variant='text'
-        >
+        <Button className={cnOrgGroups()} startIcon={<GroupAdd />} onClick={this.openDialog} variant='text'>
           Создать группу
         </Button>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
@@ -101,15 +96,14 @@ export class OrgGroupsCreate extends Component {
   }
 
   @action.bound
-  private handleErrors(err: HttpErrorResponse) {
+  private handleErrors(err: AxiosError) {
     this.errorFields = cloneDeep(defaultValue);
-    err.error &&
-      err.error.errors &&
-      err.error.errors.forEach((fieldError: { [key: string]: string }) => {
-        if (fieldError.field) {
-          this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
-        }
-      });
+    const errors = err?.response?.data?.errors || [];
+    errors.forEach((fieldError: { [key: string]: string }) => {
+      if (fieldError.field) {
+        this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
+      }
+    });
   }
 
   @action.bound

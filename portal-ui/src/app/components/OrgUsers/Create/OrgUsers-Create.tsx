@@ -1,12 +1,12 @@
 import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { cloneDeep } from 'lodash';
 import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import { PersonAdd } from '@material-ui/icons';
-import { HttpErrorResponse } from '@angular/common/http';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+import { cloneDeep } from 'lodash';
+import { AxiosError } from 'axios';
 
 import { usersService, NewUserData } from '../../../services/crg/users.service';
 import { Form, FormField, FormLabel, FormControl } from '../../Form/Form';
@@ -36,12 +36,7 @@ export class OrgUsersCreate extends Component {
 
     return (
       <>
-        <Button
-          className={cnOrgUsersCreate()}
-          startIcon={<PersonAdd />}
-          onClick={this.openDialog}
-          variant='text'
-        >
+        <Button className={cnOrgUsersCreate()} startIcon={<PersonAdd />} onClick={this.openDialog} variant='text'>
           Создать пользователя
         </Button>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
@@ -128,15 +123,14 @@ export class OrgUsersCreate extends Component {
   }
 
   @action.bound
-  private handleErrors(err: HttpErrorResponse) {
+  private handleErrors(err: AxiosError) {
     this.errorFields = cloneDeep(defaultValue);
-    err.error &&
-      err.error.errors &&
-      err.error.errors.forEach((fieldError: { [key: string]: string }) => {
-        if (fieldError.field) {
-          this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
-        }
-      });
+    const errors = err?.response?.data?.errors || [];
+    errors.forEach((fieldError: { [key: string]: string }) => {
+      if (fieldError.field) {
+        this.errorFields[fieldError.field] = fieldError.defaultMessage || 'ошибка';
+      }
+    });
   }
 
   @action.bound
