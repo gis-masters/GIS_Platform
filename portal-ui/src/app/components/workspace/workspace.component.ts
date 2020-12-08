@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { sidebars } from '../../stores/Sidebars.store';
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnDestroy, OnInit {
+  @Input() fixed: boolean;
   cn = cn('workspace');
 
   isInfoSidebarActive = false;

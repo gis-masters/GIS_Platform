@@ -35,7 +35,13 @@ class Http {
   }
 
   async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const responce = await axios.patch(url, data, config);
+    const responce = await axios.patch(url, data, {
+      ...config,
+      headers: {
+        'Content-Type': 'application/merge-patch+json',
+        ...config?.headers
+      }
+    });
 
     return responce.data;
   }

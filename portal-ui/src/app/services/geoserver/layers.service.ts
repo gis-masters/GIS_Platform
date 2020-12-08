@@ -1,15 +1,19 @@
 import { cloneDeep } from 'lodash';
 
-import { serverProperties } from '../server-properties.service';
-import { services } from '../services';
-import { CrgLayer, CrgLayersGroup, Rule } from '../crg/projects.models';
-import { WfsFeature } from '../geoserver/wfs-models';
+import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayersGroup, Rule } from '../crg/projects.models';
+import { serverProperties } from '../server-properties.service';
+import { WfsFeature } from '../geoserver/wfs-models';
+import { patch } from '../util/patch';
 import { http } from '../http.service';
+import { services } from '../services';
 
-export async function deleteLayer(layer: CrgLayer) {
-  await http.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layer.id}`);
-  currentProject.deleteLayer(layer);
+export async function deleteLayer(layerId: number) {
+  await http.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layerId}`);
+  if (sidebars.layerForAttributes?.id === layerId) {
+    sidebars.closeAttributes();
+  }
 }
 
 export async function loadLayerLegend(layer: CrgLayer) {
@@ -17,7 +21,7 @@ export async function loadLayerLegend(layer: CrgLayer) {
     return;
   }
 
-  currentProject.patch(layer, { legendIsFetching: true });
+  patch(layer, { legendIsFetching: true });
 
   const styleSld: string = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(styleSld, 'text/xml');
@@ -39,7 +43,7 @@ export async function loadLayerLegend(layer: CrgLayer) {
     })
   );
 
-  currentProject.patch(layer, {
+  patch(layer, {
     legend: rulesWithLegend,
     legendIsFetching: false
   });
@@ -52,16 +56,20 @@ export function getFeatureLayer(feature: WfsFeature): CrgLayer {
 }
 
 // на будущее
-async function updateLayerOrGroup<T extends CrgLayer | CrgLayersGroup>(item: T, patch: Partial<T>, isGroup: boolean) {
+async function updateLayerOrGroup<T extends CrgLayer | CrgLayersGroup>(
+  item: T,
+  itemPatch: Partial<T>,
+  isGroup: boolean
+) {
   await services.provided;
   const backup = cloneDeep(item);
   const path = isGroup ? 'groups' : 'layers';
-  currentProject.patch(item, patch);
+  patch(item, itemPatch);
   try {
     const url = `${await serverProperties.projectsUrl}/${currentProject.id}/${path}/${item.id}`;
-    await http.patch(url, patch);
+    await http.patch(url, itemPatch);
   } catch (err) {
-    currentProject.patch(item, backup);
+    patch(item, backup);
   }
 }
 
@@ -123,4 +131,35 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
     headers: { 'Content-Type': 'application/vnd.ogc.sld+xml' },
     responseType: 'text'
   });
+}
+
+export function generateNextGroupId(): number {
+  return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
+}
+
+export async function updateLayer(
+  layerId: number,
+  patch: Partial<CrgLayer>,
+  project: CrgProject = currentProject
+): Promise<void> {
+  return await http.patch(`${await serverProperties.projectsUrl}/${project.id}/layers/${layerId}`, patch);
+}
+
+export async function createLayersGroup(
+  newGroup: NewCrgLayersGroup,
+  project: CrgProject = currentProject
+): Promise<CrgLayersGroup> {
+  return await http.post<CrgLayersGroup>(`${await serverProperties.projectsUrl}/${project.id}/groups/`, newGroup);
+}
+
+export async function updateLayersGroup(
+  groupId: number,
+  patch: Partial<CrgLayersGroup>,
+  project: CrgProject = currentProject
+): Promise<void> {
+  return await http.patch(`${await serverProperties.projectsUrl}/${project.id}/groups/${groupId}`, patch);
+}
+
+export async function deleteLayersGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
+  return await http.delete(`${await serverProperties.projectsUrl}/${project.id}/groups/${groupId}`);
 }

@@ -1,7 +1,6 @@
 import { debounce } from 'lodash';
 
 import { http } from '../http.service';
-import { services } from '../services';
 import { PageableResponse } from '../models';
 import { ApiLink, CrgUser } from './users.service';
 import { allGroups } from '../../stores/AllGroups.store';
@@ -20,7 +19,7 @@ export type NewGroupData = Pick<CrgGroup, 'name' | 'description'>;
 
 class GroupsService {
   private static _instance: GroupsService;
-  private groupsListStoreInited = false;
+  private allGroupsStoreInited = false;
   private debouncedFetchGroupsListStore: () => Promise<void>;
 
   private constructor() {
@@ -32,7 +31,6 @@ class GroupsService {
   }
 
   async getAll(): Promise<CrgGroup[]> {
-    await services.provided;
     const url = await serverProperties.groupsUrl;
     const params = { size: '10000' };
     const response = await http.get<PageableResponse<{ groups: CrgGroup[] }>>(url, { params });
@@ -41,7 +39,6 @@ class GroupsService {
   }
 
   async create(groupData: NewGroupData) {
-    await services.provided;
     const url = await serverProperties.groupsUrl;
 
     await http.post<CrgGroup>(url, groupData);
@@ -50,7 +47,6 @@ class GroupsService {
   }
 
   async delete(group: CrgGroup) {
-    await services.provided;
     const url = await serverProperties.groupsUrl;
 
     await http.delete(`${url}/${group.id}`);
@@ -58,8 +54,13 @@ class GroupsService {
     this.debouncedFetchGroupsListStore();
   }
 
+  async getUserGroups(user: CrgUser): Promise<CrgGroup[]> {
+    await this.initGroupsListStore();
+
+    return allGroups.list.filter(({ users }) => users.some(({ id }) => id === user.id));
+  }
+
   async addUserToGroup(user: CrgUser, group: CrgGroup) {
-    await services.provided;
     const url = await serverProperties.groupsUrl;
 
     await http.post(`${url}/${group.id}/users/${user.id}`, {});
@@ -68,7 +69,6 @@ class GroupsService {
   }
 
   async removeUserFromGroup(user: CrgUser, group: CrgGroup) {
-    await services.provided;
     const url = await serverProperties.groupsUrl;
 
     await http.delete(`${url}/${group.id}/users/${user.id}`);
@@ -77,17 +77,17 @@ class GroupsService {
   }
 
   async initGroupsListStore() {
-    if (this.groupsListStoreInited) {
+    if (this.allGroupsStoreInited) {
       return;
     }
 
-    this.groupsListStoreInited = true;
+    this.allGroupsStoreInited = true;
 
     await this.fetchGroupsListStore();
   }
 
   private async fetchGroupsListStore() {
-    if (!this.groupsListStoreInited) {
+    if (!this.allGroupsStoreInited) {
       return;
     }
 

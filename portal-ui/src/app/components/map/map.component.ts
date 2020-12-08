@@ -158,15 +158,6 @@ export class MapComponent implements OnInit, OnDestroy {
     Emitter.scopeOff(this);
   }
 
-  async deleteLayer(layer: CrgLayer) {
-    await deleteLayer(layer);
-    const fType: FeatureType = await getFeatureTypeByLayer(layer);
-    await deleteFeatureType(fType);
-    Toast.info('Удалено');
-
-    await openLayersService.deleteLayerFromMap(layer.complexName);
-  }
-
   /**
    * Отобразить информацию об объектах, которые пересекают заданные координаты.
    */

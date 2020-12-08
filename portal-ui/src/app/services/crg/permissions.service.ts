@@ -4,7 +4,9 @@ import { PageableResponse } from '../models';
 import { services } from '../services';
 import { serverProperties } from '../server-properties.service';
 import { Toast } from '../../components/Toast/Toast';
+import { groupsService } from './groups.service';
 import { http } from '../http.service';
+import { CrgUser } from './users.service';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -200,5 +202,28 @@ export function filterByPrincipal(
 ): RoleAssignmentBody[] {
   return permissions.filter(
     ({ principalId, principalType }) => principalId === filteringPrincipalId || principalType === filteringPrincipalType
+  );
+}
+
+export async function hasRoleInProject(user: CrgUser, project: CrgProject, role: Role): Promise<boolean> {
+  const [permissions, groups] = await Promise.all([getProjectPermissions(project), groupsService.getUserGroups(user)]);
+
+  return (
+    isRoleIn(role, PrincipalType.USER, user.id, permissions) ||
+    groups.some(group => isRoleIn(role, PrincipalType.GROUP, group.id, permissions))
+  );
+}
+
+function isRoleIn(
+  targetRole: Role,
+  targetPrincipalType: PrincipalType,
+  targetPrincipalId: number,
+  permissions: RoleAssignmentBody[]
+): boolean {
+  return permissions.some(
+    ({ principalId, principalType, role }) =>
+      principalId === targetPrincipalId &&
+      principalType === targetPrincipalType &&
+      roles.slice(roles.indexOf(role)).includes(targetRole)
   );
 }

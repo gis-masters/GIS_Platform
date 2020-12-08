@@ -1,14 +1,23 @@
 import { action, computed, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
+import { cloneDeep, reverse } from 'lodash';
 
 import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject, TreeItem } from '../services/crg/projects.models';
+import {
+  CrgLayer,
+  CrgLayersGroup,
+  CrgLayerType,
+  CrgProject,
+  NewCrgLayersGroup,
+  TreeItem
+} from '../services/crg/projects.models';
+import { getPatch } from '../services/util/patch';
 
 const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 
 interface CrgProjectData extends CrgProject {
   layers: CrgLayer[];
-  groups: CrgLayersGroup[];
+  groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   layersErrors: { [key: string]: string[] };
 }
 
@@ -41,7 +50,9 @@ class CurrentProject implements CrgProjectData {
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
   @observable layers: CrgLayer[];
-  @observable groups: CrgLayersGroup[];
+  @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
+  @observable primalLayers: CrgLayer[];
+  @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable layersCount: number;
   @observable _maxLayersInBatch?: number;
   @observable layersErrors: { [key: string]: string[] };
@@ -88,13 +99,15 @@ class CurrentProject implements CrgProjectData {
 
         return item;
       })
-      .map(item => {
+      .map((item, i, tree) => {
         item.depth = this.getDept(item);
         item.visible = !(item.errors && item.errors.length) && this.getGenusVisibility(item);
         item.hiddenByZoom = this.isHiddenByZoom(item);
 
         if (!item.isGroup) {
           item.actualTransparency = this.getActualTransparency(item);
+        } else {
+          item.isEmptyGroup = !tree.some(someItem => !someItem.isGroup && this.isAncestor(someItem, item));
         }
 
         return item;
@@ -103,13 +116,23 @@ class CurrentProject implements CrgProjectData {
   }
 
   @computed
-  get visibleLayers(): TreeItem<CrgLayer>[] {
+  get visibleTreeWithEmptyGroups(): TreeItem[] {
+    return this.tree.filter(item => !this.hasCollapsedParent(item));
+  }
+
+  @computed
+  get visibleTree(): TreeItem[] {
+    return this.visibleTreeWithEmptyGroups.filter(({ isEmptyGroup }) => !isEmptyGroup);
+  }
+
+  @computed
+  get visibleOnMapLayers(): TreeItem<CrgLayer>[] {
     return this.tree.filter(item => !item.isGroup && item.visible && !item.hiddenByZoom) as TreeItem<CrgLayer>[];
   }
 
   @computed
   get visibleLayersBatched(): TreeItem<CrgLayer>[][] {
-    return this.visibleLayers.reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
+    return this.visibleOnMapLayers.reduce((acc: TreeItem<CrgLayer>[][], item: TreeItem<CrgLayer>) => {
       if (!acc.length) {
         return [[item]];
       }
@@ -133,17 +156,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get visibleLayersWithoutRasters(): TreeItem<CrgLayer>[] {
-    return this.visibleLayers.filter(item => item.payload.type !== CrgLayerType.RASTER);
-  }
-
-  @action
-  setProject(project: CrgProject, layers: CrgLayer[], groups: CrgLayersGroup[]) {
-    Object.assign(this, emptyProject, { ...project, layers, groups });
-  }
-
-  @action
-  dropProject() {
-    Object.assign(this, emptyProject);
+    return this.visibleOnMapLayers.filter(item => item.payload.type !== CrgLayerType.RASTER);
   }
 
   @computed
@@ -166,6 +179,84 @@ class CurrentProject implements CrgProjectData {
     return Number(this._maxLayersInBatch || MAX_LAYERS_IN_BATCH_DEFAULT);
   }
 
+  @computed
+  get queriesQueueLength(): number {
+    return Object.values(this.queriesQueue).flat().length;
+  }
+
+  @computed
+  get queriesQueue(): {
+    groupsToCreate: NewCrgLayersGroup[];
+    groupsToPatch: [number, Partial<CrgLayersGroup>][];
+    layersToPatch: [number, Partial<CrgLayer>][];
+    layersToDelete: number[];
+    groupsToDelete: number[];
+  } {
+    const groupsMeaningfulFields: (keyof CrgLayersGroup)[] = [
+      'enabled',
+      'expanded',
+      'parent',
+      'position',
+      'title',
+      'transparency'
+    ];
+
+    const layersMeaningfulFields: (keyof CrgLayer)[] = ['enabled', 'groupId', 'position', 'title', 'transparency'];
+
+    return {
+      groupsToCreate: this.tree
+        .filter(({ isGroup, payload }) => isGroup && this.primalGroups.every(({ id }) => id !== payload.id))
+        .map(({ payload }) => payload as NewCrgLayersGroup),
+
+      groupsToPatch: this.groups
+        .map(group => [group, this.primalGroups.find(primalGroup => primalGroup.id === group.id)])
+        .filter(([, primalGroup]) => primalGroup)
+        .map(
+          ([group, primalGroup]) =>
+            [group.id, getPatch(group, primalGroup, groupsMeaningfulFields)] as [number, Partial<CrgLayersGroup>]
+        )
+        .filter(([, patch]) => Object.keys(patch).length),
+
+      layersToPatch: this.layers
+        .map(layer => [layer, this.primalLayers.find(primalLayer => primalLayer.id === layer.id)])
+        .filter(([, primalLayer]) => primalLayer)
+        .map(
+          ([layer, primalLayer]) =>
+            [layer.id, getPatch(layer, primalLayer, layersMeaningfulFields)] as [number, Partial<CrgLayer>]
+        )
+        .filter(([, patch]) => Object.keys(patch).length),
+
+      layersToDelete: this.primalLayers
+        .filter(primalLayer => !this.layers.some(layer => primalLayer.id === layer.id))
+        .map(({ id }) => id),
+
+      groupsToDelete: this.primalGroups
+        .filter(primalGroup => !this.groups.some(group => primalGroup.id === group.id))
+        .sort(
+          (a, b) =>
+            this.tree.findIndex(({ isGroup, id }) => isGroup && id === b.id) -
+            this.tree.findIndex(({ isGroup, id }) => isGroup && id === a.id)
+        )
+        .map(({ id }) => id)
+    };
+  }
+
+  @action
+  setProject(project: CrgProject, layers: CrgLayer[], groups: CrgLayersGroup[]) {
+    Object.assign(this, emptyProject, {
+      ...project,
+      layers,
+      groups,
+      primalLayers: cloneDeep(layers),
+      primalGroups: cloneDeep(groups)
+    });
+  }
+
+  @action
+  dropProject() {
+    Object.assign(this, emptyProject);
+  }
+
   @action
   deleteLayer(layer: CrgLayer) {
     const index = this.layers.indexOf(layer);
@@ -175,8 +266,22 @@ class CurrentProject implements CrgProjectData {
   }
 
   @action
-  patch<T>(item: T, patch: Partial<T>) {
-    Object.assign(item, patch);
+  deleteGroup(deletingGroup: CrgLayersGroup) {
+    const index = this.groups.indexOf(deletingGroup);
+    if (index > -1) {
+      this.groups.splice(index, 1);
+    }
+
+    this.layers.slice().forEach(layer => {
+      if (layer.groupId === deletingGroup.id) {
+        currentProject.deleteLayer(layer);
+      }
+    });
+    currentProject.groups.forEach(group => {
+      if (group.parent === deletingGroup.id) {
+        this.deleteGroup(group);
+      }
+    });
   }
 
   @action
@@ -255,6 +360,23 @@ class CurrentProject implements CrgProjectData {
     this.layersErrors[layerComplexName] = errors;
   }
 
+  @action
+  switchGroupId(oldId: number, newId: number) {
+    this.groups.forEach(group => {
+      if (group.id === oldId) {
+        group.id = newId;
+      }
+      if (group.parent === oldId) {
+        group.parent = newId;
+      }
+    });
+    this.layers.forEach(layer => {
+      if (layer.groupId === oldId) {
+        layer.groupId = newId;
+      }
+    });
+  }
+
   private isHiddenByZoom(treeItem: TreeItem): boolean {
     if (treeItem.isGroup) {
       return false;
@@ -263,6 +385,49 @@ class CurrentProject implements CrgProjectData {
     const { minZoom, maxZoom } = treeItem.payload as CrgLayer;
 
     return this.viewZoom < minZoom || this.viewZoom > maxZoom;
+  }
+
+  private hasCollapsedParent(item: TreeItem): boolean {
+    if (!item.parent) {
+      return false;
+    }
+
+    const { expanded } = item.parent.payload as CrgLayersGroup;
+
+    return expanded ? this.hasCollapsedParent(item.parent) : true;
+  }
+
+  isAncestor(item: TreeItem, ancestorItem: TreeItem): boolean {
+    if (!item.parent) {
+      return false;
+    }
+
+    return item.parent === ancestorItem || this.isAncestor(item.parent, ancestorItem);
+  }
+
+  getClosestCommonAncestor(a: TreeItem, b: TreeItem): TreeItem<CrgLayersGroup> | null {
+    const depth = Math.min(a.depth, b.depth);
+
+    if (a.id === b.parent?.id) {
+      return a as TreeItem<CrgLayersGroup>;
+    }
+
+    if (a.parent?.id === b.id) {
+      return b as TreeItem<CrgLayersGroup>;
+    }
+
+    if (!depth) {
+      return null;
+    }
+
+    const genusA = this.getGenusAtDept(a, depth);
+    const genusB = this.getGenusAtDept(b, depth);
+
+    if (genusA.parent.id === genusB.parent.id) {
+      return genusA.parent;
+    } else {
+      return this.getClosestCommonAncestor(genusA.parent, genusB.parent);
+    }
   }
 }
 

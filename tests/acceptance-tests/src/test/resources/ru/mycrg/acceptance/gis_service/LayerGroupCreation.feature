@@ -16,6 +16,7 @@ Feature: Создание групп слоев в проектах
     Examples:
       | title     | position |
       | STRING_10 | NUMBER_2 |
+      | STRING_2  | NUMBER_2 |
 
   Scenario Outline: Создание группы слоев проекта с родительской группы слоев с валидными данными
     Given Существует проект "STRING_10"
@@ -37,4 +38,3 @@ Feature: Создание групп слоев в проектах
       | title      | position | reason            |
       | STRING_0   | NUMBER_2 | Пустое название   |
       | STRING_257 | NUMBER_2 | Длинное название  |
-      | STRING_2   | NUMBER_2 | Короткое название |

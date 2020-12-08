@@ -21,8 +21,8 @@ import { FilterParams } from '../../services/util/filterObjects';
 import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { Highlight } from '../Highlight/Highlight';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
-import { IdBadge } from '../IdBadge/IdBadge';
 import { Button } from '../Button/Button';
 import { XTable } from '../XTable/XTable';
 
@@ -78,7 +78,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
                 {principalType === PrincipalType.USER && ' пользователя '}
                 {principalType === PrincipalType.GROUP && ' группы '}
                 {principalName}
-                <IdBadge id={principalId} />
+                <TextBadge id={principalId} />
               </>
             }
             headerActions={
@@ -333,7 +333,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         <Highlight word={filterParams.layerTitle} enabled={filterActive}>
           {item.layerTitle}
         </Highlight>
-        {item.origin.layer && <IdBadge id={item.origin.layer.id} />}
+        {item.origin.layer && <TextBadge id={item.origin.layer.id} />}
       </>
     );
   }

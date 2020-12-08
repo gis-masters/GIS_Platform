@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class GroupCreateDto {
 
     @NotBlank
-    @Length(min = 3, max = 255)
+    @Length(min = 1, max = 255)
     private String title;
 
     @CrgParentGroup

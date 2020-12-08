@@ -8,9 +8,8 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { PrincipalType } from '../../services/crg/permissions.service';
-import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { OrgActions } from '../OrgActions/OrgActions';
-import { XTable } from '../XTable/XTable';
+import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 
@@ -25,6 +24,43 @@ interface CrgGroupExtended extends CrgGroup {
 
 @observer
 export class OrgGroups extends Component {
+  private xTableCols: XTableColumn<CrgGroupExtended>[] = [
+    {
+      title: 'Название',
+      field: 'name',
+      filtering: true,
+      sorting: true,
+      getIdBadge: ({ id }) => id
+    },
+    {
+      title: 'Описание',
+      field: 'description',
+      filtering: true,
+      sorting: true,
+      align: 'right'
+    },
+    {
+      title: 'Пользователей',
+      field: 'usersCount',
+      filtering: true,
+      sorting: true,
+      align: 'right'
+    },
+    {
+      title: 'Разрешений',
+      field: 'permissionsCount',
+      filtering: true,
+      sorting: true,
+      align: 'right'
+    },
+    {
+      title: 'Действия',
+      align: 'right',
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderGroupActions
+    }
+  ];
+
   async componentDidMount() {
     await groupsService.initGroupsListStore();
   }
@@ -35,42 +71,7 @@ export class OrgGroups extends Component {
         className={cnOrgGroups()}
         headerActions={<OrgGroupsCreate />}
         data={this.groups}
-        cols={[
-          {
-            title: 'Название',
-            field: 'name',
-            filtering: true,
-            sorting: true,
-            getIdBadge: ({ id }) => id
-          },
-          {
-            title: 'Описание',
-            field: 'description',
-            filtering: true,
-            sorting: true,
-            align: 'right'
-          },
-          {
-            title: 'Пользователей',
-            field: 'usersCount',
-            filtering: true,
-            sorting: true,
-            align: 'right'
-          },
-          {
-            title: 'Разрешений',
-            field: 'permissionsCount',
-            filtering: true,
-            sorting: true,
-            align: 'right'
-          },
-          {
-            title: 'Действия',
-            align: 'right',
-            cellProps: { padding: 'checkbox' },
-            renderCellContent: this.renderGroupActions
-          }
-        ]}
+        cols={this.xTableCols}
         defaultSort={{ field: 'name', asc: true }}
         secondarySortField='id'
         filterable

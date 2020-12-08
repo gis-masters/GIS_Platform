@@ -5,7 +5,6 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { BuildInRole } from './permissions.service';
 import { PageableResponse } from '../models';
-import { services } from '../services';
 import { http } from '../http.service';
 
 export interface ApiLink {
@@ -69,7 +68,6 @@ class UsersService {
   }
 
   async getAll(): Promise<CrgUser[]> {
-    await services.provided;
     const url = await serverProperties.usersUrl;
     const params = { size: '10000' };
 
@@ -77,7 +75,6 @@ class UsersService {
   }
 
   async create(userData: NewUserData) {
-    await services.provided;
     const url = await serverProperties.usersUrl;
 
     await http.post(url, userData);
@@ -103,6 +100,12 @@ class UsersService {
     await this.fetchUsersListStore();
   }
 
+  async getUserByUsername(targetUsename: string): Promise<CrgUser> {
+    await this.initUsersListStore();
+
+    return allUsers.fullList.find(({ username }) => targetUsename === username);
+  }
+
   private async fetchingCurrent(): Promise<void> {
     const url = (await serverProperties.usersUrl) + '/current';
     try {
@@ -123,7 +126,7 @@ class UsersService {
     }
 
     allUsers.setFetching(true);
-    const users = (await this.getAll()).filter(user => user.username !== currentUser.userName);
+    const users = await this.getAll();
     allUsers.setList(users);
     allUsers.setFetching(false);
   }

@@ -10,7 +10,5 @@ interface LayerTitleProps {
 }
 
 export const LayerTitle: FC<LayerTitleProps> = ({ children, isError }) => (
-  <div className={cnLayerTitle({ error: isError })}>
-    {children}
-  </div>
+  <div className={cnLayerTitle({ error: isError })}>{children}</div>
 );

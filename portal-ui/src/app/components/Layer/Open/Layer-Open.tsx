@@ -12,10 +12,11 @@ const cnLayerOpen = cn('Layer', 'Open');
 interface LayerOpenProps {
   open: boolean;
   onClick: () => void;
+  disabled: boolean;
 }
 
-export const LayerOpen: FC<LayerOpenProps> = ({ onClick, open }) => (
-  <IconButton className={cnLayerOpen()} onClick={onClick} size='small' color='primary'>
+export const LayerOpen: FC<LayerOpenProps> = ({ onClick, open, disabled }) => (
+  <IconButton className={cnLayerOpen()} onClick={onClick} size='small' color='primary' disabled={disabled}>
     <LayerOpenIcon open={open} />
   </IconButton>
 );

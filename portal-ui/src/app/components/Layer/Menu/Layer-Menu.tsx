@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  ListItemIcon,
-  Menu,
-  MenuItem
-} from '@material-ui/core';
-import { AddCircle, Delete, ListAlt, Unarchive } from '@material-ui/icons';
+import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
+import { AddCircle, Delete, Edit, ListAlt, Unarchive } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../../stores/Sidebars.store';
-import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../../services/crg/projects.models';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
 import { deleteLayer } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
@@ -24,24 +17,25 @@ import {
   isExportAllowed,
   isReadAllowed
 } from '../../../services/crg/permissions.service';
+import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
-import { Button } from '../../Button/Button';
 
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
 
 interface LayerMenuProps {
-  entity: CrgLayer | CrgLayersGroup;
+  entity: TreeItemPayload;
   open: boolean;
   x: number;
   y: number;
   anchor: HTMLElement;
   onClose: () => void;
   isGroup: boolean;
+  editMode: boolean;
 }
 
 @observer
 export class LayerMenu extends Component<LayerMenuProps> {
-  @observable private deleteDialogOpen = false;
+  @observable private editGroupDialogOpen = false;
   @observable private readAllowed = false;
   @observable private createAllowed = false;
   @observable private exportAllowed = false;
@@ -52,7 +46,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   render() {
-    const { open, x, y, onClose, anchor, entity, isGroup } = this.props;
+    const { open, x, y, onClose, anchor, entity, isGroup, editMode } = this.props;
+    const isVectorLayer = !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR;
 
     return (
       <>
@@ -67,7 +62,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.readAllowed && (
+          {!editMode && isVectorLayer && this.readAllowed && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -76,7 +71,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.createAllowed && (
+          {!editMode && isVectorLayer && this.createAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -85,7 +80,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR && this.exportAllowed && (
+          {!editMode && isVectorLayer && this.exportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />
@@ -94,27 +89,40 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && this.deleteAllowed && (
-            <MenuItem onClick={this.openDeleteDialog}>
+          {!isGroup && editMode && this.deleteAllowed && (
+            <MenuItem onClick={this.deleteLayer}>
               <ListItemIcon>
                 <Delete />
               </ListItemIcon>
               Удалить слой
             </MenuItem>
           )}
+
+          {isGroup && editMode && (
+            <MenuItem onClick={this.openEditGroupDialog}>
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              Переименовать группу
+            </MenuItem>
+          )}
+
+          {isGroup && editMode && (
+            <MenuItem onClick={this.deleteGroup}>
+              <ListItemIcon>
+                <Delete />
+              </ListItemIcon>
+              Удалить группу
+            </MenuItem>
+          )}
         </Menu>
 
-        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
-          <DialogContent>
-            <DialogContentText>Удалить слой "{entity.title}"?</DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.deleteLayer} color='primary'>
-              Удалить
-            </Button>
-            <Button onClick={this.closeDeleteDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
+        <LayersGroupEditDialog
+          open={this.editGroupDialogOpen}
+          onClose={this.closeEditGroupDialog}
+          title={entity.title}
+          onEdit={this.editGroup}
+        />
       </>
     );
   }
@@ -126,11 +134,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
       return;
     }
 
+    const layer = entity as CrgLayer;
+
     const permissions = await Promise.all([
-      isReadAllowed(entity as CrgLayer),
-      isCreateAllowed(entity as CrgLayer),
-      isDeleteAllowed(entity as CrgLayer),
-      isExportAllowed(entity as CrgLayer)
+      isReadAllowed(layer),
+      isCreateAllowed(layer),
+      isDeleteAllowed(layer),
+      isExportAllowed(layer)
     ]);
 
     this.setPermissions(permissions);
@@ -179,21 +189,30 @@ export class LayerMenu extends Component<LayerMenuProps> {
     onClose();
   }
 
-  @boundMethod
-  private async deleteLayer() {
-    await deleteLayer(this.props.entity as CrgLayer);
-    this.closeDeleteDialog();
-    sidebars.closeAttributes();
-  }
-
   @action.bound
-  private openDeleteDialog() {
-    this.deleteDialogOpen = true;
+  private openEditGroupDialog() {
+    this.editGroupDialogOpen = true;
     this.props.onClose();
   }
 
   @action.bound
-  private closeDeleteDialog() {
-    this.deleteDialogOpen = false;
+  private closeEditGroupDialog() {
+    this.editGroupDialogOpen = false;
+  }
+
+  @action.bound
+  private editGroup(title: string) {
+    this.props.entity.title = title;
+  }
+
+  @action.bound
+  private async deleteGroup() {
+    currentProject.deleteGroup(this.props.entity as CrgLayersGroup);
+  }
+
+  @action.bound
+  private async deleteLayer() {
+    const layer = this.props.entity as CrgLayer;
+    currentProject.deleteLayer(layer);
   }
 }

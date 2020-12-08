@@ -70,18 +70,10 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
         </DialogContent>
 
         <DialogActions>
-          <Button
-            form='createDatasetForm'
-            type='submit'
-            color='primary'
-            variant='outlined'
-            disabled={!this.newDatasetName}
-          >
+          <Button form='createDatasetForm' type='submit' color='primary' disabled={!this.newDatasetName}>
             Создать
           </Button>
-          <Button onClick={this.props.onClose} variant='outlined'>
-            Отмена
-          </Button>
+          <Button onClick={this.props.onClose}>Отмена</Button>
         </DialogActions>
       </Dialog>
     );

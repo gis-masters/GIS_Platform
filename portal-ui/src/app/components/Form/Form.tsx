@@ -1,5 +1,4 @@
-import React, { FC, FormEvent } from 'react';
-import { IClassNameProps } from '@bem-react/core';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';

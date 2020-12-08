@@ -32,6 +32,7 @@ interface BaseCrgLayer extends CrgEntity {
 }
 
 // extended on ui
+//FIXME: не должно быть расширения на UI, может перенести эти св-ва в TreeItem?
 export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
   legend?: RuleWithLegend[];
@@ -49,10 +50,18 @@ export interface CrgLayersGroup extends CrgEntity {
   expanded: boolean;
 }
 
-export interface TreeItem<T = CrgLayer | CrgLayersGroup> {
+export type NewCrgLayersGroup = Pick<
+  CrgLayersGroup,
+  'id' | 'title' | 'enabled' | 'transparency' | 'position' | 'parent' | 'expanded'
+>;
+
+export type TreeItemPayload = CrgLayer | CrgLayersGroup | NewCrgLayersGroup;
+
+export interface TreeItem<T = TreeItemPayload> {
   id: number;
   payload: T;
   isGroup: boolean;
+  isEmptyGroup?: boolean;
   depth?: number;
   visible?: boolean;
   hiddenByZoom?: boolean;

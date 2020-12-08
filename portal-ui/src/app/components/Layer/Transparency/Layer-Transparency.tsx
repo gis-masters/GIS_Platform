@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Slider } from '@material-ui/core';
 
-import { CrgLayer, CrgLayersGroup } from '../../../services/crg/projects.models';
+import { TreeItemPayload } from '../../../services/crg/projects.models';
 
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./Layer-Transparency.scss';
 const cnLayerTransparency = cn('Layer', 'Transparency');
 
 interface LayerTransparencyProps {
-  entity: CrgLayer | CrgLayersGroup;
+  entity: TreeItemPayload;
 }
 
 @observer

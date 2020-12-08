@@ -3,8 +3,8 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Layer } from '../../Layer/Layer';
 import { TreeItem } from '../../../services/crg/projects.models';
+import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 
@@ -12,23 +12,29 @@ const cnLayersTree = cn('LayersTree');
 
 interface LayersTreeItemProps {
   item: TreeItem;
+  editMode: boolean;
+  highlighted: boolean;
 }
 
 @observer
 export class LayersTreeItem extends Component<LayersTreeItemProps> {
   render() {
-    const { isGroup, payload, depth, visible, hiddenByZoom, errors } = this.props.item;
+    const { editMode, item, highlighted } = this.props;
+    const { isGroup, isEmptyGroup, payload, depth, visible, hiddenByZoom, errors } = item;
 
     return (
       <Layer
-        className={cnLayersTree('Item', { visible, hiddenByZoom })}
+        className={cnLayersTree('Item', { visible, hiddenByZoom, editMode })}
         isGroup={isGroup}
+        isEmptyGroup={isEmptyGroup}
         data={payload}
         depth={depth}
         visible={visible}
         hiddenByZoom={hiddenByZoom}
         onEyeClick={this.eyeHandler}
         errors={errors}
+        editMode={editMode}
+        highlighted={highlighted}
       />
     );
   }

@@ -10,7 +10,7 @@ import { filterObjects, FilterParams } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { FilterButton } from '../FilterButton/FilterButton';
 import { Highlight } from '../Highlight/Highlight';
-import { IdBadge } from '../IdBadge/IdBadge';
+import { TextBadge } from '../TextBadge/TextBadge';
 
 import { TableHeadCell } from './TableHeadCell/TableHeadCell';
 import { XTableEmpty } from './Empty/XTable-Empty';
@@ -108,7 +108,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                               <Highlight word={this.filterParams[field]} enabled={filterable && this.filterActive}>
                                 {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
                               </Highlight>
-                              {getIdBadge && <IdBadge id={getIdBadge(rowData)} />}
+                              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
                             </>
                           )}
                         </TableCell>

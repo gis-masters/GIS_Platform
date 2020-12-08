@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayersGroup, CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
+import { CrgLayersGroup, CrgLayer, CrgLayerType, TreeItemPayload } from '../../services/crg/projects.models';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
@@ -12,6 +12,7 @@ import { schemaService } from '../../services/crg/schema.service';
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
 import { IconType } from './Icon/Layer-Icon';
+import { LayerDrag } from './Drag/Layer-Drag';
 import { LayerCard } from './Card/Layer-Card';
 import { LayerMenu } from './Menu/Layer-Menu';
 import { LayerOpen } from './Open/Layer-Open';
@@ -21,6 +22,7 @@ import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerLegend } from './Legend/Layer-Legend';
 import { LayerIcon } from './Icon/Layer-Icon.composed';
 import { LayerInnards } from './Innards/Layer-Innards';
+import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
 
@@ -30,11 +32,14 @@ export const cnLayer = cn('Layer');
 
 export interface LayerProps extends IClassNameProps {
   isGroup: boolean;
-  data: CrgLayer | CrgLayersGroup;
+  isEmptyGroup: boolean;
+  data: TreeItemPayload;
   depth: number;
   visible: boolean;
   hiddenByZoom: boolean;
   errors: string[];
+  editMode: boolean;
+  highlighted: boolean;
   onEyeClick: () => void;
 }
 
@@ -48,14 +53,31 @@ export class Layer extends Component<LayerProps> {
   @observable private _errors: string[] = [];
   private menuAnchor?: HTMLElement;
 
-  constructor(props: LayerProps) {
-    super(props);
+  async componentDidMount() {
+    await this.fetchIconType();
+  }
 
-    this.fetchIconType();
+  componentDidUpdate({ editMode: prevEditMode }: LayerProps) {
+    const { editMode } = this.props;
+
+    if (editMode && !prevEditMode) {
+      this.setOpen(false);
+    }
   }
 
   render() {
-    const { className, data, isGroup, depth, onEyeClick, visible, hiddenByZoom } = this.props;
+    const {
+      className,
+      data,
+      isGroup,
+      isEmptyGroup,
+      depth,
+      onEyeClick,
+      visible,
+      hiddenByZoom,
+      editMode,
+      highlighted
+    } = this.props;
     const { title, enabled } = data;
     const { expanded } = data as CrgLayersGroup;
     const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
@@ -64,8 +86,9 @@ export class Layer extends Component<LayerProps> {
       : '';
 
     return (
-      <div className={cnLayer({ open: this.open, group: isGroup, visible }, [className])}>
-        <LayerCard onContextMenu={this.handleContextMenu}>
+      <div className={cnLayer({ open: this.open, group: isGroup, visible, editMode }, [className])}>
+        <LayerCard onContextMenu={this.handleContextMenu} highlighted={highlighted}>
+          <LayerDrag />
           {!hiddenByZoom && <LayerTransparencyIndicator value={data.transparency} />}
           {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
           <LayerEye
@@ -75,9 +98,12 @@ export class Layer extends Component<LayerProps> {
             tooltipText={hiddenByZoomTooltipText}
           />
           <LayerGap gap={depth} />
-          <LayerOpen onClick={this.handleOpen} open={this.open} />
+          <LayerOpen onClick={this.handleOpen} open={this.open} disabled={editMode && !isGroup} />
           <LayerIcon type={this.iconType} expanded={expanded} />
-          <LayerTitle isError={this.isError}>{title}</LayerTitle>
+          <LayerTitle isError={this.isError}>
+            {title}
+            {isEmptyGroup && <LayerEmptiness />}
+          </LayerTitle>
           <LayerBurger disabled={this.isError} onClick={this.handleBurgerClick} />
         </LayerCard>
 
@@ -94,6 +120,7 @@ export class Layer extends Component<LayerProps> {
           y={this.menuY}
           anchor={this.menuAnchor}
           onClose={this.handleContextMenuClose}
+          editMode={editMode}
         />
       </div>
     );
@@ -152,18 +179,18 @@ export class Layer extends Component<LayerProps> {
 
   @action.bound
   private handleOpen() {
-    const { isGroup, data } = this.props;
+    const { isGroup, data, editMode } = this.props;
 
     if (isGroup) {
       const group = data as CrgLayersGroup;
       group.expanded = !group.expanded;
     } else {
       const { type } = data as CrgLayer;
-      if (type !== CrgLayerType.VECTOR) {
+      if (type !== CrgLayerType.VECTOR || editMode) {
         return;
       }
 
-      this._open = !this._open;
+      this.setOpen(!this._open);
     }
   }
 
@@ -206,5 +233,10 @@ export class Layer extends Component<LayerProps> {
     if (data.enabled) {
       onEyeClick();
     }
+  }
+
+  @action
+  private setOpen(open: boolean) {
+    this._open = open;
   }
 }

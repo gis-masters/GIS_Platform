@@ -10,7 +10,7 @@ import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { FilterParams } from '../../services/util/filterObjects';
 import { Highlight } from '../Highlight/Highlight';
-import { IdBadge } from '../IdBadge/IdBadge';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { Button } from '../Button/Button';
 import { PermissionsListItemWrapped } from '../PermissionsListDialog/PermissionsListDialog';
 import { XTable } from '../XTable/XTable';
@@ -188,7 +188,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         <Highlight word={filterParams.layerTitle} enabled={filterActive}>
           {item.layerTitle}
         </Highlight>
-        {item.origin.layer && <IdBadge id={item.origin.layer.id} />}
+        {item.origin.layer && <TextBadge id={item.origin.layer.id} />}
       </>
     );
   }

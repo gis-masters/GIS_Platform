@@ -6,7 +6,6 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { FilterParams } from '../../services/util/filterObjects';
-import { allPermissionsService } from '../../services/crg/allPermissions.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
 import { PrincipalType } from '../../services/crg/permissions.service';
@@ -15,8 +14,8 @@ import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { OrgActions } from '../OrgActions/OrgActions';
 import { Highlight } from '../Highlight/Highlight';
-import { IdBadge } from '../IdBadge/IdBadge';
-import { XTable } from '../XTable/XTable';
+import { TextBadge } from '../TextBadge/TextBadge';
+import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
 
@@ -32,6 +31,55 @@ interface CrgUserExtended extends CrgUser {
 
 @observer
 export class OrgUsers extends Component {
+  private xTableCols: XTableColumn<CrgUserExtended>[] = [
+    {
+      title: 'Фамилия',
+      field: 'surName',
+      filtering: true,
+      sorting: true
+    },
+    {
+      title: 'Имя',
+      field: 'name',
+      filtering: true,
+      sorting: true
+    },
+    {
+      title: 'Активен',
+      field: 'enabled',
+      sorting: true,
+      align: 'right',
+      renderCellContent: this.renderUserEnabled
+    },
+    {
+      title: 'e-mail / username',
+      field: 'email',
+      filtering: true,
+      sorting: true,
+      align: 'right',
+      renderCellContent: this.renderUserEmail
+    },
+    {
+      title: 'Группы',
+      field: 'groupsString',
+      filtering: true,
+      align: 'right'
+    },
+    {
+      title: 'Разрешений',
+      field: 'permissionsCount',
+      filtering: true,
+      sorting: true,
+      align: 'right'
+    },
+    {
+      title: 'Действия',
+      align: 'right',
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderUserActions
+    }
+  ];
+
   async componentDidMount() {
     await Promise.all([await usersService.initUsersListStore(), await groupsService.initGroupsListStore()]);
   }
@@ -42,54 +90,7 @@ export class OrgUsers extends Component {
         className={cnOrgUsers()}
         headerActions={<OrgUsersCreate />}
         data={this.users}
-        cols={[
-          {
-            title: 'Фамилия',
-            field: 'surName',
-            filtering: true,
-            sorting: true
-          },
-          {
-            title: 'Имя',
-            field: 'name',
-            filtering: true,
-            sorting: true
-          },
-          {
-            title: 'Активен',
-            field: 'enabled',
-            sorting: true,
-            align: 'right',
-            renderCellContent: this.renderUserEnabled
-          },
-          {
-            title: 'e-mail / username',
-            field: 'email',
-            filtering: true,
-            sorting: true,
-            align: 'right',
-            renderCellContent: this.renderUserEmail
-          },
-          {
-            title: 'Группы',
-            field: 'groupsString',
-            filtering: true,
-            align: 'right'
-          },
-          {
-            title: 'Разрешений',
-            field: 'permissionsCount',
-            filtering: true,
-            sorting: true,
-            align: 'right'
-          },
-          {
-            title: 'Действия',
-            align: 'right',
-            cellProps: { padding: 'checkbox' },
-            renderCellContent: this.renderUserActions
-          }
-        ]}
+        cols={this.xTableCols}
         defaultSort={{ field: 'surName', asc: true }}
         secondarySortField='id'
         filterable
@@ -128,7 +129,7 @@ export class OrgUsers extends Component {
           {user.email}
         </Highlight>
         {user.email !== user.username && ` / ${user.username}`}
-        <IdBadge id={user.id} />
+        <TextBadge id={user.id} />
       </>
     );
   }
