@@ -11,7 +11,7 @@ Feature: Выборка проектов
     And в заголовке Location передает ID созданной организации
     When Пользователь делает запрос на все проекты организации
     Then Сервер отвечает со статус-кодом 200
-    And В ответе сервере в "projects" отсутствует пункт "_embedded"
+    And В ответе сервера для сущности "projects" отсутствует пункт "_embedded"
     Examples:
       | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
       | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |

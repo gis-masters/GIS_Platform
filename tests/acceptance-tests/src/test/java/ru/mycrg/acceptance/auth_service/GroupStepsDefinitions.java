@@ -72,7 +72,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользовательская группа {string}, {string}")
-    public void isUsersGroupExist(String groupName, String groupDescription) {
+    public void initializeUsersGroup(String groupName, String groupDescription) {
         if (isUsersGroupExistInPool(groupName)) {
             makeExactUsersGroupAsCurrent(groupName);
         } else {

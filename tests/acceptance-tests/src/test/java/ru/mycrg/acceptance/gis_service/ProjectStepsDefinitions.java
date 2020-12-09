@@ -3,9 +3,9 @@ package ru.mycrg.acceptance.gis_service;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
@@ -16,8 +16,9 @@ import java.util.Map;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
@@ -59,13 +60,14 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует проект {string}")
-    public void isProjectExist(String projectName) {
+    public void initializeProject(String projectNameKey) {
+        final String projectName = generateString(projectNameKey);
         if (isProjectExistInPool(projectName)) {
             makeExactProjectAsCurrent(projectName);
         } else if (!projectPool.isEmpty()) {
             makeLastAvailableProjectAsCurrent();
         } else {
-            createProject(projectName);
+            createProject(projectNameKey);
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetProjectIdFromBody();
         }
@@ -102,8 +104,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на создание проекта {string}")
-    public void createProject(String projectName) {
-        projectDto = new ProjectRequestDto(generateString(projectName));
+    public void createProject(String projectNameKey) {
+        projectDto = new ProjectRequestDto(generateString(projectNameKey));
 
         super.createEntity(projectDto);
     }
@@ -124,18 +126,23 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на создание правила на текущего пользователя")
     public void giveCurrentUserPermToCurrentProject() {
-        Map<String, String> queryParams = new LinkedHashMap<>();
+        addPermissionToProject(userId, "user", "VIEWER");
+    }
 
-        queryParams.put("principalId", userId.toString());
-        queryParams.put("principalType", "user");
-        queryParams.put("role", "VIEWER");
+    @When("Администратор присваивает текущей группе роль {string}")
+    public void addPermissionToCurrentGroup(String role) {
+        addPermissionToProject(usersGroupId, "group", role);
+    }
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(queryParams)).
-                        contentType(ContentType.JSON)
-                .when().
-                        post(String.format("/%d/permissions", projectId));
+    @Then("В ответе присутствует текущий проект")
+    public void checkCurrentProjectIsPresentInResponse() {
+        jsonPath = response.jsonPath();
+
+        final List<String> names = jsonPath.getList("_embedded.projects.name");
+
+        names.forEach(s -> System.out.println("PROJECT NAME : " + s));
+
+        assertTrue(names.contains(projectDto.getProjectName()));
     }
 
     @When("Пользователь делает запрос на удаление текущего проекта")
@@ -258,18 +265,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         return new ProjectRequestDto(projectName);
     }
 
-    private Response createProject(ProjectRequestDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("");
-
-        return response;
-    }
-
     private void makeExactProjectAsCurrent(String projectName) {
         projectPool.entrySet().stream()
                    .filter(entry -> entry.getValue().getProjectName().equals(projectName))
@@ -288,5 +283,19 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                        projectId = entry.getKey();
                        projectDto = entry.getValue();
                    });
+    }
+
+    private void addPermissionToProject(Integer principalId, String principalType, String role) {
+        Map<String, String> payload = new LinkedHashMap<>();
+        payload.put("principalId", principalId.toString());
+        payload.put("principalType", principalType);
+        payload.put("role", role);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(payload)).
+                        contentType(ContentType.JSON)
+                .when().
+                        post(String.format("/%d/permissions", projectId));
     }
 }

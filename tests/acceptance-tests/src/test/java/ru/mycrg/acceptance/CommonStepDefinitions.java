@@ -96,11 +96,11 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @And("В ответе сервере в {string} отсутствует пункт {string}")
-    public void checkNonExistentField(String checkType, String field) {
+    @And("В ответе сервера для сущности {string} отсутствует пункт {string}")
+    public void checkNonExistentField(String entity, String field) {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get(String.format("%s/", checkType))
+                get(String.format("%s/", entity))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).

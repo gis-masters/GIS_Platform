@@ -64,7 +64,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользователь")
-    public void checkUser(DataTable dataTable) {
+    public void initializeUser(DataTable dataTable) {
         String eMail = generateString(dataTable.asList().get(2));
 
         if (isUserExistInPool(eMail)) {
