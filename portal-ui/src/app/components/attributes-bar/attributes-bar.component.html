@@ -1,117 +1,107 @@
 <div resizable-bar="top" class="attributes-bar">
   <div class="attributes-bar__header">
-
-    <div class="attributes-bar__title">{{layer?.title}}</div>
+    <div class="attributes-bar__title">{{ layer?.title }}</div>
 
     <div class="attributes-bar__header-right-side">
-      <crg-button
-          class="attributes-bar__head-button"
-          [matMenuTriggerFor]="editMenu"
-          *ngIf="updatingAllowed">
-        Правка
-      </crg-button>
+      <crg-button class="attributes-bar__head-button" [matMenuTriggerFor]="editMenu">Правка</crg-button>
 
       <crg-button
-          class="attributes-bar__head-button"
-          [checked]="enableFilter"
-          (click)="switchFilter()"
-          icon="filter_list">
+        class="attributes-bar__head-button"
+        [checked]="enableFilter"
+        (click)="switchFilter()"
+        icon="filter_list"
+      >
         Фильтр
       </crg-button>
 
-      <mat-icon class="attributes-bar__close" (click)="closeMe()">
-        close
-      </mat-icon>
+      <mat-icon class="attributes-bar__close" (click)="closeMe()"> close </mat-icon>
     </div>
   </div>
 
   <div class="attributes-bar__content">
     <crg-loading *ngIf="loading" [percents]="showPercent ? loadPercent : null"></crg-loading>
 
-    <ngx-datatable [ngClass]="{
-                      'bootstrap': enableFilter,
-                      'fiz-bootstrap': !enableFilter,
-                      'attributes-bar__datatable': true
-                    }"
-                   [rows]="features"
-                   [columns]="columns"
-                   [columnMode]="'force'"
-                   [rowHeight]="20"
-                   [headerHeight]="enableFilter ? 50 : 25"
-                   [footerHeight]="40"
-                   [selectionType]="'checkbox'"
-                   [selectAllRowsOnPage]="false"
-                   [trackByProp]="'updated'"
-
-                   [externalPaging]="true"
-                   [externalSorting]="true"
-                   [count]="totalFeatures"
-                   [offset]="pageInfo.offset"
-                   [limit]="pageInfo.pageSize"
-
-                   [rowIdentity]="customRowIdentity"
-
-                   (page)='setPage($event)'
-                   (sort)="onSort($event)"
-                   (select)='showSelectedFeatures()'
-                   (activate)="onActivate($event)"
-
-                   [messages]="tableMessages"
-                   [virtualization]="false"
-                   [scrollbarV]="true"
-                   [scrollbarH]="true">
+    <ngx-datatable
+      [ngClass]="{
+        bootstrap: enableFilter,
+        'fiz-bootstrap': !enableFilter,
+        'attributes-bar__datatable': true
+      }"
+      [rows]="features"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [rowHeight]="20"
+      [headerHeight]="enableFilter ? 50 : 25"
+      [footerHeight]="40"
+      [selectionType]="'checkbox'"
+      [selectAllRowsOnPage]="false"
+      [trackByProp]="'updated'"
+      [externalPaging]="true"
+      [externalSorting]="true"
+      [count]="totalFeatures"
+      [offset]="pageInfo.offset"
+      [limit]="pageInfo.pageSize"
+      [rowIdentity]="customRowIdentity"
+      (page)="setPage($event)"
+      (sort)="onSort($event)"
+      (select)="showSelectedFeatures()"
+      (activate)="onActivate($event)"
+      [messages]="tableMessages"
+      [virtualization]="false"
+      [scrollbarV]="true"
+      [scrollbarH]="true"
+    >
     </ngx-datatable>
 
     <ng-template #customSelectAll ngx-datatable-header-template>
-      <input type="checkbox" (change)="handleSelectAll()" [value]="isSelectAll" [disabled]="loading"/>
+      <input type="checkbox" (change)="handleSelectAll()" [value]="isSelectAll" [disabled]="loading" />
     </ng-template>
 
     <ng-template #cellTemplate let-row="row" let-value="value">
-      <div *ngIf="currentPositionFeature?.id === row.id">
-        >
-      </div>
+      <div *ngIf="currentPositionFeature?.id === row.id">></div>
     </ng-template>
 
-    <ng-template #filterTemplate let-column="column" let-sort="sortFn" let-sortDir="sortDir"
-                 ngx-datatable-header-template>
+    <ng-template
+      #filterTemplate
+      let-column="column"
+      let-sort="sortFn"
+      let-sortDir="sortDir"
+      ngx-datatable-header-template
+    >
       <div (click)="sort($event, sortDir, sortFn)">
-        <div class="cut-text w-95 cur-p">{{column.name}}</div>
+        <div class="cut-text w-95 cur-p">{{ column.name }}</div>
         <div class="sort-btn"></div>
       </div>
 
-      <crg-table-filter *ngIf="enableFilter" [property]="getSimpleProperty(column.prop.split('.')[1])"
-                        (filterEvent)="onFilterChange($event)"></crg-table-filter>
+      <crg-table-filter
+        *ngIf="enableFilter"
+        [property]="getSimpleProperty(column.prop.split('.')[1])"
+        (filterEvent)="onFilterChange($event)"
+      ></crg-table-filter>
     </ng-template>
   </div>
-
 </div>
 
 <mat-menu #editMenu="matMenu">
-
-  <button mat-menu-item (click)="editFeatures()"
-          *ngIf="updatingAllowed">
+  <button mat-menu-item (click)="editFeatures()" *ngIf="updatingAllowed">
     <mat-icon>edit</mat-icon>
     <span>Множественное редактирование</span>
   </button>
 
   <mat-divider></mat-divider>
 
-  <button mat-menu-item (click)="copyObjects()"
-          *ngIf="updatingAllowed">
+  <button mat-menu-item (click)="copyObjects()">
     <mat-icon>file_copy</mat-icon>
     <span>Копировать</span>
   </button>
 
-  <button mat-menu-item (click)="moveObjects()"
-          *ngIf="deletingAllowed">
+  <button mat-menu-item (click)="moveObjects()" *ngIf="deletingAllowed">
     <mat-icon>shuffle</mat-icon>
     <span>Переместить</span>
   </button>
 
-  <button mat-menu-item (click)="deleteObjects()"
-          *ngIf="deletingAllowed">
+  <button mat-menu-item (click)="deleteObjects()" *ngIf="deletingAllowed">
     <mat-icon>delete</mat-icon>
     <span>Удалить</span>
   </button>
-
 </mat-menu>
