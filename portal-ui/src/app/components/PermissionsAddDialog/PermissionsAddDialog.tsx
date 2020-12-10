@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { Role, roles, rolesTitles, PrincipalType } from '../../services/crg/permissions.service';
+import { Role, roles, rolesTitles, PrincipalType } from '../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { FilterParams } from '../../services/util/filterObjects';

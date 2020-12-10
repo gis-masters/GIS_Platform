@@ -1,18 +1,12 @@
 package ru.mycrg.data_service.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
-@Data
-@NoArgsConstructor
 @Entity
-@Table(name = "permissions")
+@Table(name = "permission")
 public class Permission {
 
     @Id
@@ -20,22 +14,14 @@ public class Permission {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Column
-    private String principalType;
+    @ManyToOne
+    private Resource resource;
 
-    @Column
-    private Long principalId;
+    @ManyToOne
+    private Principal principal;
 
-    @Column
+    @Column(length = 20, nullable = false)
     private String role;
-
-    @ManyToMany
-    @JoinTable(
-            name = "resource_permissions",
-            joinColumns = {@JoinColumn(name = "permission_id")},
-            inverseJoinColumns = {@JoinColumn(name = "resource_id")}
-    )
-    private Set<Resource> resources = new HashSet<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -44,7 +30,61 @@ public class Permission {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
-    public void addResource(Resource resource) {
-        this.resources.add(resource);
+    public Permission() {
+        // Framework required
+    }
+
+    public Permission(Resource resource, Principal principal, String role) {
+        this.resource = resource;
+        this.principal = principal;
+        this.role = role;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Principal getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
     }
 }

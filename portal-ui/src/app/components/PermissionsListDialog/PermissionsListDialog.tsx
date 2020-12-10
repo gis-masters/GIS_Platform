@@ -6,20 +6,18 @@ import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import {
-  RoleAssignmentBody,
-  PrincipalType,
-  addTablePermission,
-  addProjectPermission,
-  removeTablePermission,
-  removeProjectPermission,
-  projectRoles
-} from '../../services/crg/permissions.service';
-import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
-import { communicationService } from '../../services/communication.service';
-import { FilterParams } from '../../services/util/filterObjects';
-import { PermissionsListItem } from '../../services/crg/allPermissions.service';
 import { allPermissions } from '../../stores/AllPermissions.store';
+import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/crg/permissions.models';
+import { PermissionsListItem } from '../../services/crg/allPermissions.service';
+import { communicationService } from '../../services/communication.service';
+import { CrgProject, CrgLayer } from '../../services/crg/projects.models';
+import { FilterParams } from '../../services/util/filterObjects';
+import {
+  addProjectPermission,
+  addTablePermission,
+  removeProjectPermission,
+  removeTablePermission
+} from '../../services/crg/permissions.client';
 import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';

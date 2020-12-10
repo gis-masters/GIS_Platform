@@ -7,19 +7,13 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { DataSet, DataTable } from '../../services/data.service';
-import { CrgUser, usersService } from '../../services/crg/users.service';
+import { addTablePermission, removeTablePermission } from '../../services/crg/permissions.client';
+import { PrincipalType, Role, RoleAssignmentBody } from '../../services/crg/permissions.models';
+import { filterByPrincipal, filterOutPrincipal } from '../../services/crg/permissions.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { communicationService } from '../../services/communication.service';
-import {
-  addTablePermission,
-  filterByPrincipal,
-  filterOutPrincipal,
-  PrincipalType,
-  removeTablePermission,
-  Role,
-  RoleAssignmentBody
-} from '../../services/crg/permissions.service';
+import { CrgUser, usersService } from '../../services/crg/users.service';
+import { DataSet, DataTable } from '../../services/data.service';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
 import { XTable } from '../XTable/XTable';
@@ -82,7 +76,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
               }
               data={this.users}
               cols={[
-                { title: 'Фамилия', field: 'surName', filtering: true, sorting: true },
+                { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
                 { title: 'Имя', field: 'name', filtering: true, sorting: true },
                 { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id },
                 {
@@ -98,7 +92,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
                   renderCellContent: this.renderUserActions
                 }
               ]}
-              defaultSort={{ field: 'surName', asc: true }}
+              defaultSort={{ field: 'surname', asc: true }}
               secondarySortField='id'
               filterable
             />
@@ -245,11 +239,11 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
     toDelete.splice(toDelete.length, 0, ...existing);
 
     for (const item of toDelete) {
-      await removeTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
+      await removeTablePermission(item, dataSet.identifier, dataTable.identifier);
     }
 
     for (const item of toCreate) {
-      await addTablePermission(item, dataSet.resourceIdentifier, dataTable.resourceIdentifier);
+      await addTablePermission(item, dataSet.identifier, dataTable.identifier);
     }
 
     communicationService.permissionsUpdated.emit();

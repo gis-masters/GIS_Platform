@@ -27,6 +27,7 @@ import java.security.Principal;
 import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RepositoryRestController
 public class UserController {
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getUsers(Pageable p, Authentication authentication) {
         Page<UserProjection> users = userService.findAll(p, authentication);
 

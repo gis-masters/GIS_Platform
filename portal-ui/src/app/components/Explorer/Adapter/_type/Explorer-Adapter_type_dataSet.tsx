@@ -19,7 +19,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDataSet {
   static getId(item: ExplorerItemData<DataSet>) {
-    return `${item.type}:${item.payload.resourceIdentifier}`;
+    return `${item.type}:${item.payload.identifier}`;
   }
 
   static getTitle(item: ExplorerItemData<DataSet>) {
@@ -31,11 +31,11 @@ export class ExplorerAdapterTypeDataSet {
   }
 
   static getMeta(item: ExplorerItemData<DataSet>) {
-    const { itemsCount, createdAt, resourceIdentifier } = item.payload;
+    const { itemsCount, createdAt, identifier } = item.payload;
     moment.locale('ru');
     const date = createdAt ? `, ${moment(createdAt).format('LL')}` : '';
 
-    return `${itemsCount} ${pluralize(itemsCount, 'таблица', 'таблицы', 'таблиц')}${date} (${resourceIdentifier})`;
+    return `${itemsCount} ${pluralize(itemsCount, 'таблица', 'таблицы', 'таблиц')}${date} (${identifier})`;
   }
 
   static getIcon() {

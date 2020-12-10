@@ -6,7 +6,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
 import { serverProperties } from '../server-properties.service';
 import { TaskImport } from '../geoserver/import/taskImport';
-import { isReadAllowed } from './permissions.service';
+import { isFeaturesReadAllowed } from './permissions.service';
 import { PageableResponse, Process } from '../models';
 import { usersService } from './users.service';
 import { wsService } from '../ws.service';
@@ -158,11 +158,11 @@ class ProjectsService {
   }
 
   async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
     const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
 
-    const layersPermissions = await Promise.all(layers.map(isReadAllowed));
+    const layersPermissions = await Promise.all(layers.map(isFeaturesReadAllowed));
 
     return layers.filter((layer, i) => layersPermissions[i]);
   }

@@ -11,6 +11,6 @@ export class CurrentUserResolver implements Resolve<void> {
    * Сходим за инфой пользователя/организации перед загрузкой старницы
    */
   async resolve() {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
   }
 }

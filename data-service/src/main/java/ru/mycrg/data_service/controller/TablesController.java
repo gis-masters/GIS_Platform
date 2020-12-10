@@ -9,8 +9,8 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.tables.ITableService;
 import ru.mycrg.data_service.service.tables.TableService;
@@ -35,28 +35,28 @@ public class TablesController {
     }
 
     @PostMapping("/datasets/{dataSetName}/tables")
-    public ResponseEntity<TableModel> createTable(@PathVariable String dataSetName,
-                                                  @Valid @RequestBody ResourceCreateDto dto,
-                                                  Authentication authentication) {
+    public ResponseEntity<IResourceModel> createTable(@PathVariable String dataSetName,
+                                                      @Valid @RequestBody ResourceCreateDto dto,
+                                                      Authentication authentication) {
         ResourceIdentifier datasetId = new ResourceIdentifier(dataSetName, SCHEMA);
         ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId);
 
-        TableModel tableModel = tableService.create(tableId, dto, authentication);
+        IResourceModel resourceModel = tableService.create(tableId, dto, authentication);
 
-        return new ResponseEntity<>(tableModel, CREATED);
+        return new ResponseEntity<>(resourceModel, CREATED);
     }
 
     @GetMapping("/datasets/{dataSetName}/tables")
-    public ResponseEntity<PagedResources<TableModel>> getTables(
+    public ResponseEntity<PagedResources<IResourceModel>> getTables(
             @PathVariable String dataSetName,
             @RequestParam(required = false, defaultValue = "") String title,
             Authentication authentication,
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
-        final Page<TableModel> tables = tableService.getPaged(dataSetName, title, pageable, authentication);
+        final Page<IResourceModel> tables = tableService.getPaged(dataSetName, title, pageable, authentication);
 
-        PagedResources<TableModel> pagedResources = pageAssembler.toResource(tables,
-                linkTo(TablesController.class)
+        PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(tables,
+                                                                                 linkTo(TablesController.class)
                         .slash("/api/data/datasets/" + dataSetName + "/tables")
                         .withSelfRel());
 
@@ -70,7 +70,7 @@ public class TablesController {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
                                                                 new ResourceIdentifier(dataSetName, SCHEMA));
 
-        final TableModel dto = tableService.getByIdentifier(rIdentifier, authentication);
+        final IResourceModel dto = tableService.getByIdentifier(rIdentifier, authentication);
 
         return ResponseEntity.ok(dto);
     }

@@ -2,22 +2,17 @@ package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.core.Relation;
-import ru.mycrg.data_service.entity.ResourceDescription;
+import ru.mycrg.data_service.entity.Resource;
 
 @Relation(collectionRelation = "datasets")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class DatasetModel extends BaseModel {
+public class DatasetModel extends ResourceModel {
 
     public DatasetModel() {
         super();
     }
 
-    public DatasetModel(String name, Roles role) {
-        super(name, role.name());
-    }
-
-    public DatasetModel(ResourceDescription rd, Roles role) {
-        super(rd.getTitle(), rd.getDetails(), rd.getType(), rd.getIdentifier(), rd.getItemsCount(), role.name(),
-              rd.getCreatedAt());
+    public DatasetModel(Resource resource, Roles roles) {
+        super(resource, roles);
     }
 }

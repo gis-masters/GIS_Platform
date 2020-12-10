@@ -15,7 +15,7 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @Log4j2
@@ -30,7 +30,7 @@ public class PermissionController {
     }
 
     @GetMapping("/permissions")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<PermissionProjection>> getPermissions(@PathVariable(name = "project_id") long projectId,
                                                                      Authentication authentication) {
         List<PermissionProjection> permissions = permissionsService.getAll(projectId, authentication);
@@ -39,7 +39,7 @@ public class PermissionController {
     }
 
     @PostMapping("/permissions")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
                                                                  @Valid @RequestBody PermissionCreateDto dto,
                                                                  Authentication authentication) {
@@ -49,7 +49,7 @@ public class PermissionController {
     }
 
     @GetMapping("/permissions/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<PermissionProjection> getPermissionById(@PathVariable(name = "project_id") long projectId,
                                                             @PathVariable(name = "id") long permissionId,
                                                             Authentication authentication) {
@@ -59,7 +59,7 @@ public class PermissionController {
     }
 
     @PatchMapping(path = "/permissions/{id}", consumes = APPLICATION_JSON_MERGE_PATCH)
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updatePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,
                                                    @RequestBody JsonMergePatch patchDto,
@@ -70,7 +70,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/permissions/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deletePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,
                                                    Authentication authentication) {

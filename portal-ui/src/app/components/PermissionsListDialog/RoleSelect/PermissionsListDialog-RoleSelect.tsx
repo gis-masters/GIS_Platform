@@ -4,15 +4,9 @@ import { observer } from 'mobx-react';
 import { Select, MenuItem } from '@material-ui/core';
 import { cn } from '@bem-react/classname';
 
-import {
-  Role,
-  PrincipalType,
-  roles,
-  projectRoles,
-  rolesTitles,
-  filterOutPrincipal
-} from '../../../services/crg/permissions.service';
+import { Role, PrincipalType, roles, projectRoles, rolesTitles } from '../../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
+import { filterOutPrincipal } from '../../../services/crg/permissions.service';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';
 

@@ -20,7 +20,7 @@ type ErrorFields = { [key in keyof NewUserData]: string };
 const defaultValue: ErrorFields = {
   email: '',
   name: '',
-  surName: '',
+  surname: '',
   password: ''
 };
 
@@ -32,7 +32,7 @@ export class OrgUsersCreate extends Component {
   @observable private errorFields: ErrorFields = cloneDeep(defaultValue);
 
   render() {
-    const { email, name, surName, password } = this.userData;
+    const { email, name, surname, password } = this.userData;
 
     return (
       <>
@@ -73,9 +73,9 @@ export class OrgUsersCreate extends Component {
                   <TextField
                     id='permissionUserSurname'
                     onChange={this.handleSurname}
-                    value={surName}
-                    error={Boolean(this.errorFields.surName)}
-                    helperText={this.errorFields.surName}
+                    value={surname}
+                    error={Boolean(this.errorFields.surname)}
+                    helperText={this.errorFields.surname}
                   />
                 </FormControl>
               </FormField>
@@ -147,8 +147,8 @@ export class OrgUsersCreate extends Component {
 
   @action.bound
   private handleSurname(e: ChangeEvent<HTMLInputElement>) {
-    this.errorFields.surName = '';
-    this.userData.surName = e.target.value;
+    this.errorFields.surname = '';
+    this.userData.surname = e.target.value;
   }
 
   @action.bound

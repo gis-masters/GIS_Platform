@@ -1,9 +1,9 @@
 import { debounce } from 'lodash';
 
-import { serverProperties } from '../server-properties.service';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { allUsers } from '../../stores/AllUsers.store';
-import { BuildInRole } from './permissions.service';
+import { serverProperties } from '../server-properties.service';
+import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
 
@@ -16,30 +16,29 @@ export interface CrgUser {
   id: number;
   email: string;
   name: string;
-  surName: string;
-  username: string;
+  surname: string;
+  login: string;
   enabled: boolean;
-  authorities: { authority: string }[];
+  authorities: BuildInRole[];
   createdAt: string;
   _links?: { [key: string]: ApiLink }[];
 }
 
-export interface NewUserData extends Pick<CrgUser, 'email' | 'name' | 'surName'> {
+export interface NewUserData extends Pick<CrgUser, 'email' | 'name' | 'surname'> {
   password: string;
 }
 
-export interface UserInfo {
-  userName: string;
+export interface OrgInfo extends CrgUser {
   orgName: string;
   orgId: number;
-  roles?: BuildInRole[];
 }
 
 class UsersService {
   private static _instance: UsersService;
   private usersListStoreInited = false;
   private debouncedFetchUsersListStore: () => Promise<void>;
-  private currentUserInfoRequest?: Promise<void>;
+  private currentUserInfoRequest?: Promise<void> | null;
+  private usersListRequest?: Promise<void> | null;
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
@@ -49,8 +48,8 @@ class UsersService {
     return this._instance || (this._instance = new this());
   }
 
-  async fetchCurrent() {
-    if (currentUser.userName) {
+  async fetchCurrentUser() {
+    if (currentUser.login) {
       return;
     }
 
@@ -59,11 +58,11 @@ class UsersService {
     }
 
     await this.currentUserInfoRequest;
-    delete this.currentUserInfoRequest;
+    this.currentUserInfoRequest = null;
   }
 
   dropCurrent() {
-    delete this.currentUserInfoRequest;
+    this.currentUserInfoRequest = null;
     currentUser.drop();
   }
 
@@ -94,32 +93,30 @@ class UsersService {
     if (this.usersListStoreInited) {
       return;
     }
-
+    if (!this.usersListRequest) {
+      this.usersListRequest = this.fetchUsersListStore();
+    }
+    await this.usersListRequest;
+    this.usersListRequest = null;
     this.usersListStoreInited = true;
-
-    await this.fetchUsersListStore();
   }
 
-  async getUserByUsername(targetUsename: string): Promise<CrgUser> {
-    await this.initUsersListStore();
+  async getCurrentUser(): Promise<CrgUser> {
+    await this.fetchCurrentUser();
 
-    return allUsers.fullList.find(({ username }) => targetUsename === username);
+    return currentUser;
   }
 
   private async fetchingCurrent(): Promise<void> {
     const url = (await serverProperties.usersUrl) + '/current';
     try {
-      currentUser.setUser(await http.get<UserInfo>(url));
+      currentUser.setOrgInfo(await http.get<OrgInfo>(url));
     } catch (e) {
-      currentUser.setUser();
+      currentUser.setOrgInfo();
     }
   }
 
   private async fetchUsersListStore() {
-    if (!this.usersListStoreInited) {
-      return;
-    }
-
     if (allUsers.fetching) {
       this.debouncedFetchUsersListStore();
       return;

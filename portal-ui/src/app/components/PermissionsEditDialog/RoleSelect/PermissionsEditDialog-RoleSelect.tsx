@@ -4,7 +4,7 @@ import { MenuItem, Select } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.service';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.models';
 
 const cnPermissionsEditDialogRoleSelect = cn('PermissionsEditDialog', 'RoleSelect');
 

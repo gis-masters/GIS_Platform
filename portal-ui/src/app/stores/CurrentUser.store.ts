@@ -1,44 +1,56 @@
 import { observable, computed, action } from 'mobx';
 
-import { UserInfo } from '../services/crg/users.service';
-import { BuildInRole } from '../services/crg/permissions.service';
+import { BuildInRole } from '../services/crg/permissions.models';
+import { OrgInfo } from '../services/crg/users.service';
 
-const emptyUser = {
-  userName: '',
+const emptyOrgInfo: OrgInfo = {
+  id: 0,
+  email: '',
+  name: '',
+  surname: '',
+  login: '',
+  enabled: false,
+  authorities: [],
+  createdAt: '',
   orgName: '',
-  orgId: 0,
-  roles: []
+  orgId: 0
 };
 
-class CurrentUser implements UserInfo {
+class CurrentUser implements OrgInfo {
   private static _instance: CurrentUser;
 
-  @observable userName: string;
+  @observable id: number;
+  @observable email: string;
+  @observable name: string;
+  @observable surname: string;
+  @observable login: string;
+  @observable enabled: boolean;
+  @observable authorities: BuildInRole[];
+  @observable createdAt: string;
   @observable orgName: string;
   @observable orgId: number;
-  @observable roles: BuildInRole[];
 
   public static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   private constructor() {
-    Object.assign(this, emptyUser);
+    Object.assign(this, emptyOrgInfo);
   }
 
   @action
-  setUser(user?: UserInfo) {
-    Object.assign(this, emptyUser, user);
+  setOrgInfo(user?: OrgInfo) {
+    Object.assign(this, emptyOrgInfo, user);
   }
 
   @action
   drop() {
-    Object.assign(this, emptyUser);
+    Object.assign(this, emptyOrgInfo);
   }
 
   @computed
   get isAdmin(): boolean {
-    return this.roles.includes(BuildInRole.ORG_ADMIN) || this.roles.includes(BuildInRole.GLOBAL_ADMIN);
+    return this.authorities.includes(BuildInRole.ORG_ADMIN) || this.authorities.includes(BuildInRole.GLOBAL_ADMIN);
   }
 }
 

@@ -23,7 +23,7 @@ export class PickupDatasetsItem extends Component<PickupDatasetsItemProps> {
     const { item } = this.props;
 
     return (
-      <ListItem className={cnPickupDatasetsItem()} button key={item.resourceIdentifier}>
+      <ListItem className={cnPickupDatasetsItem()} button key={item.identifier}>
         <ListItemText
           primary={item.title}
           secondary={`${item.itemsCount} ${pluralize(item.itemsCount, 'таблица', 'таблицы', 'таблиц')}`}

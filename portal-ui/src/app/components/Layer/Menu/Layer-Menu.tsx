@@ -9,13 +9,11 @@ import { sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
 import { schemaService } from '../../../services/crg/schema.service';
-import { deleteLayer } from '../../../services/geoserver/layers.service';
 import { exportService } from '../../../services/crg/export.service';
 import {
-  isCreateAllowed,
-  isDeleteAllowed,
-  isExportAllowed,
-  isReadAllowed
+  isFeaturesCreateAllowed,
+  isLayerExportAllowed,
+  isLayersManagementAllowed
 } from '../../../services/crg/permissions.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { EditFeatureMode } from '../../edit-feature/edit-feature.component';
@@ -36,13 +34,12 @@ interface LayerMenuProps {
 @observer
 export class LayerMenu extends Component<LayerMenuProps> {
   @observable private editGroupDialogOpen = false;
-  @observable private readAllowed = false;
-  @observable private createAllowed = false;
-  @observable private exportAllowed = false;
-  @observable private deleteAllowed = false;
+  @observable private featuresCreateAllowed = false;
+  @observable private layerExportAllowed = false;
+  @observable private layersDeleteAllowed = false;
 
   async componentDidMount() {
-    await this.handlePermissions();
+    await this.fetchPermissions();
   }
 
   render() {
@@ -62,7 +59,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!editMode && isVectorLayer && this.readAllowed && (
+          {!editMode && isVectorLayer && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -71,7 +68,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && isVectorLayer && this.createAllowed && (
+          {!editMode && isVectorLayer && this.featuresCreateAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -80,7 +77,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && isVectorLayer && this.exportAllowed && (
+          {!editMode && isVectorLayer && this.layerExportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />
@@ -89,7 +86,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!isGroup && editMode && this.deleteAllowed && (
+          {!isGroup && editMode && this.layersDeleteAllowed && (
             <MenuItem onClick={this.deleteLayer}>
               <ListItemIcon>
                 <Delete />
@@ -127,31 +124,27 @@ export class LayerMenu extends Component<LayerMenuProps> {
     );
   }
 
-  private async handlePermissions() {
+  private async fetchPermissions() {
     const { entity, isGroup } = this.props;
 
     if (isGroup) {
       return;
     }
 
-    const layer = entity as CrgLayer;
-
-    const permissions = await Promise.all([
-      isReadAllowed(layer),
-      isCreateAllowed(layer),
-      isDeleteAllowed(layer),
-      isExportAllowed(layer)
+    const allowed = await Promise.all([
+      isFeaturesCreateAllowed(entity as CrgLayer),
+      isLayerExportAllowed(entity as CrgLayer),
+      isLayersManagementAllowed()
     ]);
 
-    this.setPermissions(permissions);
+    this.setPermissions(...allowed);
   }
 
   @action
-  private setPermissions([readAllowed, createAllowed, deleteAllowed, exportAllowed]: boolean[]) {
-    this.readAllowed = readAllowed;
-    this.createAllowed = createAllowed;
-    this.deleteAllowed = deleteAllowed;
-    this.exportAllowed = exportAllowed;
+  private setPermissions(featuresCreateAllowed: boolean, layerExportAllowed: boolean, layersDeleteAllowed: boolean) {
+    this.featuresCreateAllowed = featuresCreateAllowed;
+    this.layerExportAllowed = layerExportAllowed;
+    this.layersDeleteAllowed = layersDeleteAllowed;
   }
 
   @boundMethod

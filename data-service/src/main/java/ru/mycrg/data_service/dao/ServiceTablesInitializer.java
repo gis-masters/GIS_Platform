@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.dao;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,106 +9,97 @@ import org.springframework.stereotype.Service;
 
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DATA_SCHEMA_NAME;
 
-@Log4j2
 @Service
 public class ServiceTablesInitializer {
 
-    @Autowired
-    private Environment environment;
+    public static final Logger log = LoggerFactory.getLogger(ServiceTablesInitializer.class);
 
-    public ServiceTablesInitializer() {
+    private final Environment environment;
+
+    public ServiceTablesInitializer(Environment environment) {
+        this.environment = environment;
     }
 
     public void initialize(JdbcTemplate jdbcTemplate) {
         String dbUser = environment.getRequiredProperty("spring.datasource.username");
         String createSchema = "CREATE SCHEMA IF NOT EXISTS " + DATA_SCHEMA_NAME + " AUTHORIZATION " + dbUser;
-        String permissionsTable = "CREATE TABLE IF NOT EXISTS data.permissions " +
-                "(id             bigserial NOT NULL," +
-                " principal_type character varying(50)," +
-                " principal_id   bigint," +
-                " role           character varying(50)," +
-                " created_at     timestamp without time zone," +
-                " last_modified  timestamp without time zone," +
-                " CONSTRAINT permissions_pkey PRIMARY KEY (id)" +
-                ") TABLESPACE pg_default; ALTER TABLE data.permissions OWNER to " + dbUser;
-
-        String resourcesTable = "CREATE TABLE IF NOT EXISTS data.resources" +
-                "(id         bigserial NOT NULL," +
-                " type       character varying(50)," +
-                " identifier character varying(255)," +
-                " CONSTRAINT resource_pkey PRIMARY KEY (id)" +
-                ") TABLESPACE pg_default; ALTER TABLE data.resources OWNER to " + dbUser;
-
-        String resourcePermissionsTable = "CREATE TABLE IF NOT EXISTS data.resource_permissions" +
-                "(" +
-                "    permission_id bigserial NOT NULL," +
-                "    resource_id   bigserial NOT NULL," +
-                "    CONSTRAINT resources_permissions_pkey PRIMARY KEY (resource_id, permission_id)," +
-                "    CONSTRAINT fk8abj4or9ii7x4gwy7qb85a4y2 FOREIGN KEY (resource_id)" +
-                "        REFERENCES data.resources (id) MATCH SIMPLE" +
-                "        ON UPDATE NO ACTION" +
-                "        ON DELETE NO ACTION," +
-                "    CONSTRAINT fkl26dnu64nki1y3bhb38k4ll8a FOREIGN KEY (permission_id)" +
-                "        REFERENCES data.permissions (id) MATCH SIMPLE" +
-                "        ON UPDATE NO ACTION" +
-                "        ON DELETE NO ACTION" +
-                ") TABLESPACE pg_default; ALTER TABLE data.resource_permissions OWNER to " + dbUser;
 
         String baseMapsTable = "CREATE TABLE IF NOT EXISTS data.base_maps" +
-                "(" +
-                "    id            bigserial              NOT NULL," +
-                "    name          character varying(255)," +
-                "    title         character varying(255) NOT NULL," +
-                "    thumbnail_urn character varying(255) NOT NULL," +
-                "    type          character varying(20)  NOT NULL," +
-                "    url           character varying(255)," +
-                "    layer_name    character varying(255)," +
-                "    style         character varying(50)," +
-                "    projection    character varying(20)," +
-                "    format        character varying(20)," +
-                "    size          integer," +
-                "    resolution    integer," +
-                "    matrix_ids    integer," +
-                "    created_at    timestamp without time zone," +
-                "    last_modified timestamp without time zone," +
-                "    CONSTRAINT base_maps_pkey PRIMARY KEY (id)" +
-                ")" +
-                "TABLESPACE pg_default; ALTER TABLE data.base_maps OWNER to " + dbUser;
+                "(id            bigserial              NOT NULL," +
+                " name          character varying(255)," +
+                " title         character varying(255) NOT NULL," +
+                " thumbnail_urn character varying(255) NOT NULL," +
+                " type          character varying(20)  NOT NULL," +
+                " url           character varying(255)," +
+                " layer_name    character varying(255)," +
+                " style         character varying(50)," +
+                " projection    character varying(20)," +
+                " format        character varying(20)," +
+                " size          integer," +
+                " resolution    integer," +
+                " matrix_ids    integer," +
+                " created_at    timestamp without time zone," +
+                " last_modified timestamp without time zone," +
+                " CONSTRAINT base_maps_pkey PRIMARY KEY (id)" +
+                ") TABLESPACE pg_default; ALTER TABLE data.base_maps OWNER to " + dbUser;
 
         String documentsTable = "CREATE TABLE IF NOT EXISTS data.documents" +
-                "(" +
-                "    id         uuid NOT NULL," +
-                "    title      character varying(500) NOT NULL," +
-                "    size       bigserial," +
-                "    CONSTRAINT documents_pkey PRIMARY KEY (id)" +
-                ")" +
-                "TABLESPACE pg_default; ALTER TABLE data.documents OWNER to " + dbUser;
+                "(id         uuid NOT NULL," +
+                " title      character varying(500) NOT NULL," +
+                " size       bigserial," +
+                " CONSTRAINT documents_pkey PRIMARY KEY (id)" +
+                ") TABLESPACE pg_default; ALTER TABLE data.documents OWNER to " + dbUser;
 
-        String resourceDescriptionTable = "CREATE TABLE IF NOT EXISTS data.resource_description" +
-                "(" +
-                " title               character varying         NOT NULL," +
-                " details             character varying(1024)," +
-                " type                character varying(20)     NOT NULL," +
-                " identifier          character varying         NOT NULL," +
-                " items_count         integer                   DEFAULT 0," +
-                " owner               character varying         NOT NULL," +
-                " created_at          timestamp without time zone," +
-                " last_modified       timestamp without time zone," +
-                " CONSTRAINT resource_description_unique_constr UNIQUE (type, identifier)" +
-                ") TABLESPACE pg_default; ALTER TABLE data.resource_description OWNER to " + dbUser;
+        String resourceTable = "CREATE TABLE IF NOT EXISTS data.resource" +
+                "(id            bigserial                 NOT NULL," +
+                " title         character varying         NOT NULL," +
+                " details       character varying(1024)," +
+                " type          character varying(20)     NOT NULL," +
+                " identifier    character varying         NOT NULL," +
+                " items_count   integer                   DEFAULT 0," +
+                " created_by    character varying," +
+                " created_at    timestamp without time zone," +
+                " last_modified timestamp without time zone," +
+                " CONSTRAINT resource_description_pkey PRIMARY KEY (id)," +
+                " CONSTRAINT resource_identifier_type UNIQUE (identifier, type)" +
+                ") TABLESPACE pg_default; ALTER TABLE data.resource OWNER to " + dbUser;
+
+        String principalTable = "CREATE TABLE IF NOT EXISTS data.principal " +
+                "(id            bigserial               NOT NULL," +
+                " identifier    bigint                  NOT NULL," +
+                " type          character varying(20)   NOT NULL," +
+                " CONSTRAINT principal_pkey PRIMARY KEY (id)," +
+                " CONSTRAINT principal_identifier_type UNIQUE (identifier, type)" +
+                ") TABLESPACE pg_default; ALTER TABLE data.principal OWNER to " + dbUser;
+
+        String permissionTable = "CREATE TABLE data.permission" +
+                "(id            bigserial               NOT NULL," +
+                " role          character varying(20)," +
+                " principal_id  bigint                  NOT NULL," +
+                " resource_id   bigint                  NOT NULL," +
+                " created_at    timestamp without time zone," +
+                " last_modified timestamp without time zone," +
+                " CONSTRAINT permission_pkey PRIMARY KEY (id)," +
+                " CONSTRAINT fk3yfc65wpuf6tu7enud5iqkh9b FOREIGN KEY (resource_id)" +
+                "     REFERENCES data.resource (id) MATCH SIMPLE" +
+                "     ON UPDATE NO ACTION" +
+                "     ON DELETE NO ACTION," +
+                " CONSTRAINT fkcsq8yuy5497r2s4n8h1rh1a62 FOREIGN KEY (principal_id)" +
+                "     REFERENCES data.principal (id) MATCH SIMPLE" +
+                "     ON UPDATE NO ACTION" +
+                "     ON DELETE NO ACTION" +
+                ") TABLESPACE pg_default; ALTER TABLE data.permission OWNER to " + dbUser;
 
         try {
             jdbcTemplate.execute(createSchema);
 
             jdbcTemplate.execute(baseMapsTable);
-            jdbcTemplate.execute(permissionsTable);
-            jdbcTemplate.execute(resourcesTable);
-            jdbcTemplate.execute(resourcePermissionsTable);
             jdbcTemplate.execute(documentsTable);
-            jdbcTemplate.execute(resourceDescriptionTable);
+            jdbcTemplate.execute(resourceTable);
+            jdbcTemplate.execute(principalTable);
+            jdbcTemplate.execute(permissionTable);
         } catch (DataAccessException e) {
             log.error("Error generate service tables: {}", e.getMessage());
         }
     }
-
 }

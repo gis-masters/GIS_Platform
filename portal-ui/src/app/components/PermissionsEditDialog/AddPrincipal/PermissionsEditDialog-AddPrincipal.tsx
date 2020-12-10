@@ -17,7 +17,7 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { allGroups } from '../../../stores/AllGroups.store';
-import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.service';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../../services/crg/permissions.models';
 import { CrgGroup } from '../../../services/crg/groups.service';
 import { CrgUser } from '../../../services/crg/users.service';
 import { XTable, XTableColumn } from '../../XTable/XTable';
@@ -157,7 +157,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
 
   private getUserColumns(): XTableColumn<CrgUser>[] {
     return [
-      { title: 'Фамилия', field: 'surName', filtering: true, sorting: true },
+      { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
       { title: 'Имя', field: 'name', filtering: true, sorting: true },
       { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id }
     ];

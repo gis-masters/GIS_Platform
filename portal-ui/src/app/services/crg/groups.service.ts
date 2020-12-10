@@ -1,10 +1,10 @@
 import { debounce } from 'lodash';
 
-import { http } from '../http.service';
-import { PageableResponse } from '../models';
-import { ApiLink, CrgUser } from './users.service';
 import { allGroups } from '../../stores/AllGroups.store';
 import { serverProperties } from '../server-properties.service';
+import { ApiLink, CrgUser } from './users.service';
+import { PageableResponse } from '../models';
+import { http } from '../http.service';
 
 export interface CrgGroup {
   id: number;

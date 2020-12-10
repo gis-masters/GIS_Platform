@@ -23,10 +23,10 @@ public class UserProvisioningFailedEventHandler implements IResponseHandler {
     }
 
     public void handle(IAuthServiceEvent mqEvent) {
-        final String userName = ((IUserEvent) mqEvent).getLogin();
+        final String login = ((IUserEvent) mqEvent).getLogin();
 
-        log.debug("User {} CREATION_PROVISIONING_FAILED", userName);
+        log.debug("User {} CREATION_PROVISIONING_FAILED", login);
 
-        userRepository.deleteByUsername(userName);
+        userRepository.deleteByLogin(login);
     }
 }

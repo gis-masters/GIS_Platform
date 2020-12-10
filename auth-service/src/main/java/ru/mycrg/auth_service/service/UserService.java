@@ -26,7 +26,6 @@ import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,18 +58,29 @@ public class UserService {
 
     @NotNull
     public UserInfoModel getCurrent(String userName) {
-        User user = userRepository.findByUsername(userName)
+        User user = userRepository.findByLogin(userName)
                                   .orElseThrow(() -> new NotFoundException(userName));
 
         Set<Organization> organizations = user.getOrganizations();
         if (!organizations.isEmpty()) {
             Organization organization = organizations.iterator().next();
 
-            final List<String> roles = user.getAuthorities().stream()
-                                           .map(Authorities::getAuthority)
-                                           .collect(Collectors.toList());
+            final Set<String> authorities = user.getAuthorities().stream()
+                                                .map(Authorities::getAuthority)
+                                                .collect(Collectors.toSet());
 
-            return new UserInfoModel(userName, organization.getName(), organization.getId(), roles);
+            return UserInfoModel.builder()
+                                .id(user.getId())
+                                .name(user.getName())
+                                .login(user.getLogin())
+                                .surname(user.getSurname())
+                                .email(user.getEmail())
+                                .enabled(user.isEnabled())
+                                .authorities(authorities)
+                                .createdAt(user.getCreatedAt())
+                                .orgId(organization.getId())
+                                .orgName(organization.getName())
+                                .build();
         }
 
         return new UserInfoModel(userName);
@@ -88,13 +98,12 @@ public class UserService {
                 .findById(orgId)
                 .orElseThrow(() -> new NotFoundException(orgId));
 
-        User newUser = new User(
-                bCrypt.encode(dto.getPassword()),
-                dto.getName(),
-                dto.getSurName(),
-                dto.getEmail()
+        User newUser = new User(bCrypt.encode(dto.getPassword()),
+                                dto.getName(),
+                                dto.getSurname(),
+                                dto.getEmail()
         );
-        newUser.setUsername(dto.getEmail());
+        newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
         newUser.setEnabled(true);
 
@@ -103,12 +112,11 @@ public class UserService {
         organization.addUser(savedUser);
 
         messageBus.sendUserEvent(
-                new UserCreatedEvent(
-                        savedUser.getUsername(),
-                        getToken(authentication),
-                        dto.getPassword(),
-                        true,
-                        "admin_" + orgId)
+                new UserCreatedEvent(savedUser.getLogin(),
+                                     getToken(authentication),
+                                     dto.getPassword(),
+                                     true,
+                                     "admin_" + orgId)
         );
 
         return projectionFactory.createProjection(UserProjection.class, savedUser);
@@ -129,7 +137,7 @@ public class UserService {
         } else if (isGeoserverAdmin(authentication)) {
             String ownerName = authentication.getName();
 
-            User owner = userRepository.findByUsername(ownerName)
+            User owner = userRepository.findByLogin(ownerName)
                                        .orElseThrow(() -> new NotFoundException(ownerName));
 
             Set<Organization> organizations = owner.getOrganizations();
@@ -158,9 +166,8 @@ public class UserService {
         } else if (isGeoserverAdmin(authentication)) {
             String ownerName = authentication.getName();
 
-            User owner = userRepository
-                    .findByUsername(ownerName)
-                    .orElseThrow(() -> new NotFoundException(ownerName));
+            User owner = userRepository.findByLogin(ownerName)
+                                       .orElseThrow(() -> new NotFoundException(ownerName));
 
             Set<Organization> organizations = owner.getOrganizations();
             Organization organization = organizations.iterator().next();
@@ -183,7 +190,7 @@ public class UserService {
 
         userRepository.findById(id).ifPresent(user -> {
             messageBus.sendUserEvent(
-                    new UserDeletedEvent(user.getUsername(), getToken(authentication)));
+                    new UserDeletedEvent(user.getLogin(), getToken(authentication)));
 
             user.getOrganizations().forEach(org -> org.getUsers().remove(user));
             userRepository.deleteById(user.getId());

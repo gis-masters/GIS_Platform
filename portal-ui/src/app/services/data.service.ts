@@ -1,11 +1,11 @@
-import { http } from './http.service';
-import { PageableResponse, SortDir } from './models';
-import { Role } from './crg/permissions.service';
 import { serverProperties } from './server-properties.service';
+import { PageableResponse, SortDir } from './models';
+import { Role } from './crg/permissions.models';
+import { http } from './http.service';
 
 export interface DataEntity {
   title?: string;
-  resourceIdentifier: string;
+  identifier: string;
   permission: Role;
   details?: string;
   type: 'SCHEMA' | 'TABLE';
@@ -45,7 +45,7 @@ export async function getDataSetTables(
   filter?: { [key: string]: string }
 ): Promise<[DataTable[], number]> {
   const response = await http.get<PageableResponse<{ tables: DataTable[] }>>(
-    `${await serverProperties.dataUrl}/datasets/${dataSet.resourceIdentifier}/tables`,
+    `${await serverProperties.dataUrl}/datasets/${dataSet.identifier}/tables`,
     { params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) } }
   );
 

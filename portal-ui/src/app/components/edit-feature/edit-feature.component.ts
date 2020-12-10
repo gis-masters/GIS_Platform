@@ -17,7 +17,7 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { schemaService, PropertySchema } from '../../services/crg/schema.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { isDeleteAllowed, isUpdateAllowed } from '../../services/crg/permissions.service';
+import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
@@ -301,8 +301,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private async checkPermissions() {
-    this.updatingAllowed = await isUpdateAllowed(this.layer);
-    this.deletingAllowed = await isDeleteAllowed(this.layer);
+    this.updatingAllowed = await isFeaturesUpdateAllowed(this.layer);
+    this.deletingAllowed = await isFeaturesDeleteAllowed(this.layer);
   }
 
   private async batchUpdateFeatures(

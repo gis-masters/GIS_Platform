@@ -13,7 +13,7 @@ public class UserCreateDto {
 
     @NotBlank(message = "Please provide user surname")
     @Size(max = 100, message = "No more than 100 characters")
-    private String surName;
+    private String surname;
 
     @Email
     @NotBlank
@@ -33,11 +33,12 @@ public class UserCreateDto {
     private String password;
 
     public UserCreateDto() {
+        // Framework required
     }
 
-    public UserCreateDto(String name, String surName, String email, String password) {
+    public UserCreateDto(String name, String surname, String email, String password) {
         this.name = name;
-        this.surName = surName;
+        this.surname = surname;
         this.email = email;
         this.password = password;
     }
@@ -58,12 +59,12 @@ public class UserCreateDto {
         this.password = password;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {

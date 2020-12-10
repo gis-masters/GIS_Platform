@@ -5,15 +5,14 @@ import ru.mycrg.gis_service.entity.Permission;
 
 @Projection(
         name = "permissionProjection",
-        types = { Permission.class })
+        types = {Permission.class})
 public interface PermissionProjection {
 
     Long getId();
 
     String getPrincipalType();
 
-    String getPrincipalId();
+    Long getPrincipalId();
 
     String getRole();
-
 }

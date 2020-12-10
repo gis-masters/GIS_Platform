@@ -82,7 +82,7 @@ class AuthService {
     try {
       this.token = await http.post(url, params.toString(), options);
       localStorage.setItem(TOKEN_KEY, this.token);
-      await usersService.fetchCurrent();
+      await usersService.fetchCurrentUser();
 
       return { ok: true };
     } catch (e) {
@@ -112,7 +112,7 @@ class AuthService {
       phone: regData.contactPhone,
       owner: {
         name: regData.firstName,
-        surName: regData.lastName,
+        surname: regData.lastName,
         email: regData.email,
         password: regData.password
       }

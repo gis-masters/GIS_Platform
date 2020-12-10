@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import { PrincipalType } from '../../services/crg/permissions.service';
+import { PrincipalType } from '../../services/crg/permissions.models';
 import { OrgActions } from '../OrgActions/OrgActions';
 import { XTable, XTableColumn } from '../XTable/XTable';
 

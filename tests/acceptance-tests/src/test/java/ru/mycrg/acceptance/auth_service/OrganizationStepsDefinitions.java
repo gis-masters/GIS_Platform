@@ -78,7 +78,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.get("name"), orgDto.getName());
         assertEquals(jsonPath.get("phone"), orgDto.getPhone());
         assertEquals(jsonPath.getList("users.name").get(0), orgDto.getOwner().getName());
-        assertEquals(jsonPath.getList("users.surName").get(0), orgDto.getOwner().getSurName());
+        assertEquals(jsonPath.getList("users.surname").get(0), orgDto.getOwner().getSurname());
         assertEquals(jsonPath.getList("users.email").get(0), orgDto.getOwner().getEmail());
     }
 

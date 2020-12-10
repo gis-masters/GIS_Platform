@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"login"})})
 public class User {
 
     @Id
@@ -21,7 +21,7 @@ public class User {
     private Long id;
 
     @Column
-    private String username;
+    private String login;
 
     @Column
     private String password;
@@ -32,8 +32,8 @@ public class User {
     @Column
     private String name;
 
-    @Column
-    private String surName;
+    @Column(name = "sur_name")
+    private String surname;
 
     @Column
     private String email;
@@ -65,10 +65,10 @@ public class User {
 
     public User() {}
 
-    public User(String password, String name, String surName, String email) {
+    public User(String password, String name, String surname, String email) {
         this.password = password;
         this.name = name;
-        this.surName = surName;
+        this.surname = surname;
         this.email = email;
         this.enabled = false;
         this.createdAt = LocalDateTime.now();
@@ -106,20 +106,20 @@ public class User {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {

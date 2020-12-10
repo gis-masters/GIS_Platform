@@ -1,10 +1,11 @@
 import { debounce } from 'lodash';
 
-import { allPermissions } from '../../stores/AllPermissions.store';
 import { allProjects } from '../../stores/AllProjects.store';
-import { getProjectPermissions, getTablePermissions, RoleAssignmentBody } from './permissions.service';
-import { communicationService } from '../communication.service';
+import { allPermissions } from '../../stores/AllPermissions.store';
+import { getProjectPermissions, getTablePermissions } from './permissions.client';
 import { CrgProject, CrgLayer, CrgLayerType } from './projects.models';
+import { communicationService } from '../communication.service';
+import { RoleAssignmentBody } from './permissions.models';
 import { projectsService } from './projects.service';
 import { services } from '../services';
 import { Toast } from '../../components/Toast/Toast';

@@ -43,6 +43,15 @@ Feature: Действия с пользователями
       | testUserName | testUserSurname | EMAIL_61       | testtestQ1   | Длинный email пользователя    |
       | testUserName | testUserSurname | user9@user.com | STRING_2     | Простой пароль пользователя   |
 
+  Scenario Outline: Выборка датальной инфы текущего пользователя
+    Given Существует пользователь
+      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    When Авторизируемся пользователем
+    Then Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление
+    Examples:
+      | userName | userSurname | userEmail | userPassword |
+      | fizname  | fizsurname  | EMAIL_10  | aA111111     |
+
   Scenario Outline: Выборка всех пользователей
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |

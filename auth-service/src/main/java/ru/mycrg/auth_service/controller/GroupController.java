@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RepositoryRestController
 public class GroupController {
@@ -42,7 +43,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<GroupProjection> createGroup(@Valid @RequestBody GroupCreateDto dto,
                                                        Authentication authentication) {
         long orgId = getOrganizationId(authentication);
@@ -53,7 +54,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getAllGroups(Pageable p, Authentication authentication) {
         Page<GroupProjection> groupProjection = groupService.findAll(p, authentication);
 
@@ -61,7 +62,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<GroupProjection> getGroupById(@PathVariable Long id, Authentication authentication) {
         GroupProjection groupProjection = groupService.findById(id, authentication);
 
@@ -69,7 +70,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups/{id}/users/{userId}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> addAuthority(@PathVariable Long id,
                                                @PathVariable Long userId,
                                                Authentication authentication) {
@@ -79,7 +80,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/groups/{id}/users/{userId}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> removeAuthority(@PathVariable Long id,
                                                   @PathVariable Long userId,
                                                   Authentication authentication) {

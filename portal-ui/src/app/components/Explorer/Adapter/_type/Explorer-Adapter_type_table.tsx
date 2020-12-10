@@ -17,7 +17,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
   static getId(item: ExplorerItemData<DataTable>) {
-    return `${item.type}:${item.payload.resourceIdentifier}`;
+    return `${item.type}:${item.payload.identifier}`;
   }
 
   static getTitle(item: ExplorerItemData<DataTable>) {
@@ -29,9 +29,9 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getMeta(item: ExplorerItemData<DataTable>) {
-    const { createdAt, resourceIdentifier } = item.payload;
+    const { createdAt, identifier } = item.payload;
 
-    return `${createdAt ? moment(createdAt).format('LL') : ''} (${resourceIdentifier})`;
+    return `${createdAt ? moment(createdAt).format('LL') : ''} (${identifier})`;
   }
 
   static getIcon() {

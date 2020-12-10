@@ -1,12 +1,11 @@
-import { CrgLayer, CrgProject, CrgSource } from './projects.models';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.models';
+import { getProjectPermissions, getTablePermissions } from './permissions.client';
+import { CrgLayer, CrgProject } from './projects.models';
 import { schemaService } from './schema.service';
-import { PageableResponse } from '../models';
-import { services } from '../services';
-import { serverProperties } from '../server-properties.service';
-import { Toast } from '../../components/Toast/Toast';
 import { groupsService } from './groups.service';
-import { http } from '../http.service';
-import { CrgUser } from './users.service';
+import { CrgUser, usersService } from './users.service';
 
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
@@ -14,68 +13,61 @@ export enum BuildInRole {
   USER = 'USER'
 }
 
-export enum Role {
-  OWNER = 'OWNER',
-  CONTRIBUTOR = 'CONTRIBUTOR',
-  VIEWER = 'VIEWER'
+enum LayerPermissionPoint {
+  CREATE_FEATURE,
+  READ_FEATURES,
+  UPDATE_FEATURES,
+  DELETE_FEATURES,
+  EXPORT
 }
 
-export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
-export const projectRoles: Role[] = [Role.VIEWER, Role.OWNER];
-
-export const rolesTitles: { [key in Role]: string } = {
-  VIEWER: 'Чтение',
-  CONTRIBUTOR: 'Запись',
-  OWNER: 'Владелец'
-};
-
-enum PermissionPoint {
-  CREATE = 'CREATE',
-  READ = 'READ',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-
-  EXPORT = 'EXPORT',
-  IMPORT = 'IMPORT'
-}
-
-export enum PrincipalType {
-  USER = 'user',
-  GROUP = 'group'
-}
-
-export interface RoleAssignmentBody {
-  id?: number;
-  principalId: number;
-  principalType: PrincipalType;
-  role: Role;
-}
-
-const permissions = new Map<Role, PermissionPoint[]>([
+const layerRolesPermissionPoints = new Map<Role, LayerPermissionPoint[]>([
   [
     Role.OWNER,
     [
-      PermissionPoint.CREATE,
-      PermissionPoint.READ,
-      PermissionPoint.UPDATE,
-      PermissionPoint.DELETE,
-      PermissionPoint.IMPORT,
-      PermissionPoint.EXPORT
+      LayerPermissionPoint.CREATE_FEATURE,
+      LayerPermissionPoint.READ_FEATURES,
+      LayerPermissionPoint.UPDATE_FEATURES,
+      LayerPermissionPoint.DELETE_FEATURES,
+      LayerPermissionPoint.EXPORT
     ]
   ],
-  [Role.CONTRIBUTOR, [PermissionPoint.CREATE, PermissionPoint.READ, PermissionPoint.UPDATE]],
-  [Role.VIEWER, [PermissionPoint.READ]]
+  [
+    Role.CONTRIBUTOR,
+    [
+      LayerPermissionPoint.CREATE_FEATURE,
+      LayerPermissionPoint.READ_FEATURES,
+      LayerPermissionPoint.UPDATE_FEATURES,
+      LayerPermissionPoint.DELETE_FEATURES
+    ]
+  ],
+  [Role.VIEWER, [LayerPermissionPoint.READ_FEATURES]]
 ]);
 
-async function isAllowed(layer: CrgLayer, targetPoint: PermissionPoint): Promise<boolean> {
+enum ProjectPermissionPoint {
+  READ,
+  UPDATE,
+  DELETE,
+  MANAGE_LAYERS
+}
+
+const projectRolesPermissionPoints = new Map<Role, ProjectPermissionPoint[]>([
+  [
+    Role.OWNER,
+    [
+      ProjectPermissionPoint.READ,
+      ProjectPermissionPoint.UPDATE,
+      ProjectPermissionPoint.DELETE,
+      ProjectPermissionPoint.MANAGE_LAYERS
+    ]
+  ],
+  [Role.CONTRIBUTOR, [ProjectPermissionPoint.READ, ProjectPermissionPoint.MANAGE_LAYERS]],
+  [Role.VIEWER, [ProjectPermissionPoint.READ]]
+]);
+
+async function isAllowedWithLayer(layer: CrgLayer, targetPoint: LayerPermissionPoint): Promise<boolean> {
   if (layer.type !== 'vector') {
     return true;
-  }
-
-  const sourceData = await getLayerSourceData(layer);
-
-  if (!layer || !targetPoint || !sourceData) {
-    return false;
   }
 
   let readOnly: boolean;
@@ -85,104 +77,43 @@ async function isAllowed(layer: CrgLayer, targetPoint: PermissionPoint): Promise
     readOnly = true;
   }
 
-  if (readOnly) {
-    return permissions.get(Role.VIEWER).includes(targetPoint);
-  } else {
-    return permissions.get(sourceData.permission).includes(targetPoint);
-  }
+  const role = readOnly
+    ? Role.VIEWER
+    : currentUser.isAdmin
+    ? Role.OWNER
+    : await getActualRoleInTable(layer.dataset, layer.internalName);
+
+  return Boolean(role) && layerRolesPermissionPoints.get(role).includes(targetPoint);
 }
 
-export function isCreateAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.CREATE);
+async function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): Promise<boolean> {
+  const role = currentUser.isAdmin ? Role.OWNER : await getActualRoleInProject(project);
+
+  return Boolean(role) && projectRolesPermissionPoints.get(role).includes(targetPoint);
 }
 
-export function isReadAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.READ);
+export function isFeaturesReadAllowed(layer: CrgLayer): Promise<boolean> {
+  return isAllowedWithLayer(layer, LayerPermissionPoint.READ_FEATURES);
 }
 
-export function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.UPDATE);
+export function isFeaturesCreateAllowed(layer: CrgLayer): Promise<boolean> {
+  return isAllowedWithLayer(layer, LayerPermissionPoint.CREATE_FEATURE);
 }
 
-export function isDeleteAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.DELETE);
+export function isFeaturesUpdateAllowed(layer: CrgLayer): Promise<boolean> {
+  return isAllowedWithLayer(layer, LayerPermissionPoint.UPDATE_FEATURES);
 }
 
-export function isExportAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowed(layer, PermissionPoint.EXPORT);
+export function isFeaturesDeleteAllowed(layer: CrgLayer): Promise<boolean> {
+  return isAllowedWithLayer(layer, LayerPermissionPoint.DELETE_FEATURES);
 }
 
-async function getLayerSourceData(layer: CrgLayer): Promise<CrgSource | null> {
-  try {
-    return await http.get<CrgSource>(`${await serverProperties.baseUrl}${layer.dataSourceUri}`);
-  } catch (e) {
-    return null;
-  }
+export function isLayerExportAllowed(layer: CrgLayer): Promise<boolean> {
+  return isAllowedWithLayer(layer, LayerPermissionPoint.EXPORT);
 }
 
-function handleSavingError(
-  e: any,
-  payload: RoleAssignmentBody,
-  actionType: string,
-  entityType: string,
-  entityName: string
-) {
-  const errText = `Не удалось ${actionType} разрешение "${payload.role}" для ${entityType} "${entityName}"`;
-  Toast.warn(errText);
-  services.logger.error(errText, e);
-}
-
-export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
-  const dataServerUrl = await serverProperties.dataUrl;
-  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
-  const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
-    params: { size: '10000' }
-  });
-
-  return response._embedded?.permissions || [];
-}
-
-export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
-  const list = await http.get<RoleAssignmentBody[]>(`${await serverProperties.projectsUrl}/${project.id}/permissions`);
-
-  return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
-}
-
-export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
-  try {
-    await http.post(`${await serverProperties.projectsUrl}/${project.id}/permissions`, payload);
-  } catch (e) {
-    handleSavingError(e, payload, 'добавить', 'проекта', project.name);
-  }
-}
-
-export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
-  const url = `${await serverProperties.dataUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
-
-  try {
-    await http.post(url, payload);
-  } catch (e) {
-    handleSavingError(e, payload, 'добавить', 'таблицы', `${datasetId}:${tableId}`);
-  }
-}
-
-export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject, layer?: CrgLayer) {
-  try {
-    await http.delete(`${await serverProperties.projectsUrl}/${project.id}/permissions/${payload.id}`);
-  } catch (e) {
-    handleSavingError(e, payload, 'удалить', 'проекта', project.name);
-  }
-}
-
-export async function removeTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
-  const dataServerUrl = await serverProperties.dataUrl;
-  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
-
-  try {
-    await http.delete(`${url}/${payload.id}`);
-  } catch (e) {
-    handleSavingError(e, payload, 'удалить', 'таблицы', `${datasetId}:${tableId}`);
-  }
+export function isLayersManagementAllowed(project: CrgProject = currentProject): Promise<boolean> {
+  return isAllowedWithProject(project, ProjectPermissionPoint.MANAGE_LAYERS);
 }
 
 export function filterOutPrincipal(
@@ -205,25 +136,31 @@ export function filterByPrincipal(
   );
 }
 
-export async function hasRoleInProject(user: CrgUser, project: CrgProject, role: Role): Promise<boolean> {
-  const [permissions, groups] = await Promise.all([getProjectPermissions(project), groupsService.getUserGroups(user)]);
-
-  return (
-    isRoleIn(role, PrincipalType.USER, user.id, permissions) ||
-    groups.some(group => isRoleIn(role, PrincipalType.GROUP, group.id, permissions))
-  );
+async function getActualRoleInTable(datasetId: string, tableId: string, user?: CrgUser): Promise<Role | undefined> {
+  return getActualRoleIn(await getTablePermissions(datasetId, tableId), user);
 }
 
-function isRoleIn(
-  targetRole: Role,
-  targetPrincipalType: PrincipalType,
-  targetPrincipalId: number,
-  permissions: RoleAssignmentBody[]
-): boolean {
-  return permissions.some(
-    ({ principalId, principalType, role }) =>
-      principalId === targetPrincipalId &&
-      principalType === targetPrincipalType &&
-      roles.slice(roles.indexOf(role)).includes(targetRole)
-  );
+async function getActualRoleInProject(project: CrgProject, user?: CrgUser): Promise<Role | undefined> {
+  return getActualRoleIn(await getProjectPermissions(project), user);
+}
+
+async function getActualRoleIn(permissions: RoleAssignmentBody[], user?: CrgUser): Promise<Role | undefined> {
+  if (!user) {
+    user = await usersService.getCurrentUser();
+  }
+
+  const groupsIds = (await groupsService.getUserGroups(user)).map(({ id }) => id);
+
+  return permissions.reduce((resultRole: Role | undefined, { principalId, principalType, role }) => {
+    if (
+      (principalId === user.id && principalType === PrincipalType.USER) ||
+      (groupsIds.includes(principalId) &&
+        principalType === PrincipalType.GROUP &&
+        roles.indexOf(role) > roles.indexOf(resultRole))
+    ) {
+      resultRole = role;
+    }
+
+    return resultRole;
+  }, undefined);
 }

@@ -9,18 +9,12 @@ import { boundMethod } from 'autobind-decorator';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
-import { DataSet, DataTable } from '../../services/data.service';
-import { CrgUser, usersService } from '../../services/crg/users.service';
+import { PrincipalType, Role, RoleAssignmentBody, roles, rolesTitles } from '../../services/crg/permissions.models';
 import { communicationService } from '../../services/communication.service';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
-import {
-  getTablePermissions,
-  PrincipalType,
-  Role,
-  RoleAssignmentBody,
-  roles,
-  rolesTitles
-} from '../../services/crg/permissions.service';
+import { getTablePermissions } from '../../services/crg/permissions.client';
+import { CrgUser, usersService } from '../../services/crg/users.service';
+import { DataSet, DataTable } from '../../services/data.service';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
@@ -55,10 +49,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
     const { dataTable, dataSet } = this.props;
     const { dataTable: prevDataTable, dataSet: prevDataSet } = prevProps;
 
-    if (
-      dataTable.resourceIdentifier !== prevDataTable.resourceIdentifier ||
-      dataSet.resourceIdentifier !== prevDataSet.resourceIdentifier
-    ) {
+    if (dataTable.identifier !== prevDataTable.identifier || dataSet.identifier !== prevDataSet.identifier) {
       this.fetchPermissions();
     }
   }
@@ -188,7 +179,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
               principalId === id && principalType === type && greaterRoles.includes(role)
           )
       )
-      .sort((a, b) => ((a as CrgUser).surName + a.name > (b as CrgUser).surName + b.name ? 1 : -1));
+      .sort((a, b) => ((a as CrgUser).surname + a.name > (b as CrgUser).surname + b.name ? 1 : -1));
   }
 
   @boundMethod
@@ -205,7 +196,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   private getIds(): [string, string] {
     const { dataSet, dataTable } = this.props;
 
-    return [dataSet.resourceIdentifier, dataTable.resourceIdentifier];
+    return [dataSet.identifier, dataTable.identifier];
   }
 
   @action.bound

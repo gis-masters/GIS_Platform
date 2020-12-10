@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 
-import { PrincipalType } from '../../../services/crg/permissions.service';
+import { PrincipalType } from '../../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
 

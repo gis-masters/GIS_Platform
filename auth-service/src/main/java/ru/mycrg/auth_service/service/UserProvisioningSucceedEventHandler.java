@@ -23,10 +23,10 @@ public class UserProvisioningSucceedEventHandler implements IResponseHandler {
     }
 
     public void handle(IAuthServiceEvent mqEvent) {
-        final String userName = ((IUserEvent) mqEvent).getLogin();
+        final String login = ((IUserEvent) mqEvent).getLogin();
 
-        log.debug("User {} CREATION_PROVISIONED", userName);
+        log.debug("User {} CREATION_PROVISIONED", login);
 
-        userRepository.activateUserByName(userName);
+        userRepository.activateUserByLogin(login);
     }
 }

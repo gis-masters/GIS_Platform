@@ -60,7 +60,7 @@ export async function getAllImportLayers(): Promise<ImportLayer[]> {
  */
 export async function initScratchImport(file: File): Promise<ScratchImport> {
   currentImport.reset({ file });
-  await usersService.fetchCurrent();
+  await usersService.fetchCurrentUser();
 
   const { scratchWorkspaceName } = await getEnvironment();
   const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;

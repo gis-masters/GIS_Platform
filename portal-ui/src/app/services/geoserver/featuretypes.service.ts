@@ -8,7 +8,7 @@ import { CrgLayer } from '../crg/projects.models';
 import { http } from '../http.service';
 
 async function buildUrl(targetName: string): Promise<string> {
-  await usersService.fetchCurrent();
+  await usersService.fetchCurrentUser();
 
   const { scratchWorkspaceName } = await getEnvironment();
   const featureTypesUrl = await serverProperties.geoServerUrl;

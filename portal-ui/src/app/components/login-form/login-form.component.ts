@@ -29,7 +29,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit() {
-    if (currentUser.userName) {
+    if (currentUser.login) {
       this.goToProjects();
     }
   }

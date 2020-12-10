@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { FilterParams } from '../../services/util/filterObjects';
 import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
-import { PrincipalType } from '../../services/crg/permissions.service';
+import { PrincipalType } from '../../services/crg/permissions.models';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
@@ -34,7 +34,7 @@ export class OrgUsers extends Component {
   private xTableCols: XTableColumn<CrgUserExtended>[] = [
     {
       title: 'Фамилия',
-      field: 'surName',
+      field: 'surname',
       filtering: true,
       sorting: true
     },
@@ -52,7 +52,7 @@ export class OrgUsers extends Component {
       renderCellContent: this.renderUserEnabled
     },
     {
-      title: 'e-mail / username',
+      title: 'e-mail / login',
       field: 'email',
       filtering: true,
       sorting: true,
@@ -91,7 +91,7 @@ export class OrgUsers extends Component {
         headerActions={<OrgUsersCreate />}
         data={this.users}
         cols={this.xTableCols}
-        defaultSort={{ field: 'surName', asc: true }}
+        defaultSort={{ field: 'surname', asc: true }}
         secondarySortField='id'
         filterable
       />
@@ -128,7 +128,7 @@ export class OrgUsers extends Component {
         <Highlight word={filterParams.email} enabled={filterActive}>
           {user.email}
         </Highlight>
-        {user.email !== user.username && ` / ${user.username}`}
+        {user.login && user.login !== user.email && ` / ${user.login}`}
         <TextBadge id={user.id} />
       </>
     );

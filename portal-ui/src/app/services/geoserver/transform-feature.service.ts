@@ -3,16 +3,16 @@ import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, MultiLineString, MultiPolygon, Point } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { usersService } from '../crg/users.service';
-import { getEnvironment } from '../environment';
 
-import { MapperUtil } from '../open-layer/MapperUtil';
-import { WfsFeature, WfsGeometry } from './wfs-models';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { serverProperties } from '../server-properties.service';
-import { FeatureDescription } from '../crg/schema.service';
-import { FeatureUtil } from '../util/FeatureUtil';
 import { getFeatureProjection } from './projections.service';
+import { FeatureDescription } from '../crg/schema.service';
+import { WfsFeature, WfsGeometry } from './wfs-models';
+import { MapperUtil } from '../open-layer/MapperUtil';
+import { usersService } from '../crg/users.service';
+import { FeatureUtil } from '../util/FeatureUtil';
+import { getEnvironment } from '../environment';
 import { services } from '../services';
 import { http } from '../http.service';
 
@@ -44,7 +44,7 @@ export class TransformFeatureService {
   }
 
   async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
@@ -73,7 +73,7 @@ export class TransformFeatureService {
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ): Promise<string> {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
@@ -124,7 +124,7 @@ export class TransformFeatureService {
   }
 
   async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
@@ -154,7 +154,7 @@ export class TransformFeatureService {
   }
 
   async deleteFeatures(featureIds: string[], layerName: string) {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
     const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;

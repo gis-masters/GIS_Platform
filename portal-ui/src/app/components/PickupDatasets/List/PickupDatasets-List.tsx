@@ -83,7 +83,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
             </FormControl>
             <List className={cnPickupDatasets('Content', ['scroll'])} dense={true}>
               {this.datasets.map((dataset: DataSet) => (
-                <PickupDatasetsItem key={dataset.resourceIdentifier} item={dataset} onClick={this.handleSelection} />
+                <PickupDatasetsItem key={dataset.identifier} item={dataset} onClick={this.handleSelection} />
               ))}
             </List>
             {this.totalPages > 1 && (

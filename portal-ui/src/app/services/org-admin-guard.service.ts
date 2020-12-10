@@ -11,9 +11,9 @@ export class OrgAdminGuardService implements CanActivate {
   constructor(private router: Router) {}
 
   async canActivate(): Promise<boolean> {
-    await usersService.fetchCurrent();
+    await usersService.fetchCurrentUser();
 
-    if (!currentUser.userName) {
+    if (!currentUser.login) {
       this.router.navigate(['login']);
       return false;
     }

@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.DatasetModel;
+import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.service.datasets.DatasetService;
 import ru.mycrg.data_service.service.datasets.IDatasetService;
@@ -36,14 +36,14 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets")
-    public ResponseEntity<PagedResources<DatasetModel>> getDatasets(
+    public ResponseEntity<PagedResources<IResourceModel>> getDatasets(
             @RequestParam(required = false, defaultValue = "") String title,
             Authentication authentication,
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
-        final Page<DatasetModel> datasets = datasetService.getPaged(title, pageable, authentication);
+        final Page<IResourceModel> datasets = datasetService.getPaged(title, pageable, authentication);
 
-        PagedResources<DatasetModel> pagedResources = pageAssembler.toResource(
+        PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
                 datasets,
                 linkTo(DatasetsController.class)
                         .slash("/api/data/datasets")
@@ -53,9 +53,9 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets/{dataSetName}")
-    public ResponseEntity<DatasetModel> getDataset(@PathVariable String dataSetName,
-                                                   Authentication authentication) {
-        final DatasetModel dto = datasetService.getByName(dataSetName, authentication);
+    public ResponseEntity<IResourceModel> getDataset(@PathVariable String dataSetName,
+                                                    Authentication authentication) {
+        final IResourceModel dto = datasetService.getByName(dataSetName, authentication);
 
         return ResponseEntity.ok(dto);
     }
@@ -67,12 +67,12 @@ public class DatasetsController {
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto,
                                                 Authentication authentication) {
-        DatasetModel newDataset = datasetService.create(dto, authentication);
+        IResourceModel newDataset = datasetService.create(dto, authentication);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/datasets/{dataSetName}")
-                .buildAndExpand(newDataset.getResourceIdentifier())
+                .buildAndExpand(newDataset.getIdentifier())
                 .toUri();
 
         return ResponseEntity.created(location).build();

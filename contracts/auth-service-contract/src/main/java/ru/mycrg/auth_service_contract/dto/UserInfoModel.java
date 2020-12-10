@@ -1,56 +1,159 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 public class UserInfoModel {
 
-    private String userName;
+    private Long id;
+    private String name;
+    private String login;
+    private String surname;
+    private String email;
+    private boolean enabled;
+    private Set<String> authorities;
+    private LocalDateTime createdAt;
+
     private String orgName;
     private Long orgId;
-    private List<String> roles;
 
-    public UserInfoModel() {}
+    public UserInfoModel() {
+        // Test required
+    }
 
-    public UserInfoModel(String userName, String orgName, Long orgId, List<String> roles) {
-        this.userName = userName;
+    public UserInfoModel(String name) {
+        this.name = name;
+    }
+
+    public UserInfoModel(Long id, String name, String login, String surname, String email, boolean enabled,
+                         Set<String> authorities, LocalDateTime createdAt, String orgName, Long orgId) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.surname = surname;
+        this.email = email;
+        this.enabled = enabled;
+        this.authorities = authorities;
+        this.createdAt = createdAt;
         this.orgName = orgName;
         this.orgId = orgId;
-        this.roles = roles;
     }
 
-    public UserInfoModel(String userName) {
-        this.userName = userName;
+    public Long getId() {
+        return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getLogin() {
+        return login;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public Set<String> getAuthorities() {
+        return authorities;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public String getOrgName() {
         return orgName;
     }
 
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
     public Long getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
+    public static UserInfoModelBuilder builder() {
+        return new UserInfoModelBuilder();
     }
 
-    public List<String> getRoles() {
-        return roles;
-    }
+    public static class UserInfoModelBuilder {
+        private Long id;
+        private String name;
+        private String login;
+        private String surname;
+        private String email;
+        private boolean enabled;
+        private Set<String> authorities;
+        private LocalDateTime createdAt;
+        private String orgName;
+        private Long orgId;
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+        UserInfoModelBuilder() {
+        }
+
+        public UserInfoModelBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserInfoModelBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public UserInfoModelBuilder login(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public UserInfoModelBuilder surname(String surname) {
+            this.surname = surname;
+            return this;
+        }
+
+        public UserInfoModelBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserInfoModelBuilder enabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public UserInfoModelBuilder authorities(Set<String> authorities) {
+            this.authorities = authorities;
+            return this;
+        }
+
+        public UserInfoModelBuilder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public UserInfoModelBuilder orgName(String orgName) {
+            this.orgName = orgName;
+            return this;
+        }
+
+        public UserInfoModelBuilder orgId(Long orgId) {
+            this.orgId = orgId;
+            return this;
+        }
+
+        public UserInfoModel build() {
+            return new UserInfoModel(id, name, login, surname, email, enabled, authorities, createdAt, orgName, orgId);
+        }
+
+        public String toString() {
+            return "UserInfoModel.UserInfoModelBuilder(id=" + this.id + ", name=" + this.name + ", login=" + this.login + ", surname=" + this.surname + ", email=" + this.email + ", enabled=" + this.enabled + ", authorities=" + this.authorities + ", createdAt=" + this.createdAt + ", orgName=" + this.orgName + ", orgId=" + this.orgId + ")";
+        }
     }
 }

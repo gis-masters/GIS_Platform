@@ -88,7 +88,7 @@ public class OrganizationService {
 
         organizationRepository.save(newOrganization);
         // We use email as login
-        newUser.setUsername(owner.getEmail());
+        newUser.setLogin(owner.getEmail());
         newUser.addAuthority(ORG_ADMIN);
 
         messageBus.sendOrgEvent(
@@ -96,7 +96,7 @@ public class OrganizationService {
                                                  getRootAccessToken(),
                                                  aesCryptor.encrypt(owner.getPassword()),
                                                  owner.getEmail(),
-                                                 newUser.getUsername()));
+                                                 newUser.getLogin()));
 
         return newOrganization;
     }
@@ -117,7 +117,7 @@ public class OrganizationService {
 
         final List<String> owners = organization.getUsers().stream()
                                                 .filter(User::isOwner)
-                                                .map(User::getUsername)
+                                                .map(User::getLogin)
                                                 .collect(Collectors.toList());
 
         messageBus.sendOrgEvent(
@@ -143,7 +143,7 @@ public class OrganizationService {
                 new User(
                         bCrypt.encode(owner.getPassword()),
                         owner.getName(),
-                        owner.getSurName(),
+                        owner.getSurname(),
                         owner.getEmail()
                 );
     }

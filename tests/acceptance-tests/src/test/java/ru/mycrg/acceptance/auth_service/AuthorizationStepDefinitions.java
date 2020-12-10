@@ -27,20 +27,6 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         return response.getDetailedCookie("crgAuthCookie");
     }
 
-    @When("Авторизируемся владельцем организации {string} {string}")
-    public void tryToGetAuthorizeAdmin(String login, String password) throws InterruptedException {
-        response = authorizeUser(generateString(login), generateString(password));
-
-        checkCookieAndWriteAsCurrent(response);
-    }
-
-    @When("Авторизируемся пользователем {string} {string}")
-    public void tryToAuthorizeUser(String login, String password) throws InterruptedException {
-        response = authorizeUser(generateString(login), generateString(password));
-
-        checkCookieAndWriteAsCurrent(response);
-    }
-
     @When("Авторизируемся пользователем")
     public void tryToAuthorizeUser() throws InterruptedException {
         response = authorizeUser(userDto.getEmail(), userDto.getPassword());

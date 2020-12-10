@@ -8,11 +8,13 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
 import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.junit.Assert.assertEquals;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.junit.Assert.*;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
@@ -122,7 +124,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), userDto.getName());
-        assertEquals(jsonPath.get("surName"), userDto.getSurName());
+        assertEquals(jsonPath.get("surname"), userDto.getSurname());
         assertEquals(jsonPath.get("email"), userDto.getEmail());
 
         userPool.put(userId, userDto);
@@ -151,6 +153,27 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     generateString(user.get(2)), generateString(user.get(3)));
 
         super.createEntity(userDto);
+    }
+
+    @When("Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление")
+    public void checkCurrentUserEndpointAndResponseBody() {
+        final UserInfoModel userInfoModel = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/current")
+                .then().
+                        log().ifValidationFails().
+                        assertThat().
+                        statusCode(SC_OK).
+                        extract().
+                        as(UserInfoModel.class);
+
+        assertNotNull(userInfoModel);
+        assertEquals(userDto.getEmail(), userInfoModel.getEmail());
+        assertEquals(userDto.getSurname(), userInfoModel.getSurname());
+        assertNotNull(userInfoModel.getId());
+        assertNotNull(userInfoModel.getAuthorities());
+        assertNotNull(userInfoModel.getOrgId());
+        assertNotNull(userInfoModel.getOrgName());
     }
 
     private boolean isUserExistInPool(String eMail) {

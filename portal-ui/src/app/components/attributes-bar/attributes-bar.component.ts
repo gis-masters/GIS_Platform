@@ -26,7 +26,7 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
-import { isUpdateAllowed, isDeleteAllowed } from '../../services/crg/permissions.service';
+import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { ValueType } from '../../services/util/FeaturePropertyValidators';
@@ -365,8 +365,8 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private async checkPermissions() {
-    this.updatingAllowed = await isUpdateAllowed(this.layer);
-    this.deletingAllowed = await isDeleteAllowed(this.layer);
+    this.updatingAllowed = await isFeaturesUpdateAllowed(this.layer);
+    this.deletingAllowed = await isFeaturesDeleteAllowed(this.layer);
   }
 
   private checkSelectionEmptiness(selected: any[]) {
@@ -381,7 +381,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
     const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
     const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
-    const layersUpdatePermissions = await Promise.all(layers.map(isUpdateAllowed));
+    const layersUpdatePermissions = await Promise.all(layers.map(isFeaturesUpdateAllowed));
 
     return layers.filter((layer, i) => {
       if (!schemas[i]) {

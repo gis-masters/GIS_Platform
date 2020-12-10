@@ -21,20 +21,19 @@ import java.util.Set;
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @Modifying
-    @Query("UPDATE User u SET u.enabled = true, u.lastModified = CURRENT_TIMESTAMP WHERE u.username = :username")
+    @Query("UPDATE User u SET u.enabled = true, u.lastModified = CURRENT_TIMESTAMP WHERE u.login = :login")
     @RestResource(exported = false)
-    int activateUserByName(@Param("username") String username);
+    int activateUserByLogin(@Param("login") String login);
 
     @RestResource(exported = false)
     Page<User> findByOrganizations(Set<Organization> organizations, Pageable p);
 
     @RestResource(exported = false)
-    void deleteByUsername(@Param("username") String userName);
+    void deleteByLogin(@Param("login") String login);
 
     @RestResource(exported = false)
-    Optional<User> findByUsername(@Param("username") String userName);
+    Optional<User> findByLogin(@Param("login") String login);
 
     @RestResource(exported = false)
     Optional<User> findByEmail(@Param("email") String email);
-
 }

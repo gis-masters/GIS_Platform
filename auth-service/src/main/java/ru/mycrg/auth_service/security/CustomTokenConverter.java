@@ -55,7 +55,7 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
     private Map<String, Object> collectAdditionalInfo(String userName) {
         final Map<String, Object> additionalInfo = new HashMap<>();
 
-        Optional<User> byUsername = userRepository.findByUsername(userName);
+        Optional<User> byUsername = userRepository.findByLogin(userName);
 
         if (byUsername.isPresent()) {
             User user = byUsername.get();

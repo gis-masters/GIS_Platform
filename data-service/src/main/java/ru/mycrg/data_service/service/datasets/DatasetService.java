@@ -7,10 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.SchemasManager;
 import ru.mycrg.data_service.dto.DatasetModel;
+import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
-import ru.mycrg.data_service.entity.ResourceDescription;
+import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.ResourceDescriptionRepository;
+import ru.mycrg.data_service.repository.ResourceRepository;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 
@@ -28,39 +29,38 @@ public class DatasetService implements IDatasetService {
 
     private final SchemasManager schemasDDL;
     private final ResourceProtector resourceProtector;
-    private final ResourceDescriptionRepository rdRepository;
+    private final ResourceRepository resRepository;
 
-    public DatasetService(ResourceDescriptionRepository rdRepository,
+    public DatasetService(ResourceRepository resRepository,
                           ResourceProtector resourceProtector,
                           SchemasManager schemasDDL) {
         this.schemasDDL = schemasDDL;
-        this.rdRepository = rdRepository;
+        this.resRepository = resRepository;
         this.resourceProtector = resourceProtector;
     }
 
     @Override
-    public Page<DatasetModel> getPaged(String title,
-                                       Pageable pageable,
-                                       Authentication authentication) {
+    public Page<IResourceModel> getPaged(String title,
+                                         Pageable pageable,
+                                         Authentication authentication) {
         if (isRoot(authentication)) {
             return new PageImpl<>(new ArrayList<>());
         } else if (isOrganizationAdmin(authentication)) {
-            return rdRepository
-                    .findByTypeAndTitleContaining(SCHEMA.name(), title, pageable)
-                    .map(description -> new DatasetModel(description, OWNER));
+            return resRepository.findByTypeAndTitleContaining(SCHEMA.name(), title, pageable)
+                                .map(resource -> new DatasetModel(resource, OWNER));
         } else {
             return new PageImpl<>(new ArrayList<>());
         }
     }
 
     @Override
-    public DatasetModel getByName(String datasetName, Authentication authentication) {
+    public IResourceModel getByName(String datasetName, Authentication authentication) {
         if (isRoot(authentication)) {
             return new DatasetModel();
         } else if (isOrganizationAdmin(authentication)) {
-            return rdRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetName)
-                               .map(rDescription -> new DatasetModel(rDescription, OWNER))
-                               .orElseGet(() -> new DatasetModel(datasetName, OWNER));
+            return resRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetName)
+                                .map(resource -> new DatasetModel(resource, OWNER))
+                                .orElseThrow(() -> new NotFoundException(datasetName));
         } else {
             return new DatasetModel();
         }
@@ -75,9 +75,8 @@ public class DatasetService implements IDatasetService {
         schemasDDL.create(rIdentifier);
 
         // Add resource description record
-        ResourceDescription entity =
-                new ResourceDescription(SCHEMA, dto, rIdentifier.toString(), authentication.getName());
-        final ResourceDescription newEntity = rdRepository.save(entity);
+        Resource entity = new Resource(SCHEMA, dto, rIdentifier.toString(), authentication.getName());
+        final Resource newEntity = resRepository.save(entity);
 
         return new DatasetModel(newEntity, OWNER);
     }
@@ -88,10 +87,10 @@ public class DatasetService implements IDatasetService {
 
         schemasDDL.delete(rIdentifier);
 
-        rdRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetId)
-                    .ifPresentOrElse(res -> rdRepository.deleteByIdentifierStartsWith(res.getIdentifier()),
-                                     () -> {
-                                         throw new NotFoundException(datasetId);
-                                     });
+        resRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetId)
+                     .ifPresentOrElse(res -> resRepository.deleteByIdentifierStartsWith(res.getIdentifier()),
+                                      () -> {
+                                          throw new NotFoundException(datasetId);
+                                      });
     }
 }

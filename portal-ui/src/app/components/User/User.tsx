@@ -27,7 +27,7 @@ export class User extends Component {
           variant='text'
           size='large'
         >
-          {currentUser.userName}
+          {currentUser.login}
         </Button>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.toggleMenu} anchorEl={this.anchorEl}>

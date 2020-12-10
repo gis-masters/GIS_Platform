@@ -1,6 +1,6 @@
 import { SupportedGeometryType } from '../geoserver/wfs-models';
 import { CrgProjectBaseMap } from './base-maps.models';
-import { Role } from './permissions.service';
+import { Role } from './permissions.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -40,9 +40,9 @@ export interface CrgLayer extends BaseCrgLayer {
 }
 
 export interface CrgSource {
-  name: string;
-  permission: Role;
-  valid: boolean;
+  role: Role;
+  identifier: string;
+  type: string;
 }
 
 export interface CrgLayersGroup extends CrgEntity {

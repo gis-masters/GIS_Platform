@@ -8,16 +8,16 @@ import java.util.Set;
 
 @Projection(
         name = "commonUser",
-        types = { User.class })
+        types = {User.class})
 public interface UserProjection {
 
     Long getId();
 
     String getName();
 
-    String getUsername();
+    String getLogin();
 
-    String getSurName();
+    String getSurname();
 
     String getEmail();
 

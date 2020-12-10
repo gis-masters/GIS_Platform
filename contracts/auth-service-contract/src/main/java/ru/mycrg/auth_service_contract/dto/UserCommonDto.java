@@ -6,10 +6,10 @@ import java.util.Set;
 public class UserCommonDto {
 
     private Long id;
-    private String username;
+    private String login;
     private boolean enabled;
     private String name;
-    private String surName;
+    private String surname;
     private String email;
     private int authoritiesCount;
     private Set<AuthorityCommonDto> authorities = new HashSet<>();
@@ -22,12 +22,12 @@ public class UserCommonDto {
         this.id = id;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getLogin() {
+        return this.login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public boolean isEnabled() {
@@ -46,12 +46,12 @@ public class UserCommonDto {
         this.name = name;
     }
 
-    public String getSurName() {
-        return this.surName;
+    public String getSurname() {
+        return this.surname;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {

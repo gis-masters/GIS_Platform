@@ -43,7 +43,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
           <DialogContent>
             <XTable
-              title={`Группы пользователя ${user.username}`}
+              title={`Группы пользователя ${user.login}`}
               data={allGroups.list}
               cols={[
                 {

@@ -7,12 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { NewCrgLayersGroup } from '../../../services/crg/projects.models';
-import { hasRoleInProject, Role } from '../../../services/crg/permissions.service';
+import { isLayersManagementAllowed } from '../../../services/crg/permissions.service';
 import { generateNextGroupId } from '../../../services/geoserver/layers.service';
-import { usersService } from '../../../services/crg/users.service';
+import { NewCrgLayersGroup } from '../../../services/crg/projects.models';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSettings } from '../../Icons/LayersSettings';
 
@@ -20,6 +18,8 @@ import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLe
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { usersService } from '../../../services/crg/users.service';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 
@@ -50,9 +50,9 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
 
   async componentDidMount() {
     this.intersectionObserver.observe(this.ref.current);
-    const user = await usersService.getUserByUsername(currentUser.userName);
-    const contributionAllowed = await hasRoleInProject(user, currentProject, Role.CONTRIBUTOR);
-    this.setProjectContributionAllowness(contributionAllowed || currentUser.isAdmin);
+    // this.setProjectContributionAllowness(await isLayersManagementAllowed(currentProject));
+    await usersService.fetchCurrentUser();
+    this.setProjectContributionAllowness(currentUser.isAdmin);
   }
 
   componentWillUnmount() {
