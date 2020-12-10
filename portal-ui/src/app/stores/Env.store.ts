@@ -1,6 +1,18 @@
 import { observable, action } from 'mobx';
 
 import { Platform, getEnvironment, Environment, EnvironmentServer } from '../services/environment';
+import { FlagsList } from '../services/feature-flags';
+
+const emptyEnv: Environment = {
+  platform: 'conv',
+  production: true,
+  server: { host: 'localhost', port: 80 },
+  ws_port: 80,
+  scratchWorkspaceName: '',
+  flags: null,
+  logo: null,
+  favicon: null
+};
 
 class Env implements Environment {
   private static _instance: Env;
@@ -10,6 +22,10 @@ class Env implements Environment {
   @observable server: EnvironmentServer;
   @observable ws_port: number;
   @observable scratchWorkspaceName: string;
+  @observable flags?: FlagsList;
+  @observable logo?: string;
+  @observable favicon?: string;
+  @observable loaded = false;
 
   public static get instance() {
     return this._instance || (this._instance = new this());
@@ -25,12 +41,8 @@ class Env implements Environment {
 
   @action
   private setEnv(env: Environment) {
-    const { platform, production, server, ws_port, scratchWorkspaceName } = env;
-    this.platform = platform;
-    this.production = production;
-    this.server = server;
-    this.ws_port = ws_port;
-    this.scratchWorkspaceName = scratchWorkspaceName;
+    Object.assign(this, emptyEnv, env);
+    this.loaded = true;
   }
 }
 

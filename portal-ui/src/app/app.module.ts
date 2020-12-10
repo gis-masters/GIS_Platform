@@ -71,6 +71,7 @@ import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/e
 import { SearchComponent } from './components/search/search.component';
 import { BaseMapsSelectComponent } from './components/base-maps-select/base-maps-select.component';
 import { DataManagementComponent } from './components/data-management/data-management.component';
+import { LogoComponent } from './components/logo/logo.component';
 
 @NgModule({
   declarations: [
@@ -120,7 +121,8 @@ import { DataManagementComponent } from './components/data-management/data-manag
     EditFeatureConfirmComponent,
     SearchComponent,
     BaseMapsSelectComponent,
-    DataManagementComponent
+    DataManagementComponent,
+    LogoComponent
   ],
   imports: [
     HttpClientModule,

@@ -9,5 +9,7 @@
   "scratchWorkspaceName": "scratch_workspace",
   "flags": {
     "dataManagement": true
-  }
+  },
+  "logo": "/assets/logo/dev/logo.jpg",
+  "favicon": "/assets/logo/dev/favicon.png"
 }

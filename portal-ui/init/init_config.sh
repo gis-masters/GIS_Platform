@@ -4,9 +4,15 @@ echo Remove default nginx config
 rm /etc/nginx/conf.d/default.conf
 
 echo Generate enviroment.json
-echo -e "{\n  \"platform\": \"$UI_PLATFORM\",\n  \"production\": $UI_PROD,\n  \"server\": {\n    \"host\": \
-\"$UI_SERVER_HOST\",\n    \"port\": $UI_SERVER_PORT\n  },\n  \"ws_port\": \"$UI_WS_PORT\",\n  \
-\"scratchWorkspaceName\": \"$UI_SWN\"\n}" > environment.json
+echo -e "{\
+\"platform\":\"$UI_PLATFORM\",\
+\"production\":$UI_PROD,\
+\"server\":{\"host\":\"$UI_SERVER_HOST\",\"port\":$UI_SERVER_PORT},\
+\"ws_port\":\"$UI_WS_PORT\",\
+\"scratchWorkspaceName\":\"$UI_SWN\",\
+\"logo\":\"$UI_LOGO\",\
+\"favicon\":\"$UI_FAVICON\"\
+}" > environment.json
 
 echo copy to assets
 cp environment.json /usr/share/nginx/html/assets/config

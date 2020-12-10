@@ -14,6 +14,8 @@ export interface Environment {
   ws_port: number;
   scratchWorkspaceName: string;
   flags?: FlagsList;
+  logo?: string;
+  favicon?: string;
 }
 
 const fetchEnv = async (): Promise<Environment> => {
