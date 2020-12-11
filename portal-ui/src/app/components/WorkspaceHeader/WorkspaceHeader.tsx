@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+
+import { Favicon } from '../Favicon/Favicon';
 
 import { WorkspaceHeaderBurger } from './Burger/WorkspaceHeader-Burger';
 import { WorkspaceHeaderOrganisation } from './Organisation/WorkspaceHeader-Organisation';
@@ -11,16 +13,13 @@ import '!style-loader!css-loader!sass-loader!./WorkspaceHeader.scss';
 
 const cnWorkspaceHeader = cn('WorkspaceHeader');
 
-export class WorkspaceHeader extends Component {
-  render() {
-    return (
-      <div className={cnWorkspaceHeader()}>
-        <WorkspaceHeaderBurger />
-        <WorkspaceHeaderOrganisation />
-        <WorkspaceHeaderBreadcrumbs />
-        <WorkspaceHeaderButtons />
-        <WorkspaceHeaderLoader />
-      </div>
-    );
-  }
-}
+export const WorkspaceHeader: FC = () => (
+  <div className={cnWorkspaceHeader()}>
+    <Favicon />
+    <WorkspaceHeaderBurger />
+    <WorkspaceHeaderOrganisation />
+    <WorkspaceHeaderBreadcrumbs />
+    <WorkspaceHeaderButtons />
+    <WorkspaceHeaderLoader />
+  </div>
+);
