@@ -75,7 +75,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует группа слоев проекта {string}, {string}")
-    public void isLayerGroupExist(String title, String position) {
+    public void initLayerGroup(String title, String position) {
         if (isExactLayerGroupExistInPool(title)) {
             makeExactLayerGroupAsCurrent(title);
         } else if (!layerGroupPool.isEmpty()) {

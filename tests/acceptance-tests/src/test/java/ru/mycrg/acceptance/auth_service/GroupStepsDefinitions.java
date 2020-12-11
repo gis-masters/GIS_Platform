@@ -135,7 +135,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор удаляет пользователя из пользовательской группы")
-    public void deleteUserToUsersGroup() {
+    public void deleteUserFromUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
                 delete(String.format("/%s/users/%s", usersGroupId, userId))
@@ -176,8 +176,8 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("На всех страницах групп {string} есть {string}")
-    public void areUsersGroupOnPages(String checkType, String entitiesPerPage) {
-        super.isSomethingOnPages(checkType, entitiesPerPage);
+    public void checkUsersGroupOnPages(String checkType, String entitiesPerPage) {
+        super.checkSomethingOnPages(checkType, entitiesPerPage);
     }
 
     private void createUserGroup(List<String> group) {
@@ -201,16 +201,6 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     private void makeExactUsersGroupAsCurrent(String name) {
         usersGroupPool.entrySet().stream()
                       .filter(entry -> entry.getValue().getName().equals(name))
-                      .findFirst()
-                      .ifPresent(entry -> {
-                          usersGroupId = entry.getKey();
-                          usersGroupDto = entry.getValue();
-                      });
-    }
-
-    private void makeLastAvailableUsersGroupAsCurrent() {
-        usersGroupPool.entrySet().stream()
-                      .skip(usersGroupPool.size() - 1)
                       .findFirst()
                       .ifPresent(entry -> {
                           usersGroupId = entry.getKey();

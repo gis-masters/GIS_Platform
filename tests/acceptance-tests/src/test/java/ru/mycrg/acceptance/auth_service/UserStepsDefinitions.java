@@ -57,7 +57,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Пользователю присвоена роль = {string}")
-    public void isUserRoleIsUser(String role) {
+    public void checkUserRole(String role) {
         getExactUser();
 
         jsonPath = response.jsonPath();
@@ -107,13 +107,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntities();
     }
 
-    @When("Администратор делает постраничный запрос на всех пользователей")
-    public void getAllUsersPaginated() {
-        getAllUsers();
-        jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList("_embedded.users.id").size();
-    }
-
     @And("Количество страниц пользователей {string} пропорционально {string}")
     public void checkUserPagesCount(String checkType, String entitiesPerPage) {
         super.checkPagesCount(checkType, entitiesPerPage);
@@ -132,7 +125,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах пользователей {string} есть {string}")
     public void areUsersOnPages(String checkType, String entitiesPerPage) {
-        super.isSomethingOnPages(checkType, entitiesPerPage);
+        super.checkSomethingOnPages(checkType, entitiesPerPage);
     }
 
     @Given("Существуют пользователи")
@@ -185,16 +178,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     private void makeExactUserAsCurrent(String email) {
         userPool.entrySet().stream()
                 .filter(entry -> entry.getValue().getEmail().equals(email))
-                .findFirst()
-                .ifPresent(entry -> {
-                    userId = entry.getKey();
-                    userDto = entry.getValue();
-                });
-    }
-
-    private void makeLastAvailableUserAsCurrent() {
-        userPool.entrySet().stream()
-                .skip(userPool.size() - 1)
                 .findFirst()
                 .ifPresent(entry -> {
                     userId = entry.getKey();

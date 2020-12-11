@@ -53,7 +53,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Поля проекта совпадают с переданными")
-    public void isProjectDataIsCorrect() {
+    public void checkProjectData() {
         jsonPath = response.jsonPath();
 
         assertEquals(jsonPath.get("name"), projectDto.getProjectName());
@@ -74,7 +74,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Представление проекта корректно")
-    public void isProjectDataStructureIsCorrect() {
+    public void checkProjectKeys() {
         Map<String, String> presentedData = response
                 .then().
                         log().ifValidationFails().
@@ -146,7 +146,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на удаление текущего проекта")
-    public void deleteCurrentProject() {
+    public void deleteProject() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete("/" + projectId);
@@ -155,7 +155,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Администратор делает запрос на проверку правил текущего проекта")
-    public void checkPermOfCurrentProject() {
+    public void checkProjectPerm() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + projectId + "/permissions");
@@ -248,7 +248,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах проектов {string} есть {string}")
     public void areProjectsOnPages(String checkType, String entitiesPerPage) {
-        super.isSomethingOnPages(checkType, entitiesPerPage);
+        super.checkSomethingOnPages(checkType, entitiesPerPage);
     }
 
     @When("Администратор делает постраничный запрос на проекты {string}")

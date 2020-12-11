@@ -49,7 +49,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на указанную подложку")
-    public void getExactBaseMap() {
+    public void getBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("" + baseMapId);
@@ -83,7 +83,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует подложка")
-    public void isBaseMapExist(DataTable dataTable) {
+    public void initBaseMap(DataTable dataTable) {
         String name = generateString(dataTable.asList().get(0));
 
         if (isBaseMapExistInPool(name)) {
@@ -98,7 +98,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на обновление полей подложки")
-    public void updateExactBaseMap(DataTable dataTable) {
+    public void updateBaseMap(DataTable dataTable) {
         baseMapDto = mapToBaseMapDto(dataTable);
 
         String payload = gson.toJson(baseMapDto);
@@ -122,7 +122,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на удаление подложки")
-    public void deleteExactBaseMap() {
+    public void deleteBaseMap() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete("" + baseMapId);
@@ -131,7 +131,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Представление подложки корректно")
-    public void checkBaseMapDataStructure() {
+    public void checkBaseMapKeys() {
         Map<String, String> presentedData = response
                 .then().
                         log().ifValidationFails().
@@ -177,7 +177,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах подложек {string} есть {string}")
     public void isBaseMapsOnPages(String checkType, String entitiesPerPage) {
-        super.isSomethingOnPages(checkType, entitiesPerPage);
+        super.checkSomethingOnPages(checkType, entitiesPerPage);
     }
 
     @And("В ответе на подложки есть упоминание ID")

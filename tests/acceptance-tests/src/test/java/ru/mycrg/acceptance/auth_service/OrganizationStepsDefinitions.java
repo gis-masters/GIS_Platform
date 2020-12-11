@@ -91,12 +91,15 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      * @throws InterruptedException
      */
     @Given("Существует организация")
-    public void isOrgExist(DataTable dataTable) throws InterruptedException {
+    public void initOrg(DataTable dataTable) throws InterruptedException {
+        boolean isPassedEmailRandom = dataTable.asList().get(4).split("_")[0].equals("EMAIL");
         String eMail = generateString(dataTable.asList().get(4));
+
+        deleteAllEntitiesInOrg();
 
         if (isOrgExistInPool(eMail)) {
             makeExactOrgAsCurrent(eMail);
-        } else if (!orgPool.isEmpty()) {
+        } else if (!orgPool.isEmpty() && isPassedEmailRandom) {
             makeFirstAvailableOrgAsCurrent();
         } else {
             sendCreateOrganizationRequest(dataTable);
@@ -116,7 +119,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Посылается запрос на удаление чужой организации")
-    public void deleteOtherOrganizationByEmail() {
+    public void deleteOtherOrganization() {
         Integer orgId = null;
         for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
             Integer id = entry.getKey();
@@ -161,7 +164,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Представление организации корректно")
-    public void isOrgDataPresentedCorrectly() {
+    public void checkOrgKeys() {
         Map<String, String> presentedData = response
                 .then().
                         log().ifValidationFails().

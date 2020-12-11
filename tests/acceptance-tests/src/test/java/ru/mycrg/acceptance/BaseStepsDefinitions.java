@@ -12,6 +12,7 @@ import org.junit.Test;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
+import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
@@ -54,6 +55,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
+    public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
 
     public static Integer currentId;
     public static Object currentDto;
@@ -181,7 +183,7 @@ public class BaseStepsDefinitions {
         assertEquals(totalPages, estimatedPages);
     }
 
-    public void isSomethingOnPages(String checkType, String entitiesPerPage) {
+    public void checkSomethingOnPages(String checkType, String entitiesPerPage) {
         for (int i = 0; i < totalPages; i++) {
             response = getBaseRequestWithCurrentCookie()
                     .when().
@@ -327,5 +329,16 @@ public class BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete("/" + id);
+    }
+
+    public void deleteAllEntitiesInOrg() {
+        userPool.clear();
+        usersGroupPool.clear();
+        baseMapsPool.clear();
+        projectPool.clear();
+        projectBaseMapsPool.clear();
+        layerGroupPool.clear();
+        datasetsPool.clear();
+        layerPool.clear();
     }
 }
