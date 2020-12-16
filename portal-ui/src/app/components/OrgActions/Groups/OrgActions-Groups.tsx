@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
-import { People } from '@material-ui/icons';
+import { People, PeopleOutline } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { CrgUser } from '../../../services/crg/users.service';
@@ -36,7 +36,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
       <>
         <Tooltip title='Группы'>
           <IconButton className={cnOrgActionsGroups()} onClick={this.openDialog}>
-            <People />
+            {this.dialogOpen ? <People /> : <PeopleOutline />}
           </IconButton>
         </Tooltip>
 

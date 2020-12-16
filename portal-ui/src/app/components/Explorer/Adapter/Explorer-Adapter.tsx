@@ -1,15 +1,15 @@
 import React, { ReactNode } from 'react';
-import { InsertDriveFile } from '@material-ui/icons';
+import { InsertDriveFileOutlined } from '@material-ui/icons';
 
+import { services } from '../../../services/services';
 import { SortDir } from '../../../services/models';
+import { Toast } from '../../Toast/Toast';
 
+import { ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDataSetRoot } from './_type/Explorer-Adapter_type_dataSetRoot';
 import { ExplorerAdapterTypeDataSet } from './_type/Explorer-Adapter_type_dataSet';
 import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
 import { ExplorerAdapterTypeEmpty } from './_type/Explorer-Adapter_type_empty';
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
-import { services } from '../../../services/services';
-import { Toast } from '../../Toast/Toast';
 
 export interface Adapter {
   getId: (item: ExplorerItemData) => string;
@@ -58,7 +58,7 @@ export function getDetails(item: ExplorerItemData): string | undefined {
 }
 
 export function getIcon(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFile />;
+  return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFileOutlined />;
 }
 
 export function isFolder(item: ExplorerItemData): boolean {

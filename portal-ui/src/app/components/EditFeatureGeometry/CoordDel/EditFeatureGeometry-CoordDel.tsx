@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { DeleteOutline } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -24,7 +24,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
             size='small'
             disabled={this.props.disabled}
           >
-            <Delete />
+            <DeleteOutline />
           </IconButton>
         </span>
       </Tooltip>

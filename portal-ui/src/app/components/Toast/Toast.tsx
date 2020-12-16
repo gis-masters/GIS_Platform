@@ -5,11 +5,7 @@ import { observer } from 'mobx-react';
 import { toast, Id, ToastOptions } from 'react-toastify';
 import nl2br from 'react-nl2br';
 import { IconButton } from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-import WarningIcon from '@material-ui/icons/Warning';
-import CloseIcon from '@material-ui/icons/Close';
+import { CheckCircle, Error, Info, Warning, Close } from '@material-ui/icons';
 import { SvgIconProps } from '@material-ui/core/SvgIcon/';
 
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
@@ -40,10 +36,10 @@ export class Toast extends Component<ToastProps> {
   static defaultDuration = 5000;
 
   private static icons: { [key: string]: FC<SvgIconProps> } = {
-    error: ErrorIcon,
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    info: InfoIcon
+    error: Error,
+    success: CheckCircle,
+    warning: Warning,
+    info: Info
   };
 
   @observable
@@ -63,7 +59,7 @@ export class Toast extends Component<ToastProps> {
       closeButton: (
         <>
           <IconButton type='button' className={cnToast('Close')} onClick={closeHandler}>
-            <CloseIcon className={cnToast('CloseIcon')} />
+            <Close className={cnToast('CloseIcon')} />
           </IconButton>
         </>
       )

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
-import { AddCircle, Delete, Edit, ListAlt, Unarchive } from '@material-ui/icons';
+import { AddCircle, Delete, DeleteOutline, Edit, ListAlt, Unarchive } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -89,7 +89,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           {!isGroup && editMode && this.layersDeleteAllowed && (
             <MenuItem onClick={this.deleteLayer}>
               <ListItemIcon>
-                <Delete />
+                <DeleteOutline />
               </ListItemIcon>
               Удалить слой
             </MenuItem>

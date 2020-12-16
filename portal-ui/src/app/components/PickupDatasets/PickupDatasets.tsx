@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
-import { LibraryAdd } from '@material-ui/icons';
-import { boundMethod } from 'autobind-decorator';
+import { LibraryAdd, LibraryAddOutlined } from '@material-ui/icons';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../Button/Button';
 import { DataSet } from '../../services/data.service';
@@ -46,7 +46,12 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
           <DialogTitle>
             <div className={cnPickupDatasets('DialogTitle')}>
               Выбор набора данных
-              <Button variant='outlined' color='primary' startIcon={<LibraryAdd />} onClick={this.openCreateDialog}>
+              <Button
+                variant='outlined'
+                color='primary'
+                startIcon={this.creationDialogOpen ? <LibraryAdd /> : <LibraryAddOutlined />}
+                onClick={this.openCreateDialog}
+              >
                 Создать новой набор
               </Button>
             </div>

@@ -24,14 +24,16 @@ export const EditFeatureGeometryCoordPick: FC<EditFeatureGeometryCoordPickProps>
 }) => (
   <Tooltip title='Указать на карте' enterDelay={800}>
     <span>
-      <IconButton className={cnEditFeatureGeometryCoordPick()}
-                  onClick={onClick}
-                  onBlur={onBlur}
-                  aria-label="pick"
-                  size="small"
-                  ref={btnRef}
-                  disabled={disabled}
-                  color={active ? 'secondary' : 'default'}>
+      <IconButton
+        className={cnEditFeatureGeometryCoordPick()}
+        onClick={onClick}
+        onBlur={onBlur}
+        aria-label='pick'
+        size='small'
+        ref={btnRef}
+        disabled={disabled}
+        color={active ? 'secondary' : 'default'}
+      >
         <LocationSearching />
       </IconButton>
     </span>

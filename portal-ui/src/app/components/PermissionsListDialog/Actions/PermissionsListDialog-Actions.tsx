@@ -3,7 +3,7 @@ import {} from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { DeleteOutline } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
@@ -22,7 +22,7 @@ export class PermissionsListActions extends Component<PermissionsListActionsProp
       <div className={cnPermissionsListDialogActions()}>
         <Tooltip title='Удалить'>
           <IconButton onClick={this.handleDelete}>
-            <Delete />
+            <DeleteOutline />
           </IconButton>
         </Tooltip>
       </div>

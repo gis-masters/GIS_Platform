@@ -2,7 +2,7 @@ import React, { Component, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { FileCopy } from '@material-ui/icons';
+import { FileCopyOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 const cnEditFeatureGeometryCopy = cn('EditFeatureGeometry', 'Copy');
@@ -17,7 +17,7 @@ export class EditFeatureGeometryCopy extends Component<EditFeatureGeometryCopyPr
     return (
       <Tooltip title='Копировать координаты линии/контура в буфер обмена'>
         <IconButton className={cnEditFeatureGeometryCopy()} onClick={this.clickHandler}>
-          <FileCopy />
+          <FileCopyOutlined />
         </IconButton>
       </Tooltip>
     );

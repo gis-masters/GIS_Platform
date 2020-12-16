@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import { SearchTwoTone } from '@material-ui/icons';
+import { SearchOutlined } from '@material-ui/icons';
 import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@material-ui/core';
 
 import { openLayersService } from '../../services/open-layer/open-layers.service';
@@ -35,7 +35,7 @@ export class Search extends Component {
           />
 
           <IconButton className={cnSearch('Button')} size='small' type='submit'>
-            {!this.isLoading ? <SearchTwoTone /> : <CircularProgress size={20} />}
+            {!this.isLoading ? <SearchOutlined /> : <CircularProgress size={20} />}
           </IconButton>
         </Paper>
 

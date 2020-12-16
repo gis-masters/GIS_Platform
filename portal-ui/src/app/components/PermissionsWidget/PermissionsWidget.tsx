@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton } from '@material-ui/lab';
-import { Edit, Group, Person } from '@material-ui/icons';
+import { Edit, EditOutlined, Group, Person } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
@@ -34,7 +34,7 @@ const MIN_PRINCIPALS_TO_HIDE = 5;
 @observer
 export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @observable private _fetching = false;
-  @observable private modalOpen = false;
+  @observable private dialogOpen = false;
   @observable private permissions: RoleAssignmentBody[] = [];
   @observable private moarExpanded: Partial<{ [key in Role]: true }> = {};
 
@@ -60,13 +60,14 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   render() {
     const { dataSet, dataTable } = this.props;
+    const EditIcon = this.dialogOpen ? Edit : EditOutlined;
 
     return (
       <>
         <div className={cnPermissionsWidget()}>
           <Button
             className={cnPermissionsWidget('Header')}
-            endIcon={<Edit fontSize='inherit' />}
+            endIcon={<EditIcon fontSize='inherit' />}
             variant='text'
             onClick={this.openModal}
           >
@@ -133,7 +134,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
         <PermissionsEditDialog
           onClose={this.closeModal}
-          open={this.modalOpen}
+          open={this.dialogOpen}
           onChange={this.fetchPermissions}
           dataSet={dataSet}
           dataTable={dataTable}
@@ -157,12 +158,12 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   @action.bound
   private openModal() {
-    this.modalOpen = true;
+    this.dialogOpen = true;
   }
 
   @action.bound
   private closeModal() {
-    this.modalOpen = false;
+    this.dialogOpen = false;
   }
 
   private getListForRole<T extends CrgUser | CrgGroup>(listRole: Role, arr: T[], type: PrincipalType): T[] {

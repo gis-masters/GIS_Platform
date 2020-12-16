@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Delete } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
+import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
 import { deleteTask } from '../../../services/geoserver/import/import.service';
 import { Button } from '../../Button/Button';
-import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
 
@@ -19,7 +19,7 @@ interface DataImportTasksListTaskProps {
 
 @observer
 export class DataImportTasksListTask extends Component<DataImportTasksListTaskProps> {
-  @observable private isDelDialogOpen = false;
+  @observable private deleteDialogOpen = false;
   @observable private isDeleting = false;
 
   render() {
@@ -41,13 +41,12 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
               <td className={cnDataImportTasksList('TaskControls')}>
                 <Tooltip title='Удалить слой'>
                   <IconButton
-                    aria-label='delete'
                     className={cnDataImportTasksList('TaskDel')}
                     size='small'
                     disabled={this.isDeleting}
                     onClick={this.openDeleteDialog}
                   >
-                    <DeleteIcon fontSize='inherit' className={cnDataImportTasksList('TaskDelIcon')} />
+                    <Delete fontSize='inherit' className={cnDataImportTasksList('TaskDelIcon')} />
                   </IconButton>
                 </Tooltip>
               </td>
@@ -55,7 +54,7 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
           ) : null}
         </tr>
 
-        <Dialog open={this.isDelDialogOpen} onClose={this.closeDeleteDialog}>
+        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
           <DialogContent>
             <DialogContentText>Вы действительно хотите удалить слой?</DialogContentText>
           </DialogContent>
@@ -80,11 +79,11 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
 
   @action.bound
   private openDeleteDialog() {
-    this.isDelDialogOpen = true;
+    this.deleteDialogOpen = true;
   }
 
   @action.bound
   private closeDeleteDialog() {
-    this.isDelDialogOpen = false;
+    this.deleteDialogOpen = false;
   }
 }

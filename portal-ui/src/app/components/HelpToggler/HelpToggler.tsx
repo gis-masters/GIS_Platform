@@ -12,7 +12,7 @@ import {
   DialogActions,
   Tooltip
 } from '@material-ui/core';
-import LiveHelpIcon from '@material-ui/icons/LiveHelp';
+import { LiveHelp, LiveHelpOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
@@ -42,7 +42,7 @@ export class HelpToggler extends Component<{}> {
       <>
         <Tooltip title={'Справка'}>
           <IconButton className={cnHelpToggler()} onClick={this.togglePopup} ref={this.ref} color='inherit'>
-            <LiveHelpIcon />
+            {this.popupOpen ? <LiveHelp /> : <LiveHelpOutlined />}
           </IconButton>
         </Tooltip>
 

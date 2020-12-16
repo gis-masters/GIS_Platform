@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
-import { GroupAdd } from '@material-ui/icons';
+import { GroupAdd, GroupAddOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
@@ -35,7 +35,12 @@ export class OrgGroupsCreate extends Component {
 
     return (
       <>
-        <Button className={cnOrgGroups()} startIcon={<GroupAdd />} onClick={this.openDialog} variant='text'>
+        <Button
+          className={cnOrgGroups()}
+          startIcon={this.dialogOpen ? <GroupAdd /> : <GroupAddOutlined />}
+          onClick={this.openDialog}
+          variant='text'
+        >
           Создать группу
         </Button>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>

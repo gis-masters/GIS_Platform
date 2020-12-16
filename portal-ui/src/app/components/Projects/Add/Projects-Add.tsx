@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Button, Popover } from '@material-ui/core';
-import { AddBox } from '@material-ui/icons';
+import { AddBoxOutlined } from '@material-ui/icons';
 
 import { ProjectForm } from '../../ProjectForm/ProjectForm';
 
@@ -23,7 +23,7 @@ export class ProjectsAdd extends Component {
           className={cnProjectsAdd()}
           variant='contained'
           color='primary'
-          startIcon={<AddBox />}
+          startIcon={<AddBoxOutlined />}
           ref={this.btnRef}
           onClick={this.handleClick}
         >

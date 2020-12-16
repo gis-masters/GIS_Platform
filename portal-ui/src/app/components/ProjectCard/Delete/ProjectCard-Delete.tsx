@@ -21,7 +21,7 @@ interface ProjectCardDeleteProps {
 
 @observer
 export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
-  @observable private isDeleteDialogOpen = false;
+  @observable private dialogOpen = false;
 
   render() {
     if (!currentUser.isAdmin) {
@@ -34,15 +34,15 @@ export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
           <Delete />
         </IconButton>
 
-        <Dialog open={this.isDeleteDialogOpen} onClose={this.closeDeleteDialog}>
+        <Dialog open={this.dialogOpen} onClose={this.closeDeleteDialog}>
           <DialogContent>
             <DialogContentText>Вы действительно хотите удалить проект?</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.deleteProject} color='primary'>
-              Ok
+              Да
             </Button>
-            <Button onClick={this.closeDeleteDialog}>Отмена</Button>
+            <Button onClick={this.closeDeleteDialog}>Нет</Button>
           </DialogActions>
         </Dialog>
       </>
@@ -51,12 +51,12 @@ export class ProjectCardDelete extends Component<ProjectCardDeleteProps> {
 
   @action.bound
   private openDeleteDialog() {
-    this.isDeleteDialogOpen = true;
+    this.dialogOpen = true;
   }
 
   @action.bound
   private closeDeleteDialog() {
-    this.isDeleteDialogOpen = false;
+    this.dialogOpen = false;
   }
 
   @boundMethod

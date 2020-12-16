@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { pluralize } from 'numeralize-ru';
-import { FeaturedPlayList } from '@material-ui/icons';
+import { Storage } from '@material-ui/icons';
 
 import { DataSet, DataTable, getDataSetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -39,7 +39,7 @@ export class ExplorerAdapterTypeDataSet {
   }
 
   static getIcon() {
-    return <FeaturedPlayList />;
+    return <Storage />;
   }
 
   static isFolder() {

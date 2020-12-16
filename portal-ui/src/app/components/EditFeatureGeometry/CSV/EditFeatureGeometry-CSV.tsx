@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent, createRef } from 'react';
 import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Archive, Unarchive } from '@material-ui/icons';
+import { ArchiveOutlined, UnarchiveOutlined } from '@material-ui/icons';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
@@ -32,7 +32,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
         {!readOnly && (
           <Tooltip title='Импорт координат линии/контура из CSV'>
             <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.importClickHandler}>
-              <Archive />
+              <ArchiveOutlined />
             </IconButton>
           </Tooltip>
         )}
@@ -44,7 +44,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
               disabled={empty}
               onClick={this.exportClickHandler}
             >
-              <Unarchive />
+              <UnarchiveOutlined />
             </IconButton>
           </span>
         </Tooltip>

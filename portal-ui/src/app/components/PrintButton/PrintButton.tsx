@@ -3,7 +3,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, IconButton, Tooltip } from '@material-ui/core';
-import { Print } from '@material-ui/icons';
+import { Print, PrintOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { openLayersService } from '../../services/open-layer/open-layers.service';
@@ -25,7 +25,7 @@ export class PrintButton extends Component {
       <>
         <Tooltip title='Распечатать карту (PDF)'>
           <IconButton className={cnPrintButton()} onClick={this.openDialog} color='inherit'>
-            <Print />
+            {this.dialogOpen ? <Print /> : <PrintOutlined />}
           </IconButton>
         </Tooltip>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>

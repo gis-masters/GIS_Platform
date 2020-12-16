@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton, Dialog, DialogContent, DialogActions, DialogContentText } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { Delete, DeleteOutline } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
@@ -29,7 +29,7 @@ export class OrgActionsDel extends Component<OrgActionsDelProps> {
       <>
         <Tooltip title='Удалить'>
           <IconButton className={cnOrgActionsDel()} onClick={this.openDialog}>
-            <Delete />
+            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
           </IconButton>
         </Tooltip>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>

@@ -11,7 +11,7 @@ import {
   Select,
   Tooltip
 } from '@material-ui/core';
-import { GroupAdd, PersonAdd } from '@material-ui/icons';
+import { GroupAdd, GroupAddOutlined, PersonAdd, PersonAddOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
@@ -43,12 +43,15 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
 
   render() {
     const { principalType } = this.props;
+    const UserIcon = this.dialogOpen ? PersonAdd : PersonAddOutlined;
+    const GroupIcon = this.dialogOpen ? GroupAdd : GroupAddOutlined;
+    const CurrentIcon = principalType === PrincipalType.USER ? UserIcon : GroupIcon;
 
     return (
       <>
         <Tooltip title={`Добавить ${principalType === PrincipalType.USER ? 'пользователя' : 'группу'}`}>
           <IconButton className={cnPermissionsEditDialog('AddPrincipal')} onClick={this.open}>
-            {principalType === PrincipalType.USER ? <PersonAdd /> : <GroupAdd />}
+            <CurrentIcon />
           </IconButton>
         </Tooltip>
         <Dialog open={this.dialogOpen} onClose={this.close} maxWidth='xl'>

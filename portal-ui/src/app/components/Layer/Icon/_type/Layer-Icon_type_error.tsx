@@ -1,6 +1,5 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
-import { Tooltip } from '@material-ui/core';
 import { ErrorOutlined } from '@material-ui/icons';
 
 import { LayerIconProps, cnLayerIcon } from '../Layer-Icon';

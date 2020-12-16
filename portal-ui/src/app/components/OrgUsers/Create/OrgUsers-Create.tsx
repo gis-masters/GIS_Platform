@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
-import { PersonAdd } from '@material-ui/icons';
+import { PersonAdd, PersonAddOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
@@ -36,7 +36,12 @@ export class OrgUsersCreate extends Component {
 
     return (
       <>
-        <Button className={cnOrgUsersCreate()} startIcon={<PersonAdd />} onClick={this.openDialog} variant='text'>
+        <Button
+          className={cnOrgUsersCreate()}
+          startIcon={this.dialogOpen ? <PersonAdd /> : <PersonAddOutlined />}
+          onClick={this.openDialog}
+          variant='text'
+        >
           Создать пользователя
         </Button>
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>

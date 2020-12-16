@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { DeleteOutline } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { PrincipalType } from '../../../services/crg/permissions.models';
@@ -21,7 +21,7 @@ export class PermissionsEditDialogRemovePrincipal extends Component<PermissionsE
     return (
       <Tooltip title={`Удалить ${principalType === PrincipalType.USER ? 'пользователя' : 'группу'}`}>
         <IconButton className={cnPermissionsEditDialogRemovePrincipal()} onClick={this.handleClick}>
-          <Delete />
+          <DeleteOutline />
         </IconButton>
       </Tooltip>
     );

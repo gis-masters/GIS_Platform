@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Tooltip, IconButton } from '@material-ui/core';
-import { AddCircle } from '@material-ui/icons';
+import { AddCircleOutline } from '@material-ui/icons';
 
 import { PrincipalType } from '../../../services/crg/permissions.models';
 import { PermissionsListItem } from '../../../services/crg/allPermissions.service';
@@ -31,7 +31,7 @@ export class PermissionsListDialogAdd extends Component<PermissionsListDialogAdd
       <>
         <Tooltip title='Добавить'>
           <IconButton className={cnPermissionsListDialogAdd()} onClick={this.openDialog}>
-            <AddCircle />
+            <AddCircleOutline />
           </IconButton>
         </Tooltip>
         <PermissionsAddDialog

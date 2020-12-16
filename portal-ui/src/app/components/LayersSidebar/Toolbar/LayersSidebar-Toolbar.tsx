@@ -2,24 +2,24 @@ import React, { Component, createRef } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Block, CreateNewFolder, Done } from '@material-ui/icons';
+import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { isLayersManagementAllowed } from '../../../services/crg/permissions.service';
 import { generateNextGroupId } from '../../../services/geoserver/layers.service';
 import { NewCrgLayersGroup } from '../../../services/crg/projects.models';
+import { usersService } from '../../../services/crg/users.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
+import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
 import { LayersSettings } from '../../Icons/LayersSettings';
 
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
-import { currentUser } from '../../../stores/CurrentUser.store';
-import { usersService } from '../../../services/crg/users.service';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 
@@ -70,17 +70,17 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
               <Tooltip title='Сохранить для всех пользователей'>
                 <span>
                   <IconButton onClick={this.save} disabled={!currentProject.queriesQueueLength} color='primary'>
-                    <Done />
+                    <SaveOutlined />
                   </IconButton>
                 </span>
               </Tooltip>
             )}
 
             {editMode && (
-              <Tooltip title='Отмена'>
+              <Tooltip title='Отменить изменения'>
                 <span>
                   <IconButton onClick={this.cansel} color='secondary'>
-                    <Block />
+                    <CancelOutlined />
                   </IconButton>
                 </span>
               </Tooltip>
@@ -90,14 +90,14 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
             {editMode && (
               <Tooltip title='Создать группу'>
                 <IconButton onClick={this.openCreateGroupDialog}>
-                  <CreateNewFolder />
+                  {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
                 </IconButton>
               </Tooltip>
             )}
 
             <Tooltip title='Настроить слои проекта'>
-              <IconButton onClick={this.handleEditModeClick} color={editMode ? 'secondary' : 'default'}>
-                <LayersSettings />
+              <IconButton onClick={this.handleEditModeClick}>
+                {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
               </IconButton>
             </Tooltip>
           </LayersSidebarToolbarRight>

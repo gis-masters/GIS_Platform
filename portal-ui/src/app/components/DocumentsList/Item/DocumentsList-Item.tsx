@@ -1,20 +1,18 @@
-import { observer } from 'mobx-react';
-import { documentsService } from '../../../services/crg/documents.service';
-import { Link } from '../../Link/Link';
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { action, observable } from 'mobx';
-import { boundMethod } from 'autobind-decorator';
-import { Assignment, Delete } from '@material-ui/icons';
+import { observer } from 'mobx-react';
+import { AssignmentOutlined, Delete, DeleteOutline } from '@material-ui/icons';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
 
-import { Toast } from '../../Toast/Toast';
-import { Button } from '../../Button/Button';
-import { services } from '../../../services/services';
 import { EditedField } from '../../../services/crg/schema.service';
-import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
+import { documentsService } from '../../../services/crg/documents.service';
 import { serverProperties } from '../../../services/server-properties.service';
 import { DocumentListItemData } from '../../EditFeatureField/Control/_type/EditFeatureField-Control_type_lookup';
+import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
+import { Button } from '../../Button/Button';
+import { Link } from '../../Link/Link';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsList-Item.scss';
 import '!style-loader!css-loader!sass-loader!../Icon/DocumentList-Icon.scss';
@@ -34,7 +32,7 @@ interface DocumentItemProps {
 @observer
 export class DocumentsListItem extends Component<DocumentItemProps> {
   @observable private isDeleteDocumentDialogOpen = false;
-  @observable private url;
+  @observable private url = '';
 
   async componentDidMount() {
     const baseUrl = await serverProperties.baseUrl;
@@ -50,7 +48,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     return (
       <>
         <div className={cnDocumentsList('Item')}>
-          <Assignment className={cnDocumentsList('Icon')} color='action' fontSize='small' />
+          <AssignmentOutlined className={cnDocumentsList('Icon')} color='action' fontSize='small' />
 
           <Link className={cnDocumentsList('Content')} url={this.url} download={document.title}>
             {document.title}
@@ -58,7 +56,11 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
 
           {featureInfo.isReadOnly ? (
             <IconButton className={cnDocumentsList('DeleteButton')} onClick={this.openDeleteDialog} size='small'>
-              <Delete color='action' fontSize='small' />
+              {this.isDeleteDocumentDialogOpen ? (
+                <Delete color='action' fontSize='small' />
+              ) : (
+                <DeleteOutline color='action' fontSize='small' />
+              )}
             </IconButton>
           ) : null}
         </div>

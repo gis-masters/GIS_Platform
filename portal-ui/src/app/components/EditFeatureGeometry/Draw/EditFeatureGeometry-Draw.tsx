@@ -5,7 +5,7 @@ import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
 import GeometryType from 'ol/geom/GeometryType';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Brush } from '@material-ui/icons';
+import { Brush, BrushOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
@@ -44,7 +44,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
           onClick={this.clickHandler}
           color={this.active ? 'secondary' : 'default'}
         >
-          <Brush />
+          {this.active ? <Brush /> : <BrushOutlined />}
         </IconButton>
       </Tooltip>
     );

@@ -4,11 +4,11 @@ import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Tooltip, IconButton, Badge } from '@material-ui/core';
-import { Notifications } from '@material-ui/icons';
+import { Notifications, NotificationsOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { eventService, IEvent } from '../../services/event.service';
+import { eventService } from '../../services/event.service';
 import { sidebars } from '../../stores/Sidebars.store';
 
 const cnNotificationsToggler = cn('NotificationsToggler');
@@ -39,7 +39,7 @@ export class NotificationsToggler extends Component<NotificationsTogglerProps> {
       <Tooltip title='Уведомления'>
         <IconButton className={cnNotificationsToggler()} onClick={this.handleClick} color='inherit'>
           <Badge badgeContent={this.count} color='secondary' invisible={!this.count}>
-            <Notifications />
+            {sidebars.infoOpen ? <Notifications /> : <NotificationsOutlined />}
           </Badge>
         </IconButton>
       </Tooltip>

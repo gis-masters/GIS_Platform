@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Menu, MenuItem, ListItemIcon } from '@material-ui/core';
-import { Menu as MenuIcon, Map as MapIcon, ViewModule, Business, CloudDownload, Storage } from '@material-ui/icons';
+import { Menu as MenuIcon, Map, ViewModule, Business, CloudDownload, Storage } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -48,7 +48,7 @@ export class WorkspaceHeaderBurger extends Component {
             >
               <MenuItem onClick={this.close} disabled={!currentProject.layers || !currentProject.layers.length}>
                 <ListItemIcon>
-                  <MapIcon />
+                  <Map />
                 </ListItemIcon>
                 Карта
               </MenuItem>
