@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { getEnvironment } from '../../../services/environment';
+import { currentUser } from '../../../stores/CurrentUser.store';
 
 import { ProjectsFilter } from '../Filter/Projects-Filter';
 import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
@@ -18,7 +18,6 @@ const cnProjectsHeader = cn('Projects', 'Header');
 export class ProjectsHeader extends Component {
   private ref = createRef<HTMLDivElement>();
   private intersectionObserver: IntersectionObserver;
-  @observable private isCreationEnabled = false;
   @observable private stuck = false;
 
   constructor(props: {}) {
@@ -34,11 +33,6 @@ export class ProjectsHeader extends Component {
 
   async componentDidMount() {
     this.intersectionObserver.observe(this.ref.current);
-
-    const { platform } = await getEnvironment();
-    if (platform !== 'simf') {
-      this.enableCreation();
-    }
   }
 
   componentWillUnmount() {
@@ -51,7 +45,7 @@ export class ProjectsHeader extends Component {
         <ProjectsFilter />
         <ProjectsSortBy />
         <ProjectsSortOrder />
-        {this.isCreationEnabled && <ProjectsAdd />}
+        {currentUser.isAdmin && <ProjectsAdd />}
       </div>
     );
   }
@@ -59,10 +53,5 @@ export class ProjectsHeader extends Component {
   @action
   private setStuck(stuck: boolean) {
     this.stuck = stuck;
-  }
-
-  @action
-  private enableCreation() {
-    this.isCreationEnabled = !this.isCreationEnabled;
   }
 }
