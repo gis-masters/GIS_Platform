@@ -138,6 +138,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_data_service
       SPRING_DATASOURCE_USERNAME: $CRG_USER
       SPRING_DATASOURCE_PASSWORD: $DB_PASS
+
+      CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
     volumes:
       - /opt/logs:/opt/logs
       - /opt/file_storage:/opt/file_storage
@@ -159,7 +161,6 @@ services:
       SPRING_FLYWAY_PASSWORD: $DB_PASS
 
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
-      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
       CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER

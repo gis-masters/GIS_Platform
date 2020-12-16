@@ -21,20 +21,10 @@ public class VectorStorage extends GeoServerBaseService {
     /**
      * Adds a new PostGis data store to the workspace.
      *
-     * @param databaseName  Database
-     * @param schemaName    Schema
      * @param workspaceName The name of the workspace containing the data stores.
-     * @param dataStoreName The name of the data store.
      */
-    public ResponseModel<Object> create(final String databaseName,
-                                        final String schemaName,
-                                        final String workspaceName,
-                                        final String dataStoreName) throws HttpClientException {
-        ConnectionParameters connParams = new ConnectionParameters(dbInfo.getDbHost(),
-                                                                   String.valueOf(dbInfo.getDbPort()),
-                                                                   databaseName, schemaName, dbInfo.getDbOwnerUser(),
-                                                                   dbInfo.getDbOwnerPassword(), "postgis");
-        DataStore dataStore = new DataStore(dataStoreName, connParams);
+    public ResponseModel<Object> create(final String workspaceName,
+                                        final DataStore dataStore) throws HttpClientException {
         String json = gson.toJson(new DataStoreModel(dataStore));
 
         Request request = builderWithBearerAuth

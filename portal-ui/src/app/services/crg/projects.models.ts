@@ -39,12 +39,6 @@ export interface CrgLayer extends BaseCrgLayer {
   legendIsFetching?: boolean;
 }
 
-export interface CrgSource {
-  role: Role;
-  identifier: string;
-  type: string;
-}
-
 export interface CrgLayersGroup extends CrgEntity {
   parent?: number;
   expanded: boolean;

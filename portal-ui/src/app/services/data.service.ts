@@ -51,3 +51,9 @@ export async function getDataSetTables(
 
   return [(response._embedded && response._embedded.tables) || [], response.page.totalPages];
 }
+
+export async function createDataset(title: string, details: string) {
+  const url = `${await serverProperties.dataUrl}/datasets`;
+
+  await http.post(url, { title, details });
+}

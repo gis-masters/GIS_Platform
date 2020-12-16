@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.entity;
 
+import org.hibernate.annotations.OnDelete;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
 @Table(name = "resource")
@@ -44,6 +47,7 @@ public class Resource {
     LocalDateTime lastModified = LocalDateTime.now();
 
     @OneToMany(mappedBy = "resource")
+    @OnDelete(action = CASCADE) // Поскольку таблицы создаются вручную, добавляю это сюда только чтобы отразить action
     private Set<Permission> permissions = new HashSet<>();
 
     public Resource() {

@@ -7,23 +7,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.wrapper.config.CrgProperties;
-
-import java.net.MalformedURLException;
 
 @SpringBootApplication
 @EnableTransactionManagement
 public class GeoServerWrapperApplication {
 
     private static final Logger log = LoggerFactory.getLogger(GeoServerWrapperApplication.class);
-
-    @Autowired
-    private Environment environment;
 
     @Autowired
     private CrgProperties properties;
@@ -33,7 +26,7 @@ public class GeoServerWrapperApplication {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void initGeoserverClient() throws MalformedURLException {
+    public void initGeoserverClient() {
         log.info("initGeoserverClient");
 
         GeoserverInfo geoserverInfo = GeoserverInfo.builder()
@@ -42,18 +35,6 @@ public class GeoServerWrapperApplication {
                 .userServiceName(properties.getUserServiceName())
                 .build();
 
-
-        String postGis = environment.getRequiredProperty("spring.datasource.url")
-                .split("//")[1]
-                .split("/")[0];
-
-        DbInfo dbInfo = DbInfo.builder()
-                .dbHost(postGis.split(":")[0])
-                .dbPort(Integer.parseInt(postGis.split(":")[1]))
-                .dbOwnerUser(environment.getRequiredProperty("spring.datasource.username"))
-                .dbOwnerPassword(environment.getRequiredProperty("spring.datasource.password"))
-                .build();
-
-        GeoserverClient.initialize(geoserverInfo, dbInfo);
+        GeoserverClient.initialize(geoserverInfo);
     }
 }

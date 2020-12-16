@@ -38,11 +38,15 @@ public class GeoserverFeatureTypeHandler extends AbstractImportChainItem {
             final ResponseModel<Object> responseModel = new FeatureTypeService(importTask.getRootToken())
                     .create(workspaceName, dataStoreName, layerName, importTask.getSrs());
             if (!responseModel.isSuccessful()) {
-                logAndInitRollback(mqRequest, importTask, responseModel.getBody().toString());
-            }
-
-            if (nextImporter != null) {
-                nextImporter.handle(mqRequest, importTask);
+                if (responseModel.getBody() != null) {
+                    logAndInitRollback(mqRequest, importTask, responseModel.getBody().toString());
+                } else {
+                    logAndInitRollback(mqRequest, importTask, responseModel.getMsg());
+                }
+            } else {
+                if (nextImporter != null) {
+                    nextImporter.handle(mqRequest, importTask);
+                }
             }
         } catch (HttpClientException e) {
             logAndInitRollback(mqRequest, importTask, e.getMessage());

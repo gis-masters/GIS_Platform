@@ -83,7 +83,7 @@ public class ServiceTablesInitializer {
                 " CONSTRAINT fk3yfc65wpuf6tu7enud5iqkh9b FOREIGN KEY (resource_id)" +
                 "     REFERENCES data.resource (id) MATCH SIMPLE" +
                 "     ON UPDATE NO ACTION" +
-                "     ON DELETE NO ACTION," +
+                "     ON DELETE CASCADE," +
                 " CONSTRAINT fkcsq8yuy5497r2s4n8h1rh1a62 FOREIGN KEY (principal_id)" +
                 "     REFERENCES data.principal (id) MATCH SIMPLE" +
                 "     ON UPDATE NO ACTION" +

@@ -4,12 +4,12 @@ import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { TextField, Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
-import { Loading } from '../Loading/Loading';
 
 import { Toast } from '../Toast/Toast';
 import { Button } from '../Button/Button';
-import { projectsService } from '../../services/crg/projects.service';
+import { Loading } from '../Loading/Loading';
 import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { createDataset } from '../../services/data.service';
 
 import '!style-loader!css-loader!sass-loader!./CreateDatasetDialog.scss';
 
@@ -24,7 +24,7 @@ interface CreateDatasetDialogProps {
 @observer
 export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
   @observable private busy = false;
-  @observable private newDatasetName = '';
+  @observable private newDatasetTitle = '';
   @observable private newDatasetDesc = '';
 
   private maxNameLength = 250;
@@ -34,7 +34,7 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
     const { open } = this.props;
 
     return (
-      <Dialog className={cnCreateDatasetDialog()} maxWidth={'md'} open={open} onClose={this.props.onClose}>
+      <Dialog className={cnCreateDatasetDialog()} maxWidth={'md'} open={open} onClose={this.closeDialog}>
         <DialogTitle>Создание нового набора данных</DialogTitle>
 
         <DialogContent className={cnCreateDatasetDialog('Content')}>
@@ -44,7 +44,7 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
               <FormControl>
                 <TextField
                   id='datasetTitle'
-                  helperText={`${this.newDatasetName.length}/${this.maxNameLength}`}
+                  helperText={`${this.newDatasetTitle.length}/${this.maxNameLength}`}
                   autoFocus
                   inputProps={{ maxLength: this.maxNameLength }}
                   onChange={this.handleNameChange}
@@ -70,10 +70,10 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
         </DialogContent>
 
         <DialogActions>
-          <Button form='createDatasetForm' type='submit' color='primary' disabled={!this.newDatasetName}>
+          <Button form='createDatasetForm' type='submit' color='primary' disabled={!this.newDatasetTitle}>
             Создать
           </Button>
-          <Button onClick={this.props.onClose}>Отмена</Button>
+          <Button onClick={this.closeDialog}>Отмена</Button>
         </DialogActions>
       </Dialog>
     );
@@ -85,20 +85,20 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
 
     this.setBusy(true);
     try {
-      await projectsService.createDataset(this.newDatasetName, this.newDatasetDesc);
+      await createDataset(this.newDatasetTitle, this.newDatasetDesc);
 
-      Toast.info(`Успешно создан набор данных: \n"${this.newDatasetName}"`);
+      Toast.info(`Успешно создан набор данных: \n"${this.newDatasetTitle}"`);
       this.props.onCreated();
     } catch (err) {
       Toast.error(`Произошла ошибка при создании набора данных`);
     } finally {
-      this.setBusy(false);
+      this.clearState();
     }
   }
 
   @action.bound
   private handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.newDatasetName = e.target.value;
+    this.newDatasetTitle = e.target.value;
   }
 
   @action.bound
@@ -106,8 +106,21 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
     this.newDatasetDesc = e.target.value;
   }
 
+  @action.bound
+  private closeDialog() {
+    this.clearState();
+    this.props.onClose();
+  }
+
   @action
   private setBusy(isBusy: boolean) {
     this.busy = isBusy;
+  }
+
+  @action
+  private clearState() {
+    this.newDatasetTitle = '';
+    this.newDatasetDesc = '';
+    this.setBusy(false);
   }
 }

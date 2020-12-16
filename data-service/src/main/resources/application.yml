@@ -35,6 +35,7 @@ management:
       enabled: false
 
 crg-options:
+  gis-service-url: http://127.0.0.1:8082
   fileStoragePath: /opt/file_storage
   geoserverDbName: geoserver_db
 

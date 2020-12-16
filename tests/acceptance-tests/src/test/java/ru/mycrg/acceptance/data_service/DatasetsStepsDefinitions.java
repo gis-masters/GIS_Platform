@@ -8,10 +8,10 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -49,10 +49,9 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + datasetName + "/tables/" + tableName);
     }
 
-    @When("Отправляется запрос на создание набора {string} {string} {string}")
-    public void createDatasetRequest(String nameKey, String titleKey, String descriptionKey) {
-        currentDatasetDto = new DatasetCreateDto(generateString(nameKey),
-                                                 generateString(titleKey),
+    @When("Отправляется запрос на создание набора {string} {string}")
+    public void createDatasetRequest(String titleKey, String descriptionKey) {
+        currentDatasetDto = new DatasetCreateDto(generateString(titleKey),
                                                  generateString(descriptionKey));
 
         response = getBaseRequestWithCurrentCookie()
@@ -62,18 +61,54 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         post();
 
-        currentDatasetName = currentDatasetDto.getName();
-        datasetsPool.put(currentDatasetDto.getName(), currentDatasetDto);
+        currentDatasetName = extractDatasetName();
+        datasetsPool.put(currentDatasetName, currentDatasetDto);
     }
 
     @And("Сервер передает Location созданного набора")
     public void shouldReturnCorrectDatasetLocation() {
         String url = response.getHeader("Location");
 
-        assertThat(url, equalTo(makeDatasetUrl(currentDatasetName)));
+        String datasetName = extractDatasetName();
+        assertThat(url, equalTo(makeDatasetUrl(datasetName)));
+    }
+
+    @And("Текущий набор существует в БД")
+    public void currentDatasetExist() {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/" + currentDatasetName)
+                .then().
+                        statusCode(SC_OK);
+    }
+
+    @When("Пользователь делает запрос на удаление текущего набора")
+    public void deleteCurrentDataset() {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        delete("/" + currentDatasetName);
+
+        datasetsPool.remove(currentDatasetName);
+    }
+
+    @Then("Текущий набор отсутствует в БД")
+    public void currentDatasetNotExist() {
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/" + currentDatasetName)
+                .then().
+                        statusCode(SC_NOT_FOUND);
+    }
+
+    private String extractDatasetName() {
+        return response.getHeader("Location")
+                       .split("/datasets/")[1];
     }
 
     private String makeDatasetUrl(String datasetName) {
-        return testServerHost + ":" + testServerPort + "/api/data/datasets/" + datasetName;
+        return String.format("%s:%d/api/data/datasets/%s", testServerHost, testServerPort, datasetName);
     }
 }

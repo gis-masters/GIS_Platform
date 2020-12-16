@@ -8,9 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverClient;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.gis_service.config.CrgProperties;
@@ -24,11 +22,9 @@ public class GisServiceApplication {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final Environment environment;
     private final CrgProperties properties;
 
-    public GisServiceApplication(Environment environment, CrgProperties properties) {
-        this.environment = environment;
+    public GisServiceApplication(CrgProperties properties) {
         this.properties = properties;
     }
 
@@ -47,18 +43,6 @@ public class GisServiceApplication {
                 .userServiceName(properties.getUserServiceName())
                 .build();
 
-        String postGis = environment
-                .getRequiredProperty("spring.datasource.url")
-                .split("//")[1]
-                .split("/")[0];
-
-        DbInfo dbInfo = DbInfo.builder()
-                              .dbHost(postGis.split(":")[0])
-                              .dbPort(Integer.parseInt(postGis.split(":")[1]))
-                              .dbOwnerUser(environment.getRequiredProperty("spring.datasource.username"))
-                              .dbOwnerPassword(environment.getRequiredProperty("spring.datasource.password"))
-                              .build();
-
-        GeoserverClient.initialize(geoserverInfo, dbInfo);
+        GeoserverClient.initialize(geoserverInfo);
     }
 }

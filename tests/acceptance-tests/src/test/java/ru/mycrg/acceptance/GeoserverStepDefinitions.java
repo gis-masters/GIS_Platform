@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
@@ -226,5 +227,32 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                      .orElse(null) != null) {
             throw new CucumberException(role + " are present in services");
         }
+    }
+
+    @And("На геосервере создано хранилище с тем же названием")
+    public void checkThatCurrentStoreExistOnGeoserver() {
+        String workspace = "scratch_database_" + orgId;
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetName)
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("dataStore.name", equalTo(currentDatasetName),
+                             "dataStore.type", equalTo("PostGIS"),
+                             "dataStore.enabled", is(true));
+    }
+
+    @And("На геосервере отсутствует хранилище")
+    public void checkThatCurrentStoreNotExistOnGeoserver() {
+        String workspace = "scratch_database_" + orgId;
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetName)
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_NOT_FOUND);
     }
 }

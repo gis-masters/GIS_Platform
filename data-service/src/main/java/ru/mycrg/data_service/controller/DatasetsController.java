@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.controller;
 
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -22,7 +21,7 @@ import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.OK;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 public class DatasetsController {
@@ -36,6 +35,7 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<PagedResources<IResourceModel>> getDatasets(
             @RequestParam(required = false, defaultValue = "") String title,
             Authentication authentication,
@@ -53,6 +53,7 @@ public class DatasetsController {
     }
 
     @GetMapping("/datasets/{dataSetName}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<IResourceModel> getDataset(@PathVariable String dataSetName,
                                                     Authentication authentication) {
         final IResourceModel dto = datasetService.getByName(dataSetName, authentication);
@@ -60,11 +61,8 @@ public class DatasetsController {
         return ResponseEntity.ok(dto);
     }
 
-    @ApiOperation(value = "Создание нового набора данных. ВНИМАНИЕ НЕ использовать напрямую!",
-                  notes = "Корректный эндпоинт для создания находится в gis-service, вызов которого выполнит " +
-                          "необходимые действия на геосервере и 'дёрнет' данный эндпоинт")
     @PostMapping("/datasets")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto,
                                                 Authentication authentication) {
         IResourceModel newDataset = datasetService.create(dto, authentication);
@@ -78,13 +76,10 @@ public class DatasetsController {
         return ResponseEntity.created(location).build();
     }
 
-    @ApiOperation(value = "Удаление набора данных. ВНИМАНИЕ НЕ использовать напрямую!",
-                  notes = "Корректный эндпоинт для удаления находится в gis-service, вызов которого выполнит " +
-                          "необходимые действия на геосервере и 'дёрнет' данный эндпоинт")
     @DeleteMapping("/datasets/{datasetId}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId, Authentication authentication) {
-        datasetService.delete(datasetId);
+        datasetService.delete(datasetId, authentication);
 
         return ResponseEntity.noContent().build();
     }

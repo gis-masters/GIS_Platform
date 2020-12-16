@@ -5,8 +5,8 @@ public class DataStore {
     public final String name;
     public final ConnectionParameters connectionParameters;
 
-    public DataStore(String name, ConnectionParameters connectionParameters) {
-        this.name = name;
+    public DataStore(String dataStoreName, ConnectionParameters connectionParameters) {
+        this.name = dataStoreName;
         this.connectionParameters = connectionParameters;
     }
 

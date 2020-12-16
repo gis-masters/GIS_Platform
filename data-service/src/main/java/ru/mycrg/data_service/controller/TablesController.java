@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
-import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.tables.ITableService;
 import ru.mycrg.data_service.service.tables.TableService;
@@ -36,7 +36,7 @@ public class TablesController {
 
     @PostMapping("/datasets/{dataSetName}/tables")
     public ResponseEntity<IResourceModel> createTable(@PathVariable String dataSetName,
-                                                      @Valid @RequestBody ResourceCreateDto dto,
+                                                      @Valid @RequestBody TableCreateDto dto,
                                                       Authentication authentication) {
         ResourceIdentifier datasetId = new ResourceIdentifier(dataSetName, SCHEMA);
         ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId);

@@ -3,13 +3,11 @@ package ru.mycrg.geoserver_client.services;
 import com.google.gson.Gson;
 import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.geoserver_client.DbInfo;
 import ru.mycrg.geoserver_client.GeoserverInfo;
 import ru.mycrg.http_client.HttpClient;
 
 public class GeoServerBaseService {
 
-    public static DbInfo dbInfo;
     public static HttpClient httpClient;
     public static GeoserverInfo geoserverInfo;
 

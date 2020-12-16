@@ -17,9 +17,8 @@ public class GeoserverClient {
     private GeoserverClient() {
     }
 
-    public static void initialize(GeoserverInfo geoserverInfo, DbInfo dbInfo) {
+    public static void initialize(GeoserverInfo geoserverInfo) {
         GeoServerBaseService.geoserverInfo = geoserverInfo;
-        GeoServerBaseService.dbInfo = dbInfo;
 
         RetryConfig config = RetryConfig.builder()
                                         .maxAttempts(10)
@@ -32,11 +31,5 @@ public class GeoserverClient {
         );
 
         GeoServerBaseService.httpClient = new HttpClient(requestHandler);
-    }
-
-    public static void initialize(GeoserverInfo geoserverInfo, DbInfo dbInfo, HttpClient httpClient) {
-        GeoServerBaseService.geoserverInfo = geoserverInfo;
-        GeoServerBaseService.dbInfo = dbInfo;
-        GeoServerBaseService.httpClient = httpClient;
     }
 }

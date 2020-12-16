@@ -14,5 +14,5 @@ public interface IDatasetService {
 
     IResourceModel create(ResourceCreateDto dto, Authentication authentication);
 
-    void delete(String datasetId);
+    void delete(String datasetId, Authentication authentication);
 }
