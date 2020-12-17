@@ -226,7 +226,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         return new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
     }
 
-    private Response createOrganization(OrganizationCreateDto dto) {
+    private void createOrganization(OrganizationCreateDto dto) {
         response = getBaseRequest()
                 .given().
                         body(gson.toJson(dto)).
@@ -234,8 +234,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         post("/organizations/init");
-
-        return response;
     }
 
     private void waitUntilOrganizationSuccessfullyDeleted(Integer id, Cookie cookie) throws InterruptedException {

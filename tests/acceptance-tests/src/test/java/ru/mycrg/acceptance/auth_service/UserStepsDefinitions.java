@@ -14,7 +14,8 @@ import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
@@ -80,7 +81,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор организации удаляет пользователя")
     public void deleteUser() {
-        super.deleteEntity(userId);
+        super.deleteCurrentEntity();
 
         userPool.remove(userId);
     }
@@ -99,7 +100,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на созданного пользователя")
     public void getExactUser() {
-        super.getCurrentEntityInfoById();
+        super.getCurrentEntity();
     }
 
     @When("Администратор делает запрос на всех пользователей")

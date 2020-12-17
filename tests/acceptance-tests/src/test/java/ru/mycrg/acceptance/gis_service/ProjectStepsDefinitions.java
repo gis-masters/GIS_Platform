@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
@@ -48,8 +48,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("В ответе на удаление проекта есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    public void checkCurrentIdInResponse() {
+        super.checkCurrentIdInResponse();
     }
 
     @And("Поля проекта совпадают с переданными")
@@ -147,9 +147,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на удаление текущего проекта")
     public void deleteProject() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + projectId);
+        super.deleteCurrentEntity();
 
         projectPool.remove(projectId);
     }
@@ -223,7 +221,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущий проект")
     public void getCurrentProjectInfoById() {
-        super.getCurrentEntityInfoById();
+        super.getCurrentEntity();
     }
 
     @When("Пользователь делает запрос на все проекты организации")

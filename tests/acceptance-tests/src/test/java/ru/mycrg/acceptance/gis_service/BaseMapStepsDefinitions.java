@@ -4,8 +4,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
@@ -56,7 +54,7 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущую подложку")
     public void getCurrentProjectBaseMapInfoById() {
-        super.getCurrentEntityInfoById();
+        super.getCurrentEntity();
     }
 
     @And("Поля подложки проекта совпадают с переданными")
@@ -77,16 +75,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(baseMapDto);
     }
 
-    @When("Пользователь делает запрос на текущую подложку {string}")
-    public void checkExactProjectBaseMap(String baseMapId) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        get("/" + baseMapId);
-    }
-
     @Given("Существует подложкa проекта {string}, {string}, {string}")
     public void isProjectBaseMapExist(String baseMapId, String title, String position) {
         if (isProjectBaseMapExistInPool(title)) {
@@ -102,23 +90,12 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает повторный запрос на создание подложки проекта")
     public void createProjectBaseMapAgain() {
-        String payload = gson.toJson(baseMapDto);
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(baseMapDto);
     }
 
     @When("Пользователь делает запрос на удаление текущей подложки текущего проекта")
     public void deleteProjectBaseMap() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        delete("/" + baseMapDto.getBaseMapId());
+        super.deleteEntityById((int) baseMapDto.getBaseMapId());
 
         projectBaseMapsPool.remove(baseMapId);
     }
@@ -173,8 +150,8 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("В ответе на удаление подложки проекта есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    public void checkCurrentIdInResponse() {
+        super.checkCurrentIdInResponse();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки проекта")
@@ -190,18 +167,6 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     private boolean isProjectBaseMapExistInPool(String title) {
         return projectBaseMapsPool.values().stream()
                                   .anyMatch(dto -> title.equals(dto.getTitle()));
-    }
-
-    private Response createProjectBaseMap(BaseMapCreateDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("");
-
-        return response;
     }
 
     private void makeExactProjectBaseMapAsCurrent(String title) {

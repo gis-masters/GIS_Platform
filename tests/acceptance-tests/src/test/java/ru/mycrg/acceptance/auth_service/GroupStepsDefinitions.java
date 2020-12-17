@@ -157,7 +157,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор организации удаляет пользовательскую группу")
     public void deleteUsersGroup() {
-        super.deleteEntity(usersGroupId);
+        super.deleteCurrentEntity();
 
         assertEquals(SC_NO_CONTENT, response.statusCode());
     }
@@ -184,12 +184,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
         String payload = gson.toJson(usersGroupDto);
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(payload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("");
+        super.createEntity(payload);
     }
 
     private boolean isUsersGroupExistInPool(String groupName) {

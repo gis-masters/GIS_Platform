@@ -60,14 +60,6 @@ public class BaseStepsDefinitions {
     public static Integer currentId;
     public static Object currentDto;
 
-    public static Object getCurrentDto() {
-        return currentDto;
-    }
-
-    public static void setCurrentDto(Object dto) {
-        currentDto = dto;
-    }
-
     public Integer getCurrentId() {
         return currentId;
     }
@@ -99,13 +91,7 @@ public class BaseStepsDefinitions {
     }
 
     public RequestSpecification getBaseRequestWithCurrentCookie() {
-        return RestAssured
-                .given().
-                        log().ifValidationFails().
-                        baseUri(testServerHost).
-                        port(testServerPort).
-                        basePath("").
-                        cookie(cookie);
+        return getBaseRequest().cookie(cookie);
     }
 
     public Integer extractIdFromLocation() {
@@ -115,21 +101,6 @@ public class BaseStepsDefinitions {
 
         Integer id = null;
 
-        while (matcher.find()) {
-            id = Integer.parseInt(matcher.group());
-        }
-
-        assertNotNull(id);
-
-        return id;
-    }
-
-    public Integer extractIdFromLocation(Response response) {
-        String header = response.getHeader("Location");
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(header);
-
-        Integer id = null;
         while (matcher.find()) {
             id = Integer.parseInt(matcher.group());
         }
@@ -241,18 +212,6 @@ public class BaseStepsDefinitions {
                        body("users.findAll { it.enabled == true }.userName", hasItems(userName));
     }
 
-    public void getCurrentEntityInfoById() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + getCurrentId());
-    }
-
-    public void getCurrentEntityInfoById(String id) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + id);
-    }
-
     public Integer extractEntityIdFromResponse(Response response) {
         return response.jsonPath().get("id");
     }
@@ -261,6 +220,14 @@ public class BaseStepsDefinitions {
         setCurrentId(extractEntityIdFromResponse(response));
 
         assertNotNull(getCurrentId());
+    }
+
+    public void getCurrentEntity() {
+        getEntity(getCurrentId());
+    }
+
+    public void getEntityById(Integer id) {
+        getEntity(id);
     }
 
     public void getAllEntities() {
@@ -275,33 +242,21 @@ public class BaseStepsDefinitions {
                         get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
     }
 
-    public void getCurrentEntity() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + getCurrentId());
-    }
-
     public void getEntityCount(String entity) {
         getAllEntities();
         jsonPath = response.jsonPath();
         entityCount = jsonPath.getList(String.format("_embedded.%s.id", entity)).size();
     }
 
-    public void checkIdInResponse() {
-        jsonPath = response.jsonPath();
-        String message = jsonPath.get("message");
-
-        assertTrue(message.contains(getCurrentId().toString()));
+    public void checkCurrentIdInResponse() {
+        checkIdInResponse(getCurrentId());
     }
 
-    public void checkIdInResponse(String id) {
-        jsonPath = response.jsonPath();
-        String message = jsonPath.get("message");
-
-        assertTrue(message.contains(id));
+    public void checkPassedIdInResponse(Integer id) {
+        checkIdInResponse(id);
     }
 
-    public Response createEntity(Object dto) {
+    public void createEntity(Object dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
@@ -309,26 +264,14 @@ public class BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         post("");
-
-        return response;
     }
 
-    public void deleteEntity() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + getCurrentId());
+    public void deleteCurrentEntity() {
+        deleteEntity(getCurrentId());
     }
 
-    public void deleteEntity(String id) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + id);
-    }
-
-    public void deleteEntity(Integer id) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("/" + id);
+    public void deleteEntityById(Integer id) {
+        deleteEntity(id);
     }
 
     public void deleteAllEntitiesInOrg() {
@@ -340,5 +283,24 @@ public class BaseStepsDefinitions {
         layerGroupPool.clear();
         datasetsPool.clear();
         layerPool.clear();
+    }
+
+    private void deleteEntity(Integer id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.valueOf(id));
+    }
+
+    private void checkIdInResponse(Integer id) {
+        jsonPath = response.jsonPath();
+        String message = jsonPath.get("message");
+
+        assertTrue(message.contains(String.valueOf(id)));
+    }
+
+    private void getEntity(Integer id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.valueOf(id));
     }
 }

@@ -63,7 +63,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущую группу слоев проекта")
     public void getCurrentLayerGroupInfoById() {
-        super.getCurrentEntityInfoById();
+        super.getCurrentEntity();
     }
 
     @And("Поля группы слоев проекта совпадают с переданными")
@@ -108,26 +108,26 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на удаление текущей группы слоев текущего проекта")
     public void deleteLayerGroup() {
-        super.deleteEntity();
+        super.deleteCurrentEntity();
 
         layerGroupPool.remove(getCurrentId());
     }
 
     @And("В ответе на удаление группы слоев проекта есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    public void checkCurrentIdInResponse() {
+        super.checkCurrentIdInResponse();
     }
 
     @When("Пользователь делает запрос на удаление родительской группы слоев текущего проекта")
     public void deleteParentLayerGroup() {
-        super.deleteEntity(parentLayerGroupId);
+        super.deleteEntityById(parentLayerGroupId);
 
         layerGroupPool.remove(parentLayerGroupId);
     }
 
     @When("Пользователь делает запрос на родительскую группу слоев")
     public void getParentLayerGroupInfoById() {
-        super.getCurrentEntityInfoById(parentLayerGroupId.toString());
+        super.getEntityById(parentLayerGroupId);
     }
 
     @And("Представление группы слоев проекта корректно")
@@ -148,9 +148,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все группы слоев организации")
     public void getAllLayerGroups() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get();
+        super.getAllEntities();
     }
 
     @Given("Существуют группы слоев проектов")
@@ -188,7 +186,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @And("В ответе на удаление родительской группы слоев проекта есть упоминание ID")
     public void checkIdInResponseInParentLayerGroup() {
-        super.checkIdInResponse(parentLayerGroupId.toString());
+        super.checkPassedIdInResponse(parentLayerGroupId);
     }
 
     private LayerGroupCreateDto mapToLayerGroupDto(String title, String position) {

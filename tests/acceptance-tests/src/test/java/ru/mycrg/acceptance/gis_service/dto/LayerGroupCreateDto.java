@@ -5,7 +5,7 @@ public class LayerGroupCreateDto {
     private final String title;
 
     private Long parent;
-    private int position = -1;
+    private int position;
 
     public LayerGroupCreateDto(String title, int position, Long parent) {
         this.title = title;

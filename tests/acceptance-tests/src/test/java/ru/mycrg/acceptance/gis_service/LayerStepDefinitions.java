@@ -71,7 +71,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущий слой")
     public void checkExactLayer() {
-        super.getCurrentEntityInfoById();
+        super.getCurrentEntity();
     }
 
     @And("Поля слоя проекта совпадают с переданными")
@@ -204,14 +204,14 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на удаление слоя")
     public void deleteLayer() {
-        super.deleteEntity(layerId);
+        super.deleteCurrentEntity();
 
         layerPool.remove(layerId);
     }
 
     @And("В ответе на удаление слоя проекта есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    public void checkCurrentIdInResponse() {
+        super.checkCurrentIdInResponse();
     }
 
     private void makeLastAvailableLayerAsCurrent() {

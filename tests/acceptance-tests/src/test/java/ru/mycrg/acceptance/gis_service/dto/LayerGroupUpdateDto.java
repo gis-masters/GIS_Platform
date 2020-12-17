@@ -6,13 +6,13 @@ public class LayerGroupUpdateDto {
 
     private final Long parent;
 
-    private int position = -1;
+    private int position;
 
     private final String enabled;
 
     private final String expanded;
 
-    private int transparency = -1;
+    private int transparency;
 
     public LayerGroupUpdateDto(String title, Long parent, int position, String enabled, String expanded,
                                int transparency) {

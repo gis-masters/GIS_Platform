@@ -36,7 +36,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на текущую таблицу")
     public void getCurrentTable() {
-        super.getCurrentEntityInfoById(currentTableName);
+        super.getEntityById(Integer.valueOf(currentTableName));
     }
 
     @And("Поля таблицы совпадают с переданными")

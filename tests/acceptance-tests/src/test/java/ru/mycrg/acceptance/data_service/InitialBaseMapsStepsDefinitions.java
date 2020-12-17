@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
@@ -50,9 +49,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на указанную подложку")
     public void getBaseMap() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("" + baseMapId);
+        super.getCurrentEntity();
     }
 
     @And("Поля подложки совпадают с переданными")
@@ -77,9 +74,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все подложки организации")
     public void getAllBaseMaps() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/?size=1000");
+        super.getAllEntities();
     }
 
     @Given("Существует подложка")
@@ -123,9 +118,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на удаление подложки")
     public void deleteBaseMap() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete("" + baseMapId);
+        super.deleteCurrentEntity();
 
         baseMapsPool.remove(baseMapId);
     }
@@ -165,9 +158,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки")
     public void getAllBaseMapsSorted(String sortingType, String sortingDirection) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
+        super.getAllEntitiesSorted(sortingType, sortingDirection);
     }
 
     @And("Количество страниц подложек {string} пропорционально {string}")
@@ -181,8 +172,8 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("В ответе на подложки есть упоминание ID")
-    public void checkIdInResponse() {
-        super.checkIdInResponse();
+    public void checkCurrentIdInResponse() {
+        super.checkCurrentIdInResponse();
     }
 
     private boolean isBaseMapExistInPool(String name) {
@@ -210,18 +201,6 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
             default:
                 return new InitialBaseMapCreateDto();
         }
-    }
-
-    private Response createBaseMap(InitialBaseMapCreateDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("");
-
-        return response;
     }
 
     private void makeExactBaseMapAsCurrent(String name) {

@@ -2,17 +2,13 @@ package ru.mycrg.acceptance.data_service;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.DatasetPermissionCreateDto;
 
-import static java.lang.Thread.sleep;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetDto;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
 
 public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
