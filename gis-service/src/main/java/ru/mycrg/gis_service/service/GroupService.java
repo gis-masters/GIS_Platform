@@ -18,7 +18,6 @@ import ru.mycrg.gis_service.repository.GroupRepository;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,32 +98,7 @@ public class GroupService {
         List<Group> groups = getProjectGroups(projectId, authentication);
         Group group = getGroupById(groups, groupId);
 
-        LinkedList<Group> groupsForRemove = new LinkedList<>();
-        collectGroupsForRemove(groups, group, groupsForRemove);
-
-        groupsForRemove.descendingIterator().forEachRemaining(nextGroup -> {
-            log.debug("Remove group: {}", nextGroup.getId());
-
-            groupRepository.deleteGroupById(nextGroup.getId());
-
-            nextGroup.getProject()
-                    .getLayers().stream()
-                    .filter(layer -> layer.getGroup() != null)
-                    .filter(layer -> layer.getGroup().getId().equals(nextGroup.getId()))
-                    .forEach(layer -> layerService.delete(layer, authentication));
-        });
-    }
-
-    private void collectGroupsForRemove(List<Group> groups, Group currentGroup, LinkedList<Group> resultList) {
-        // Add current group
-        resultList.add(currentGroup);
-
-        // Add child group
-        groups.forEach(childGroup -> {
-            if (currentGroup.getId().equals(childGroup.getParent())) {
-                collectGroupsForRemove(groups, childGroup, resultList);
-            }
-        });
+        groupRepository.deleteGroupById(group.getId());
     }
 
     private List<Group> getProjectGroups(long projectId, Authentication authentication) {
