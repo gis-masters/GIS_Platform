@@ -12,6 +12,8 @@ public class ResourceModel implements IResourceModel {
     private String type;
     private String identifier;
     private Integer itemsCount;
+    private String crs;
+    private String schemaId;
     private String role;
     private LocalDateTime createdAt;
 
@@ -24,6 +26,8 @@ public class ResourceModel implements IResourceModel {
         this.type = resource.getType();
         this.identifier = resource.getIdentifier();
         this.itemsCount = resource.getItemsCount();
+        this.crs = resource.getCrs();
+        this.schemaId = resource.getSchemaId();
         this.role = role.name();
         this.createdAt = resource.getCreatedAt();
     }
@@ -96,6 +100,24 @@ public class ResourceModel implements IResourceModel {
     @Override
     public void setItemsCount(Integer itemsCount) {
         this.itemsCount = itemsCount;
+    }
+
+    @Override
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
+    @Override
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
     }
 
     @Override

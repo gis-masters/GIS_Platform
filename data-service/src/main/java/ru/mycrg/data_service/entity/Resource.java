@@ -33,6 +33,12 @@ public class Resource {
     @Column(updatable = false, nullable = false)
     private String identifier;
 
+    @Column
+    private String crs;
+
+    @Column
+    private String schemaId;
+
     @Column(name = "items_count")
     private Integer itemsCount;
 
@@ -139,5 +145,21 @@ public class Resource {
 
     public Set<Permission> getPermissions() {
         return permissions;
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
     }
 }

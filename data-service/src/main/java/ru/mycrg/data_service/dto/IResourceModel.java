@@ -31,4 +31,8 @@ public interface IResourceModel {
     Integer getItemsCount();
 
     void setItemsCount(Integer itemsCount);
+
+    String getCrs();
+
+    String getSchemaId();
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
@@ -33,20 +34,14 @@ public class TableService implements ITableService {
 
     public static final Logger log = LoggerFactory.getLogger(TableService.class);
 
-    private final PermissionsService permissionsService;
     private final ResourceRepository resRepository;
-    private final ResourcesService resourcesService;
 
-    public TableService(PermissionsService permissionsService,
-                        ResourcesService resourcesService,
-                        ResourceRepository resRepository) {
+    public TableService(ResourceRepository resRepository) {
         this.resRepository = resRepository;
-        this.resourcesService = resourcesService;
-        this.permissionsService = permissionsService;
     }
 
     @Override
-    public IResourceModel create(ResourceIdentifier rIdentifier, ResourceCreateDto dto, Authentication authentication) {
+    public IResourceModel create(ResourceIdentifier rIdentifier, TableCreateDto dto, Authentication authentication) {
         log.warn("ATTENTION. NOT CREATE REAL TABLE YET. Just write info to the resource description table");
 
         var oTable = resRepository.findByTypeAndIdentifier(TABLE.name(), rIdentifier.toString());
@@ -56,6 +51,9 @@ public class TableService implements ITableService {
 
         // Add resource description record
         Resource entity = new Resource(TABLE, dto, rIdentifier.toString(), authentication.getName());
+        entity.setCrs(dto.getCrs());
+        entity.setSchemaId(dto.getSchemaId());
+
         final Resource newEntity = resRepository.save(entity);
         resRepository.increaseItemsCounter(rIdentifier.getParent().toString());
 

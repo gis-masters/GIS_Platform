@@ -12,11 +12,35 @@ public class TableCreateDto extends ResourceCreateDto {
             "латинского алфавита в нижнем регистре, цифры и символ '_'. Должно начинаться с букв.")
     private String name;
 
+    @NotBlank
+    @Size(min = 8, max = 20, message = "Ожидается строка вида: 'EPSG:28406'")
+    private String crs;
+
+    @NotBlank
+    @Size(min = 3, max = 50)
+    private String schemaId;
+
     public String getName() {
         return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
     }
 }

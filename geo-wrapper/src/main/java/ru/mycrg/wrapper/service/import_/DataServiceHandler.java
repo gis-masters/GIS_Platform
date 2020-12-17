@@ -53,21 +53,23 @@ public class DataServiceHandler extends AbstractImportChainItem {
         json.put("name", tableName);
         json.put("title", tableTitle);
         json.put("details", tableDescription);
+        json.put("crs", "EPSG:" + importTask.getSrs());
+        json.put("schemaId", schemaDto.getName());
 
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json.toString());
 
-        URL datasetUrl = getDatasetUrl(datasetName);
+        URL tableUrl = getTableUrl(datasetName);
 
-        log.info("URL: {} / TEST TABLE BODY: {}", datasetUrl, json);
+        log.info("URL: {} / TEST TABLE BODY: {}", tableUrl, json);
 
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + importTask.getUserToken())
-                .url(datasetUrl)
+                .url(tableUrl)
                 .post(body).build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new ImportException(response.body().string());
+                throw new ImportException(response.message());
             }
 
             if (nextImporter != null) {
@@ -87,7 +89,7 @@ public class DataServiceHandler extends AbstractImportChainItem {
     }
 
     @NotNull
-    private URL getDatasetUrl(String datasetName) {
+    private URL getTableUrl(String datasetName) {
         try {
             return new URL(properties.getDataServiceUrl(), "/datasets/" + datasetName + "/tables");
         } catch (Exception e) {

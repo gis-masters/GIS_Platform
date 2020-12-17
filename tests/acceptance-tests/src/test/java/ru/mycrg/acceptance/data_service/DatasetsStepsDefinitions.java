@@ -59,6 +59,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         body(gson.toJson(currentDatasetDto)).
                         contentType(ContentType.JSON)
                 .when().
+                        log().ifValidationFails().
                         post();
 
         currentDatasetName = extractDatasetName();

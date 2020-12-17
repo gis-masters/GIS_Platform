@@ -57,6 +57,8 @@ public class ServiceTablesInitializer {
                 " type          character varying(20)     NOT NULL," +
                 " identifier    character varying         NOT NULL," +
                 " items_count   integer                   DEFAULT 0," +
+                " schema_id     character varying(50)," +
+                " crs           character varying(20)," +
                 " created_by    character varying," +
                 " created_at    timestamp without time zone," +
                 " last_modified timestamp without time zone," +

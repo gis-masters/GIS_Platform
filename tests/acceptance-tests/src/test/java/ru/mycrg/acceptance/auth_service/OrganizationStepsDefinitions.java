@@ -95,6 +95,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         boolean isPassedEmailRandom = dataTable.asList().get(4).split("_")[0].equals("EMAIL");
         String eMail = generateString(dataTable.asList().get(4));
 
+        System.out.println("User: " + eMail);
+
         deleteAllEntitiesInOrg();
 
         if (isOrgExistInPool(eMail)) {
