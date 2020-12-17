@@ -32,7 +32,7 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
     return (
       <div className={cnPickupDatasets()}>
         {this.selectedDataset && <PickupDatasetSelected name={this.selectedDataset} />}
-        <Button className={cnPickupDatasets('Button')} variant='outlined' color='primary' onClick={this.openDialog}>
+        <Button className={cnPickupDatasets('Button')} color='primary' onClick={this.openDialog}>
           Выбрать набор данных
         </Button>
         <Dialog
@@ -47,12 +47,11 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
             <div className={cnPickupDatasets('DialogTitle')}>
               Выбор набора данных
               <Button
-                variant='outlined'
                 color='primary'
                 startIcon={this.creationDialogOpen ? <LibraryAdd /> : <LibraryAddOutlined />}
                 onClick={this.openCreateDialog}
               >
-                Создать новой набор
+                Создать новый набор
               </Button>
             </div>
           </DialogTitle>
@@ -62,9 +61,7 @@ export class PickupDatasets extends Component<PickupDatasetsProps> {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={this.handleClose} color='default' variant='outlined'>
-              Отмена
-            </Button>
+            <Button onClick={this.handleClose}>Отмена</Button>
           </DialogActions>
         </Dialog>
         <CreateDatasetDialog
