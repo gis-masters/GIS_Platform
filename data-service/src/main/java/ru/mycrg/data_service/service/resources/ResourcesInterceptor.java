@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,20 +33,18 @@ public class ResourcesInterceptor implements HandlerInterceptor {
                              @NotNull HttpServletResponse response,
                              @NotNull Object handler) {
         if (isRequestToTables(request)) {
-            Optional<String> oDataSet = getAttribute(request, "dataSetName");
-            Optional<String> oTable = getAttribute(request, "tableName");
+            String dataSetId = getAttribute(request, "dataSetId")
+                    .orElseThrow(() -> new NotFoundException("Not found attribute 'dataSetId'"));
+            String tableId = getAttribute(request, "tableId")
+                    .orElseThrow(() -> new NotFoundException("Not found attribute 'tableId'"));
 
-            if (oDataSet.isPresent() && oTable.isPresent()) {
-                ResourceIdentifier datasetResource = new ResourceIdentifier(oDataSet.get(), SCHEMA);
-                ResourceIdentifier tableResource = new ResourceIdentifier(oTable.get(), TABLE, datasetResource);
+            ResourceIdentifier datasetResource = new ResourceIdentifier(dataSetId, SCHEMA);
+            ResourceIdentifier tableResource = new ResourceIdentifier(tableId, TABLE, datasetResource);
 
-                resourceProtector.throwIfNotExist(tableResource);
-            } else {
-                throw new DataServiceException("Incorrect path: " + request.getRequestURI());
-            }
+            resourceProtector.throwIfNotExist(tableResource);
         } else if (isRequestToDatasets(request)) {
-            getAttribute(request, "dataSetName").ifPresent(dataSetName -> {
-                resourceProtector.throwIfNotExist(new ResourceIdentifier(dataSetName, SCHEMA));
+            getAttribute(request, "dataSetId").ifPresent(dataSetId -> {
+                resourceProtector.throwIfNotExist(new ResourceIdentifier(dataSetId, SCHEMA));
             });
         }
 

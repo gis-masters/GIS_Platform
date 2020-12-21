@@ -8,7 +8,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RepositoryRestResource(collectionResourceRel = "layers", path = "layers", exported = false)
 public interface LayerRepository extends PagingAndSortingRepository<Layer, Long> {
@@ -19,4 +21,9 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     @Query("DELETE FROM Layer l where l.id = :layerId")
     void deleteLayerById(@Param("layerId") Long layerId);
 
+    @Query("FROM Layer l WHERE l.internalName = :internalName AND l.project.id IN :projectIds")
+    List<Layer> findRelatedByInternalName(@Param("internalName") String internalName, Set<Long> projectIds);
+
+    @Query("FROM Layer l WHERE l.dataset = :datasetId AND l.project.id IN :projectIds")
+    List<Layer> findRelatedByDataset(@Param("datasetId") String datasetId, Set<Long> projectIds);
 }

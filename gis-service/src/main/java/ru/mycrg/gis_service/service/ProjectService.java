@@ -49,7 +49,7 @@ public class ProjectService {
         this.geoserverLayersHandler = geoserverLayersHandler;
     }
 
-    public Page<ProjectProjection> getAll(Pageable pageable, Authentication authentication) {
+    public Page<ProjectProjection> getPaged(Pageable pageable, Authentication authentication) {
         Page<Project> projects;
         if (isRoot(authentication)) {
             projects = projectRepository.findAll(pageable);
@@ -69,6 +69,12 @@ public class ProjectService {
         }
 
         return projects.map(project -> projectionFactory.createProjection(ProjectProjection.class, project));
+    }
+
+    public List<Project> getAll(Authentication authentication) {
+        Long orgId = getOrganizationId(authentication);
+
+        return projectRepository.findAllByOrganizationId(orgId);
     }
 
     /**

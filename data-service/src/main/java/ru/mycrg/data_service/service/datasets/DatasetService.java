@@ -36,16 +36,16 @@ public class DatasetService implements IDatasetService {
 
     public static final String SCHEMA_PREFIX = "dataset";
 
-    private final SchemasManager schemasDDL;
+    private final SchemasManager schemasManager;
     private final ResourceProtector resourceProtector;
     private final ResourceRepository resRepository;
     private final DataStoreClient dataStoreClient;
 
     public DatasetService(ResourceRepository resRepository,
                           ResourceProtector resourceProtector,
-                          SchemasManager schemasDDL,
+                          SchemasManager schemasManager,
                           DataStoreClient dataStoreClient) {
-        this.schemasDDL = schemasDDL;
+        this.schemasManager = schemasManager;
         this.resRepository = resRepository;
         this.dataStoreClient = dataStoreClient;
         this.resourceProtector = resourceProtector;
@@ -86,7 +86,7 @@ public class DatasetService implements IDatasetService {
         resourceProtector.throwIfExists(rIdentifier);
 
         // Create schema
-        schemasDDL.create(rIdentifier);
+        schemasManager.create(rIdentifier);
 
         // Add resource description record
         Resource entity = new Resource(SCHEMA, dto, rIdentifier.toString(), authentication.getName());
@@ -95,7 +95,7 @@ public class DatasetService implements IDatasetService {
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetId, authentication);
         if (!responseModel.isSuccessful()) {
             resRepository.delete(newEntity);
-            schemasDDL.delete(rIdentifier);
+            schemasManager.delete(rIdentifier);
 
             throw new DataServiceException("Не удалось создать хранилище на gis-service", responseModel);
         }
@@ -104,18 +104,16 @@ public class DatasetService implements IDatasetService {
     }
 
     @Override
-    public void delete(String datasetId, Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(datasetId, SCHEMA);
+    public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
+        schemasManager.delete(rIdentifier);
 
-        schemasDDL.delete(rIdentifier);
-
-        resRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetId)
+        resRepository.findByTypeAndIdentifier(SCHEMA.name(), rIdentifier.getId())
                      .ifPresentOrElse(res -> resRepository.deleteByIdentifierStartsWith(res.getIdentifier()),
                                       () -> {
-                                          throw new NotFoundException(datasetId);
+                                          throw new NotFoundException(rIdentifier.getId());
                                       });
 
-        ResponseModel<Object> responseModel = dataStoreClient.delete(datasetId, authentication);
+        ResponseModel<Object> responseModel = dataStoreClient.delete(rIdentifier.getId(), authentication);
         if (!responseModel.isSuccessful()) {
             log.warn("Не удалось удалить хранилище на gis-service: {}", responseModel);
         }

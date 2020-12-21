@@ -46,9 +46,9 @@ public class ObjectsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{dataSetName}/tables/{tableName}")
-    public Object createObject(@PathVariable String dataSetName,
-                               @PathVariable String tableName,
+    @PostMapping("/datasets/{dataSetId}/tables/{tableId}")
+    public Object createObject(@PathVariable String dataSetId,
+                               @PathVariable String tableId,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                @RequestParam(value = "body", required = false) String jsonBody,
                                Authentication authentication) {
@@ -57,8 +57,8 @@ public class ObjectsController {
 
             Map<String, Object> body = deserializeBody(jsonBody);
 
-            ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                    new ResourceIdentifier(dataSetName, SCHEMA));
+            ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                    new ResourceIdentifier(dataSetId, SCHEMA));
 
             if (files.length > 0) {
                 for (MultipartFile file: files) {
@@ -84,13 +84,13 @@ public class ObjectsController {
         }
     }
 
-    @GetMapping("/datasets/{dataSetName}/tables/{tableName}/{id}")
-    public ResponseEntity<Map<String, Object>> getById(@PathVariable String dataSetName,
-                                                       @PathVariable String tableName,
+    @GetMapping("/datasets/{dataSetId}/tables/{tableId}/{id}")
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable String dataSetId,
+                                                       @PathVariable String tableId,
                                                        @PathVariable UUID id,
                                                        Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         Map<String, Object> entity = objectService.getById(rIdentifier, id, authentication);
 
@@ -98,15 +98,15 @@ public class ObjectsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/datasets/{dataSetName}/tables/{tableName}/{id}")
-    public ResponseEntity<Object> delete(@PathVariable String dataSetName,
-                                         @PathVariable String tableName,
+    @DeleteMapping("/datasets/{dataSetId}/tables/{tableId}/{id}")
+    public ResponseEntity<Object> delete(@PathVariable String dataSetId,
+                                         @PathVariable String tableId,
                                          @PathVariable UUID id,
                                          Authentication authentication) {
         fileStorageService.removeFile(id.toString());
 
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         objectService.deleteObject(rIdentifier, id, authentication);
 
@@ -114,9 +114,9 @@ public class ObjectsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/datasets/{dataSetName}/tables/{tableName}/{id}/download")
-    public ResponseEntity<Resource> downloadBinary(@PathVariable String dataSetName,
-                                                   @PathVariable String tableName,
+    @GetMapping("/datasets/{dataSetId}/tables/{tableId}/{id}/download")
+    public ResponseEntity<Resource> downloadBinary(@PathVariable String dataSetId,
+                                                   @PathVariable String tableId,
                                                    @PathVariable UUID id,
                                                    HttpServletRequest request,
                                                    Authentication authentication) {

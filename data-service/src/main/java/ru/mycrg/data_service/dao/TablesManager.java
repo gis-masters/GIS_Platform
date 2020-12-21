@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceManager;
@@ -15,6 +16,8 @@ public class TablesManager implements ResourceManager {
     private static final Logger log = LoggerFactory.getLogger(TablesManager.class);
 
     private final JdbcTemplate jdbcTemplate;
+
+    public static final String EXTENSION_POSTFIX = "_extension";
 
     public TablesManager(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -48,7 +51,11 @@ public class TablesManager implements ResourceManager {
     }
 
     @Override
+    @Transactional
     public void delete(ResourceIdentifier rIdentifier) {
-        throw new DataServiceException("Not implemented");
+        log.debug("Try delete: {}", rIdentifier);
+
+        jdbcTemplate.execute(String.format("DROP TABLE IF EXISTS %s.\"%s\"",
+                                           rIdentifier.getParent().getId(), rIdentifier.getId()));
     }
 }

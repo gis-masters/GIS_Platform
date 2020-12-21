@@ -32,48 +32,48 @@ public class DatasetPermissionsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{dataSetName}/roleAssignment")
-    public ResponseEntity<PermissionProjection> addPermissionToDataset(@PathVariable String dataSetName,
+    @PostMapping("/datasets/{dataSetId}/roleAssignment")
+    public ResponseEntity<PermissionProjection> addPermissionToDataset(@PathVariable String dataSetId,
                                                                        @Valid @RequestBody PermissionCreateDto dto,
                                                                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        final ResourceIdentifier resIdentifier = new ResourceIdentifier(dataSetName, SCHEMA);
+        final ResourceIdentifier resIdentifier = new ResourceIdentifier(dataSetId, SCHEMA);
 
         PermissionProjection permission = permissionsService.create(resIdentifier, dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/datasets/{dataSetName}/roleAssignment/{id}")
-                .buildAndExpand(dataSetName, permission.getId())
+                .path("/datasets/{dataSetId}/roleAssignment/{id}")
+                .buildAndExpand(dataSetId, permission.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/datasets/{dataSetName}/roleAssignment")
-    public ResponseEntity<Object> getDatasetPermissions(@PathVariable String dataSetName,
+    @GetMapping("/datasets/{dataSetId}/roleAssignment")
+    public ResponseEntity<Object> getDatasetPermissions(@PathVariable String dataSetId,
                                                         Pageable pageable,
                                                         PagedResourcesAssembler pageAssembler) {
-        var permissions = permissionsService.getForResource(new ResourceIdentifier(dataSetName, SCHEMA), pageable);
+        var permissions = permissionsService.getForResource(new ResourceIdentifier(dataSetId, SCHEMA), pageable);
 
         PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(DatasetPermissionsController.class)
-                        .slash("/api/data/datasets/" + dataSetName)
+                        .slash("/api/data/datasets/" + dataSetId)
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/datasets/{dataSetName}/roleAssignment/{permissionId}")
-    public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String dataSetName,
+    @DeleteMapping("/datasets/{dataSetId}/roleAssignment/{permissionId}")
+    public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String dataSetId,
                                                           @PathVariable Long permissionId) {
-        permissionsService.deleteById(new ResourceIdentifier(dataSetName, SCHEMA), permissionId);
+        permissionsService.deleteById(new ResourceIdentifier(dataSetId, SCHEMA), permissionId);
 
         return ResponseEntity.noContent().build();
     }

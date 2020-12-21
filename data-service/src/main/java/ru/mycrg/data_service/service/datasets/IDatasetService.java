@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 public interface IDatasetService {
 
@@ -14,5 +15,5 @@ public interface IDatasetService {
 
     IResourceModel create(ResourceCreateDto dto, Authentication authentication);
 
-    void delete(String datasetId, Authentication authentication);
+    void delete(ResourceIdentifier rIdentifier, Authentication authentication);
 }

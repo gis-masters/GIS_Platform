@@ -6,14 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.gis_service.dto.LayerCreateDto;
-import ru.mycrg.gis_service.dto.LayerProjection;
-import ru.mycrg.gis_service.dto.LayerUpdateDto;
+import ru.mycrg.gis_service.dto.*;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
+import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.LayerRepository;
@@ -22,6 +21,7 @@ import ru.mycrg.gis_service.service.geoserver.GeoserverLayersHandler;
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
@@ -94,6 +94,32 @@ public class LayerService {
         layerRepository.deleteLayerById(layer.getId());
 
         geoserverLayersHandler.deleteLayer(layer, authentication);
+    }
+
+    public List<RelatedLayersModel> findRelatedLayers(String field, String value,
+                                                      Authentication authentication) {
+        Set<Long> projectIds = projectService.getAll(authentication).stream()
+                                             .map(Project::getId)
+                                             .collect(Collectors.toSet());
+        List<Layer> relatedLayers;
+        if ("table".equals(field)) {
+            relatedLayers = layerRepository.findRelatedByInternalName(value, projectIds);
+        } else if ("dataset".equals(field)) {
+            relatedLayers = layerRepository.findRelatedByDataset(value, projectIds);
+        } else {
+            throw new BadRequestException("Not support related field: " + field,
+                                          new ErrorInfo("field", "Allowed: 'dataset', 'table'"));
+        }
+
+        return relatedLayers.stream()
+                .map(layer -> {
+                    LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName(authentication));
+                    ProjectProjection pProjection = projectService
+                            .getProjectionById(layer.getProject().getId(), authentication);
+
+                    return new RelatedLayersModel(lProjection, pProjection);
+                })
+                .collect(Collectors.toList());
     }
 
     private void updateGroup(Layer layer, LayerUpdateDto dto, List<Group> groups) {

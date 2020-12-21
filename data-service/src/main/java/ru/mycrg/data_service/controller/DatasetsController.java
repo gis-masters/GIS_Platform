@@ -15,6 +15,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.service.datasets.DatasetService;
 import ru.mycrg.data_service.service.datasets.IDatasetService;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -22,6 +23,7 @@ import java.net.URI;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 
 @RestController
 public class DatasetsController {
@@ -52,11 +54,11 @@ public class DatasetsController {
         return new ResponseEntity<>(pagedResources, OK);
     }
 
-    @GetMapping("/datasets/{dataSetName}")
+    @GetMapping("/datasets/{dataSetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<IResourceModel> getDataset(@PathVariable String dataSetName,
-                                                    Authentication authentication) {
-        final IResourceModel dto = datasetService.getByName(dataSetName, authentication);
+    public ResponseEntity<IResourceModel> getDataset(@PathVariable String dataSetId,
+                                                     Authentication authentication) {
+        final IResourceModel dto = datasetService.getByName(dataSetId, authentication);
 
         return ResponseEntity.ok(dto);
     }
@@ -69,17 +71,17 @@ public class DatasetsController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/datasets/{dataSetName}")
+                .path("/datasets/{dataSetId}")
                 .buildAndExpand(newDataset.getIdentifier())
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("/datasets/{datasetId}")
+    @DeleteMapping("/datasets/{dataSetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId, Authentication authentication) {
-        datasetService.delete(datasetId, authentication);
+    public ResponseEntity<Object> deleteDataset(@PathVariable String dataSetId, Authentication authentication) {
+        datasetService.delete(new ResourceIdentifier(dataSetId, SCHEMA), authentication);
 
         return ResponseEntity.noContent().build();
     }

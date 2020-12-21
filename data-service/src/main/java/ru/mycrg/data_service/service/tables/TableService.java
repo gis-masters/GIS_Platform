@@ -7,21 +7,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.TablesManager;
 import ru.mycrg.data_service.dto.IResourceModel;
-import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ResourceRepository;
-import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.resources.ResourcesService;
+import ru.mycrg.http_client.ResponseModel;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 
+import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.security.CrgClaimsParser.isOrganizationAdmin;
@@ -34,10 +34,12 @@ public class TableService implements ITableService {
 
     public static final Logger log = LoggerFactory.getLogger(TableService.class);
 
+    private final TablesManager tablesManager;
     private final ResourceRepository resRepository;
 
-    public TableService(ResourceRepository resRepository) {
+    public TableService(ResourceRepository resRepository, TablesManager tablesManager) {
         this.resRepository = resRepository;
+        this.tablesManager = tablesManager;
     }
 
     @Override
@@ -98,6 +100,24 @@ public class TableService implements ITableService {
             // TODO: Implement me
             return new TableModel();
         }
+    }
+
+    @Override
+    public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
+        resRepository
+                .findByTypeAndIdentifier(TABLE.name(), rIdentifier.toString())
+                .ifPresentOrElse(res -> {
+                                     resRepository.deleteByIdentifierStartsWith(res.getIdentifier());
+                                     tablesManager.delete(rIdentifier);
+
+                                     String extTableName = rIdentifier.getId() + EXTENSION_POSTFIX;
+                                     ResourceIdentifier extTable =
+                                             new ResourceIdentifier(extTableName, TABLE, rIdentifier.getParent());
+                                     tablesManager.delete(extTable);
+                                 },
+                                 () -> {
+                                     throw new NotFoundException(rIdentifier.toString());
+                                 });
     }
 
     private String extractTableName(String resourceIdentifier) {

@@ -17,4 +17,6 @@ public interface ITableService {
     IResourceModel getByIdentifier(ResourceIdentifier rIdentifier, Authentication authentication);
 
     IResourceModel create(ResourceIdentifier resource, TableCreateDto dto, Authentication authentication);
+
+    void delete(ResourceIdentifier resource, Authentication authentication);
 }

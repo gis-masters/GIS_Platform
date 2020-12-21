@@ -17,8 +17,6 @@ public class SchemasManager implements ResourceManager {
 
     private static final Logger log = LoggerFactory.getLogger(SchemasManager.class);
 
-    private static final String EXTENSION_POSTFIX = "_extension";
-
     private final List<String> systemSchemas = List.of("data");
 
     private final Environment environment;

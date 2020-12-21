@@ -33,56 +33,56 @@ public class TablesPermissionsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{dataSetName}/tables/{tableName}/roleAssignment")
-    public ResponseEntity<PermissionProjection> addPermissionToTable(@PathVariable String dataSetName,
-                                                                     @PathVariable String tableName,
+    @PostMapping("/datasets/{dataSetId}/tables/{tableId}/roleAssignment")
+    public ResponseEntity<PermissionProjection> addPermissionToTable(@PathVariable String dataSetId,
+                                                                     @PathVariable String tableId,
                                                                      @Valid @RequestBody PermissionCreateDto dto,
                                                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         PermissionProjection permission = permissionsService.create(rIdentifier, dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/datasets/{dataSetName}/tables/{tableName}/roleAssignment/{id}")
-                .buildAndExpand(dataSetName, tableName, permission.getId())
+                .path("/datasets/{dataSetId}/tables/{tableId}/roleAssignment/{id}")
+                .buildAndExpand(dataSetId, tableId, permission.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/datasets/{dataSetName}/tables/{tableName}/roleAssignment")
-    public ResponseEntity<Object> getTablePermissions(@PathVariable String dataSetName,
-                                                      @PathVariable String tableName,
+    @GetMapping("/datasets/{dataSetId}/tables/{tableId}/roleAssignment")
+    public ResponseEntity<Object> getTablePermissions(@PathVariable String dataSetId,
+                                                      @PathVariable String tableId,
                                                       Pageable pageable,
                                                       PagedResourcesAssembler pageAssembler) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         var permissions = permissionsService.getForResource(rIdentifier, pageable);
 
         PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(TablesPermissionsController.class)
-                        .slash("/api/data/datasets/" + dataSetName + "/tables/" + tableName + "/roleAssignment")
+                        .slash("/api/data/datasets/" + dataSetId + "/tables/" + tableId + "/roleAssignment")
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/datasets/{dataSetName}/tables/{tableName}/roleAssignment/{permissionId}")
-    public ResponseEntity<Object> deleteTablePermission(@PathVariable String dataSetName,
-                                                        @PathVariable String tableName,
+    @DeleteMapping("/datasets/{dataSetId}/tables/{tableId}/roleAssignment/{permissionId}")
+    public ResponseEntity<Object> deleteTablePermission(@PathVariable String dataSetId,
+                                                        @PathVariable String tableId,
                                                         @PathVariable Long permissionId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         permissionsService.deleteById(rIdentifier, permissionId);
 

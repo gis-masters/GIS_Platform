@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
@@ -34,11 +36,11 @@ public class TablesController {
         this.tableService = tableService;
     }
 
-    @PostMapping("/datasets/{dataSetName}/tables")
-    public ResponseEntity<IResourceModel> createTable(@PathVariable String dataSetName,
+    @PostMapping("/datasets/{dataSetId}/tables")
+    public ResponseEntity<IResourceModel> createTable(@PathVariable String dataSetId,
                                                       @Valid @RequestBody TableCreateDto dto,
                                                       Authentication authentication) {
-        ResourceIdentifier datasetId = new ResourceIdentifier(dataSetName, SCHEMA);
+        ResourceIdentifier datasetId = new ResourceIdentifier(dataSetId, SCHEMA);
         ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId);
 
         IResourceModel resourceModel = tableService.create(tableId, dto, authentication);
@@ -46,32 +48,45 @@ public class TablesController {
         return new ResponseEntity<>(resourceModel, CREATED);
     }
 
-    @GetMapping("/datasets/{dataSetName}/tables")
+    @GetMapping("/datasets/{dataSetId}/tables")
     public ResponseEntity<PagedResources<IResourceModel>> getTables(
-            @PathVariable String dataSetName,
+            @PathVariable String dataSetId,
             @RequestParam(required = false, defaultValue = "") String title,
             Authentication authentication,
             Pageable pageable,
             PagedResourcesAssembler pageAssembler) {
-        final Page<IResourceModel> tables = tableService.getPaged(dataSetName, title, pageable, authentication);
+        final Page<IResourceModel> tables = tableService.getPaged(dataSetId, title, pageable, authentication);
 
         PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(tables,
                                                                                  linkTo(TablesController.class)
-                        .slash("/api/data/datasets/" + dataSetName + "/tables")
+                        .slash("/api/data/datasets/" + dataSetId + "/tables")
                         .withSelfRel());
 
         return new ResponseEntity<>(pagedResources, OK);
     }
 
-    @GetMapping("/datasets/{dataSetName}/tables/{tableName}")
-    public ResponseEntity<Object> getTable(@PathVariable String dataSetName,
-                                           @PathVariable String tableName,
+    @GetMapping("/datasets/{dataSetId}/tables/{tableId}")
+    public ResponseEntity<Object> getTable(@PathVariable String dataSetId,
+                                           @PathVariable String tableId,
                                            Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableName, TABLE,
-                                                                new ResourceIdentifier(dataSetName, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
 
         final IResourceModel dto = tableService.getByIdentifier(rIdentifier, authentication);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/datasets/{dataSetId}/tables/{tableId}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> deleteDataset(@PathVariable String dataSetId,
+                                                @PathVariable String tableId,
+                                                Authentication authentication) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
+                                                                new ResourceIdentifier(dataSetId, SCHEMA));
+
+        tableService.delete(rIdentifier, authentication);
+
+        return ResponseEntity.noContent().build();
     }
 }
