@@ -21,6 +21,7 @@ class GroupsService {
   private static _instance: GroupsService;
   private allGroupsStoreInited = false;
   private debouncedFetchGroupsListStore: () => Promise<void>;
+  private allGroupsFetching?: Promise<CrgGroup[]>;
 
   private constructor() {
     this.debouncedFetchGroupsListStore = debounce(this.fetchGroupsListStore, 300);
@@ -55,7 +56,7 @@ class GroupsService {
   }
 
   async getUserGroups(user: CrgUser): Promise<CrgGroup[]> {
-    await this.initGroupsListStore();
+    await this.initAllGroupsStore();
 
     return allGroups.list.filter(({ users }) => users.some(({ id }) => id === user.id));
   }
@@ -76,8 +77,11 @@ class GroupsService {
     this.debouncedFetchGroupsListStore();
   }
 
-  async initGroupsListStore() {
+  async initAllGroupsStore() {
     if (this.allGroupsStoreInited) {
+      if (this.allGroupsFetching) {
+        await this.allGroupsFetching;
+      }
       return;
     }
 
@@ -97,7 +101,9 @@ class GroupsService {
     }
 
     allGroups.setFetching(true);
-    const groups = await groupsService.getAll();
+    this.allGroupsFetching = groupsService.getAll();
+    const groups = await this.allGroupsFetching;
+    delete this.allGroupsFetching;
     allGroups.setList(groups);
     allGroups.setFetching(false);
   }

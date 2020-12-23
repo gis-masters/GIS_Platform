@@ -77,11 +77,13 @@ async function isAllowedWithLayer(layer: CrgLayer, targetPoint: LayerPermissionP
     readOnly = true;
   }
 
-  const role = readOnly
-    ? Role.VIEWER
-    : currentUser.isAdmin
-    ? Role.OWNER
-    : await getActualRoleInTable(layer.dataset, layer.internalName);
+  let role = await getActualRoleInTable(layer.dataset, layer.internalName);
+  if (currentUser.isAdmin) {
+    role = Role.OWNER;
+  }
+  if (roles.indexOf(role) > roles.indexOf(Role.VIEWER) && readOnly) {
+    role = Role.VIEWER;
+  }
 
   return Boolean(role) && layerRolesPermissionPoints.get(role).includes(targetPoint);
 }

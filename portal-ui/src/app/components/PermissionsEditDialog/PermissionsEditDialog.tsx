@@ -44,7 +44,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
 
   componentDidMount() {
     usersService.initUsersListStore();
-    groupsService.initGroupsListStore();
+    groupsService.initAllGroupsStore();
   }
 
   render() {

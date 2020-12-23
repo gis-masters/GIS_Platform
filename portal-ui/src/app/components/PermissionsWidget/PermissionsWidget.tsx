@@ -40,7 +40,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   async componentDidMount() {
     usersService.initUsersListStore();
-    groupsService.initGroupsListStore();
+    groupsService.initAllGroupsStore();
     this.fetchPermissions();
     communicationService.permissionsUpdated.on(this.fetchPermissions, this);
   }

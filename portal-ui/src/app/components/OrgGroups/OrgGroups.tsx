@@ -62,7 +62,7 @@ export class OrgGroups extends Component {
   ];
 
   async componentDidMount() {
-    await groupsService.initGroupsListStore();
+    await groupsService.initAllGroupsStore();
   }
 
   render() {

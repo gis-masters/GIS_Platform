@@ -159,9 +159,7 @@ class ProjectsService {
 
   async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
     await usersService.fetchCurrentUser();
-
     const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
-
     const layersPermissions = await Promise.all(layers.map(isFeaturesReadAllowed));
 
     return layers.filter((layer, i) => layersPermissions[i]);
