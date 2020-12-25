@@ -75,12 +75,12 @@ class ProjectsService {
       return;
     }
 
+    const layers = await this.getProjectLayers(project.id);
+    const layersPermissions = await Promise.all(layers.map(isFeaturesReadAllowed));
+    const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
+
     if (project.id === id) {
-      currentProject.setProject(
-        project,
-        await this.getProjectLayers(project.id),
-        await this.getProjectGroups(project.id)
-      );
+      currentProject.setProject(project, allowedLayers, await this.getProjectGroups(project.id));
     } else {
       delete this.fetchingCurrentProject;
       await this.fetchCurrent(id);
@@ -158,11 +158,7 @@ class ProjectsService {
   }
 
   async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
-    await usersService.fetchCurrentUser();
-    const layers = await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
-    const layersPermissions = await Promise.all(layers.map(isFeaturesReadAllowed));
-
-    return layers.filter((layer, i) => layersPermissions[i]);
+    return await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
   }
 
   async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
