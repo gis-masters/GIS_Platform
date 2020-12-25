@@ -14,12 +14,11 @@ import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.ResourceRepository;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
+import ru.mycrg.data_service.service.resources.ResourcesService;
 import ru.mycrg.http_client.ResponseModel;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -29,7 +28,6 @@ import static ru.mycrg.data_service.security.CrgClaimsParser.isOrganizationAdmin
 import static ru.mycrg.data_service.security.CrgClaimsParser.isRoot;
 
 @Service
-@Transactional
 public class DatasetService implements IDatasetService {
 
     public static final Logger log = LoggerFactory.getLogger(DatasetService.class);
@@ -38,16 +36,16 @@ public class DatasetService implements IDatasetService {
 
     private final SchemasManager schemasManager;
     private final ResourceProtector resourceProtector;
-    private final ResourceRepository resRepository;
+    private final ResourcesService resourcesService;
     private final DataStoreClient dataStoreClient;
 
-    public DatasetService(ResourceRepository resRepository,
+    public DatasetService(ResourcesService resourcesService,
                           ResourceProtector resourceProtector,
                           SchemasManager schemasManager,
                           DataStoreClient dataStoreClient) {
         this.schemasManager = schemasManager;
-        this.resRepository = resRepository;
         this.dataStoreClient = dataStoreClient;
+        this.resourcesService = resourcesService;
         this.resourceProtector = resourceProtector;
     }
 
@@ -58,8 +56,8 @@ public class DatasetService implements IDatasetService {
         if (isRoot(authentication)) {
             return new PageImpl<>(new ArrayList<>());
         } else if (isOrganizationAdmin(authentication)) {
-            return resRepository.findByTypeAndTitleContaining(SCHEMA.name(), title, pageable)
-                                .map(resource -> new DatasetModel(resource, OWNER));
+            return resourcesService.getDatasetsByTitle(title, pageable)
+                                   .map(resource -> new DatasetModel(resource, OWNER));
         } else {
             return new PageImpl<>(new ArrayList<>());
         }
@@ -70,9 +68,9 @@ public class DatasetService implements IDatasetService {
         if (isRoot(authentication)) {
             return new DatasetModel();
         } else if (isOrganizationAdmin(authentication)) {
-            return resRepository.findByTypeAndIdentifier(SCHEMA.name(), datasetName)
-                                .map(resource -> new DatasetModel(resource, OWNER))
-                                .orElseThrow(() -> new NotFoundException(datasetName));
+            return resourcesService.getDataset(datasetName)
+                                   .map(resource -> new DatasetModel(resource, OWNER))
+                                   .orElseThrow(() -> new NotFoundException(datasetName));
         } else {
             return new DatasetModel();
         }
@@ -90,11 +88,11 @@ public class DatasetService implements IDatasetService {
 
         // Add resource description record
         Resource entity = new Resource(SCHEMA, dto, rIdentifier.toString(), authentication.getName());
-        final Resource newEntity = resRepository.save(entity);
+        final Resource newEntity = resourcesService.save(entity);
 
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetId, authentication);
         if (!responseModel.isSuccessful()) {
-            resRepository.delete(newEntity);
+            resourcesService.delete(newEntity);
             schemasManager.delete(rIdentifier);
 
             throw new DataServiceException("Не удалось создать хранилище на gis-service", responseModel);
@@ -107,11 +105,11 @@ public class DatasetService implements IDatasetService {
     public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
         schemasManager.delete(rIdentifier);
 
-        resRepository.findByTypeAndIdentifier(SCHEMA.name(), rIdentifier.getId())
-                     .ifPresentOrElse(res -> resRepository.deleteByIdentifierStartsWith(res.getIdentifier()),
-                                      () -> {
-                                          throw new NotFoundException(rIdentifier.getId());
-                                      });
+        resourcesService.getDataset(rIdentifier.getId())
+                        .ifPresentOrElse(res -> resourcesService.deleteByIdentifier(res.getIdentifier()),
+                                         () -> {
+                                             throw new NotFoundException(rIdentifier.getId());
+                                         });
 
         ResponseModel<Object> responseModel = dataStoreClient.delete(rIdentifier.getId(), authentication);
         if (!responseModel.isSuccessful()) {

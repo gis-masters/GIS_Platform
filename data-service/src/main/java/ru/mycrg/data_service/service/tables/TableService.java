@@ -14,11 +14,9 @@ import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.ResourceRepository;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.http_client.ResponseModel;
+import ru.mycrg.data_service.service.resources.ResourcesService;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
@@ -29,16 +27,15 @@ import static ru.mycrg.data_service.security.CrgClaimsParser.isRoot;
 import static ru.mycrg.data_service.service.resources.ResourceIdentifier.SEPARATOR;
 
 @Service
-@Transactional
 public class TableService implements ITableService {
 
     public static final Logger log = LoggerFactory.getLogger(TableService.class);
 
     private final TablesManager tablesManager;
-    private final ResourceRepository resRepository;
+    private final ResourcesService resourcesService;
 
-    public TableService(ResourceRepository resRepository, TablesManager tablesManager) {
-        this.resRepository = resRepository;
+    public TableService(ResourcesService resourcesService, TablesManager tablesManager) {
+        this.resourcesService = resourcesService;
         this.tablesManager = tablesManager;
     }
 
@@ -46,7 +43,7 @@ public class TableService implements ITableService {
     public IResourceModel create(ResourceIdentifier rIdentifier, TableCreateDto dto, Authentication authentication) {
         log.warn("ATTENTION. NOT CREATE REAL TABLE YET. Just write info to the resource description table");
 
-        var oTable = resRepository.findByTypeAndIdentifier(TABLE.name(), rIdentifier.toString());
+        var oTable = resourcesService.getTable(rIdentifier.toString());
         if (oTable.isPresent()) {
             throw new ConflictException("Table already exist: " + rIdentifier.toString());
         }
@@ -56,8 +53,8 @@ public class TableService implements ITableService {
         entity.setCrs(dto.getCrs());
         entity.setSchemaId(dto.getSchemaId());
 
-        final Resource newEntity = resRepository.save(entity);
-        resRepository.increaseItemsCounter(rIdentifier.getParent().toString());
+        final Resource newEntity = resourcesService.save(entity);
+        resourcesService.increaseItemsCounter(rIdentifier.getParent().toString());
 
         return new TableModel(newEntity, OWNER);
     }
@@ -71,8 +68,8 @@ public class TableService implements ITableService {
             // TODO: Implement me
             return new PageImpl<>(new ArrayList<>());
         } else if (isOrganizationAdmin(authentication)) {
-            return resRepository
-                    .findByTypeAndIdentifierStartingWithAndTitleContaining(TABLE.name(), schemaName, title, pageable)
+            return resourcesService
+                    .getDatasetTablesByTitle(schemaName, title, pageable)
                     .map(description -> {
                         final IResourceModel resourceModel = new TableModel(description, OWNER);
                         final String tableName = extractTableName(resourceModel.getIdentifier());
@@ -92,8 +89,8 @@ public class TableService implements ITableService {
             // TODO: Implement me
             return new TableModel();
         } else if (isOrganizationAdmin(authentication)) {
-            return resRepository
-                    .findByTypeAndIdentifier(TABLE.name(), rIdentifier.toString())
+            return resourcesService
+                    .getTable(rIdentifier.toString())
                     .map(resourceDescription -> new TableModel(resourceDescription, OWNER))
                     .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
         } else {
@@ -104,10 +101,10 @@ public class TableService implements ITableService {
 
     @Override
     public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
-        resRepository
-                .findByTypeAndIdentifier(TABLE.name(), rIdentifier.toString())
+        resourcesService
+                .getTable(rIdentifier.toString())
                 .ifPresentOrElse(res -> {
-                                     resRepository.deleteByIdentifierStartsWith(res.getIdentifier());
+                                     resourcesService.deleteByIdentifier(res.getIdentifier());
                                      tablesManager.delete(rIdentifier);
 
                                      String extTableName = rIdentifier.getId() + EXTENSION_POSTFIX;

@@ -74,7 +74,7 @@ public class ServiceTablesInitializer {
                 " CONSTRAINT principal_identifier_type UNIQUE (identifier, type)" +
                 ") TABLESPACE pg_default; ALTER TABLE data.principal OWNER to " + dbUser;
 
-        String permissionTable = "CREATE TABLE data.permission" +
+        String permissionTable = "CREATE TABLE IF NOT EXISTS data.permission" +
                 "(id            bigserial               NOT NULL," +
                 " role          character varying(20)," +
                 " principal_id  bigint                  NOT NULL," +

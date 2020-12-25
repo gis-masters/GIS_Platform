@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import ru.mycrg.data_service.service.resources.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -40,8 +42,7 @@ public class PermissionsService {
     }
 
     public Page<PermissionProjection> getForResource(ResourceIdentifier resIdentifier, Pageable pageable) {
-        return permissionsRepository
-                .getAllByResource(resourcesService.get(resIdentifier), pageable);
+        return permissionsRepository.getAllByResource(resourcesService.get(resIdentifier), pageable);
     }
 
     public PermissionProjection create(@NotNull ResourceIdentifier resIdentifier,
