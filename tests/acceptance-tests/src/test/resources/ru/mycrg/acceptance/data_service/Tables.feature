@@ -12,7 +12,7 @@ Feature: Проверка сущности table
     Then Сервер отвечает со статус-кодом 201
     Examples:
       | name      | title      | details     | crs       | schemaId  | reason                     |
-      | STRING_3  | STRING_1   | STRING_1    | STRING_8  | STRING_3  | Граничные нижние значения  |
+      | STRING_3  | STRING_1   | STRING_1    | STRING_8  | STRING_2  | Граничные нижние значения  |
       | STRING_60 | STRING_250 | STRING_1000 | STRING_20 | STRING_50 | Граничные верхние значения |
 
 #  Нельзя проверить ничего более до тех пор пока таблицы не создаются реально

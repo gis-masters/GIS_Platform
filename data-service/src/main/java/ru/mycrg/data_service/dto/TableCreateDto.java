@@ -17,7 +17,7 @@ public class TableCreateDto extends ResourceCreateDto {
     private String crs;
 
     @NotBlank
-    @Size(min = 3, max = 50)
+    @Size(min = 2, max = 50)
     private String schemaId;
 
     public String getName() {
