@@ -16,7 +16,10 @@ import { XTable } from '../../XTable/XTable';
 
 import { OrgActionsUserGroupCheck } from '../UserGroupCheck/OrgActions-UserGroupCheck';
 
+import '!style-loader!css-loader!sass-loader!../GroupsTable/OrgActions-GroupsTable.scss';
+
 const cnOrgActionsGroups = cn('OrgActions', 'Groups');
+const cnOrgActionsGroupsTable = cn('OrgActions', 'GroupsTable');
 
 interface OrgActionsGroupsProps {
   user: CrgUser;
@@ -43,6 +46,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
           <DialogContent>
             <XTable
+              className={cnOrgActionsGroupsTable()}
               title={`Группы пользователя ${user.login}`}
               data={allGroups.list}
               cols={[

@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, createRef, ReactNode, RefObject } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -52,6 +52,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
   @observable private filterParams: FilterParams<T> = {};
   @observable private filterActive = false;
   @observable private _page = 1;
+  @observable private tableMinHeight = 0;
+  private tableRef: RefObject<HTMLDivElement> = createRef();
   private rowsPerPage = 20;
 
   constructor(props: XTableProps<T>) {
@@ -72,7 +74,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
           </XTableHeaderActions>
         </XTableHeader>
         <>
-          <TableContainer component={XTableContainer}>
+          <TableContainer minHeight={this.tableMinHeight} containerRef={this.tableRef} component={XTableContainer}>
             <Table stickyHeader>
               {!headless && (
                 <TableHead>
@@ -86,6 +88,8 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         filterParams={this.filterParams}
                         filtering={filterable && this.filterActive && filtering}
                         align={align}
+                        onBeforeFilterChange={this.beforeFilterChange}
+                        onFilterChange={this.afterFilterChange}
                       >
                         {title}
                       </TableHeadCell>
@@ -119,7 +123,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
               </TableBody>
             </Table>
           </TableContainer>
-          {this.pagesCount > 1 && (
+          {this.paginationEnabled && (
             <XTableFooter>
               <Pagination count={this.pagesCount} page={this.page} onChange={this.handlePagination} />
             </XTableFooter>
@@ -157,6 +161,11 @@ export class XTable<T> extends Component<XTableProps<T>> {
     return Math.ceil(this.data.length / this.rowsPerPage);
   }
 
+  @computed
+  private get paginationEnabled(): boolean {
+    return Math.ceil(this.props.data.length / this.rowsPerPage) > 1;
+  }
+
   @action.bound
   private toggleFilter() {
     this.filterActive = !this.filterActive;
@@ -165,5 +174,19 @@ export class XTable<T> extends Component<XTableProps<T>> {
   @action.bound
   private handlePagination(e: React.ChangeEvent<unknown>, value: number) {
     this._page = value;
+  }
+
+  @action.bound
+  private beforeFilterChange() {
+    if (this.dataPaged.length === this.rowsPerPage || !this.tableMinHeight) {
+      this.tableMinHeight = this.tableRef?.current?.offsetHeight;
+    }
+  }
+
+  @action.bound
+  private afterFilterChange() {
+    if (this.dataPaged.length === this.rowsPerPage || this.data === this.props.data) {
+      this.tableMinHeight = 0;
+    }
   }
 }
