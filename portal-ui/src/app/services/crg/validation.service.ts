@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 import { ValidationError } from '../util/FeaturePropertyValidators';
 import { serverProperties } from '../server-properties.service';
 import { ValidationWsMsg, wsService } from '../ws.service';
@@ -39,15 +37,13 @@ export interface ViolationItem {
   errorTypes: string[];
 }
 
-export interface ValidationRequest {
-  wsUiId?: string;
-  resources: ExportResourceModel[];
-}
+class ValidationService {
+  private static _instance: ValidationService;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ValidationService {
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   async initValidation(layers: CrgLayer[]): Promise<ValidationWsMsg> {
     return http.post<ValidationWsMsg>(`${await serverProperties.apiUrl}/validation`, this.preparePayload(layers), {
       headers: { 'Content-Type': 'application/json' }
@@ -96,3 +92,5 @@ export class ValidationService {
     });
   }
 }
+
+export const validationService = ValidationService.instance;

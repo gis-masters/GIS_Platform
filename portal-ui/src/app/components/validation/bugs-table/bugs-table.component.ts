@@ -14,7 +14,7 @@ import { schemaService } from '../../../services/crg/schema.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs-models';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
-import { ValidationResultsResponse, ValidationService } from '../../../services/crg/validation.service';
+import { ValidationResultsResponse, validationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
 
@@ -58,7 +58,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger, private validationService: ValidationService) {}
+  constructor(private logger: NGXLogger) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     const step = changes['step'];
@@ -83,7 +83,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
         switchMap(() => {
           this.isLoadingResults = true;
           if (this.isActive) {
-            return this.validationService.getValidationResults(
+            return validationService.getValidationResults(
               {
                 dataset: this.crgLayer.dataset,
                 table: this.crgLayer.internalName,
@@ -109,7 +109,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   async getValidation() {
-    const response: ValidationResultsResponse = await this.validationService.getValidationResults(
+    const response: ValidationResultsResponse = await validationService.getValidationResults(
       {
         dataset: this.crgLayer.dataset,
         table: this.crgLayer.internalName,

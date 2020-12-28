@@ -9,7 +9,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
 
 import { MaterialModule } from './material.module';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
-import { PrimeNgModule } from './prime-ng.module';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxMaskModule } from 'ngx-mask';
@@ -35,10 +34,7 @@ import { MappingPairComponent } from './components/mapping-pair/mapping-pair.com
 import { BugsTableComponent } from './components/validation/bugs-table/bugs-table.component';
 import { ReportSidebarComponent } from './components/validation/report-sidebar/report-sidebar.component';
 import { ViolationsViewComponent } from './components/validation/violations-view/violations-view.component';
-import { LayerObjectsComponent } from './components/layer-objects/layer-objects.component';
-import { ValidationDialogComponent } from './components/validation/validation-dialog/validation-dialog.component';
 import { ErrorsBadgeComponent } from './components/errors-badge/errors-badge.component';
-import { ExportDialogComponent } from './components/export/export-dilog/export-dialog.component';
 import { InfoSidebarComponent } from './components/info-sidebar/info-sidebar.component';
 import { LayersSidebarComponent } from './components/layers-sidebar/layers-sidebar.component';
 import { ProgressItemComponent } from './components/progress-item/progress-item.component';
@@ -65,6 +61,7 @@ import { WorkspaceComponent } from './components/workspace/workspace.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
+import { ReValidateButtonComponent } from './components/reValidateButton/reValidateButton.component';
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
@@ -84,12 +81,9 @@ import { LogoComponent } from './components/logo/logo.component';
     BugsTableComponent,
     ReportSidebarComponent,
     ViolationsViewComponent,
-    ValidationDialogComponent,
-    LayerObjectsComponent,
     FilterLayersPipe,
     EditBugObjectComponent,
     ErrorsBadgeComponent,
-    ExportDialogComponent,
     InfoSidebarComponent,
     LayersSidebarComponent,
     ProgressItemComponent,
@@ -115,6 +109,7 @@ import { LogoComponent } from './components/logo/logo.component';
     EditFeatureFieldComponent,
     EditFeatureGeometryComponent,
     FeaturesListSidebarComponent,
+    ReValidateButtonComponent,
     EditFeatureGeometryComponent,
     ZoomToFeatureComponent,
     OrgAdminComponent,
@@ -128,7 +123,6 @@ import { LogoComponent } from './components/logo/logo.component';
     HttpClientModule,
     AppRoutingModule,
     MaterialModule,
-    PrimeNgModule,
 
     BrowserModule,
     FileUploadModule,

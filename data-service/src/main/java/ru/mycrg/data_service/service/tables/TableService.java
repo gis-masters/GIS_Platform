@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.tables;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -70,13 +71,7 @@ public class TableService implements ITableService {
         } else if (isOrganizationAdmin(authentication)) {
             return resourcesService
                     .getDatasetTablesByTitle(schemaName, title, pageable)
-                    .map(description -> {
-                        final IResourceModel resourceModel = new TableModel(description, OWNER);
-                        final String tableName = extractTableName(resourceModel.getIdentifier());
-                        resourceModel.setIdentifier(tableName);
-
-                        return resourceModel;
-                    });
+                    .map(this::mapToResourceModel);
         } else {
             // TODO: Implement me
             return new PageImpl<>(new ArrayList<>());
@@ -91,7 +86,7 @@ public class TableService implements ITableService {
         } else if (isOrganizationAdmin(authentication)) {
             return resourcesService
                     .getTable(rIdentifier.toString())
-                    .map(resourceDescription -> new TableModel(resourceDescription, OWNER))
+                    .map(this::mapToResourceModel)
                     .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
         } else {
             // TODO: Implement me
@@ -115,6 +110,15 @@ public class TableService implements ITableService {
                                  () -> {
                                      throw new NotFoundException(rIdentifier.toString());
                                  });
+    }
+
+    @NotNull
+    private IResourceModel mapToResourceModel(Resource resource) {
+        final IResourceModel resourceModel = new TableModel(resource, OWNER);
+        final String tableName = extractTableName(resourceModel.getIdentifier());
+        resourceModel.setIdentifier(tableName);
+
+        return resourceModel;
     }
 
     private String extractTableName(String resourceIdentifier) {

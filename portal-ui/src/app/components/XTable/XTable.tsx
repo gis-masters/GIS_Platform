@@ -32,6 +32,7 @@ export interface XTableColumn<T> {
   renderCellContent?: (rowData: T, filterActive: boolean, filterParams: FilterParams<T>) => ReactNode;
   getIdBadge?: (rowData: T) => string | number;
   cellProps?: TableCellProps;
+  headerCellProps?: TableCellProps;
   align?: TableCellProps['align'];
 }
 
@@ -79,7 +80,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
               {!headless && (
                 <TableHead>
                   <TableRow>
-                    {cols.map(({ field, title, sorting, filtering, align }, i) => (
+                    {cols.map(({ field, title, sorting, filtering, align, headerCellProps }, i) => (
                       <TableHeadCell
                         key={i}
                         field={field}
@@ -88,6 +89,7 @@ export class XTable<T> extends Component<XTableProps<T>> {
                         filterParams={this.filterParams}
                         filtering={filterable && this.filterActive && filtering}
                         align={align}
+                        headerCellProps={headerCellProps}
                         onBeforeFilterChange={this.beforeFilterChange}
                         onFilterChange={this.afterFilterChange}
                       >

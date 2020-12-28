@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { BugReport, BugReportOutlined, GetAppOutlined } from '@material-ui/icons';
+import { BugReport, BugReportOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { User } from '../../User/User';
 import { env } from '../../../stores/Env.store';
 import { route } from '../../../stores/Route.store';
-import { sidebars } from '../../../stores/Sidebars.store';
-import { communicationService } from '../../../services/communication.service';
 import { Pages } from '../../../app-routing.module';
-import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
-import { ActionType } from '../../export/export-dilog/export-dialog.component';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { PrintButton } from '../../PrintButton/PrintButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
-import { User } from '../../User/User';
+import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';
 
@@ -35,13 +34,7 @@ export class WorkspaceHeaderButtons extends Component {
           </Tooltip>
         )}
 
-        {route.data.page === Pages.MAP && env.platform === 'conv' && (
-          <Tooltip title='Выгрузка GML'>
-            <IconButton onClick={this.handleExportClick} color='inherit'>
-              <GetAppOutlined />
-            </IconButton>
-          </Tooltip>
-        )}
+        {route.data.page === Pages.MAP && env.platform === 'conv' && <ExportGmlButton />}
 
         <HelpToggler />
         <NotificationsToggler />
@@ -57,10 +50,5 @@ export class WorkspaceHeaderButtons extends Component {
     } else {
       sidebars.openBugReport();
     }
-  }
-
-  @boundMethod
-  private handleExportClick() {
-    communicationService.gmlDialog.emit({ action: ActionType.OPEN, layers: undefined });
   }
 }

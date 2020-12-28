@@ -19,11 +19,3 @@
 
   <crg-attributes-bar [class]="cn('bar', { dir: 'bottom' })" *ngIf="isAttrSidebarActive"> </crg-attributes-bar>
 </div>
-
-<p-dialog header="Проверка данных" [style]="{ width: '450px', height: '500px' }" [(visible)]="isValidationDialogShow">
-  <crg-validation-dialog [data]="validationDialogData"> </crg-validation-dialog>
-</p-dialog>
-
-<p-dialog header="Экспорт" [style]="{ width: '450px', height: '500px' }" [(visible)]="isGmlDialogShow">
-  <crg-export-dialog></crg-export-dialog>
-</p-dialog>

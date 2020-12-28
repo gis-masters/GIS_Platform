@@ -1,8 +1,4 @@
-import { EventEmitter } from '@angular/core';
-
-import { GmlDialogData } from '../components/export/export-dilog/export-dialog.component';
-import { ValidationDialogData } from '../components/validation/validation-dialog/validation-dialog.component';
-import { CrgLayer, CrgProject } from '../services/crg/projects.models';
+import { CrgLayer, CrgProject } from './crg/projects.models';
 import { Emitter } from './util/Emitter';
 
 export interface ObjectDto {
@@ -13,25 +9,21 @@ export interface ObjectDto {
 class CommunicationService {
   private static _instance: CommunicationService;
 
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private constructor() {}
 
+  validationInitiated = new Emitter<boolean>();
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
-
-  // TODO: избавиться от EventEmitter rxjs тут
-  validationDialog = new EventEmitter<ValidationDialogData>();
-  selectedForValidation = new EventEmitter<CrgLayer[]>();
-  gmlDialog = new EventEmitter<GmlDialogData>();
-  editView = new EventEmitter<ObjectDto[]>();
+  editView = new Emitter<ObjectDto[]>();
 
   off(scope: any) {
     Emitter.scopeOff(scope);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 

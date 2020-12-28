@@ -59,8 +59,6 @@
   color: grey;
 }
 
-.revalidation-b {
-  margin-right: 10px;
-
-  outline: none;
+.report-sidebar-button {
+  display: inline-block;
 }

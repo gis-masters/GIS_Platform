@@ -17,6 +17,7 @@ interface TableHeadCellProps<T> extends TableCellProps {
   sortParams?: SortParams<T>;
   filtering?: boolean;
   filterParams?: FilterParams<T>;
+  headerCellProps?: TableCellProps;
   onBeforeFilterChange: () => void;
   onFilterChange: () => void;
 }
@@ -24,17 +25,20 @@ interface TableHeadCellProps<T> extends TableCellProps {
 @observer
 export class TableHeadCell<T> extends Component<TableHeadCellProps<T>> {
   render() {
-    const { field, sorting, sortParams, filtering, filterParams, children } = this.props;
+    const { field, sorting, sortParams, filtering, filterParams, children, headerCellProps } = this.props;
 
     const cellProps = {
+      ...headerCellProps,
       ...this.props,
       className: cnTableHeadCell({ sorting, filtering }, [this.props.className])
     };
+
     delete cellProps.field;
     delete cellProps.sorting;
     delete cellProps.filtering;
     delete cellProps.sortParams;
     delete cellProps.filterParams;
+    delete cellProps.headerCellProps;
     delete cellProps.onFilterChange;
     delete cellProps.onBeforeFilterChange;
 

@@ -1,0 +1,25 @@
+body .ValidateLayersDialog {
+  &-Title {
+    padding: 16px 24px 0;
+  }
+
+  &-Content {
+    width: 600px;
+  }
+
+  &-Total {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: medium;
+    color: var(--gray);
+  }
+
+  &-Form {
+    padding: 15px 0;
+  }
+
+  &-SchemaSelector {
+    width: 100%;
+  }
+}

@@ -5,11 +5,10 @@ import { NGXLogger } from 'ngx-logger';
 
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { communicationService, ObjectDto } from '../../../services/communication.service';
-import { ValidationBrieflyInfo, ValidationService } from '../../../services/crg/validation.service';
+import { ValidationBrieflyInfo, validationService } from '../../../services/crg/validation.service';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { ProcessStatus, ProcessType } from '../../../services/models';
-import { Toast } from '../../Toast/Toast';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
 @Component({
@@ -20,32 +19,32 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isActive: boolean;
   layers: CrgLayer[];
-  
+
   commonInfo: Map<string, ValidationBrieflyInfo> = new Map<string, ValidationBrieflyInfo>();
-  
+
   step = 0;
   isValidationInited = false;
-  
+
   isEditMode = false;
   objectsToEdit: ObjectDto[] = [];
-  
+
   commonProgress = 0;
-  
+
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger, private validationService: ValidationService) {
-    communicationService.selectedForValidation
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data: CrgLayer[]) => this.initValidation(data));
-
+  constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
+
+    communicationService.validationInitiated.on(value => {
+      this.isValidationInited = value;
+    }, this);
   }
 
   async ngOnInit() {
-    communicationService.editView.pipe(takeUntil(this.unsubscribe$)).subscribe((objects: ObjectDto[]) => {
+    communicationService.editView.on((objects: ObjectDto[]) => {
       this.isEditMode = true;
       this.objectsToEdit = objects;
-    });
+    }, this);
 
     wsService.messages$
       .pipe(
@@ -70,6 +69,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    communicationService.off(this);
   }
 
   setStep(index: number) {
@@ -84,35 +84,9 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     this.step--;
   }
 
-  async initValidation(crgLayers: CrgLayer[]) {
-    this.isValidationInited = true;
-
-    try {
-      const response: ValidationWsMsg = await this.validationService.initValidation(crgLayers);
-      if (response) {
-        // TODO: Ничего не предпринимаем здесь. Ждем сообщений из websocet. А надо бы отследивать
-        // процесс страхуя websocet
-        this.logger.debug('return process', response);
-      } else {
-        this.showError();
-      }
-    } catch (error) {
-      this.showError(error);
-    }
-  }
-
   closeMe() {
     openLayersService.clearDraft();
     sidebars.closeBugReport();
-  }
-
-  reValidate() {
-    if (this.layers && this.layers.length > 0) {
-      const copy = Object.assign([], this.layers);
-      communicationService.validationDialog.emit({ show: true, layers: copy });
-    } else {
-      this.logger.info('Не подгружены слоя');
-    }
   }
 
   switchMode() {
@@ -145,7 +119,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.validationService.getShortInfo(layers).then(
+    validationService.getShortInfo(layers).then(
       (response: ValidationBrieflyInfo[]) => {
         this.isValidationInited = false;
 
@@ -167,11 +141,5 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
         this.logger.error('Cant get validation info: ', error);
       }
     );
-  }
-
-  private showError(error?) {
-    this.isValidationInited = false;
-    this.logger.error('Cant validate layers: ', error);
-    Toast.error('Ошибка проверки данных');
   }
 }

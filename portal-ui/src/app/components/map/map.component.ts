@@ -3,27 +3,20 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
-import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
-import { ValidationDialogData } from '../../components/validation/validation-dialog/validation-dialog.component';
-import { GmlDialogData, ActionType } from '../../components/export/export-dilog/export-dialog.component';
-import { getFeatureTypeByLayer, deleteFeatureType } from '../../services/geoserver/featuretypes.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { communicationService } from '../../services/communication.service';
 import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
-import { deleteLayer } from '../../services/geoserver/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
 import { sidebars } from '../../stores/Sidebars.store';
-import { Toast } from '../Toast/Toast';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -35,12 +28,9 @@ type NamesChunks = { [srsName: string]: string[] };
 export class MapComponent implements OnInit, OnDestroy {
   isAttrSidebarActive = false;
   isBugReportSidebarActive = false;
-  isValidationDialogShow = false;
-  isGmlDialogShow = false;
   isFeaturesSidebarActive = false;
   isEditSidebarActive = false;
 
-  validationDialogData: ValidationDialogData;
   selectedLayer: CrgLayer;
   cn = cn('map');
 
@@ -83,24 +73,6 @@ export class MapComponent implements OnInit, OnDestroy {
       },
       { fireImmediately: true }
     );
-
-    communicationService.validationDialog.pipe(takeUntil(this.unsubscribe$)).subscribe((data: ValidationDialogData) => {
-      if (data && data.show) {
-        this.isValidationDialogShow = true;
-
-        if (data.layers && data.layers.length > 0) {
-          this.validationDialogData = data;
-        } else {
-          Toast.warn('Отсутствуют данные. Начните свою работу с загрузки слоев.');
-        }
-      } else {
-        this.isValidationDialogShow = false;
-      }
-    });
-
-    communicationService.gmlDialog.pipe(takeUntil(this.unsubscribe$)).subscribe((data: GmlDialogData) => {
-      this.isGmlDialogShow = data.action !== ActionType.CLOSE;
-    });
 
     fromMobx(() => sidebars.leftOpen)
       .pipe(takeUntil(this.unsubscribe$))

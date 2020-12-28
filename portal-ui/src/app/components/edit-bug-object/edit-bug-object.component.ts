@@ -4,7 +4,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs-models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { communicationService, ObjectDto } from '../../services/communication.service';
+import { ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { schemaService } from '../../services/crg/schema.service';
 import { BaseEdit } from './base-edit';
@@ -66,8 +66,6 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.closeMe.emit(true);
         Toast.success('Сохранено');
 
-        // Сразу провалидируем слой при успешном сохранении
-        communicationService.selectedForValidation.emit([this.data[0].crgLayer]);
         openLayersService.refreshLayers();
       } else {
         this.logger.warn('UpdateFeature response: ', response);
