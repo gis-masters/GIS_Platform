@@ -4,7 +4,7 @@ import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { serverProperties } from '../../services/server-properties.service';
+import { getBaseUrl } from '../../services/server-urls.service';
 import { sleep } from '../../services/util/sleep';
 import { http } from '../../services/http.service';
 import { services } from '../../services/services';
@@ -67,7 +67,7 @@ export class Link extends Component<LinkProps> {
           services.router.navigateByUrl(url);
         });
       } else if (download) {
-        const baseUrl = await serverProperties.baseUrl;
+        const baseUrl = await getBaseUrl();
 
         http
           .get(url, { responseType: 'blob' })

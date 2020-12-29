@@ -1,0 +1,172 @@
+import { getEnvironment } from './environment';
+
+async function getHost(): Promise<string> {
+  return (await getEnvironment()).server.host || location.hostname;
+}
+
+async function getPort(): Promise<string> {
+  return (await getEnvironment()).server.port || location.port;
+}
+
+async function getPath(): Promise<string> {
+  return (await getEnvironment()).server.path || '';
+}
+
+async function getWsPort(): Promise<string> {
+  return (await getEnvironment()).server.wsPort || location.port;
+}
+
+async function getWsPath(): Promise<string> {
+  return (await getEnvironment()).server.wsPath || '';
+}
+
+export async function getWsEndpointUrl(): Promise<string> {
+  const host = await getHost();
+  const port = await getWsPort();
+  const path = await getWsPath();
+
+  return `${location.protocol}//${host}:${port}${path}/crg-ws-endpoint`;
+}
+
+export async function getBaseUrl(): Promise<string> {
+  const host = await getHost();
+  const port = await getPort();
+  const path = await getPath();
+
+  return `${location.protocol}//${host}${port && ':'}${port}${path}`;
+}
+
+export async function getGeoServerUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/geoserver';
+}
+
+export async function getWmsUrl(): Promise<string> {
+  return (await getGeoServerUrl()) + '/wms';
+}
+
+export async function getWfsUrl(): Promise<string> {
+  return (await getGeoServerUrl()) + '/wfs';
+}
+
+async function getWmtsUrl(): Promise<string> {
+  return (await getGeoServerUrl()) + '/gwc/service/wmts';
+}
+
+export async function getGeoserverImportsUrl(): Promise<string> {
+  return (await getGeoServerUrl()) + '/rest/imports';
+}
+
+export async function getAuthUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/oauth/token';
+}
+
+export async function getLogoutUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/perform_logout';
+}
+
+export async function getValidationUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/api/validation';
+}
+
+export async function getOrganizationsUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/organizations';
+}
+
+export async function getSchemaUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/schema';
+}
+
+export async function getExportUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/export';
+}
+
+export async function getUsersUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/users';
+}
+
+export async function getUserUrl(userId: number | string): Promise<string> {
+  return `${await getBaseUrl()}/users/${userId}`;
+}
+
+export async function getGroupsUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/groups';
+}
+
+export async function getGroupUrl(groupId: number): Promise<string> {
+  return `${await getGroupsUrl()}/${groupId}`;
+}
+
+export async function getGroupUserUrl(groupId: number, userId: number): Promise<string> {
+  return `${await getGroupsUrl()}/${groupId}/users/${userId}`;
+}
+
+export async function getProjectsUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/projects';
+}
+
+export async function getProjectUrl(projectId: number): Promise<string> {
+  return `${await getProjectsUrl()}/${projectId}`;
+}
+
+export async function getProjectImportUrl(projectId: number): Promise<string> {
+  return (await getProjectUrl(projectId)) + '/import';
+}
+
+export async function getProjectLayersUrl(projectId: number): Promise<string> {
+  return (await getProjectUrl(projectId)) + '/layers';
+}
+
+export async function getProjectLayerUrl(projectId: number, layerId: number): Promise<string> {
+  return `${await getProjectUrl(projectId)}/layers/${layerId}`;
+}
+
+export async function getProjectGroupsUrl(projectId: number): Promise<string> {
+  return (await getProjectUrl(projectId)) + '/groups';
+}
+
+export async function getProjectGroupUrl(projectId: number, groupId: number): Promise<string> {
+  return `${await getProjectGroupsUrl(projectId)}/${groupId}`;
+}
+
+export async function getProjectPermissionsUrl(projectId: number): Promise<string> {
+  return (await getProjectUrl(projectId)) + '/permissions';
+}
+
+export async function getProjectPermissionUrl(projectId: number, permissionId: number): Promise<string> {
+  return `${await getProjectPermissionsUrl(projectId)}/${permissionId}`;
+}
+
+async function getDataUrl(): Promise<string> {
+  return (await getBaseUrl()) + '/api/data';
+}
+
+export async function getDatasetsUrl(): Promise<string> {
+  return `${await getDataUrl()}/datasets`;
+}
+
+export async function getDatasetUrl(datasetId: string): Promise<string> {
+  return `${await getDatasetsUrl()}/${datasetId}`;
+}
+
+export async function getDatasetTablesUrl(datasetId: string): Promise<string> {
+  return `${await getDatasetUrl(datasetId)}/tables`;
+}
+
+export async function getTableRoleAssignmentUrl(datasetId: string, tableId: string): Promise<string> {
+  return `${await getDatasetTablesUrl(datasetId)}/${tableId}/roleAssignment`;
+}
+
+export async function getBasemapsByIdsUrl(): Promise<string> {
+  return (await getDataUrl()) + '/basemaps/search/findByIdIn';
+}
+
+export async function replaceUrl(url: string) {
+  if (!url) {
+    return '';
+  }
+  const newUrl = new URL(url);
+  newUrl.hostname = await getHost();
+  newUrl.port = await getPort();
+
+  return newUrl.href;
+}

@@ -1,10 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-
-import { services } from '../services';
-import { Toast } from '../../components/Toast/Toast';
-import { serverProperties } from '../server-properties.service';
-import { http } from '../http.service';
 import { AxiosError } from 'axios';
+
+import { getBaseUrl } from '../server-urls.service';
+import { services } from '../services';
+import { http } from '../http.service';
+import { Toast } from '../../components/Toast/Toast';
 
 export interface TemporaryDocumentBody {
   title: string;
@@ -34,7 +33,7 @@ class DocumentsService {
     formData.append('files', file);
     formData.append('body', JSON.stringify(body));
 
-    const baseUrl = await serverProperties.baseUrl;
+    const baseUrl = await getBaseUrl();
 
     return await http.post<CrgDocument[]>(baseUrl + uri, formData).catch((error: AxiosError) => {
       Toast.error('Возникла ошибка при загрузке файла');
@@ -45,7 +44,7 @@ class DocumentsService {
   }
 
   async delete(uri: string) {
-    const baseUrl = await serverProperties.baseUrl;
+    const baseUrl = await getBaseUrl();
     await http.delete(baseUrl + uri).catch((error: AxiosError) => {
       Toast.error('Не удалось удалить файл');
       services.logger.error('Не удалось удалить файл: ', error.message);

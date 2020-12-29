@@ -1,14 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { env } from '../stores/Env.store';
-import { GeoUtil } from './util/GeoUtil';
+import { replaceUrl } from './server-urls.service';
 
 axios.defaults.withCredentials = true;
 
-axios.interceptors.request.use(config => {
-  if (env.server) {
-    config.url = GeoUtil.replaceUrl(config.url, env.server);
-  }
+axios.interceptors.request.use(async config => {
+  config.url = await replaceUrl(config.url);
 
   return config;
 });

@@ -4,14 +4,21 @@ import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
-import { serverProperties } from '../server-properties.service';
-import { TaskImport } from '../geoserver/import/taskImport';
 import { isFeaturesReadAllowed } from './permissions.service';
+import { TaskImport } from '../geoserver/import/taskImport';
 import { PageableResponse, Process } from '../models';
 import { usersService } from './users.service';
 import { wsService } from '../ws.service';
 import { services } from '../services';
 import { http } from '../http.service';
+import {
+  getProjectGroupsUrl,
+  getProjectImportUrl,
+  getProjectLayersUrl,
+  getProjectsUrl,
+  getProjectUrl,
+  getWmsUrl
+} from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
 
 class ProjectsService {
@@ -32,9 +39,8 @@ class ProjectsService {
   }
 
   async fetchProjects() {
-    const url = await serverProperties.projectsUrl;
+    const url = await getProjectsUrl();
     const params = { size: '1000' };
-
     const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(url, { params });
 
     if (response && response._embedded) {
@@ -96,7 +102,7 @@ class ProjectsService {
         break;
       }
 
-      const url = new URL(await serverProperties.wmsUrl);
+      const url = new URL(await getWmsUrl());
 
       url.searchParams.set('SERVICE', 'WMS');
       url.searchParams.set('VERSION', '1.3.0');
@@ -126,17 +132,14 @@ class ProjectsService {
   }
 
   async create(name: string): Promise<CrgProject> {
-    const url = await serverProperties.projectsUrl;
-
-    const payload = {
-      projectName: name
-    };
+    const url = await getProjectsUrl();
+    const payload = { projectName: name };
 
     return http.post<CrgProject>(url, payload);
   }
 
   async delete(id: number) {
-    const url = `${await serverProperties.projectsUrl}/${id}`;
+    const url = await getProjectUrl(id);
     await http.delete(url);
     allProjects.delete(id);
   }
@@ -146,36 +149,34 @@ class ProjectsService {
    * то имя под которым создана схема в БД) проекта в который хотим импортировать.
    * Организация, а соответственно и название БД есть на сервере.
    */
-  async doWorkImport(tasks: TaskImport[], projectId: number, targetSchema: string): Promise<Process> {
-    const url = `${await serverProperties.apiUrl}/${projectId}/import`;
+  async doWorkImport(importTasks: TaskImport[], projectId: number, targetSchema: string): Promise<Process> {
+    const url = await getProjectImportUrl(projectId);
     const payload = {
       wsUiId: wsService.getId(),
-      targetSchema: targetSchema,
-      importTasks: tasks
+      targetSchema,
+      importTasks
     };
 
     return http.post<Process>(url, payload);
   }
 
   async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
-    return await http.get<CrgLayer[]>(`${await serverProperties.projectsUrl}/${projectId}/layers`);
+    return await http.get<CrgLayer[]>(await getProjectLayersUrl(projectId));
   }
 
   async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {
-    return await http.get<CrgLayersGroup[]>(`${await serverProperties.projectsUrl}/${projectId}/groups`);
+    return await http.get<CrgLayersGroup[]>(await getProjectGroupsUrl(projectId));
   }
 
   async createDataset(title: string, details: string) {
-    const url = `${await serverProperties.projectsUrl}/datasets`;
+    const url = `${await getProjectsUrl()}/datasets`;
 
     await http.post(url, { title, details });
   }
 
   private async getById(id: number): Promise<CrgProject | void> {
     try {
-      const url = `${await serverProperties.projectsUrl}/${id}`;
-
-      return await http.get<CrgProject>(url);
+      return await http.get<CrgProject>(await getProjectUrl(id));
     } catch (e) {
       if (e.response && e.response.status === 404) {
         Toast.warn('Не найден проект id: ' + id);

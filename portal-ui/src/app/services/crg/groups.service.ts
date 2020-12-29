@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 
 import { allGroups } from '../../stores/AllGroups.store';
-import { serverProperties } from '../server-properties.service';
+import { getGroupsUrl, getGroupUrl, getGroupUserUrl } from '../server-urls.service';
 import { ApiLink, CrgUser } from './users.service';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
@@ -32,7 +32,7 @@ class GroupsService {
   }
 
   async getAll(): Promise<CrgGroup[]> {
-    const url = await serverProperties.groupsUrl;
+    const url = await getGroupsUrl();
     const params = { size: '10000' };
     const response = await http.get<PageableResponse<{ groups: CrgGroup[] }>>(url, { params });
 
@@ -40,18 +40,13 @@ class GroupsService {
   }
 
   async create(groupData: NewGroupData) {
-    const url = await serverProperties.groupsUrl;
-
+    const url = await getGroupsUrl();
     await http.post<CrgGroup>(url, groupData);
-
     this.debouncedFetchGroupsListStore();
   }
 
   async delete(group: CrgGroup) {
-    const url = await serverProperties.groupsUrl;
-
-    await http.delete(`${url}/${group.id}`);
-
+    await http.delete(await getGroupUrl(group.id));
     this.debouncedFetchGroupsListStore();
   }
 
@@ -62,18 +57,12 @@ class GroupsService {
   }
 
   async addUserToGroup(user: CrgUser, group: CrgGroup) {
-    const url = await serverProperties.groupsUrl;
-
-    await http.post(`${url}/${group.id}/users/${user.id}`, {});
-
+    await http.post(await getGroupUserUrl(group.id, user.id), {});
     this.debouncedFetchGroupsListStore();
   }
 
   async removeUserFromGroup(user: CrgUser, group: CrgGroup) {
-    const url = await serverProperties.groupsUrl;
-
-    await http.delete(`${url}/${group.id}/users/${user.id}`);
-
+    await http.delete(await getGroupUserUrl(group.id, user.id));
     this.debouncedFetchGroupsListStore();
   }
 

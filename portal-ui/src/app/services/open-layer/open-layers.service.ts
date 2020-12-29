@@ -34,7 +34,7 @@ import {
   transformGeometry
 } from '../geoserver/projections.service';
 import { WfsFeature } from '../geoserver/wfs-models';
-import { serverProperties } from '../server-properties.service';
+import { getWmsUrl } from '../server-urls.service';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { services } from '../services';
 import { Emitter } from '../util/Emitter';
@@ -252,7 +252,7 @@ class OpenLayersService {
       if (this.isTiledWms) {
         layer = new TileLayer({
           source: new TileWMS({
-            url: await serverProperties.wmsUrl,
+            url: await getWmsUrl(),
             params: params,
             tileLoadFunction: this.crgLayersLoadFunction,
             serverType: 'geoserver',
@@ -265,7 +265,7 @@ class OpenLayersService {
       } else {
         layer = new ImageLayer({
           source: new ImageWMS({
-            url: await serverProperties.wmsUrl,
+            url: await getWmsUrl(),
             params: params,
             imageLoadFunction: this.crgLayersLoadFunction,
             ratio: 1,

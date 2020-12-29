@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { serverProperties } from '../server-properties.service';
+import { getBaseUrl } from '../server-urls.service';
 import { http } from '../http.service';
 import { Process } from '../models';
 
@@ -9,7 +9,7 @@ import { Process } from '../models';
 })
 export class OrganizationService {
   async getProcessById(processId: number): Promise<Process> {
-    const baseUrl = await serverProperties.baseUrl;
+    const baseUrl = await getBaseUrl();
 
     return http.get<Process>(`${baseUrl}/processes/${processId}`);
   }

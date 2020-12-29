@@ -1,7 +1,7 @@
 import { Process } from '../models';
 import { http } from '../http.service';
 import { wsService } from '../ws.service';
-import { serverProperties } from '../server-properties.service';
+import { getExportUrl } from '../server-urls.service';
 
 export interface ExportRequest {
   resources: ExportResourceModel[];
@@ -45,7 +45,7 @@ class ExportService {
   }
 
   private async export(payload: ExportRequest): Promise<Process> {
-    return http.post<Process>(await serverProperties.exportUrl, JSON.stringify(payload), {
+    return http.post<Process>(await getExportUrl(), JSON.stringify(payload), {
       headers: { 'Content-Type': 'application/json' }
     });
   }

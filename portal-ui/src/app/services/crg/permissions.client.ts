@@ -1,4 +1,4 @@
-import { serverProperties } from '../server-properties.service';
+import { getProjectPermissionsUrl, getProjectPermissionUrl, getTableRoleAssignmentUrl } from '../server-urls.service';
 import { RoleAssignmentBody } from './permissions.models';
 import { CrgProject } from './projects.models';
 import { PageableResponse } from '../models';
@@ -7,8 +7,7 @@ import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
 
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
-  const dataServerUrl = await serverProperties.dataUrl;
-  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
+  const url = await getTableRoleAssignmentUrl(datasetId, tableId);
   const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
     params: { size: '10000' }
   });
@@ -17,7 +16,7 @@ export async function getTablePermissions(datasetId: string, tableId: string): P
 }
 
 export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
-  const url = `${await serverProperties.dataUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
+  const url = await getTableRoleAssignmentUrl(datasetId, tableId);
 
   try {
     await http.post(url, payload);
@@ -27,8 +26,7 @@ export async function addTablePermission(payload: RoleAssignmentBody, datasetId:
 }
 
 export async function removeTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
-  const dataServerUrl = await serverProperties.dataUrl;
-  const url = `${dataServerUrl}/datasets/${datasetId}/tables/${tableId}/roleAssignment`;
+  const url = await getTableRoleAssignmentUrl(datasetId, tableId);
 
   try {
     await http.delete(`${url}/${payload.id}`);
@@ -38,14 +36,14 @@ export async function removeTablePermission(payload: RoleAssignmentBody, dataset
 }
 
 export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
-  const list = await http.get<RoleAssignmentBody[]>(`${await serverProperties.projectsUrl}/${project.id}/permissions`);
+  const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
 
   return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
 }
 
 export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
   try {
-    await http.post(`${await serverProperties.projectsUrl}/${project.id}/permissions`, payload);
+    await http.post(await getProjectPermissionsUrl(project.id), payload);
   } catch (e) {
     handleSavingError(e, payload, 'добавить', 'проекта', project.name);
   }
@@ -53,7 +51,7 @@ export async function addProjectPermission(payload: RoleAssignmentBody, project:
 
 export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
   try {
-    await http.delete(`${await serverProperties.projectsUrl}/${project.id}/permissions/${payload.id}`);
+    await http.delete(await getProjectPermissionUrl(project.id, payload.id));
   } catch (e) {
     handleSavingError(e, payload, 'удалить', 'проекта', project.name);
   }

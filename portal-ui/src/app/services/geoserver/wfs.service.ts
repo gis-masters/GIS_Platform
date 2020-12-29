@@ -3,12 +3,12 @@ import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 import { isEqual } from 'lodash';
 
-import { CrgModels } from '../models';
-import { Util } from './util';
 import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs-models';
+import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
+import { CrgModels } from '../models';
 import { services } from '../services';
-import { serverProperties } from '../server-properties.service';
 import { http } from '../http.service';
+import { Util } from './util';
 
 type Coord = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
@@ -52,8 +52,7 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
 
   return defer(async () => {
     await services.provided;
-    const url = (await serverProperties.geoServerUrl) + '/wfs';
-    const fCollection = await http.get<WfsFeatureCollection>(url, { params: params });
+    const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params: params });
 
     return clearFeatureId(fCollection);
   });
@@ -65,9 +64,8 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
  */
 export const getFeaturesByXmlFilter = async (xml: string): Promise<WfsFeatureCollection> => {
   await services.provided;
-  const url = (await serverProperties.geoServerUrl) + '/wfs';
 
-  return http.post<WfsFeatureCollection>(url, xml, {
+  return http.post<WfsFeatureCollection>(await getWfsUrl(), xml, {
     headers: { 'Content-type': 'application/xml' },
     params: { exceptions: 'application/json' }
   });
@@ -108,7 +106,7 @@ const prepareLink = async (typeName: string, objectId: string): Promise<string> 
   const workspaceName = typeName.split(':')[0];
 
   return (
-    (await serverProperties.geoServerUrl) +
+    (await getGeoServerUrl()) +
     '/' +
     workspaceName +
     '/ows' +

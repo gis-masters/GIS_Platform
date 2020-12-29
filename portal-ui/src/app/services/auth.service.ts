@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-import { serverProperties } from './server-properties.service';
+import { getAuthUrl, getLogoutUrl, getOrganizationsUrl, getUserUrl } from './server-urls.service';
 import { usersService } from './crg/users.service';
 import { services } from './services';
 import { http } from './http.service';
@@ -40,10 +40,9 @@ axios.interceptors.response.use(
     const err = e.toJSON ? { ...e.toJSON(), response: e.response } : e;
 
     if (
-      e.response &&
-      e.response.status === 401 &&
-      !(e.config && e.config.url === (await serverProperties.authUrl)) &&
-      !(e.config && e.config.url === (await serverProperties.usersUrl) + '/current')
+      e.response?.status === 401 &&
+      !(e.config?.url === (await getAuthUrl())) &&
+      !(e.config?.url === (await getUserUrl('current')))
     ) {
       await authService.logout();
     }
@@ -78,7 +77,7 @@ class AuthService {
     };
 
     const options = { withCredentials: true, headers };
-    const url = await serverProperties.authUrl;
+    const url = await getAuthUrl();
     try {
       this.token = await http.post(url, params.toString(), options);
       localStorage.setItem(TOKEN_KEY, this.token);
@@ -95,8 +94,7 @@ class AuthService {
   }
 
   async logout() {
-    const baseUrl = await serverProperties.baseUrl;
-    await http.post(baseUrl + '/perform_logout', {}, { withCredentials: true });
+    await http.post(await getLogoutUrl(), {}, { withCredentials: true });
     this.token = '';
     localStorage.removeItem(TOKEN_KEY);
     usersService.dropCurrent();
@@ -107,6 +105,7 @@ class AuthService {
 
   // TODO: Создание новой орг в модуле аутентификации???
   async registration(regData: RegData): Promise<{}> {
+    const url = await getOrganizationsUrl();
     const payload = {
       name: regData.company,
       phone: regData.contactPhone,
@@ -117,7 +116,6 @@ class AuthService {
         password: regData.password
       }
     };
-    const url = await serverProperties.organizationsUrl;
 
     return http.post(url + '/init', payload);
   }

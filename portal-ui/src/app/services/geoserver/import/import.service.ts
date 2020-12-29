@@ -1,6 +1,6 @@
 import { getEnvironment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
-import { serverProperties } from '../../server-properties.service';
+import { getGeoserverImportsUrl, getGeoServerUrl } from '../../server-urls.service';
 import {
   ImportLayer,
   ImportTaskResponse,
@@ -36,7 +36,7 @@ export async function fetchCurrentImport(importId: string) {
 }
 
 export async function getById(id: string) {
-  const url = `${await getImportUrl()}/${id}`;
+  const url = `${await getGeoserverImportsUrl()}/${id}`;
   return (await http.get<InputStartResponseDto>(url)).import;
 }
 
@@ -85,7 +85,7 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
   }
 
   try {
-    const { import: scratchImport } = await http.post<InputStartResponseDto>(await getImportUrl(), payload);
+    const { import: scratchImport } = await http.post<InputStartResponseDto>(await getGeoserverImportsUrl(), payload);
 
     currentImport.fit({ scratch: scratchImport });
 
@@ -97,10 +97,6 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
 
     return Promise.reject(err);
   }
-}
-
-async function getImportUrl(): Promise<string> {
-  return (await serverProperties.geoServerUrl) + '/rest/imports';
 }
 
 async function uploadTasks(url: string, file: File) {
@@ -132,7 +128,7 @@ async function uploadToScratch() {
   // придти и через 10 минут... Наш gateway оборвет запрос через 10 сек, поэтому ошибку по таймауту 504 не считаем
   // ошибкой, ретраи здесь также не нужны.
   try {
-    return await http.post(`${await getImportUrl()}/${currentImport.id}`, {});
+    return await http.post(`${await getGeoserverImportsUrl()}/${currentImport.id}`, {});
   } catch (e) {
     if (!e.response || e.response.status !== 504) {
       currentImport.setError(e);

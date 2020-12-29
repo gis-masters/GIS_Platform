@@ -7,7 +7,7 @@ import { ImportLayerItem } from '../geoserver/import/models';
 import { CoordinateEdited, SupportedGeometryType, WfsFeature } from '../geoserver/wfs-models';
 import { getEmptyGeometry } from '../geoserver/wfs.service';
 import { http } from '../http.service';
-import { serverProperties } from '../server-properties.service';
+import { getSchemaUrl } from '../server-urls.service';
 import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
@@ -268,10 +268,9 @@ class SchemaService {
 
   private async fetch(fetchAll?: boolean): Promise<void> {
     this.fetchingNow++;
-    const payload = fetchAll ? [] : this.fetchingPool.splice(0);
     await services.provided;
-    const url = await serverProperties.schemaUrl;
-    const response = await http.post<(FeatureDescription | null)[]>(url, payload);
+    const payload = fetchAll ? [] : this.fetchingPool.splice(0);
+    const response = await http.post<(FeatureDescription | null)[]>(await getSchemaUrl(), payload);
 
     if (!response) {
       throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);

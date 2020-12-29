@@ -5,7 +5,7 @@ import { Stomp, CompatClient } from '@stomp/stompjs';
 
 import { generateRandomId } from './util/stringUtil';
 import { BugObject } from './crg/validation.service';
-import { serverProperties } from './server-properties.service';
+import { getWsEndpointUrl } from './server-urls.service';
 import { ProcessType } from './models';
 
 export interface IWsMessage {
@@ -42,12 +42,11 @@ class WsService {
   private static _instance: WsService;
   private _wsMsg$: BehaviorSubject<IWsMessage> = new BehaviorSubject<IWsMessage>(undefined);
 
-  messages$: Observable<IWsMessage> = this._wsMsg$.asObservable()
-    .pipe(
-      // компоненты при подписке должны видеть одно последнее значение в потоке
-      publishReplay(1),
-      refCount()
-    );
+  messages$: Observable<IWsMessage> = this._wsMsg$.asObservable().pipe(
+    // компоненты при подписке должны видеть одно последнее значение в потоке
+    publishReplay(1),
+    refCount()
+  );
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -63,17 +62,13 @@ class WsService {
   }
 
   async connect() {
-    // TODO: CORS щишибка на websocket когда конектимся через 8100, попробую здесь напрямую к 8088. Или попробывать
-    // добавить корс вебсокет секьюрити и на 8100
-    const host = await serverProperties.host;
-    const port = await serverProperties.wsPort;
-    const socket = new SockJS(`${host}:${port}/crg-ws-endpoint`);
+    const socket = new SockJS(await getWsEndpointUrl());
 
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, () => {
       this.setConnected(true);
-      this.stompClient.subscribe('/topic/' + this.id + '/**', (data) => {
+      this.stompClient.subscribe('/topic/' + this.id + '/**', data => {
         this._wsMsg$.next(JSON.parse(data.body));
       });
     });
@@ -89,3 +84,5 @@ class WsService {
 }
 
 export const wsService = WsService.instance;
+
+window['ws'] = wsService;

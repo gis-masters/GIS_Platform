@@ -1,17 +1,20 @@
+import { env } from '../stores/Env.store';
 import { FlagsList } from './feature-flags';
 
 export type Platform = 'conv' | 'simf';
 
 export interface EnvironmentServer {
-  host: string;
-  port: number;
+  host?: string;
+  port?: string;
+  path?: string;
+  wsPort?: string;
+  wsPath?: string;
 }
 
 export interface Environment {
   platform: Platform;
   production: boolean;
   server: EnvironmentServer;
-  ws_port: number;
   scratchWorkspaceName: string;
   flags?: FlagsList;
   logo?: string;
@@ -20,9 +23,11 @@ export interface Environment {
 
 const fetchEnv = async (): Promise<Environment> => {
   const response = await fetch('assets/config/environment.json');
-  const env: Environment = await response.json();
+  const environment: Environment = await response.json();
 
-  return env;
+  env.setEnv(environment);
+
+  return environment;
 };
 
 const envPromise: Promise<Environment> = fetchEnv();

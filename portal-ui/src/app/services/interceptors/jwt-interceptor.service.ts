@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, defer } from 'rxjs';
-import { catchError, flatMap } from 'rxjs/operators';
+import { Observable, throwError, defer, from } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 
-import { getEnvironment, Environment } from '../environment';
+import { replaceUrl } from '../server-urls.service';
 import { authService } from '../auth.service';
-import { GeoUtil } from '../util/GeoUtil';
 
 //TODO: kill me
 @Injectable({
@@ -13,25 +12,23 @@ import { GeoUtil } from '../util/GeoUtil';
 })
 export class JwtInterceptorService implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return defer(getEnvironment).pipe(
-      flatMap((environment: Environment) => {
-        request = request.clone({
-          setHeaders: {
-            Authorization: 'Bearer ' + authService.token
-          },
-          url: GeoUtil.replaceUrl(request.url, environment.server)
-        });
+    return from(async () => {
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + authService.token
+        },
+        url: await replaceUrl(request.url)
+      });
 
-        return next.handle(request).pipe(
-          catchError((errorResponse: HttpErrorResponse) => {
-            if (errorResponse.status === 401) {
-              authService.logout();
-            }
+      return next.handle(request).pipe(
+        catchError((errorResponse: HttpErrorResponse) => {
+          if (errorResponse.status === 401) {
+            authService.logout();
+          }
 
-            return throwError(errorResponse);
-          })
-        );
-      })
-    );
+          return throwError(errorResponse);
+        })
+      );
+    });
   }
 }

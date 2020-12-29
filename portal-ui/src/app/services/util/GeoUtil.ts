@@ -1,7 +1,6 @@
-import {ImportTaskResponse, ImportTaskShort} from '../geoserver/import/models';
+import { ImportTaskResponse, ImportTaskShort } from '../geoserver/import/models';
 
 export class GeoUtil {
-
   /**
    * Приведем в нормальный вид ответ от API геосервера.
    * @param importTask Объект с тасками полученный от геосервера
@@ -12,19 +11,6 @@ export class GeoUtil {
     }
 
     return importTask.task ? [importTask.task] : importTask.tasks || [];
-  }
-
-  static replaceUrl(url: string, envServer: { host: string; port: number }): string {
-    if (!url) {
-      return '';
-    }
-
-    const newUrl = new URL(url);
-
-    newUrl.host = envServer.host;
-    newUrl.port = String(envServer.port);
-
-    return newUrl.href;
   }
 
   static getAliasForBaseType(type: string) {

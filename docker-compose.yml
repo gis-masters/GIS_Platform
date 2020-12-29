@@ -94,8 +94,8 @@ services:
       CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
       CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
 
-      SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: $JWT_ACCESS_TOKEN_VALIDITY_SECONDS
-      SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: $JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+      SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: ${JWT_ACCESS_TOKEN_VALIDITY_SECONDS:-}
+      SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: ${JWT_REFRESH_TOKEN_VALIDITY_SECONDS:-}
     volumes:
       - /opt/logs:/opt/logs
     logging:
@@ -281,16 +281,21 @@ services:
     environment:
       UI_PLATFORM: $UI_PLATFORM
       UI_PROD: $UI_PROD
-      UI_SERVER_HOST: $UI_SERVER_HOST
-      UI_SERVER_PORT: $UI_SERVER_PORT
+      UI_SERVER_HOST: ${UI_SERVER_HOST:-}
+      UI_SERVER_PORT: ${UI_SERVER_PORT:-}
+      UI_SERVER_PATH: ${UI_SERVER_PATH:-/api}
+      UI_WS_PORT: ${UI_WS_PORT:-}
+      UI_WS_PATH: ${UI_WS_PATH:-/ws}
       UI_SWN: $UI_SWN
-      UI_WS_PORT: $UI_WS_PORT
       UI_LOGO: ${UI_LOGO:-}
       UI_FAVICON: ${UI_FAVICON:-}
+      UI_HTTPS: ${UI_HTTPS:-}
     depends_on:
       - geo-api
       - geoserver
     volumes:
       - /opt/reglaments:/usr/share/nginx/html/reglaments
+      - /opt/ssl:/opt/ssl
     ports:
     - 80:80
+    - 443:443

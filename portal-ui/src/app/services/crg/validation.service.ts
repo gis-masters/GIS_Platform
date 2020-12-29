@@ -1,5 +1,5 @@
 import { ValidationError } from '../util/FeaturePropertyValidators';
-import { serverProperties } from '../server-properties.service';
+import { getValidationUrl } from '../server-urls.service';
 import { ValidationWsMsg, wsService } from '../ws.service';
 import { ExportResourceModel } from './export.service';
 import { CrgLayer } from './projects.models';
@@ -45,7 +45,7 @@ class ValidationService {
   }
 
   async initValidation(layers: CrgLayer[]): Promise<ValidationWsMsg> {
-    return http.post<ValidationWsMsg>(`${await serverProperties.apiUrl}/validation`, this.preparePayload(layers), {
+    return http.post<ValidationWsMsg>(await getValidationUrl(), this.preparePayload(layers), {
       headers: { 'Content-Type': 'application/json' }
     });
   }
@@ -63,7 +63,7 @@ class ValidationService {
       sort_by: sortBy.length > 0 ? `${sortBy}.${sortDirection}` : ''
     };
 
-    const url = `${await serverProperties.apiUrl}/validation/results`;
+    const url = `${await getValidationUrl()}/results`;
 
     return http.post<ValidationResultsResponse>(url, JSON.stringify(resource), {
       headers: { 'Content-Type': 'application/json' },
@@ -72,7 +72,7 @@ class ValidationService {
   }
 
   async getShortInfo(layers: CrgLayer[]): Promise<ValidationBrieflyInfo[]> {
-    const url = `${await serverProperties.apiUrl}/validation/short`;
+    const url = `${await getValidationUrl()}/short`;
 
     return http.post<ValidationBrieflyInfo[]>(url, this.preparePayload(layers), {
       headers: { 'Content-Type': 'application/json' }

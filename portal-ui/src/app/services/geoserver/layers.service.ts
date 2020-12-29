@@ -1,16 +1,19 @@
-import { cloneDeep } from 'lodash';
-
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayersGroup, Rule } from '../crg/projects.models';
-import { serverProperties } from '../server-properties.service';
 import { WfsFeature } from '../geoserver/wfs-models';
 import { patch } from '../util/patch';
 import { http } from '../http.service';
-import { services } from '../services';
+import {
+  getGeoServerUrl,
+  getProjectGroupsUrl,
+  getProjectGroupUrl,
+  getProjectLayerUrl,
+  getWmsUrl
+} from '../server-urls.service';
 
 export async function deleteLayer(layerId: number) {
-  await http.delete(`${await serverProperties.projectsUrl}/${currentProject.id}/layers/${layerId}`);
+  await http.delete(await getProjectLayerUrl(currentProject.id, layerId));
   if (sidebars.layerForAttributes?.id === layerId) {
     sidebars.closeAttributes();
   }
@@ -55,24 +58,6 @@ export function getFeatureLayer(feature: WfsFeature): CrgLayer {
   return currentProject.vectorLayers.find(l => l.internalName === layerName);
 }
 
-// на будущее
-async function updateLayerOrGroup<T extends CrgLayer | CrgLayersGroup>(
-  item: T,
-  itemPatch: Partial<T>,
-  isGroup: boolean
-) {
-  await services.provided;
-  const backup = cloneDeep(item);
-  const path = isGroup ? 'groups' : 'layers';
-  patch(item, itemPatch);
-  try {
-    const url = `${await serverProperties.projectsUrl}/${currentProject.id}/${path}/${item.id}`;
-    await http.patch(url, itemPatch);
-  } catch (err) {
-    patch(item, backup);
-  }
-}
-
 function createImageFromBlob(image: Blob): Promise<string> {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -109,7 +94,7 @@ async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: st
     RULE: ruleName
   };
 
-  return http.get(`${await serverProperties.geoServerUrl}/wms`, { responseType: 'blob', params });
+  return http.get(await getWmsUrl(), { responseType: 'blob', params });
 }
 
 /**
@@ -120,7 +105,7 @@ async function getLegendGraphicByRuleName(complexLayerName: string, ruleName: st
 async function getStyleSld(complexStyleName: string): Promise<string> {
   const styleNameArr = complexStyleName.split(':');
   const styleName = styleNameArr.pop();
-  const geoServerUrl = await serverProperties.geoServerUrl;
+  const geoServerUrl = await getGeoServerUrl();
   const workspacesUrl = geoServerUrl + '/rest/workspaces/';
   const workspaceName = styleNameArr[0];
   const url: string = workspaceName
@@ -142,14 +127,14 @@ export async function updateLayer(
   patch: Partial<CrgLayer>,
   project: CrgProject = currentProject
 ): Promise<void> {
-  return await http.patch(`${await serverProperties.projectsUrl}/${project.id}/layers/${layerId}`, patch);
+  return await http.patch(await getProjectLayerUrl(project.id, layerId), patch);
 }
 
 export async function createLayersGroup(
   newGroup: NewCrgLayersGroup,
   project: CrgProject = currentProject
 ): Promise<CrgLayersGroup> {
-  return await http.post<CrgLayersGroup>(`${await serverProperties.projectsUrl}/${project.id}/groups/`, newGroup);
+  return await http.post<CrgLayersGroup>(await getProjectGroupsUrl(project.id), newGroup);
 }
 
 export async function updateLayersGroup(
@@ -157,9 +142,9 @@ export async function updateLayersGroup(
   patch: Partial<CrgLayersGroup>,
   project: CrgProject = currentProject
 ): Promise<void> {
-  return await http.patch(`${await serverProperties.projectsUrl}/${project.id}/groups/${groupId}`, patch);
+  return await http.patch(await getProjectGroupUrl(project.id, groupId), patch);
 }
 
 export async function deleteLayersGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
-  return await http.delete(`${await serverProperties.projectsUrl}/${project.id}/groups/${groupId}`);
+  return await http.delete(await getProjectGroupUrl(project.id, groupId));
 }

@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { allUsers } from '../../stores/AllUsers.store';
-import { serverProperties } from '../server-properties.service';
+import { getUsersUrl, getUserUrl } from '../server-urls.service';
 import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
@@ -67,25 +67,18 @@ class UsersService {
   }
 
   async getAll(): Promise<CrgUser[]> {
-    const url = await serverProperties.usersUrl;
     const params = { size: '10000' };
 
-    return (await http.get<PageableResponse<{ users: CrgUser[] }>>(url, { params }))._embedded.users;
+    return (await http.get<PageableResponse<{ users: CrgUser[] }>>(await getUsersUrl(), { params }))._embedded.users;
   }
 
   async create(userData: NewUserData) {
-    const url = await serverProperties.usersUrl;
-
-    await http.post(url, userData);
-
+    await http.post(await getUsersUrl(), userData);
     this.debouncedFetchUsersListStore();
   }
 
   async delete(user: CrgUser) {
-    const url = await serverProperties.usersUrl;
-
-    await http.delete(`${url}/${user.id}`);
-
+    await http.delete(await getUserUrl(user.id));
     this.debouncedFetchUsersListStore();
   }
 
@@ -108,9 +101,8 @@ class UsersService {
   }
 
   private async fetchingCurrent(): Promise<void> {
-    const url = (await serverProperties.usersUrl) + '/current';
     try {
-      currentUser.setOrgInfo(await http.get<OrgInfo>(url));
+      currentUser.setOrgInfo(await http.get<OrgInfo>(await getUserUrl('current')));
     } catch (e) {
       currentUser.setOrgInfo();
     }

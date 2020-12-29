@@ -5,12 +5,12 @@ import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { serverProperties } from '../server-properties.service';
 import { getFeatureProjection } from './projections.service';
 import { FeatureDescription } from '../crg/schema.service';
 import { WfsFeature, WfsGeometry } from './wfs-models';
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { usersService } from '../crg/users.service';
+import { getWfsUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { getEnvironment } from '../environment';
 import { services } from '../services';
@@ -33,15 +33,8 @@ export class TransformFeatureService {
     return this._instance || (this._instance = new this());
   }
 
-  private wfsUrl: string;
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
-
-  constructor() {
-    serverProperties.geoServerUrl.then(geoServerUrl => {
-      this.wfsUrl = geoServerUrl + '/wfs';
-    });
-  }
 
   async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
     await usersService.fetchCurrentUser();
@@ -63,7 +56,7 @@ export class TransformFeatureService {
         </Update>
       </Transaction>`;
 
-    return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
   async updateFeatures(
@@ -120,7 +113,7 @@ export class TransformFeatureService {
       .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
       .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
 
-    return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
   async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
@@ -150,7 +143,7 @@ export class TransformFeatureService {
 
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
 
-    return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
   async deleteFeatures(featureIds: string[], layerName: string) {
@@ -177,7 +170,7 @@ export class TransformFeatureService {
       .serializeToString(this.getNode(TransactionType.DELETE, featuresToDelete, options))
       .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '');
 
-    return http.post(this.wfsUrl, payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
   private getNode(type: TransactionType, features: Feature[], options: WriteTransactionOptions): Node {

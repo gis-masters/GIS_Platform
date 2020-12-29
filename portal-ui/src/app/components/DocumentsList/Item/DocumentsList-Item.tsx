@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 
 import { EditedField } from '../../../services/crg/schema.service';
 import { documentsService } from '../../../services/crg/documents.service';
-import { serverProperties } from '../../../services/server-properties.service';
+import { getBaseUrl } from '../../../services/server-urls.service';
 import { DocumentListItemData } from '../../EditFeatureField/Control/_type/EditFeatureField-Control_type_lookup';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
@@ -35,7 +35,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
   @observable private url = '';
 
   async componentDidMount() {
-    const baseUrl = await serverProperties.baseUrl;
+    const baseUrl = await getBaseUrl();
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 

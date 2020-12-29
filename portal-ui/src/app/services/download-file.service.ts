@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { serverProperties } from './server-properties.service';
+import { getExportUrl } from './server-urls.service';
 import { http } from './http.service';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { http } from './http.service';
 })
 export class DownloadFileService {
   async download(fileName: string): Promise<any> {
-    const exportUrl = await serverProperties.exportUrl;
+    const exportUrl = await getExportUrl();
 
     return http.get(exportUrl + '/' + fileName, { responseType: 'blob' });
   }

@@ -1,8 +1,8 @@
-import { serverProperties } from '../server-properties.service';
-import { CrgBaseMap, CrgProjectBaseMap } from './base-maps.models';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
-import { services } from '../services';
+import { CrgBaseMap, CrgProjectBaseMap } from './base-maps.models';
+import { getBasemapsByIdsUrl } from '../server-urls.service';
 import { PageableResponse } from '../models';
+import { services } from '../services';
 import { http } from '../http.service';
 
 /**
@@ -10,10 +10,8 @@ import { http } from '../http.service';
  */
 export async function fetchAllBaseMaps(baseMaps: CrgProjectBaseMap[]) {
   await services.provided;
-
-  const params = {'ids': baseMaps.map(value => String(value.baseMapId)).join(', ')};
-
-  const url = (await serverProperties.dataUrl) + '/basemaps/search/findByIdIn';
+  const params = { ids: baseMaps.map(value => String(value.baseMapId)).join(', ') };
+  const url = await getBasemapsByIdsUrl();
 
   try {
     const response = await http.get<PageableResponse<{ basemaps: CrgBaseMap[] }>>(url, { params });
