@@ -39,7 +39,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 
-    this.setUrl(`${baseUrl}${resourcePath}/${id}/download`);
+    this.setUrl(`${baseUrl}${resourcePath}/records/${id}/download`);
   }
 
   render() {
@@ -106,7 +106,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 
-    await documentsService.delete(`${resourcePath}/${id}`);
+    await documentsService.delete(`${resourcePath}/records/${id}`);
     this.props.deleteCallback(id);
     this.closeDeleteDialog();
   }

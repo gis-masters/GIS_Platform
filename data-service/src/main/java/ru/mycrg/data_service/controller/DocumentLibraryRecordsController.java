@@ -30,25 +30,24 @@ import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @RestController
-public class ObjectsController {
+public class DocumentLibraryRecordsController {
 
-    public static final Logger log = LoggerFactory.getLogger(ObjectsController.class);
+    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
     private final ObjectService objectService;
     private final FileStorageService fileStorageService;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public ObjectsController(ObjectService objectService,
-                             FileStorageService fileStorageService) {
+    public DocumentLibraryRecordsController(ObjectService objectService,
+                                            FileStorageService fileStorageService) {
         this.objectService = objectService;
         this.fileStorageService = fileStorageService;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{dataSetId}/tables/{tableId}")
-    public Object createObject(@PathVariable String dataSetId,
-                               @PathVariable String tableId,
+    @PostMapping("/document-libraries/{docLibId}")
+    public Object createObject(@PathVariable String docLibId,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                @RequestParam(value = "body", required = false) String jsonBody,
                                Authentication authentication) {
@@ -57,8 +56,8 @@ public class ObjectsController {
 
             Map<String, Object> body = deserializeBody(jsonBody);
 
-            ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
-                                                                    new ResourceIdentifier(dataSetId, SCHEMA));
+            ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
+                                                                    new ResourceIdentifier("data", SCHEMA));
 
             if (files.length > 0) {
                 for (MultipartFile file: files) {
@@ -84,43 +83,40 @@ public class ObjectsController {
         }
     }
 
-    @GetMapping("/datasets/{dataSetId}/tables/{tableId}/{id}")
-    public ResponseEntity<Map<String, Object>> getById(@PathVariable String dataSetId,
-                                                       @PathVariable String tableId,
-                                                       @PathVariable UUID id,
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}")
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
+                                                       @PathVariable UUID recId,
                                                        Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
-                                                                new ResourceIdentifier(dataSetId, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
+                                                                new ResourceIdentifier("data", SCHEMA));
 
-        Map<String, Object> entity = objectService.getById(rIdentifier, id, authentication);
+        Map<String, Object> entity = objectService.getById(rIdentifier, recId, authentication);
 
         return ResponseEntity.ok(entity);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/datasets/{dataSetId}/tables/{tableId}/{id}")
-    public ResponseEntity<Object> delete(@PathVariable String dataSetId,
-                                         @PathVariable String tableId,
-                                         @PathVariable UUID id,
+    @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
+    public ResponseEntity<Object> delete(@PathVariable String docLibId,
+                                         @PathVariable UUID recId,
                                          Authentication authentication) {
-        fileStorageService.removeFile(id.toString());
+        fileStorageService.removeFile(recId.toString());
 
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
-                                                                new ResourceIdentifier(dataSetId, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
+                                                                new ResourceIdentifier("data", SCHEMA));
 
-        objectService.deleteObject(rIdentifier, id, authentication);
+        objectService.deleteObject(rIdentifier, recId, authentication);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/datasets/{dataSetId}/tables/{tableId}/{id}/download")
-    public ResponseEntity<Resource> downloadBinary(@PathVariable String dataSetId,
-                                                   @PathVariable String tableId,
-                                                   @PathVariable UUID id,
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}/download")
+    public ResponseEntity<Resource> downloadBinary(@PathVariable String docLibId,
+                                                   @PathVariable UUID recId,
                                                    HttpServletRequest request,
                                                    Authentication authentication) {
-        Resource resource = fileStorageService.loadFileAsResource(id.toString());
+        Resource resource = fileStorageService.loadFileAsResource(recId.toString());
 
         // Try to determine file's content type
         String contentType = null;
