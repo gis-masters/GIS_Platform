@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 
-import { WfsGeometry } from '../services/geoserver/wfs-models';
+import { WfsGeometry } from '../services/geoserver/wfs.models';
 import { isGeometryValid } from '../services/geoserver/wfs.service';
 import { CrgProjection, transformGeometry } from '../services/geoserver/projections.service';
 

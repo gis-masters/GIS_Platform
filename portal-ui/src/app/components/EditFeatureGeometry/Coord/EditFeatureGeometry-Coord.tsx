@@ -6,7 +6,7 @@ import MapBrowserEvent from 'ol/MapBrowserEvent';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';

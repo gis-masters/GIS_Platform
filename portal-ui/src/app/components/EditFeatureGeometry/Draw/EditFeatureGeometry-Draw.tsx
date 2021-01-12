@@ -9,7 +9,7 @@ import { Brush, BrushOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { transform, olProjection } from '../../../services/geoserver/projections.service';
 

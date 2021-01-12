@@ -7,13 +7,12 @@ import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
 import { isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
 import { PageableResponse, Process } from '../models';
-import { usersService } from './users.service';
 import { wsService } from '../ws.service';
 import { services } from '../services';
 import { http } from '../http.service';
 import {
+  getApiImportUrl,
   getProjectGroupsUrl,
-  getProjectImportUrl,
   getProjectLayersUrl,
   getProjectsUrl,
   getProjectUrl,
@@ -150,7 +149,7 @@ class ProjectsService {
    * Организация, а соответственно и название БД есть на сервере.
    */
   async doWorkImport(importTasks: TaskImport[], projectId: number, targetSchema: string): Promise<Process> {
-    const url = await getProjectImportUrl(projectId);
+    const url = await getApiImportUrl(projectId);
     const payload = {
       wsUiId: wsService.getId(),
       targetSchema,

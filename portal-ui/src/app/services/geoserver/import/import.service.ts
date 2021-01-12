@@ -1,6 +1,11 @@
 import { getEnvironment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
-import { getGeoserverImportsUrl, getGeoServerUrl } from '../../server-urls.service';
+import {
+  getGeoserverImportsUrl,
+  getGeoserverImportTaskLayerUrl,
+  getGeoserverImportTaskUrl,
+  getGeoserverImportUrl
+} from '../../server-urls.service';
 import {
   ImportLayer,
   ImportTaskResponse,
@@ -36,19 +41,19 @@ export async function fetchCurrentImport(importId: string) {
 }
 
 export async function getById(id: string) {
-  const url = `${await getGeoserverImportsUrl()}/${id}`;
+  const url = await getGeoserverImportUrl(id);
+
   return (await http.get<InputStartResponseDto>(url)).import;
 }
 
 export async function checkImportStatus() {
-  const { href } = currentImport.scratch;
-  const { import: scratch } = await http.get<InputStartResponseDto>(href);
+  const { import: scratch } = await http.get<InputStartResponseDto>(await getGeoserverImportUrl(currentImport.id));
   currentImport.fit({ scratch });
   fillTasks();
 }
 
 async function getImportLayer(task: ImportTaskShort): Promise<ImportLayer> {
-  return http.get<ImportLayer>(task.href + '/layer');
+  return http.get<ImportLayer>(await getGeoserverImportTaskLayerUrl(currentImport.id, task.id));
 }
 
 export async function getAllImportLayers(): Promise<ImportLayer[]> {
@@ -89,7 +94,7 @@ export async function initScratchImport(file: File): Promise<ScratchImport> {
 
     currentImport.fit({ scratch: scratchImport });
 
-    await uploadTasks(scratchImport.href, file);
+    await uploadTasks(await getGeoserverImportUrl(scratchImport.id), file);
 
     return scratchImport;
   } catch (err) {
@@ -150,12 +155,14 @@ export async function updateProgress() {
 }
 
 async function getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
-  const { task } = await http.get<{ task: ImportTaskFull }>(shortTask.href);
+  const { task } = await http.get<{ task: ImportTaskFull }>(
+    await getGeoserverImportTaskUrl(currentImport.id, shortTask.id)
+  );
 
   return task;
 }
 
 export async function deleteTask(task: ImportTaskShort) {
-  await http.delete(task.href);
+  await http.delete(await getGeoserverImportTaskUrl(currentImport.id, task.id));
   await checkImportStatus();
 }

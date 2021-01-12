@@ -5,7 +5,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayersGroup, CrgLayer, CrgLayerType, TreeItemPayload } from '../../services/crg/projects.models';
-import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes } from '../../services/geoserver/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
 

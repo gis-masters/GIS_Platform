@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
 @Component({

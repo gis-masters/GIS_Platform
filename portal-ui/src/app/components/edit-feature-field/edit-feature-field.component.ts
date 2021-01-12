@@ -4,7 +4,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 
 import { EditedField, FieldType } from '../../services/crg/schema.service';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { CrgLayer } from '../../services/crg/projects.models';
 
 @Component({

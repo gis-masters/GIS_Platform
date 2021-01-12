@@ -4,7 +4,7 @@ import GeometryType from 'ol/geom/GeometryType';
 import { MultiLineString, MultiPolygon, Point } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
 
-import { WfsFeature, WfsGeometry } from '../geoserver/wfs-models';
+import { WfsFeature, WfsGeometry } from '../geoserver/wfs.models';
 import { Toast } from '../../components/Toast/Toast';
 
 export class MapperUtil {

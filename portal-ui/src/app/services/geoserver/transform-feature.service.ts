@@ -7,7 +7,7 @@ import { Coordinate } from 'ol/coordinate';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { getFeatureProjection } from './projections.service';
 import { FeatureDescription } from '../crg/schema.service';
-import { WfsFeature, WfsGeometry } from './wfs-models';
+import { WfsFeature, WfsGeometry } from './wfs.models';
 import { MapperUtil } from '../open-layer/MapperUtil';
 import { usersService } from '../crg/users.service';
 import { getWfsUrl } from '../server-urls.service';

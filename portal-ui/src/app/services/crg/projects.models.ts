@@ -1,4 +1,4 @@
-import { SupportedGeometryType } from '../geoserver/wfs-models';
+import { SupportedGeometryType } from '../geoserver/wfs.models';
 import { CrgProjectBaseMap } from './base-maps.models';
 import { Role } from './permissions.models';
 

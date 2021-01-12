@@ -2,9 +2,7 @@ import React from 'react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import {
-  WfsMultiLineStringGeometry
-} from '../../../../services/geoserver/wfs-models';
+import { WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import {

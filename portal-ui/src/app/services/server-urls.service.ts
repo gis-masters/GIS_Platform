@@ -56,6 +56,22 @@ export async function getGeoserverImportsUrl(): Promise<string> {
   return (await getGeoServerUrl()) + '/rest/imports';
 }
 
+export async function getGeoserverImportUrl(importId: number | string): Promise<string> {
+  return `${await getGeoserverImportsUrl()}/${importId}`;
+}
+
+export async function getGeoserverImportTasksUrl(importId: number | string): Promise<string> {
+  return `${await getGeoserverImportUrl(importId)}/tasks`;
+}
+
+export async function getGeoserverImportTaskUrl(importId: number | string, taskId: number): Promise<string> {
+  return `${await getGeoserverImportTasksUrl(importId)}/${taskId}`;
+}
+
+export async function getGeoserverImportTaskLayerUrl(importId: number | string, taskId: number): Promise<string> {
+  return `${await getGeoserverImportTaskUrl(importId, taskId)}/layer`;
+}
+
 export async function getAuthUrl(): Promise<string> {
   return (await getBaseUrl()) + '/oauth/token';
 }
@@ -138,6 +154,10 @@ export async function getProjectPermissionUrl(projectId: number, permissionId: n
 
 async function getDataUrl(): Promise<string> {
   return (await getBaseUrl()) + '/api/data';
+}
+
+export async function getApiImportUrl(projectId: number): Promise<string> {
+  return `${await getBaseUrl()}/api/${projectId}/import`;
 }
 
 export async function getDatasetsUrl(): Promise<string> {

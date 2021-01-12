@@ -7,10 +7,10 @@ import { ArrowForward } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { schemaService } from '../../services/crg/schema.service';
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs-models';
+import { WFS_FEATURE_ID_DELIMITER } from '../../services/geoserver/wfs.models';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 

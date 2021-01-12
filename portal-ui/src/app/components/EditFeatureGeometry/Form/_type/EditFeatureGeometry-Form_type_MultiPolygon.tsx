@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import GeometryType from 'ol/geom/GeometryType';
 import { withBemMod } from '@bem-react/core';
 
-import { WfsMultiPolygonGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs-models';
+import { WfsMultiPolygonGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs.models';
 import { env } from '../../../../stores/Env.store';
 
 import {

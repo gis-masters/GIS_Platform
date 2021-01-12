@@ -6,7 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';

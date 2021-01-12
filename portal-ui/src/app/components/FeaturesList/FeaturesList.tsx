@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../stores/Sidebars.store';
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';

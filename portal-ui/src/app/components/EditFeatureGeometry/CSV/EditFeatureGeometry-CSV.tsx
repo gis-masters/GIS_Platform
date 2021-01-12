@@ -8,7 +8,7 @@ import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 

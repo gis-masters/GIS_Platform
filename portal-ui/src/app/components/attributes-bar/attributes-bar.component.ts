@@ -25,7 +25,7 @@ import { communicationService } from '../../services/communication.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/models';
-import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs-models';
+import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.models';
 import { isFeaturesUpdateAllowed, isFeaturesDeleteAllowed } from '../../services/crg/permissions.service';
 import { CopyFeaturesDialogComponent } from '../dialogs/copy-features-dialog/copy-features-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';

@@ -2,7 +2,7 @@ import { observable, action, reaction } from 'mobx';
 
 import { route } from './Route.store';
 import { CrgLayer } from '../services/crg/projects.models';
-import { WfsFeature } from '../services/geoserver/wfs-models';
+import { WfsFeature } from '../services/geoserver/wfs.models';
 import { EditFeatureMode, Properties } from '../components/edit-feature/edit-feature.component';
 
 export interface EditFeaturesData {

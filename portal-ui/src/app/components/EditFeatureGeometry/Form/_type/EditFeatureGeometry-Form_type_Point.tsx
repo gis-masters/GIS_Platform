@@ -3,7 +3,7 @@ import { withBemMod } from '@bem-react/core';
 import GeometryType from 'ol/geom/GeometryType';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsPointGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs-models';
+import { WfsPointGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';

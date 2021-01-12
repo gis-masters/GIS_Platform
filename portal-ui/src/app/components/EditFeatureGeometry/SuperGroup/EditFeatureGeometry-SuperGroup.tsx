@@ -4,7 +4,7 @@ import { action } from 'mobx';
 import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { env } from '../../../stores/Env.store';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 

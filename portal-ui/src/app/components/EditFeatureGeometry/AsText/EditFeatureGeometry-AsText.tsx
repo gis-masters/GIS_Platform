@@ -8,7 +8,7 @@ import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
-import { CoordinateEdited } from '../../../services/geoserver/wfs-models';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 
 import '!style-loader!css-loader!sass-loader!../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
 import '!style-loader!css-loader!sass-loader!../Text/EditFeatureGeometry-Text.scss';

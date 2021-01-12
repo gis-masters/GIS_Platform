@@ -46,7 +46,7 @@ export UI_SERVER_PORT=${UI_SERVER_PORT:-}
 export UI_SERVER_PATH=${UI_SERVER_PATH:-}
 export UI_WS_PORT=${UI_WS_PORT:-}
 export UI_WS_PATH=${UI_WS_PATH:-}
-export UI_SWN=${UI_SWN:-scratch}
+export UI_SWN=${UI_SWN:-scratch_database}
 
 
 echo Init migrations

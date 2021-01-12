@@ -11,7 +11,7 @@ import {
   WfsPointGeometry,
   WfsMultiLineStringGeometry,
   WfsMultiPolygonGeometry
-} from './wfs-models';
+} from './wfs.models';
 import { getFeatureLayer } from './layers.service';
 import { normalizeCoordinates, isCoordinateValid } from './wfs.service';
 

@@ -10,7 +10,7 @@ import {
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 
 @Component({

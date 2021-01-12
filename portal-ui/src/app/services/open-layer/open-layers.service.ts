@@ -33,7 +33,7 @@ import {
   transform,
   transformGeometry
 } from '../geoserver/projections.service';
-import { WfsFeature } from '../geoserver/wfs-models';
+import { WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { services } from '../services';

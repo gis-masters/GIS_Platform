@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { SupportedGeometryType } from '../../../services/geoserver/wfs-models';
+import { SupportedGeometryType } from '../../../services/geoserver/wfs.models';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Icon.scss';
 

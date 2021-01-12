@@ -1,7 +1,7 @@
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayersGroup, Rule } from '../crg/projects.models';
-import { WfsFeature } from '../geoserver/wfs-models';
+import { WfsFeature } from './wfs.models';
 import { patch } from '../util/patch';
 import { http } from '../http.service';
 import {

@@ -4,7 +4,7 @@ import { debounce, DebouncedFunc } from 'lodash';
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { ImportLayerItem } from '../geoserver/import/models';
-import { CoordinateEdited, SupportedGeometryType, WfsFeature } from '../geoserver/wfs-models';
+import { CoordinateEdited, SupportedGeometryType, WfsFeature } from '../geoserver/wfs.models';
 import { getEmptyGeometry } from '../geoserver/wfs.service';
 import { http } from '../http.service';
 import { getSchemaUrl } from '../server-urls.service';

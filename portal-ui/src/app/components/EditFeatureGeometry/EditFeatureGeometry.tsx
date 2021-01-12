@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { supportedGeometryTypes } from '../../services/geoserver/wfs-models';
+import { supportedGeometryTypes } from '../../services/geoserver/wfs.models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';

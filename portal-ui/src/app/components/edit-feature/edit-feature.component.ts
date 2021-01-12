@@ -11,7 +11,7 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { BatchModel } from '../../services/crg/batch-model';
 import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { communicationService } from '../../services/communication.service';
-import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs-models';
+import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { schemaService, PropertySchema } from '../../services/crg/schema.service';

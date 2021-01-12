@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsFeature } from '../../services/geoserver/wfs-models';
+import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 
 const cnZoomToFeature = cn('ZoomToFeature');
