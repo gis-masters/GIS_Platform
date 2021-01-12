@@ -15,7 +15,9 @@ import ru.mycrg.gis_service.repository.ProjectRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.CREATE_ORGANIZATION;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.REMOVE_ORGANIZATION;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
 import static ru.mycrg.gis_service.service.ProjectService.DEFAULT_PROJECT_NAME;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 import static ru.mycrg.mq_queue_contract.CrgConstants.SCRATCH_DB_PREFIX;
@@ -34,16 +36,16 @@ public class OrganizationService {
 
         VariableMap variables = Variables
                 .createVariables()
-                .putValue(CREATE_DTO_VAR_NAME, dto.toJsonString())
-                .putValue(TOKEN_VAR_NAME, details.getTokenValue());
+                .putValue(CREATE_DTO_VAR_NAME.getValue(), dto.toJsonString())
+                .putValue(TOKEN_VAR_NAME.getValue(), details.getTokenValue());
 
         return bpmnRuntimeService.startProcessInstanceByKey(
-                CREATE_ORGANIZATION_PROCESS_ID,
+                CREATE_ORGANIZATION.getValue(),
                 String.valueOf(dto.getOrgId()),
                 variables);
     }
 
-    public void delete(Long id, List<String> users, Authentication authentication) {
+    public ProcessInstance delete(Long id, List<String> users, Authentication authentication) {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
 
         String dbName = DEFAULT_DB_NAME + id;
@@ -58,13 +60,13 @@ public class OrganizationService {
 
         VariableMap variables = Variables
                 .createVariables()
-                .putValue(ORG_ID_VAR_NAME, id)
-                .putValue(WORKSPACES_VAR_NAME, workspaces)
-                .putValue(USERS_VAR_NAME, users)
-                .putValue(TOKEN_VAR_NAME, details.getTokenValue());
+                .putValue(ORG_ID_VAR_NAME.getValue(), id)
+                .putValue(WORKSPACES_VAR_NAME.getValue(), workspaces)
+                .putValue(USERS_VAR_NAME.getValue(), users)
+                .putValue(TOKEN_VAR_NAME.getValue(), details.getTokenValue());
 
-        bpmnRuntimeService.startProcessInstanceByKey(
-                REMOVE_ORGANIZATION_PROCESS_ID,
+        return bpmnRuntimeService.startProcessInstanceByKey(
+                REMOVE_ORGANIZATION.getValue(),
                 String.valueOf(id),
                 variables);
     }

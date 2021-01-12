@@ -7,7 +7,7 @@ import ru.mycrg.geoserver_client.services.rule.RulesService;
 
 import java.util.List;
 
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 @Service("deleteRules")
@@ -15,9 +15,9 @@ public class DeleteRules implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
-        final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
-        List<String> workspaces = (List<String>) execution.getVariable(WORKSPACES_VAR_NAME);
+        final Object orgId = execution.getVariable(ORG_ID_VAR_NAME.getValue());
+        final String accessToken = execution.getVariable(TOKEN_VAR_NAME.getValue()).toString();
+        List<String> workspaces = (List<String>) execution.getVariable(WORKSPACES_VAR_NAME.getValue());
 
         final RulesService rulesService = new RulesService(accessToken);
         for (String workspaceName: workspaces) {

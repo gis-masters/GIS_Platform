@@ -9,8 +9,8 @@ import ru.mycrg.geoserver_client.services.user_role.UsersAndRolesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.CREATE_DTO_VAR_NAME;
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.TOKEN_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.CREATE_DTO_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
 import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 @Service("createUserAndRole")
@@ -21,8 +21,8 @@ public class CreateUserAndRole implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
-        final String jsonString = (String) execution.getVariable(CREATE_DTO_VAR_NAME);
+        final String accessToken = execution.getVariable(TOKEN_VAR_NAME.getValue()).toString();
+        final String jsonString = (String) execution.getVariable(CREATE_DTO_VAR_NAME.getValue());
         OrgCreateDto dto = objectMapper.readValue(jsonString, OrgCreateDto.class);
 
         UsersAndRolesService usersAndRolesService = new UsersAndRolesService(accessToken);

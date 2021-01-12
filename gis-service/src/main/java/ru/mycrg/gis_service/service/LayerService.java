@@ -16,7 +16,6 @@ import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.LayerRepository;
-import ru.mycrg.gis_service.service.geoserver.GeoserverLayersHandler;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -36,18 +35,15 @@ public class LayerService {
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
-    private final GeoserverLayersHandler geoserverLayersHandler;
 
     public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
-                        GeoserverLayersHandler geoserverLayersHandler,
                         ProjectService projectService) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
-        this.geoserverLayersHandler = geoserverLayersHandler;
     }
 
     public List<LayerProjection> findAll(long projectId, Authentication authentication) {
@@ -92,8 +88,6 @@ public class LayerService {
 
     public void delete(Layer layer, Authentication authentication) {
         layerRepository.deleteLayerById(layer.getId());
-
-        geoserverLayersHandler.deleteLayer(layer, authentication);
     }
 
     public List<RelatedLayersModel> findRelatedLayers(String field, String value,

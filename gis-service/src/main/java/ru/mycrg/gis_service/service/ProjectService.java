@@ -19,7 +19,6 @@ import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.security.UserDetails;
-import ru.mycrg.gis_service.service.geoserver.GeoserverLayersHandler;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -37,16 +36,13 @@ public class ProjectService {
 
     private final ProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
-    private final GeoserverLayersHandler geoserverLayersHandler;
 
     public static final String DEFAULT_PROJECT_NAME = "workspace";
 
     public ProjectService(ProjectionFactory projectionFactory,
-                          GeoserverLayersHandler geoserverLayersHandler,
                           ProjectRepository projectRepository) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
-        this.geoserverLayersHandler = geoserverLayersHandler;
     }
 
     public Page<ProjectProjection> getPaged(Pageable pageable, Authentication authentication) {
@@ -171,9 +167,6 @@ public class ProjectService {
         Project project = projectRepository
                 .findByIdAndOrganizationId(projectId, orgId)
                 .orElseThrow(() -> new NotFoundException(projectId));
-
-        project.getLayers()
-               .forEach(layer -> geoserverLayersHandler.deleteLayer(layer, authentication));
 
         projectRepository.delete(project);
     }

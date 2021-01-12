@@ -12,8 +12,8 @@ import static ru.mycrg.geoserver_client.services.rule.RulesUtil.buildRule;
 import static ru.mycrg.geoserver_client.services.rule.ServiceKeys.WFS_RULE_KEY;
 import static ru.mycrg.geoserver_client.services.rule.ServiceKeys.WMS_RULE_KEY;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.CREATE_DTO_VAR_NAME;
-import static ru.mycrg.gis_service.bpmn.IJavaDelegateProperties.TOKEN_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.CREATE_DTO_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
 import static ru.mycrg.mq_queue_contract.CrgConstants.*;
 
 @Log4j2
@@ -22,8 +22,8 @@ public class CreateAccessRules implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final String accessToken = execution.getVariable(TOKEN_VAR_NAME).toString();
-        final String jsonString = (String) execution.getVariable(CREATE_DTO_VAR_NAME);
+        final String accessToken = execution.getVariable(TOKEN_VAR_NAME.getValue()).toString();
+        final String jsonString = (String) execution.getVariable(CREATE_DTO_VAR_NAME.getValue());
         OrgCreateDto dto = objectMapper.readValue(jsonString, OrgCreateDto.class);
 
         RulesService rulesService = new RulesService(accessToken);
