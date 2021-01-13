@@ -173,13 +173,18 @@ class OpenLayersService {
       ]
     });
 
-    this._map.on('singleclick', event => {
-      if (event.coordinate) {
+    this._map.on('singleclick', e => {
+      if (this.pickHandler) {
+        this.pickHandler(e);
+        delete this.pickHandler;
+
+        return;
+      }
+      if (e.coordinate) {
         if (!this.isModifying && !this.draftSourceDraw) {
-          this.mapClick.emit(event.coordinate);
+          this.mapClick.emit(e.coordinate);
         }
       } else {
-        console.warn('No coordinate', event.coordinate);
         this.mapClick.emit([0, 0]);
       }
     });
@@ -485,19 +490,11 @@ class OpenLayersService {
   }
 
   pickPoint(handler: (e: MapBrowserEvent) => void) {
-    this.pickHandler = e => {
-      handler(e);
-      this.pickingOff();
-    };
-
-    this._map.once('singleclick', this.pickHandler);
+    this.pickHandler = handler;
   }
 
   pickingOff() {
-    if (this.pickHandler) {
-      this._map.un('singleclick', this.pickHandler);
-      delete this.pickHandler;
-    }
+    delete this.pickHandler;
   }
 
   positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {

@@ -18,6 +18,7 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 interface EditFeatureGeometryAsTextProps {
   coordinates: CoordinateEdited[];
   mustBeClosed: boolean;
+  onChange?: (coordinates: CoordinateEdited[]) => void;
 }
 
 @observer
@@ -89,7 +90,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
 
   @action.bound
   private save() {
-    const { coordinates, mustBeClosed } = this.props;
+    const { coordinates, mustBeClosed, onChange } = this.props;
     const newCoordinates = this.text
       .replace(/,/g, '.')
       .split('\n')
@@ -102,6 +103,9 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     }
 
     coordinates.splice(0, coordinates.length, ...newCoordinates);
+    if (onChange) {
+      onChange(coordinates);
+    }
     this.closeDialog();
   }
 }

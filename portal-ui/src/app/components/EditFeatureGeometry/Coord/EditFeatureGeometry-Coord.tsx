@@ -1,16 +1,14 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
+import { Coordinate } from 'ol/coordinate';
 import TextField from '@material-ui/core/TextField';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
-import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { olProjection, transform } from '../../../services/geoserver/projections.service';
 
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 import { EditFeatureGeometryCoordPick } from '../CoordPick/EditFeatureGeometry-CoordPick';
@@ -30,26 +28,19 @@ interface EditFeatureGeometryCoordProps {
   canBeDeleted?: boolean;
   disabled?: boolean;
   index?: number;
+  active?: boolean;
 }
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  @observable private picking = false;
-  private pickRef = createRef<HTMLButtonElement>();
-
-  componentWillUnmount() {
-    this.offPicking();
-  }
+  @observable active = false;
 
   render() {
-    const { val, withControls, index, canBeDeleted, disabled } = this.props;
+    const { val, withControls, index, canBeDeleted, disabled, store, active } = this.props;
 
-    // росреестра своё понимание X и Y
+    // у росреестра своё понимание X и Y
     return (
-      <div
-        className={cnEditFeatureGeometry('Coord', { withControls, active: this.picking })}
-        onKeyDown={this.keyHandler}
-      >
+      <div className={cnEditFeatureGeometry('Coord', { withControls, active: active || this.active })}>
         {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{index + 1}</div> : null}
 
         <TextField
@@ -71,11 +62,12 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         />
 
         <EditFeatureGeometryCoordPick
-          onClick={this.pickerClickHandler}
-          onBlur={this.pickerBlurHandler}
-          active={this.picking}
-          btnRef={this.pickRef}
+          onPick={this.pickHandler}
+          store={store}
           disabled={disabled}
+          onPickStart={this.enableActive}
+          onPickEnd={this.disableActive}
+          size='small'
         />
 
         {withControls ? (
@@ -99,23 +91,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     onChange(val, index);
   }
 
-  @action
-  private pick() {
-    this.picking = true;
-    openLayersService.pickPoint(this.pickHandler);
-    document.body.classList.add('global-crosshair-cursor');
-  }
-
-  @action
-  private offPicking() {
-    this.picking = false;
-    document.body.classList.remove('global-crosshair-cursor');
-    if (this.pickRef.current) {
-      this.pickRef.current.blur();
-    }
-    openLayersService.pickingOff();
-  }
-
   @boundMethod
   private deleteHandler() {
     const { onDelete, index } = this.props;
@@ -124,32 +99,19 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     }
   }
 
-  @boundMethod
-  private pickerClickHandler() {
-    if (this.picking) {
-      this.offPicking();
-    } else {
-      this.pick();
-    }
-  }
-
-  @boundMethod
-  private pickerBlurHandler() {
-    this.offPicking();
+  @action.bound
+  private pickHandler(val: Coordinate) {
+    const { onChange, index } = this.props;
+    onChange(val, index);
   }
 
   @action.bound
-  private pickHandler(e: MapBrowserEvent) {
-    const { val, onChange, index } = this.props;
-    val.splice(0, 2, ...transform(olProjection, this.props.store.currentProjection, e.coordinate));
-    onChange(val, index);
-    this.offPicking();
+  private enableActive() {
+    this.active = true;
   }
 
-  @boundMethod
-  private keyHandler(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Escape') {
-      this.offPicking();
-    }
+  @action.bound
+  private disableActive() {
+    this.active = false;
   }
 }
