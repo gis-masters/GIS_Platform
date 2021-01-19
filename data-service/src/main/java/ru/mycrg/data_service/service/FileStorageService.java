@@ -7,7 +7,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.DataServiceInternalException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 
 import java.io.IOException;
@@ -69,7 +68,7 @@ public class FileStorageService {
         } catch (NoSuchFileException e) {
             throw new NotFoundException("File not found: " + fileName, e);
         } catch (IOException e) {
-            throw new DataServiceInternalException("Cant delete file: " + fileName, e);
+            throw new DataServiceException("Cant delete file: " + fileName, e);
         }
     }
 }

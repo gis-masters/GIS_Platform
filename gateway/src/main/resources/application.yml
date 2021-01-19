@@ -21,6 +21,7 @@ zuul:
   sensitive-headers: Cookie,Set-Cookie
   routes:
 
+    # AUTH SERVICE
     crg-auth-service-groups:
       path: /groups/**
       url: http://auth-service:9000/groups/
@@ -47,30 +48,9 @@ zuul:
       path: /api/data/**
       url: http://crg-data-service:8084/
 
-    # API SERVICE
-    api-common:
-      path: /api/**
-      url: http://geo-api:8088/api/
-
-    gis-processes:
-      path: /processes/**
-      url: http://geo-api:8088/processes/
-
-    gis-schema:
-      path: /schema/**
-      url: http://geo-api:8088/schema/
-
-    gis-export:
-      path: /export/**
-      url: http://geo-api:8088/export/
-
-    gis-import:
-      path: /import/**
-      url: http://geo-api:8088/import/
-
     gis-ws:
       path: /crg-ws-endpoint/**
-      url: http://geo-api:8088/crg-ws-endpoint/
+      url: http://crg-data-service:8084/crg-ws-endpoint/
 
     # Geoserver
     geoserver:

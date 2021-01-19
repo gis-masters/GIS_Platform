@@ -9,24 +9,26 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
     private String error;
     private ProcessStatus status;
 
-    public BaseMqProcessResponse() {}
+    public BaseMqProcessResponse() {
+        // Framework required
+    }
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest) {
-        super(mqRequest.getId(), mqRequest.getType());
+        super(mqRequest);
     }
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload) {
-        super(mqRequest.getId(), mqRequest.getType(), payload);
+        super(mqRequest, payload);
     }
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload, ProcessStatus status) {
-        super(mqRequest.getId(), mqRequest.getType(), payload);
+        super(mqRequest, payload);
 
         this.status = status;
     }
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, ProcessStatus status, String error) {
-        super(mqRequest.getId(), mqRequest.getType());
+        super(mqRequest);
 
         this.status = status;
         this.error = error;
@@ -34,7 +36,7 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
 
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, ProcessStatus status, String description,
                                  int progress) {
-        super(mqRequest.getId(), mqRequest.getType());
+        super(mqRequest);
 
         this.status = status;
         this.description = description;
@@ -44,7 +46,7 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload, ProcessStatus status,
                                  String description,
                                  int progress) {
-        super(mqRequest.getId(), mqRequest.getType(), payload);
+        super(mqRequest, payload);
 
         this.status = status;
         this.description = description;
@@ -54,7 +56,7 @@ public class BaseMqProcessResponse extends BaseMqProcessRequest {
     public BaseMqProcessResponse(BaseMqProcessRequest mqRequest, Object payload, ProcessStatus status,
                                  String description,
                                  String error) {
-        super(mqRequest.getId(), mqRequest.getType(), payload);
+        super(mqRequest, payload);
 
         this.status = status;
         this.description = description;

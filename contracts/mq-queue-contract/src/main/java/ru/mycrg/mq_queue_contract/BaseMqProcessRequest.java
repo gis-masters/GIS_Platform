@@ -5,24 +5,32 @@ import ru.mycrg.mq_queue_contract.enums.ProcessType;
 public class BaseMqProcessRequest {
 
     private Long id;
+    private String dbName;
     private ProcessType type;
     private Object payload;
 
     public BaseMqProcessRequest() {
+        // Framework required
     }
 
-    public BaseMqProcessRequest(Long id) {
-        this.id = id;
+    public BaseMqProcessRequest(BaseMqProcessRequest request) {
+        this.id = request.getId();
+        this.dbName = request.getDbName();
+        this.type = request.getType();
+        this.payload = request.getPayload();
     }
 
-    public BaseMqProcessRequest(Long id, ProcessType type) {
+    public BaseMqProcessRequest(String dbName, Long id, ProcessType type, Object payload) {
         this.id = id;
+        this.dbName = dbName;
         this.type = type;
+        this.payload = payload;
     }
 
-    public BaseMqProcessRequest(Long id, ProcessType type, Object payload) {
-        this.id = id;
-        this.type = type;
+    public BaseMqProcessRequest(BaseMqProcessRequest request, Object payload) {
+        this.id = request.getId();
+        this.dbName = request.getDbName();
+        this.type = request.getType();
         this.payload = payload;
     }
 
@@ -48,5 +56,9 @@ public class BaseMqProcessRequest {
 
     public void setPayload(Object payload) {
         this.payload = payload;
+    }
+
+    public String getDbName() {
+        return dbName;
     }
 }

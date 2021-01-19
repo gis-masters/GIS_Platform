@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service_contract.IOrganizationEvent;
 import ru.mycrg.auth_service_contract.OrganizationDependencyProvisionFailedEvent;
-import ru.mycrg.integration_service.domain.IRequestHandler;
+import ru.mycrg.integration_service.domain.IOrganizationRequestHandler;
 import ru.mycrg.integration_service.domain.RequestHandlerFactory;
 
 /**
- * Данный диспетчер находит нужный обработчик запроса, имплементирующий {@link IRequestHandler} <p>
+ * Данный диспетчер находит нужный обработчик запроса, имплементирующий {@link IOrganizationRequestHandler} <p>
  * Отправляет ответ об ошибке в случае если обработчик не найден.
  */
 @Service
@@ -37,5 +37,4 @@ public class EventDispatcher {
             messageBusSender.sendOrgEvent(new OrganizationDependencyProvisionFailedEvent(mqEvent));
         }
     }
-
 }

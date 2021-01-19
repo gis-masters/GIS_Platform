@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service;
 
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -18,10 +19,11 @@ import java.util.Set;
 
 import static ru.mycrg.data_service.mappers.BaseMapMapper.baseMapMapper;
 
-@Log4j2
 @Service
 @RepositoryEventHandler
 public class BaseMapsService {
+
+    public static final Logger log = LoggerFactory.getLogger(BaseMapsService.class);
 
     private final Validator validator;
 

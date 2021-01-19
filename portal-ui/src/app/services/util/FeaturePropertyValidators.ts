@@ -12,7 +12,8 @@ export enum ValueType {
   GEOMETRY = 'GEOMETRY',
   URL = 'URL',
   DATETIME = 'DATETIME',
-  LOOKUP = 'LOOKUP'
+  LOOKUP = 'LOOKUP',
+  UUID = 'UUID'
 }
 
 export interface ValidationError {
@@ -185,7 +186,8 @@ export class FeaturePropertyValidators {
 
     const decimal = value.toString().replace(',', '.').split('.')[1];
     if (decimal && decimal.length > propertySchema.fractionDigits) {
-      errors['totalDigits'] = 'Превышена допустимая длинна дробной части числа. Допустимо: ' + propertySchema.fractionDigits + ' символов';
+      errors['totalDigits'] =
+        'Превышена допустимая длинна дробной части числа. Допустимо: ' + propertySchema.fractionDigits + ' символов';
     }
   }
 

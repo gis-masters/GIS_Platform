@@ -3,8 +3,11 @@
   "production": false,
   "server": {
     "host": "localhost",
-    "port": 8100
+    "port": 8100,
+    "wsPort": 8084
   },
-  "ws_port": 8088,
-  "scratchWorkspaceName": "scratch_database"
+  "scratchWorkspaceName": "scratch_database",
+  "flags": {
+    "dataManagement": true
+  }
 }

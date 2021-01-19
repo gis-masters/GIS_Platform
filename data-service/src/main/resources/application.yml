@@ -20,7 +20,7 @@ spring:
     username: fiz
     password: 314
   jpa:
-    database-platform:  org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     properties:
       hibernate.format_sql: true
@@ -28,6 +28,11 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 60MB
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
 
 management:
   health:
@@ -35,7 +40,12 @@ management:
       enabled: false
 
 crg-options:
+  auth-service-url: http://127.0.0.1:9000
   gis-service-url: http://127.0.0.1:8082
   fileStoragePath: /opt/file_storage
   geoserverDbName: geoserver_db
-
+  exportStoragePath: /opt/export/
+  client_id: admin
+  client_secret: geoserver
+  root-user-name: admin@mail.ru
+  root-user-password: geoserver

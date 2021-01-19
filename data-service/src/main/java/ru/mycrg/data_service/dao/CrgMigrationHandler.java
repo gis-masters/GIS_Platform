@@ -1,29 +1,35 @@
 package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.service.BaseMapsService;
+
+import java.sql.Connection;
 
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DATA_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
 
-@Log4j2
 @Service
 public class CrgMigrationHandler {
 
+    public static final Logger log = LoggerFactory.getLogger(CrgMigrationHandler.class);
+
+    private final ApplicationContext ctx;
     private final CrgDataSourcesPool crgDataSourcesPool;
     private final BaseMapsService baseMapsService;
-    private final ServiceTablesInitializer serviceTablesInitializer;
 
-    public CrgMigrationHandler(ServiceTablesInitializer serviceTablesInitializer,
-                               CrgDataSourcesPool crgDataSourcesPool,
-                               BaseMapsService baseMapsService) {
+    public CrgMigrationHandler(CrgDataSourcesPool crgDataSourcesPool,
+                               BaseMapsService baseMapsService,
+                               ApplicationContext ctx) {
+        this.ctx = ctx;
         this.baseMapsService = baseMapsService;
         this.crgDataSourcesPool = crgDataSourcesPool;
-        this.serviceTablesInitializer = serviceTablesInitializer;
     }
 
     public void handle() {
@@ -46,15 +52,16 @@ public class CrgMigrationHandler {
     public void initMigration(String dbName) {
         try {
             HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
+            try (final Connection connection = tempDataSource.getConnection()) {
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/initServiceTables.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/initOldSchemas.sql"));
+            }
 
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(tempDataSource);
-
-            serviceTablesInitializer.initialize(jdbcTemplate);
-            baseMapsService.initDefault(jdbcTemplate);
+            baseMapsService.initDefault(new JdbcTemplate(tempDataSource));
 
             tempDataSource.close();
         } catch (Exception e) {
-            log.error("Cant initialize service tables for: " + dbName, e.getMessage());
+            log.error("Cant initialize service tables for: {} Reason: {}", dbName, e.getMessage());
         }
     }
 }

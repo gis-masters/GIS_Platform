@@ -31,7 +31,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         log().ifValidationFails().
-                        post(String.format("/api/%d/import", projectId));
+                        post(String.format("/api/data/import/%d", projectId));
 
         Thread.sleep(5000);
     }

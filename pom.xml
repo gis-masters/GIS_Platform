@@ -62,7 +62,6 @@
 		<module>data-service</module>
 		<module>integration-service</module>
 
-        <module>geo-api</module>
         <module>geo-wrapper</module>
 
         <module>clients/http-client</module>

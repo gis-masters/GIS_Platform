@@ -1,1 +1,0 @@
-ALTER TABLE public.projects DROP CONSTRAINT fk3gwrleyyq6prcnqekmkobbimd;

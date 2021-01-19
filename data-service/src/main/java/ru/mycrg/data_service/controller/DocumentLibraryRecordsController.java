@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceInternalException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.FileStorageService;
 import ru.mycrg.data_service.service.ObjectService;
+import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,19 +29,21 @@ import java.util.*;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.service.JsonConverter.mapper;
 
 @RestController
 public class DocumentLibraryRecordsController {
 
     public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
+    private final SchemaService schemaService;
     private final ObjectService objectService;
     private final FileStorageService fileStorageService;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     public DocumentLibraryRecordsController(ObjectService objectService,
+                                            SchemaService schemaService,
                                             FileStorageService fileStorageService) {
+        this.schemaService = schemaService;
         this.objectService = objectService;
         this.fileStorageService = fileStorageService;
     }
@@ -79,8 +82,16 @@ public class DocumentLibraryRecordsController {
 
             return objects;
         } catch (CrgDaoException e) {
-            throw new DataServiceInternalException(e.getMessage(), e.getCause());
+            throw new DataServiceException(e.getMessage(), e.getCause());
         }
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/document-libraries/{docLibId}/schema")
+    public Object getLibSchema(@PathVariable String docLibId) {
+        return schemaService
+                .getSchemaByName(docLibId)
+                .orElseThrow(() -> new NotFoundException("Not found schema for library: " + docLibId));
     }
 
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")

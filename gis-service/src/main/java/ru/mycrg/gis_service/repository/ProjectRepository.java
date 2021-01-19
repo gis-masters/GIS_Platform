@@ -12,7 +12,9 @@ import java.util.Optional;
 @RepositoryRestResource(collectionResourceRel = "projects", path = "projects")
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
 
-    Page<Project> findAllByOrganizationId(Long orgId, Pageable pageable);
+    Page<Project> findAllByOrganizationIdAndNameContaining(Long orgId, String name, Pageable pageable);
+
+    Page<Project> findAllByNameContaining(String name, Pageable pageable);
 
     List<Project> findAllByOrganizationId(Long orgId);
 

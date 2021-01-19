@@ -9,5 +9,6 @@ public enum ValueType {
     GEOMETRY,
     URL,
     DATETIME,
-    LOOKUP
+    LOOKUP,
+    UUID
 }

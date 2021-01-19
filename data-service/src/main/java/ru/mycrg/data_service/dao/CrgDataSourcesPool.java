@@ -1,7 +1,8 @@
 package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,10 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-@Log4j2
 @Service
 public class CrgDataSourcesPool {
+
+    public static final Logger log = LoggerFactory.getLogger(CrgDataSourcesPool.class);
 
     public static final String DEFAULT_DB_NAME = "database_";
     public static final String DATA_SCHEMA_NAME = "data";

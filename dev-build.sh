@@ -43,6 +43,6 @@ export UI_PROD=${UI_PROD:-false}
 export UI_SERVER_HOST=${UI_SERVER_HOST:-localhost}
 export UI_SERVER_PORT=${UI_SERVER_PORT:-8100}
 export UI_SWN=${UI_SWN:-scratch}
-export UI_WS_PORT=${UI_WS_PORT:-8088}
+export UI_WS_PORT=${UI_WS_PORT:-8084}
 
 docker-compose -f docker-compose.dev.yml -f docker-compose.yml up

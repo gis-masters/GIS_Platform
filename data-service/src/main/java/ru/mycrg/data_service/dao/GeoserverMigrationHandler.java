@@ -1,15 +1,17 @@
 package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-@Log4j2
 @Service
 public class GeoserverMigrationHandler {
+
+    public static final Logger log = LoggerFactory.getLogger(GeoserverMigrationHandler.class);
 
     private final Environment environment;
     private final CrgDataSourcesPool crgDataSourcesPool;

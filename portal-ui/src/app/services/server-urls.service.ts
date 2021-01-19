@@ -81,7 +81,7 @@ export async function getLogoutUrl(): Promise<string> {
 }
 
 export async function getValidationUrl(): Promise<string> {
-  return (await getBaseUrl()) + '/api/validation';
+  return (await getDataUrl()) + '/validation';
 }
 
 export async function getOrganizationsUrl(): Promise<string> {
@@ -89,11 +89,11 @@ export async function getOrganizationsUrl(): Promise<string> {
 }
 
 export async function getSchemaUrl(): Promise<string> {
-  return (await getBaseUrl()) + '/schema';
+  return (await getDataUrl()) + '/schemas';
 }
 
 export async function getExportUrl(): Promise<string> {
-  return (await getBaseUrl()) + '/export';
+  return (await getDataUrl()) + '/export';
 }
 
 export async function getUsersUrl(): Promise<string> {
@@ -124,10 +124,6 @@ export async function getProjectUrl(projectId: number): Promise<string> {
   return `${await getProjectsUrl()}/${projectId}`;
 }
 
-export async function getProjectImportUrl(projectId: number): Promise<string> {
-  return (await getProjectUrl(projectId)) + '/import';
-}
-
 export async function getProjectLayersUrl(projectId: number): Promise<string> {
   return (await getProjectUrl(projectId)) + '/layers';
 }
@@ -156,8 +152,12 @@ async function getDataUrl(): Promise<string> {
   return (await getBaseUrl()) + '/api/data';
 }
 
+export async function getProcessUrl(processId: number): Promise<string> {
+  return `${await getDataUrl()}/processes/${processId}`;
+}
+
 export async function getApiImportUrl(projectId: number): Promise<string> {
-  return `${await getBaseUrl()}/api/${projectId}/import`;
+  return `${await getDataUrl()}/import/${projectId}`;
 }
 
 export async function getDatasetsUrl(): Promise<string> {

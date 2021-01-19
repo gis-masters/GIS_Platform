@@ -270,13 +270,13 @@ class SchemaService {
     this.fetchingNow++;
     await services.provided;
     const payload = fetchAll ? [] : this.fetchingPool.splice(0);
-    const response = await http.post<(FeatureDescription | null)[]>(await getSchemaUrl(), payload);
+    const params = { schemaIds: payload.join(',') };
+    const response = await http.get<(FeatureDescription | null)[]>(await getSchemaUrl(), { params });
 
     if (!response) {
-      throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
       this.fetchingNow--;
       this.checkForsakenResolvers();
-      return;
+      throw new Error(`Getting schemas ${JSON.stringify(payload)} error`);
     }
 
     response.forEach(schema => {

@@ -45,18 +45,18 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public Page<ProjectProjection> getPaged(Pageable pageable, Authentication authentication) {
+    public Page<ProjectProjection> getPaged(String name, Pageable pageable, Authentication authentication) {
         Page<Project> projects;
         if (isRoot(authentication)) {
-            projects = projectRepository.findAll(pageable);
+            projects = projectRepository.findAllByNameContaining(name, pageable);
         } else {
             final UserDetails userDetails = getUserDetails(authentication);
             Long orgId = getFirstOrganizationId(userDetails);
             if (isOrganizationAdmin(authentication)) {
-                projects = projectRepository.findAllByOrganizationId(orgId, pageable);
+                projects = projectRepository.findAllByOrganizationIdAndNameContaining(orgId, name, pageable);
             } else {
                 final List<Project> organizationProjects = projectRepository
-                        .findAllByOrganizationId(orgId, pageable).stream()
+                        .findAllByOrganizationIdAndNameContaining(orgId, name, pageable).stream()
                         .collect(Collectors.toList());
                 final List<Project> filteredProjects = filterByPermissions(organizationProjects, userDetails);
 

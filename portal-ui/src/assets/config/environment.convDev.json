@@ -4,7 +4,7 @@
   "server": {
     "host": "10.10.10.201",
     "port": 8100,
-    "wsPort": 8088
+    "wsPort": 8084
   },
   "scratchWorkspaceName": "scratch_database",
   "flags": {

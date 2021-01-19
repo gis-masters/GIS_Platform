@@ -25,11 +25,6 @@ services:
     ports:
       - 8084:8084
 
-  geo-api:
-    build: geo-api
-    ports:
-      - 8088:8088
-
   geo-wrapper:
     build: geo-wrapper
 

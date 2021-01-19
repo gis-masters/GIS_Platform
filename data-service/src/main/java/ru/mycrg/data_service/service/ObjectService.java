@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service;
 
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.TablesDao;
@@ -13,9 +14,10 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import java.util.Map;
 import java.util.UUID;
 
-@Log4j2
 @Service
 public class ObjectService {
+
+    public static final Logger log = LoggerFactory.getLogger(ObjectService.class);
 
     private final TablesDao tablesDao;
 

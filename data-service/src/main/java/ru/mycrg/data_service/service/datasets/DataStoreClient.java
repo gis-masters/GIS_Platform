@@ -18,7 +18,7 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static ru.mycrg.data_service.service.CrgAuthHelper.getToken;
+import static ru.mycrg.data_service.security.CrgAuthHelper.getToken;
 
 @Service
 public class DataStoreClient {

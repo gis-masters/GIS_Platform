@@ -1,7 +1,8 @@
 package ru.mycrg.data_service.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,9 +13,10 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.INITIAL_SCHEMA_NAME;
 
-@Log4j2
 @Service
 public class DatabaseDDL {
+
+    public static final Logger log = LoggerFactory.getLogger(DatabaseDDL.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final CrgDataSourcesPool crgDataSourcesPool;
