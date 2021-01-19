@@ -104,7 +104,7 @@ export class Layer extends Component<LayerProps> {
             {title}
             {isEmptyGroup && <LayerEmptiness />}
           </LayerTitle>
-          <LayerBurger disabled={this.isError} onClick={this.handleBurgerClick} />
+          <LayerBurger onClick={this.handleBurgerClick} />
         </LayerCard>
 
         <LayerInnards show={this.open && !isGroup} depth={depth}>

@@ -13,7 +13,7 @@ import { Highlight } from '../Highlight/Highlight';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Button } from '../Button/Button';
 import { PermissionsListItemWrapped } from '../PermissionsListDialog/PermissionsListDialog';
-import { XTable } from '../XTable/XTable';
+import { XTable, XTableColumn } from '../XTable/XTable';
 
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';
 
@@ -35,6 +35,40 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   @observable selectedList: PermissionsListItem[] = [];
   @observable role: Role = Role.VIEWER;
 
+  private cols: XTableColumn<PermissionsListItemWrapped>[] = [
+    {
+      title: (
+        <Checkbox
+          indeterminate={this.selectedList.length > 0 && !this.allSelected}
+          checked={this.allSelected}
+          onChange={this.handleSelectAll}
+        />
+      ),
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderCheckbox
+    },
+    {
+      title: 'Проект',
+      field: 'projectTitle',
+      filtering: true,
+      sorting: true,
+      getIdBadge: ({ origin }) => origin.project.id
+    },
+    {
+      title: 'Слой',
+      field: 'layerTitle',
+      filtering: true,
+      sorting: true,
+      renderCellContent: this.renderLayerTitle
+    },
+    {
+      title: 'Схема',
+      field: 'schemaId',
+      filtering: true,
+      sorting: true
+    }
+  ];
+
   render() {
     const { open } = this.props;
 
@@ -50,39 +84,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
           <XTable
             title='Добавление разрешений'
             data={this.list}
-            cols={[
-              {
-                title: (
-                  <Checkbox
-                    indeterminate={this.selectedList.length > 0 && !this.allSelected}
-                    checked={this.allSelected}
-                    onChange={this.handleSelectAll}
-                  />
-                ),
-                cellProps: { padding: 'checkbox' },
-                renderCellContent: this.renderCheckbox
-              },
-              {
-                title: 'Проект',
-                field: 'projectTitle',
-                filtering: true,
-                sorting: true,
-                getIdBadge: ({ origin }) => origin.project.id
-              },
-              {
-                title: 'Слой',
-                field: 'layerTitle',
-                filtering: true,
-                sorting: true,
-                renderCellContent: this.renderLayerTitle
-              },
-              {
-                title: 'Схема',
-                field: 'schemaId',
-                filtering: true,
-                sorting: true
-              }
-            ]}
+            cols={this.cols}
             defaultSort={{ field: 'synteticId', asc: true }}
             secondarySortField='synteticId'
             filterable

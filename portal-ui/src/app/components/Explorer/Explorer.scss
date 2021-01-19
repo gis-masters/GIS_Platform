@@ -4,10 +4,15 @@
   display: grid;
   align-items: flex-start;
   gap: 20px;
-  grid-template: auto auto auto auto / 3fr 2fr;
-  grid-template-areas: 'head head' 'toolbar info' 'list info' 'pagination info';
+  grid-template: auto auto auto auto / 1fr;
+  grid-template-areas: 'head' 'toolbar' 'list' 'pagination';
 
   &:focus {
     outline: none;
+  }
+
+  &_withInfoPanel {
+    grid-template: auto auto auto auto / 3fr 2fr;
+    grid-template-areas: 'head head' 'toolbar info' 'list info' 'pagination info';
   }
 }

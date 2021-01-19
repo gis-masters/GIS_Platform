@@ -14,9 +14,9 @@ import { CrgGroup, groupsService } from '../../services/crg/groups.service';
 import { communicationService } from '../../services/communication.service';
 import { CrgUser, usersService } from '../../services/crg/users.service';
 import { DataSet, DataTable } from '../../services/data.service';
+import { XTable, XTableColumn } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
-import { XTable } from '../XTable/XTable';
 
 import { PermissionsEditDialogRoleSelect } from './RoleSelect/PermissionsEditDialog-RoleSelect';
 import { PermissionsEditDialogAddPrincipal } from './AddPrincipal/PermissionsEditDialog-AddPrincipal';
@@ -41,6 +41,58 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   @observable private busy = false;
   @observable private activeTab: PrincipalType = PrincipalType.USER;
   @observable private changedPermissions?: RoleAssignmentBody[];
+
+  private usersCols: XTableColumn<CrgUser>[] = [
+    { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
+    { title: 'Имя', field: 'name', filtering: true, sorting: true },
+    { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id },
+    {
+      title: 'Разрешения',
+      cellProps: { padding: 'checkbox' },
+      align: 'right',
+      renderCellContent: this.renderUserRoleSelect
+    },
+    {
+      title: 'Действия',
+      cellProps: { padding: 'checkbox' },
+      align: 'right',
+      renderCellContent: this.renderUserActions
+    }
+  ];
+
+  private groupsCols: XTableColumn<CrgGroup>[] = [
+    {
+      title: 'Название',
+      field: 'name',
+      filtering: true,
+      sorting: true,
+      getIdBadge: ({ id }) => id
+    },
+    {
+      title: 'Описание',
+      field: 'description',
+      filtering: true,
+      sorting: true,
+      align: 'right'
+    },
+    {
+      title: 'Пользователей',
+      align: 'right',
+      renderCellContent: ({ users }) => users.length
+    },
+    {
+      title: 'Разрешения',
+      cellProps: { padding: 'checkbox' },
+      align: 'right',
+      renderCellContent: this.renderGroupRoleSelect
+    },
+    {
+      title: 'Действия',
+      cellProps: { padding: 'checkbox' },
+      align: 'right',
+      renderCellContent: this.renderGroupActions
+    }
+  ];
 
   componentDidMount() {
     usersService.initUsersListStore();
@@ -75,23 +127,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
                 />
               }
               data={this.users}
-              cols={[
-                { title: 'Фамилия', field: 'surname', filtering: true, sorting: true },
-                { title: 'Имя', field: 'name', filtering: true, sorting: true },
-                { title: 'e-mail', field: 'email', filtering: true, sorting: true, getIdBadge: ({ id }) => id },
-                {
-                  title: 'Разрешения',
-                  cellProps: { padding: 'checkbox' },
-                  align: 'right',
-                  renderCellContent: this.renderUserRoleSelect
-                },
-                {
-                  title: 'Действия',
-                  cellProps: { padding: 'checkbox' },
-                  align: 'right',
-                  renderCellContent: this.renderUserActions
-                }
-              ]}
+              cols={this.usersCols}
               defaultSort={{ field: 'surname', asc: true }}
               secondarySortField='id'
               filterable
@@ -108,39 +144,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
                 />
               }
               data={this.groups}
-              cols={[
-                {
-                  title: 'Название',
-                  field: 'name',
-                  filtering: true,
-                  sorting: true,
-                  getIdBadge: ({ id }) => id
-                },
-                {
-                  title: 'Описание',
-                  field: 'description',
-                  filtering: true,
-                  sorting: true,
-                  align: 'right'
-                },
-                {
-                  title: 'Пользователей',
-                  align: 'right',
-                  renderCellContent: ({ users }) => users.length
-                },
-                {
-                  title: 'Разрешения',
-                  cellProps: { padding: 'checkbox' },
-                  align: 'right',
-                  renderCellContent: this.renderGroupRoleSelect
-                },
-                {
-                  title: 'Действия',
-                  cellProps: { padding: 'checkbox' },
-                  align: 'right',
-                  renderCellContent: this.renderGroupActions
-                }
-              ]}
+              cols={this.groupsCols}
               defaultSort={{ field: 'name', asc: true }}
               secondarySortField='id'
               filterable

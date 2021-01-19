@@ -25,7 +25,7 @@ export const Loading: FC<LoadingProps> = ({ visible, className, noBackdrop, size
       <CircularProgress
         size={size ? size : 100}
         value={value}
-        variant={typeof value === 'number' ? 'static' : 'indeterminate'}
+        variant={typeof value === 'number' ? 'determinate' : 'indeterminate'}
       />
     </div>
   );

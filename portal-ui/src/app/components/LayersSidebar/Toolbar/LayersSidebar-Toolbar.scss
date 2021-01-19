@@ -1,17 +1,14 @@
 .LayersSidebar-Toolbar {
-  position: sticky;
   z-index: 2;
-  top: -0.2px;
 
   display: flex;
 
-  margin-bottom: 7px;
   padding: 0 7px;
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   background: white;
 
-  &_stuck {
+  &_above {
     transition: box-shadow 0.3s;
 
     border-bottom: none;

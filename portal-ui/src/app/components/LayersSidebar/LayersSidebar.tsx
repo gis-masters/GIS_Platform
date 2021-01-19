@@ -8,10 +8,12 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { projectsService } from '../../services/crg/projects.service';
 import {
+  createLayer,
   createLayersGroup,
   deleteLayer,
   deleteLayersGroup,
   generateNextGroupId,
+  generateNextLayerId,
   updateLayer,
   updateLayersGroup
 } from '../../services/geoserver/layers.service';
@@ -32,14 +34,20 @@ export class LayersSidebar extends Component {
   @observable private editMode = false;
   @observable private busy = false;
   @observable private queriedCount = 0;
+  @observable private toolbarAbove = false;
 
   render() {
     return (
       <div className={cnLayersSidebar({ open: sidebars.leftOpen })}>
         <LayersSidebarOpen />
         <LayersSidebarInner>
-          <LayersSidebarContent>
-            <LayersSidebarToolbar editMode={this.editMode} onChangeMode={this.setEditMode} onSave={this.save} />
+          <LayersSidebarToolbar
+            editMode={this.editMode}
+            onChangeMode={this.setEditMode}
+            onSave={this.save}
+            above={this.toolbarAbove}
+          />
+          <LayersSidebarContent onScroll={this.contentScrollHandler}>
             <LayersTree editMode={this.editMode} />
           </LayersSidebarContent>
         </LayersSidebarInner>
@@ -80,6 +88,14 @@ export class LayersSidebar extends Component {
       this.countQuery();
     }
 
+    for (const layer of currentProject.queriesQueue.layersToCreate) {
+      const createdLayer = await createLayer({ ...layer, id: undefined, complexName: undefined });
+      if (layer.id !== createdLayer.id && currentProject.layers.some(({ id }) => id === createdLayer.id)) {
+        currentProject.switchLayerId(createdLayer.id, generateNextLayerId());
+      }
+      this.countQuery();
+    }
+
     for (const [layerId, patch] of currentProject.queriesQueue.layersToPatch) {
       await updateLayer(layerId, patch);
       this.countQuery();
@@ -100,5 +116,10 @@ export class LayersSidebar extends Component {
 
     this.setBusy(false);
     this.setEditMode(false);
+  }
+
+  @action.bound
+  contentScrollHandler(e: React.UIEvent<HTMLDivElement, UIEvent>) {
+    this.toolbarAbove = Boolean(e.currentTarget.scrollTop);
   }
 }

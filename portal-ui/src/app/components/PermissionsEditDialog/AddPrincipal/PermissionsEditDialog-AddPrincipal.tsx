@@ -41,6 +41,21 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
   @observable private role: Role = Role.VIEWER;
   @observable private selectedPrincipals: (CrgUser | CrgGroup)[] = [];
 
+  private cols: XTableColumn<CrgUser | CrgGroup>[] = [
+    {
+      title: (
+        <Checkbox
+          indeterminate={this.selectedPrincipals.length > 0 && !this.selectedAll}
+          checked={this.selectedAll}
+          onChange={this.handleSelectAll}
+        />
+      ),
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderCheckbox
+    },
+    ...this.getColumns()
+  ];
+
   render() {
     const { principalType } = this.props;
     const UserIcon = this.dialogOpen ? PersonAdd : PersonAddOutlined;
@@ -60,20 +75,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
               className={cnPermissionsEditDialog('AddPrincipalTable')}
               title='Добавление разрешений'
               data={this.viewedPrincipals}
-              cols={[
-                {
-                  title: (
-                    <Checkbox
-                      indeterminate={this.selectedPrincipals.length > 0 && !this.selectedAll}
-                      checked={this.selectedAll}
-                      onChange={this.handleSelectAll}
-                    />
-                  ),
-                  cellProps: { padding: 'checkbox' },
-                  renderCellContent: this.renderCheckbox
-                },
-                ...this.getColumns()
-              ]}
+              cols={this.cols}
               defaultSort={{ field: 'createdAt', asc: true }}
               secondarySortField='id'
               filterable

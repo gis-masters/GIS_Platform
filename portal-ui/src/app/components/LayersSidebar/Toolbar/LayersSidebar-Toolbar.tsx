@@ -10,11 +10,14 @@ import { cloneDeep } from 'lodash';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { generateNextGroupId } from '../../../services/geoserver/layers.service';
-import { NewCrgLayersGroup } from '../../../services/crg/projects.models';
+import { NewCrgLayer, NewCrgLayersGroup } from '../../../services/crg/projects.models';
 import { usersService } from '../../../services/crg/users.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
+import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
+import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayersSettings } from '../../Icons/LayersSettings';
+import { LayerAdd } from '../../Icons/LayerAdd';
 
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
@@ -24,6 +27,7 @@ import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 
 interface LayersSidebarToolbarProps {
+  above: boolean;
   editMode: boolean;
   onChangeMode: (editMode: boolean) => void;
   onSave: () => void;
@@ -31,40 +35,23 @@ interface LayersSidebarToolbarProps {
 
 @observer
 export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
-  private ref = createRef<HTMLDivElement>();
-  private intersectionObserver: IntersectionObserver;
   @observable private createGroupDialogOpen = false;
-  @observable private stuck = false;
+  @observable private addLayerDialogOpen = false;
   @observable private projectContributionAllowed = false;
 
-  constructor(props: LayersSidebarToolbarProps) {
-    super(props);
-
-    this.intersectionObserver = new IntersectionObserver(
-      ([e]) => {
-        this.setStuck(e.intersectionRatio < 1);
-      },
-      { threshold: [1] }
-    );
-  }
 
   async componentDidMount() {
-    this.intersectionObserver.observe(this.ref.current);
     // this.setProjectContributionAllowness(await isLayersManagementAllowed(currentProject));
     await usersService.fetchCurrentUser();
     this.setProjectContributionAllowness(currentUser.isAdmin);
   }
 
-  componentWillUnmount() {
-    this.intersectionObserver.disconnect();
-  }
-
   render() {
-    const { editMode } = this.props;
+    const { editMode, above } = this.props;
 
     return (
       <>
-        <div className={cnLayersSidebarToolbar({ stuck: this.stuck })} ref={this.ref}>
+        <div className={cnLayersSidebarToolbar({ above })}>
           <LayersSidebarToolbarLeft>
             {editMode && this.projectContributionAllowed && (
               <Tooltip title='Сохранить для всех пользователей'>
@@ -88,6 +75,14 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
           </LayersSidebarToolbarLeft>
           <LayersSidebarToolbarRight>
             {editMode && (
+              <Tooltip title='Подключить слой'>
+                <IconButton onClick={this.openAddLayerDialog}>
+                  {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {editMode && (
               <Tooltip title='Создать группу'>
                 <IconButton onClick={this.openCreateGroupDialog}>
                   {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
@@ -109,6 +104,8 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
           onEdit={this.createGroup}
           create
         />
+
+        <AddLayerDialog open={this.addLayerDialogOpen} onClose={this.closeAddLayerDialog} onAdd={this.addLayer} />
       </>
     );
   }
@@ -121,6 +118,21 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   @action.bound
   private closeCreateGroupDialog() {
     this.createGroupDialogOpen = false;
+  }
+
+  @action.bound
+  private openAddLayerDialog() {
+    this.addLayerDialogOpen = true;
+  }
+
+  @action.bound
+  private closeAddLayerDialog() {
+    this.addLayerDialogOpen = false;
+  }
+
+  @action.bound
+  private addLayer(layer: NewCrgLayer) {
+    currentProject.layers.splice(0, 0, layer);
   }
 
   @action.bound
@@ -137,11 +149,6 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
     currentProject.groups.splice(0, 0, newGroup);
 
     this.closeCreateGroupDialog();
-  }
-
-  @action
-  private setStuck(stuck: boolean) {
-    this.stuck = stuck;
   }
 
   @action

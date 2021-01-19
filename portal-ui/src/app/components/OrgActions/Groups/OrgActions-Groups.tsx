@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tooltip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 import { People, PeopleOutline } from '@material-ui/icons';
@@ -10,9 +10,9 @@ import { boundMethod } from 'autobind-decorator';
 import { CrgUser } from '../../../services/crg/users.service';
 import { CrgGroup, groupsService } from '../../../services/crg/groups.service';
 import { allGroups } from '../../../stores/AllGroups.store';
+import { XTable, XTableColumn } from '../../XTable/XTable';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
-import { XTable } from '../../XTable/XTable';
 
 import { OrgActionsUserGroupCheck } from '../UserGroupCheck/OrgActions-UserGroupCheck';
 
@@ -31,6 +31,19 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
   @observable private loading = false;
   @observable private dialogOpen = false;
   @observable private selected: CrgGroup[] = [];
+  private cols: XTableColumn<CrgGroup>[] = [
+    {
+      cellProps: { padding: 'checkbox' },
+      renderCellContent: this.renderCheckbox
+    },
+    {
+      title: 'Название',
+      field: 'name',
+      getIdBadge: ({ id }) => id,
+      filtering: true,
+      sorting: true
+    }
+  ];
 
   render() {
     const { user } = this.props;
@@ -49,19 +62,7 @@ export class OrgActionsGroups extends Component<OrgActionsGroupsProps> {
               className={cnOrgActionsGroupsTable()}
               title={`Группы пользователя ${user.login}`}
               data={allGroups.list}
-              cols={[
-                {
-                  cellProps: { padding: 'checkbox' },
-                  renderCellContent: this.renderCheckbox
-                },
-                {
-                  title: 'Название',
-                  field: 'name',
-                  getIdBadge: ({ id }) => id,
-                  filtering: true,
-                  sorting: true
-                }
-              ]}
+              cols={this.cols}
               defaultSort={{ field: 'name', asc: true }}
               secondarySortField='id'
               filterable

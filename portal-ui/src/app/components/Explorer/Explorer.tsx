@@ -1,5 +1,5 @@
 import React, { Component, CSSProperties } from 'react';
-import { action, observable } from 'mobx';
+import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
@@ -27,12 +27,6 @@ import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
 const cnExplorer = cn('Explorer');
 
-interface ExplorerProps {
-  title?: string;
-  items?: ExplorerItemData[];
-  preset?: keyof typeof presets;
-}
-
 enum KeyAction {
   NEXT = 'next',
   PREV = 'prev',
@@ -55,43 +49,71 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
   [ExplorerItemType.DATA_SET_ROOT]: { type: ExplorerItemType.DATA_SET_ROOT }
 };
 
+interface ExplorerProps {
+  title?: string;
+  items?: ExplorerItemData[];
+  preset?: keyof typeof presets;
+  disabledItems?: ExplorerItemData[];
+  withInfoPanel?: boolean;
+  fixedHeight?: boolean;
+  onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
+  onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
+}
+
 @observer
 export class Explorer extends Component<ExplorerProps> {
+  private onSelectReactionDispose: IReactionDisposer;
   @observable private busy = false;
-
   private store: ExplorerStore = new ExplorerStore();
 
   constructor(props: ExplorerProps) {
     super(props);
-    this.initPath(props);
+    this.init(props);
+  }
+
+  componentDidMount() {
+    this.onSelectReactionDispose = reaction(
+      () => this.store.selectedItem,
+      selectedItem => {
+        if (this.props.onSelect) {
+          this.props.onSelect(selectedItem, this.store.path);
+        }
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this.onSelectReactionDispose();
   }
 
   componentDidUpdate(prevProps: ExplorerProps) {
     if (!isEqual(prevProps, this.props)) {
-      this.initPath(this.props);
+      this.init(this.props);
     }
   }
 
   render() {
+    const { withInfoPanel, fixedHeight } = this.props;
+
     return (
       <div
-        className={cnExplorer()}
+        className={cnExplorer({ withInfoPanel })}
         onKeyDown={this.keyDownHandler}
         tabIndex={0}
-        style={{ '--ExplorerPageSize': this.store.pageSize } as CSSProperties}
+        style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
       >
         <ExplorerTitle store={this.store} onOpen={this.openItem} />
         <ExplorerList store={this.store} onOpen={this.openItem} />
         <ExplorerToolbar store={this.store} onChange={this.handleQueryChange} />
-        <ExplorerInfo store={this.store} type={this.store.selectedItem.type} />
+        {withInfoPanel && <ExplorerInfo store={this.store} type={this.store.selectedItem.type} />}
         <ExplorerPagination store={this.store} onChange={this.paginate} />
         <Loading visible={this.busy} noBackdrop />
       </div>
     );
   }
 
-  private initPath(props: ExplorerProps) {
-    const { items, title, preset } = props;
+  private init(props: ExplorerProps) {
+    const { items, title, preset, disabledItems } = props;
 
     if (preset) {
       this.store.setPath([presets[preset]]);
@@ -101,15 +123,21 @@ export class Explorer extends Component<ExplorerProps> {
         items.length ? items[0] : emptyItem
       ]);
     }
+
+    this.store.disabledItems = disabledItems || [];
   }
 
   @boundMethod
   private async openItem(item: ExplorerItemData, page: number, depth?: number) {
+    const { store, props } = this;
+
+    if (props.onOpen) {
+      props.onOpen(item, store.path);
+    }
+
     if (!isFolder(item)) {
       return;
     }
-
-    const { store } = this;
 
     if (depth !== store.path.length - 2) {
       store.setSortItems(getChildrenSortItems(item));

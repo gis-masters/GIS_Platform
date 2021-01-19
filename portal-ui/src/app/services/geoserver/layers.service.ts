@@ -1,13 +1,14 @@
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayersGroup, Rule } from '../crg/projects.models';
 import { WfsFeature } from './wfs.models';
+import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayer, NewCrgLayersGroup, Rule } from '../crg/projects.models';
 import { patch } from '../util/patch';
 import { http } from '../http.service';
 import {
   getGeoServerUrl,
   getProjectGroupsUrl,
   getProjectGroupUrl,
+  getProjectLayersUrl,
   getProjectLayerUrl,
   getWmsUrl
 } from '../server-urls.service';
@@ -120,6 +121,14 @@ async function getStyleSld(complexStyleName: string): Promise<string> {
 
 export function generateNextGroupId(): number {
   return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
+}
+
+export function generateNextLayerId(): number {
+  return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
+}
+
+export async function createLayer(newLayer: NewCrgLayer, project: CrgProject = currentProject): Promise<CrgLayer> {
+  return await http.post<CrgLayer>(await getProjectLayersUrl(project.id), newLayer);
 }
 
 export async function updateLayer(

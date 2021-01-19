@@ -40,13 +40,8 @@ export class WorkspaceHeaderBurger extends Component {
           )}
 
           {route.data.page === Pages.IMPORT && (
-            <Link
-              url={`/projects/${currentProject.id}/map`}
-              theme='none'
-              disabled={!currentProject.layers || !currentProject.layers.length}
-              delay={300}
-            >
-              <MenuItem onClick={this.close} disabled={!currentProject.layers || !currentProject.layers.length}>
+            <Link url={`/projects/${currentProject.id}/map`} theme='none' delay={300}>
+              <MenuItem onClick={this.close}>
                 <ListItemIcon>
                   <Map />
                 </ListItemIcon>

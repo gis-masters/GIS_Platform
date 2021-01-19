@@ -1,0 +1,7 @@
+body .SelectDataTable {
+  width: 100%;
+
+  &_empty {
+    border: 1px var(--gray) dashed;
+  }
+}

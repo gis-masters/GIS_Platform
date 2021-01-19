@@ -8,6 +8,7 @@ import {
   CrgLayersGroup,
   CrgLayerType,
   CrgProject,
+  NewCrgLayer,
   NewCrgLayersGroup,
   TreeItem
 } from '../services/crg/projects.models';
@@ -16,7 +17,7 @@ import { getPatch } from '../services/util/patch';
 const MAX_LAYERS_IN_BATCH_DEFAULT = 5;
 
 interface CrgProjectData extends CrgProject {
-  layers: CrgLayer[];
+  layers: (CrgLayer | NewCrgLayer)[];
   groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   layersErrors: { [key: string]: string[] };
 }
@@ -49,7 +50,7 @@ class CurrentProject implements CrgProjectData {
   @observable organizationId: number;
   @observable baseMaps: CrgProjectBaseMap[];
   @observable default: boolean;
-  @observable layers: CrgLayer[];
+  @observable layers: (CrgLayer | NewCrgLayer)[];
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
@@ -188,6 +189,7 @@ class CurrentProject implements CrgProjectData {
   get queriesQueue(): {
     groupsToCreate: NewCrgLayersGroup[];
     groupsToPatch: [number, Partial<CrgLayersGroup>][];
+    layersToCreate: NewCrgLayer[];
     layersToPatch: [number, Partial<CrgLayer>][];
     layersToDelete: number[];
     groupsToDelete: number[];
@@ -201,7 +203,7 @@ class CurrentProject implements CrgProjectData {
       'transparency'
     ];
 
-    const layersMeaningfulFields: (keyof CrgLayer)[] = ['enabled', 'groupId', 'position', 'title', 'transparency'];
+    const layersMeaningfulFields: (keyof NewCrgLayer)[] = ['enabled', 'groupId', 'position', 'title', 'transparency'];
 
     return {
       groupsToCreate: this.tree
@@ -216,6 +218,10 @@ class CurrentProject implements CrgProjectData {
             [group.id, getPatch(group, primalGroup, groupsMeaningfulFields)] as [number, Partial<CrgLayersGroup>]
         )
         .filter(([, patch]) => Object.keys(patch).length),
+
+      layersToCreate: this.tree
+        .filter(({ isGroup, payload }) => !isGroup && this.primalLayers.every(({ id }) => id !== payload.id))
+        .map(({ payload }) => payload as NewCrgLayer),
 
       layersToPatch: this.layers
         .map(layer => [layer, this.primalLayers.find(primalLayer => primalLayer.id === layer.id)])
@@ -358,6 +364,15 @@ class CurrentProject implements CrgProjectData {
   @action
   setLayerError(layerComplexName: string, errors: string[]) {
     this.layersErrors[layerComplexName] = errors;
+  }
+
+  @action
+  switchLayerId(oldId: number, newId: number) {
+    this.layers.forEach(layer => {
+      if (layer.id === oldId) {
+        layer.id = newId;
+      }
+    });
   }
 
   @action

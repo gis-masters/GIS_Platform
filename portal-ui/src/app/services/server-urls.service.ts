@@ -172,8 +172,12 @@ export async function getDatasetTablesUrl(datasetId: string): Promise<string> {
   return `${await getDatasetUrl(datasetId)}/tables`;
 }
 
+export async function getDatasetTableUrl(datasetId: string, tableId: string): Promise<string> {
+  return `${await getDatasetUrl(datasetId)}/tables/${tableId}`;
+}
+
 export async function getTableRoleAssignmentUrl(datasetId: string, tableId: string): Promise<string> {
-  return `${await getDatasetTablesUrl(datasetId)}/${tableId}/roleAssignment`;
+  return `${await getDatasetTableUrl(datasetId, tableId)}/roleAssignment`;
 }
 
 export async function getBasemapsByIdsUrl(): Promise<string> {

@@ -201,11 +201,19 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private async deleteGroup() {
     currentProject.deleteGroup(this.props.entity as CrgLayersGroup);
+    this.testAttributesBar();
   }
 
   @action.bound
   private async deleteLayer() {
     const layer = this.props.entity as CrgLayer;
     currentProject.deleteLayer(layer);
+    this.testAttributesBar();
+  }
+
+  private testAttributesBar() {
+    if (sidebars.attributesOpen && !currentProject.layers.some(({ id }) => sidebars.layerForAttributes.id === id)) {
+      sidebars.closeAttributes();
+    }
   }
 }

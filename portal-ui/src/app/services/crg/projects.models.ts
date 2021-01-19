@@ -19,15 +19,16 @@ interface CrgEntity {
 // layer from api
 interface BaseCrgLayer extends CrgEntity {
   dataset: string;
+  dataStoreName?: string;
   internalName: string;
   type: CrgLayerType;
-  maxZoom: number;
-  minZoom: number;
+  minZoom?: number;
+  maxZoom?: number;
   styleName: string;
   nativeCRS: string;
   schemaId: string;
   complexName: string;
-  dataSourceUri: string;
+  dataSourceUri?: string;
   groupId?: number;
 }
 
@@ -37,6 +38,32 @@ export interface CrgLayer extends BaseCrgLayer {
   geometryType?: SupportedGeometryType;
   legend?: RuleWithLegend[];
   legendIsFetching?: boolean;
+}
+
+export type NewCrgLayer = Pick<
+  BaseCrgLayer,
+  | 'id'
+  | 'title'
+  | 'dataStoreName'
+  | 'dataset'
+  | 'complexName'
+  | 'internalName'
+  | 'enabled'
+  | 'groupId'
+  | 'minZoom'
+  | 'maxZoom'
+  | 'nativeCRS'
+  | 'transparency'
+  | 'styleName'
+  | 'position'
+  | 'schemaId'
+  | 'type'
+>;
+
+export interface CrgSource {
+  role: Role;
+  identifier: string;
+  type: string;
 }
 
 export interface CrgLayersGroup extends CrgEntity {
@@ -49,7 +76,7 @@ export type NewCrgLayersGroup = Pick<
   'id' | 'title' | 'enabled' | 'transparency' | 'position' | 'parent' | 'expanded'
 >;
 
-export type TreeItemPayload = CrgLayer | CrgLayersGroup | NewCrgLayersGroup;
+export type TreeItemPayload = CrgLayer | NewCrgLayer | CrgLayersGroup | NewCrgLayersGroup;
 
 export interface TreeItem<T = TreeItemPayload> {
   id: number;

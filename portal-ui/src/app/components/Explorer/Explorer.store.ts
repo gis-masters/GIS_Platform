@@ -6,6 +6,7 @@ import { ExplorerItemData, SortItem } from './Explorer.models';
 
 export class ExplorerStore {
   @observable path: ExplorerItemData[] = [];
+  @observable disabledItems: ExplorerItemData[] = [];
   @observable pageSize = 10;
   @observable page = 0;
   @observable totalPages = 0;

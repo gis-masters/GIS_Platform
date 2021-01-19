@@ -1,0 +1,14 @@
+body .Breadcrumbs-Item {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  flex-shrink: 1;
+  justify-content: center;
+
+  min-width: 20px;
+  padding: 4px;
+
+  border-radius: 3px;
+
+  line-height: 1.15;
+}

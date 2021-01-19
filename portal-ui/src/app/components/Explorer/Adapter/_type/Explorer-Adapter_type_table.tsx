@@ -17,7 +17,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
   static getId(item: ExplorerItemData<DataTable>) {
-    return `${item.type}:${item.payload.identifier}`;
+    return `${item.type}:${item.payload.dataset}:${item.payload.identifier}`;
   }
 
   static getTitle(item: ExplorerItemData<DataTable>) {
