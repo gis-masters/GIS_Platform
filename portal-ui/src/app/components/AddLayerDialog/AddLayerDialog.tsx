@@ -150,7 +150,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     );
 
     this.usedDataTablesRequests = Promise.all(
-      currentProject.layers
+      currentProject.vectorLayers
         .filter(
           layer =>
             !this.usedDataTables.some(
