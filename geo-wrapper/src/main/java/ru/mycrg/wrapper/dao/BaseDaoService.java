@@ -1,6 +1,5 @@
 package ru.mycrg.wrapper.dao;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,16 +72,11 @@ public class BaseDaoService {
         jdbcTemplate
                 .batchUpdate(upsert, violations, violations.size(),
                              (ps, violation) -> {
-                                 int objectId = Integer.parseInt(violation.getObjectId());
-                                 int classId = Integer.parseInt(violation.getClassId());
-                                 int xMin = Integer.parseInt(violation.getxMin());
-                                 JsonNode json = Util.convertToJson(violation);
-
-                                 ps.setInt(1, objectId);
-                                 ps.setString(2, json.toString());
-                                 ps.setInt(3, xMin);
+                                 ps.setInt(1, Integer.parseInt(violation.getObjectId()));
+                                 ps.setString(2, Util.convertToJson(violation).toString());
+                                 ps.setInt(3, Integer.parseInt(violation.getxMin()));
                                  ps.setBoolean(4, isValid(violation));
-                                 ps.setInt(5, classId);
+                                 ps.setInt(5, stringToInt(violation.getClassId()));
                              });
     }
 
@@ -237,5 +231,14 @@ public class BaseDaoService {
 
     private boolean isValid(@NotNull ObjectValidationResult result) {
         return result.getPropertyViolations().isEmpty() && result.getObjectViolations().isEmpty();
+    }
+
+    @NotNull
+    private Integer stringToInt(String param) {
+        try {
+            return Integer.parseInt(param);
+        } catch(NumberFormatException e) {
+            return -1;
+        }
     }
 }
