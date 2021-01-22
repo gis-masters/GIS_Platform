@@ -112,9 +112,14 @@
             "contentUrl": "/assets/help/map/projectManagement/06changeDisplayLayers.html"
           },
           {
+            "id": "createLayer",
+            "title": "Создание слоя",
+            "contentUrl": "/assets/help/map/projectManagement/07createLayer.html"
+          },
+          {
             "id": "saveAbortChanges",
             "title": "Сохранение и отмена изменений",
-            "contentUrl": "/assets/help/map/projectManagement/07saveAbortChanges.html"
+            "contentUrl": "/assets/help/map/projectManagement/08saveAbortChanges.html"
           }
         ]
       },
