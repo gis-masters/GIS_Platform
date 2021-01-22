@@ -140,6 +140,8 @@ services:
       - /opt/logs:/opt/logs
       - /opt/file_storage:/opt/file_storage
       - /opt/export:/opt/export
+    ports:
+      - 8084:8084
 
   gis-service:
     container_name: crg-gis-service
