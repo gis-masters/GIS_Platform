@@ -72,6 +72,13 @@ public class DataHandler {
                 // do nothing with geometry
             } else {
                 decodedRow.put(key, NULL_MARKER);
+
+                Optional<SimplePropertyDto> oProperty = getPropertyByName(schema.getProperties(), key);
+                if (oProperty.isPresent()) {
+                    if (ValueType.DATETIME.equals(oProperty.get().getValueType())) {
+                        decodedRow.put(key, value);
+                    }
+                }
             }
         });
 
@@ -105,5 +112,4 @@ public class DataHandler {
     private static Optional<SimplePropertyDto> getPropertyByName(List<SimplePropertyDto> properties, String name) {
         return properties.stream().filter(sProp -> sProp.getName().equalsIgnoreCase(name)).findFirst();
     }
-
 }

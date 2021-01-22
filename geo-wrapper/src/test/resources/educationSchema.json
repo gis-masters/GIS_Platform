@@ -840,6 +840,14 @@
       "allowedValues": [
         "Polygon"
       ]
+    },
+    {
+      "name": "created_da",
+      "title": "Дата создания",
+      "hidden": false,
+      "required": true,
+      "valueType": "DATETIME",
+      "sequenceNumber": 6
     }
   ],
   "customRuleFunction": "var errors = [];\n\nif (obj.classid == '602010102') {\n  if (!obj.edu_stype) {\n    errors.push({attribute: 'edu_stype', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.edu_stype) {\n    errors.push({attribute: 'edu_stype', error: 'Значение заполняется только для объекта \"Общеобразовательная организация\"'});\n}\n\nif (obj.classid == '602010104') {\n  if (!obj.edu_sdtype) {\n    errors.push({attribute: 'edu_sdtype', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.edu_sdtype) {\n    errors.push({attribute: 'edu_sdtype', error: 'Значение заполняется только для объекта \"Организация, реализующая программы профессионального и высшего образования\"'});\n}\n\nif (obj.classid == '602010106') {\n  if (!obj.sci_type) {\n    errors.push({attribute: 'sci_type', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.sci_type) {\n    errors.push({attribute: 'sci_type', error: 'Значение заполняется только для объекта \"Научная организация и ее структурные подразделения\"'});\n}\n\nif (obj.classid == '602010102' || obj.classid == '602010103') {\n  if (!obj.prg_type) {\n    errors.push({attribute: 'prg_type', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.prg_type) {\n    errors.push({attribute: 'prg_type', error: 'Значение заполняется только для объектов \"Общеобразовательная организация\", \"Организация дополнительного образования\"'});\n}\n\nif (!(obj.classid == '602010104')) {\n  if (obj.edu_tunit) {\n    errors.push({attribute: 'edu_tunit', error: 'Значение заполняется только для объекта \"Организация, реализующая программы профессионального и высшего образования\"'});\n  }\n}\n\nif (obj.status == '2') {\n  if (!obj.function) {\n    errors.push({attribute: 'reg_status', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.function) {\n    errors.push({attribute: 'reg_status', error: 'Значение заполняется только для планируемых к размещению объектов'});\n}\n\nif (obj.status == '2' || obj.status == '3' || obj.status == '4') {\n  if (!obj.event_time) {\n    errors.push({attribute: 'event_time', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.event_time) {\n    errors.push({attribute: 'event_time', error: 'Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'});\n}\n\nreturn errors;",

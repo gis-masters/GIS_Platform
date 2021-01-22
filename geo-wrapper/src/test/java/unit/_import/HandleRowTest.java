@@ -14,6 +14,7 @@ import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -65,6 +66,7 @@ public class HandleRowTest {
         final PGobject pgObject = new PGobject();
         pgObject.setValue("032165198161651981");
 
+        final LocalDateTime now = LocalDateTime.now();
         final SchemaDto schema = getSchemaFromFile("educationSchema.json");
         final Map<String, Object> dbRow = new HashMap<String, Object>(){{
             put("classid", "602010101");
@@ -78,6 +80,7 @@ public class HandleRowTest {
             put("reg_status", "1");
             put("shape", pgObject);
             put("ruleid", "5");
+            put("created_da", now);
         }};
 
         when(scriptEngine.invokeFunction(any(), any())).thenReturn(new HashMap<String, Object>());
@@ -95,6 +98,7 @@ public class HandleRowTest {
         assertEquals("032165198161651981", result.get("shape").toString());
         assertEquals("4", result.get("status"));
         assertEquals("1", result.get("reg_status"));
+        assertNotEquals(NULL_MARKER, result.get("created_da"));
     }
 
     private SchemaDto getSchemaFromFile(String fName) throws IOException {
