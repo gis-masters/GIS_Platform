@@ -10,7 +10,7 @@ public class LayerUpdateDto {
     private String nativeCRS;
     private int position = 1;
     private int transparency = 1;
-    private Long groupId;
+    private Long parentId;
 
     public LayerUpdateDto(String title, String dataset, Boolean enabled, int position, int transparency, int minZoom,
                           int maxZoom, String nativeCRS) {
@@ -25,18 +25,18 @@ public class LayerUpdateDto {
     }
 
     public LayerUpdateDto(String title, String dataset, Boolean enabled, int minZoom, int maxZoom,
-                          String nativeCRS, Long groupId) {
+                          String nativeCRS, Long parentId) {
         this.title = title;
         this.dataset = dataset;
         this.enabled = enabled;
         this.minZoom = minZoom;
         this.maxZoom = maxZoom;
         this.nativeCRS = nativeCRS;
-        this.groupId = groupId;
+        this.parentId = parentId;
     }
 
-    public LayerUpdateDto(Long groupId) {
-        this.groupId = groupId;
+    public LayerUpdateDto(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getTitle() {
@@ -67,8 +67,8 @@ public class LayerUpdateDto {
         return maxZoom;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public Long getParentId() {
+        return parentId;
     }
 
     public String getNativeCRS() {

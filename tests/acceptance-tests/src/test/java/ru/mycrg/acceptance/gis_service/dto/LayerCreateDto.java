@@ -6,7 +6,7 @@ public class LayerCreateDto {
 
     private final String dataset;
 
-    private final String internalName;
+    private final String tableName;
 
     private final String styleName;
 
@@ -20,11 +20,11 @@ public class LayerCreateDto {
 
     private final String dataSourceUri;
 
-    public LayerCreateDto(String title, String dataset, String internalName, String styleName, String type,
+    public LayerCreateDto(String title, String dataset, String tableName, String styleName, String type,
                           String schemaId, String dataStoreName, String nativeCRS, String dataSourceUri) {
         this.title = title;
         this.dataset = dataset;
-        this.internalName = internalName;
+        this.tableName = tableName;
         this.styleName = styleName;
         this.type = type;
         this.schemaId = schemaId;
@@ -41,8 +41,8 @@ public class LayerCreateDto {
         return dataset;
     }
 
-    public String getInternalName() {
-        return internalName;
+    public String getTableName() {
+        return tableName;
     }
 
     public String getStyleName() {

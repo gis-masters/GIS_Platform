@@ -1,6 +1,7 @@
 package ru.mycrg.gis_service.controller;
 
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,11 @@ import java.util.List;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
-@Log4j2
 @RestController
 @RequestMapping("/projects/{project_id}")
 public class PermissionController {
+
+    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     private final PermissionsService permissionsService;
 
@@ -43,6 +45,9 @@ public class PermissionController {
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
                                                                  @Valid @RequestBody PermissionCreateDto dto,
                                                                  Authentication authentication) {
+
+        log.debug("Try to create permission for project {}", dto.getPrincipalId());
+
         PermissionProjection permission = permissionsService.create(projectId, dto, authentication);
 
         return new ResponseEntity<>(permission, HttpStatus.CREATED);
@@ -64,6 +69,8 @@ public class PermissionController {
                                                    @PathVariable(name = "id") long permissionId,
                                                    @RequestBody JsonMergePatch patchDto,
                                                    Authentication authentication) {
+        log.debug("update permission for project: {} to: {}", projectId, patchDto.toJsonValue());
+
         permissionsService.update(projectId, permissionId, patchDto, authentication);
 
         return ResponseEntity.noContent().build();
@@ -74,6 +81,8 @@ public class PermissionController {
     public ResponseEntity<Object> deletePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,
                                                    Authentication authentication) {
+        log.debug("Request for deletion permission {} for project {}", permissionId, projectId);
+
         permissionsService.delete(projectId, permissionId, authentication);
 
         return ResponseEntity.noContent().build();

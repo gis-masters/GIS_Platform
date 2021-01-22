@@ -56,7 +56,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
         json.put("title", title);
         json.put("dataset", datasetName);
-        json.put("internalName", layerName);
+        json.put("tableName", layerName);
         json.put("schemaId", schemaId);
         json.put("dataStoreName", storeName);
         json.put("nativeCRS", "EPSG:" + importTask.getSrs());

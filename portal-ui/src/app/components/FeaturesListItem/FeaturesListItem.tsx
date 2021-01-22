@@ -59,7 +59,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   private async fetchSchema() {
     const { properties, id } = this.props.feature;
     const tableName = this.extractTableName(id);
-    const { schemaId } = currentProject.layers.find(layer => layer.internalName === tableName);
+    const { schemaId } = currentProject.layers.find(layer => layer.tableName === tableName);
     const schema = await schemaService.getSchemaBySchemaId(schemaId);
 
     if (schema) {

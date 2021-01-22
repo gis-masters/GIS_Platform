@@ -1,14 +1,7 @@
 package ru.mycrg.gis_service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class PermissionCreateDto {
 
     @Min(message = "Минимальное допустимое значение 1", value = 1)
@@ -23,6 +16,34 @@ public class PermissionCreateDto {
     @NotBlank
     @Pattern(regexp = "^(VIEWER|OWNER)$", message = "Допустимые значения поля role: VIEWER, OWNER")
     private String role;
+
+    public PermissionCreateDto() {
+        //Required by framework
+    }
+
+    public Long getPrincipalId() {
+        return principalId;
+    }
+
+    public void setPrincipalId(Long principalId) {
+        this.principalId = principalId;
+    }
+
+    public String getPrincipalType() {
+        return principalType;
+    }
+
+    public void setPrincipalType(String principalType) {
+        this.principalType = principalType;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     @Override
     public String toString() {

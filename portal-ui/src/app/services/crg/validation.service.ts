@@ -85,7 +85,7 @@ class ValidationService {
       resources: layers.map((layer: CrgLayer) => {
         return {
           dataset: layer.dataset,
-          table: layer.internalName,
+          table: layer.tableName,
           schemaId: layer.schemaId
         };
       })

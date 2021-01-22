@@ -92,7 +92,7 @@ class CurrentProject implements CrgProjectData {
       }))
     ]
       .map((item: TreeItem, i, items) => {
-        const parentId = item.isGroup ? (item.payload as CrgLayersGroup).parent : (item.payload as CrgLayer).groupId;
+        const parentId = item.isGroup ? (item.payload as CrgLayersGroup).parentId : (item.payload as CrgLayer).parentId;
 
         if (parentId) {
           item.parent = items.find(t => t.isGroup && t.id === parentId) as TreeItem<CrgLayersGroup>;
@@ -197,13 +197,13 @@ class CurrentProject implements CrgProjectData {
     const groupsMeaningfulFields: (keyof CrgLayersGroup)[] = [
       'enabled',
       'expanded',
-      'parent',
+      'parentId',
       'position',
       'title',
       'transparency'
     ];
 
-    const layersMeaningfulFields: (keyof NewCrgLayer)[] = ['enabled', 'groupId', 'position', 'title', 'transparency'];
+    const layersMeaningfulFields: (keyof NewCrgLayer)[] = ['enabled', 'parentId', 'position', 'title', 'transparency'];
 
     return {
       groupsToCreate: this.tree
@@ -279,12 +279,12 @@ class CurrentProject implements CrgProjectData {
     }
 
     this.layers.slice().forEach(layer => {
-      if (layer.groupId === deletingGroup.id) {
+      if (layer.parentId === deletingGroup.id) {
         currentProject.deleteLayer(layer);
       }
     });
     currentProject.groups.forEach(group => {
-      if (group.parent === deletingGroup.id) {
+      if (group.parentId === deletingGroup.id) {
         this.deleteGroup(group);
       }
     });
@@ -381,13 +381,13 @@ class CurrentProject implements CrgProjectData {
       if (group.id === oldId) {
         group.id = newId;
       }
-      if (group.parent === oldId) {
-        group.parent = newId;
+      if (group.parentId === oldId) {
+        group.parentId = newId;
       }
     });
     this.layers.forEach(layer => {
-      if (layer.groupId === oldId) {
-        layer.groupId = newId;
+      if (layer.parentId === oldId) {
+        layer.parentId = newId;
       }
     });
   }

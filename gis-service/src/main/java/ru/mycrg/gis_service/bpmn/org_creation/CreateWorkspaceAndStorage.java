@@ -1,8 +1,9 @@
 package ru.mycrg.gis_service.bpmn.org_creation;
 
-import lombok.extern.log4j.Log4j2;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
+import ru.mycrg.gis_service.controller.LayerController;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
@@ -17,9 +19,10 @@ import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.CREATE_DTO_VAR_NAME;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
 import static ru.mycrg.mq_queue_contract.CrgConstants.*;
 
-@Log4j2
 @Service("createWorkspaceAndStorage")
 public class CreateWorkspaceAndStorage implements JavaDelegate {
+
+    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     @Autowired
     private Environment environment;
@@ -35,6 +38,8 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
 
         // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
         new WorkspacesService(accessToken).createWorkspace(scratchWorkspaceName);
+
+        log.debug("Try to create workspace and storage for org {}", dto.getOrgId());
 
         String postGis = environment
                 .getRequiredProperty("spring.datasource.url")

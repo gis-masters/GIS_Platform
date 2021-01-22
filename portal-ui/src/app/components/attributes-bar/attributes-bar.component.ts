@@ -299,7 +299,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     // В таблице выводился нормальный id без перфикса фичи. Теперь верну эту инфу назад.
     const clonedFeatures: WfsFeature[] = cloneDeep(selected);
     clonedFeatures.forEach((feature: WfsFeature) => {
-      feature.id = this.layer.internalName + '.' + feature.id;
+      feature.id = this.layer.tableName + '.' + feature.id;
     });
 
     sidebars.openEdit({
@@ -423,9 +423,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     let i = 0;
     from(batchModel.batches)
       .pipe(
-        concatMap(features =>
-          transformFeature.insertFeatures(features, selectedLayer.internalName, this.layer.nativeCRS)
-        ),
+        concatMap(features => transformFeature.insertFeatures(features, selectedLayer.tableName, this.layer.nativeCRS)),
         catchError(err => this.handleError(err))
       )
       .subscribe(() => {
@@ -451,13 +449,13 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         concatMap(features => {
           return combineLatest(
             of(features),
-            transformFeature.insertFeatures(features, selectedLayer.internalName, this.layer.nativeCRS)
+            transformFeature.insertFeatures(features, selectedLayer.tableName, this.layer.nativeCRS)
           );
         }),
         concatMap(([features]) => {
           const featureIds = features.map(feature => feature.id);
 
-          return transformFeature.deleteFeatures(featureIds, this.layer.internalName);
+          return transformFeature.deleteFeatures(featureIds, this.layer.tableName);
         }),
         catchError(err => this.handleError(err)),
         takeUntil(this.unsubscribe$)
@@ -484,7 +482,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         concatMap(features => {
           const featureIds = features.map(feature => feature.id);
 
-          return transformFeature.deleteFeatures(featureIds, this.layer.internalName);
+          return transformFeature.deleteFeatures(featureIds, this.layer.tableName);
         })
       )
       .subscribe(() => {

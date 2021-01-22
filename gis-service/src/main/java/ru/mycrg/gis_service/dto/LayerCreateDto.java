@@ -1,16 +1,10 @@
 package ru.mycrg.gis_service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class LayerCreateDto {
 
     @NotBlank
@@ -23,7 +17,7 @@ public class LayerCreateDto {
 
     @NotBlank
     @Length(min = 2, max = 255)
-    private String internalName;
+    private String tableName;
 
     @Length(min = 2, max = 255)
     private String styleName;
@@ -43,4 +37,80 @@ public class LayerCreateDto {
 
     @Length(min = 6, max = 255)
     private String dataSourceUri;
+
+    public LayerCreateDto() {
+        //Required by framework
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(String dataset) {
+        this.dataset = dataset;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
+
+    public String getDataStoreName() {
+        return dataStoreName;
+    }
+
+    public void setDataStoreName(String dataStoreName) {
+        this.dataStoreName = dataStoreName;
+    }
+
+    public String getNativeCRS() {
+        return nativeCRS;
+    }
+
+    public void setNativeCRS(String nativeCRS) {
+        this.nativeCRS = nativeCRS;
+    }
+
+    public String getDataSourceUri() {
+        return dataSourceUri;
+    }
+
+    public void setDataSourceUri(String dataSourceUri) {
+        this.dataSourceUri = dataSourceUri;
+    }
 }

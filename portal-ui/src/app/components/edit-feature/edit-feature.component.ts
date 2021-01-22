@@ -220,7 +220,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     if (this.isNew) {
       await transformFeature.insertFeatures(
         [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
-        this.layer.internalName,
+        this.layer.tableName,
         this.layer.nativeCRS
       );
 
@@ -228,7 +228,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       communicationService.featuresUpdated.emit();
     } else {
       await this.batchUpdateFeatures(
-        this.layer.internalName,
+        this.layer.tableName,
         this.features,
         newProperties,
         this.isGeometryChanged ? this.changedGeometry : undefined

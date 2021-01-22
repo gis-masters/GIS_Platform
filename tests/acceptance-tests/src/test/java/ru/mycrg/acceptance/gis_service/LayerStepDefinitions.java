@@ -80,12 +80,12 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         assertEquals(layerCreateDto.getTitle(), jsonPath.get("title"));
         assertEquals(layerCreateDto.getDataset(), jsonPath.get("dataset"));
-        assertEquals(layerCreateDto.getInternalName(), jsonPath.get("internalName"));
+        assertEquals(layerCreateDto.getTableName(), jsonPath.get("tableName"));
         assertEquals(layerCreateDto.getStyleName(), jsonPath.get("styleName"));
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getSchemaId(), jsonPath.get("schemaId"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
-        assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getInternalName()),
+        assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
                      jsonPath.get("complexName"));
     }
 
@@ -126,7 +126,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("title"));
         assertTrue(presentedData.containsKey("type"));
         assertTrue(presentedData.containsKey("dataset"));
-        assertTrue(presentedData.containsKey("internalName"));
+        assertTrue(presentedData.containsKey("tableName"));
         assertTrue(presentedData.containsKey("enabled"));
         assertTrue(presentedData.containsKey("position"));
         assertTrue(presentedData.containsKey("transparency"));
@@ -199,7 +199,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         extract().jsonPath().
                         getMap("");
 
-        assertThat(presentedData.get("groupId"), is(layerGroupId));
+        assertThat(presentedData.get("parentId"), is(layerGroupId));
     }
 
     @When("Пользователь делает запрос на удаление слоя")

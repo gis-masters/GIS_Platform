@@ -23,7 +23,7 @@ public class Layer implements Identifiable<Long> {
     private String dataset;
 
     @Column
-    private String internalName;
+    private String tableName;
 
     @Column
     private String type;
@@ -69,15 +69,16 @@ public class Layer implements Identifiable<Long> {
     private Project project;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Group group;
+    private Group parent;
 
     public Layer() {
+        //Required by framework
     }
 
     public Layer(LayerCreateDto dto) {
         title = dto.getTitle();
         dataset = dto.getDataset();
-        internalName = dto.getInternalName();
+        tableName = dto.getTableName();
         type = dto.getType();
         schemaId = dto.getSchemaId();
         styleName = dto.getStyleName();
@@ -112,12 +113,12 @@ public class Layer implements Identifiable<Long> {
         this.title = title;
     }
 
-    public String getInternalName() {
-        return internalName;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setInternalName(String internalName) {
-        this.internalName = internalName;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -224,12 +225,12 @@ public class Layer implements Identifiable<Long> {
         this.dataSourceUri = dataSourceUri;
     }
 
-    public Group getGroup() {
-        return group;
+    public Group getParent() {
+        return parent;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setParent(Group group) {
+        this.parent = group;
     }
 
     public String getType() {

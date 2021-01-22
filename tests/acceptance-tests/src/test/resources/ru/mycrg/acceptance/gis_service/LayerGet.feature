@@ -20,9 +20,9 @@ Feature: Выборка слоев проекта
   Scenario Outline: Проверка представления созданного слоя проекта
     Given Существует проект "STRING_10"
     Given Существует слой проекта
-      | <title> | <dataset> | <internalName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
+      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
     When Пользователь делает запрос на текущий слой
     And Представление слоя проекта корректно
     Examples:
-      | title    | dataset  | internalName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
+      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
       | STRING_5 | STRING_5 | STRING_5     | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |

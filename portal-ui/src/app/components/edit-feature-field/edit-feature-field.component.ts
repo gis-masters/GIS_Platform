@@ -40,7 +40,7 @@ export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
       featureInfo: {
         feature: this.feature,
         isNew: this.isNew,
-        layerName: this.layer ? this.layer.internalName : '',
+        layerName: this.layer ? this.layer.tableName : '',
         isReadOnly: Boolean(this.isReadOnly)
       }
     });

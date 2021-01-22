@@ -86,7 +86,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
             return validationService.getValidationResults(
               {
                 dataset: this.crgLayer.dataset,
-                table: this.crgLayer.internalName,
+                table: this.crgLayer.tableName,
                 schemaId: this.crgLayer.schemaId
               },
               this.paginator.pageIndex,
@@ -112,7 +112,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     const response: ValidationResultsResponse = await validationService.getValidationResults(
       {
         dataset: this.crgLayer.dataset,
-        table: this.crgLayer.internalName,
+        table: this.crgLayer.tableName,
         schemaId: this.crgLayer.schemaId
       },
       0,

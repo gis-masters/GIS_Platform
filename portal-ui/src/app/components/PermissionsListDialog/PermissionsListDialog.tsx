@@ -293,7 +293,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
     for (let [permission, project, layer] of toDelete) {
       if (layer) {
-        await removeTablePermission(permission, layer.dataset, layer.internalName);
+        await removeTablePermission(permission, layer.dataset, layer.tableName);
       } else {
         await removeProjectPermission(permission, project);
       }
@@ -301,7 +301,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
     for (let [permission, project, layer] of toCreate) {
       if (layer) {
-        await addTablePermission(permission, layer.dataset, layer.internalName);
+        await addTablePermission(permission, layer.dataset, layer.tableName);
       } else {
         await addProjectPermission(permission, project);
       }

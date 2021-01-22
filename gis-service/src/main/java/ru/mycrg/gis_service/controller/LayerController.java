@@ -1,6 +1,7 @@
 package ru.mycrg.gis_service.controller;
 
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,11 @@ import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
-@Log4j2
 @RestController
 @RequestMapping("/projects/{project_id}")
 public class LayerController {
+
+    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     private final LayerService layerService;
     private final ProjectService projectService;
@@ -63,6 +65,9 @@ public class LayerController {
                                                        @Valid @RequestBody LayerCreateDto dto,
                                                        BindingResult bindingResult,
                                                        Authentication authentication) {
+
+        log.debug("Request create layer: {}", dto.getTableName());
+
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }

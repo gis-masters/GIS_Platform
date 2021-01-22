@@ -8,7 +8,7 @@ public class LayerProjection {
     private final String title;
     private final String type;
     private final String dataset;
-    private final String internalName;
+    private final String tableName;
     private final boolean enabled;
     private final Integer position;
     private final int transparency;
@@ -18,7 +18,7 @@ public class LayerProjection {
     private final String nativeCRS;
     private final String schemaId;
     private final String dataSourceUri;
-    private final Long groupId;
+    private final Long parentId;
     private final String complexName;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
@@ -26,7 +26,7 @@ public class LayerProjection {
         this.title = layer.getTitle();
         this.type = layer.getType();
         this.dataset = layer.getDataset();
-        this.internalName = layer.getInternalName();
+        this.tableName = layer.getTableName();
         this.enabled = layer.isEnabled();
         this.position = layer.getPosition();
         this.transparency = layer.getTransparency();
@@ -36,8 +36,8 @@ public class LayerProjection {
         this.nativeCRS = layer.getNativeCRS();
         this.schemaId = layer.getSchemaId();
         this.dataSourceUri = layer.getDataSourceUri();
-        this.groupId = layer.getGroup() != null ? layer.getGroup().getId(): null;
-        this.complexName = orgWorkspaceName + ":" + internalName;
+        this.parentId = layer.getParent() != null ? layer.getParent().getId(): null;
+        this.complexName = orgWorkspaceName + ":" + tableName;
     }
 
     public Long getId() {
@@ -56,8 +56,8 @@ public class LayerProjection {
         return dataset;
     }
 
-    public String getInternalName() {
-        return internalName;
+    public String getTableName() {
+        return tableName;
     }
 
     public boolean isEnabled() {
@@ -96,8 +96,8 @@ public class LayerProjection {
         return dataSourceUri;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public Long getParentId() {
+        return parentId;
     }
 
     public String getComplexName() {

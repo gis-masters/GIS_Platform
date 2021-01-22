@@ -216,7 +216,7 @@ class SchemaService {
   }
 
   async getEmptyFeature(layer: CrgLayer): Promise<WfsFeature<CoordinateEdited>> {
-    const { internalName, schemaId } = layer;
+    const { tableName, schemaId } = layer;
     const schema = await this.getSchema(schemaId);
 
     const properties = schema.properties.reduce((acc: { [key: string]: null }, propertySchema) => {
@@ -226,7 +226,7 @@ class SchemaService {
 
     return {
       type: 'Feature',
-      id: internalName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+      id: tableName, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
       geometry: getEmptyGeometry(schema.geometryType),
       geometry_name: 'shape', // TODO нужно добавить в схему и брать оттуда
       properties

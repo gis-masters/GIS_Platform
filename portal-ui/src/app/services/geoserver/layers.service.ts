@@ -56,7 +56,7 @@ export async function loadLayerLegend(layer: CrgLayer) {
 export function getFeatureLayer(feature: WfsFeature): CrgLayer {
   const [layerName] = feature.id.split('.');
 
-  return currentProject.vectorLayers.find(l => l.internalName === layerName);
+  return currentProject.vectorLayers.find(l => l.tableName === layerName);
 }
 
 function createImageFromBlob(image: Blob): Promise<string> {

@@ -209,7 +209,7 @@ class OpenLayersService {
 
   addExternalLayers(layers: CrgLayer[], zIndex: number) {
     layers.forEach(layer => {
-      const layerOnMap = this.getLayerByName(layer.internalName);
+      const layerOnMap = this.getLayerByName(layer.tableName);
       if (layerOnMap) {
         layerOnMap.setVisible(true);
         layerOnMap.setOpacity(layer.transparency / 100);
@@ -219,7 +219,7 @@ class OpenLayersService {
           source: new TileArcGISRest({
             url: layer.dataSourceUri,
             params: {
-              LAYERS: layer.internalName
+              LAYERS: layer.tableName
             },
             tileLoadFunction: this.arcGisMapServerLoadFunction
           }),

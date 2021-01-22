@@ -121,7 +121,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         id: generateNextLayerId(),
         dataStoreName,
         dataset: this.dataSet.identifier,
-        internalName: this.dataTable.identifier,
+        tableName: this.dataTable.identifier,
         complexName: `${dataStoreName}:${this.dataTable.identifier}`,
         title: this.title,
         enabled: true,
@@ -146,18 +146,16 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
 
     const alreadyUsedDataTables = this.usedDataTables.filter(table =>
-      currentProject.layers.some(layer => table.dataset === layer.dataset && table.identifier === layer.internalName)
+      currentProject.layers.some(layer => table.dataset === layer.dataset && table.identifier === layer.tableName)
     );
 
     this.usedDataTablesRequests = Promise.all(
       currentProject.vectorLayers
         .filter(
           layer =>
-            !this.usedDataTables.some(
-              table => table.dataset === layer.dataset && table.identifier === layer.internalName
-            )
+            !this.usedDataTables.some(table => table.dataset === layer.dataset && table.identifier === layer.tableName)
         )
-        .map(layer => getDataTable(layer.dataset, layer.internalName))
+        .map(layer => getDataTable(layer.dataset, layer.tableName))
     );
 
     const newUsedDataTables = await this.usedDataTablesRequests;

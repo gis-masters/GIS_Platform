@@ -97,7 +97,7 @@ public class LayerService {
                                              .collect(Collectors.toSet());
         List<Layer> relatedLayers;
         if ("table".equals(field)) {
-            relatedLayers = layerRepository.findRelatedByInternalName(value, projectIds);
+            relatedLayers = layerRepository.findRelatedByTableName(value, projectIds);
         } else if ("dataset".equals(field)) {
             relatedLayers = layerRepository.findRelatedByDataset(value, projectIds);
         } else {
@@ -117,29 +117,29 @@ public class LayerService {
     }
 
     private void updateGroup(Layer layer, LayerUpdateDto dto, List<Group> groups) {
-        if (dto.getGroupId() != null) {
+        if (dto.getParentId() != null) {
             Group parentGroup = groups.stream()
-                                      .filter(group -> group.getId().equals(dto.getGroupId()))
+                                      .filter(group -> group.getId().equals(dto.getParentId()))
                                       .findFirst()
                                       .orElseThrow(() -> new BadRequestException(
-                                              "groupId: Родительская группа задана неверно"));
+                                              "parentId: Родительская группа задана неверно"));
 
-            layer.setGroup(parentGroup);
+            layer.setParent(parentGroup);
         } else {
-            layer.setGroup(null);
+            layer.setParent(null);
         }
     }
 
     @NotNull
     private Layer createLayer(LayerCreateDto dto, Project project) {
-        if (layerRepository.findByInternalNameAndProject(dto.getInternalName(), project).isPresent()) {
-            throw new ConflictException("Layer with same internalName already exist");
+        if (layerRepository.findByTableNameAndProject(dto.getTableName(), project).isPresent()) {
+            throw new ConflictException("Layer with same tableName already exist");
         }
 
         Layer newLayer = new Layer(dto);
 
         if ("vector".equals(dto.getType())) {
-            String dataSourceUri = DATA_SERVICE_API_PREFIX + "/datasets/" + dto.getDataset() + "/tables/" + dto.getInternalName();
+            String dataSourceUri = DATA_SERVICE_API_PREFIX + "/datasets/" + dto.getDataset() + "/tables/" + dto.getTableName();
             newLayer.setDataSourceUri(dataSourceUri);
         }
 

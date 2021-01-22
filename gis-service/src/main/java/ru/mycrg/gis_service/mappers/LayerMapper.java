@@ -16,7 +16,7 @@ public interface LayerMapper {
     Layer toEntity(LayerUpdateDto updateDto);
 
     @Mappings({
-            @Mapping(target = "groupId", source = "layer.group.id")
+            @Mapping(target = "parentId", source = "layer.parent.id")
     })
     LayerUpdateDto toDto(Layer layer);
 

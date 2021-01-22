@@ -20,7 +20,7 @@ interface CrgEntity {
 interface BaseCrgLayer extends CrgEntity {
   dataset: string;
   dataStoreName?: string;
-  internalName: string;
+  tableName: string;
   type: CrgLayerType;
   minZoom?: number;
   maxZoom?: number;
@@ -29,7 +29,7 @@ interface BaseCrgLayer extends CrgEntity {
   schemaId: string;
   complexName: string;
   dataSourceUri?: string;
-  groupId?: number;
+  parentId?: number;
 }
 
 // extended on ui
@@ -47,9 +47,9 @@ export type NewCrgLayer = Pick<
   | 'dataStoreName'
   | 'dataset'
   | 'complexName'
-  | 'internalName'
+  | 'tableName'
   | 'enabled'
-  | 'groupId'
+  | 'parentId'
   | 'minZoom'
   | 'maxZoom'
   | 'nativeCRS'
@@ -67,13 +67,13 @@ export interface CrgSource {
 }
 
 export interface CrgLayersGroup extends CrgEntity {
-  parent?: number;
+  parentId?: number;
   expanded: boolean;
 }
 
 export type NewCrgLayersGroup = Pick<
   CrgLayersGroup,
-  'id' | 'title' | 'enabled' | 'transparency' | 'position' | 'parent' | 'expanded'
+  'id' | 'title' | 'enabled' | 'transparency' | 'position' | 'parentId' | 'expanded'
 >;
 
 export type TreeItemPayload = CrgLayer | NewCrgLayer | CrgLayersGroup | NewCrgLayersGroup;

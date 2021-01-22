@@ -120,7 +120,7 @@ export class ExportGmlDialog extends Component<ExportGmlDialogProps> {
     const resources: ExportResourceModel[] = this.selectedLayers.map(layer => {
       return {
         dataset: layer.dataset,
-        table: layer.internalName,
+        table: layer.tableName,
         schemaId: layer.schemaId
       };
     });

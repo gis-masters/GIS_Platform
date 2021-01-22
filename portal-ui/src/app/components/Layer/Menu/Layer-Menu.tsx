@@ -174,9 +174,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async export() {
     const { entity, onClose } = this.props;
-    const { dataset, internalName, schemaId } = entity as CrgLayer;
+    const { dataset, tableName, schemaId } = entity as CrgLayer;
 
-    await exportService.exportAsShape([{ dataset, table: internalName, schemaId }]);
+    await exportService.exportAsShape([{ dataset, table: tableName, schemaId }]);
     sidebars.openInfo();
 
     onClose();

@@ -17,7 +17,7 @@ async function buildUrl(targetName: string): Promise<string> {
 }
 
 export async function getFeatureTypeByLayer(layer: CrgLayer): Promise<FeatureType> {
-  const url = await buildUrl(layer.internalName);
+  const url = await buildUrl(layer.tableName);
   const { featureType } = await http.get<{ featureType: FeatureType }>(url);
 
   return featureType;

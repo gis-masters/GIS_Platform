@@ -86,7 +86,7 @@ class AllPermissionsService {
 
       try {
         permissions = layer
-          ? await getTablePermissions(layer.dataset, layer.internalName)
+          ? await getTablePermissions(layer.dataset, layer.tableName)
           : await getProjectPermissions(project);
       } catch (e) {
         broken = true;
