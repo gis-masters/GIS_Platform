@@ -186,6 +186,8 @@ export function transformGeometry(
       coordinates: newCoordinates
     } as WfsMultiPolygonGeometry;
   }
+
+  return geometry as WfsGeometry<Coordinate>;
 }
 
 function transformCoordinate(
