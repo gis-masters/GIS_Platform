@@ -9,13 +9,13 @@ import { Button } from '../../../Button/Button';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
+import { FieldType } from '../../../../services/crg/schema.service';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
 
 import { EditFeaturesControlProps, cnEditFeatureFieldControl } from '../EditFeatureField-Control';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url.scss';
-import { FieldType } from '../../../../services/crg/schema.service';
 
 const cnEditFeatureField = cn('EditFeatureField');
 

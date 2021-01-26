@@ -1,17 +1,40 @@
 import React, { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
-import { SupportedGeometryType } from '../../../services/geoserver/wfs.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType } from '../../../services/crg/projects.models';
+import { LayerIcon as Icon } from '../../LayerIcon/LayerIcon.composed';
+import { LayerIconType } from '../../LayerIcon/LayerIcon';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Icon.scss';
 
-export const cnLayerIcon = cn('Layer', 'Icon');
+const cnLayerIcon = cn('Layer', 'Icon');
 
-export type IconType = SupportedGeometryType | 'group' | 'unknown' | 'raster' | 'error';
-
-export interface LayerIconProps extends IClassNameProps {
-  type: IconType;
+interface LayerIconProps {
+  expanded: boolean;
+  isGroup: boolean;
+  isError: boolean;
+  data: CrgLayer | CrgLayersGroup;
 }
 
-export const LayerIcon: FC<LayerIconProps> = () => null;
+export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded }) => {
+  let iconType: LayerIconType;
+  let schemaId: string;
+
+  if (isError) {
+    iconType = 'error';
+  } else if (isGroup) {
+    iconType = 'group';
+  } else if ((data as CrgLayer).type === CrgLayerType.RASTER) {
+    iconType = 'raster';
+  } else if ((data as CrgLayer).type === CrgLayerType.VECTOR) {
+    iconType = 'vector';
+  } else {
+    iconType = 'unknown';
+  }
+
+  if (!isGroup) {
+    schemaId = (data as CrgLayer).schemaId;
+  }
+
+  return <Icon type={iconType} className={cnLayerIcon()} schemaId={schemaId} expanded={expanded} />;
+};

@@ -5,13 +5,12 @@ import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayersGroup, CrgLayer, CrgLayerType, TreeItemPayload } from '../../services/crg/projects.models';
-import { supportedGeometryTypes } from '../../services/geoserver/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/crg/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
-import { IconType } from './Icon/Layer-Icon';
+import { LayerIcon } from './Icon/Layer-Icon';
 import { LayerDrag } from './Drag/Layer-Drag';
 import { LayerCard } from './Card/Layer-Card';
 import { LayerMenu } from './Menu/Layer-Menu';
@@ -20,7 +19,6 @@ import { LayerTitle } from './Title/Layer-Title';
 import { LayerErrors } from './Errors/Layer-Errors';
 import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerLegend } from './Legend/Layer-Legend';
-import { LayerIcon } from './Icon/Layer-Icon.composed';
 import { LayerInnards } from './Innards/Layer-Innards';
 import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
@@ -49,12 +47,11 @@ export class Layer extends Component<LayerProps> {
   @observable private menuOpen = false;
   @observable private menuX = 0;
   @observable private menuY = 0;
-  @observable private iconType: IconType = 'unknown';
   @observable private _errors: string[] = [];
   private menuAnchor?: HTMLElement;
 
   async componentDidMount() {
-    await this.fetchIconType();
+    await this.testSchema();
   }
 
   componentDidUpdate({ editMode: prevEditMode }: LayerProps) {
@@ -99,7 +96,7 @@ export class Layer extends Component<LayerProps> {
           />
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} disabled={editMode && !isGroup} />
-          <LayerIcon type={this.iconType} expanded={expanded} />
+          <LayerIcon isGroup={isGroup} expanded={expanded} data={data} isError={this.isError} />
           <LayerTitle isError={this.isError}>
             {title}
             {isEmptyGroup && <LayerEmptiness />}
@@ -147,34 +144,22 @@ export class Layer extends Component<LayerProps> {
     return Boolean(this.errors.length);
   }
 
-  private async fetchIconType() {
+  private async testSchema() {
     const { data, isGroup } = this.props;
-    let iconType: IconType;
 
     if (isGroup) {
-      iconType = 'group';
-    } else {
-      const { schemaId, type } = data as CrgLayer;
-
-      if (type === CrgLayerType.VECTOR) {
-        try {
-          const { geometryType } = await schemaService.getSchema(schemaId);
-          iconType = supportedGeometryTypes.includes(geometryType) ? geometryType : 'unknown';
-        } catch (e) {
-          iconType = 'error';
-          this.addError('Не найдена схема для слоя.');
-        }
-      } else {
-        iconType = 'raster';
-      }
+      return;
     }
 
-    this.setIconType(iconType);
-  }
+    const { schemaId, type } = data as CrgLayer;
 
-  @action
-  private setIconType(iconType: IconType) {
-    this.iconType = iconType;
+    if (type === CrgLayerType.VECTOR) {
+      try {
+        const { geometryType } = await schemaService.getSchema(schemaId);
+      } catch (e) {
+        this.addError('Не найдена схема для слоя.');
+      }
+    }
   }
 
   @action.bound

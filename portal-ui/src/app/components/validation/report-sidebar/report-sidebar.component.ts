@@ -11,6 +11,7 @@ import { sidebars } from '../../../stores/Sidebars.store';
 import { ProcessStatus, ProcessType } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
 import { currentProject } from '../../../stores/CurrentProject.store';
+
 @Component({
   selector: 'crg-report-sidebar',
   templateUrl: './report-sidebar.component.html',
@@ -42,7 +43,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async ngOnInit() {
-    communicationService.editView.on((objects: ObjectDto[]) => {
+    communicationService.editBugObject.on((objects: ObjectDto[]) => {
       this.isEditMode = true;
       this.objectsToEdit = objects;
     }, this);
@@ -53,14 +54,14 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
         filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe((wsMessage: IWsMessage) => this.handleWsMessage(wsMessage.payload as ValidationWsMsg));
+      .subscribe((wsMessage: IWsMessage<ValidationWsMsg>) => this.handleWsMessage(wsMessage.payload));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.layers = currentProject.vectorLayers;
 
     this.commonProgress = 0;
-    const layersChange = changes['layers'];
+    const layersChange = changes.layers;
 
     if (layersChange) {
       this.updateBrieflyInfo(this.layers);

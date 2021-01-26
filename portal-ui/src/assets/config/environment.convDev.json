@@ -3,8 +3,10 @@
   "production": false,
   "server": {
     "host": "10.10.10.201",
-    "port": 8100,
-    "wsPort": 8084
+    "port": "80",
+    "wsPort": "80",
+    "path": "/api",
+    "wsPath": "/ws"
   },
   "scratchWorkspaceName": "scratch_database",
   "flags": {

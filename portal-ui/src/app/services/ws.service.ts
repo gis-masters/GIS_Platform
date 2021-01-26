@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
-import * as SockJS from 'sockjs-client';
+import SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
 
 import { generateRandomId } from './util/stringUtil';
@@ -8,9 +8,9 @@ import { BugObject } from './crg/validation.service';
 import { getWsEndpointUrl } from './server-urls.service';
 import { ProcessType } from './models';
 
-export interface IWsMessage {
+export interface IWsMessage<T = ExportWsMsg | ValidationWsMsg> {
   type: ProcessType;
-  payload: ExportWsMsg | ValidationWsMsg;
+  payload: T;
 }
 
 export interface ExportWsMsg {

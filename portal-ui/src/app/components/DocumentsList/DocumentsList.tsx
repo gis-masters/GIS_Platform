@@ -1,9 +1,9 @@
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { AddBoxOutlined } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AddBoxOutlined } from '@material-ui/icons';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';
@@ -11,7 +11,6 @@ import { EditedField } from '../../services/crg/schema.service';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { CrgDocument, documentsService } from '../../services/crg/documents.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { DocumentListItemData } from '../EditFeatureField/Control/_type/EditFeatureField-Control_type_lookup';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
@@ -23,12 +22,16 @@ import '!style-loader!css-loader!sass-loader!./AddIcon/DocumentList-AddIcon.scss
 
 const cnDocumentsList = cn('DocumentsList');
 
+export interface DocumentListItemData {
+  id: string;
+  title: string;
+}
+
 interface DocumentsListProps {
   documents?: DocumentListItemData[];
   editedField: EditedField;
   featureInfo: EditFeatureInfo;
-
-  modifyCallback(payload: DocumentListItemData[]);
+  modifyCallback: (payload: DocumentListItemData[]) => void;
 }
 
 @observer
@@ -37,6 +40,7 @@ export class DocumentsList extends Component<DocumentsListProps> {
 
   render() {
     const { editedField, documents, featureInfo } = this.props;
+    const htmlId = 'icon-button-file-' + editedField.name;
     if (!editedField) {
       return;
     }
@@ -46,13 +50,13 @@ export class DocumentsList extends Component<DocumentsListProps> {
         <input
           className={cnDocumentsList('Input')}
           accept='*/*'
-          id='icon-button-file'
+          id={htmlId}
           type='file'
           onChange={this.onFileChangeHandler}
         />
         {featureInfo.isReadOnly ? (
-          <label className={cnDocumentsList('Label')} htmlFor='icon-button-file'>
-            <span>Добавить файл</span>
+          <label className={cnDocumentsList('Label')} htmlFor={htmlId}>
+            Добавить файл
             <AddBoxOutlined className={cnDocumentsList('AddIcon')} color='primary' fontSize='small' />
           </label>
         ) : null}

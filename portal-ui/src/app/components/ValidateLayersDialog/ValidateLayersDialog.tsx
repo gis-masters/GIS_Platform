@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { communicationService } from '../../services/communication.service';
+import { boundMethod } from 'autobind-decorator';
 
-import { Toast } from '../Toast/Toast';
-import { Button } from '../Button/Button';
-import { LayersList } from '../LayersList/LayersList';
 import { sidebars } from '../../stores/Sidebars.store';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { communicationService } from '../../services/communication.service';
 import { validationService } from '../../services/crg/validation.service';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { LayersList } from '../LayersList/LayersList';
+import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./ValidateLayersDialog.scss';
 
@@ -24,7 +24,6 @@ interface ValidateLayersDialogProps {
 
 @observer
 export class ValidateLayersDialog extends Component<ValidateLayersDialogProps> {
-  @observable private dialogOpen = false;
   @observable private selectedLayers: CrgLayer[] = [];
 
   render() {

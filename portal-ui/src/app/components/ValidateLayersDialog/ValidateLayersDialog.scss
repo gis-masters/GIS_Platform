@@ -11,8 +11,10 @@ body .ValidateLayersDialog {
     position: absolute;
     top: 20px;
     right: 24px;
-    font-size: medium;
+
     color: var(--gray);
+
+    font-size: medium;
   }
 
   &-Form {

@@ -7,12 +7,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { EditedField } from '../../../services/crg/schema.service';
-import { documentsService } from '../../../services/crg/documents.service';
 import { getBaseUrl } from '../../../services/server-urls.service';
-import { DocumentListItemData } from '../../EditFeatureField/Control/_type/EditFeatureField-Control_type_lookup';
+import { documentsService } from '../../../services/crg/documents.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
 import { Link } from '../../Link/Link';
+
+import { DocumentListItemData } from '../DocumentsList';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsList-Item.scss';
 import '!style-loader!css-loader!sass-loader!../Icon/DocumentList-Icon.scss';
@@ -25,8 +26,7 @@ interface DocumentItemProps {
   document: DocumentListItemData;
   editedField: EditedField;
   featureInfo: EditFeatureInfo;
-
-  deleteCallback(id: string);
+  deleteCallback: (id: string) => void;
 }
 
 @observer

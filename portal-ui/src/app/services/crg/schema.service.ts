@@ -128,7 +128,7 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
-  async getSchemaBySchemaId(schemaId: string, global?: boolean): Promise<FeatureDescription | undefined> {
+  async getById(schemaId: string, global?: boolean): Promise<FeatureDescription | undefined> {
     if (!schemaId) {
       return;
     }
@@ -162,7 +162,7 @@ class SchemaService {
     }
 
     return (
-      (await this.getSchemaBySchemaId(layerNameWithGeomType, true)) || (await this.getSchemaBySchemaId(layerName, true))
+      (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true))
     );
   }
 

@@ -144,7 +144,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   editObject(event: Event, objectId: string) {
     event.stopPropagation();
 
-    communicationService.editView.emit([{ id: objectId, crgLayer: this.crgLayer }]);
+    communicationService.editBugObject.emit([{ id: objectId, crgLayer: this.crgLayer }]);
   }
 
   private handleResponse(response: ValidationResultsResponse) {

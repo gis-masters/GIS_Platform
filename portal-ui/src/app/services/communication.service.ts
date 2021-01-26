@@ -21,7 +21,7 @@ class CommunicationService {
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
-  editView = new Emitter<ObjectDto[]>();
+  editBugObject = new Emitter<ObjectDto[]>();
 
   off(scope: any) {
     Emitter.scopeOff(scope);

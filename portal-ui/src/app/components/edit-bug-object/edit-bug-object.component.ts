@@ -3,15 +3,15 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 
 import { BaseEdit } from './base-edit';
-import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
+import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { communicationService, ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { schemaService } from '../../services/crg/schema.service';
-import { Toast } from '../Toast/Toast';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { validationService } from '../../services/crg/validation.service';
+import { schemaService } from '../../services/crg/schema.service';
+import { Toast } from '../Toast/Toast';
 
 @Component({
   selector: 'crg-edit-bug-object',

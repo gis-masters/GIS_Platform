@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
+import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { services } from '../../../../services/services';
-import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
-import { DocumentsList } from '../../../DocumentsList/DocumentsList';
-import { FieldType } from '../../../../services/crg/schema.service';
-import { action, observable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
-export interface DocumentListItemData {
-  id: string;
-  title: string;
-}
+import { services } from '../../../../services/services';
+import { FieldType } from '../../../../services/crg/schema.service';
+import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
+
+import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
 
 @observer
 class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlProps> {
   @observable lookupValue: DocumentListItemData[];
 
-  constructor (props: EditFeaturesControlProps) {
+  constructor(props: EditFeaturesControlProps) {
     super(props);
 
     try {
@@ -24,11 +22,9 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
     } catch (e) {
       services.logger.warn('Incorrect lookup value: ', props.field.value);
     }
-
-    this.updateChild = this.updateChild.bind(this);
   }
 
-  render () {
+  render() {
     const { className, field } = this.props;
 
     return (
@@ -37,12 +33,14 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
           documents={this.lookupValue}
           editedField={field}
           featureInfo={this.props.featureInfo}
-          modifyCallback={this.updateChild}/>
+          modifyCallback={this.updateChild}
+        />
       </div>
     );
   }
 
-  updateChild = (data: DocumentListItemData[]) => {
+  @boundMethod
+  updateChild(data: DocumentListItemData[]) {
     this.setValue(data);
   }
 

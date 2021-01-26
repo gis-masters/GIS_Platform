@@ -1,9 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-import { ViewList } from '@material-ui/icons';
 
 import { DataTable } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 
 import { ExplorerItemData } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
@@ -34,8 +34,8 @@ export class ExplorerAdapterTypeTable {
     return `${createdAt ? moment(createdAt).format('LL') : ''} (${identifier})`;
   }
 
-  static getIcon() {
-    return <ViewList />;
+  static getIcon(item: ExplorerItemData<DataTable>) {
+    return <LayerIcon type='vector' schemaId={item.payload.schemaId} />;
   }
 
   static isFolder() {
