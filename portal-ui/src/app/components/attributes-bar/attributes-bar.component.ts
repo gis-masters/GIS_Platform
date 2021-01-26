@@ -597,9 +597,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
         }
       } else if (simpleProperty.valueType === ValueType.DATETIME) {
         if (!simpleProperty.dateFormat) {
-          resultObject[property] = new Date(properties[property]).toLocaleDateString();
-        } else {
-          resultObject[property] = moment().locale('ru').format(simpleProperty.dateFormat);
+          if (properties[property]) {
+            resultObject[property] = new Date(properties[property]).toLocaleDateString();
+          }
+        } else if (properties[property]) {
+          resultObject[property] = moment(properties[property]).locale('ru').format(simpleProperty.dateFormat);
         }
       } else {
         resultObject[property] = properties[property];

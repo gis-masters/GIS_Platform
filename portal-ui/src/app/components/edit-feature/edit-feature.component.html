@@ -119,6 +119,43 @@
           </div>
         </div>
 
+        <div *ngIf="editFeatureItem.property?.valueType?.includes('DATETIME')" class="row fiz-edit-item">
+          <div class="col-6 px-0 edit-item-title">
+            <span
+              *ngIf="!editFeatureItem.isFgistpProperty"
+              style="color: grey"
+              matTooltip="Данное свойство не соответствует приказу"
+            >
+              {{ editFeatureItem.property?.title }}
+            </span>
+            <span *ngIf="editFeatureItem.isFgistpProperty">
+              {{ editFeatureItem.property?.title }}
+            </span>
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group" *ngIf="updatingAllowed">
+              <input class="form-control" type="date" formControlName="{{editFeatureItem.name}}"/>
+              <span class="input-group-text error-badge" *ngIf="editFeatureForm.controls[editFeatureItem.name].errors">
+                <crg-errors-badge [errors]="editFeatureForm.controls[editFeatureItem.name].errors"></crg-errors-badge>
+              </span>
+
+              <div class="input-group-append" *ngIf="mode === 'multipleEdit'">
+                <span class="input-group-text multiple-edit-badge">
+                  <mat-icon class="cur-p" (click)="switchControl(editFeatureItem.property)">edit</mat-icon>
+                </span>
+              </div>
+
+              <div class="multiedit-template" *ngIf="isShowTemplate(editFeatureItem.property)">
+                <span class="template-text">Оставить как есть</span>
+              </div>
+            </div>
+
+            <div *ngIf="!updatingAllowed" class="read-value">
+              {{ getDateTime(editFeatureItem.value) }}
+            </div>
+          </div>
+        </div>
+
         <div *ngIf="editFeatureItem.property?.valueType?.includes('INT')" class="row fiz-edit-item">
           <div class="col-6 px-0 edit-item-title">
             <span

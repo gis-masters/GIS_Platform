@@ -34,6 +34,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
+    this.updateBrieflyInfo(this.layers);
 
     communicationService.validationInitiated.on(value => {
       this.isValidationInited = value;

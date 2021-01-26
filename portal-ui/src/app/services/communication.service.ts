@@ -16,6 +16,7 @@ class CommunicationService {
   private constructor() {}
 
   validationInitiated = new Emitter<boolean>();
+  needUpdateValidationResults = new Emitter<boolean>();
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();

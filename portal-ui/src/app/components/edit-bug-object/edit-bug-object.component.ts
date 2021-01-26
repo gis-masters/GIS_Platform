@@ -1,16 +1,17 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { NGXLogger } from 'ngx-logger';
 
+import { BaseEdit } from './base-edit';
 import { getFeatureById } from '../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
-import { ObjectDto } from '../../services/communication.service';
+import { communicationService, ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { schemaService } from '../../services/crg/schema.service';
-import { BaseEdit } from './base-edit';
 import { Toast } from '../Toast/Toast';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { NGXLogger } from 'ngx-logger';
+import { validationService } from '../../services/crg/validation.service';
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -67,6 +68,8 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         Toast.success('Сохранено');
 
         openLayersService.refreshLayers();
+        await validationService.initValidation([crgLayer]);
+        communicationService.needUpdateValidationResults.emit();
       } else {
         this.logger.warn('UpdateFeature response: ', response);
         Toast.warn('Не удалось сохранить');

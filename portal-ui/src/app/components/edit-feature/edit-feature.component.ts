@@ -300,6 +300,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     return item && item.title;
   }
 
+  getDateTime(value: string | number): string {
+    return new Date(value).toLocaleDateString();
+  }
+
   private async checkPermissions() {
     this.updatingAllowed = await isFeaturesUpdateAllowed(this.layer);
     this.deletingAllowed = await isFeaturesDeleteAllowed(this.layer);

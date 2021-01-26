@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -11,6 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { communicationService } from '../../../services/communication.service';
 import { schemaService } from '../../../services/crg/schema.service';
+import { getProjection } from '../../../services/geoserver/projections.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
@@ -30,7 +31,7 @@ import { CrgLayer } from '../../../services/crg/projects.models';
     ])
   ]
 })
-export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() isActive: boolean;
   @Input() index: number;
   @Input() step: number;
@@ -59,6 +60,12 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger) {}
+
+  ngOnInit(): void {
+    communicationService.needUpdateValidationResults.on(async () => {
+      await this.getValidation();
+    }, this);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     const step = changes['step'];
@@ -106,6 +113,7 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    communicationService.off(this);
   }
 
   async getValidation() {
@@ -127,7 +135,10 @@ export class BugsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   async showObject(event: Event, objectId: string) {
     event.stopPropagation();
     const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
-    openLayersService.highlightFeatures([wfsFeature]);
+
+    const projection = getProjection(this.crgLayer.nativeCRS);
+    openLayersService.highlightFeatures([wfsFeature], projection);
+    openLayersService.positionToFeature(wfsFeature, projection);
   }
 
   editObject(event: Event, objectId: string) {
