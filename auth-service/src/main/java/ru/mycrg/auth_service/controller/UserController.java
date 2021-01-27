@@ -18,15 +18,16 @@ import ru.mycrg.auth_service.service.AuthorityService;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
+import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RepositoryRestController
@@ -67,14 +68,6 @@ public class UserController {
         return ResponseEntity.ok(assembler.toResource(users));
     }
 
-    @GetMapping("/users/{id}")
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
-        UserProjection userProjection = userService.findById(id, authentication);
-
-        return ResponseEntity.ok(userProjection);
-    }
-
     @PostMapping("/users")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateDto userCreateDto,
@@ -103,6 +96,25 @@ public class UserController {
         headers.setLocation(location);
 
         return new ResponseEntity<>(headers, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/users/{id}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
+        UserProjection userProjection = userService.findProjectionById(id, authentication);
+
+        return ResponseEntity.ok(userProjection);
+    }
+
+    @PatchMapping("/users/{id}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<UserProjection> updateUser(@Valid @RequestBody UserUpdateDto dto,
+                                                     @PathVariable Long id,
+                                                     Authentication authentication) {
+
+        userService.update(id, dto, authentication);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/{id}")

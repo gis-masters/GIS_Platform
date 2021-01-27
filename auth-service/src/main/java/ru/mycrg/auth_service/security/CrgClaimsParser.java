@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import ru.mycrg.auth_service.exeptions.ForbiddenException;
+import ru.mycrg.auth_service.exceptions.ForbiddenException;
 
 import java.security.Principal;
 import java.util.ArrayList;

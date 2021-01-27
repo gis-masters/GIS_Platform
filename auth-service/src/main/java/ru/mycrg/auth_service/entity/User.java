@@ -32,8 +32,15 @@ public class User {
     @Column
     private String name;
 
+    @Column(name = "middle_name")
+    private String middleName;
+
     @Column(name = "sur_name")
     private String surname;
+
+    private String job;
+
+    private String phone;
 
     @Column
     private String email;
@@ -61,25 +68,41 @@ public class User {
     private LocalDateTime createdAt;
 
     @Column(name = "last_modified")
-    private @LastModifiedDate LocalDateTime lastModified;
+    private @LastModifiedDate
+    LocalDateTime lastModified;
 
-    public User() {}
+    public User() {
+        // Required by framework
+    }
 
-    public User(String password, String name, String surname, String email) {
+    public User(String password, String name, String surname, String email, String middleName, String job,
+                String phone) {
         this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
         this.enabled = false;
+        this.name = name;
+        this.middleName = middleName;
+        this.surname = surname;
+        this.job = job;
+        this.phone = phone;
+        this.email = email;
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
     }
 
+    public User(String password, String name, String middleName, String surname, String job, String phone) {
+        this.password = password;
+        this.name = name;
+        this.middleName = middleName;
+        this.surname = surname;
+        this.job = job;
+        this.phone = phone;
+    }
+
     public boolean isOwner() {
         return authorities.stream()
-                .map(Authorities::getAuthority)
-                .collect(Collectors.toList())
-                .contains(ORG_ADMIN);
+                          .map(Authorities::getAuthority)
+                          .collect(Collectors.toList())
+                          .contains(ORG_ADMIN);
     }
 
     public Long getId() {
@@ -152,9 +175,9 @@ public class User {
 
     public void removeAuthority(String authority) {
         this.authorities.stream()
-                .filter(item -> authority.equalsIgnoreCase(item.getAuthority()))
-                .findFirst()
-                .ifPresent(item -> this.authorities.remove(item));
+                        .filter(item -> authority.equalsIgnoreCase(item.getAuthority()))
+                        .findFirst()
+                        .ifPresent(item -> this.authorities.remove(item));
     }
 
     public Set<Organization> getOrganizations() {
@@ -187,5 +210,29 @@ public class User {
 
     public void setGroups(Set<Group> groups) {
         this.groups = groups;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

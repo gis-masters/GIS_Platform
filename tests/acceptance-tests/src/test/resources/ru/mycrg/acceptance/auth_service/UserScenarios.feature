@@ -7,16 +7,18 @@ Feature: Действия с пользователями
 
   Scenario Outline: Создание пользователя c валидными данными
     When Администратор создает пользователя
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+      | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> |
     Then Сервер отвечает со статус-кодом 202
     And в заголовке Location передает ID созданного пользователя
     When Администратор делает запрос на созданного пользователя
     Then Поля пользователя совпадают с переданными
     And Пользователю присвоена роль = "USER"
     When Авторизируемся пользователем
+    Then Сервер отвечает со статус-кодом 200
     Examples:
-      | userName     | userSurname     | userEmail | userPassword |
-      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
+      | userName         | userSurname | userEmail | userPassword | middleName | job       | phone     |
+      | BaseUserName     | STRING_10   | EMAIL_20  | testtestQ1   |            |           |           |
+      | ExtendedUserName | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  | STRING_10 | NUMBER_10 |
 
   Scenario Outline: Повторное создание пользователя c валидными данными
     Given Существует пользователь
@@ -29,21 +31,25 @@ Feature: Действия с пользователями
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
-      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+      | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | userName     | userSurname     | userEmail      | userPassword | reason                        |
-      | testUserName | testUserSurname | user1          | testtestQ1   | Невалидный email пользователя |
-      | STRING_0     | testUserSurname | user2@user.com | testtestQ1   | Пустое имя пользователя       |
-      | STRING_2     | testUserSurname | user3@user.com | testtestQ1   | Короткое имя пользователя     |
-      | STRING_61    | testUserSurname | user4@user.com | testtestQ1   | Длинное имя пользователя      |
-      | testUserName | STRING_101      | user5@user.com | testtestQ1   | Длинная фамилия пользователя  |
-      | testUserName | STRING_0        | user6@user.com | testtestQ1   | Пустая фамилия пользователя   |
-      | testUserName | testUserSurname | STRING_0       | testtestQ1   | Нет email пользователя        |
-      | testUserName | testUserSurname | EMAIL_61       | testtestQ1   | Длинный email пользователя    |
-      | testUserName | testUserSurname | user9@user.com | STRING_2     | Простой пароль пользователя   |
+      | userName     | userSurname     | userEmail              | userPassword | middleName | job        | phone     | reason                        |
+      | testUserName | testUserSurname | invalidUser1           | testtestQ1   |            |            |           | Невалидный email пользователя |
+      | STRING_0     | testUserSurname | invalidUser2@user.com  | testtestQ1   |            |            |           | Пустое имя пользователя       |
+      | STRING_2     | testUserSurname | invalidUser3@user.com  | testtestQ1   |            |            |           | Короткое имя пользователя     |
+      | STRING_61    | testUserSurname | invalidUser4@user.com  | testtestQ1   |            |            |           | Длинное имя пользователя      |
+      | testUserName | STRING_101      | invalidUser5@user.com  | testtestQ1   |            |            |           | Длинная фамилия пользователя  |
+      | testUserName | STRING_0        | invalidUser6@user.com  | testtestQ1   |            |            |           | Пустая фамилия пользователя   |
+      | testUserName | testUserSurname | STRING_0               | testtestQ1   |            |            |           | Нет email пользователя        |
+      | testUserName | testUserSurname | EMAIL_61               | testtestQ1   |            |            |           | Длинный email пользователя    |
+      | testUserName | testUserSurname | invalidUser9@user.com  | STRING_2     |            |            |           | Простой пароль пользователя   |
+      | testUserName | testUserSurname | invalidUser10@user.com | testtestQ1   | STRING_2   | STRING_10  | NUMBER_10 | Короткое отчество             |
+      | testUserName | testUserSurname | invalidUser11@user.com | testtestQ1   | STRING_52  | STRING_10  | NUMBER_10 | Длинное отчество              |
+      | testUserName | testUserSurname | invalidUser12@user.com | testtestQ1   | STRING_10  | STRING_252 | NUMBER_10 | Длинная должность             |
+      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_22 | Длинный телефон               |
 
-  Scenario Outline: Выборка датальной инфы текущего пользователя
+  Scenario Outline: Выборка детальной инфы текущего пользователя
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Авторизируемся пользователем
@@ -104,6 +110,61 @@ Feature: Действия с пользователями
       | 1            |
       | 2            |
       | 3            |
+
+  Scenario Outline: Обновление полей пользователя администратором организации
+    Given Существует пользователь
+      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    When Пользователь делает запрос на обновление пользователя
+      | <newUserName> | <newUserSurname> | <newUserPassword> |
+    Then Сервер отвечает со статус-кодом 200
+    When Администратор делает запрос на созданного пользователя
+    Then Поля пользователя обновлены
+    When Авторизируемся пользователем
+    Then Сервер отвечает со статус-кодом 200
+    Examples:
+      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
+      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
+
+  Scenario Outline: Обновление полей пользователя чужим администратором организации
+    Given Существует пользователь
+      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    When Отправляется запрос на создание организации
+      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
+    When Авторизируемся владельцем организации
+    When Пользователь делает запрос на обновление пользователя
+      | <newUserName> | <newUserSurname> | <newUserPassword> |
+    Then Сервер отвечает со статус-кодом 404
+    Examples:
+      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
+      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
+
+  Scenario Outline: Обновление полей пользователя самим пользователем
+    Given Существует пользователь
+      | <userName> | <userSurname> | <userEmail> | <userPassword> |
+    Given Авторизируемся пользователем
+    When Пользователь делает запрос на обновление пользователя
+      | <newUserName> | <newUserSurname> | <newUserPassword> |
+    Then Сервер отвечает со статус-кодом 200
+    When Пользователь делает запрос на самого себя
+    Then Поля пользователя обновлены
+    When Авторизируемся пользователем
+    Then Сервер отвечает со статус-кодом 200
+    Examples:
+      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
+      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
+
+  Scenario Outline: Обновление полей пользователя другим пользователем
+    Given Существует пользователь
+      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+    Given Существует пользователь
+      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+    Given Авторизируемся пользователем
+    When Пользователь делает запрос на обновление чужого пользователя
+      | <newUserName> | <newUserSurname> | <newUserPassword> |
+    Then Сервер отвечает со статус-кодом 404
+    Examples:
+      | newUserName | newUserSurname | newUserPassword |
+      | UpdUserName | UpdUserSurname | testtestQ2      |
 
   Scenario Outline: Удаление пользователя
     Given Существует пользователь

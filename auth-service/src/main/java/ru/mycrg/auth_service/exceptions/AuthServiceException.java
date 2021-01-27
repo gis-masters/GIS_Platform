@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.exeptions;
+package ru.mycrg.auth_service.exceptions;
 
 public class AuthServiceException extends RuntimeException {
 

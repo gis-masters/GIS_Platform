@@ -15,8 +15,8 @@ import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Authorities;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
-import ru.mycrg.auth_service.exeptions.ConflictException;
-import ru.mycrg.auth_service.exeptions.NotFoundException;
+import ru.mycrg.auth_service.exceptions.ConflictException;
+import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
@@ -24,7 +24,9 @@ import ru.mycrg.auth_service_contract.UserCreatedEvent;
 import ru.mycrg.auth_service_contract.UserDeletedEvent;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
+import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
@@ -74,6 +76,9 @@ public class UserService {
                                 .name(user.getName())
                                 .login(user.getLogin())
                                 .surname(user.getSurname())
+                                .middleName(user.getMiddleName())
+                                .job(user.getJob())
+                                .phone(user.getPhone())
                                 .email(user.getEmail())
                                 .enabled(user.isEnabled())
                                 .authorities(authorities)
@@ -101,7 +106,10 @@ public class UserService {
         User newUser = new User(bCrypt.encode(dto.getPassword()),
                                 dto.getName(),
                                 dto.getSurname(),
-                                dto.getEmail()
+                                dto.getEmail(),
+                                dto.getMiddleName(),
+                                dto.getJob(),
+                                dto.getPhone()
         );
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
@@ -152,15 +160,98 @@ public class UserService {
     }
 
     /**
-     * Возвращает пользователя если запрос пришел от root пользователя или запрашиваемый пользователь состоит в
-     * организации, владелец которой запрашивает данные. Метод вызывает NotFoundException в случае отсутствия
-     * пользователя или доступа к пользователю.
+     * Возвращает пользователя если выполняются условия
+     * <ol>
+     * <li>Если запрос пришел от root
+     * <li>Если запрос пришел от администратора организации и запрашиваемый является пользователем организации
+     * <li>Если запрос пришел от самого пользователя
+     * </ol>
      *
-     * @param id             User id
-     * @param authentication Authenticated principal info
+     * @param id             Идентификатор пользователя
+     * @param authentication Информация об авторизации
+     *
+     * @throws NotFoundException если пользователь не существует
+     * @throws NotFoundException если нет прав на просмотр пользователя
+     * @see ru.mycrg.auth_service_contract.Authorities
      */
-    public UserProjection findById(Long id, Authentication authentication) {
+    public UserProjection findProjectionById(Long id, Authentication authentication) {
+        User user = findById(id, authentication).orElseThrow(() -> new NotFoundException(id));
+
+        return projectionFactory.createProjection(UserProjection.class, user);
+    }
+
+    public void delete(Long id, Authentication authentication) {
+        UserProjection userProjection = findProjectionById(id, authentication);
+        log.debug("Try delete user: {}", userProjection.getEmail());
+
+        userRepository.findById(id).ifPresent(user -> {
+            messageBus.sendUserEvent(
+                    new UserDeletedEvent(user.getLogin(), getToken(authentication)));
+
+            user.getOrganizations().forEach(org -> org.getUsers().remove(user));
+            userRepository.deleteById(user.getId());
+        });
+    }
+
+    public void addAuthority(Long id, String authority, Authentication authentication) {
+        UserProjection userProjection = findProjectionById(id, authentication);
+
+        if (!isUserHasAuthority(userProjection, authority)) {
+            userRepository.findById(userProjection.getId()).ifPresent(user -> user.addAuthority(authority));
+        }
+    }
+
+    public void removeAuthority(Long id, String authority, Authentication authentication) {
+        UserProjection userProjection = findProjectionById(id, authentication);
+
+        if (isUserHasAuthority(userProjection, authority)) {
+            userRepository.findById(userProjection.getId()).ifPresent(user -> user.removeAuthority(authority));
+        } else {
+            throw new NotFoundException(id);
+        }
+    }
+
+    public void update(Long userId, UserUpdateDto dto, Authentication authentication) {
+        User userForUpdate = findById(userId, authentication).orElseThrow(() -> new NotFoundException(userId));
+
+        if (dto.getName() != null) {
+            userForUpdate.setName(dto.getName());
+        }
+
+        if (dto.getSurname() != null) {
+            userForUpdate.setSurname(dto.getSurname());
+        }
+
+        if (dto.getMiddleName() != null) {
+            userForUpdate.setMiddleName(dto.getMiddleName());
+        }
+
+        if (dto.getJob() != null) {
+            userForUpdate.setJob(dto.getJob());
+        }
+
+        if (dto.getPhone() != null) {
+            userForUpdate.setPhone(dto.getPhone());
+        }
+
+        if (dto.getPassword() != null) {
+            userForUpdate.setPassword(bCrypt.encode(dto.getPassword()));
+        }
+
+        userForUpdate.setLastModified(LocalDateTime.now());
+
+        userRepository.save(userForUpdate);
+    }
+
+    private boolean isUserHasAuthority(UserProjection userProjection, String authority) {
+        return userProjection
+                .getAuthorities().stream()
+                .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
+    }
+
+    private Optional<User> findById(Long id, Authentication authentication) {
         Optional<User> oUser = Optional.empty();
+
         if (isRoot(authentication)) {
             oUser = userRepository.findById(id);
         } else if (isGeoserverAdmin(authentication)) {
@@ -174,50 +265,15 @@ public class UserService {
 
             oUser = organization
                     .getUsers().stream()
-                    .filter(u -> u.getId().equals(id)).findFirst();
-        }
-
-        if (oUser.isPresent()) {
-            return projectionFactory.createProjection(UserProjection.class, oUser.get());
+                    .filter(u -> u.getId().equals(id))
+                    .findFirst();
         } else {
-            throw new NotFoundException(id);
+            Optional<User> someUser = userRepository.findById(id);
+            if (someUser.isPresent() && authentication.getName().equals(someUser.get().getEmail())) {
+                oUser = someUser;
+            }
         }
-    }
 
-    public void delete(Long id, Authentication authentication) {
-        UserProjection userProjection = findById(id, authentication);
-        log.debug("Try delete user: {}", userProjection.getEmail());
-
-        userRepository.findById(id).ifPresent(user -> {
-            messageBus.sendUserEvent(
-                    new UserDeletedEvent(user.getLogin(), getToken(authentication)));
-
-            user.getOrganizations().forEach(org -> org.getUsers().remove(user));
-            userRepository.deleteById(user.getId());
-        });
-    }
-
-    public void addAuthority(Long id, String authority, Authentication authentication) {
-        UserProjection userProjection = findById(id, authentication);
-
-        if (!isUserHasAuthority(userProjection, authority)) {
-            userRepository.findById(userProjection.getId()).ifPresent(user -> user.addAuthority(authority));
-        }
-    }
-
-    public void removeAuthority(Long id, String authority, Authentication authentication) {
-        UserProjection userProjection = findById(id, authentication);
-
-        if (isUserHasAuthority(userProjection, authority)) {
-            userRepository.findById(userProjection.getId()).ifPresent(user -> user.removeAuthority(authority));
-        } else {
-            throw new NotFoundException(id);
-        }
-    }
-
-    private boolean isUserHasAuthority(UserProjection userProjection, String authority) {
-        return userProjection
-                .getAuthorities().stream()
-                .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
+        return oUser;
     }
 }

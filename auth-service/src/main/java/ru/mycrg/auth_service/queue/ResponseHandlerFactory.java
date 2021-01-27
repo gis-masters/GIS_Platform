@@ -2,7 +2,7 @@ package ru.mycrg.auth_service.queue;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service.exeptions.QueueException;
+import ru.mycrg.auth_service.exceptions.QueueException;
 import ru.mycrg.auth_service.service.*;
 import ru.mycrg.auth_service_contract.*;
 

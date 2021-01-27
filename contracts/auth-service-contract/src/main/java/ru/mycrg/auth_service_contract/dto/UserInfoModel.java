@@ -8,7 +8,10 @@ public class UserInfoModel {
     private Long id;
     private String name;
     private String login;
+    private String middleName;
     private String surname;
+    private String job;
+    private String phone;
     private String email;
     private boolean enabled;
     private Set<String> authorities;
@@ -26,7 +29,8 @@ public class UserInfoModel {
     }
 
     public UserInfoModel(Long id, String name, String login, String surname, String email, boolean enabled,
-                         Set<String> authorities, LocalDateTime createdAt, String orgName, Long orgId) {
+                         Set<String> authorities, LocalDateTime createdAt, String orgName, Long orgId,
+                         String middleName, String job, String phone) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -37,6 +41,25 @@ public class UserInfoModel {
         this.createdAt = createdAt;
         this.orgName = orgName;
         this.orgId = orgId;
+        this.middleName = middleName;
+        this.job = job;
+        this.phone = phone;
+    }
+
+    public static UserInfoModelBuilder builder() {
+        return new UserInfoModelBuilder();
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 
     public Long getId() {
@@ -79,10 +102,6 @@ public class UserInfoModel {
         return orgId;
     }
 
-    public static UserInfoModelBuilder builder() {
-        return new UserInfoModelBuilder();
-    }
-
     public static class UserInfoModelBuilder {
         private Long id;
         private String name;
@@ -94,6 +113,9 @@ public class UserInfoModel {
         private LocalDateTime createdAt;
         private String orgName;
         private Long orgId;
+        private String middleName;
+        private String job;
+        private String phone;
 
         UserInfoModelBuilder() {
         }
@@ -148,12 +170,28 @@ public class UserInfoModel {
             return this;
         }
 
+        public UserInfoModelBuilder middleName(String middleName) {
+            this.middleName = middleName;
+            return this;
+        }
+
+        public UserInfoModelBuilder job(String job) {
+            this.job = job;
+            return this;
+        }
+
+        public UserInfoModelBuilder phone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
         public UserInfoModel build() {
-            return new UserInfoModel(id, name, login, surname, email, enabled, authorities, createdAt, orgName, orgId);
+            return new UserInfoModel(id, name, login, surname, email, enabled, authorities, createdAt, orgName, orgId,
+                                     middleName, job, phone);
         }
 
         public String toString() {
-            return "UserInfoModel.UserInfoModelBuilder(id=" + this.id + ", name=" + this.name + ", login=" + this.login + ", surname=" + this.surname + ", email=" + this.email + ", enabled=" + this.enabled + ", authorities=" + this.authorities + ", createdAt=" + this.createdAt + ", orgName=" + this.orgName + ", orgId=" + this.orgId + ")";
+            return "UserInfoModel.UserInfoModelBuilder(id=" + this.id + ", name=" + this.name + ", login=" + this.login + ", surname=" + this.surname + ", email=" + this.email + ", enabled=" + this.enabled + ", authorities=" + this.authorities + ", createdAt=" + this.createdAt + ", orgName=" + this.orgName + ", orgId=" + this.orgId + ", middleName=" + this.middleName + ", job=" + this.job + ", phone=" + this.phone + ")";
         }
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
-import ru.mycrg.auth_service.exeptions.*;
+import ru.mycrg.auth_service.exceptions.*;
 import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
@@ -144,7 +144,10 @@ public class OrganizationService {
                         bCrypt.encode(owner.getPassword()),
                         owner.getName(),
                         owner.getSurname(),
-                        owner.getEmail()
+                        owner.getEmail(),
+                        owner.getMiddleName(),
+                        owner.getJob(),
+                        owner.getPhone()
                 );
     }
 

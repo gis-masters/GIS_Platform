@@ -10,7 +10,35 @@ public class UserCommonDto {
     private boolean enabled;
     private String name;
     private String surname;
+    private String middleName;
     private String email;
+    private String job;
+    private String phone;
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     private int authoritiesCount;
     private Set<AuthorityCommonDto> authorities = new HashSet<>();
 

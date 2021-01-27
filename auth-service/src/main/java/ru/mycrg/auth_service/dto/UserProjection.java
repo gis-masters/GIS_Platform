@@ -19,6 +19,12 @@ public interface UserProjection {
 
     String getSurname();
 
+    String getMiddleName();
+
+    String getJob();
+
+    String getPhone();
+
     String getEmail();
 
     boolean isEnabled();

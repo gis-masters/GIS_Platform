@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.dto.IdNameProjection;
 import ru.mycrg.auth_service.entity.User;
-import ru.mycrg.auth_service.exeptions.AuthServiceException;
+import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.repository.UserRepository;
 
 import java.util.HashMap;

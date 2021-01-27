@@ -1,19 +1,26 @@
 package ru.mycrg.acceptance.auth_service;
 
+import io.cucumber.core.exception.CucumberException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -44,10 +51,22 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор создает пользователя")
     public void createUser(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+        List<String> data = new ArrayList<>(dataTable.asList());
 
-        userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
-                                    generateString(data.get(2)), generateString(data.get(3)));
+        data.removeIf(Objects::isNull);
+
+        switch (data.size()) {
+            case 4:
+                userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                            generateString(data.get(2)), generateString(data.get(3)));
+                break;
+            case 7:
+                userDto = new UserCreateDto(generateString(data.get(0)), generateString(data.get(1)),
+                                            generateString(data.get(2)), generateString(data.get(3)),
+                                            generateString(data.get(4)), generateString(data.get(5)),
+                                            generateString(data.get(6)));
+                break;
+        }
 
         super.createEntity(userDto);
     }
@@ -142,13 +161,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         getEntityCount(entity);
     }
 
-    private void createUser(List<String> user) {
-        userDto = new UserCreateDto(generateString(user.get(0)), generateString(user.get(1)),
-                                    generateString(user.get(2)), generateString(user.get(3)));
-
-        super.createEntity(userDto);
-    }
-
     @When("Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление")
     public void checkCurrentUserEndpointAndResponseBody() {
         final UserInfoModel userInfoModel = getBaseRequestWithCurrentCookie()
@@ -170,6 +182,80 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(userInfoModel.getOrgName());
     }
 
+    @When("Пользователь делает запрос на обновление пользователя")
+    public void patchUser(DataTable datatable) {
+        setUserDtoFields(datatable);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(userDto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch(String.valueOf(userId));
+    }
+
+    @Then("Поля пользователя обновлены")
+    public void checkUserUpdatedFields() {
+        jsonPath = response.jsonPath();
+
+        assertThat(jsonPath.get("name"), equalTo(userDto.getName()));
+        assertThat(jsonPath.get("surname"), equalTo(userDto.getSurname()));
+    }
+
+    @When("Пользователь делает запрос на самого себя")
+    public void getUsersCurrent() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/current");
+    }
+
+    @When("Пользователь делает запрос на обновление чужого пользователя")
+    public void patchForeignUser(DataTable datatable) {
+        takeForeignUserAsCurrent();
+
+        setUserDtoFields(datatable);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(userDto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch(String.valueOf(userId));
+    }
+
+    @When("Пользователь делает запрос на обновление своих собственных данных")
+    public void updateCurrentUser(DataTable datatable) {
+        setUserDtoFields(datatable);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(userDto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch("/current");
+    }
+
+    private void takeForeignUserAsCurrent() {
+        Map.Entry<Integer, UserCreateDto> entry;
+        entry = userPool.entrySet().stream()
+                        .filter((user) -> !user.getValue().getEmail().equals(userDto.getEmail()))
+                        .findFirst()
+                        .orElseThrow(() -> new CucumberException("Haven't found any foreign user"));
+
+        userId = entry.getKey();
+        userDto = entry.getValue();
+    }
+
+    private void setUserDtoFields(DataTable datatable) {
+        List<String> data = datatable.asList();
+        userDto.setName(generateString(data.get(0)));
+        userDto.setSurname(generateString(data.get(1)));
+        userDto.setPassword(generateString(data.get(2)));
+    }
+
     private boolean isUserExistInPool(String eMail) {
         return userPool
                 .values().stream()
@@ -184,5 +270,12 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                     userId = entry.getKey();
                     userDto = entry.getValue();
                 });
+    }
+
+    private void createUser(List<String> user) {
+        userDto = new UserCreateDto(generateString(user.get(0)), generateString(user.get(1)),
+                                    generateString(user.get(2)), generateString(user.get(3)));
+
+        super.createEntity(userDto);
     }
 }

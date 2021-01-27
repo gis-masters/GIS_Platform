@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.exeptions;
+package ru.mycrg.auth_service.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

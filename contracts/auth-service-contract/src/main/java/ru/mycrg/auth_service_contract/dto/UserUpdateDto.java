@@ -1,20 +1,16 @@
 package ru.mycrg.auth_service_contract.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserCreateDto {
+public class UserUpdateDto {
 
-    @NotBlank(message = "Please provide user name")
     @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
     private String name;
 
     @Size(min = 3, max = 50, message = "No less 3 and no more than 50 characters")
     private String middleName;
 
-    @NotBlank(message = "Please provide user surname")
     @Size(max = 100, message = "No more than 100 characters")
     private String surname;
 
@@ -23,11 +19,6 @@ public class UserCreateDto {
 
     @Size(max = 20, message = "No more than 20 characters")
     private String phone;
-
-    @Email
-    @NotBlank
-    @Size(max = 60, message = "No more than 60 characters")
-    private String email;
 
     //    ^                 # start-of-string
     //    (?=.*[0-9])       # a digit must occur at least once
@@ -38,29 +29,18 @@ public class UserCreateDto {
     //    $                 # end-of-string
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$",
              message = "Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов")
-    @NotBlank
     private String password;
 
-    public UserCreateDto() {
-        // Framework required
+    public UserUpdateDto() {
+        //Required by framework
     }
 
-    public UserCreateDto(String name, String surname, String email, String password) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
+    public String getName() {
+        return name;
     }
 
-    public UserCreateDto(String name, String surname, String email, String password, String middleName, String job,
-                         String phone) {
+    public void setName(String name) {
         this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.middleName = middleName;
-        this.job = job;
-        this.phone = phone;
     }
 
     public String getMiddleName() {
@@ -69,6 +49,14 @@ public class UserCreateDto {
 
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getJob() {
@@ -87,35 +75,11 @@ public class UserCreateDto {
         this.phone = phone;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
