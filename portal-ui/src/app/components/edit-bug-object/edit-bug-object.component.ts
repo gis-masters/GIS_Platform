@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
+import { debounceTime } from 'rxjs/operators';
 
 import { BaseEdit } from './base-edit';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
@@ -34,7 +35,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   ngOnInit(): void {
     this.editFeatureForm = this.formBuilder.group({});
-    this.editFeatureForm.valueChanges.subscribe(featureProperties => {
+    this.editFeatureForm.valueChanges.pipe(debounceTime(50)).subscribe(featureProperties => {
       this.validateCustomRules(featureProperties);
     });
   }
