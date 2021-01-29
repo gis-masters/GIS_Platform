@@ -16,6 +16,7 @@ public class CrgDaoGeometryHelper {
     private static final Logger log = LoggerFactory.getLogger(CrgDaoGeometryHelper.class);
 
     public CrgDaoGeometryHelper() {
+        // Required
     }
 
     public Integer countInvalid(JdbcTemplate jdbcTemplate, String schema, String table) throws DaoException {
@@ -74,5 +75,4 @@ public class CrgDaoGeometryHelper {
                 throw new DaoException("Not supported geometry type: " + geometryType);
         }
     }
-
 }

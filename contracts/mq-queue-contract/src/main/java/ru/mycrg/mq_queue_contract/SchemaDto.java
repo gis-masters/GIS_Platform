@@ -15,6 +15,7 @@ public class SchemaDto {
     private String originName;
     private boolean readOnly;
     private GeometryType geometryType;
+    private List<ContentTypes> contentTypes = new ArrayList<>();
 
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
@@ -98,5 +99,13 @@ public class SchemaDto {
 
     public void setGeometryType(GeometryType geometryType) {
         this.geometryType = geometryType;
+    }
+
+    public List<ContentTypes> getContentTypes() {
+        return contentTypes;
+    }
+
+    public void setContentTypes(List<ContentTypes> contentTypes) {
+        this.contentTypes = contentTypes;
     }
 }

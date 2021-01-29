@@ -11,7 +11,6 @@ import ru.mycrg.geoserver_client.services.storage.vector.ConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.DataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
-import ru.mycrg.gis_service.controller.LayerController;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
@@ -22,7 +21,7 @@ import static ru.mycrg.mq_queue_contract.CrgConstants.*;
 @Service("createWorkspaceAndStorage")
 public class CreateWorkspaceAndStorage implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateWorkspaceAndStorage.class);
 
     @Autowired
     private Environment environment;

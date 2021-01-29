@@ -10,7 +10,6 @@ import ru.mycrg.auth_service.entity.Group;
 
 import java.util.Optional;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @PreAuthorize(HAS_ANY_AUTHORITY)

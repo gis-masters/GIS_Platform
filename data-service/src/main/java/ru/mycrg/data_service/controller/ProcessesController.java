@@ -34,7 +34,7 @@ public class ProcessesController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getProcesses(Pageable pageable, Principal principal) {
+    public ResponseEntity<Object> getProcesses(Pageable pageable, Principal principal) {
         Page<Process> processes = processService.findAll(pageable, principal);
 
         Link pageSelfLink = links.linkFor(Process.class).withSelfRel();

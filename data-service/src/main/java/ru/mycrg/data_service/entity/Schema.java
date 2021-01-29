@@ -35,7 +35,9 @@ public class Schema {
     @Type(type="text")
     private String calculatedFields;
 
-    public Schema() {}
+    public Schema() {
+        // Required
+    }
 
     public long getId() {
         return id;

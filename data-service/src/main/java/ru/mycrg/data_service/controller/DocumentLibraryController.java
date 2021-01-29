@@ -4,6 +4,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +21,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.FileStorageService;
-import ru.mycrg.data_service.service.ObjectService;
+import ru.mycrg.data_service.service.RecordsService;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
@@ -26,25 +29,26 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 
 @RestController
-public class DocumentLibraryRecordsController {
+public class DocumentLibraryController {
 
-    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
+    public static final Logger log = LoggerFactory.getLogger(DocumentLibraryController.class);
 
     private final SchemaService schemaService;
-    private final ObjectService objectService;
+    private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
 
-    public DocumentLibraryRecordsController(ObjectService objectService,
-                                            SchemaService schemaService,
-                                            FileStorageService fileStorageService) {
+    public DocumentLibraryController(RecordsService recordsService,
+                                     SchemaService schemaService,
+                                     FileStorageService fileStorageService) {
         this.schemaService = schemaService;
-        this.objectService = objectService;
+        this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -68,14 +72,14 @@ public class DocumentLibraryRecordsController {
                         throw new BadRequestException("File is empty");
                     }
 
-                    ITableObject tableObject = objectService.createObject(rIdentifier, body, authentication);
+                    ITableObject tableObject = recordsService.createRecord(rIdentifier, body, authentication);
 
                     fileStorageService.storeFile(file, tableObject.getId().toString());
 
                     objects.add(tableObject);
                 }
             } else {
-                ITableObject tableObject = objectService.createObject(rIdentifier, body, authentication);
+                ITableObject tableObject = recordsService.createRecord(rIdentifier, body, authentication);
 
                 objects.add(tableObject);
             }
@@ -94,6 +98,25 @@ public class DocumentLibraryRecordsController {
                 .orElseThrow(() -> new NotFoundException("Not found schema for library: " + docLibId));
     }
 
+    @GetMapping("/document-libraries/{docLibId}/records")
+    public ResponseEntity<Object> getAll(@PathVariable String docLibId,
+                                         Pageable pageable,
+                                         Authentication authentication,
+                                         PagedResourcesAssembler<Map<String, Object>> pageAssembler) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
+                                                                new ResourceIdentifier("data", SCHEMA));
+
+        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, pageable, authentication);
+
+        var pagedResources = pageAssembler.toResource(
+                result,
+                linkTo(DocumentLibraryController.class)
+                        .slash("/api/data/document-libraries/" + docLibId + "/records")
+                        .withSelfRel());
+
+        return ResponseEntity.ok(pagedResources);
+    }
+
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
                                                        @PathVariable UUID recId,
@@ -101,7 +124,7 @@ public class DocumentLibraryRecordsController {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
                                                                 new ResourceIdentifier("data", SCHEMA));
 
-        Map<String, Object> entity = objectService.getById(rIdentifier, recId, authentication);
+        Map<String, Object> entity = recordsService.getById(rIdentifier, recId, authentication);
 
         return ResponseEntity.ok(entity);
     }
@@ -116,7 +139,7 @@ public class DocumentLibraryRecordsController {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE,
                                                                 new ResourceIdentifier("data", SCHEMA));
 
-        objectService.deleteObject(rIdentifier, recId, authentication);
+        recordsService.deleteRecord(rIdentifier, recId, authentication);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

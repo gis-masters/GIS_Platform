@@ -56,8 +56,9 @@ public class BaseDaoService {
     }
 
     @Transactional
-    public void saveValidationResults(JdbcTemplate jdbcTemplate, ResourceProjection resource,
-                                      List<ObjectValidationResult> violations) throws NumberFormatException {
+    public void saveValidationResults(JdbcTemplate jdbcTemplate,
+                                      ResourceProjection resource,
+                                      List<ObjectValidationResult> violations) {
         String schema = resource.getSchemaName();
         String extensionTableName = resource.getTableName() + EXTENSION_POSTFIX;
 

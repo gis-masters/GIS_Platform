@@ -19,7 +19,7 @@ public class ResponseHandlerFactory {
         this.context = context;
     }
 
-    public Processable getProcessHandler(BaseMqProcessResponse mqEvent) throws DataServiceException {
+    public Processable getProcessHandler(BaseMqProcessResponse mqEvent) {
         final ProcessType type = mqEvent.getType();
 
         switch (type) {

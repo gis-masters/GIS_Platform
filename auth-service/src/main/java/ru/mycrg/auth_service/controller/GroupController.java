@@ -18,7 +18,6 @@ import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 

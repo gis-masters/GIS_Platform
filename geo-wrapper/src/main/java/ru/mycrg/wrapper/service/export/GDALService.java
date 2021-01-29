@@ -34,7 +34,7 @@ public class GDALService extends BaseRequestHandler implements IExporter {
     }
 
     @Override
-    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) {
         MqExportProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
         String pathToZip;

@@ -238,7 +238,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataServiceException.class)
     public ResponseEntity<Object> internalExceptionsHandler(final RuntimeException ex) {
-        final ApiErrorModel errorModel = new ApiErrorModel(HttpStatus.BAD_REQUEST, ex.getMessage());
+        final ApiErrorModel errorModel = new ApiErrorModel(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }

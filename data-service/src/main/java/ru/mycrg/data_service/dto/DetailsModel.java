@@ -7,7 +7,9 @@ public class DetailsModel {
 
     private List<TaskModel> tasks = new ArrayList<>();
 
-    public DetailsModel() {}
+    public DetailsModel() {
+        // Required
+    }
 
     public List<TaskModel> getTasks() {
         return tasks;

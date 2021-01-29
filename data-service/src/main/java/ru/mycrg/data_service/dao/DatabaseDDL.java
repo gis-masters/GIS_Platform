@@ -60,8 +60,6 @@ public class DatabaseDDL {
 
             newDbJdbcTemplate.execute("CREATE EXTENSION postgis");
         } catch (Exception e) {
-            log.error(e.toString());
-
             throw new DataServiceException("Не удалось создать бд: " + dbName, e.getCause());
         } finally {
             if (newDataSource != null) {

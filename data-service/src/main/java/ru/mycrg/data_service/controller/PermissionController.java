@@ -3,17 +3,14 @@ package ru.mycrg.data_service.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceProjection;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
@@ -27,16 +24,16 @@ public class PermissionController {
 
     @GetMapping("/all-permissions")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<PagedResources<ResourceProjection>> getAllPermissions(Pageable pageable,
-                                                                                PagedResourcesAssembler pageAssembler) {
+    public ResponseEntity<Object> getAllPermissions(Pageable pageable,
+                                                    PagedResourcesAssembler<ResourceProjection> pageAssembler) {
         final Page<ResourceProjection> result = resourcesService.getPaged(pageable);
 
-        PagedResources<ResourceProjection> pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 result,
                 linkTo(PermissionController.class)
                         .slash("/api/data/all-permissions")
                         .withSelfRel());
 
-        return new ResponseEntity<>(pagedResources, OK);
+        return ResponseEntity.ok(pagedResources);
     }
 }

@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 
 public class JsonConverter {
 
+    private JsonConverter() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Logger log = LoggerFactory.getLogger(JsonConverter.class);
 
     public static final ObjectMapper mapper = new ObjectMapper();

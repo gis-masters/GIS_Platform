@@ -2,13 +2,11 @@ package ru.mycrg.data_service.controller;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
@@ -61,13 +59,13 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> getTablePermissions(@PathVariable String dataSetId,
                                                       @PathVariable String tableId,
                                                       Pageable pageable,
-                                                      PagedResourcesAssembler pageAssembler) {
+                                                      PagedResourcesAssembler<PermissionProjection> pageAssembler) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
                                                                 new ResourceIdentifier(dataSetId, SCHEMA));
 
         var permissions = permissionsService.getForResource(rIdentifier, pageable);
 
-        PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(TablesPermissionsController.class)
                         .slash("/api/data/datasets/" + dataSetId + "/tables/" + tableId + "/roleAssignment")

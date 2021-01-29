@@ -22,9 +22,17 @@ CREATE TABLE IF NOT EXISTS data.base_maps
 
 CREATE TABLE IF NOT EXISTS data.documents
 (
-    id    uuid                   NOT NULL,
-    title character varying(500) NOT NULL,
-    size  bigserial,
+    id              uuid NOT NULL,
+    parent          uuid,
+    title           character varying(500),
+    name            character varying,
+    type            character varying(50),
+    size            bigint,
+    category        character varying,
+    content_type_id character varying,
+    created_at      timestamp without time zone,
+    last_modified   timestamp without time zone,
+    created_by      character varying(50),
     CONSTRAINT documents_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 
@@ -83,7 +91,7 @@ CREATE TABLE IF NOT EXISTS data.schemas
     CONSTRAINT schemas_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 
-CREATE TABLE data.processes
+CREATE TABLE IF NOT EXISTS data.processes
 (
     id        bigserial NOT NULL,
     user_name character varying(60),

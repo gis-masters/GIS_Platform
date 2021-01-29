@@ -5,7 +5,9 @@ public class BaseRequest {
     private String wsUiId;
     private String targetSchema;
 
-    public BaseRequest() {}
+    public BaseRequest() {
+        // Required
+    }
 
     public String getWsUiId() {
         return wsUiId;

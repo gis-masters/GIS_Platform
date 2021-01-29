@@ -1,14 +1,13 @@
 package ru.mycrg.data_service.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
@@ -57,10 +56,11 @@ public class DatasetPermissionsController {
     @GetMapping("/datasets/{dataSetId}/roleAssignment")
     public ResponseEntity<Object> getDatasetPermissions(@PathVariable String dataSetId,
                                                         Pageable pageable,
-                                                        PagedResourcesAssembler pageAssembler) {
-        var permissions = permissionsService.getForResource(new ResourceIdentifier(dataSetId, SCHEMA), pageable);
+                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+        final Page<PermissionProjection> permissions = permissionsService.getForResource(
+                new ResourceIdentifier(dataSetId, SCHEMA), pageable);
 
-        PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
+        final var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(DatasetPermissionsController.class)
                         .slash("/api/data/datasets/" + dataSetId)

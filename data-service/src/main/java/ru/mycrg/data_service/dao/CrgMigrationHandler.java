@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.service.BaseMapsService;
 
 import java.sql.Connection;
 
@@ -22,13 +21,10 @@ public class CrgMigrationHandler {
 
     private final ApplicationContext ctx;
     private final CrgDataSourcesPool crgDataSourcesPool;
-    private final BaseMapsService baseMapsService;
 
     public CrgMigrationHandler(CrgDataSourcesPool crgDataSourcesPool,
-                               BaseMapsService baseMapsService,
                                ApplicationContext ctx) {
         this.ctx = ctx;
-        this.baseMapsService = baseMapsService;
         this.crgDataSourcesPool = crgDataSourcesPool;
     }
 
@@ -53,11 +49,10 @@ public class CrgMigrationHandler {
         try {
             HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
             try (final Connection connection = tempDataSource.getConnection()) {
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/initServiceTables.sql"));
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/initOldSchemas.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M1__initServiceTables.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M2__initOldSchemas.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M3__initDefaultBasemaps.sql"));
             }
-
-            baseMapsService.initDefault(new JdbcTemplate(tempDataSource));
 
             tempDataSource.close();
         } catch (Exception e) {

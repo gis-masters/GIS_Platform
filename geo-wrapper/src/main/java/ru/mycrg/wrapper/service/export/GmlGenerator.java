@@ -76,7 +76,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      *
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(BaseMqProcessRequest mqRequest) throws ExportException {
+    public String generate(BaseMqProcessRequest mqRequest) {
         idCounter = 1;
         log.debug("Start gml generation");
 
@@ -98,7 +98,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    public GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) throws ExportException {
+    public GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) {
         try {
             MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
 
@@ -381,7 +381,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
      *
      * @return Путь к сохраненному файлу
      */
-    private String saveXml(Document document, String fileName) throws ExportException {
+    private String saveXml(Document document, String fileName) {
         log.debug("Save {} to file", fileName);
 
         try {

@@ -23,7 +23,7 @@ import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATC
 @RequestMapping("/projects/{project_id}")
 public class PermissionController {
 
-    private static final Logger log = LoggerFactory.getLogger(LayerController.class);
+    private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
 
     private final PermissionsService permissionsService;
 
@@ -45,7 +45,6 @@ public class PermissionController {
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
                                                                  @Valid @RequestBody PermissionCreateDto dto,
                                                                  Authentication authentication) {
-
         log.debug("Try to create permission for project {}", dto.getPrincipalId());
 
         PermissionProjection permission = permissionsService.create(projectId, dto, authentication);

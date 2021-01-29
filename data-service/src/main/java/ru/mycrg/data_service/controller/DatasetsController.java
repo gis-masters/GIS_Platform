@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,7 +20,6 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 
@@ -38,20 +36,19 @@ public class DatasetsController {
 
     @GetMapping("/datasets")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<PagedResources<IResourceModel>> getDatasets(
-            @RequestParam(required = false, defaultValue = "") String title,
-            Authentication authentication,
-            Pageable pageable,
-            PagedResourcesAssembler pageAssembler) {
+    public ResponseEntity<Object> getDatasets(@RequestParam(required = false, defaultValue = "") String title,
+                                              Authentication authentication,
+                                              Pageable pageable,
+                                              PagedResourcesAssembler<IResourceModel> pageAssembler) {
         final Page<IResourceModel> datasets = datasetService.getPaged(title, pageable, authentication);
 
-        PagedResources<IResourceModel> pagedResources = pageAssembler.toResource(
+        var pagedResources = pageAssembler.toResource(
                 datasets,
                 linkTo(DatasetsController.class)
                         .slash("/api/data/datasets")
                         .withSelfRel());
 
-        return new ResponseEntity<>(pagedResources, OK);
+        return ResponseEntity.ok(pagedResources);
     }
 
     @GetMapping("/datasets/{dataSetId}")
