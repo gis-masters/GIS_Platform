@@ -56,6 +56,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerCreateDto> layerPool = new LinkedHashMap<>();
+    public static Map<String, String> filesPool = new LinkedHashMap<>();
 
     public static Integer currentId;
     public static Object currentDto;
