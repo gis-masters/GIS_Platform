@@ -6245,8 +6245,7 @@ SELECT 'transplogisticobj',
         results.ruleid = obj.classid + ''0'' + status;
       }
 
-      return results;
-      ' |
+      return results;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj');
 
 
