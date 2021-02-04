@@ -31,6 +31,9 @@ public class UserUpdateDto {
              message = "Пароль должен содержать цифры, заглавную букву, быть не менее 8 символов без пробелов")
     private String password;
 
+    @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
+    private String enabled;
+
     public UserUpdateDto() {
         //Required by framework
     }
@@ -81,5 +84,13 @@ public class UserUpdateDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
     }
 }

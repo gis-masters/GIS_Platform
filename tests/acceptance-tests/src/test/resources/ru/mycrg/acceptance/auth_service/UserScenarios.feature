@@ -49,6 +49,19 @@ Feature: Действия с пользователями
       | testUserName | testUserSurname | invalidUser12@user.com | testtestQ1   | STRING_10  | STRING_252 | NUMBER_10 | Длинная должность             |
       | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_22 | Длинный телефон               |
 
+  Scenario: Включение пользователя админом организации
+    Given Существует пользователь
+      | enableUser | enableUser | EMAIL_10 | testtestQ1 |
+    When Пользователь делает запрос на изменение статуса пользователя на "true"
+    When Авторизируемся пользователем
+    Then Сервер отвечает со статус-кодом 200
+
+  Scenario: Выключение пользователя админом организации
+    Given Существует пользователь
+      | disableUser | disableUser | EMAIL_10 | testtestQ1 |
+    When Пользователь делает запрос на изменение статуса пользователя на "false"
+    And Пользователь не может авторизоваться
+
   Scenario Outline: Выборка детальной инфы текущего пользователя
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
@@ -115,15 +128,16 @@ Feature: Действия с пользователями
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Пользователь делает запрос на обновление пользователя
-      | <newUserName> | <newUserSurname> | <newUserPassword> |
+      | <newUserName> | <newUserSurname> | <newUserPassword> | <newUserIsEnabled> |
     Then Сервер отвечает со статус-кодом 200
     When Администратор делает запрос на созданного пользователя
     Then Поля пользователя обновлены
+      | <newUserName> | <newUserSurname> | <newUserIsEnabled> |
     When Авторизируемся пользователем
     Then Сервер отвечает со статус-кодом 200
     Examples:
-      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
-      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
+      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword | newUserIsEnabled |
+      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      | true             |
 
   Scenario Outline: Обновление полей пользователя чужим администратором организации
     Given Существует пользователь
@@ -147,6 +161,7 @@ Feature: Действия с пользователями
     Then Сервер отвечает со статус-кодом 200
     When Пользователь делает запрос на самого себя
     Then Поля пользователя обновлены
+      | <newUserName> | <newUserSurname> |
     When Авторизируемся пользователем
     Then Сервер отвечает со статус-кодом 200
     Examples:

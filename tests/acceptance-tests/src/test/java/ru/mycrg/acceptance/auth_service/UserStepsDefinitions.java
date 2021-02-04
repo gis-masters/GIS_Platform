@@ -7,6 +7,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -25,6 +27,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
+
+    private static final int RETRY_DELAY = 1000;
+    private static final int MAX_RETRY_ATTEMPT = 10;
 
     public static Integer userId;
     public static UserCreateDto userDto;
@@ -86,7 +91,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользователь")
-    public void initializeUser(DataTable dataTable) {
+    public void initializeUser(DataTable dataTable) throws InterruptedException {
         String eMail = generateString(dataTable.asList().get(2));
 
         if (isUserExistInPool(eMail)) {
@@ -95,6 +100,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             createUser(dataTable);
             assertEquals(SC_ACCEPTED, response.getStatusCode());
             extractUserIdFromLocation();
+
+            waitUntilUserSuccessfullyCreated(userId);
         }
     }
 
@@ -196,11 +203,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Поля пользователя обновлены")
-    public void checkUserUpdatedFields() {
+    public void checkUserUpdatedFields(DataTable datatable) {
+        List<String> data = datatable.asList();
+
         jsonPath = response.jsonPath();
 
-        assertThat(jsonPath.get("name"), equalTo(userDto.getName()));
-        assertThat(jsonPath.get("surname"), equalTo(userDto.getSurname()));
+        assertThat(jsonPath.get("name"), equalTo(data.get(0)));
+        assertThat(jsonPath.get("surname"), equalTo(data.get(1)));
     }
 
     @When("Пользователь делает запрос на самого себя")
@@ -225,17 +234,17 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         patch(String.valueOf(userId));
     }
 
-    @When("Пользователь делает запрос на обновление своих собственных данных")
-    public void updateCurrentUser(DataTable datatable) {
-        setUserDtoFields(datatable);
-
-        response = getBaseRequestWithCurrentCookie()
+    @When("Пользователь делает запрос на изменение статуса пользователя на {string}")
+    public void performsDisableEnableUsers(String isEnabled) {
+        getBaseRequestWithCurrentCookie()
                 .given().
-                        body(gson.toJson(userDto)).
+                body(String.format("{\"enabled\":\"%s\"}", isEnabled)).
                         contentType(ContentType.JSON)
                 .when().
-                        log().ifValidationFails().
-                        patch("/current");
+                        patch(String.valueOf(userId))
+                .then().
+                        statusCode(SC_OK).
+                        log().ifValidationFails();
     }
 
     private void takeForeignUserAsCurrent() {
@@ -251,6 +260,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     private void setUserDtoFields(DataTable datatable) {
         List<String> data = datatable.asList();
+
         userDto.setName(generateString(data.get(0)));
         userDto.setSurname(generateString(data.get(1)));
         userDto.setPassword(generateString(data.get(2)));
@@ -277,5 +287,29 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     generateString(user.get(2)), generateString(user.get(3)));
 
         super.createEntity(userDto);
+    }
+
+    private void waitUntilUserSuccessfullyCreated(Integer id) throws InterruptedException {
+        System.out.println("check user status: " + id);
+
+        int currentAttempt = 1;
+        do {
+            System.out.println("attempt check user: " + currentAttempt);
+            currentAttempt++;
+
+            Response response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get("/" + id);
+
+            boolean isEnabled = response.jsonPath().get("enabled");
+
+            if (response.statusCode() == SC_OK && isEnabled) {
+                return;
+            }
+
+            sleep(RETRY_DELAY);
+        } while (currentAttempt <= MAX_RETRY_ATTEMPT);
+
+        throw new RuntimeException("User not created: " + id);
     }
 }

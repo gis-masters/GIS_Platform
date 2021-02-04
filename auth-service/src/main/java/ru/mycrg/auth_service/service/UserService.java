@@ -238,6 +238,10 @@ public class UserService {
             userForUpdate.setPassword(bCrypt.encode(dto.getPassword()));
         }
 
+        if (dto.isEnabled() != null) {
+            userForUpdate.setEnabled(Boolean.parseBoolean(dto.isEnabled()));
+        }
+
         userForUpdate.setLastModified(LocalDateTime.now());
 
         userRepository.save(userForUpdate);
