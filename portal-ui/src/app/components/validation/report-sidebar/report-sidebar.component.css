@@ -1,3 +1,7 @@
+:host {
+  overflow: auto;
+}
+
 .validation_accordion {
   width: 100%;
   padding-right: 5px;
@@ -30,7 +34,7 @@
 
 .report-sidebar {
   width: 550px;
-  height: 100%;
+  height: calc(100% - 73px);
 
   background-color: white;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);

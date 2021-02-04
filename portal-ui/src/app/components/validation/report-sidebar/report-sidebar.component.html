@@ -76,7 +76,6 @@
         </div>
       </div>
     </div>
-    <div style="height: 70px; width: 100%" *ngIf="!isEditMode"></div>
 
     <div *ngIf="isEditMode">
       <crg-edit-bug-object [data]="objectsToEdit" (closeMe)="switchMode()"></crg-edit-bug-object>
