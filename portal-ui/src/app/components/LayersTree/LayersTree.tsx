@@ -72,7 +72,7 @@ export class LayersTree extends Component<LayersTreeProps> {
 
     if (combine) {
       const parent = this.getItemByDraggableId(combine.draggableId);
-      sourceItem.payload[sourceItem.isGroup ? 'parent' : 'groupId'] = parent.payload.id;
+      sourceItem.payload.parentId = parent.payload.id;
       sourceItem.payload.position = -42;
       this.reorder();
     }
@@ -110,12 +110,16 @@ export class LayersTree extends Component<LayersTreeProps> {
 
     this.reorder(newTree);
 
-    const parent =
+    let parent =
       beforeItem && afterItem
         ? currentProject.getClosestCommonAncestor(beforeItem, afterItem)
         : (beforeItem || afterItem).parent;
 
-    sourceItem.payload[sourceItem.isGroup ? 'parent' : 'groupId'] = parent?.payload?.id;
+    if (forward && sourceItem.parent && sourceItem.parent.id === destinationItem.parent?.id) {
+      parent = sourceItem.parent;
+    }
+
+    sourceItem.payload.parentId = parent?.payload?.id;
   }
 
   @action
