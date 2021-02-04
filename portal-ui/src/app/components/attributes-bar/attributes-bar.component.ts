@@ -131,33 +131,30 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     communicationService.off(this);
   }
 
-  updateTable(requestModel?: CrgModels) {
+  async updateTable(requestModel?: CrgModels) {
     this.loading = true;
     this.showPercent = false;
-    getFeatures(this.layer.complexName, requestModel)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((fCollection: WfsFeatureCollection) => {
-        if (fCollection) {
-          this.loading = false;
-          this.totalFeatures = fCollection.totalFeatures;
+    const fCollection: WfsFeatureCollection = await getFeatures(this.layer.complexName, requestModel);
+    if (fCollection) {
+      this.loading = false;
+      this.totalFeatures = fCollection.totalFeatures;
 
-          if (this.isNeedPrepareColumn) {
-            // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
-            //  при открытии или при переходе на новый слой
-            this.prepareColumns(fCollection.features[0]);
-            this.isNeedPrepareColumn = false;
-          }
+      if (this.isNeedPrepareColumn) {
+        // TODO: новый запрос в пределах того же слоя не принесет новых колонок! Формировать колонки только
+        //  при открытии или при переходе на новый слой
+        this.prepareColumns(fCollection.features[0]);
+        this.isNeedPrepareColumn = false;
+      }
 
-          this.features = fCollection.features.map((feature: WfsFeature) => {
-            const wfsFeatureView: WfsFeatureView = feature;
-            wfsFeatureView.aliases = this.fillAliases(feature.properties);
+      this.features = fCollection.features.map((feature: WfsFeature) => {
+        const wfsFeatureView: WfsFeatureView = feature;
+        wfsFeatureView.aliases = this.fillAliases(feature.properties);
 
-            return wfsFeatureView;
-          });
-        } else {
-          this.logger.warn('Unexpected response:', fCollection);
-        }
+        return wfsFeatureView;
       });
+    } else {
+      this.logger.warn('Unexpected response:', fCollection);
+    }
   }
 
   showSelectedFeatures() {
@@ -263,7 +260,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  handleSelectAll() {
+  async handleSelectAll() {
     if (this.features.length === 0) {
       return;
     }
@@ -276,14 +273,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
       this.loading = true;
       this.showPercent = false;
-      getFeatures(this.layer.complexName, clonedRequestModel)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(fCollection => {
-          this.attributeTable.selected = fCollection.features;
-          this.loading = false;
+      const fCollection: WfsFeatureCollection = await getFeatures(this.layer.complexName, clonedRequestModel);
+      this.attributeTable.selected = fCollection.features;
+      this.loading = false;
 
-          this.showSelectedFeatures();
-        });
+      this.showSelectedFeatures();
     } else {
       this.attributeTable.selected = [];
       openLayersService.clearDraft();

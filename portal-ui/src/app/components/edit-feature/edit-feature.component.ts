@@ -20,11 +20,10 @@ import { transformFeature } from '../../services/geoserver/transform-feature.ser
 import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
-import { getEmptyGeometry } from '../../services/geoserver/wfs.service';
+import { getEmptyGeometry, getFeaturesById } from '../../services/geoserver/wfs.service';
 
 export interface Properties {
   [key: string]: any;
@@ -236,7 +235,20 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     sidebars.setFeaturesEdited(false);
+
+    const savedFeatures = await getFeaturesById(
+      this.features.map(({ id }) => id),
+      this.layer.complexName
+    );
+
     sidebars.closeEdit();
+    sidebars.openEdit({
+      mode: this.mode,
+      features: savedFeatures,
+      layer: this.layer,
+      properties: this.properties,
+      isNew: this.isNew
+    });
   }
 
   async deleteFeature() {

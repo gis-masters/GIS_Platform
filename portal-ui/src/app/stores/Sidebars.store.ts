@@ -11,7 +11,7 @@ export interface EditFeaturesData {
   viewFeatures?: WfsFeature[];
   layer?: CrgLayer;
   properties?: Properties;
-  isNew?: true;
+  isNew?: boolean;
 }
 
 const defaultValues: Partial<Sidebars> = {

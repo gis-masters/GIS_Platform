@@ -1,4 +1,3 @@
-import { Observable, defer } from 'rxjs';
 import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 import { isEqual } from 'lodash';
@@ -6,7 +5,6 @@ import { isEqual } from 'lodash';
 import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs.models';
 import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
 import { CrgModels } from '../models';
-import { services } from '../services';
 import { http } from '../http.service';
 import { Util } from './util';
 
@@ -14,7 +12,6 @@ type Coord = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
 export const getFeatureById = async (complexName: string, objectId: string): Promise<WfsFeature> => {
-  await services.provided;
   const url = await prepareLink(complexName, objectId);
   const featureCollection: WfsFeatureCollection = await http.get<WfsFeatureCollection>(url);
 
@@ -25,7 +22,7 @@ export const getFeatureById = async (complexName: string, objectId: string): Pro
   }
 };
 
-export const getFeatures = (complexName: string, requestModel?: CrgModels): Observable<WfsFeatureCollection> => {
+export async function getFeatures(complexName: string, requestModel?: CrgModels): Promise<WfsFeatureCollection> {
   const params: { [key: string]: string } = {
     service: 'wfs',
     // version: '2.0.0',
@@ -49,27 +46,37 @@ export const getFeatures = (complexName: string, requestModel?: CrgModels): Obse
   if (!!cqlFilter) {
     params.CQL_FILTER = cqlFilter;
   }
+  const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params: params });
 
-  return defer(async () => {
-    await services.provided;
-    const fCollection = await http.get<WfsFeatureCollection>(await getWfsUrl(), { params: params });
-
-    return clearFeatureId(fCollection);
-  });
-};
+  return clearFeatureId(fCollection);
+}
 
 /**
  * Выборка объектов слоя по XML фильтру.
  * @param xml Подготовленный, при помощи библиотеки openLayers, XML document конвертированный в строку.
  */
-export const getFeaturesByXmlFilter = async (xml: string): Promise<WfsFeatureCollection> => {
-  await services.provided;
-
+export async function getFeaturesByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
   return http.post<WfsFeatureCollection>(await getWfsUrl(), xml, {
     headers: { 'Content-type': 'application/xml' },
     params: { exceptions: 'application/json' }
   });
-};
+}
+
+export async function getFeaturesById(ids: string[], namespace: string): Promise<WfsFeature[]> {
+  const headers = { 'Content-type': 'application/json' };
+  const params = {
+    outputFormat: 'application/json',
+    service: 'wfs',
+    version: '2.0.0',
+    request: 'GetFeature',
+    typeNames: namespace,
+    featureID: ids.join(',')
+  };
+
+  const { features } = await http.get<WfsFeatureCollection>(await getWfsUrl(), { headers, params });
+
+  return features;
+}
 
 export const isGeometryValid = (geometry: WfsGeometry): boolean => {
   return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
