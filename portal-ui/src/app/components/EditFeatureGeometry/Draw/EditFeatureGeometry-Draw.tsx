@@ -5,80 +5,106 @@ import { Coordinate } from 'ol/coordinate';
 import { DrawEvent } from 'ol/interaction/Draw';
 import GeometryType from 'ol/geom/GeometryType';
 import { IconButton, Tooltip } from '@material-ui/core';
-import { Brush, BrushOutlined } from '@material-ui/icons';
+import { Brush, BrushOutlined, SvgIconComponent } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { transform, olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
 import { openLayersService } from '../../../services/open-layer/open-layers.service';
 import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { transform, olProjection } from '../../../services/geoserver/projections.service';
+import { Emitter } from '../../../services/util/Emitter';
+import { boundMethod } from 'autobind-decorator';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
 
 interface EditFeatureGeometryDrawProps {
-  coordinates: CoordinateEdited[];
+  point?: CoordinateEdited;
   store: EditFeatureGeometryStore;
+  onDraw: (val: CoordinateEdited | CoordinateEdited[]) => void;
+  Icon?: SvgIconComponent;
+  IconWhenActive?: SvgIconComponent;
+  tip?: string;
 }
 
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
-  constructor(props: EditFeatureGeometryDrawProps) {
-    super(props);
 
-    this.handleDraw = this.handleDraw.bind(this);
+  componentDidMount() {
+    openLayersService.modificationDisabled.on(this.disactivate);
   }
 
   componentWillUnmount() {
     if (this.active) {
-      document.body.classList.remove('global-crosshair-cursor');
       openLayersService.drawOff();
+      openLayersService.disableDraftModification();
     }
+
+    Emitter.scopeOff(this);
   }
 
   render() {
+    const { Icon, IconWhenActive, tip } = this.props;
+    const IconNormal = Icon || BrushOutlined;
+    const IconActive = IconWhenActive || Icon || Brush;
+
     return (
-      <Tooltip title='Нарисовать на карте'>
+      <Tooltip title={tip || 'Рисовать на карте'}>
         <IconButton
           className={cnEditFeatureGeometryDraw()}
           onClick={this.clickHandler}
           color={this.active ? 'secondary' : 'default'}
         >
-          {this.active ? <Brush /> : <BrushOutlined />}
+          {this.active ? <IconActive /> : <IconNormal />}
         </IconButton>
       </Tooltip>
     );
   }
 
-  private get geometryType(): GeometryType {
+  private get drawingGeometryType(): GeometryType {
     const { geometryType } = this.props.store;
 
     return geometryType === GeometryType.MULTI_POLYGON ? GeometryType.POLYGON : geometryType;
   }
 
+  @action.bound
   private handleDraw(e: DrawEvent) {
-    // @ts-ignore
-    const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
-    const newCoordinates = drawed[0].map(coord => transform(olProjection, this.props.store.currentProjection, coord));
+    const { point, store, onDraw } = this.props;
 
-    this.updateGeometry(newCoordinates);
+    if (point) {
+      // @ts-ignore
+      const drawed = e.feature.getGeometry().getCoordinates() as Coordinate;
+      point.splice(0, point.length, ...transform(olProjection, store.currentProjection, drawed));
+      onDraw(point);
+    } else {
+      // @ts-ignore
+      const drawed = e.feature.getGeometry().getCoordinates() as Coordinate[][];
+      const newPart = drawed[0].map(coord => transform(olProjection, store.currentProjection, coord));
+      onDraw(newPart);
+    }
+  }
+
+  @boundMethod
+  private clickHandler() {
+    if (!this.active) {
+      openLayersService.draw(this.drawingGeometryType, this.handleDraw);
+      openLayersService.disableDraftModification();
+      openLayersService.enableDraftModification();
+      this.activate();
+    } else {
+      openLayersService.drawOff();
+      openLayersService.disableDraftModification();
+      this.disactivate();
+    }
   }
 
   @action
-  private updateGeometry(newCoordinates: CoordinateEdited[]) {
-    const { coordinates } = this.props;
-    coordinates.splice(0, coordinates.length, ...newCoordinates);
+  private activate() {
+    this.active = true;
   }
 
   @action.bound
-  private clickHandler() {
-    this.active = !this.active;
-    if (this.active) {
-      document.body.classList.add('global-crosshair-cursor');
-      openLayersService.draw(this.geometryType, this.handleDraw);
-    } else {
-      document.body.classList.remove('global-crosshair-cursor');
-      openLayersService.drawOff();
-    }
+  private disactivate() {
+    this.active = false;
   }
 }

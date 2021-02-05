@@ -1,16 +1,17 @@
 import React from 'react';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { Brush, BrushOutlined } from '@material-ui/icons';
 import GeometryType from 'ol/geom/GeometryType';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsPointGeometry, CoordinateEdited } from '../../../../services/geoserver/wfs.models';
 
-import { EditFeatureGeometryCoordPick } from '../../CoordPick/EditFeatureGeometry-CoordPick';
+import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
+import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
 import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
+import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 import {
   EditFeatureGeometryFormProps,
@@ -30,25 +31,31 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
 
     return (
       <div className={cnEditFeatureGeometryForm(null, [className])}>
+        <EditFeatureGeometryToolbar>
+          <EditFeatureGeometryToolbarLeft>
+            <EditFeatureGeometryDraw store={store} point={geometry.coordinates} onDraw={this.changeHandler} />
+            <EditFeatureGeometryAsText
+              coordinates={[geometry.coordinates]}
+              mustBeClosed={false}
+              onChange={this.asTextHandler}
+              geometryType={store.geometryType}
+              first
+            />
+          </EditFeatureGeometryToolbarLeft>
+        </EditFeatureGeometryToolbar>
+
         <EditFeatureGeometryXY />
         <EditFeatureGeometryCoord val={geometry.coordinates} store={store} onChange={this.changeHandler} />
-
-        <EditFeatureGeometryCoordPick
-          store={store}
-          Icon={this.active ? Brush : BrushOutlined}
-          onPickStart={this.enableActive}
-          onPickEnd={this.disableActive}
-          onPick={this.changeHandler}
-          size='medium'
-        />
-
-        <EditFeatureGeometryAsText
-          coordinates={[geometry.coordinates]}
-          mustBeClosed={false}
-          onChange={this.asTextHandler}
-        />
       </div>
     );
+  }
+
+  @computed
+  private get isEmpty(): boolean {
+    const { store } = this.props;
+    const geometry = store.geometry as WfsPointGeometry;
+
+    return !geometry.coordinates.some(dismention => dismention);
   }
 
   @boundMethod

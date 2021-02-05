@@ -10,7 +10,7 @@ import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometr
 const EditFeatureGeometryViewTypeMultiLineString: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
   <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
     {(store.geometry as WfsMultiLineStringGeometry).coordinates.map((coordinatesGroup, i) => (
-      <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} />
+      <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} index={i} store={store} />
     ))}
   </div>
 );

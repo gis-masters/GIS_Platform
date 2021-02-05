@@ -6,7 +6,7 @@ import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
-import { MultiPolygon } from 'ol/geom';
+import { Geometry, MultiPolygon } from 'ol/geom';
 import GeometryType from 'ol/geom/GeometryType';
 import ImageWrapper from 'ol/Image';
 import { Draw, Modify } from 'ol/interaction';
@@ -21,11 +21,19 @@ import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import ImageLayer from 'ol/layer/Image';
+import { boundMethod } from 'autobind-decorator';
 
-import { CrgLayer } from '../../services/crg/projects.models';
+import { currentMap } from '../../stores/CurrentMap.store';
 import { baseMapsStore } from '../../stores/BaseMaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { CrgBaseMap, SourceType } from '../crg/base-maps.models';
+import { CrgLayer } from '../../services/crg/projects.models';
+import { WfsFeature } from '../geoserver/wfs.models';
+import { getWmsUrl } from '../server-urls.service';
+import { Emitter } from '../util/Emitter';
+import { MapperUtil } from './MapperUtil';
+import { services } from '../services';
+import { http } from '../http.service';
 import {
   CrgProjection,
   getFeatureProjection,
@@ -33,13 +41,6 @@ import {
   transform,
   transformGeometry
 } from '../geoserver/projections.service';
-import { WfsFeature } from '../geoserver/wfs.models';
-import { getWmsUrl } from '../server-urls.service';
-import { currentMap } from '../../stores/CurrentMap.store';
-import { services } from '../services';
-import { Emitter } from '../util/Emitter';
-import { MapperUtil } from './MapperUtil';
-import { http } from '../http.service';
 
 // исправление ошибки в типах openlayers
 // актуально для ol: 6.4.3, @types/ol: ^6.4.1, typescript: ~3.8.3
@@ -61,33 +62,9 @@ class OpenLayersService {
   private static _instance: OpenLayersService;
 
   private CRG_INFO_PROP_NAME = 'crgInfo';
-  private readonly isTiledWms;
+  private readonly isTiledWms: boolean;
 
   private readonly debouncedZoomEvent: () => void;
-
-  constructor() {
-    reaction(
-      () => baseMapsStore.currentBaseMap,
-      currentBaseMap => {
-        if (currentBaseMap) {
-          const tileSource = this.prepareTileSource(currentBaseMap);
-          if (tileSource) {
-            this.baseMapLayer.setVisible(true);
-            this.baseMapLayer.setSource(tileSource);
-          } else {
-            this.baseMapLayer.setVisible(false);
-          }
-        } else {
-          this.baseMapLayer.setVisible(false);
-        }
-      },
-      { fireImmediately: true }
-    );
-
-    this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view.getZoom()), 100);
-
-    this.isTiledWms = localStorage.getItem('tiledWms');
-  }
 
   public static get instance() {
     return this._instance || (this._instance = new this());
@@ -95,12 +72,16 @@ class OpenLayersService {
 
   mapClick = new Emitter<Coordinate>();
   zoomChanged = new Emitter<number>();
+  modificationEnabled = new Emitter();
+  modificationDisabled = new Emitter();
+  modificationDone = new Emitter<Geometry>();
 
   // Подлдожка
   private baseMapLayer = new TileLayer();
 
   private _map: Map;
   private view: View;
+  private draftStyle: Style;
   private markersSource: VectorSource;
   private draftSource: VectorSource;
   private draftSourceModify?: Modify;
@@ -123,6 +104,30 @@ class OpenLayersService {
   private defaultZoomValue = 9;
   private defaultViewPoint = [3844444, 5644444];
 
+  constructor() {
+    reaction(
+      () => baseMapsStore.currentBaseMap,
+      currentBaseMap => {
+        if (currentBaseMap) {
+          const tileSource = this.prepareTileSource(currentBaseMap);
+          if (tileSource) {
+            this.baseMapLayer.setVisible(true);
+            this.baseMapLayer.setSource(tileSource);
+          } else {
+            this.baseMapLayer.setVisible(false);
+          }
+        } else {
+          this.baseMapLayer.setVisible(false);
+        }
+      },
+      { fireImmediately: true }
+    );
+
+    this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view.getZoom()), 100);
+
+    this.isTiledWms = Boolean(localStorage.getItem('tiledWms'));
+  }
+
   async createMap() {
     this.markersSource = new VectorSource({
       features: []
@@ -141,6 +146,23 @@ class OpenLayersService {
       maxZoom: 21
     });
 
+    const { imageColor, strokeColor } = this.getDraftColors();
+    this.draftStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.3)'
+      }),
+      stroke: new Stroke({
+        color: strokeColor,
+        width: 2
+      }),
+      image: new Circle({
+        radius: 7,
+        fill: new Fill({
+          color: imageColor
+        })
+      })
+    });
+
     this._map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
@@ -154,21 +176,7 @@ class OpenLayersService {
         new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
-          style: new Style({
-            fill: new Fill({
-              color: 'rgba(255, 255, 255, 0.3)'
-            }),
-            stroke: new Stroke({
-              color: '#ff0018',
-              width: 2
-            }),
-            image: new Circle({
-              radius: 7,
-              fill: new Fill({
-                color: 'rgba(255, 55, 55, 0.8)'
-              })
-            })
-          })
+          style: this.draftStyle
         })
       ]
     });
@@ -180,6 +188,7 @@ class OpenLayersService {
 
         return;
       }
+
       if (e.coordinate) {
         if (!this.isModifying && !this.draftSourceDraw) {
           this.mapClick.emit(e.coordinate);
@@ -454,34 +463,44 @@ class OpenLayersService {
     return new MultiPolygon(buffer);
   }
 
-  enableDraftModification(handler: (e: ModifyEvent) => void) {
+  enableDraftModification() {
     this.isModifying = true;
-    this.draftSourceModify.on('modifyend', handler);
+    this.selectDraftColor();
+    this.draftSourceModify.on('modifyend', this.modificationHandler);
     this._map.addInteraction(this.draftSourceModify);
+    this.modificationEnabled.emit();
   }
 
-  disableDraftModification(handler: (e: ModifyEvent) => void) {
+  disableDraftModification() {
     this.isModifying = false;
-    this.draftSourceModify.un('modifyend', handler);
+    this.selectDraftColor();
+    this.draftSourceModify.un('modifyend', this.modificationHandler);
     this._map.removeInteraction(this.draftSourceModify);
+    this.modificationDisabled.emit();
+  }
+
+  @boundMethod
+  modificationHandler(e: ModifyEvent) {
+    this.modificationDone.emit(e.features.item(0).getGeometry());
   }
 
   draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {
+    this.drawOff();
+    document.body.classList.add('global-crosshair-cursor');
+
     this.draftSourceDraw = new Draw({
       source: this.draftSource,
       type: geometryType
     });
 
-    this.drawHandler = (e: DrawEvent) => {
-      this.drawOff();
-      setTimeout(() => handler(e), 0);
-    };
+    this.drawHandler = handler;
 
     this.draftSourceDraw.on('drawend', this.drawHandler);
     this._map.addInteraction(this.draftSourceDraw);
   }
 
   drawOff() {
+    document.body.classList.remove('global-crosshair-cursor');
     if (this.draftSourceDraw) {
       this.draftSourceDraw.un('drawend', this.drawHandler);
       this._map.removeInteraction(this.draftSourceDraw);
@@ -690,6 +709,23 @@ class OpenLayersService {
       return crgInfo.isUserLayer;
     } else {
       return false;
+    }
+  }
+
+  private selectDraftColor() {
+    const { imageColor, strokeColor } = this.getDraftColors();
+    // @ts-ignore
+    this.draftStyle.getImage().getFill().setColor(imageColor);
+    this.draftStyle.getStroke().setColor(strokeColor);
+    // repaint
+    this.draftSource.addFeatures([]);
+  }
+
+  private getDraftColors(): { strokeColor: string; imageColor: string } {
+    if (this.isModifying || this.draftSourceDraw) {
+      return { strokeColor: '#66f', imageColor: 'rgba(55, 55, 255, 0.8)' };
+    } else {
+      return { strokeColor: '#ff0018', imageColor: 'rgba(255, 55, 55, 0.8)' };
     }
   }
 }

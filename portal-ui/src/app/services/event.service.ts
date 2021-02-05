@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, publishReplay, refCount } from 'rxjs/operators';
 import { remove } from 'lodash';
 
-import { generateRandomId } from './util/stringUtil';
+import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
 import { ProcessType } from './models';
 

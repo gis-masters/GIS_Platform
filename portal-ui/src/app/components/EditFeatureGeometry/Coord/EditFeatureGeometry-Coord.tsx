@@ -6,9 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { isDimensionValid } from '../../../services/geoserver/wfs.service';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 import { EditFeatureGeometryCoordPick } from '../CoordPick/EditFeatureGeometry-CoordPick';
@@ -23,7 +23,7 @@ interface EditFeatureGeometryCoordProps {
   store: EditFeatureGeometryStore;
   val: CoordinateEdited;
   withControls?: true;
-  onChange?: (val: CoordinateEdited, i: number) => void;
+  onChange: (val: CoordinateEdited, i: number) => void;
   onDelete?: (index: number) => void;
   canBeDeleted?: boolean;
   disabled?: boolean;

@@ -116,7 +116,7 @@ export class TransformFeatureService {
     return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
   }
 
-  async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string) {
+  async insertFeatures(featuresData: WfsFeature[], layerName: string, srsName: string): Promise<string[]> {
     await usersService.fetchCurrentUser();
 
     const { scratchWorkspaceName } = await getEnvironment();
@@ -143,7 +143,18 @@ export class TransformFeatureService {
 
     const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
 
-    return http.post(await getWfsUrl(), payload, { headers: { 'Content-Type': 'text/xml' }, responseType: 'text' });
+    const responseXML = await http.post<string>(await getWfsUrl(), payload, {
+      headers: { 'Content-Type': 'text/xml' },
+      responseType: 'text'
+    });
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(responseXML, 'text/xml');
+    const ids = Array.prototype.slice
+      .call(xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId'))
+      .map((f: Element) => f.getAttribute('fid'));
+
+    return ids;
   }
 
   async deleteFeatures(featureIds: string[], layerName: string) {

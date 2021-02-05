@@ -2,10 +2,10 @@ import React, { FC, useCallback, ChangeEvent } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { Select } from '../../Select/Select';
-import { projections, getProjection } from '../../../services/geoserver/projections.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { projections, getProjection } from '../../../services/geoserver/projections.service';
 import { FormField, FormLabel, FormControl } from '../../Form/Form';
+import { Select } from '../../Select/Select';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ProjSel.scss';
 
@@ -16,15 +16,16 @@ interface Props {
 }
 
 export const EditFeatureGeometryProjSel: FC<Props> = observer(({ store }: Props) => {
-  const handleChange = useCallback((e: ChangeEvent<{ name?: string; value: unknown }>) => {
-    store.setProjection(getProjection(e.target.value as string));
-  }, [store]);
+  const handleChange = useCallback(
+    (e: ChangeEvent<{ name?: string; value: unknown }>) => {
+      store.setProjection(getProjection(e.target.value as string));
+    },
+    [store]
+  );
 
   return (
     <FormField className={cnEditFeatureGeometry('ProjSel')}>
-      <FormLabel htmlFor='projSel'>
-        Система координат
-      </FormLabel>
+      <FormLabel htmlFor='projSel'>Система координат</FormLabel>
       <FormControl>
         <Select
           options={projections.map(proj => ({ value: proj.id, children: proj.title }))}

@@ -3,8 +3,8 @@
   "production": true,
   "server": {
     "host": "simf-region.mycrg.ru",
-    "port": 8100
+    "port": 8100,
+    "wsPort": 8084
   },
-  "ws_port": 8084,
   "scratchWorkspaceName": "scratch_workspace"
 }

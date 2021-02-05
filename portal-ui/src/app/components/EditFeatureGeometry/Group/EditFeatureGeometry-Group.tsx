@@ -1,23 +1,23 @@
 import React, { Component, ComponentType, PropsWithChildren, createRef } from 'react';
 import { observer } from 'mobx-react';
 import { observable, computed, action } from 'mobx';
-import { debounce } from 'lodash';
 import { IClassNameProps } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+import { debounce } from 'lodash';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
-import { EditFeatureGeometryGroupInner } from '../GroupInner/EditFeatureGeometry-GroupInner';
 import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
+import { EditFeatureGeometryGroupInner } from '../GroupInner/EditFeatureGeometry-GroupInner';
 import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeometry-GroupFooter';
+import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
-import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
-import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
 
@@ -56,7 +56,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
   }
 
   render() {
-    const { coordinates, minCoordsCount, canBeDeleted, className, Container, mustBeClosed, store } = this.props;
+    const { coordinates, minCoordsCount, canBeDeleted, className, Container, mustBeClosed, store, index } = this.props;
     const Tag = Container || Div;
 
     return (
@@ -92,10 +92,31 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
 
         <EditFeatureGeometryGroupFooter>
           <EditFeatureGeometryAddNode onClick={this.addHandler} />
-          <EditFeatureGeometryAsText coordinates={coordinates} mustBeClosed={mustBeClosed} />
-          {this.empty ? <EditFeatureGeometryDraw coordinates={coordinates} store={store} /> : null}
-          <EditFeatureGeometryCSV coordinates={coordinates} empty={this.empty} mustBeClosed={mustBeClosed} />
-          {canBeDeleted ? <EditFeatureGeometryDelButton onClick={this.deleteGroupHandler} /> : null}
+          <EditFeatureGeometryAsText
+            coordinates={coordinates}
+            mustBeClosed={mustBeClosed}
+            geometryType={store.geometryType}
+            first={!index}
+          />
+          <EditFeatureGeometryCSV
+            coordinates={coordinates}
+            empty={this.empty}
+            mustBeClosed={mustBeClosed}
+            geometryType={store.geometryType}
+            first={!index}
+          />
+          {canBeDeleted ? (
+            <EditFeatureGeometryDelButton
+              onClick={this.deleteGroupHandler}
+              labelToDelete={selectLabelForGeometryType(
+                store.geometryType,
+                `контур${index ? ' (вырезку)' : ''}`,
+                'линию',
+                'точку',
+                'группу'
+              )}
+            />
+          ) : null}
         </EditFeatureGeometryGroupFooter>
       </Tag>
     );
@@ -137,6 +158,7 @@ export class EditFeatureGeometryGroup extends Component<EditFeatureGeometryGroup
   private changeHandler(val: CoordinateEdited, i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
+    coordinates[i] = val;
     if (i === 0 && mustBeClosed) {
       coordinates[coordinates.length - 1] = val;
     }

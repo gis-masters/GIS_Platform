@@ -4,11 +4,18 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Dialog, DialogContent, DialogActions, TextField, IconButton, Tooltip } from '@material-ui/core';
 import { ListAlt } from '@material-ui/icons';
+import GeometryType from 'ol/geom/GeometryType';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
+import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
+import {
+  CoordinateEdited,
+  WfsMultiLineStringGeometry,
+  WfsMultiPolygonGeometry,
+  WfsPointGeometry
+} from '../../../services/geoserver/wfs.models';
 import { Button } from '../../Button/Button';
-import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 
 import '!style-loader!css-loader!sass-loader!../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
 import '!style-loader!css-loader!sass-loader!../Text/EditFeatureGeometry-Text.scss';
@@ -19,6 +26,8 @@ interface EditFeatureGeometryAsTextProps {
   coordinates: CoordinateEdited[];
   mustBeClosed: boolean;
   onChange?: (coordinates: CoordinateEdited[]) => void;
+  geometryType: GeometryType;
+  first: boolean;
 }
 
 @observer
@@ -27,9 +36,18 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   @observable private text: string;
 
   render() {
+    const { geometryType, first } = this.props;
+    const partLabel = selectLabelForGeometryType(
+      geometryType,
+      `контура${first ? '' : ' (вырезки)'}`,
+      'линии',
+      'точки',
+      'группы'
+    );
+
     return (
       <>
-        <Tooltip title='Как текст'>
+        <Tooltip title={`Координаты ${partLabel} как текст`}>
           <IconButton
             className={cnEditFeatureGeometry('AsText')}
             color={this.isOpen ? 'secondary' : 'default'}
@@ -90,13 +108,24 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
 
   @action.bound
   private save() {
-    const { coordinates, mustBeClosed, onChange } = this.props;
-    const newCoordinates = this.text
+    const { coordinates, mustBeClosed, onChange, geometryType } = this.props;
+    let newCoordinates: CoordinateEdited[] = this.text
       .replace(/,/g, '.')
       .split('\n')
       .map(row => row.trim().replace(/\s+/g, ' '))
       .filter(row => row)
       .map(row => row.split(/\s/).reverse());
+
+    if (!newCoordinates.length) {
+      const emptyGeometry = getEmptyGeometry(geometryType);
+      if (geometryType === GeometryType.POINT) {
+        newCoordinates = [(emptyGeometry as WfsPointGeometry<CoordinateEdited>).coordinates];
+      } else if (geometryType === GeometryType.MULTI_LINE_STRING) {
+        newCoordinates = (emptyGeometry as WfsMultiLineStringGeometry).coordinates[0];
+      } else if (geometryType === GeometryType.MULTI_POLYGON) {
+        newCoordinates = (emptyGeometry as WfsMultiPolygonGeometry).coordinates[0][0];
+      }
+    }
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
       newCoordinates.push(newCoordinates[0]);

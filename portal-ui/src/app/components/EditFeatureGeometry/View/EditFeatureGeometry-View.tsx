@@ -18,8 +18,6 @@ export interface EditFeatureGeometryViewProps extends IClassNameProps {
 
 export const EditFeatureGeometryView: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
   <div className={cnEditFeatureGeometryView(null, [className])}>
-    <EditFeatureGeometryError>
-      Неподдерживаемый тип геометрии: {store.geometry.type}
-    </EditFeatureGeometryError>
+    <EditFeatureGeometryError>Неподдерживаемый тип геометрии: {store.geometry?.type}</EditFeatureGeometryError>
   </div>
 );

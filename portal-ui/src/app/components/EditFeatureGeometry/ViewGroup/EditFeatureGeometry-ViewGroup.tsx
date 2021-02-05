@@ -1,16 +1,9 @@
 import React, { Component, FC, createRef, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
-import {
-  Paper,
-  PaperProps,
-  Table,
-  TableContainer,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell
-} from '@material-ui/core';
+import { Paper, PaperProps, Table, TableContainer, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
+
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
@@ -21,19 +14,26 @@ const cnEditFeatureGeometryViewGroup = cn('EditFeatureGeometry', 'ViewGroup');
 interface EditFeatureGeometryViewGroupProps {
   coordinates: Coordinate[];
   isPoint?: boolean;
+  store: EditFeatureGeometryStore;
+  index: number;
 }
 
-const Container: FC<PaperProps> = (props) => <Paper {...props} square />;
+const Container: FC<PaperProps> = props => <Paper {...props} square />;
 
 export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryViewGroupProps> {
   tableRef: RefObject<HTMLTableElement> = createRef();
-  
-  render () {
-    const { coordinates, isPoint } = this.props;
-    
+
+  render() {
+    const { coordinates, isPoint, store, index } = this.props;
+
     return (
       <TableContainer component={Container} className={cnEditFeatureGeometryViewGroup()}>
-        <EditFeatureGeometryViewGroupControls coordinates={coordinates} tableRef={this.tableRef} />
+        <EditFeatureGeometryViewGroupControls
+          coordinates={coordinates}
+          tableRef={this.tableRef}
+          store={store}
+          index={index}
+        />
         <Table size='small' ref={this.tableRef}>
           <TableHead>
             <TableRow>
@@ -56,4 +56,3 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
     );
   }
 }
-

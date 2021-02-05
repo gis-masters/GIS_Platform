@@ -6,24 +6,27 @@ import { filter, first, takeUntil } from 'rxjs/operators';
 import { Coordinate } from 'ol/coordinate';
 import { boundMethod } from 'autobind-decorator';
 
-import { Toast } from '../Toast/Toast';
+import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { BatchModel } from '../../services/crg/batch-model';
-import { EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { getFeaturesById } from '../../services/geoserver/wfs.service';
+import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { communicationService } from '../../services/communication.service';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { schemaService, PropertySchema } from '../../services/crg/schema.service';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { FeaturePropertyValidators, ValueType } from '../../services/util/FeaturePropertyValidators';
+import { isFeaturesDeleteAllowed, isFeaturesUpdateAllowed } from '../../services/crg/permissions.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { BaseEdit } from '../edit-bug-object/base-edit';
 import { CrgLayer } from '../../services/crg/projects.models';
-import { getFeatureLayer } from '../../services/geoserver/layers.service';
-import { getEmptyGeometry, getFeaturesById } from '../../services/geoserver/wfs.service';
+import { BaseEdit } from '../edit-bug-object/base-edit';
+import { Toast } from '../Toast/Toast';
+
+import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { getEmptyGeometry } from '../../services/geoserver/wfs.util';
+import { sleep } from '../../services/util/sleep';
 
 export interface Properties {
   [key: string]: any;
@@ -171,15 +174,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 .subscribe(changedGeometry => {
                   this.changedGeometry = changedGeometry;
 
-                  if (this.editGeometryStore.isValid) {
-                    const feature = {
-                      ...this.features[0],
-                      geometry: changedGeometry
-                    };
-                    openLayersService.highlightFeatures([feature]);
-                  } else {
-                    openLayersService.clearDraft();
-                  }
+                  const feature = {
+                    ...this.features[0],
+                    geometry: changedGeometry
+                  };
+
+                  openLayersService.highlightFeatures([feature]);
                 });
 
               fromMobx(() => this.editGeometryStore.isValid)
@@ -215,9 +215,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     this.isSaveInProgress = true;
 
     const newProperties = this.getActualValuesFromForm();
+    let ids = this.features.map(({ id }) => id);
 
     if (this.isNew) {
-      await transformFeature.insertFeatures(
+      ids = await transformFeature.insertFeatures(
         [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
         this.layer.tableName,
         this.layer.nativeCRS
@@ -236,18 +237,18 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     sidebars.setFeaturesEdited(false);
 
-    const savedFeatures = await getFeaturesById(
-      this.features.map(({ id }) => id),
-      this.layer.complexName
-    );
+    const savedFeatures = await getFeaturesById(ids, this.layer.complexName);
 
     sidebars.closeEdit();
+
+    await sleep(0);
+
     sidebars.openEdit({
       mode: this.mode,
       features: savedFeatures,
       layer: this.layer,
       properties: this.properties,
-      isNew: this.isNew
+      isNew: false
     });
   }
 

@@ -4,14 +4,16 @@ import { isEqual } from 'lodash';
 
 import { WfsFeature, WfsFeatureCollection, CoordinateEdited, WfsGeometry } from './wfs.models';
 import { getGeoServerUrl, getWfsUrl } from '../server-urls.service';
+import { generateFilter, generateSortParam } from './wfs.util';
 import { CrgModels } from '../models';
 import { http } from '../http.service';
-import { Util } from './util';
 
-type Coord = Coordinate | Coordinate[][] | Coordinate[][][];
-type CoordEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
+export const WFS_FEATURE_ID_DELIMITER = '.';
 
-export const getFeatureById = async (complexName: string, objectId: string): Promise<WfsFeature> => {
+type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
+type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
+
+export async function getFeatureById(complexName: string, objectId: string): Promise<WfsFeature> {
   const url = await prepareLink(complexName, objectId);
   const featureCollection: WfsFeatureCollection = await http.get<WfsFeatureCollection>(url);
 
@@ -20,7 +22,7 @@ export const getFeatureById = async (complexName: string, objectId: string): Pro
   } else {
     throw new Error('Not found feature by ID: ' + objectId);
   }
-};
+}
 
 export async function getFeatures(complexName: string, requestModel?: CrgModels): Promise<WfsFeatureCollection> {
   const params: { [key: string]: string } = {
@@ -31,7 +33,7 @@ export async function getFeatures(complexName: string, requestModel?: CrgModels)
     exceptions: 'application/json',
     typeName: complexName,
     // PROPERTYNAME: fillProp(complexName),
-    sortBy: Util.generateSortParam(requestModel)
+    sortBy: generateSortParam(requestModel)
   };
 
   if (requestModel && requestModel.page) {
@@ -42,7 +44,7 @@ export async function getFeatures(complexName: string, requestModel?: CrgModels)
     params.count = countRows;
   }
 
-  const cqlFilter = Util.generateFilter(requestModel);
+  const cqlFilter = generateFilter(requestModel);
   if (!!cqlFilter) {
     params.CQL_FILTER = cqlFilter;
   }
@@ -78,38 +80,39 @@ export async function getFeaturesById(ids: string[], namespace: string): Promise
   return features;
 }
 
-export const isGeometryValid = (geometry: WfsGeometry): boolean => {
+export function isGeometryValid(geometry: WfsGeometry): boolean {
   return isCoordinateValid(geometry.coordinates.flat(5) as Coordinate) && !hasUnclosedPolygons(geometry);
-};
+}
 
-const hasUnclosedPolygons = (geometry: WfsGeometry): boolean => {
+function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
   if (geometry.type === GeometryType.MULTI_POLYGON) {
     return geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1])));
   } else {
     return false;
   }
-};
+}
 
-export const isCoordinateValid = (coord: Coordinate): boolean => {
-  return coord.every(isDimensionValid);
-};
+export function isCoordinateValid(coord: Coordinate): boolean {
+  return coord?.every(isDimensionValid);
+}
 
-export const isDimensionValid = (dimension: string | number): boolean => {
+export function isDimensionValid(dimension: string | number): boolean {
   return !isNaN(transformDimension(dimension));
-};
+}
 
-export const normalizeCoordinates = (coord: CoordEdited | string | number): Coord | number => {
+export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
   if (Array.isArray(coord)) {
-    return (coord as CoordEdited[]).map(normalizeCoordinates) as Coord;
+    return (coord as CoordsEdited[]).map(normalizeCoordinates) as Coords;
   } else {
     return transformDimension(coord);
   }
-};
+}
 
-export const transformDimension = (dimension: number | string) =>
-  String(dimension).trim() === '' ? NaN : Number(dimension);
+export function transformDimension(dimension: number | string) {
+  return String(dimension).trim() === '' ? NaN : Number(dimension);
+}
 
-const prepareLink = async (typeName: string, objectId: string): Promise<string> => {
+async function prepareLink(typeName: string, objectId: string): Promise<string> {
   const workspaceName = typeName.split(':')[0];
 
   return (
@@ -122,9 +125,9 @@ const prepareLink = async (typeName: string, objectId: string): Promise<string> 
     '&outputFormat=application%2Fjson&featureID=' +
     objectId
   );
-};
+}
 
-const clearFeatureId = (fCollection: WfsFeatureCollection): WfsFeatureCollection => {
+function clearFeatureId(fCollection: WfsFeatureCollection): WfsFeatureCollection {
   fCollection.features.forEach((feature: WfsFeature) => {
     const splitElement = feature.id.split('.')[1];
     if (splitElement) {
@@ -133,41 +136,4 @@ const clearFeatureId = (fCollection: WfsFeatureCollection): WfsFeatureCollection
   });
 
   return fCollection;
-};
-
-export const getEmptyGeometry = (geometryType: GeometryType): WfsGeometry<CoordinateEdited> => {
-  if (geometryType === GeometryType.POINT) {
-    return {
-      type: GeometryType.POINT,
-      coordinates: ['', '']
-    };
-  }
-
-  if (geometryType === GeometryType.MULTI_LINE_STRING) {
-    return {
-      type: GeometryType.MULTI_LINE_STRING,
-      coordinates: [
-        [
-          ['', ''],
-          ['', '']
-        ]
-      ]
-    };
-  }
-
-  if (geometryType === GeometryType.MULTI_POLYGON) {
-    return {
-      type: GeometryType.MULTI_POLYGON,
-      coordinates: [
-        [
-          [
-            ['', ''],
-            ['', ''],
-            ['', ''],
-            ['', '']
-          ]
-        ]
-      ]
-    };
-  }
-};
+}

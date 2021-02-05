@@ -1,8 +1,6 @@
 import { Coordinate } from 'ol/coordinate';
 import GeometryType from 'ol/geom/GeometryType';
 
-export const WFS_FEATURE_ID_DELIMITER = '.';
-
 export type CoordinateEdited = (number | string)[];
 
 export type SupportedGeometryType = GeometryType.POINT | GeometryType.MULTI_LINE_STRING | GeometryType.MULTI_POLYGON;

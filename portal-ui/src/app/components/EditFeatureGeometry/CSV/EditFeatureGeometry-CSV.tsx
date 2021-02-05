@@ -3,11 +3,13 @@ import { action } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { ArchiveOutlined, UnarchiveOutlined } from '@material-ui/icons';
+import GeometryType from 'ol/geom/GeometryType';
 import { saveAs } from 'file-saver';
 import { parse, unparse } from 'papaparse';
 import { isEqual, clone } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs.util';
 import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
@@ -19,25 +21,34 @@ interface EditFeatureGeometryCSVProps {
   empty?: boolean;
   mustBeClosed?: boolean;
   readOnly?: boolean;
+  geometryType: GeometryType;
+  first: boolean;
 }
 
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps> {
   private inputRef = createRef<HTMLInputElement>();
 
   render() {
-    const { readOnly, empty } = this.props;
+    const { readOnly, empty, geometryType, first } = this.props;
+    const partLabel = selectLabelForGeometryType(
+      geometryType,
+      `контура${first ? '' : ' (вырезки)'}`,
+      'линии',
+      'точки',
+      'группы'
+    );
 
     return (
       <>
         {!readOnly && (
-          <Tooltip title='Импорт координат линии/контура из CSV'>
+          <Tooltip title={`Импорт координат ${partLabel} из CSV`}>
             <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.importClickHandler}>
               <ArchiveOutlined />
             </IconButton>
           </Tooltip>
         )}
 
-        <Tooltip title='Экспорт координат линии/контура в CSV'>
+        <Tooltip title={`Экспорт координат ${partLabel} в CSV`}>
           <span>
             <IconButton
               className={cnEditFeatureGeometryCSV({ do: 'export' })}

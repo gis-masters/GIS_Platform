@@ -7,10 +7,11 @@ const cnEditFeatureGeometryDelButton = cn('EditFeatureGeometry', 'DelButton');
 
 interface EditFeatureGeometryDelButtonProps {
   onClick: () => void;
+  labelToDelete: string;
 }
 
-export const EditFeatureGeometryDelButton: FC<EditFeatureGeometryDelButtonProps> = ({ onClick }) => (
-  <Tooltip title='Удалить контур/линию'>
+export const EditFeatureGeometryDelButton: FC<EditFeatureGeometryDelButtonProps> = ({ onClick, labelToDelete }) => (
+  <Tooltip title={`Удалить ${labelToDelete}`}>
     <IconButton className={cnEditFeatureGeometryDelButton()} onClick={onClick}>
       <DeleteSweepOutlined />
     </IconButton>

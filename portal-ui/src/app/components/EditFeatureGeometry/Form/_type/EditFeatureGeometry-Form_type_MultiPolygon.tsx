@@ -31,6 +31,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
             store={store}
             index={index}
             key={index}
+            onPolygonDelete={this.deletePolygonHandler}
           />
         ))}
 
@@ -52,6 +53,12 @@ class EditFeatureGeometryFormTypeMultiPolygon extends EditFeatureGeometryForm {
         ['', '']
       ]
     ]);
+  }
+
+  @action.bound
+  private deletePolygonHandler(i: number) {
+    const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
+    geometry.coordinates.splice(i, 1);
   }
 }
 

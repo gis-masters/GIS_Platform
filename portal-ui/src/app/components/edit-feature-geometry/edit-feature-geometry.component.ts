@@ -1,17 +1,9 @@
-import {
-  Component,
-  Input,
-  ElementRef,
-  OnDestroy,
-  OnChanges,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, Input, ElementRef, OnDestroy, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 
 @Component({
   selector: 'crg-edit-feature-geometry',
@@ -23,15 +15,15 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   @Input() readOnly: boolean;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit () {
+  ngOnInit() {
     this.renderReactElement();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnChanges () {
+  ngOnChanges() {
     this.renderReactElement();
   }
 

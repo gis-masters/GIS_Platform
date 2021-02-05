@@ -1,8 +1,9 @@
 import React, { FC, RefObject } from 'react';
 import { Coordinate } from 'ol/coordinate';
 import { cn } from '@bem-react/classname';
-
 import { Paper } from '@material-ui/core';
+
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 import { EditFeatureGeometryCopy } from '../Copy/EditFeatureGeometry-Copy';
@@ -14,14 +15,23 @@ const cnEditFeatureGeometryViewGroupControls = cn('EditFeatureGeometry', 'ViewGr
 interface EditFeatureGeometryViewGroupControlsProps {
   coordinates: Coordinate[];
   tableRef: RefObject<HTMLTableElement>;
+  store: EditFeatureGeometryStore;
+  index: number;
 }
 
 export const EditFeatureGeometryViewGroupControls: FC<EditFeatureGeometryViewGroupControlsProps> = ({
   coordinates,
-  tableRef
+  tableRef,
+  store,
+  index
 }) => (
   <Paper className={cnEditFeatureGeometryViewGroupControls()} square>
-    <EditFeatureGeometryCopy coordinates={coordinates} tableRef={tableRef} />
-    <EditFeatureGeometryCSV coordinates={coordinates} readOnly />
+    <EditFeatureGeometryCopy
+      coordinates={coordinates}
+      tableRef={tableRef}
+      geometryType={store.geometryType}
+      first={!index}
+    />
+    <EditFeatureGeometryCSV coordinates={coordinates} readOnly geometryType={store.geometryType} first={!index} />
   </Paper>
 );

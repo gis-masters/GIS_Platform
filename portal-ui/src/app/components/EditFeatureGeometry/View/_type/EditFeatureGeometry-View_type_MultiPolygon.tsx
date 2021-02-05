@@ -10,7 +10,7 @@ import { EditFeatureGeometryViewSuperGroup } from '../../ViewSuperGroup/EditFeat
 const EditFeatureGeometryViewTypeMultiPolygon: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
   <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
     {(store.geometry as WfsMultiPolygonGeometry).coordinates.map((coordinatesGroup, i) => (
-      <EditFeatureGeometryViewSuperGroup coordinates={coordinatesGroup} key={i} />
+      <EditFeatureGeometryViewSuperGroup coordinates={coordinatesGroup} key={i} store={store} />
     ))}
   </div>
 );

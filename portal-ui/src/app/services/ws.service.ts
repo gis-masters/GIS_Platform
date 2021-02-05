@@ -3,7 +3,7 @@ import { publishReplay, refCount } from 'rxjs/operators';
 import SockJS from 'sockjs-client';
 import { Stomp, CompatClient } from '@stomp/stompjs';
 
-import { generateRandomId } from './util/stringUtil';
+import { generateRandomId } from './util/randomId';
 import { BugObject } from './crg/validation.service';
 import { getWsEndpointUrl } from './server-urls.service';
 import { ProcessType } from './models';

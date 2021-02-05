@@ -9,7 +9,12 @@ import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometr
 
 const EditFeatureGeometryViewTypePoint: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
   <div className={cnEditFeatureGeometryView(null, [className])}>
-    <EditFeatureGeometryViewGroup coordinates={[(store.geometry as WfsPointGeometry).coordinates]} isPoint={true} />
+    <EditFeatureGeometryViewGroup
+      coordinates={[(store.geometry as WfsPointGeometry).coordinates]}
+      isPoint={true}
+      store={store}
+      index={0}
+    />
   </div>
 );
 
