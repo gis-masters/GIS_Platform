@@ -1,4 +1,4 @@
-import { PropertySchema } from '../crg/schema.service';
+import { PropertySchema } from '../crg/schema.models';
 import { CrgComparison } from '../properties-comparator.service';
 import { LayerAttribute } from '../geoserver/import/models';
 import { AS_IS, NOT_IMPORT } from '../models';
@@ -30,7 +30,6 @@ export class DirectComparison implements CrgComparison {
   setNext(comparison: CrgComparison) {
     this.comparison = comparison;
   }
-
 }
 
 /**
@@ -43,12 +42,14 @@ export class GeometryComparison implements CrgComparison {
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     let result = null;
 
-    if (source.binding.includes('MultiPolygon') ||
-        source.binding.includes('MultiLineString') ||
-        source.binding.includes('LineString') ||
-        source.binding.includes('PolySurface') ||
-        source.binding.includes('Curve') ||
-        source.binding.includes('Point')) {
+    if (
+      source.binding.includes('MultiPolygon') ||
+      source.binding.includes('MultiLineString') ||
+      source.binding.includes('LineString') ||
+      source.binding.includes('PolySurface') ||
+      source.binding.includes('Curve') ||
+      source.binding.includes('Point')
+    ) {
       result = {
         name: 'shape',
         title: 'shape'
@@ -65,7 +66,6 @@ export class GeometryComparison implements CrgComparison {
   setNext(comparison: CrgComparison) {
     this.comparison = comparison;
   }
-
 }
 
 /**
@@ -94,7 +94,6 @@ export class ObjectIdComparison implements CrgComparison {
   setNext(comparison: CrgComparison) {
     this.comparison = comparison;
   }
-
 }
 
 /**
@@ -103,7 +102,6 @@ export class ObjectIdComparison implements CrgComparison {
  * Для него не задается "следующего" по цепочке.
  */
 export class LastComparison implements CrgComparison {
-
   compare(source: LayerAttribute, properties: PropertySchema[]): PropertySchema {
     return {
       name: AS_IS.name,
@@ -114,5 +112,4 @@ export class LastComparison implements CrgComparison {
   setNext(comparison: CrgComparison) {
     throw Error('Wrong use last comparator');
   }
-
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { PropertySchema } from './crg/schema.service';
+import { PropertySchema } from './crg/schema.models';
 import { DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison } from './util/CrgComparatorUtil';
 import { LayerAttribute } from './geoserver/import/models';
 
@@ -8,7 +8,6 @@ import { LayerAttribute } from './geoserver/import/models';
   providedIn: 'root'
 })
 export class PropertiesComparatorService {
-
   private initialComparison: CrgComparison = new DirectComparison();
 
   constructor() {
@@ -32,14 +31,12 @@ export class PropertiesComparatorService {
   compare(source: LayerAttribute, columns: PropertySchema[]): PropertySchema {
     return this.initialComparison.compare(source, columns);
   }
-
 }
 
 /**
  * Простая реализация паттерна "цепочка обязанностей" используя setNext()
  */
 export interface CrgComparison {
-
   /**
    * Задаем следующий метод в цепочке.
    * @param comparison Обработчик

@@ -6,9 +6,9 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } f
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { EditedField } from '../../../services/crg/schema.service';
+import { EditedField } from '../../../services/crg/schema.models';
 import { getBaseUrl } from '../../../services/server-urls.service';
-import { documentsService } from '../../../services/crg/documents.service';
+import { docLibraryService } from '../../../services/crg/doc-library.service';
 import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
 import { Link } from '../../Link/Link';
@@ -106,7 +106,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 
-    await documentsService.delete(`${resourcePath}/records/${id}`);
+    await docLibraryService.delete(`${resourcePath}/records/${id}`);
     this.props.deleteCallback(id);
     this.closeDeleteDialog();
   }

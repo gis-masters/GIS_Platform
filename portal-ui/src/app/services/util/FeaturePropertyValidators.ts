@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
 
-import { PropertySchema, PropertyEnumerations } from '../crg/schema.service';
+import { PropertySchema, PropertyEnumerations } from '../crg/schema.models';
 
 // Править в соответствии с ru/mycrg/common/enums/ValueType.java
 export enum ValueType {

@@ -19,7 +19,8 @@ import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/mo
 import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService, FeatureDescription } from '../../services/crg/schema.service';
+import { schemaService } from '../../services/crg/schema.service';
+import { FeatureDescription } from '../../services/crg/schema.models';
 
 @Component({
   selector: 'crg-mapping-page',

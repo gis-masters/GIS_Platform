@@ -5,7 +5,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../../../services/services';
-import { FieldType } from '../../../../services/crg/schema.service';
+import { FieldType } from '../../../../services/crg/schema.models';
 import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
 
 import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';

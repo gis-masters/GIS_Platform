@@ -1,14 +1,11 @@
-import {NGXLogger} from 'ngx-logger';
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {
-  FeatureDescription,
-  PropertySchema
-} from '../../services/crg/schema.service';
-import {Subject} from 'rxjs';
-import {ImportLayerItem} from '../../services/geoserver/import/models';
-import {AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER} from '../../services/models';
-import {ImportDataHolderService, InputDataMetrics} from '../../services/geoserver/import/import-data-holder.service';
-import {FeatureUtil} from '../../services/util/FeatureUtil';
+import { NGXLogger } from 'ngx-logger';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { FeatureDescription, PropertySchema } from '../../services/crg/schema.models';
+import { Subject } from 'rxjs';
+import { ImportLayerItem } from '../../services/geoserver/import/models';
+import { AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../services/models';
+import { ImportDataHolderService, InputDataMetrics } from '../../services/geoserver/import/import-data-holder.service';
+import { FeatureUtil } from '../../services/util/FeatureUtil';
 
 @Component({
   selector: 'crg-mapping-card',
@@ -16,7 +13,6 @@ import {FeatureUtil} from '../../services/util/FeatureUtil';
   styleUrls: ['./mapping-card.component.css']
 })
 export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
-
   @Input() importLayer: ImportLayerItem;
   @Input() schemas: FeatureDescription[];
 
@@ -30,15 +26,13 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger,
-              private importData: ImportDataHolderService) {
-    this.importData.metrics$
-        .subscribe((metrics: InputDataMetrics) => this.metrics = metrics);
+  constructor(private logger: NGXLogger, private importData: ImportDataHolderService) {
+    this.importData.metrics$.subscribe((metrics: InputDataMetrics) => (this.metrics = metrics));
   }
 
   async ngOnInit() {
-    this.propertySchemas.push({name: NOT_IMPORT.name, title: NOT_IMPORT.title});
-    this.propertySchemas.push({name: AS_IS.name, title: AS_IS.title});
+    this.propertySchemas.push({ name: NOT_IMPORT.name, title: NOT_IMPORT.title });
+    this.propertySchemas.push({ name: AS_IS.name, title: AS_IS.title });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -100,8 +94,10 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   openAttributes() {
-    return !!this.selectedFeatureType &&
-             this.selectedFeatureType !== 'NOT_IMPORT_LAYER' &&
-             this.selectedFeatureType !== 'IMPORT_LAYER_AS_IS';
+    return (
+      !!this.selectedFeatureType &&
+      this.selectedFeatureType !== 'NOT_IMPORT_LAYER' &&
+      this.selectedFeatureType !== 'IMPORT_LAYER_AS_IS'
+    );
   }
 }

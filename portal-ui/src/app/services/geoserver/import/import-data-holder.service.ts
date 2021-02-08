@@ -2,7 +2,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { ImportLayerItem, LayerAttribute } from './models';
 import { MatchingPair, TaskImport } from './taskImport';
-import { schemaService, FeatureDescription, PropertySchema } from '../../crg/schema.service';
+import { schemaService } from '../../crg/schema.service';
+import { FeatureDescription, PropertySchema } from '../../crg/schema.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
@@ -41,10 +42,10 @@ export class ImportDataHolderService {
 
   getWorkTasks() {
     return this._comparableLayers
-               .filter((layerPair: ComparableLayersPair) => !layerPair.isDisabled)
-               .map((layerPair: ComparableLayersPair) => {
-                 return layerPair.targetLayer;
-               });
+      .filter((layerPair: ComparableLayersPair) => !layerPair.isDisabled)
+      .map((layerPair: ComparableLayersPair) => {
+        return layerPair.targetLayer;
+      });
   }
 
   /**
@@ -69,7 +70,7 @@ export class ImportDataHolderService {
       targetLayer: taskImport,
       isActive: false,
       isDisabled: false,
-      isMapped: false,
+      isMapped: false
     });
 
     // Attributes mapping
@@ -95,24 +96,23 @@ export class ImportDataHolderService {
     const comparableLayersPair = this.findCompatiblePair(layerNativeName);
     const attributePair = this.findAttributePair(comparableLayersPair, source);
     if (attributePair) {
-      comparableLayersPair.targetLayer.pairs
-        .forEach((mapItem: MatchingPair, index, array) => {
-          if (mapItem.source.name === source.name) {
-            if (propertySchema.name === NOT_IMPORT.name) {
-              array.splice(index, 1);
-            } else if (propertySchema.name === AS_IS.name) {
-              mapItem.target = {
-                name: source.name,
-                type: AS_IS.name
-              };
-            } else {
-              mapItem.target = {
-                name: propertySchema.name,
-                type: ImportTargetType.FROM_SCHEMA
-              };
-            }
+      comparableLayersPair.targetLayer.pairs.forEach((mapItem: MatchingPair, index, array) => {
+        if (mapItem.source.name === source.name) {
+          if (propertySchema.name === NOT_IMPORT.name) {
+            array.splice(index, 1);
+          } else if (propertySchema.name === AS_IS.name) {
+            mapItem.target = {
+              name: source.name,
+              type: AS_IS.name
+            };
+          } else {
+            mapItem.target = {
+              name: propertySchema.name,
+              type: ImportTargetType.FROM_SCHEMA
+            };
           }
-        });
+        }
+      });
     } else {
       this.addAttributeMapping(layerNativeName, source, propertySchema);
     }
@@ -161,8 +161,9 @@ export class ImportDataHolderService {
   }
 
   findCompatiblePair(nativeName: string): ComparableLayersPair {
-    return this._comparableLayers
-               .find((layersPair: ComparableLayersPair) => layersPair.originalLayer.nativeName === nativeName);
+    return this._comparableLayers.find(
+      (layersPair: ComparableLayersPair) => layersPair.originalLayer.nativeName === nativeName
+    );
   }
 
   clear() {
@@ -201,10 +202,10 @@ export class ImportDataHolderService {
     this.updateMetrics(this._comparableLayers);
   }
 
-  private findAttributePair(comparableLayersPair: ComparableLayersPair,
-                            source: LayerAttribute): MatchingPair {
-    return comparableLayersPair.targetLayer.pairs
-      .find((pair: MatchingPair) => pair.source.name === source.name && pair.source.binding === source.binding);
+  private findAttributePair(comparableLayersPair: ComparableLayersPair, source: LayerAttribute): MatchingPair {
+    return comparableLayersPair.targetLayer.pairs.find(
+      (pair: MatchingPair) => pair.source.name === source.name && pair.source.binding === source.binding
+    );
   }
 
   private updateMetrics(comparableLayersPairs: ComparableLayersPair[]) {

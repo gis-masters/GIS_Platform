@@ -56,7 +56,7 @@ public class DocumentLibraryController {
     @PostMapping("/document-libraries/{docLibId}")
     public Object createObject(@PathVariable String docLibId,
                                @RequestParam(value = "files", required = false) MultipartFile[] files,
-                               @RequestParam(value = "body", required = false) String jsonBody,
+                               @RequestParam(value = "body") String jsonBody,
                                Authentication authentication) {
         try {
             List<ITableObject> objects = new ArrayList<>();

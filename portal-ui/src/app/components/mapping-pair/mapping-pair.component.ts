@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { GeoUtil } from '../../services/util/GeoUtil';
-import { PropertySchema } from '../../services/crg/schema.service';
+import { PropertySchema } from '../../services/crg/schema.models';
 import { PropertiesComparatorService } from '../../services/properties-comparator.service';
 import { LayerAttribute } from '../../services/geoserver/import/models';
 import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
@@ -15,25 +15,26 @@ import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/models';
   styleUrls: ['./mapping-pair.component.css']
 })
 export class MappingPairComponent implements OnInit, OnChanges {
-
   @Input() layerName: string;
   @Input() importedLayerAttribute: LayerAttribute; // Атрибут импортированного шейпа
-  @Input() propertySchemas: PropertySchema[];      // Атрибуты описанные в схеме
+  @Input() propertySchemas: PropertySchema[]; // Атрибуты описанные в схеме
 
   columnForm: FormGroup;
   selectedProperty: PropertySchema;
 
-  constructor(private importData: ImportDataHolderService,
-              private crgComparator: PropertiesComparatorService,
-              private formBuilder: FormBuilder) {
-  }
+  constructor(
+    private importData: ImportDataHolderService,
+    private crgComparator: PropertiesComparatorService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
     let currentAttrPair: MatchingPair;
     const comparableLayersPair = this.importData.findCompatiblePair(this.layerName);
     if (comparableLayersPair && comparableLayersPair.targetLayer.pairs.length > 0) {
-      currentAttrPair = comparableLayersPair.targetLayer.pairs
-        .find((matchingPair: MatchingPair) => matchingPair.source.name === this.importedLayerAttribute.name);
+      currentAttrPair = comparableLayersPair.targetLayer.pairs.find(
+        (matchingPair: MatchingPair) => matchingPair.source.name === this.importedLayerAttribute.name
+      );
 
       if (currentAttrPair) {
         if (currentAttrPair.target.type === ImportTargetType.FROM_SCHEMA) {
@@ -94,7 +95,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, this.selectedProperty);
   }
 
-  getOptionText (property: PropertySchema): string {
+  getOptionText(property: PropertySchema): string {
     const { valueType, name, title } = property;
     const isSpecial = name === NOT_IMPORT.name || name === AS_IS.name;
 

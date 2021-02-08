@@ -4,80 +4,15 @@ import { debounce, DebouncedFunc } from 'lodash';
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { ImportLayerItem } from '../geoserver/import/models';
-import { CoordinateEdited, SupportedGeometryType, WfsFeature } from '../geoserver/wfs.models';
+import { CoordinateEdited, WfsFeature } from '../geoserver/wfs.models';
 import { getEmptyGeometry } from '../geoserver/wfs.util';
 import { http } from '../http.service';
 import { getSchemaUrl } from '../server-urls.service';
 import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { CrgLayer } from './projects.models';
+import { FeatureDescription, PropertySchema } from './schema.models';
 import { BugObject } from './validation.service';
-
-export interface FeatureDescription {
-  name: string;
-  title: string;
-  description: string;
-  properties: PropertySchema[];
-  tableName: string;
-  geometryType: SupportedGeometryType;
-  customRuleFunction?: any;
-  matchingCounter?: number;
-  calcFiledFunction?: string;
-  readOnly?: boolean;
-}
-
-export type PropertyEnumerations = { value: string; title: string }[];
-
-export interface PropertySchema {
-  name: string;
-  title: string;
-  description?: string;
-
-  required?: boolean;
-  mustBeEmpty?: boolean;
-  hidden?: boolean;
-  isMultiple?: boolean;
-
-  objectIdentityOnUi?: boolean;
-
-  updateability?: Updateability;
-  choice?: any;
-  valueType?: any;
-  foreignKeyType?: string;
-
-  length?: number;
-  minLength?: number;
-  maxLength?: number;
-  pattern?: string;
-  patternDescription?: string;
-  minInclusive?: number;
-  maxInclusive?: number;
-  totalDigits?: number;
-  fractionDigits?: number;
-  allowedValues?: string[];
-  enumerations?: PropertyEnumerations;
-  dateFormat?: string;
-  displayMode?: 'in_popup';
-  resourcePath?: string;
-}
-
-export enum Updateability {
-  CREATE_ONLY = 'CREATE_ONLY',
-  CREATE_WRITE = 'CREATE_WRITE',
-  READ_ONLY = 'READ_ONLY'
-}
-
-export enum FieldType {
-  URL = 'url',
-  LOOKUP = 'lookup'
-}
-
-export interface EditedField {
-  name: string;
-  value: string;
-  property: PropertySchema;
-  isFgistpProperty: boolean;
-}
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -161,9 +96,7 @@ class SchemaService {
       }
     }
 
-    return (
-      (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true))
-    );
+    return (await this.getById(layerNameWithGeomType, true)) || (await this.getById(layerName, true));
   }
 
   async getClassIdAlias(layer: CrgLayer, bugObject: BugObject): Promise<string> {

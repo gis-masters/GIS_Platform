@@ -2,7 +2,7 @@ import GeometryType from 'ol/geom/GeometryType';
 
 import { GeoUtil } from './GeoUtil';
 import { ImportTaskResponse } from '../geoserver/import/models';
-import { FeatureDescription } from '../crg/schema.service';
+import { FeatureDescription } from '../crg/schema.models';
 import { FeatureUtil } from './FeatureUtil';
 
 describe('GeoUtil test', () => {

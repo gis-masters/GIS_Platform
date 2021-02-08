@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, O
 import { fromEvent, Subject } from 'rxjs';
 
 import { FilterEvent } from '../../services/models';
-import { PropertySchema } from '../../services/crg/schema.service';
+import { PropertySchema } from '../../services/crg/schema.models';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -12,7 +12,6 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./table-filter.component.css']
 })
 export class TableFilterComponent implements AfterViewInit, OnDestroy {
-
   @Input() property: PropertySchema;
   @Output() filterEvent = new EventEmitter<FilterEvent>();
   @ViewChild('filterInput') filterInput: ElementRef;
@@ -21,8 +20,7 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor() {
-  }
+  constructor() {}
 
   ngAfterViewInit(): void {
     if (this.filterInput) {
@@ -35,9 +33,9 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
         )
         .subscribe(value => {
           if (!!value) {
-            this.filterEvent.emit({value: [value], property: this.property});
+            this.filterEvent.emit({ value: [value], property: this.property });
           } else {
-            this.filterEvent.emit({value: [], property: this.property});
+            this.filterEvent.emit({ value: [], property: this.property });
           }
         });
     }
@@ -53,15 +51,13 @@ export class TableFilterComponent implements AfterViewInit, OnDestroy {
       return false;
     }
 
-    if (valueType.includes('STRING') ||
-        valueType.includes('INT') ||
-        valueType.includes('DOUBLE')) {
+    if (valueType.includes('STRING') || valueType.includes('INT') || valueType.includes('DOUBLE')) {
       return true;
     }
   }
 
   onSelection(event: MatSelectChange) {
     this.selectionChangeEvent$.next(event.value);
-    this.filterEvent.emit({value: event.value, property: this.property});
+    this.filterEvent.emit({ value: event.value, property: this.property });
   }
 }

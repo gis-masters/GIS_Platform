@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { AddBoxOutlined } from '@material-ui/icons';
+import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AddBoxOutlined } from '@material-ui/icons';
 
 import { Loading } from '../Loading/Loading';
 import { services } from '../../services/services';
-import { EditedField } from '../../services/crg/schema.service';
+import { EditedField } from '../../services/crg/schema.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
-import { CrgDocument, documentsService } from '../../services/crg/documents.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { CrgDocument, docLibraryService } from '../../services/crg/doc-library.service';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
+import '!style-loader!css-loader!sass-loader!./DocumentsList.scss';
 import '!style-loader!css-loader!sass-loader!./List/DocumentList-List.scss';
 import '!style-loader!css-loader!sass-loader!./Input/DocumentList-Input.scss';
 import '!style-loader!css-loader!sass-loader!./Label/DocumentList-Label.scss';
@@ -120,7 +121,11 @@ export class DocumentsList extends Component<DocumentsListProps> {
       const { editedField } = this.props;
       const fileName = selectedFile.name;
 
-      const crgDocument = await documentsService.upload(selectedFile, fileName, editedField.property.resourcePath);
+      const crgDocument = await docLibraryService.createRecordWithBinary(
+        selectedFile,
+        fileName,
+        editedField.property.resourcePath
+      );
 
       // Update current feature
       const { featureInfo } = this.props;

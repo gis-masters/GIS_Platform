@@ -8,12 +8,8 @@ import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'r
 import { catchError, concatMap, debounceTime, filter, takeUntil } from 'rxjs/operators';
 
 import { Toast } from '../Toast/Toast';
-import {
-  schemaService,
-  FeatureDescription,
-  PropertySchema,
-  PropertyEnumerations
-} from '../../services/crg/schema.service';
+import { schemaService } from '../../services/crg/schema.service';
+import { FeatureDescription, PropertyEnumerations, PropertySchema } from '../../services/crg/schema.models';
 import { BatchModel } from '../../services/crg/batch-model';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -57,7 +53,6 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   features: WfsFeatureView[] = [];
   totalFeatures: number;
   columns: TableColumn[] = [];
-  customRowIdentity = (row: WfsFeature) => row.id;
   pageInfo: Pageable = {
     pageSize: 25,
     offset: 0
@@ -81,9 +76,12 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   deletingAllowed = false;
   updatingAllowed = false;
+
   private schema: FeatureDescription;
   private requestModel$: BehaviorSubject<CrgModels> = new BehaviorSubject<CrgModels>({});
   private unsubscribe$: Subject<void> = new Subject<void>();
+
+  customRowIdentity = (row: WfsFeature) => row.id;
 
   constructor(private dialog: MatDialog, private logger: NGXLogger) {}
 

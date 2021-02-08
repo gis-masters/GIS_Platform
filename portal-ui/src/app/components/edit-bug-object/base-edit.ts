@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { EditedField, FeatureDescription } from '../../services/crg/schema.service';
+import { EditedField, FeatureDescription } from '../../services/crg/schema.models';
 import { openLayersService } from '../../services/open-layer/open-layers.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
@@ -51,12 +51,14 @@ export class BaseEdit implements OnDestroy {
       return;
     }
 
-    FeaturePropertyValidators.validateCustomRules(featureProperties, this.featureDescription.customRuleFunction)
-      .forEach((validationError: ValidationError) => {
-        const control = this.editFeatureForm.controls[validationError.attribute];
-        if (control) {
-          control.setErrors([validationError.error]);
-        }
-      });
+    FeaturePropertyValidators.validateCustomRules(
+      featureProperties,
+      this.featureDescription.customRuleFunction
+    ).forEach((validationError: ValidationError) => {
+      const control = this.editFeatureForm.controls[validationError.attribute];
+      if (control) {
+        control.setErrors([validationError.error]);
+      }
+    });
   }
 }

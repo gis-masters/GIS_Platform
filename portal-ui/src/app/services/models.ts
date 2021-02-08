@@ -1,6 +1,6 @@
 import GeometryType from 'ol/geom/GeometryType';
 
-import { FeatureDescription, PropertySchema } from './crg/schema.service';
+import { FeatureDescription, PropertySchema } from './crg/schema.models';
 
 interface PageableLink {
   href: string;

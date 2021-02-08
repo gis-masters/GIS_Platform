@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FieldType, EditedField } from '../../../services/crg/schema.service';
+import { FieldType, EditedField } from '../../../services/crg/schema.models';
 import { EditFeatureFieldControl } from '../Control/EditFeatureField-Control.composed';
 import { EditFeatureInfo } from '../EditFeatureField';
 
@@ -15,8 +15,8 @@ interface EditFeatureFieldFieldProps {
   featureInfo: EditFeatureInfo;
 }
 
-export const EditFeatureFieldField: FC<EditFeatureFieldFieldProps> = ({ type, field , featureInfo}) => (
+export const EditFeatureFieldField: FC<EditFeatureFieldFieldProps> = ({ type, field, featureInfo }) => (
   <div className={cnEditFeatureField('Field')}>
-    <EditFeatureFieldControl type={type} field={field} featureInfo={featureInfo}/>
+    <EditFeatureFieldControl type={type} field={field} featureInfo={featureInfo} />
   </div>
 );
