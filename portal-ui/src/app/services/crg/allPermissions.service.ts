@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 
 import { allProjects } from '../../stores/AllProjects.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { getProjectPermissions, getTablePermissions } from './permissions.client';
+import { getAllProjectsPermissions, getAllTablesPermissions, getProjectPermissions } from './permissions.client';
 import { CrgProject, CrgLayer, CrgLayerType } from './projects.models';
 import { communicationService } from '../communication.service';
 import { RoleAssignmentBody } from './permissions.models';
@@ -60,6 +60,9 @@ class AllPermissionsService {
 
     allPermissions.setFetching(true);
 
+    const resourcesPermissions = await getAllTablesPermissions();
+    const projectPermissionsOodles = await getAllProjectsPermissions();
+
     if (!allProjects.isLoaded) {
       await projectsService.fetchProjects();
     }
@@ -85,9 +88,12 @@ class AllPermissionsService {
       let permissions: RoleAssignmentBody[] = [];
 
       try {
-        permissions = layer
-          ? await getTablePermissions(layer.dataset, layer.tableName)
-          : await getProjectPermissions(project);
+        if (layer) {
+          const layerComplexId = `${layer.dataset}.${layer.tableName}`;
+          permissions = resourcesPermissions.find(({ identifier }) => identifier === layerComplexId)?.permissions || [];
+        } else {
+          permissions = projectPermissionsOodles[String(project.id)] || [];
+        }
       } catch (e) {
         broken = true;
         let errText =

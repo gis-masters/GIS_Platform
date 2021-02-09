@@ -15,12 +15,13 @@ import ru.mycrg.gis_service.service.PermissionsService;
 import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.gis_service.config.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
-@RequestMapping("/projects/{project_id}")
+@RequestMapping("/projects")
 public class PermissionController {
 
     private static final Logger log = LoggerFactory.getLogger(PermissionController.class);
@@ -31,7 +32,15 @@ public class PermissionController {
         this.permissionsService = permissionsService;
     }
 
-    @GetMapping("/permissions")
+    @GetMapping("/all-permissions")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Map<Long, List<PermissionProjection>>> getAllPermissions(Authentication authentication) {
+        Map<Long, List<PermissionProjection>> allPermissions = permissionsService.getAll(authentication);
+
+        return ResponseEntity.ok(allPermissions);
+    }
+
+    @GetMapping("/{project_id}/permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<PermissionProjection>> getPermissions(@PathVariable(name = "project_id") long projectId,
                                                                      Authentication authentication) {
@@ -40,7 +49,7 @@ public class PermissionController {
         return ResponseEntity.ok(permissions);
     }
 
-    @PostMapping("/permissions")
+    @PostMapping("/{project_id}/permissions")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
                                                                  @Valid @RequestBody PermissionCreateDto dto,
@@ -52,7 +61,7 @@ public class PermissionController {
         return new ResponseEntity<>(permission, HttpStatus.CREATED);
     }
 
-    @GetMapping("/permissions/{id}")
+    @GetMapping("/{project_id}/permissions/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<PermissionProjection> getPermissionById(@PathVariable(name = "project_id") long projectId,
                                                             @PathVariable(name = "id") long permissionId,
@@ -62,7 +71,7 @@ public class PermissionController {
         return new Resource<>(permission);
     }
 
-    @PatchMapping(path = "/permissions/{id}", consumes = APPLICATION_JSON_MERGE_PATCH)
+    @PatchMapping(path = "/{project_id}/permissions/{id}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> updatePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,
@@ -75,7 +84,7 @@ public class PermissionController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/permissions/{id}")
+    @DeleteMapping("/{project_id}/permissions/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deletePermission(@PathVariable(name = "project_id") long projectId,
                                                    @PathVariable(name = "id") long permissionId,

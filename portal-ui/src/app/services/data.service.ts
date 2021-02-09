@@ -3,22 +3,27 @@ import { PageableResponse, SortDir } from './models';
 import { Role } from './crg/permissions.models';
 import { http } from './http.service';
 
+export enum DataEntityType {
+  SCHEMA = 'SCHEMA',
+  TABLE = 'TABLE'
+}
+
 export interface DataEntity {
   title?: string;
   identifier: string;
   permission: Role;
   details?: string;
-  type: 'SCHEMA' | 'TABLE';
+  type: DataEntityType;
   createdAt?: string;
   itemsCount: number;
 }
 
 export interface DataSet extends DataEntity {
-  type: 'SCHEMA';
+  type: DataEntityType.SCHEMA;
 }
 
 export interface DataTable extends DataEntity {
-  type: 'TABLE';
+  type: DataEntityType.TABLE;
   crs: string;
   schemaId: string;
   dataset: string;

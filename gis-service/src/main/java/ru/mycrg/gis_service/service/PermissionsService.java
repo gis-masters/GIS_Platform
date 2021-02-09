@@ -1,5 +1,6 @@
 package ru.mycrg.gis_service.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
@@ -16,8 +17,11 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.mycrg.gis_service.mappers.PermissionMapper.permissionMapper;
 
@@ -40,17 +44,29 @@ public class PermissionsService {
         this.permissionRepository = permissionRepository;
     }
 
+    public Map<Long, List<PermissionProjection>> getAll(Authentication authentication) {
+        Map<Long, List<PermissionProjection>> allPermissions = new HashMap<>();
+        projectService.getAll(authentication)
+                      .forEach(project -> {
+                          List<PermissionProjection> projectPermissions = getProjectPermission(project);
+                          if (!projectPermissions.isEmpty()) {
+                              allPermissions.put(project.getId(), projectPermissions);
+                          }
+                      });
+
+        return allPermissions;
+    }
+
     public List<PermissionProjection> getAll(long projectId, Authentication authentication) {
-        return getProjectPermissions(projectId, authentication).stream()
-                .map(permission -> projectionFactory.createProjection(PermissionProjection.class, permission))
-                .collect(Collectors.toList());
+        return Stream.of(projectService.getById(projectId, authentication))
+                     .map(this::getProjectPermission)
+                     .findFirst().get();
     }
 
     public PermissionProjection getById(long projectId, long permissionId, Authentication authentication) {
-        final List<Permission> permissions = getProjectPermissions(projectId, authentication);
-        final Permission permission = getPermissionById(permissions, permissionId);
+        final Permission permission = getPermissionById(projectId, permissionId, authentication);
 
-        return projectionFactory.createProjection(PermissionProjection.class, permission);
+        return mapToProjection(permission);
     }
 
     public PermissionProjection create(long projectId, PermissionCreateDto dto, Authentication authentication) {
@@ -60,12 +76,11 @@ public class PermissionsService {
 
         final Permission savedPermission = permissionRepository.save(new Permission(dto, project));
 
-        return projectionFactory.createProjection(PermissionProjection.class, savedPermission);
+        return mapToProjection(savedPermission);
     }
 
     public void update(long projectId, long permissionId, JsonMergePatch patchDto, Authentication authentication) {
-        final List<Permission> permissions = getProjectPermissions(projectId, authentication);
-        final Permission permissionForUpdate = getPermissionById(permissions, permissionId);
+        final Permission permissionForUpdate = getPermissionById(projectId, permissionId, authentication);
 
         PermissionCreateDto permissionDto = permissionMapper.toDto(permissionForUpdate);
         final PermissionCreateDto patchedPermission =
@@ -81,8 +96,7 @@ public class PermissionsService {
     }
 
     public void delete(long projectId, long permissionId, Authentication authentication) {
-        final List<Permission> permissions = getProjectPermissions(projectId, authentication);
-        final Permission permission = getPermissionById(permissions, permissionId);
+        final Permission permission = getPermissionById(projectId, permissionId, authentication);
 
         permissionRepository.deletePermissionById(permission.getId());
     }
@@ -111,16 +125,23 @@ public class PermissionsService {
         }
     }
 
-    private Permission getPermissionById(List<Permission> permissions, Long permissionId) {
-        return permissions.stream()
-                .filter(permission -> permission.getId().equals(permissionId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(permissionId));
+    @NotNull
+    private Permission getPermissionById(Long projectId, Long permissionId, Authentication authentication) {
+        return projectService.getById(projectId, authentication)
+                             .getPermissions().stream()
+                             .filter(permission -> permission.getId().equals(permissionId))
+                             .findFirst()
+                             .orElseThrow(() -> new NotFoundException(permissionId));
     }
 
-    private List<Permission> getProjectPermissions(long projectId, Authentication authentication) {
-        return projectService
-                .getById(projectId, authentication)
-                .getPermissions();
+    private List<PermissionProjection> getProjectPermission(Project project) {
+        return project.getPermissions().stream()
+                      .map(this::mapToProjection)
+                      .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private PermissionProjection mapToProjection(Permission permission) {
+        return projectionFactory.createProjection(PermissionProjection.class, permission);
     }
 }

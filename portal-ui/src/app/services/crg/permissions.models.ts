@@ -1,3 +1,5 @@
+import { DataEntityType } from '../data.service';
+
 export enum BuildInRole {
   GLOBAL_ADMIN = 'GLOBAL_ADMIN',
   ORG_ADMIN = 'ORG_ADMIN',
@@ -26,7 +28,15 @@ export enum PrincipalType {
 
 export interface RoleAssignmentBody {
   id?: number;
+  createdAt?: string;
   principalId: number;
   principalType: PrincipalType;
   role: Role;
+}
+
+export interface ResourcePermissions {
+  createdAt: string;
+  identifier: string;
+  type: DataEntityType;
+  permissions?: RoleAssignmentBody[];
 }

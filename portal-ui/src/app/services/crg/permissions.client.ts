@@ -1,10 +1,17 @@
-import { getProjectPermissionsUrl, getProjectPermissionUrl, getTableRoleAssignmentUrl } from '../server-urls.service';
-import { RoleAssignmentBody } from './permissions.models';
+import {
+  getAllPermissionsUrl,
+  getAllProjectsPermissionsUrl,
+  getProjectPermissionsUrl,
+  getProjectPermissionUrl,
+  getTableRoleAssignmentUrl
+} from '../server-urls.service';
+import { ResourcePermissions, RoleAssignmentBody } from './permissions.models';
 import { CrgProject } from './projects.models';
 import { PageableResponse } from '../models';
 import { services } from '../services';
 import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
+import { DataEntityType } from '../data.service';
 
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
   const url = await getTableRoleAssignmentUrl(datasetId, tableId);
@@ -13,6 +20,12 @@ export async function getTablePermissions(datasetId: string, tableId: string): P
   });
 
   return response._embedded?.permissions || [];
+}
+
+export async function getAllTablesPermissions(): Promise<ResourcePermissions[]> {
+  const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
+
+  return response.filter(({ type, permissions }) => type === DataEntityType.TABLE && permissions?.length);
 }
 
 export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
@@ -39,6 +52,10 @@ export async function getProjectPermissions(project: CrgProject): Promise<RoleAs
   const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
 
   return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
+}
+
+export async function getAllProjectsPermissions(): Promise<{ [projectId: string]: RoleAssignmentBody[] }> {
+  return await http.get<{ [projectId: string]: RoleAssignmentBody[] }>(await getAllProjectsPermissionsUrl());
 }
 
 export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {

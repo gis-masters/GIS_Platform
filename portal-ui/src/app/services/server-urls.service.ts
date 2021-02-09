@@ -124,6 +124,10 @@ export async function getProjectUrl(projectId: number): Promise<string> {
   return `${await getProjectsUrl()}/${projectId}`;
 }
 
+export async function getAllProjectsPermissionsUrl(): Promise<string> {
+  return `${await getProjectsUrl()}/all-permissions`;
+}
+
 export async function getProjectLayersUrl(projectId: number): Promise<string> {
   return (await getProjectUrl(projectId)) + '/layers';
 }
@@ -182,6 +186,10 @@ export async function getTableRoleAssignmentUrl(datasetId: string, tableId: stri
 
 export async function getBasemapsByIdsUrl(): Promise<string> {
   return (await getDataUrl()) + '/basemaps/search/findByIdIn';
+}
+
+export async function getAllPermissionsUrl(): Promise<string> {
+  return (await getDataUrl()) + '/all-permissions';
 }
 
 export async function replaceUrl(url: string) {
