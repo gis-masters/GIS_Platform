@@ -41,10 +41,10 @@ public class ProjectController {
 
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getProjects(@RequestParam(required = false, defaultValue = "") String title,
+    public ResponseEntity<Object> getProjects(@RequestParam(required = false, defaultValue = "") String name,
                                               Pageable pageable,
                                               Authentication authentication) {
-        Page<ProjectProjection> projects = projectService.getPaged(title, pageable, authentication);
+        Page<ProjectProjection> projects = projectService.getPaged(name, pageable, authentication);
 
         return ResponseEntity.ok(assembler.toResource(projects));
     }

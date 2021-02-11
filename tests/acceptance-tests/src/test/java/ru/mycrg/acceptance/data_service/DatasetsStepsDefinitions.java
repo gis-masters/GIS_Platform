@@ -104,6 +104,11 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_NOT_FOUND);
     }
 
+    @When("Администратор делает запрос на выборку наборов с фильтрацией по полю {string} и значению: {string}")
+    public void getDatasetsByFilter(String field, String value) {
+        super.getCurrentEntityByFilter(field, value);
+    }
+
     private String extractDatasetName() {
         return response.getHeader("Location")
                        .split("/datasets/")[1];

@@ -48,15 +48,15 @@ public class ProjectService {
     public Page<ProjectProjection> getPaged(String name, Pageable pageable, Authentication authentication) {
         Page<Project> projects;
         if (isRoot(authentication)) {
-            projects = projectRepository.findAllByNameContaining(name, pageable);
+            projects = projectRepository.findAllByNameContainingIgnoreCase(name, pageable);
         } else {
             final UserDetails userDetails = getUserDetails(authentication);
             Long orgId = getFirstOrganizationId(userDetails);
             if (isOrganizationAdmin(authentication)) {
-                projects = projectRepository.findAllByOrganizationIdAndNameContaining(orgId, name, pageable);
+                projects = projectRepository.findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable);
             } else {
                 final List<Project> organizationProjects = projectRepository
-                        .findAllByOrganizationIdAndNameContaining(orgId, name, pageable).stream()
+                        .findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable).stream()
                         .collect(Collectors.toList());
                 final List<Project> filteredProjects = filterByPermissions(organizationProjects, userDetails);
 

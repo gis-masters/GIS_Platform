@@ -237,6 +237,12 @@ public class BaseStepsDefinitions {
                         get("/?size=1000");
     }
 
+    public void getCurrentEntityByFilter(String field, String value) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("?%s=%s", field, value));
+    }
+
     public void getAllEntitiesSorted(String sortingType, String sortingDirection) {
         response = getBaseRequestWithCurrentCookie()
                 .when().

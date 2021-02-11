@@ -42,12 +42,12 @@ public class ResourcesService {
     }
 
     public Page<Resource> getDatasetsByTitle(String title, Pageable pageable) {
-        return resRepository.findByTypeAndTitleContaining(SCHEMA.name(), title, pageable);
+        return resRepository.findByTypeAndTitleContainingIgnoreCase(SCHEMA.name(), title, pageable);
     }
 
     public Page<Resource> getDatasetTablesByTitle(String dataset, String title, Pageable pageable) {
         return resRepository
-                .findByTypeAndIdentifierStartingWithAndTitleContaining(TABLE.name(), dataset, title, pageable);
+                .findByTypeAndIdentifierStartingWithAndTitleContainingIgnoreCase(TABLE.name(), dataset, title, pageable);
     }
 
     public Optional<Resource> getDataset(String identifier) {

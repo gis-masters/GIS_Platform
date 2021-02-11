@@ -52,7 +52,6 @@ Feature: Выборка проектов
       | id             | asc               |
       | id             | desc              |
 
-
   Scenario Outline: Выборка всех проектов постранично (<projectsPerPage> page/pages)
     When Существуют проекты
       | STRING_10 |
@@ -67,3 +66,14 @@ Feature: Выборка проектов
       | 1               |
       | 2               |
       | 3               |
+
+  Scenario Outline: Фильтрация по названию проекта должна быть не чувствительна к регистру
+    When Существуют проекты
+      | ProjectNameWithSomeUpperLiterals |
+      | project_name                     |
+      | otherName                        |
+    When Администратор делает запрос на выборку проектов с фильтрацией по полю "<filterKey>" и значению "<filterValue>"
+    Then В выборке присутствуют "2" элемента
+    Examples:
+      | filterKey | filterValue |
+      | name      | PROJECT     |

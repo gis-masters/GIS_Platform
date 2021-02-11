@@ -56,6 +56,11 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(page.containsKey("number"));
     }
 
+    @Then("В выборке присутствуют {string} элемента")
+    public void checkTotalProjects(String count) {
+        assertEquals(Integer.valueOf(count), response.jsonPath().get("page.totalElements"));
+    }
+
     @And("Данные отсортированы по {string} и {string} в {string}")
     public void isDataSorted(String sortingType, String sortingDirection, String entity) {
         jsonPath = response.jsonPath();
