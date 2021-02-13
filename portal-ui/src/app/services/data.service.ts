@@ -1,4 +1,5 @@
-import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl } from './server-urls.service';
+import { getDatasetsUrl, getDatasetTablesUrl, getDatasetTableUrl, getTableConnectionsUrl } from './server-urls.service';
+import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PageableResponse, SortDir } from './models';
 import { Role } from './crg/permissions.models';
 import { http } from './http.service';
@@ -27,6 +28,11 @@ export interface DataTable extends DataEntity {
   crs: string;
   schemaId: string;
   dataset: string;
+}
+
+export interface DataTableConnection {
+  layer: CrgLayer;
+  project: CrgProject;
 }
 
 export async function getDataSets(
@@ -67,12 +73,16 @@ export async function getDataSetTables(
 export async function getDataTable(datasetId: string, dataTableId: string): Promise<DataTable> {
   const response = await http.get<Omit<DataTable, 'dataset'>>(await getDatasetTableUrl(datasetId, dataTableId));
 
-  // убрать после закрытия бага #2250
-  if (response.identifier.includes('.')) {
-    response.identifier = response.identifier.split('.')[1];
-  }
-
   return { ...response, dataset: datasetId };
+}
+
+export async function getDataTableConnections(dataTableId: string): Promise<DataTableConnection[]> {
+  const params = {
+    field: 'table',
+    value: dataTableId
+  };
+
+  return await http.get<DataTableConnection[]>(await getTableConnectionsUrl(dataTableId), { params });
 }
 
 export async function createDataset(title: string, details: string) {

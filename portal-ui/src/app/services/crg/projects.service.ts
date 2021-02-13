@@ -4,9 +4,9 @@ import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
+import { PageableResponse, Process, SortDir } from '../models';
 import { isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
-import { PageableResponse, Process } from '../models';
 import { wsService } from '../ws.service';
 import { services } from '../services';
 import { http } from '../http.service';
@@ -135,6 +135,20 @@ class ProjectsService {
     const payload = { projectName: name };
 
     return http.post<CrgProject>(url, payload);
+  }
+
+  async getProjects(
+    page: number,
+    pageSize: number,
+    sort?: string,
+    sortDir?: SortDir,
+    filter?: { [key: string]: string }
+  ): Promise<[CrgProject[], number]> {
+    const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(await getProjectsUrl(), {
+      params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
+    });
+
+    return [response._embedded?.projects || [], response.page.totalPages];
   }
 
   async delete(id: number) {

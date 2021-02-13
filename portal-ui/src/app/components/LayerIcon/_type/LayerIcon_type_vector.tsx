@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { Adjust, Category, SvgIconComponent, Timeline } from '@material-ui/icons';
+import { Adjust, SvgIconComponent, Timeline, ReportProblemOutlined } from '@material-ui/icons';
 import GeometryType from 'ol/geom/GeometryType';
 
 import { SupportedGeometryType } from '../../../services/geoserver/wfs.models';
@@ -37,7 +37,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
     } else if (this.geometryType === GeometryType.POINT) {
       Icon = Adjust;
     } else {
-      Icon = Category;
+      Icon = ReportProblemOutlined;
     }
 
     return <Icon className={className} />;

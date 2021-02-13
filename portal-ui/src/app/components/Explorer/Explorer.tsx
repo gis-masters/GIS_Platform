@@ -46,15 +46,17 @@ const keyActions: { [key in KeyAction]: string[] } = {
 };
 
 const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
-  [ExplorerItemType.DATA_SET_ROOT]: { type: ExplorerItemType.DATA_SET_ROOT }
+  [ExplorerItemType.DATA_SET_ROOT]: { type: ExplorerItemType.DATA_SET_ROOT },
+  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT }
 };
 
-interface ExplorerProps {
+export interface ExplorerProps {
   title?: string;
   items?: ExplorerItemData[];
   preset?: keyof typeof presets;
   disabledItems?: ExplorerItemData[];
   withInfoPanel?: boolean;
+  withoutTitle?: boolean;
   fixedHeight?: boolean;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
@@ -93,7 +95,7 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle } = this.props;
 
     return (
       <div
@@ -102,10 +104,10 @@ export class Explorer extends Component<ExplorerProps> {
         tabIndex={0}
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
       >
-        <ExplorerTitle store={this.store} onOpen={this.openItem} />
+        {!withoutTitle && <ExplorerTitle store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} />
         <ExplorerToolbar store={this.store} onChange={this.handleQueryChange} />
-        {withInfoPanel && <ExplorerInfo store={this.store} type={this.store.selectedItem.type} />}
+        {withInfoPanel && <ExplorerInfo store={this.store} type={this.store.selectedItem.type} Explorer={Explorer} />}
         <ExplorerPagination store={this.store} onChange={this.paginate} />
         <Loading visible={this.busy} noBackdrop />
       </div>

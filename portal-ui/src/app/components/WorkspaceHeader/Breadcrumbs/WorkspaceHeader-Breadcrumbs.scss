@@ -1,4 +1,6 @@
 .WorkspaceHeader-Breadcrumbs {
+  grid-area: breadcrumbs;
+
   overflow: hidden;
 
   min-width: 200px;
@@ -8,6 +10,4 @@
   text-overflow: ellipsis;
 
   font-size: 14px;
-
-  grid-area: breadcrumbs;
 }

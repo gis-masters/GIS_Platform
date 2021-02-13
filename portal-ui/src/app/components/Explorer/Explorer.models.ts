@@ -2,8 +2,10 @@ export enum ExplorerItemType {
   EMPTY = 'empty',
   DATA_SET = 'dataSet',
   TABLE = 'table',
+  PROJECT = 'project',
 
-  DATA_SET_ROOT = 'dataSetRoot'
+  DATA_SET_ROOT = 'dataSetRoot',
+  PROJECTS_ROOT = 'projectsRoot'
 }
 
 export interface ExplorerItemPayloads {}

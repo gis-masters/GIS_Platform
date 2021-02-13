@@ -184,6 +184,10 @@ export async function getTableRoleAssignmentUrl(datasetId: string, tableId: stri
   return `${await getDatasetTableUrl(datasetId, tableId)}/roleAssignment`;
 }
 
+export async function getTableConnectionsUrl(tableId: string): Promise<string> {
+  return `${await getProjectsUrl()}/find-related-layers`;
+}
+
 export async function getBasemapsByIdsUrl(): Promise<string> {
   return (await getDataUrl()) + '/basemaps/search/findByIdIn';
 }

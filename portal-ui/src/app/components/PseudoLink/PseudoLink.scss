@@ -1,10 +1,10 @@
-.PseudoLink {
+body .PseudoLink {
   cursor: pointer;
   transition: border-bottom-color 0.3s;
 
   &-Inner {
-    color: var(--blue);
-    border-bottom: 1px var(--blue) dashed;
+    color: #3f51b5;
+    border-bottom: 1px #3f51b5 dashed;
   }
 
   &:hover {
