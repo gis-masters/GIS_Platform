@@ -27,7 +27,19 @@
   {
     "id": "login",
     "title": "Запуск и авторизация в системе",
-    "contentUrl": "/assets/help/login/00login.html"
+    "contentUrl": "/assets/help/login/00login.html",
+    "children": [
+      {
+        "id": "registration",
+        "title": "Регистрация пользователя",
+        "contentUrl": "/assets/help/projects/01registration.html"
+      },
+      {
+        "id": "signOut",
+        "title": "Выход из системы",
+        "contentUrl": "/assets/help/projects/02signOut.html"
+      }
+    ]
   },
   {
     "id": "projects",
@@ -37,13 +49,11 @@
       {
         "id": "create",
         "title": "Создание проекта",
-        "platforms": ["conv"],
         "contentUrl": "/assets/help/projects/01create.html"
       },
       {
         "id": "delete",
         "title": "Удаление проекта",
-        "platforms": ["conv"],
         "contentUrl": "/assets/help/projects/02delete.html"
       },
       {
@@ -55,8 +65,7 @@
   },
   {
     "id": "import",
-    "title": "Загрузка векторных данных в формате sph",
-    "platforms": ["conv"],
+    "title": "Загрузка векторных данных в формате shp",
     "contentUrl": "/assets/help/import/00import.html",
     "children": [
       {
@@ -124,6 +133,16 @@
         ]
       },
       {
+        "id": "org-admin",
+        "title": "Управление организацией",
+        "contentUrl": "/assets/help/map/orgManagement/00orgManagement.html"
+      },
+      {
+        "id": "dataManagement",
+        "title": "Управление данными",
+        "contentUrl": "/assets/help/map/dataManagement/00dataManagement.html"
+      },
+      {
         "id": "controlLayers",
         "title": "Управление слоями",
         "contentUrl": "/assets/help/map/01controlLayers.html"
@@ -147,6 +166,16 @@
         "id": "attributeTable",
         "title": "Получение атрибутивной информации об объекте (атрибутивная таблица)",
         "contentUrl": "/assets/help/map/05attributeTable.html"
+      },
+      {
+        "id": "substrates",
+        "title": "Подложки",
+        "contentUrl": "/assets/help/map/06substrates.html"
+      },
+      {
+        "id": "listProjects",
+        "title": "Переход к списку проектов",
+        "contentUrl": "/assets/help/map/07listProjects.html"
       },
       {
         "id": "fullEditObject",
