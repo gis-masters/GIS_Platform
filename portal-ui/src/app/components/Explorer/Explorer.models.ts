@@ -1,14 +1,19 @@
 export enum ExplorerItemType {
   EMPTY = 'empty',
+
   DATA_SET = 'dataSet',
   TABLE = 'table',
   PROJECT = 'project',
 
-  DATA_SET_ROOT = 'dataSetRoot',
-  PROJECTS_ROOT = 'projectsRoot'
-}
+  LIBRARY = 'library',
+  FOLDER = 'folder',
+  DOCUMENT = 'document',
 
-export interface ExplorerItemPayloads {}
+  DATA_SET_ROOT = 'dataSetRoot',
+  LIBRARY_ROOT = 'libraryRoot',
+  PROJECTS_ROOT = 'projectsRoot',
+  ROOT = 'root'
+}
 
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
   type: ExplorerItemType;

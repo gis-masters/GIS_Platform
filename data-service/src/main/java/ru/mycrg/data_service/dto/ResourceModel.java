@@ -32,6 +32,17 @@ public class ResourceModel implements IResourceModel {
         this.createdAt = resource.getCreatedAt();
     }
 
+    public ResourceModel(String title, String details, String type, String identifier, String schemaId, String role,
+                         LocalDateTime createdAt) {
+        this.title = title;
+        this.details = details;
+        this.type = type;
+        this.identifier = identifier;
+        this.schemaId = schemaId;
+        this.role = role;
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String getRole() {
         return role;

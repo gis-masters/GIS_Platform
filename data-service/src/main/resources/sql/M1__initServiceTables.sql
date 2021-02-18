@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS data.documents
     name            character varying,
     type            character varying(50),
     size            bigint,
+    inner_path      character varying,
     category        character varying,
     content_type_id character varying,
     created_at      timestamp without time zone,
@@ -101,4 +102,18 @@ CREATE TABLE IF NOT EXISTS data.processes
     extra     json,
     details   json,
     CONSTRAINT rus43af9ap4edm43mm3141oddj6 PRIMARY KEY (id)
+) TABLESPACE pg_default;
+
+CREATE TABLE IF NOT EXISTS data.doc_libraries
+(
+    id            bigserial         NOT NULL,
+    title         character varying,
+    details       character varying(1024),
+    table_name    character varying NOT NULL,
+    schema_id     character varying(50),
+    created_by    character varying,
+    created_at    timestamp without time zone,
+    last_modified timestamp without time zone,
+    CONSTRAINT doc_libraries_pkey PRIMARY KEY (id),
+    CONSTRAINT doc_libraries_table UNIQUE (table_name)
 ) TABLESPACE pg_default;

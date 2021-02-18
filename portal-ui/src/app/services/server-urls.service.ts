@@ -168,6 +168,14 @@ export async function getDatasetsUrl(): Promise<string> {
   return `${await getDataUrl()}/datasets`;
 }
 
+export async function getDocLibrariesUrl(): Promise<string> {
+  return `${await getDataUrl()}/document-libraries`;
+}
+
+export async function getDocLibrariesRecordsUrl(libraryName): Promise<string> {
+  return `${await getDataUrl()}/document-libraries/${libraryName}/records`;
+}
+
 export async function getDatasetUrl(datasetId: string): Promise<string> {
   return `${await getDatasetsUrl()}/${datasetId}`;
 }

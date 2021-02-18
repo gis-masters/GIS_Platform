@@ -12,12 +12,14 @@ import ru.mycrg.data_service.service.resources.ResourceManager;
 
 import java.util.List;
 
+import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
+
 @Service
 public class SchemasManager implements ResourceManager {
 
     private static final Logger log = LoggerFactory.getLogger(SchemasManager.class);
 
-    private final List<String> systemSchemas = List.of("data");
+    private final List<String> systemSchemas = List.of(SYSTEM_SCHEMA_NAME);
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;

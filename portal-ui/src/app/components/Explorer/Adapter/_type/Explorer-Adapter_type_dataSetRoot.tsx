@@ -1,3 +1,6 @@
+import React from 'react';
+
+import { Database } from '../../../Icons/Database';
 import { SortDir } from '../../../../services/models';
 import { DataSet, getDataSets } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -13,7 +16,7 @@ declare module '../../Explorer.models' {
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDataSetRoot {
-  static getId(item: ExplorerItemData<DataSet>) {
+  static getId(item: ExplorerItemData<null>) {
     return 'dataSetRoot';
   }
 
@@ -23,6 +26,10 @@ export class ExplorerAdapterTypeDataSetRoot {
 
   static getMeta(item: ExplorerItemData<DataSet>) {
     return '';
+  }
+
+  static getIcon() {
+    return <Database />;
   }
 
   static isFolder() {

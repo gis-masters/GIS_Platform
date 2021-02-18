@@ -6,17 +6,19 @@ import { http } from './http.service';
 
 export enum DataEntityType {
   SCHEMA = 'SCHEMA',
-  TABLE = 'TABLE'
+  TABLE = 'TABLE',
+  LIBRARY = 'LIBRARY'
 }
 
 export interface DataEntity {
-  title?: string;
+  title: string;
   identifier: string;
   permission: Role;
   details?: string;
   type: DataEntityType;
   createdAt?: string;
-  itemsCount: number;
+  itemsCount?: number;
+  schemaId?: string;
 }
 
 export interface DataSet extends DataEntity {
@@ -62,12 +64,12 @@ export async function getDataSetTables(
     { params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) } }
   );
 
-  const dataTabes: DataTable[] = (response._embedded?.tables || []).map(table => ({
+  const dataTables: DataTable[] = (response._embedded?.tables || []).map(table => ({
     ...table,
     dataset: dataSet.identifier
   }));
 
-  return [dataTabes, response.page.totalPages];
+  return [dataTables, response.page.totalPages];
 }
 
 export async function getDataTable(datasetId: string, dataTableId: string): Promise<DataTable> {

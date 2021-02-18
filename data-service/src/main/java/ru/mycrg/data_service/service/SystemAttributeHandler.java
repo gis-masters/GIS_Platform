@@ -1,0 +1,83 @@
+package ru.mycrg.data_service.service;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.mq_queue_contract.SchemaDto;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+
+import static ru.mycrg.data_service.service.SystemAttributes.*;
+
+@Service
+public class SystemAttributeHandler {
+
+    private final SchemaService schemaService;
+
+    private SchemaDto schema;
+
+    public SystemAttributeHandler(SchemaService schemaService) {
+        this.schemaService = schemaService;
+    }
+
+    public SystemAttributeHandler fetchSchema(@NotNull String schemaName) {
+        schemaService.getSchemaByName(schemaName).ifPresent(schemaDto -> this.schema = schemaDto);
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillTimes(@NotNull Map<String, Object> body) {
+        if (attributeDefined(CREATED_AT)) {
+            body.put(CREATED_AT.getName(), LocalDateTime.now());
+        }
+
+        if (attributeDefined(LAST_MODIFIED)) {
+            body.put(LAST_MODIFIED.getName(), LocalDateTime.now());
+        }
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillCreator(@NotNull Map<String, Object> body,
+                                              @NotNull Authentication authentication) {
+        if (attributeDefined(CREATED_BY)) {
+            body.put(CREATED_BY.getName(), authentication.getName());
+        }
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillFileInfo(@NotNull Map<String, Object> body, MultipartFile file) {
+        if (file != null) {
+            if (attributeDefined(SIZE)) {
+                body.put(SIZE.getName(), file.getSize());
+            }
+
+            if (attributeDefined(FILE_TYPE)) {
+                body.put(FILE_TYPE.getName(), StringUtils.getFilenameExtension(file.getOriginalFilename()));
+            }
+        }
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillFileInnerName(@NotNull Map<String, Object> body, String innerFileName) {
+        if (attributeDefined(INNER_PATH)) {
+            body.put(INNER_PATH.getName(), innerFileName);
+        }
+
+        return this;
+    }
+
+    private boolean attributeDefined(SystemAttributes attribute) {
+        if (this.schema == null) {
+            return false;
+        }
+
+        return schema.getProperties().stream()
+                     .anyMatch(property -> property.getName().equals(attribute.getName()));
+    }
+}

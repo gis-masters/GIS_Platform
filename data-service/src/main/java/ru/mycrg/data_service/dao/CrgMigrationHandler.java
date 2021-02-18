@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DATA_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
 
 @Service
@@ -47,11 +47,12 @@ public class CrgMigrationHandler {
 
     public void initMigration(String dbName) {
         try {
-            HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, DATA_SCHEMA_NAME);
+            HikariDataSource tempDataSource = crgDataSourcesPool.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME);
             try (final Connection connection = tempDataSource.getConnection()) {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M1__initServiceTables.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M2__initOldSchemas.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M3__initDefaultBasemaps.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M4__initDefaultLibraries.sql"));
             }
 
             tempDataSource.close();

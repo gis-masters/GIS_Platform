@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
@@ -13,6 +14,7 @@ import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,5 +87,20 @@ public class SchemaService {
         entity.setClassRule(toJsonNode(schemaDto));
 
         schemaRepository.save(entity);
+    }
+
+    public void checkObjectBySchema(Map<String, Object> body, String schemaName) {
+        getSchemaByName(schemaName).ifPresent(schema -> {
+            body.keySet().forEach(key -> {
+                if (!isPropertyExist(schema, key)) {
+                    throw new BadRequestException("Property: '" + key + "' not exist in schema: " + schemaName);
+                }
+            });
+        });
+    }
+
+    private boolean isPropertyExist(SchemaDto schema, String key) {
+        return schema.getProperties().stream()
+                     .anyMatch(property -> property.getName().equals(key));
     }
 }

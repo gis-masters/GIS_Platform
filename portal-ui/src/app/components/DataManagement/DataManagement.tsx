@@ -16,7 +16,7 @@ export class DataManagement extends Component {
     return (
       flags.dataManagement && (
         <div className={cnDataManagement()}>
-          <Explorer preset={ExplorerItemType.DATA_SET_ROOT} withInfoPanel fixedHeight />
+          <Explorer preset={ExplorerItemType.ROOT} withInfoPanel fixedHeight />
         </div>
       )
     );

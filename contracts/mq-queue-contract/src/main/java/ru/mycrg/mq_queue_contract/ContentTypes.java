@@ -7,6 +7,8 @@ public class ContentTypes {
 
     private String id;
     private String type;
+    private String title;
+    private String icon;
     private List<Object> attributes = new ArrayList<>();
 
     public ContentTypes() {
@@ -35,5 +37,21 @@ public class ContentTypes {
 
     public void setAttributes(List<Object> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

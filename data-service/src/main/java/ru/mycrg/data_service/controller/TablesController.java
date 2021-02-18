@@ -34,12 +34,11 @@ public class TablesController {
         this.tableService = tableService;
     }
 
-    @PostMapping("/datasets/{dataSetId}/tables")
-    public ResponseEntity<IResourceModel> createTable(@PathVariable String dataSetId,
+    @PostMapping("/datasets/{datasetId}/tables")
+    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
                                                       @Valid @RequestBody TableCreateDto dto,
                                                       Authentication authentication) {
-        ResourceIdentifier datasetId = new ResourceIdentifier(dataSetId, SCHEMA);
-        ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId);
+        ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId, SCHEMA);
 
         IResourceModel resourceModel = tableService.create(tableId, dto, authentication);
 
@@ -63,25 +62,23 @@ public class TablesController {
         return ResponseEntity.ok(pagedResources);
     }
 
-    @GetMapping("/datasets/{dataSetId}/tables/{tableId}")
-    public ResponseEntity<Object> getTable(@PathVariable String dataSetId,
+    @GetMapping("/datasets/{datasetId}/tables/{tableId}")
+    public ResponseEntity<Object> getTable(@PathVariable String datasetId,
                                            @PathVariable String tableId,
                                            Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
-                                                                new ResourceIdentifier(dataSetId, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
         final IResourceModel dto = tableService.getByIdentifier(rIdentifier, authentication);
 
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping("/datasets/{dataSetId}/tables/{tableId}")
+    @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataset(@PathVariable String dataSetId,
+    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId,
                                                 @PathVariable String tableId,
                                                 Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE,
-                                                                new ResourceIdentifier(dataSetId, SCHEMA));
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
         tableService.delete(rIdentifier, authentication);
 

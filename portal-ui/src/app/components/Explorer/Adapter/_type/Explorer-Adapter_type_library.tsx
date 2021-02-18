@@ -1,0 +1,141 @@
+import React, { ReactNode } from 'react';
+import moment from 'moment';
+import { pluralize } from 'numeralize-ru';
+import { LocalLibrary } from '@material-ui/icons';
+
+import { Adapter } from '../Explorer-Adapter';
+import { SortDir } from '../../../../services/models';
+import { Emitter } from '../../../../services/util/Emitter';
+import { EmptyListView } from '../../../EmptyListView/EmptyListView';
+import { schemaService } from '../../../../services/crg/schema.service';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { communicationService } from '../../../../services/communication.service';
+import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
+import {
+  ContentTypeTypes,
+  docLibraryService,
+  DocumentLibrary,
+  LibraryItem
+} from '../../../../services/crg/doc-library.service';
+
+declare module '../../Explorer.models' {
+  export interface ExplorerItemPayloads {
+    [ExplorerItemType.LIBRARY]: LibraryItem;
+  }
+}
+
+@staticImplements<Adapter>()
+export class ExplorerAdapterTypeLibrary {
+  static getId(item: ExplorerItemData<LibraryItem>) {
+    return `${item.type}:${item.payload.id}`;
+  }
+
+  static getTitle(item: ExplorerItemData<LibraryItem>) {
+    return item.payload.title;
+  }
+
+  static getDetails(item: ExplorerItemData<LibraryItem>) {
+    return String(item.payload.details);
+  }
+
+  static getMeta(item: ExplorerItemData<LibraryItem>) {
+    const { itemsCount, createdAt, identifier } = item.payload;
+    moment.locale('ru');
+    const date = createdAt ? `${moment(createdAt).format('LL')}` : '';
+    const counter = itemsCount
+      ? `${itemsCount} ${pluralize(Number(itemsCount), 'элемент', 'элемента', 'элементов')}, `
+      : '';
+
+    return `${counter} ${date} (${identifier})`;
+  }
+
+  static getIcon() {
+    return <LocalLibrary />;
+  }
+
+  static isFolder() {
+    return true;
+  }
+
+  static async getChildren(
+    item: ExplorerItemData<DocumentLibrary>,
+    page: number,
+    pageSize: number,
+    sort?: string,
+    sortDir?: SortDir,
+    filter?: { [key: string]: string }
+  ): Promise<[ExplorerItemData<LibraryItem>[], number]> {
+    const [libraryItems, pagesCount] = await docLibraryService.getAllRecords(
+      item.payload.identifier,
+      page,
+      pageSize,
+      sort,
+      sortDir,
+      filter
+    );
+
+    const { contentTypes } = await schemaService.getSchema(item.payload.identifier);
+
+    return [
+      libraryItems.map(libraryItem => {
+        const contentType = contentTypes.find(cType => cType.id === libraryItem.content_type_id);
+
+        return {
+          type:
+            contentType && contentType.type === ContentTypeTypes.FOLDER
+              ? ExplorerItemType.FOLDER
+              : ExplorerItemType.DOCUMENT,
+          payload: libraryItem
+        };
+      }),
+      pagesCount
+    ];
+  }
+
+  static getChildrenSortItems(): SortItem[] {
+    return [
+      {
+        label: 'Названию',
+        value: 'title'
+      },
+      {
+        label: 'Дате создания',
+        value: 'createdAt'
+      }
+    ];
+  }
+
+  static getChildrenSortDefaultValue(): string {
+    return 'createdAt';
+  }
+
+  static getChildrenSortDefaultDirection(): SortDir {
+    return SortDir.DESC;
+  }
+
+  static getChildrenFilterField(): string {
+    return 'title';
+  }
+
+  static getChildrenFilterLabel(): string {
+    return 'Поиск по названию';
+  }
+
+  static getToolbarActions(item: ExplorerItemData<DocumentLibrary>): ReactNode {
+    return <CreateLibraryElement library={item.payload} />;
+  }
+
+  static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
+    return (
+      <EmptyListView
+        text='Отсутствуют элементы для отображения'
+        secondaryText='Начните работу с создания новых разделов или файлов'
+      />
+    );
+  }
+
+  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+    return [communicationService.libraryItemsUpdated];
+  }
+}

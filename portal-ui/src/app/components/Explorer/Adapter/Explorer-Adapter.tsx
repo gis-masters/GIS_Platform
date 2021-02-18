@@ -3,11 +3,17 @@ import { InsertDriveFileOutlined } from '@material-ui/icons';
 
 import { services } from '../../../services/services';
 import { SortDir } from '../../../services/models';
+import { Emitter } from '../../../services/util/Emitter';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDataSetRoot } from './_type/Explorer-Adapter_type_dataSetRoot';
 import { ExplorerAdapterTypeDataSet } from './_type/Explorer-Adapter_type_dataSet';
+import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
+import { ExplorerAdapterTypeFolder } from './_type/Explorer-Adapter_type_folder';
+import { ExplorerAdapterTypeLibrary } from './_type/Explorer-Adapter_type_library';
+import { ExplorerAdapterTypeLibraryRoot } from './_type/Explorer-Adapter_type_libraryRoot';
+import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
 import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
 import { ExplorerAdapterTypeEmpty } from './_type/Explorer-Adapter_type_empty';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
@@ -15,7 +21,7 @@ import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_p
 
 export interface Adapter {
   getId: (item: ExplorerItemData) => string;
-  getTitle: (item: ExplorerItemData) => string;
+  getTitle: (item: ExplorerItemData) => ReactNode;
   getMeta: (item: ExplorerItemData) => string;
   getDetails?: (item: ExplorerItemData) => string;
   getIcon?: (item: ExplorerItemData) => ReactNode;
@@ -33,13 +39,21 @@ export interface Adapter {
   getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
   getChildrenFilterField?: (item: ExplorerItemData) => string;
   getChildrenFilterLabel?: (item: ExplorerItemData) => string;
+  getToolbarActions?: (item: ExplorerItemData) => ReactNode;
+  getEmptyListView?: (item: ExplorerItemData) => ReactNode;
+  getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
 }
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
   [ExplorerItemType.DATA_SET]: ExplorerAdapterTypeDataSet,
   [ExplorerItemType.TABLE]: ExplorerAdapterTypeTable,
+  [ExplorerItemType.LIBRARY]: ExplorerAdapterTypeLibrary,
+  [ExplorerItemType.FOLDER]: ExplorerAdapterTypeFolder,
+  [ExplorerItemType.DOCUMENT]: ExplorerAdapterTypeDocument,
   [ExplorerItemType.DATA_SET_ROOT]: ExplorerAdapterTypeDataSetRoot,
+  [ExplorerItemType.LIBRARY_ROOT]: ExplorerAdapterTypeLibraryRoot,
+  [ExplorerItemType.ROOT]: ExplorerAdapterTypeRoot,
   [ExplorerItemType.PROJECT]: ExplorerAdapterTypeProject,
   [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot
 };
@@ -48,7 +62,7 @@ export function getId(item: ExplorerItemData): string {
   return adapters[item.type].getId(item);
 }
 
-export function getTitle(item: ExplorerItemData): string {
+export function getTitle(item: ExplorerItemData): ReactNode {
   return adapters[item.type].getTitle(item);
 }
 
@@ -109,4 +123,16 @@ export function getChildrenFilterField(item: ExplorerItemData): string | undefin
 
 export function getChildrenFilterLabel(item: ExplorerItemData): string | undefined {
   return adapters[item.type].getChildrenFilterLabel && adapters[item.type].getChildrenFilterLabel(item);
+}
+
+export function getToolbarActions(item: ExplorerItemData): ReactNode | undefined {
+  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item);
+}
+
+export function getEmptyListView(item: ExplorerItemData): ReactNode | undefined {
+  return adapters[item.type].getEmptyListView && adapters[item.type].getEmptyListView(item);
+}
+
+export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+  return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
 }

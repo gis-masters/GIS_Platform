@@ -39,11 +39,13 @@ public class RecordsService {
         }
     }
 
-    public Map<String, Object> getById(ResourceIdentifier table, UUID id, Authentication authentication) {
+    public Map<String, Object> getById(ResourceIdentifier resourceIdentifier,
+                                       UUID recordId,
+                                       Authentication authentication) {
         return tablesDao
-                .findById(table, id)
+                .findById(resourceIdentifier, recordId)
                 .orElseThrow(() -> {
-                    throw new NotFoundException(id);
+                    throw new NotFoundException(recordId);
                 });
     }
 

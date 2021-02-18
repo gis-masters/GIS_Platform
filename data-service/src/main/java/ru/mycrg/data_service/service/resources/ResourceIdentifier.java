@@ -28,6 +28,13 @@ public class ResourceIdentifier {
         this.parent = parent;
     }
 
+    public ResourceIdentifier(@NotNull String childId, @NotNull ResourceType childType,
+                              @NotNull String parentId, @NotNull ResourceType parentType) {
+        this.id = childId;
+        this.type = childType;
+        this.parent = new ResourceIdentifier(parentId, parentType);
+    }
+
     @NotNull
     public String getId() {
         return id;

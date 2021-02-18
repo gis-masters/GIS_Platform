@@ -1,20 +1,20 @@
 import React, { Component, ReactNode } from 'react';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { ChevronRight } from '@material-ui/icons';
+import { IconButton, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
-import { computed } from 'mobx';
 import { getId } from '../Adapter/Explorer-Adapter';
 
 const cnExplorerItem = cn('Explorer', 'Item');
 
 export interface ExplorerItemProps {
   item: ExplorerItemData;
-  title: string;
+  title: ReactNode;
   meta?: string;
   icon: ReactNode;
   selected: boolean;

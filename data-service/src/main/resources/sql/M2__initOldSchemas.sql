@@ -83530,3 +83530,205 @@ SELECT 'wildlifeprotection_point',
 
       return results;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection_point');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'documents',
+       '{
+  "name": "documents",
+  "title": "Документы ГПЗУ",
+  "description": "documents_schema_v1",
+  "tableName": "documents",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "hidden": false,
+      "valueType": "UUID",
+      "sequenceNumber": 0
+    },
+    {
+      "name": "title",
+      "title": "Заголовок",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 500
+    },
+    {
+      "name": "name",
+      "title": "Название",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 254
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 50
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "required": true,
+      "hidden": false,
+      "valueType": "INT",
+      "sequenceNumber": 0
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "required": true,
+      "hidden": true,
+      "valueType": "STRING",
+      "sequenceNumber": 0
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "required": true,
+      "hidden": false,
+      "valueType": "DATETIME",
+      "sequenceNumber": 0
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "required": true,
+      "hidden": false,
+      "valueType": "DATETIME",
+      "sequenceNumber": 0
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 50
+    },
+    {
+      "name": "category",
+      "title": "Категории/Теги",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 254
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "sequenceNumber": 0,
+      "maxLength": 50
+    },
+    {
+      "name": "binary",
+      "required": true,
+      "valueType": "BINARY",
+      "sequenceNumber": 2
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_v1",
+      "type": "DOCUMENT",
+      "title": "Документ первого типа",
+      "icon": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "hidden": false,
+          "valueType": "STRING",
+          "sequenceNumber": 0,
+          "maxLength": 500
+        },
+        {
+          "name": "binary",
+          "title": "Выбор файла",
+          "required": true,
+          "valueType": "BINARY",
+          "sequenceNumber": 2
+        }
+      ]
+    },
+    {
+      "id": "doc_v3",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "hidden": false,
+          "valueType": "STRING",
+          "sequenceNumber": 0,
+          "maxLength": 500
+        }
+      ]
+    },
+    {
+      "id": "doc_v2",
+      "type": "DOCUMENT",
+      "title": "Документ ГПЗУ",
+      "icon": "GPZU",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "hidden": false,
+          "valueType": "STRING",
+          "sequenceNumber": 0,
+          "maxLength": 500
+        },
+        {
+          "name": "category",
+          "title": "Теги",
+          "required": true,
+          "hidden": false,
+          "valueType": "STRING",
+          "sequenceNumber": 0,
+          "maxLength": 254
+        },
+        {
+          "name": "binary",
+          "title": "Выбор файла",
+          "required": true,
+          "valueType": "BINARY",
+          "sequenceNumber": 2
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название раздела",
+          "required": true,
+          "hidden": false,
+          "valueType": "STRING",
+          "sequenceNumber": 0,
+          "maxLength": 500
+        }
+      ]
+    }
+  ]
+}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'documents');

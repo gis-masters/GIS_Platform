@@ -39,7 +39,8 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
     const { id } = this.props.document;
     const { resourcePath } = this.props.editedField.property;
 
-    this.setUrl(`${baseUrl}${resourcePath}/records/${id}/download`);
+    const field = 'inner_path'; // temporary binary fieldName of default document library schema
+    this.setUrl(`${baseUrl}${resourcePath}/records/${id}/${field}/download`);
   }
 
   render() {

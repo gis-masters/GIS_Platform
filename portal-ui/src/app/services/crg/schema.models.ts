@@ -17,6 +17,8 @@ export interface FeatureDescription {
 export interface ContentType {
   id: string;
   type: string;
+  title?: string;
+  icon?: string;
   attributes: PropertySchema[];
 }
 

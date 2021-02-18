@@ -17,7 +17,7 @@ public class CrgDataSourcesPool {
     public static final Logger log = LoggerFactory.getLogger(CrgDataSourcesPool.class);
 
     public static final String DEFAULT_DB_NAME = "database_";
-    public static final String DATA_SCHEMA_NAME = "data";
+    public static final String SYSTEM_SCHEMA_NAME = "data";
     public static final String INITIAL_SCHEMA_NAME = "public";
     public static final String INITIAL_DB_NAME = "crg_data_service";
 
@@ -40,7 +40,7 @@ public class CrgDataSourcesPool {
 
             return dataSources.get(dbName);
         } else {
-            HikariDataSource dataSource = getDataSource(dbName, DATA_SCHEMA_NAME, HIKARI_POOL_SIZE);
+            HikariDataSource dataSource = getDataSource(dbName, SYSTEM_SCHEMA_NAME, HIKARI_POOL_SIZE);
 
             dataSources.put(dbName, dataSource);
             log.debug("Created new one. Current pool size: {}", dataSources.size());

@@ -32,13 +32,12 @@ public class ResourcesInterceptor implements HandlerInterceptor {
                              @NotNull HttpServletResponse response,
                              @NotNull Object handler) {
         if (isRequestToTables(request)) {
-            String dataSetId = getAttribute(request, "dataSetId")
-                    .orElseThrow(() -> new NotFoundException("Not found attribute 'dataSetId'"));
+            String datasetId = getAttribute(request, "datasetId")
+                    .orElseThrow(() -> new NotFoundException("Not found attribute 'datasetId'"));
             String tableId = getAttribute(request, "tableId")
                     .orElseThrow(() -> new NotFoundException("Not found attribute 'tableId'"));
 
-            ResourceIdentifier datasetResource = new ResourceIdentifier(dataSetId, SCHEMA);
-            ResourceIdentifier tableResource = new ResourceIdentifier(tableId, TABLE, datasetResource);
+            ResourceIdentifier tableResource = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
             resourceProtector.throwIfNotExist(tableResource);
         } else if (isRequestToDatasets(request)) {

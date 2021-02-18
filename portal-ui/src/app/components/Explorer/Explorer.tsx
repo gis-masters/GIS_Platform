@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { Loading } from '../Loading/Loading';
+import { Emitter } from '../../services/util/Emitter';
 
 import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
 import {
@@ -14,6 +15,7 @@ import {
   getChildrenSortDefaultValue,
   getChildrenSortItems,
   getId,
+  getRefreshEmitters,
   isFolder
 } from './Adapter/Explorer-Adapter';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
@@ -46,7 +48,9 @@ const keyActions: { [key in KeyAction]: string[] } = {
 };
 
 const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
+  [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT },
   [ExplorerItemType.DATA_SET_ROOT]: { type: ExplorerItemType.DATA_SET_ROOT },
+  [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT },
   [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT }
 };
 
@@ -64,9 +68,11 @@ export interface ExplorerProps {
 
 @observer
 export class Explorer extends Component<ExplorerProps> {
-  private onSelectReactionDispose: IReactionDisposer;
   @observable private busy = false;
+
+  private onSelectReactionDispose: IReactionDisposer;
   private store: ExplorerStore = new ExplorerStore();
+  private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
 
   constructor(props: ExplorerProps) {
     super(props);
@@ -86,6 +92,7 @@ export class Explorer extends Component<ExplorerProps> {
 
   componentWillUnmount() {
     this.onSelectReactionDispose();
+    Emitter.scopeOff(this);
   }
 
   componentDidUpdate(prevProps: ExplorerProps) {
@@ -148,13 +155,29 @@ export class Explorer extends Component<ExplorerProps> {
       store.setFilter({});
     }
 
-    store.selectItem(item);
-    this.setBusy(true);
-    const { pageSize, sort, sortDir, filter } = store;
-    const [children, pagesCount] = await getChildren(item, page, pageSize, sort, sortDir, filter);
-    this.setBusy(false);
-    store.setPage(page);
-    this.setChildren(item, children, pagesCount, depth);
+    try {
+      store.selectItem(item);
+      this.setBusy(true);
+      const { pageSize, sort, sortDir, filter } = store;
+      const [children, pagesCount] = await getChildren(item, page, pageSize, sort, sortDir, filter);
+
+      children.forEach(child => {
+        if (!this.subscribedRefreshEmitterTypes.includes(child.type)) {
+          this.subscribedRefreshEmitterTypes.push(child.type);
+
+          getRefreshEmitters(child).forEach(emitter => {
+            emitter.on(this.refresh);
+          });
+        }
+      });
+
+      store.setPage(page);
+      this.setChildren(item, children, pagesCount, depth);
+    } catch (e) {
+      throw Error('Ошибка при получении элементов' + e);
+    } finally {
+      this.setBusy(false);
+    }
   }
 
   @boundMethod
@@ -222,5 +245,12 @@ export class Explorer extends Component<ExplorerProps> {
   @action
   private setBusy(busy: boolean) {
     this.busy = busy;
+  }
+
+  @boundMethod
+  private refresh() {
+    const { store } = this;
+
+    this.openItem(store.currentItem, 0, store.path.length - 2);
   }
 }

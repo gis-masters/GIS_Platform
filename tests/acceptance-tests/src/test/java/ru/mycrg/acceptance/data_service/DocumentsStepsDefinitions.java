@@ -21,30 +21,29 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
 
     @Override
     public RequestSpecification getBaseRequest() {
-        return super.getBaseRequest().basePath("/api/data/document-libraries/");
+        return super.getBaseRequest().basePath("/api/data/document-libraries");
     }
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
-        return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries/");
+        return super.getBaseRequestWithCurrentCookie().basePath("/api/data/document-libraries");
     }
 
     @When("Пользователь делает запрос на добавление файла")
     public void createDocument(DataTable dataTable) {
         fileName = dataTable.asList().get(0);
 
-        file = new File(
-                String.format("src/test/resources/ru/mycrg/acceptance/data_service/files/%s", fileName));
+        file = new File(String.format("src/test/resources/ru/mycrg/acceptance/data_service/files/%s", fileName));
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("multipart/form-data").
-                        multiPart("files", file).
+                        multiPart("file", file).
                         multiPart("body",
                                   String.format("{\"title\":\"%s\",\"size\":%d}", file.getName(), file.length()))
                 .when().
                         log().ifValidationFails().
-                        post("documents");
+                        post("/documents/records");
     }
 
     @And("Сервер передает ID файла в ответе")
@@ -69,10 +68,14 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на скачивание файла")
     public void downloadFile() {
+        final String tempBinaryFieldNameOfDefaultLibrarySchema = "inner_path";
+        final String url = String.format("/documents/records/%s/%s/download",
+                                         documentId, tempBinaryFieldNameOfDefaultLibrarySchema);
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().ifValidationFails().
-                        get(String.format("documents/records/%s/download", documentId));
+                        get(url);
     }
 
     @And("В ответе передается содержимое файла")
@@ -85,7 +88,7 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().ifValidationFails().
-                        delete(String.format("documents/records/%s", documentId));
+                        delete(String.format("/documents/records/%s", documentId));
     }
 
     private void makeExactDocumentAsCurrent(String fileNamePassed) {

@@ -5,7 +5,8 @@ import { cn } from '@bem-react/classname';
 import { List } from '@material-ui/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
+import { getEmptyListView, getIcon, getId, getMeta, getTitle, isFolder } from '../Adapter/Explorer-Adapter';
+import { ExplorerEmpty } from '../Empty/Explorer-Empty';
 import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
@@ -30,11 +31,17 @@ export class ExplorerList extends Component<ExplorerListProps> {
   }
 
   render() {
+    const { path } = this.props.store;
+    const emptyListView = path.length > 1 ? getEmptyListView(path[path.length - 2]) : null;
+
     return (
       <List className={cnExplorerList()} disablePadding>
-        {this.currentList.map(this.getItemProps).map(props => (
-          <ExplorerItem {...props} key={getId(props.item)} />
-        ))}
+        {Boolean(this.currentList?.length) &&
+          this.currentList.map(this.getItemProps).map(props => <ExplorerItem {...props} key={getId(props.item)} />)}
+
+        {Boolean(!this.currentList?.length) ? (
+          <>{emptyListView ? <ExplorerEmpty>{emptyListView}</ExplorerEmpty> : null}</>
+        ) : null}
       </List>
     );
   }
@@ -47,7 +54,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
   }
 
   @boundMethod
-  private getItemProps(item: ExplorerItemData, i: number, items: ExplorerItemData[]): ExplorerItemProps {
+  private getItemProps(item: ExplorerItemData): ExplorerItemProps {
     const { onOpen, store } = this.props;
 
     return {
