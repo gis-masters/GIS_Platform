@@ -75,7 +75,7 @@ public class DataHandler {
 
                 Optional<SimplePropertyDto> oProperty = getPropertyByName(schema.getProperties(), key);
                 if (oProperty.isPresent() && ValueType.DATETIME.equals(oProperty.get().getValueType())) {
-                    decodedRow.put(key, value);
+                    decodedRow.put(key, value == null ? NULL_MARKER : value);
                 }
             }
         });

@@ -81,6 +81,7 @@ public class HandleRowTest {
             put("shape", pgObject);
             put("ruleid", "5");
             put("created_da", now);
+            put("created_da2", null);
         }};
 
         when(scriptEngine.invokeFunction(any(), any())).thenReturn(new HashMap<String, Object>());
@@ -99,6 +100,7 @@ public class HandleRowTest {
         assertEquals("4", result.get("status"));
         assertEquals("1", result.get("reg_status"));
         assertNotEquals(NULL_MARKER, result.get("created_da"));
+        assertEquals(NULL_MARKER, result.get("created_da2"));
     }
 
     private SchemaDto getSchemaFromFile(String fName) throws IOException {
