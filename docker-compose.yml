@@ -245,6 +245,10 @@ services:
       UI_LOGO: ${UI_LOGO:-}
       UI_FAVICON: ${UI_FAVICON:-}
       UI_HTTPS: ${UI_HTTPS:-}
+      UI_SUPRESS_TOAST_ERRORS_HTTP: ${UI_SUPRESS_TOAST_ERRORS_HTTP:-}
+      UI_SUPRESS_TOAST_ERRORS_HTTPS: ${UI_SUPRESS_TOAST_ERRORS_HTTPS:-}
+      UI_SEND_ERRORS_TO_TG_HTTP: ${UI_SEND_ERRORS_TO_TG_HTTP:-}
+      UI_SEND_ERRORS_TO_TG_HTTPS: ${UI_SEND_ERRORS_TO_TG_HTTPS:-}
     volumes:
       - /opt/reglaments:/usr/share/nginx/html/reglaments
       - /opt/ssl:/opt/ssl

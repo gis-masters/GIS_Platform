@@ -13,5 +13,13 @@
     "dataManagement": true
   },
   "logo": "/assets/logo/dev/logo.jpg",
-  "favicon": "/assets/logo/dev/favicon.png"
+  "favicon": "/assets/logo/dev/favicon.png",
+  "supressToastErrors": {
+    "http": false,
+    "https": false
+  },
+  "sendErrorsToTG": {
+    "http": false,
+    "https": false
+  }
 }

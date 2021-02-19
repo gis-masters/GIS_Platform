@@ -11,6 +11,11 @@ export interface EnvironmentServer {
   wsPath?: string;
 }
 
+export interface ProtocolsBoolean {
+  http: boolean;
+  https: boolean;
+}
+
 export interface Environment {
   platform: Platform;
   production: boolean;
@@ -19,6 +24,8 @@ export interface Environment {
   flags?: FlagsList;
   logo?: string;
   favicon?: string;
+  supressToastErrors: ProtocolsBoolean;
+  sendErrorsToTG: ProtocolsBoolean;
 }
 
 const fetchEnv = async (): Promise<Environment> => {

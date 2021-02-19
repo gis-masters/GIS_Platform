@@ -265,32 +265,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
     toDelete.splice(toDelete.length, 0, ...existing);
 
-    console.log(
-      'this.prepareApiArgsList(this.existingList)',
-      this.prepareApiArgsList(this.existingList).map(([permission, project, layer]) => [
-        permission.principalId,
-        permission.role,
-        project.id,
-        layer?.id
-      ])
-    );
-    console.log(
-      'existing',
-      existing.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
-    );
-    console.log(
-      'changed',
-      changed.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
-    );
-    console.log(
-      'toDelete',
-      toDelete.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
-    );
-    console.log(
-      'toCreate',
-      toCreate.map(([permission, project, layer]) => [permission.principalId, permission.role, project.id, layer?.id])
-    );
-
     for (let [permission, project, layer] of toDelete) {
       if (layer) {
         await removeTablePermission(permission, layer.dataset, layer.tableName);

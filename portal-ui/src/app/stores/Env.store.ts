@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-import { Platform, Environment, EnvironmentServer } from '../services/environment';
+import { Platform, Environment, EnvironmentServer, ProtocolsBoolean } from '../services/environment';
 import { FlagsList } from '../services/feature-flags';
 
 const emptyEnv: Environment = {
@@ -10,7 +10,15 @@ const emptyEnv: Environment = {
   scratchWorkspaceName: '',
   flags: null,
   logo: null,
-  favicon: null
+  favicon: null,
+  supressToastErrors: {
+    http: false,
+    https: false
+  },
+  sendErrorsToTG: {
+    http: false,
+    https: false
+  }
 };
 
 class Env implements Environment {
@@ -24,12 +32,14 @@ class Env implements Environment {
   @observable logo?: string;
   @observable favicon?: string;
   @observable loaded = false;
+  @observable supressToastErrors: ProtocolsBoolean;
+  @observable sendErrorsToTG: ProtocolsBoolean;
 
   public static get instance() {
     return this._instance || (this._instance = new this());
   }
-  
-  private constructor() { }
+
+  private constructor() {}
 
   @action
   setEnv(env: Environment) {

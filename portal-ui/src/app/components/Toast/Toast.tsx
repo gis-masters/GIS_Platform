@@ -8,6 +8,9 @@ import { IconButton } from '@material-ui/core';
 import { CheckCircle, Error, Info, Warning, Close } from '@material-ui/icons';
 import { SvgIconProps } from '@material-ui/core/SvgIcon/';
 
+import { env } from '../../stores/Env.store';
+import { sendTelegramError } from '../../services/telegram.service';
+
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
 
 const cnToast = cn('Toast');
@@ -111,29 +114,58 @@ export class Toast extends Component<ToastProps> {
     };
   }
 
-  static error(message: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts) {
+  static error(messageOrOpts: JSX.Element | string | ToastErrorOpts, opts?: ToastErrorOpts, canBeSupresed?: boolean) {
+    let message = messageOrOpts;
     if (!opts) {
       if (
-        message.hasOwnProperty('message') ||
-        message.hasOwnProperty('error') ||
-        message.hasOwnProperty('details') ||
-        message.hasOwnProperty('source')
+        messageOrOpts.hasOwnProperty('message') ||
+        messageOrOpts.hasOwnProperty('error') ||
+        messageOrOpts.hasOwnProperty('details') ||
+        messageOrOpts.hasOwnProperty('source')
       ) {
-        opts = message as ToastErrorOpts;
+        opts = messageOrOpts as ToastErrorOpts;
         message = opts.message;
       } else {
         opts = {};
       }
     }
 
+    if (!message) {
+      message = 'Произошла ошибка.';
+    }
+
     const { source, error, details, fileno, columnNumber } = opts;
     const sourceFile = source ? new URL(source).pathname : '';
+    const protocol = window.location.protocol.slice(0, -1);
+
+    let tgMsg = '';
+    if (typeof message === 'string') {
+      tgMsg = message;
+    } else {
+      try {
+        tgMsg = JSON.stringify(message, null, 2) || String(message);
+      } catch (e) {}
+    }
+    if (details) {
+      tgMsg += `
+${details}`;
+    }
+    if (error) {
+      tgMsg += `
+${error.message ? error.message : error.toString()}`;
+    }
+
+    sendTelegramError(tgMsg);
+
+    if (env.supressToastErrors[protocol] && canBeSupresed) {
+      return;
+    }
 
     this.show({
       autoClose: 10000,
       ...opts,
       type: 'error',
-      message: (message as JSX.Element | string) || 'Произошла ошибка.',
+      message: message as JSX.Element | string,
       details:
         error || details || source ? (
           <>
