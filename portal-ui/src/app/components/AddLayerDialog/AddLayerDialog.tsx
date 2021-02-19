@@ -155,7 +155,19 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           layer =>
             !this.usedDataTables.some(table => table.dataset === layer.dataset && table.identifier === layer.tableName)
         )
-        .map(layer => getDataTable(layer.dataset, layer.tableName))
+        .map(async layer => {
+          const table = await getDataTable(layer.dataset, layer.tableName);
+
+          // с бэка тут временами приходит всякая хрень
+          if (!table.dataset) {
+            table.dataset = layer.dataset;
+          }
+          if (!table.identifier) {
+            table.identifier = layer.tableName;
+          }
+
+          return table;
+        })
     );
 
     const newUsedDataTables = await this.usedDataTablesRequests;
