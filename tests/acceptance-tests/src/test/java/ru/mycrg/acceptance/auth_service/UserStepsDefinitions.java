@@ -18,10 +18,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.String.format;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -238,13 +240,20 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void performsDisableEnableUsers(String isEnabled) {
         getBaseRequestWithCurrentCookie()
                 .given().
-                body(String.format("{\"enabled\":\"%s\"}", isEnabled)).
+                body(format("{\"enabled\":\"%s\"}", isEnabled)).
                         contentType(ContentType.JSON)
                 .when().
                         patch(String.valueOf(userId))
                 .then().
                         statusCode(SC_OK).
                         log().ifValidationFails();
+    }
+
+    @Then("Статус пользователя равен {string}")
+    public void checkUserStatus(String userStatus) {
+        getExactUser();
+
+        assertThat(response.jsonPath().get("enabled"), is(Boolean.parseBoolean(userStatus)));
     }
 
     private void takeForeignUserAsCurrent() {
