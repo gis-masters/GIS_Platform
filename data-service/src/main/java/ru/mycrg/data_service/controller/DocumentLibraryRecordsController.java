@@ -33,7 +33,7 @@ import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.data_service.service.SystemAttributes.INNER_PATH;
+import static ru.mycrg.data_service.service.SystemLibraryAttributes.INNER_PATH;
 
 @RestController
 public class DocumentLibraryRecordsController {
@@ -99,12 +99,13 @@ public class DocumentLibraryRecordsController {
 
     @GetMapping("/document-libraries/{docLibId}/records")
     public ResponseEntity<Object> getAll(@PathVariable String docLibId,
+                                         @RequestParam(required = false, defaultValue = "") String parent,
                                          Pageable pageable,
                                          Authentication authentication,
                                          PagedResourcesAssembler<Map<String, Object>> pageAssembler) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
 
-        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, pageable, authentication);
+        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, pageable, parent, authentication);
 
         var pagedResources = pageAssembler.toResource(
                 result,

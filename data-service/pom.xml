@@ -82,6 +82,13 @@
             <version>2.10.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.healthmarketscience.sqlbuilder/sqlbuilder -->
+        <dependency>
+            <groupId>com.healthmarketscience.sqlbuilder</groupId>
+            <artifactId>sqlbuilder</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

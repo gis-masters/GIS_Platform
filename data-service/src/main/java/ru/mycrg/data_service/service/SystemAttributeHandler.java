@@ -10,7 +10,7 @@ import ru.mycrg.mq_queue_contract.SchemaDto;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static ru.mycrg.data_service.service.SystemAttributes.*;
+import static ru.mycrg.data_service.service.SystemLibraryAttributes.*;
 
 @Service
 public class SystemAttributeHandler {
@@ -72,7 +72,7 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    private boolean attributeDefined(SystemAttributes attribute) {
+    private boolean attributeDefined(SystemLibraryAttributes attribute) {
         if (this.schema == null) {
             return false;
         }

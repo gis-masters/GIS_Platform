@@ -83548,6 +83548,14 @@ SELECT 'documents',
       "sequenceNumber": 0
     },
     {
+      "name": "parent",
+      "title": "Родительский каталог",
+      "required": true,
+      "hidden": false,
+      "valueType": "UUID",
+      "sequenceNumber": 0
+    },
+    {
       "name": "title",
       "title": "Заголовок",
       "required": true,

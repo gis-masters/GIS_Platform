@@ -30,9 +30,10 @@ public class RecordsService {
 
     public Page<Map<String, Object>> getPaged(ResourceIdentifier rIdentifier,
                                               Pageable pageable,
+                                              String parent,
                                               Authentication authentication) {
         try {
-            return tablesDao.findAllPaged(rIdentifier, pageable);
+            return tablesDao.findAllPaged(rIdentifier, pageable, parent);
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
             throw new DataServiceException("Failed obtain records from: " + rIdentifier.toString());

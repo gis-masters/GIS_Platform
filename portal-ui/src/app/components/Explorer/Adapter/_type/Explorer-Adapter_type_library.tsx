@@ -59,7 +59,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildren(
-    item: ExplorerItemData<DocumentLibrary>,
+    explorerItem: ExplorerItemData<DocumentLibrary>,
     page: number,
     pageSize: number,
     sort?: string,
@@ -67,7 +67,7 @@ export class ExplorerAdapterTypeLibrary {
     filter?: { [key: string]: string }
   ): Promise<[ExplorerItemData<LibraryItem>[], number]> {
     const [libraryItems, pagesCount] = await docLibraryService.getAllRecords(
-      item.payload.identifier,
+      explorerItem.payload.identifier,
       page,
       pageSize,
       sort,
@@ -75,18 +75,21 @@ export class ExplorerAdapterTypeLibrary {
       filter
     );
 
-    const { contentTypes } = await schemaService.getSchema(item.payload.identifier);
+    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
 
     return [
-      libraryItems.map(libraryItem => {
-        const contentType = contentTypes.find(cType => cType.id === libraryItem.content_type_id);
+      libraryItems.map(item => {
+        item.library = explorerItem.payload.identifier;
+        item.schemaId = explorerItem.payload.schemaId;
+
+        const contentType = contentTypes.find(cType => cType.id === item.content_type_id);
 
         return {
           type:
             contentType && contentType.type === ContentTypeTypes.FOLDER
               ? ExplorerItemType.FOLDER
               : ExplorerItemType.DOCUMENT,
-          payload: libraryItem
+          payload: item
         };
       }),
       pagesCount
@@ -123,7 +126,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getToolbarActions(item: ExplorerItemData<DocumentLibrary>): ReactNode {
-    return <CreateLibraryElement library={item.payload} />;
+    return <CreateLibraryElement payload={item.payload} />;
   }
 
   static getEmptyListView(item: ExplorerItemData): ReactNode | undefined {

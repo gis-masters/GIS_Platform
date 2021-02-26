@@ -1,19 +1,18 @@
 import { AxiosError } from 'axios';
-import { communicationService } from '../communication.service';
 
 import { services } from '../services';
 import { http } from '../http.service';
-import { DataEntity, DataEntityType } from '../data.service';
 import { Toast } from '../../components/Toast/Toast';
 import { PageableResponse, SortDir } from '../models';
+import { DataEntity, DataEntityType } from '../data.service';
+import { communicationService } from '../communication.service';
 import { getBaseUrl, getDocLibrariesRecordsUrl, getDocLibrariesUrl } from '../server-urls.service';
 
 export interface LibraryItem {
+  id: string;
+  library: string;
+  schemaId: string;
   [key: string]: unknown;
-}
-
-interface LibraryItemContent {
-  content: LibraryItem;
 }
 
 export enum ContentTypeTypes {
@@ -69,7 +68,7 @@ class DocLibraryService {
       params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
     };
 
-    const response = await http.get<PageableResponse<{ linkedHashMaps: LibraryItemContent[] }>>(url, params);
+    const response = await http.get<PageableResponse<{ linkedHashMaps: { content: LibraryItem }[] }>>(url, params);
 
     const libItems = response._embedded?.linkedHashMaps.map(({ content }) => content) || [];
 

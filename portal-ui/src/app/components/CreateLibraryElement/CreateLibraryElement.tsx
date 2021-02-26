@@ -7,13 +7,14 @@ import { services } from '../../services/services';
 import { schemaService } from '../../services/crg/schema.service';
 import { ContentType, FeatureDescription } from '../../services/crg/schema.models';
 import { getSchemaWithAppliedContentType } from '../../services/crg/schema.utils';
-import { docLibraryService, DocumentLibrary } from '../../services/crg/doc-library.service';
+import { docLibraryService, DocumentLibrary, LibraryItem } from '../../services/crg/doc-library.service';
 
 import { CreateLibraryElementButton } from './Button/CreateLibraryElement-Button';
 import { CreateLibraryElementDialog } from './Dialog/CreateLibraryElement-Dialog';
 
 export interface CreateLibraryElementsProps {
-  library: DocumentLibrary;
+  payload: DocumentLibrary | LibraryItem;
+  parent?: string;
 }
 
 @observer
@@ -25,7 +26,7 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
   private contentTypeId: string;
 
   async componentDidMount() {
-    const schema = await schemaService.getSchema(this.props.library.schemaId);
+    const schema = await schemaService.getSchema(this.props.payload.schemaId);
     this.setSchema(schema);
   }
 
@@ -78,6 +79,9 @@ export class CreateLibraryElement extends Component<CreateLibraryElementsProps> 
     }
 
     formValue.content_type_id = this.contentTypeId;
+    if (this.props.parent) {
+      formValue.parent = this.props.parent;
+    }
 
     try {
       const crgDocuments = await docLibraryService.createRecord(this.schema.tableName, formValue);

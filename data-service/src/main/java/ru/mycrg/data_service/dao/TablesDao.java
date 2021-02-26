@@ -1,5 +1,10 @@
 package ru.mycrg.data_service.dao;
 
+import com.healthmarketscience.sqlbuilder.InsertQuery;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbColumn;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSchema;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbSpec;
+import com.healthmarketscience.sqlbuilder.dbspec.basic.DbTable;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +24,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
+import static ru.mycrg.data_service.service.SystemLibraryAttributes.ID;
+import static ru.mycrg.data_service.service.SystemLibraryAttributes.PARENT;
+
 @Service
 @Transactional
 public class TablesDao {
@@ -35,36 +43,32 @@ public class TablesDao {
                           @NotNull Map<String, Object> body) throws CrgDaoException {
         try {
             UUID id = UUID.randomUUID();
-            StringBuilder propertiesPart = new StringBuilder().append("id");
-            StringBuilder valuesPart = new StringBuilder().append("'").append(id).append("'");
 
-            StringBuilder initialPart = new StringBuilder()
-                    .append("INSERT INTO ")
-                    .append(resourceIdentifier.toString());
+            final DbTable table = getDbTable(resourceIdentifier);
+            final DbColumn idColumn = table.addColumn(ID.getName());
+
+            final InsertQuery insertQuery = new InsertQuery(table);
+            insertQuery.addColumn(idColumn, id);
 
             body.forEach((key, value) -> {
-                propertiesPart
-                        .append(", ")
-                        .append(key);
+                final DbColumn dbColumn = table.addColumn(key);
 
-                valuesPart
-                        .append(", :")
-                        .append(key);
+                insertQuery.addColumn(dbColumn, value);
             });
+            String query = insertQuery.validate().toString();
 
-            String insertQuery = String.format("%s (%s) values (%s)",
-                                               initialPart.toString(), propertiesPart.toString(),
-                                               valuesPart.toString());
-
-            log.debug("INSERT_QUERY: {}", insertQuery);
-
-            pJdbcTemplate.update(insertQuery, body);
+            log.debug("INSERT_QUERY: {}", query);
+            pJdbcTemplate.getJdbcTemplate().update(query);
 
             return id;
         } catch (DataAccessException e) {
-            throw new CrgDaoException("Не удалось выполнить вставку в таблицу: " + resourceIdentifier.toString());
+            String msg = String.format("Не удалось выполнить вставку в таблицу: '%s'. %s",
+                                       resourceIdentifier.toString(), e.getCause().getMessage());
+            throw new CrgDaoException(msg);
         } catch (Exception e) {
-            throw new CrgDaoException("Что то пошло не так при вставке в таблицу: " + resourceIdentifier.toString());
+            String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
+                                       resourceIdentifier.toString(), e.getCause().getMessage());
+            throw new CrgDaoException(msg);
         }
     }
 
@@ -81,16 +85,25 @@ public class TablesDao {
         }
     }
 
-    public Page<Map<String, Object>> findAllPaged(ResourceIdentifier rIdentifier, Pageable pageable)
+    public Page<Map<String, Object>> findAllPaged(ResourceIdentifier rIdentifier, Pageable pageable, String parent)
             throws CrgDaoException {
         Integer total = countTotalRecords(rIdentifier);
 
-        final var result = pJdbcTemplate.query(
-                String.format("SELECT * FROM %s LIMIT :limit OFFSET :offset", rIdentifier.toString()),
-                new MapSqlParameterSource()
-                        .addValue("limit", pageable.getPageSize())
-                        .addValue("offset", pageable.getOffset()),
-                (rs, rowNum) -> getRecordAsObjectMap(rs));
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        String query;
+        if (parent.isEmpty()) {
+            query = String.format("SELECT * FROM %s where parent is NULL LIMIT :limit OFFSET :offset",
+                                  rIdentifier.toString());
+        } else {
+            paramSource.addValue(PARENT.getName(), parent);
+            query = String.format("SELECT * FROM %s where parent::text = :parent LIMIT :limit OFFSET :offset",
+                                  rIdentifier.toString());
+        }
+
+        paramSource.addValue("limit", pageable.getPageSize())
+                   .addValue("offset", pageable.getOffset());
+
+        final var result = pJdbcTemplate.query(query, paramSource, (rs, rowNum) -> getRecordAsObjectMap(rs));
 
         return new PageImpl<>(result, pageable, total);
     }
@@ -126,5 +139,12 @@ public class TablesDao {
         }
 
         return selectedRow;
+    }
+
+    private DbTable getDbTable(@NotNull ResourceIdentifier resourceIdentifier) {
+        final DbSpec spec = new DbSpec();
+        final DbSchema schema = spec.addSchema(resourceIdentifier.getParent().getId());
+
+        return schema.addTable(resourceIdentifier.getId());
     }
 }
