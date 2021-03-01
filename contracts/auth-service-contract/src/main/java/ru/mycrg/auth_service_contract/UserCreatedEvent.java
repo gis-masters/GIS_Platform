@@ -7,6 +7,7 @@ public class UserCreatedEvent extends UserBaseEvent {
     private String role;
 
     public UserCreatedEvent() {
+        // Required
     }
 
     public UserCreatedEvent(String login, String token, String password, boolean isEnabled, String role) {

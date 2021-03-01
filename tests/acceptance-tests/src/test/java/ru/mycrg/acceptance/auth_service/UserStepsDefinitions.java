@@ -236,7 +236,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         patch(String.valueOf(userId));
     }
 
-    @When("Пользователь делает запрос на изменение статуса пользователя на {string}")
+    @When("Администратор делает запрос на изменение статуса пользователя на {string}")
     public void performsDisableEnableUsers(String isEnabled) {
         getBaseRequestWithCurrentCookie()
                 .given().

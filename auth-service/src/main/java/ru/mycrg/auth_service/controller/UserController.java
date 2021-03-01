@@ -111,7 +111,6 @@ public class UserController {
     public ResponseEntity<UserProjection> updateUser(@Valid @RequestBody UserUpdateDto dto,
                                                      @PathVariable Long id,
                                                      Authentication authentication) {
-
         userService.update(id, dto, authentication);
 
         return ResponseEntity.ok().build();

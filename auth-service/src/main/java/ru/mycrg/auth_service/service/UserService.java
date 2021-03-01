@@ -113,7 +113,7 @@ public class UserService {
         );
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
-        newUser.setEnabled(true);
+        newUser.setEnabled(false);
 
         User savedUser = userRepository.save(newUser);
 
