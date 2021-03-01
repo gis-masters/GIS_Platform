@@ -103,7 +103,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
         assertThat(jsonPath.get("title"), equalTo(layerGroupDto.getTitle()));
         assertThat(jsonPath.get("position"), is(layerGroupDto.getPosition()));
-        assertThat(jsonPath.get("parent"), is(parentLayerGroupId));
+        assertThat(jsonPath.get("parentId"), is(parentLayerGroupId));
     }
 
     @When("Пользователь делает запрос на удаление текущей группы слоев текущего проекта")

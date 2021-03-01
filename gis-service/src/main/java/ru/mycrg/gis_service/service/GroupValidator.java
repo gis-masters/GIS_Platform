@@ -14,15 +14,15 @@ public class GroupValidator {
 
     @Contract(pure = false, mutates = "groups")
     public static boolean isInvalidGroupRelation(@NotNull Group group, List<Group> groups) {
-        if (group.getId() != null && group.getId().equals(group.getParent())) {
+        if (group.getId() != null && group.getId().equals(group.getParentId())) {
             return true;
         }
 
-        if (group.getParent() == null) {
+        if (group.getParentId() == null) {
             return false;
         }
 
-        Group parentGroup = getGroupById(groups, group.getParent());
+        Group parentGroup = getGroupById(groups, group.getParentId());
         if (parentGroup == null) {
             return true;
         }
@@ -34,21 +34,21 @@ public class GroupValidator {
         Group group = getGroupById(groups, initialGroup.getId());
         if (group != null) {
             // Если парент переписывается у существующей группы то заменим его и протестируем
-            group.setParent(initialGroup.getParent());
+            group.setParentId(initialGroup.getParentId());
         }
 
         Group currentGroup = initialGroup;
         while (true) {
-            if (currentGroup.getParent() == null) {
+            if (currentGroup.getParentId() == null) {
                 // Это рут группа - нет зацикливания
                 return false;
             }
 
-            if (currentGroup.getParent().equals(initialGroup.getId())) {
+            if (currentGroup.getParentId().equals(initialGroup.getId())) {
                 return true;
             }
 
-            Group parentGroup = getGroupById(groups, currentGroup.getParent());
+            Group parentGroup = getGroupById(groups, currentGroup.getParentId());
             if (parentGroup != null) {
                 if (parentGroup.equals(initialGroup)) {
                     return true;

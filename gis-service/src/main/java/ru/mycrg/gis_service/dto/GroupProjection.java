@@ -22,5 +22,5 @@ public interface GroupProjection {
 
     int getTransparency();
 
-    Long getParent();
+    Long getParentId();
 }

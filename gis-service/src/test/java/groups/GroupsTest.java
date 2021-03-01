@@ -20,22 +20,22 @@ class GroupsTest {
 
         Group sameIdGroup = new Group();
         sameIdGroup.setId(314);
-        sameIdGroup.setParent(314L);
+        sameIdGroup.setParentId(314L);
 
         Group notExistParentGroup = new Group();
         notExistParentGroup.setId(1);
-        notExistParentGroup.setParent(314L);
+        notExistParentGroup.setParentId(314L);
 
         Group cyclingGroup = new Group();
         cyclingGroup.setId(2);
-        cyclingGroup.setParent(5L);
+        cyclingGroup.setParentId(5L);
 
         Group correctGroup = new Group();
         correctGroup.setId(6);
-        correctGroup.setParent(5L);
+        correctGroup.setParentId(5L);
 
         Group newGroup = new Group();
-        newGroup.setParent(3L);
+        newGroup.setParentId(3L);
 
         assertFalse(isInvalidGroupRelation(rootGroup, groups));
         assertTrue(isInvalidGroupRelation(sameIdGroup, groups));
@@ -51,19 +51,19 @@ class GroupsTest {
 
         Group level11 = new Group();
         level11.setId(2);
-        level11.setParent(1L);
+        level11.setParentId(1L);
 
         Group level12 = new Group();
         level12.setId(3);
-        level12.setParent(1L);
+        level12.setParentId(1L);
 
         Group level21 = new Group();
         level21.setId(4);
-        level21.setParent(2L);
+        level21.setParentId(2L);
 
         Group level31 = new Group();
         level31.setId(5);
-        level31.setParent(4L);
+        level31.setParentId(4L);
 
         return Arrays.asList(root, level11, level12, level21, level31);
     }

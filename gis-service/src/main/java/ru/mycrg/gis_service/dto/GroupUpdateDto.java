@@ -13,7 +13,7 @@ public class GroupUpdateDto {
     private String title;
 
     @CrgParentGroup
-    private Long parent;
+    private Long parentId;
 
     @Min(message = "Минимальное допустимое значение -1", value = -1)
     @Max(Integer.MAX_VALUE)
@@ -41,12 +41,12 @@ public class GroupUpdateDto {
         this.title = title;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParent(Long parent) {
-        this.parent = parent;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public int getPosition() {

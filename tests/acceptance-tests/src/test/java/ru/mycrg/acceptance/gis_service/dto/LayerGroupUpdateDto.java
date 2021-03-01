@@ -4,7 +4,7 @@ public class LayerGroupUpdateDto {
 
     private final String title;
 
-    private final Long parent;
+    private final Long parentId;
 
     private int position;
 
@@ -14,10 +14,10 @@ public class LayerGroupUpdateDto {
 
     private int transparency;
 
-    public LayerGroupUpdateDto(String title, Long parent, int position, String enabled, String expanded,
+    public LayerGroupUpdateDto(String title, Long parentId, int position, String enabled, String expanded,
                                int transparency) {
         this.title = title;
-        this.parent = parent;
+        this.parentId = parentId;
         this.position = position;
         this.enabled = enabled;
         this.expanded = expanded;
@@ -28,8 +28,8 @@ public class LayerGroupUpdateDto {
         return title;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getParentId() {
+        return parentId;
     }
 
     public int getPosition() {

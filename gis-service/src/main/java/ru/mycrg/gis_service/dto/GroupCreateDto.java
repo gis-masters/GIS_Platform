@@ -13,7 +13,7 @@ public class GroupCreateDto {
     private String title;
 
     @CrgParentGroup
-    private Long parent;
+    private Long parentId;
 
     @Max(Integer.MAX_VALUE)
     private int position = -1;
@@ -30,12 +30,12 @@ public class GroupCreateDto {
         this.title = title;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParent(Long parent) {
-        this.parent = parent;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public int getPosition() {

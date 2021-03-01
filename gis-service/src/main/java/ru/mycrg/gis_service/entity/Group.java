@@ -18,7 +18,7 @@ public class Group implements Identifiable<Long> {
     private Long id;
 
     @Column
-    private Long parent;
+    private Long parentId;
 
     @Column
     private String title;
@@ -54,7 +54,7 @@ public class Group implements Identifiable<Long> {
 
     public Group(GroupCreateDto dto) {
         this.title = dto.getTitle();
-        this.parent = dto.getParent();
+        this.parentId = dto.getParentId();
         this.position = dto.getPosition();
 
         this.enabled = true;
@@ -73,12 +73,12 @@ public class Group implements Identifiable<Long> {
         this.id = id;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParent(Long parent) {
-        this.parent = parent;
+    public void setParentId(Long parent) {
+        this.parentId = parent;
     }
 
     public String getTitle() {
