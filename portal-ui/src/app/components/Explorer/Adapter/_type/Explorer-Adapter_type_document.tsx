@@ -5,8 +5,8 @@ import { InsertDriveFile } from '@material-ui/icons';
 
 import { LibraryItem } from '../../../../services/crg/doc-library.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
+import { ExplorerItemData } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {

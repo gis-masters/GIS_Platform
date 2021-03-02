@@ -6,7 +6,7 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 
 import { ExplorerItemType } from '../../Explorer.models';
 import { cnExplorerInfo, ExplorerInfoProps } from '../Explorer-Info';
-import { TableManagementWidget } from '../../../TableManagementWidget/TableManagementWidget';
+import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 
 interface ExplorerInfoTypeDataTableProps {
   type?: ExplorerItemType;
@@ -21,7 +21,7 @@ function renderContent({ Explorer, store }: ExplorerInfoProps) {
 
   return (
     <>
-      <TableManagementWidget dataTable={dataTable} dataSet={dataSet} Explorer={Explorer} />
+      <ConnectionsTableToProjectsWidget dataTable={dataTable} dataSet={dataSet} Explorer={Explorer} />
       <PermissionsWidget dataTable={dataTable} dataSet={dataSet} />
     </>
   );

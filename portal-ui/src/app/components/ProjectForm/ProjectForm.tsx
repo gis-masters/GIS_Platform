@@ -85,9 +85,11 @@ export class ProjectForm extends Component<ProjectFormProps> {
 
     try {
       const newProject = await projectsService.create(this.newProjectName);
-      await projectsService.fetchProjects();
+      communicationService.projectsUpdated.emit();
+      communicationService.allProjectsFetched.once(() => {
+        communicationService.projectCreated.emit(newProject);
+      });
       Toast.success('Проект создан');
-      communicationService.projectCreated.emit(newProject);
       this.props.onClose();
     } catch (err) {
       if (err.response && err.response.status === 409) {

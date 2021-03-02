@@ -20,14 +20,19 @@ class AllProjects {
 
   @computed
   get list(): CrgProject[] {
-    const filtered = filterObjects(this._list || [], { name: this.nameFilter });
+    return [...(this._list || [])];
+  }
+
+  @computed
+  get displayedList(): CrgProject[] {
+    const filtered = filterObjects(this.list, { name: this.nameFilter });
     const sorted = sortObjects(filtered, this.sortBy, this.sortAsc, 'id');
 
     return sorted;
   }
 
   @computed
-  get isLoaded(): boolean {
+  get inited(): boolean {
     return Boolean(this._list);
   }
 

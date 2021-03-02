@@ -1,5 +1,5 @@
 import { SupportedGeometryType } from '../geoserver/wfs.models';
-import { CrgProjectBaseMap } from './base-maps.models';
+import { ProjectBasemap } from './basemaps.models';
 import { Role } from './permissions.models';
 
 export enum CrgLayerType {
@@ -100,7 +100,7 @@ export interface CrgProject {
   order: number;
   organizationId: number;
   createdAt: string;
-  baseMaps: CrgProjectBaseMap[];
+  baseMaps: ProjectBasemap[];
   layersCount: number;
 }
 

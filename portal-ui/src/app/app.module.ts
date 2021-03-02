@@ -66,7 +66,7 @@ import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-fea
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { SearchComponent } from './components/search/search.component';
-import { BaseMapsSelectComponent } from './components/base-maps-select/base-maps-select.component';
+import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-select.component';
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { LogoComponent } from './components/logo/logo.component';
 
@@ -115,7 +115,7 @@ import { LogoComponent } from './components/logo/logo.component';
     OrgAdminComponent,
     EditFeatureConfirmComponent,
     SearchComponent,
-    BaseMapsSelectComponent,
+    BasemapsSelectComponent,
     DataManagementComponent,
     LogoComponent
   ],

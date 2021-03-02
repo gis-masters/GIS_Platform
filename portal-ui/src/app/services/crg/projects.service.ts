@@ -1,4 +1,5 @@
 import { reaction } from 'mobx';
+import { debounce } from 'lodash';
 
 import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
@@ -10,6 +11,7 @@ import { TaskImport } from '../geoserver/import/taskImport';
 import { wsService } from '../ws.service';
 import { services } from '../services';
 import { http } from '../http.service';
+import { sleep } from '../util/sleep';
 import {
   getApiImportUrl,
   getProjectGroupsUrl,
@@ -19,34 +21,63 @@ import {
   getWmsUrl
 } from '../server-urls.service';
 import { Toast } from '../../components/Toast/Toast';
+import { communicationService } from '../communication.service';
 
 class ProjectsService {
   private static _instance: ProjectsService;
   private fetchingCurrentProject?: Promise<CrgProject | void>;
+  private fetchingAllProjectsRequest?: Promise<CrgProject[]>;
+  private debouncedFetchAllProjects: () => Promise<void>;
 
   private constructor() {
+    this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
+
     reaction(
       () => route.params && route.params.projectId,
       async id => {
         await this.fetchCurrent(Number(id));
       }
     );
+
+    communicationService.projectsUpdated.on(() => {
+      this.debouncedFetchAllProjects();
+    });
   }
 
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
-  async fetchProjects() {
-    const url = await getProjectsUrl();
-    const params = { size: '1000' };
-    const response = await http.get<PageableResponse<{ projects: CrgProject[] }>>(url, { params });
-
-    if (response && response._embedded) {
-      allProjects.setList(response._embedded.projects);
-    } else {
-      allProjects.setList([]);
+  async initAllProjectsStore() {
+    if (allProjects.inited) {
+      return;
     }
+
+    if (this.fetchingAllProjectsRequest) {
+      await this.fetchingAllProjectsRequest;
+      await sleep(0);
+
+      return;
+    }
+
+    await this.fetchAllProjects();
+  }
+
+  private async fetchAllProjects() {
+    const url = await getProjectsUrl();
+    const request = http.getPaged<CrgProject>(url);
+    this.fetchingAllProjectsRequest = request;
+
+    const response = await this.fetchingAllProjectsRequest;
+
+    if (this.fetchingAllProjectsRequest !== request) {
+      return;
+    }
+
+    delete this.fetchingAllProjectsRequest;
+
+    allProjects.setList(response);
+    communicationService.allProjectsFetched.emit();
   }
 
   clearCurrent() {

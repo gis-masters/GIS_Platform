@@ -9,9 +9,12 @@ export enum ExplorerItemType {
   FOLDER = 'folder',
   DOCUMENT = 'document',
 
+  BASEMAP = 'basemap',
+
   DATA_SET_ROOT = 'dataSetRoot',
   LIBRARY_ROOT = 'libraryRoot',
   PROJECTS_ROOT = 'projectsRoot',
+  BASEMAPS_ROOT = 'basemapsRoot',
   ROOT = 'root'
 }
 

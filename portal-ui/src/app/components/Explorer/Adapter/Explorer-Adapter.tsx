@@ -18,6 +18,8 @@ import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
 import { ExplorerAdapterTypeEmpty } from './_type/Explorer-Adapter_type_empty';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
+import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
+import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
 
 export interface Adapter {
   getId: (item: ExplorerItemData) => string;
@@ -55,7 +57,9 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.LIBRARY_ROOT]: ExplorerAdapterTypeLibraryRoot,
   [ExplorerItemType.ROOT]: ExplorerAdapterTypeRoot,
   [ExplorerItemType.PROJECT]: ExplorerAdapterTypeProject,
-  [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot
+  [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot,
+  [ExplorerItemType.BASEMAP]: ExplorerAdapterTypeBasemap,
+  [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot
 };
 
 export function getId(item: ExplorerItemData): string {

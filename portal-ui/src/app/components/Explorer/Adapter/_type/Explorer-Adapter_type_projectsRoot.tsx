@@ -1,10 +1,10 @@
 import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { projectsService } from '../../../../services/crg/projects.service';
 import { CrgProject } from '../../../../services/crg/projects.models';
 
 import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
-import { projectsService } from '../../../../services/crg/projects.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

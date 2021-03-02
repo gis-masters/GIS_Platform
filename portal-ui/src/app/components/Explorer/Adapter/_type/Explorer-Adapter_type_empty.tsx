@@ -1,6 +1,6 @@
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { ExplorerItemData } from '../../Explorer.models';
 
+import { ExplorerItemData } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {

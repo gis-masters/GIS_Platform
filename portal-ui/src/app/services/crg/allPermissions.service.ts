@@ -63,9 +63,7 @@ class AllPermissionsService {
     const resourcesPermissions = await getAllTablesPermissions();
     const projectPermissionsOodles = await getAllProjectsPermissions();
 
-    if (!allProjects.isLoaded) {
-      await projectsService.fetchProjects();
-    }
+    await projectsService.initAllProjectsStore();
 
     const list: PermissionsListItem[] = [];
     let itemCounter = 0;

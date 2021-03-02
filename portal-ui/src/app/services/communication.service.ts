@@ -21,6 +21,8 @@ class CommunicationService {
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
+  projectsUpdated = new Emitter();
+  allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
   libraryItemsUpdated = new Emitter();
 

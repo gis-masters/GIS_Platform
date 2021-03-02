@@ -6,18 +6,13 @@ import { communicationService } from '../../../../services/communication.service
 import { schemaService } from '../../../../services/crg/schema.service';
 
 import { SortDir } from '../../../../services/models';
-import {
-  ContentTypeTypes,
-  docLibraryService,
-  DocumentLibrary,
-  LibraryItem
-} from '../../../../services/crg/doc-library.service';
+import { ContentTypeTypes, docLibraryService, LibraryItem } from '../../../../services/crg/doc-library.service';
 import { Emitter } from '../../../../services/util/Emitter';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
+import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {

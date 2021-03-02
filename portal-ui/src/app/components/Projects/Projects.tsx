@@ -26,7 +26,7 @@ export class Projects extends Component {
   @observable private newProjectId = 0;
 
   async componentDidMount() {
-    await projectsService.fetchProjects();
+    await projectsService.initAllProjectsStore();
 
     communicationService.projectCreated.on(this.scrollTo, this);
   }
@@ -38,13 +38,13 @@ export class Projects extends Component {
   render() {
     return (
       <div className={cnProjects(null, ['scroll'])} ref={this.thisRef}>
-        {!allProjects.isLoaded ? (
+        {!allProjects.inited ? (
           <ProjectsLoader />
         ) : (
           <>
             <ProjectsHeader />
             <ProjectsList>
-              {allProjects.list.map((project, i) => (
+              {allProjects.displayedList.map((project, i) => (
                 <ProjectCard
                   className={cnProjects('Card')}
                   project={project}

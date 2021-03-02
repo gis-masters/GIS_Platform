@@ -124,6 +124,10 @@ export async function getProjectUrl(projectId: number): Promise<string> {
   return `${await getProjectsUrl()}/${projectId}`;
 }
 
+export async function getProjectBasemapsUrl(projectId: number): Promise<string> {
+  return `${await getProjectUrl(projectId)}/basemaps`;
+}
+
 export async function getAllProjectsPermissionsUrl(): Promise<string> {
   return `${await getProjectsUrl()}/all-permissions`;
 }
@@ -196,8 +200,12 @@ export async function getTableConnectionsUrl(tableId: string): Promise<string> {
   return `${await getProjectsUrl()}/find-related-layers`;
 }
 
+export async function getBasemapsUrl(): Promise<string> {
+  return (await getDataUrl()) + '/basemaps';
+}
+
 export async function getBasemapsByIdsUrl(): Promise<string> {
-  return (await getDataUrl()) + '/basemaps/search/findByIdIn';
+  return (await getBasemapsUrl()) + '/search/findByIdIn';
 }
 
 export async function getAllPermissionsUrl(): Promise<string> {

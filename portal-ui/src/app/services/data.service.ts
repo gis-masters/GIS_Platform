@@ -44,9 +44,8 @@ export async function getDataSets(
   sortDir?: SortDir,
   filter?: { [key: string]: string }
 ): Promise<[DataSet[], number]> {
-  const response = await http.get<PageableResponse<{ datasets: DataSet[] }>>(await getDatasetsUrl(), {
-    params: { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) }
-  });
+  const params = { page, size: pageSize, sort: sort ? `${sort},${sortDir}` : undefined, ...(filter || {}) };
+  const response = await http.get<PageableResponse<{ datasets: DataSet[] }>>(await getDatasetsUrl(), { params });
 
   return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
 }

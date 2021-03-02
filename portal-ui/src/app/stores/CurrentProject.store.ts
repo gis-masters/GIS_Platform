@@ -1,8 +1,8 @@
 import { action, computed, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, reverse } from 'lodash';
+import { cloneDeep } from 'lodash';
 
-import { CrgProjectBaseMap } from '../services/crg/base-maps.models';
+import { ProjectBasemap } from '../services/crg/basemaps.models';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -48,7 +48,7 @@ class CurrentProject implements CrgProjectData {
   @observable name: string;
   @observable order: number;
   @observable organizationId: number;
-  @observable baseMaps: CrgProjectBaseMap[];
+  @observable baseMaps: ProjectBasemap[];
   @observable default: boolean;
   @observable layers: (CrgLayer | NewCrgLayer)[];
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];

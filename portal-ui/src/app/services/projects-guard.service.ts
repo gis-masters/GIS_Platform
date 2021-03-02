@@ -9,12 +9,9 @@ import { services } from './services';
   providedIn: 'root'
 })
 export class ProjectsGuardService implements CanActivate {
-
-  constructor() {}
-
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {
-      await projectsService.fetchProjects();
+      await projectsService.initAllProjectsStore();
 
       const defaultProject = allProjects.list.find(project => project.default);
       if (defaultProject) {

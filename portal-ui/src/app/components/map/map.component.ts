@@ -12,7 +12,7 @@ import { openLayersService } from '../../services/open-layer/open-layers.service
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
-import { fetchAllBaseMaps } from '../../services/crg/base-maps.service';
+import { fetchProjectBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
@@ -40,7 +40,7 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(private logger: NGXLogger) {}
 
   async ngOnInit() {
-    await fetchAllBaseMaps(currentProject.baseMaps);
+    await fetchProjectBasemaps(currentProject.baseMaps);
 
     openLayersService.createMap();
 

@@ -51,7 +51,8 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
   [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT },
   [ExplorerItemType.DATA_SET_ROOT]: { type: ExplorerItemType.DATA_SET_ROOT },
   [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT },
-  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT }
+  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT },
+  [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT }
 };
 
 export interface ExplorerProps {

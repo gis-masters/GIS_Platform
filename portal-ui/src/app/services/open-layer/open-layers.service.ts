@@ -24,9 +24,9 @@ import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
 import { currentMap } from '../../stores/CurrentMap.store';
-import { baseMapsStore } from '../../stores/BaseMaps.store';
+import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
-import { CrgBaseMap, SourceType } from '../crg/base-maps.models';
+import { Basemap, SourceType } from '../crg/basemaps.models';
 import { CrgLayer } from '../../services/crg/projects.models';
 import { WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
@@ -77,7 +77,7 @@ class OpenLayersService {
   modificationDone = new Emitter<Geometry>();
 
   // Подлдожка
-  private baseMapLayer = new TileLayer();
+  private basemapLayer = new TileLayer();
 
   private _map: Map;
   private view: View;
@@ -106,18 +106,18 @@ class OpenLayersService {
 
   constructor() {
     reaction(
-      () => baseMapsStore.currentBaseMap,
+      () => basemapsStore.currentBasemap,
       currentBaseMap => {
         if (currentBaseMap) {
           const tileSource = this.prepareTileSource(currentBaseMap);
           if (tileSource) {
-            this.baseMapLayer.setVisible(true);
-            this.baseMapLayer.setSource(tileSource);
+            this.basemapLayer.setVisible(true);
+            this.basemapLayer.setSource(tileSource);
           } else {
-            this.baseMapLayer.setVisible(false);
+            this.basemapLayer.setVisible(false);
           }
         } else {
-          this.baseMapLayer.setVisible(false);
+          this.basemapLayer.setVisible(false);
         }
       },
       { fireImmediately: true }
@@ -168,7 +168,7 @@ class OpenLayersService {
       view: this.view,
       controls: defaultControls().extend([new ScaleLine()]),
       layers: [
-        this.baseMapLayer,
+        this.basemapLayer,
         new VectorLayer({
           source: this.markersSource,
           zIndex: this.MARKERS_LAYER_ZINDEX
@@ -649,52 +649,52 @@ class OpenLayersService {
       .filter(layer => this.isUserLayer(layer)) as TileLayer[];
   }
 
-  private prepareTileSource(baseMap: CrgBaseMap): TileImage | undefined {
-    if (!baseMap || !baseMap.type) {
+  private prepareTileSource(basemap: Basemap): TileImage | undefined {
+    if (!basemap || !basemap.type) {
       return undefined;
     }
 
-    switch (baseMap.type) {
+    switch (basemap.type) {
       case SourceType.OSM:
         return new OSM();
       case SourceType.WMTS:
-        return this.prepareWMTS(baseMap);
+        return this.prepareWMTS(basemap);
       case SourceType.XYZ:
         const options: XYZOptions = { crossOrigin: 'Anonymous' };
-        if (baseMap.url) {
-          options.url = baseMap.url;
+        if (basemap.url) {
+          options.url = basemap.url;
         }
 
         return new XYZ(options);
     }
   }
 
-  private prepareWMTS(baseMap: CrgBaseMap): WMTS {
+  private prepareWMTS(basemap: Basemap): WMTS {
     try {
-      const projection = getProjection(baseMap.projection);
+      const projection = getProjection(basemap.projection);
       const projectionExtent = projection.getExtent();
-      const size = getWidth(projectionExtent) / baseMap.size;
-      const resolutions = new Array(baseMap.resolution);
-      const matrixIds = new Array(baseMap.matrixIds);
-      for (let z = 0; z < baseMap.resolution; ++z) {
+      const size = getWidth(projectionExtent) / basemap.size;
+      const resolutions = new Array(basemap.resolution);
+      const matrixIds = new Array(basemap.matrixIds);
+      for (let z = 0; z < basemap.resolution; ++z) {
         // generate resolutions and matrixIds arrays for this WMTS
         resolutions[z] = size / Math.pow(2, z);
-        matrixIds[z] = baseMap.projection + ':' + z;
+        matrixIds[z] = basemap.projection + ':' + z;
       }
 
       return new WMTS({
         tileLoadFunction: this.crgLayersLoadFunction,
-        urls: [baseMap.url],
+        urls: [basemap.url],
         tileGrid: new WMTSTileGrid({
           origin: getTopLeft(projectionExtent),
           resolutions: resolutions,
           matrixIds: matrixIds
         }),
-        style: baseMap.style,
-        layer: baseMap.layerName,
-        matrixSet: baseMap.projection,
-        format: baseMap.format,
-        projection: projection,
+        style: basemap.style,
+        layer: basemap.layerName,
+        matrixSet: basemap.projection,
+        format: basemap.format,
+        projection,
         wrapX: true,
         crossOrigin: 'Anonymous'
       });

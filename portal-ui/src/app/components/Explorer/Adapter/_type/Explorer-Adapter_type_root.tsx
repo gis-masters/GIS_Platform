@@ -47,6 +47,9 @@ export class ExplorerAdapterTypeRoot {
         },
         {
           type: ExplorerItemType.LIBRARY_ROOT
+        },
+        {
+          type: ExplorerItemType.BASEMAPS_ROOT
         }
       ],
       0

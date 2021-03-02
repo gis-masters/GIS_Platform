@@ -3,14 +3,12 @@ import moment from 'moment';
 import { pluralize } from 'numeralize-ru';
 import { LocalLibrary } from '@material-ui/icons';
 
-import { Adapter } from '../Explorer-Adapter';
 import { SortDir } from '../../../../services/models';
 import { Emitter } from '../../../../services/util/Emitter';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 import { schemaService } from '../../../../services/crg/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService } from '../../../../services/communication.service';
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import {
   ContentTypeTypes,
@@ -18,6 +16,9 @@ import {
   DocumentLibrary,
   LibraryItem
 } from '../../../../services/crg/doc-library.service';
+
+import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
