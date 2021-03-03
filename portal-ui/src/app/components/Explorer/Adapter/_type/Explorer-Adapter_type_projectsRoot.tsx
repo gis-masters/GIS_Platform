@@ -65,7 +65,7 @@ export class ExplorerAdapterTypeProjectsRoot {
   }
 
   static getChildrenFilterField(): string {
-    return 'title';
+    return 'name';
   }
 
   static getChildrenFilterLabel(): string {
