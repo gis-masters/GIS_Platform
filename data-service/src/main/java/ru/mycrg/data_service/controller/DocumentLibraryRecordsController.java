@@ -22,6 +22,8 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.*;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.util.filter.CrgFilter;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -32,24 +34,26 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PARENT;
+import static ru.mycrg.data_service.util.filter.FilterCondition.*;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.data_service.service.SystemLibraryAttributes.INNER_PATH;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
 
 @RestController
 public class DocumentLibraryRecordsController {
 
     public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
-    private final SchemaService schemaService;
+    private final DocumentLibraryService libraryService;
     private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
     private final SystemAttributeHandler systemAttributeHandler;
 
     public DocumentLibraryRecordsController(RecordsService recordsService,
-                                            SchemaService schemaService,
+                                            DocumentLibraryService libraryService,
                                             SystemAttributeHandler systemAttributeHandler,
                                             FileStorageService fileStorageService) {
-        this.schemaService = schemaService;
+        this.libraryService = libraryService;
         this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
         this.systemAttributeHandler = systemAttributeHandler;
@@ -68,7 +72,7 @@ public class DocumentLibraryRecordsController {
             ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
 
             Map<String, Object> body = deserializeBody(jsonBody);
-            schemaService.checkObjectBySchema(body, docLibId);
+            libraryService.checkObjectBySchema(body, docLibId);
             systemAttributeHandler.fetchSchema(docLibId)
                                   .fillCreator(body, authentication)
                                   .fillTimes(body)
@@ -100,12 +104,17 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records")
     public ResponseEntity<Object> getAll(@PathVariable String docLibId,
                                          @RequestParam(required = false, defaultValue = "") String parent,
+                                         @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
                                          Authentication authentication,
                                          PagedResourcesAssembler<Map<String, Object>> pageAssembler) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
 
-        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, pageable, parent, authentication);
+        checkSortedFields(docLibId, pageable);
+
+        final CrgFilter filter = prepareFilter(parent, title);
+        final SchemaDto schema = libraryService.getSchema(docLibId);
+        Page<Map<String, Object>> result = recordsService.getPaged(rIdentifier, schema, pageable, filter);
 
         var pagedResources = pageAssembler.toResource(
                 result,
@@ -114,6 +123,22 @@ public class DocumentLibraryRecordsController {
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
+    }
+
+    @NotNull
+    private CrgFilter prepareFilter(String parent, String title) {
+        final CrgFilter filter = new CrgFilter();
+        if (parent.isEmpty()) {
+            filter.addFilter(PARENT.getName(), parent, IS_NULL);
+        } else {
+            filter.addFilter(PARENT.getName(), parent, EQUAL_TO);
+        }
+
+        if (!title.isEmpty()) {
+            filter.addFilter("title", title, LIKE);
+        }
+
+        return filter;
     }
 
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
@@ -176,6 +201,13 @@ public class DocumentLibraryRecordsController {
             contentType = "application/octet-stream";
         }
         return contentType;
+    }
+
+    private void checkSortedFields(String docLibId, Pageable pageable) {
+        final HashMap<String, Object> body = new HashMap<>();
+        pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
+
+        libraryService.checkObjectBySchema(body, docLibId);
     }
 
     private Map<String, Object> deserializeBody(@Nullable String jsonString) {

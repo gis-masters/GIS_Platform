@@ -105,13 +105,14 @@ export class ExplorerAdapterTypeLibrary {
       },
       {
         label: 'Дате создания',
-        value: 'createdAt'
+        value: 'created_at'
       }
     ];
   }
 
   static getChildrenSortDefaultValue(): string {
-    return 'createdAt';
+    // На самом деле это не должно быть захардкожено, а должно браться из схемы.
+    return 'created_at';
   }
 
   static getChildrenSortDefaultDirection(): SortDir {

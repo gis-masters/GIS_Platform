@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.util;
 
 public enum SystemLibraryAttributes {
 

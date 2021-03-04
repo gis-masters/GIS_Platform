@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dto.IResourceModel;
-import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.SchemaService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -26,11 +24,8 @@ public class DocumentLibraryController {
     public static final Logger log = LoggerFactory.getLogger(DocumentLibraryController.class);
 
     private final DocumentLibraryService librariesService;
-    private final SchemaService schemaService;
 
-    public DocumentLibraryController(SchemaService schemaService,
-                                     DocumentLibraryService librariesService) {
-        this.schemaService = schemaService;
+    public DocumentLibraryController(DocumentLibraryService librariesService) {
         this.librariesService = librariesService;
     }
 
@@ -54,8 +49,6 @@ public class DocumentLibraryController {
     @GetMapping("/document-libraries/{docLibId}/schema")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Object getLibrarySchema(@PathVariable String docLibId) {
-        return schemaService
-                .getSchemaByName(docLibId)
-                .orElseThrow(() -> new NotFoundException("Not found schema for library: " + docLibId));
+        return librariesService.getSchema(docLibId);
     }
 }

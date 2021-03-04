@@ -5,12 +5,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static ru.mycrg.data_service.service.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
 public class SystemAttributeHandler {

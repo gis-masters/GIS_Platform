@@ -13,6 +13,8 @@ import ru.mycrg.data_service.entity.TableObjectImpl;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.util.filter.CrgFilter;
+import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.util.Map;
 import java.util.UUID;
@@ -29,11 +31,11 @@ public class RecordsService {
     }
 
     public Page<Map<String, Object>> getPaged(ResourceIdentifier rIdentifier,
+                                              SchemaDto schema,
                                               Pageable pageable,
-                                              String parent,
-                                              Authentication authentication) {
+                                              CrgFilter filter) {
         try {
-            return tablesDao.findAllPaged(rIdentifier, pageable, parent);
+            return tablesDao.findPagedByFilter(rIdentifier, schema, pageable, filter);
         } catch (CrgDaoException e) {
             log.error(e.getMessage());
             throw new DataServiceException("Failed obtain records from: " + rIdentifier.toString());

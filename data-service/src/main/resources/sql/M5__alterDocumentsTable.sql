@@ -1,29 +1,33 @@
 ALTER TABLE data.documents
-    ADD COLUMN parent uuid;
+    ADD COLUMN IF NOT EXISTS parent uuid;
 
 ALTER TABLE data.documents
-    ADD COLUMN name character varying;
+    ADD COLUMN IF NOT EXISTS name character varying;
 
 ALTER TABLE data.documents
-    ADD COLUMN type character varying(50);
+    ADD COLUMN IF NOT EXISTS type character varying(50);
 
 ALTER TABLE data.documents
-    ADD COLUMN inner_path character varying;
+    ADD COLUMN IF NOT EXISTS inner_path character varying;
 
 ALTER TABLE data.documents
-    ADD COLUMN category character varying;
+    ADD COLUMN IF NOT EXISTS category character varying;
 
 ALTER TABLE data.documents
-    ADD COLUMN content_type_id character varying;
+    ADD COLUMN IF NOT EXISTS content_type_id character varying;
 
 ALTER TABLE data.documents
-    ADD COLUMN created_by character varying(50);
+    ADD COLUMN IF NOT EXISTS created_by character varying(50);
 
 ALTER TABLE data.documents
-    ADD COLUMN created_at timestamp without time zone;
+    ADD COLUMN IF NOT EXISTS created_at timestamp without time zone;
 
 ALTER TABLE data.documents
-    ADD COLUMN last_modified timestamp without time zone;
+    ADD COLUMN IF NOT EXISTS last_modified timestamp without time zone;
 
 UPDATE data.documents
-SET inner_path=id, content_type_id='doc_v1', created_at=now(), last_modified=now();
+SET inner_path=id,
+    content_type_id='doc_v1',
+    created_at=now(),
+    last_modified=now()
+WHERE documents.content_type_id IS NULL;
