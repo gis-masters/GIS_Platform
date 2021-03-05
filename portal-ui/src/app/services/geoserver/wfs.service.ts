@@ -24,7 +24,11 @@ export async function getFeatureById(complexName: string, objectId: string): Pro
   }
 }
 
-export async function getFeatures(complexName: string, requestModel?: CrgModels): Promise<WfsFeatureCollection> {
+export async function getFeatures(
+  complexName: string,
+  requestModel?: CrgModels,
+  srsName?: string
+): Promise<WfsFeatureCollection> {
   const params: { [key: string]: string } = {
     service: 'wfs',
     // version: '2.0.0',
@@ -33,7 +37,8 @@ export async function getFeatures(complexName: string, requestModel?: CrgModels)
     exceptions: 'application/json',
     typeName: complexName,
     // PROPERTYNAME: fillProp(complexName),
-    sortBy: generateSortParam(requestModel)
+    sortBy: generateSortParam(requestModel),
+    srsName
   };
 
   if (requestModel && requestModel.page) {

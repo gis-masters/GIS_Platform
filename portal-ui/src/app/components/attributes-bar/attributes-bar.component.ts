@@ -132,7 +132,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   async updateTable(requestModel?: CrgModels) {
     this.loading = true;
     this.showPercent = false;
-    const fCollection: WfsFeatureCollection = await getFeatures(this.layer.complexName, requestModel);
+    const fCollection: WfsFeatureCollection = await getFeatures(
+      this.layer.complexName,
+      requestModel,
+      this.layer.nativeCRS
+    );
     if (fCollection) {
       this.loading = false;
       this.totalFeatures = fCollection.totalFeatures;
@@ -271,7 +275,11 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
 
       this.loading = true;
       this.showPercent = false;
-      const fCollection: WfsFeatureCollection = await getFeatures(this.layer.complexName, clonedRequestModel);
+      const fCollection: WfsFeatureCollection = await getFeatures(
+        this.layer.complexName,
+        clonedRequestModel,
+        this.layer.nativeCRS
+      );
       this.attributeTable.selected = fCollection.features;
       this.loading = false;
 
