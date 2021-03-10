@@ -37,7 +37,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   render() {
     const { Explorer, connectedProjects, loading } = this.props;
-    const count = connectedProjects.length || 0;
+    const count = connectedProjects?.length || 0;
     const textProjects = `${count} ${pluralize(count, 'проект', 'проекта', 'проектов')}`;
 
     return (
