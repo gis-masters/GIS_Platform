@@ -23,9 +23,9 @@ class Http {
   private constructor() {}
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const responce = await axios.get(url, config);
+    const response = await axios.get(url, config);
 
-    return responce.data;
+    return response.data;
   }
 
   async getPaged<T>(url: string, config: AxiosRequestConfig = {}): Promise<T[]> {
@@ -38,11 +38,14 @@ class Http {
 
     do {
       config.params.page = page;
-      const responce = await this.get<PageableResponse<{ [key: string]: T[] }>>(url, config);
-      totalPages = responce.page.totalPages;
-      page = responce.page.number + 1;
-      let key = Object.keys(responce._embedded)[0];
-      result = result.concat(responce._embedded[key]);
+      const response = await this.get<PageableResponse<{ [key: string]: T[] }>>(url, config);
+      totalPages = response.page.totalPages;
+      page = response.page.number + 1;
+
+      if (response._embedded) {
+        const key = Object.keys(response._embedded)[0];
+        result = result.concat(response._embedded[key]);
+      }
     } while (page < totalPages);
 
     return result;
@@ -55,7 +58,7 @@ class Http {
   }
 
   async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const responce = await axios.patch(url, data, {
+    const response = await axios.patch(url, data, {
       ...config,
       headers: {
         'Content-Type': 'application/merge-patch+json',
@@ -63,13 +66,13 @@ class Http {
       }
     });
 
-    return responce.data;
+    return response.data;
   }
 
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const responce = await axios.delete(url, config);
+    const response = await axios.delete(url, config);
 
-    return responce.data;
+    return response.data;
   }
 }
 

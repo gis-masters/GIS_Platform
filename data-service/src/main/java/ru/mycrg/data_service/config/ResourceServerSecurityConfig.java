@@ -44,6 +44,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                 .antMatchers(HttpMethod.GET, "/crg-ws-endpoint/**").permitAll()
+                .antMatchers("/.~~spring-boot!~/**").permitAll() // devtools
                 .anyRequest().authenticated();
     }
 

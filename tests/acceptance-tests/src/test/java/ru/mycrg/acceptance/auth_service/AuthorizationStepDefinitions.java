@@ -19,7 +19,7 @@ import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @When("Авторизируемся под рутом")
-    public Cookie getRootAuthority() throws InterruptedException {
+    public Cookie authorizeAsRoot() throws InterruptedException {
         response = authorizeUser(rootUserName, rootPassword);
 
         checkCookieAndWriteAsCurrent(response);

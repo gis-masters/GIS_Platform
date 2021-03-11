@@ -4,14 +4,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
+import ru.mycrg.data_service.service.resources.ResourcesService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -25,8 +29,11 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 public class TablesPermissionsController {
 
     private final PermissionsService permissionsService;
+    private final ResourcesService resourcesService;
 
-    public TablesPermissionsController(PermissionsService permissionsService) {
+    public TablesPermissionsController(PermissionsService permissionsService,
+                                       ResourcesService resourcesService) {
+        this.resourcesService = resourcesService;
         this.permissionsService = permissionsService;
     }
 
@@ -35,16 +42,19 @@ public class TablesPermissionsController {
     public ResponseEntity<PermissionProjection> addPermissionToTable(@PathVariable String datasetId,
                                                                      @PathVariable String tableId,
                                                                      @Valid @RequestBody PermissionCreateDto dto,
-                                                                     BindingResult bindingResult) {
+                                                                     BindingResult bindingResult,
+                                                                     Authentication authentication) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        final Resource resource = resourcesService.get(rIdentifier, authentication)
+                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
-        PermissionProjection permission = permissionsService.create(rIdentifier, dto);
+        final PermissionProjection permission = permissionsService.create(resource, dto);
 
-        URI location = ServletUriComponentsBuilder
+        final URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/datasets/{datasetId}/tables/{tableId}/roleAssignment/{id}")
                 .buildAndExpand(datasetId, tableId, permission.getId())
@@ -58,12 +68,15 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> getTablePermissions(@PathVariable String datasetId,
                                                       @PathVariable String tableId,
                                                       Pageable pageable,
-                                                      PagedResourcesAssembler<PermissionProjection> pageAssembler) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+                                                      PagedResourcesAssembler<PermissionProjection> pageAssembler,
+                                                      Authentication authentication) {
+        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        final Resource resource = resourcesService.get(rIdentifier, authentication)
+                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
-        var permissions = permissionsService.getForResource(rIdentifier, pageable);
+        final var permissions = permissionsService.getPaged(resource, pageable);
 
-        var pagedResources = pageAssembler.toResource(
+        final var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(TablesPermissionsController.class)
                         .slash("/api/data/datasets/" + datasetId + "/tables/" + tableId + "/roleAssignment")
@@ -76,10 +89,13 @@ public class TablesPermissionsController {
     @DeleteMapping("/datasets/{datasetId}/tables/{tableId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> deleteTablePermission(@PathVariable String datasetId,
                                                         @PathVariable String tableId,
-                                                        @PathVariable Long permissionId) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+                                                        @PathVariable Long permissionId,
+                                                        Authentication authentication) {
+        final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
+        final Resource resource = resourcesService.get(rIdentifier, authentication)
+                                                  .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
-        permissionsService.deleteById(rIdentifier, permissionId);
+        permissionsService.deleteById(resource, permissionId);
 
         return ResponseEntity.noContent().build();
     }

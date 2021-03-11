@@ -1,12 +1,12 @@
 package ru.mycrg.acceptance.data_service.dto;
 
-public class DatasetPermissionCreateDto {
+public class PermissionCreateDto {
 
     private final String principalType;
     private final long principalId;
     private final String role;
 
-    public DatasetPermissionCreateDto(String principalType, long principalId, String role) {
+    public PermissionCreateDto(String principalType, long principalId, String role) {
         this.principalType = principalType;
         this.principalId = principalId;
         this.role = role;

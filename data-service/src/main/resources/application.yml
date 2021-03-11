@@ -33,6 +33,9 @@ spring:
     port: 5672
     username: fiz
     password: 314
+  devtools:
+    remote:
+      secret: some_fiz_sercret
 
 management:
   health:

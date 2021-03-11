@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.datasets;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,21 +12,22 @@ import ru.mycrg.data_service.dao.SchemasManager;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
+import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 import ru.mycrg.http_client.ResponseModel;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
-import static ru.mycrg.data_service.security.CrgClaimsParser.isOrganizationAdmin;
-import static ru.mycrg.data_service.security.CrgClaimsParser.isRoot;
 
 @Service
 public class DatasetService implements IDatasetService {
@@ -53,27 +55,19 @@ public class DatasetService implements IDatasetService {
     public Page<IResourceModel> getPaged(String title,
                                          Pageable pageable,
                                          Authentication authentication) {
-        if (isRoot(authentication)) {
-            return new PageImpl<>(new ArrayList<>());
-        } else if (isOrganizationAdmin(authentication)) {
-            return resourcesService.getDatasetsByTitle(title, pageable)
-                                   .map(resource -> new DatasetModel(resource, OWNER));
-        } else {
-            return new PageImpl<>(new ArrayList<>());
-        }
+        List<IResourceModel> datasets = resourcesService
+                .getByTitle(title, SCHEMA, authentication).stream()
+                .map(resource -> mapToModelWithDefineRole(authentication, resource))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(datasets, pageable, datasets.size());
     }
 
     @Override
-    public IResourceModel getByName(String datasetName, Authentication authentication) {
-        if (isRoot(authentication)) {
-            return new DatasetModel();
-        } else if (isOrganizationAdmin(authentication)) {
-            return resourcesService.getDataset(datasetName)
-                                   .map(resource -> new DatasetModel(resource, OWNER))
-                                   .orElseThrow(() -> new NotFoundException(datasetName));
-        } else {
-            return new DatasetModel();
-        }
+    public IResourceModel getInfo(ResourceIdentifier rIdentifier, Authentication authentication) {
+        return resourcesService.get(rIdentifier, authentication)
+                               .map(resource -> mapToModelWithDefineRole(authentication, resource))
+                               .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
     }
 
     @Override
@@ -105,15 +99,22 @@ public class DatasetService implements IDatasetService {
     public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
         schemasManager.delete(rIdentifier);
 
-        resourcesService.getDataset(rIdentifier.getId())
-                        .ifPresentOrElse(res -> resourcesService.deleteByIdentifier(res.getIdentifier()),
-                                         () -> {
-                                             throw new NotFoundException(rIdentifier.getId());
-                                         });
+        Resource dataset = resourcesService.get(rIdentifier, authentication)
+                                           .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
+
+        resourcesService.deleteByIdentifier(dataset.getIdentifier());
 
         ResponseModel<Object> responseModel = dataStoreClient.delete(rIdentifier.getId(), authentication);
         if (!responseModel.isSuccessful()) {
             log.warn("Не удалось удалить хранилище на gis-service: {}", responseModel);
         }
+    }
+
+    @NotNull
+    private IResourceModel mapToModelWithDefineRole(Authentication authentication, Resource resource) {
+        Roles role = resourceProtector.defineRole(resource, authentication)
+                                      .orElseThrow(() -> new ForbiddenException("Can't define role"));
+
+        return new DatasetModel(resource, role);
     }
 }

@@ -1,6 +1,5 @@
 Feature: Удаление организации
 
-  @deletion
   Scenario Outline: Удаление с валидными учетными данными
     Given Существует организация
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
@@ -19,7 +18,6 @@ Feature: Удаление организации
       | orgName         | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
       | ООО БыкиИКоровы | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
 
-  @deletion
   Scenario: Удаление от имени владельца другой организации
     Given Существует организация
       | ООО Быки | 1111111111 | Иванов | Иван | EMAIL_20 | testPassword1 |
@@ -29,12 +27,11 @@ Feature: Удаление организации
     When Посылается запрос на удаление чужой организации
     Then Сервер отвечает со статус-кодом 403
 
-  @deletion
   Scenario Outline: Удаление организации в процессе создания
     Given Отправляется запрос на создание организации
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
     And Сервер отвечает со статус-кодом 202
-    And в заголовке Location передает ID созданной организации
+    And В заголовке Location передается ID созданной организации
     When Авторизируемся под рутом
     Then Посылается запрос на удаление текущей организации
     And Сервер отвечает со статус-кодом 400

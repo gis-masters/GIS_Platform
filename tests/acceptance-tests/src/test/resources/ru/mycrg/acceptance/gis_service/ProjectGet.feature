@@ -8,7 +8,7 @@ Feature: Выборка проектов
   Scenario Outline: Получение всех проектов, когда проектов нет
     When Отправляется запрос на создание организации
       | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
-    And в заголовке Location передает ID созданной организации
+    And В заголовке Location передается ID созданной организации
     When Пользователь делает запрос на все проекты организации
     Then Сервер отвечает со статус-кодом 200
     And В ответе сервера для сущности "projects" отсутствует пункт "_embedded"
@@ -73,7 +73,7 @@ Feature: Выборка проектов
       | project_name                     |
       | otherName                        |
     When Администратор делает запрос на выборку проектов с фильтрацией по полю "<filterKey>" и значению "<filterValue>"
-    Then В выборке присутствуют "2" элемента
+    Then В выборке присутствуют определённое кол-во элементов: "2"
     Examples:
       | filterKey | filterValue |
       | name      | PROJECT     |

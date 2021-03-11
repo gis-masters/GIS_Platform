@@ -33,10 +33,10 @@ public class CrgDataSourcesPool {
     }
 
     public synchronized HikariDataSource getDataSource(String dbName) {
-        log.debug("getDataSource for: {}", dbName);
+        log.trace("getDataSource for: {}", dbName);
 
         if (dataSources.containsKey(dbName)) {
-            log.debug("get from pool");
+            log.trace("get from pool");
 
             return dataSources.get(dbName);
         } else {

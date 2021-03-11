@@ -23,23 +23,23 @@ import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
 @RestController
-public class DatasetPermissionsController {
+public class DocumentLibraryPermissionController {
 
     private final ResourcesService resourcesService;
     private final PermissionsService permissionsService;
 
-    public DatasetPermissionsController(PermissionsService permissionsService,
-                                        ResourcesService resourcesService) {
+    public DocumentLibraryPermissionController(PermissionsService permissionsService,
+                                               ResourcesService resourcesService) {
         this.resourcesService = resourcesService;
         this.permissionsService = permissionsService;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{datasetId}/roleAssignment")
-    public ResponseEntity<PermissionProjection> addPermissionToDataset(@PathVariable String datasetId,
+    @PostMapping("/document-libraries/{docLibId}/roleAssignment")
+    public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @Valid @RequestBody PermissionCreateDto dto,
                                                                        BindingResult bindingResult,
                                                                        Authentication authentication) {
@@ -47,45 +47,46 @@ public class DatasetPermissionsController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
-                                            .orElseThrow(() -> new NotFoundException(datasetId));
-        PermissionProjection permission = permissionsService.create(resource, dto);
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, LIBRARY);
+        final Resource resource = resourcesService.get(rIdentifier, authentication)
+                                                  .orElseThrow(() -> new NotFoundException(docLibId));
+        final PermissionProjection permission = permissionsService.create(resource, dto);
 
-        URI location = ServletUriComponentsBuilder
+        final URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/datasets/{datasetId}/roleAssignment/{id}")
-                .buildAndExpand(datasetId, permission.getId())
+                .path("/document-libraries/{docLibId}/roleAssignment/{id}")
+                .buildAndExpand(docLibId, permission.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/datasets/{datasetId}/roleAssignment")
-    public ResponseEntity<Object> getDatasetPermissions(@PathVariable String datasetId,
+    @GetMapping("/document-libraries/{docLibId}/roleAssignment")
+    public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
                                                         Pageable pageable,
                                                         PagedResourcesAssembler<PermissionProjection> pageAssembler,
                                                         Authentication authentication) {
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
-                                            .orElseThrow(() -> new NotFoundException(datasetId));
+        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY), authentication)
+                                                  .orElseThrow(() -> new NotFoundException(docLibId));
         final Page<PermissionProjection> permissions = permissionsService.getPaged(resource, pageable);
 
         final var pagedResources = pageAssembler.toResource(
                 permissions,
                 linkTo(DatasetPermissionsController.class)
-                        .slash("/api/data/datasets/" + datasetId)
+                        .slash("/api/data/document-libraries/" + docLibId)
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/datasets/{datasetId}/roleAssignment/{permissionId}")
-    public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String datasetId,
-                                                          @PathVariable Long permissionId,
-                                                          Authentication authentication) {
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
-                                            .orElseThrow(() -> new NotFoundException(datasetId));
+    @DeleteMapping("/document-libraries/{docLibId}/roleAssignment/{permissionId}")
+    public ResponseEntity<Object> delete(@PathVariable String docLibId,
+                                         @PathVariable Long permissionId,
+                                         Authentication authentication) {
+        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY), authentication)
+                                                  .orElseThrow(() -> new NotFoundException(docLibId));
         permissionsService.deleteById(resource, permissionId);
 
         return ResponseEntity.noContent().build();

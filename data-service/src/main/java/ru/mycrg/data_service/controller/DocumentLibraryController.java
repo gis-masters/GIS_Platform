@@ -31,10 +31,10 @@ public class DocumentLibraryController {
 
     @GetMapping("/document-libraries")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getPagableWithFilter(@RequestParam(required = false, defaultValue = "") String title,
-                                                       Authentication authentication,
-                                                       Pageable pageable,
-                                                       PagedResourcesAssembler<IResourceModel> pageAssembler) {
+    public ResponseEntity<Object> getPagedWithFilter(@RequestParam(required = false, defaultValue = "") String title,
+                                                     Authentication authentication,
+                                                     Pageable pageable,
+                                                     PagedResourcesAssembler<IResourceModel> pageAssembler) {
         final Page<IResourceModel> libraries = librariesService.getPaged(title, pageable, authentication);
 
         var pagedResources = pageAssembler.toResource(

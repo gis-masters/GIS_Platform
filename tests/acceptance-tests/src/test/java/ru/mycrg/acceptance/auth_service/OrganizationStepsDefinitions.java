@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
-    public static final int MAX_RETRY_ATTEMPT = 50;
+    public static final int MAX_RETRY_ATTEMPT = 20;
     public static final int RETRY_DELAY = 6000;
 
     public static Integer orgId;
@@ -29,13 +29,18 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
-        orgDto = mapToOrgDto(dataTable);
+        List<String> data = dataTable.asList();
+        UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
+                                                generateString(data.get(4)), generateString(data.get(5)));
+
+        userPool.put(-1, owner);
+        orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
 
         createOrganization(orgDto);
     }
 
-    @And("в заголовке Location передает ID созданной организации")
-    public void extractOrgIdFromLocation() {
+    @And("В заголовке Location передается ID созданной организации")
+    public void checkOrgIdInLocationSetAsCurrentPutInPool() {
         orgId = super.extractIdFromLocation();
 
         orgPool.put(orgId, orgDto);
@@ -50,7 +55,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Ждем окончания процесса создания организации")
     public void waitUntilOrganizationSuccessfullyCreated() throws InterruptedException {
-        waitUntilOrganizationSuccessfullyCreated(orgId, cookie);
+        waitUntilOrganizationSuccessfullyCreated(orgId);
 
         orgPool.put(orgId, orgDto);
     }
@@ -88,7 +93,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      *
      * @param dataTable Параметры организации.
      *
-     * @throws InterruptedException
+     * @throws InterruptedException Возникает если организация не создалась успешно и закончились попытки её проверки.
      */
     @Given("Существует организация")
     public void initOrg(DataTable dataTable) throws InterruptedException {
@@ -105,11 +110,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             makeFirstAvailableOrgAsCurrent();
         } else {
             sendCreateOrganizationRequest(dataTable);
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            extractOrgIdFromLocation();
 
-            Cookie cookie = new AuthorizationStepDefinitions().getRootAuthority();
-            waitUntilOrganizationSuccessfullyCreated(orgId, cookie);
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+
+            waitUntilOrganizationSuccessfullyCreated(orgId);
         }
     }
 
@@ -218,14 +224,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         statusCode(code);
     }
 
-    private OrganizationCreateDto mapToOrgDto(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-        UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                generateString(data.get(4)), generateString(data.get(5)));
-
-        return new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
-    }
-
     private void createOrganization(OrganizationCreateDto dto) {
         response = getBaseRequest()
                 .given().
@@ -258,7 +256,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         throw new RuntimeException("Organization not created: " + id);
     }
 
-    private void waitUntilOrganizationSuccessfullyCreated(Integer id, Cookie cookie) throws InterruptedException {
+    private void waitUntilOrganizationSuccessfullyCreated(Integer id) throws InterruptedException {
+        new AuthorizationStepDefinitions().authorizeAsRoot();
+
         System.out.println("check status org: " + id);
 
         int currentAttempt = 0;

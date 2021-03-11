@@ -1,11 +1,10 @@
 Feature: Настройка прав доступа к ресурсам "data" сервиса
 
-  Scenario: Проверка секьюрити эндпоинта "roleAssignment"
-    Given Поднят дата сервис
-    And наш пользователь не имеет ролей ORG_ADMIN или GLOBAL_ADMIN
-    When Выполняя любые запросы на ".../roleAssignment"
-    Then получаем ответ 403
-
+#  Scenario: Проверка секьюрити эндпоинта "roleAssignment"
+#    Given Поднят дата сервис
+#    And наш пользователь не имеет ролей ORG_ADMIN или GLOBAL_ADMIN
+#    When Выполняя любые запросы на ".../roleAssignment"
+#    Then получаем ответ 403
 
   Scenario: Добавление роли
     Given Существует схема "workspace_1" но таблица "some_table" отсутствует

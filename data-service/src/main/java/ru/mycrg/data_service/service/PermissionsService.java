@@ -15,8 +15,6 @@ import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionsRepository;
 import ru.mycrg.data_service.service.resources.PrincipalService;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
-import ru.mycrg.data_service.service.resources.ResourcesService;
 
 import java.util.Optional;
 
@@ -27,26 +25,26 @@ public class PermissionsService {
     private final ProjectionFactory projectionFactory;
     private final PermissionsRepository permissionsRepository;
     private final PrincipalService principalService;
-    private final ResourcesService resourcesService;
 
     public PermissionsService(PermissionsRepository permissionsRepository,
-                              ResourcesService resourcesService,
                               PrincipalService principalService,
                               ProjectionFactory projectionFactory) {
-        this.resourcesService = resourcesService;
         this.projectionFactory = projectionFactory;
         this.principalService = principalService;
         this.permissionsRepository = permissionsRepository;
     }
 
-    public Page<PermissionProjection> getForResource(ResourceIdentifier resIdentifier, Pageable pageable) {
-        return permissionsRepository.getAllByResource(resourcesService.get(resIdentifier), pageable);
+    // TODO: Продолжить закрывать дыры, список всех выставленных прав могут видеть только владелец и рут.
+    // Что может видеть пользователь с другими правами?
+    public Page<PermissionProjection> getPaged(Resource resource, Pageable pageable) {
+        // У самого ресурса мы можем спросить все его разрешения (resource.getPermissions()), но делаем это через
+        // базу чтобы иметь pageable ответ из коробки.
+        return permissionsRepository.getAllByResource(resource, pageable);
     }
 
-    public PermissionProjection create(@NotNull ResourceIdentifier resIdentifier,
+    public PermissionProjection create(@NotNull Resource resource,
                                        @NotNull PermissionCreateDto dto) {
-        final Resource resource = resourcesService.get(resIdentifier);
-        final Principal principal = principalService.get(dto.getPrincipalId(), dto.getPrincipalType());
+        final Principal principal = principalService.getOrCreate(dto.getPrincipalId(), dto.getPrincipalType());
 
         throwIfExist(resource, principal, dto.getRole());
 
@@ -66,18 +64,17 @@ public class PermissionsService {
         }
     }
 
-    public void deleteById(ResourceIdentifier rIdentifier, Long permissionId) {
-        resourcesService.get(rIdentifier)
-                        .getPermissions().stream()
-                        .filter(permission -> permission.getId() == permissionId)
-                        .findFirst()
-                        .ifPresentOrElse(permission -> {
-                            permissionsRepository.deleteById(permission.getId());
+    public void deleteById(@NotNull Resource resource, Long permissionId) {
+        resource.getPermissions().stream()
+                .filter(permission -> permission.getId() == permissionId)
+                .findFirst()
+                .ifPresentOrElse(permission -> {
+                    permissionsRepository.deleteById(permission.getId());
 
-                            principalService.deleteIfNoPermissions(permission.getPrincipal());
-                        }, () -> {
-                            throw new NotFoundException(permissionId);
-                        });
+                    principalService.deleteIfNoPermissions(permission.getPrincipal());
+                }, () -> {
+                    throw new NotFoundException(permissionId);
+                });
     }
 
     public void throwIfExist(Resource resource, Principal principal, String role) {

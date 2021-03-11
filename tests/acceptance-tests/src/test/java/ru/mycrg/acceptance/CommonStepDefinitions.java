@@ -56,8 +56,8 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertTrue(page.containsKey("number"));
     }
 
-    @Then("В выборке присутствуют {string} элемента")
-    public void checkTotalProjects(String count) {
+    @Then("В выборке присутствуют определённое кол-во элементов: {string}")
+    public void checkTotalElements(String count) {
         assertEquals(Integer.valueOf(count), response.jsonPath().get("page.totalElements"));
     }
 

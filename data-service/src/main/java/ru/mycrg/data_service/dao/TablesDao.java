@@ -18,10 +18,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
-import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.mq_queue_contract.SchemaDto;
 
 import java.sql.ResultSet;

@@ -51,11 +51,12 @@ public class DatasetsController {
         return ResponseEntity.ok(pagedResources);
     }
 
-    @GetMapping("/datasets/{dataSetId}")
+    @GetMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<IResourceModel> getDataset(@PathVariable String dataSetId,
+    public ResponseEntity<IResourceModel> getDataset(@PathVariable String datasetId,
                                                      Authentication authentication) {
-        final IResourceModel dto = datasetService.getByName(dataSetId, authentication);
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(datasetId, SCHEMA);
+        final IResourceModel dto = datasetService.getInfo(rIdentifier, authentication);
 
         return ResponseEntity.ok(dto);
     }
@@ -68,17 +69,17 @@ public class DatasetsController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/datasets/{dataSetId}")
+                .path("/datasets/{datasetId}")
                 .buildAndExpand(newDataset.getIdentifier())
                 .toUri();
 
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("/datasets/{dataSetId}")
+    @DeleteMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataset(@PathVariable String dataSetId, Authentication authentication) {
-        datasetService.delete(new ResourceIdentifier(dataSetId, SCHEMA), authentication);
+    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId, Authentication authentication) {
+        datasetService.delete(new ResourceIdentifier(datasetId, SCHEMA), authentication);
 
         return ResponseEntity.noContent().build();
     }

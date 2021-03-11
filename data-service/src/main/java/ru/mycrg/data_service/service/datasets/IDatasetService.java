@@ -11,7 +11,7 @@ public interface IDatasetService {
 
     Page<IResourceModel> getPaged(String title, Pageable pageable, Authentication authentication);
 
-    IResourceModel getByName(String name, Authentication authentication);
+    IResourceModel getInfo(ResourceIdentifier rIdentifier, Authentication authentication);
 
     IResourceModel create(ResourceCreateDto dto, Authentication authentication);
 

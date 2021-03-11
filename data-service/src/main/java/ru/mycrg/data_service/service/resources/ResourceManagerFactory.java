@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.SchemasManager;
 import ru.mycrg.data_service.dao.TablesManager;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.DocumentLibraryService;
 
 @Service
 public class ResourceManagerFactory {
@@ -23,6 +24,8 @@ public class ResourceManagerFactory {
                 return context.getBean(SchemasManager.class);
             case TABLE:
                 return context.getBean(TablesManager.class);
+            case LIBRARY:
+                return context.getBean(DocumentLibraryService.class);
             default:
                 throw new DataServiceException("Not supported resource type: " + rIdentifier.getType());
         }

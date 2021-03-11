@@ -45,18 +45,18 @@ public class TablesController {
         return new ResponseEntity<>(resourceModel, CREATED);
     }
 
-    @GetMapping("/datasets/{dataSetId}/tables")
-    public ResponseEntity<Object> getTables(@PathVariable String dataSetId,
+    @GetMapping("/datasets/{datasetId}/tables")
+    public ResponseEntity<Object> getTables(@PathVariable String datasetId,
                                             @RequestParam(required = false, defaultValue = "") String title,
                                             Authentication authentication,
                                             Pageable pageable,
                                             PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> tables = tableService.getPaged(dataSetId, title, pageable, authentication);
+        final Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable, authentication);
 
         var pagedResources = pageAssembler.toResource(
                 tables,
                 linkTo(TablesController.class)
-                        .slash("/api/data/datasets/" + dataSetId + "/tables")
+                        .slash("/api/data/datasets/" + datasetId + "/tables")
                         .withSelfRel());
 
         return ResponseEntity.ok(pagedResources);
@@ -75,9 +75,9 @@ public class TablesController {
 
     @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId,
-                                                @PathVariable String tableId,
-                                                Authentication authentication) {
+    public ResponseEntity<Object> deleteTable(@PathVariable String datasetId,
+                                              @PathVariable String tableId,
+                                              Authentication authentication) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
         tableService.delete(rIdentifier, authentication);

@@ -41,8 +41,8 @@ public class ResourcesInterceptor implements HandlerInterceptor {
 
             resourceProtector.throwIfNotExist(tableResource);
         } else if (isRequestToDatasets(request)) {
-            getAttribute(request, "dataSetId").ifPresent(dataSetId -> {
-                resourceProtector.throwIfNotExist(new ResourceIdentifier(dataSetId, SCHEMA));
+            getAttribute(request, "datasetId").ifPresent(datasetId -> {
+                resourceProtector.throwIfNotExist(new ResourceIdentifier(datasetId, SCHEMA));
             });
         }
 

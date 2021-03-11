@@ -9,7 +9,7 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 public interface ITableService {
 
-    Page<IResourceModel> getPaged(String schemaName,
+    Page<IResourceModel> getPaged(String dataset,
                                   String title,
                                   Pageable pageable,
                                   Authentication authentication);

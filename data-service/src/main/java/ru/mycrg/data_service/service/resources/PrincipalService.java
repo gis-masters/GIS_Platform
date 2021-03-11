@@ -24,7 +24,7 @@ public class PrincipalService {
      * @param type       Principal type
      */
     @NotNull
-    public Principal get(Long identifier, String type) {
+    public Principal getOrCreate(Long identifier, String type) {
         return principalRepository
                 .findByIdentifierAndAndType(identifier, type)
                 .orElseGet(() -> principalRepository.save(new Principal(identifier, type)));

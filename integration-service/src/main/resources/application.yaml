@@ -34,6 +34,15 @@ camunda.bpm.admin-user:
   id: demo
   password: demo
 
+management:
+  endpoint:
+    loggers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: loggers
+
 crg-options:
   gis_service_url: http://127.0.0.1:8082
   data_service_url: http://127.0.0.1:8084
