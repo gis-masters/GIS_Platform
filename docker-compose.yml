@@ -185,8 +185,6 @@ services:
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
-      CRG_OPTIONS_ROOT_USER_NAME: $GEOSERVER_USER
-      CRG_OPTIONS_ROOT_USER_PASSWORD: $GEOSERVER_PASSWORD
     ports:
       - 8100:8100
     volumes:

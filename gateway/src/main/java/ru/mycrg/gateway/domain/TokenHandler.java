@@ -7,5 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public interface TokenHandler {
-    Optional<JwtToken> extractToken(@NotNull HttpServletRequest request);
+
+    Optional<JwtToken> extract(@NotNull HttpServletRequest request);
 }

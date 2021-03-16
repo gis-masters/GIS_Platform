@@ -96,13 +96,13 @@ export class ExplorerAdapterTypeFolder {
       },
       {
         label: 'Дате создания',
-        value: 'createdAt'
+        value: 'created_at'
       }
     ];
   }
 
   static getChildrenSortDefaultValue(): string {
-    return 'createdAt';
+    return 'created_at';
   }
 
   static getChildrenSortDefaultDirection(): SortDir {

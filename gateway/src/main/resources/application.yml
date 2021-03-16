@@ -68,6 +68,4 @@ crg-options:
   secret: vjp4lLW_QmjMHiUw1OBVRIZH
   client-id: admin
   client-secret: geoserver
-  root-user-name: admin@mail.ru
-  root-user-password: geoserver
-
+  auth-method: COOKIE_BEARER

@@ -8,6 +8,7 @@ public class CrgExceptionModel {
     private String message;
 
     public CrgExceptionModel() {
+        // Required
     }
 
     public CrgExceptionModel(final HttpStatus status, String message) {

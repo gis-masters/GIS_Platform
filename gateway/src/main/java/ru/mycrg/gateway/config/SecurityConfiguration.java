@@ -11,8 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.mycrg.gateway.domain.BearerHandler;
-import ru.mycrg.gateway.domain.CookieHandler;
+import ru.mycrg.gateway.domain.Authenticator;
+import ru.mycrg.gateway.domain.CookieProducer;
 import ru.mycrg.gateway.filters.MainAuthFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,16 +21,13 @@ import java.util.Collections;
 import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
-public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CookieHandler cookieHandler;
+    private CookieProducer cookieProducer;
 
     @Autowired
-    private BearerHandler bearerHandler;
-
-    @Autowired
-    private CrgProperties properties;
+    private Authenticator authenticator;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -55,11 +52,12 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 // handle an authorized attempts
-                .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .exceptionHandling().authenticationEntryPoint(
+                (req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
                 // Add a filter to validate the tokens with every request
-                .addFilterAfter(new MainAuthFilter(cookieHandler, bearerHandler, properties),
-                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new MainAuthFilter(cookieProducer, authenticator),
+                                UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // authorization requests config
                 .antMatchers(POST, "/oauth/token", "/organizations/init", "/perform_logout").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
