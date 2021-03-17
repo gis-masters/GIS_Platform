@@ -28,8 +28,6 @@ interface FormProps<T> extends React.DetailedHTMLProps<React.FormHTMLAttributes<
 
 @observer
 export class Form<T extends { [key: string]: unknown }> extends Component<FormProps<T>> {
-  private currentFormValue?: T;
-
   render() {
     const { schema, formValue = {}, children, className, onFormChange, onFormSubmit, ...otherProps } = this.props;
 
@@ -61,12 +59,10 @@ export class Form<T extends { [key: string]: unknown }> extends Component<FormPr
 
   @boundMethod
   private fieldChanged(itemValue: { value: T[keyof T]; propertyName: keyof T }) {
-    const formValue = cloneDeep(this.props.formValue);
-
-    formValue[itemValue.propertyName] = itemValue.value;
-
-    this.currentFormValue = formValue;
-    this.props.onFormChange(formValue);
+    const { formValue, onFormChange } = this.props;
+    const newFormValue = cloneDeep(formValue);
+    newFormValue[itemValue.propertyName] = itemValue.value;
+    onFormChange(newFormValue);
   }
 
   @boundMethod
@@ -75,7 +71,7 @@ export class Form<T extends { [key: string]: unknown }> extends Component<FormPr
 
     const { onFormSubmit, formValue } = this.props;
     if (onFormSubmit) {
-      onFormSubmit(this.currentFormValue || formValue);
+      onFormSubmit(formValue);
     }
   }
 }

@@ -5,61 +5,54 @@ import { boundMethod } from 'autobind-decorator';
 import { action, computed, observable } from 'mobx';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
-import { Form } from '../../Form/Form';
-import { Button } from '../../Button/Button';
-import { Loading } from '../../Loading/Loading';
-import { services } from '../../../services/services';
 import { FeatureDescription, FieldType } from '../../../services/crg/schema.models';
+import { LibraryItem } from '../../../services/crg/doc-library.service';
+import { services } from '../../../services/services';
+import { sleep } from '../../../services/util/sleep';
+import { Loading } from '../../Loading/Loading';
+import { Button } from '../../Button/Button';
+import { Form } from '../../Form/Form';
 
-import '!style-loader!css-loader!sass-loader!./CreateLibraryElement-Dialog.scss';
-
-const cnAddDocumentDialog = cn('Explorer-CreateElementDialog');
+const cnCreateLibraryElementDialog = cn('CreateLibraryElement', 'Dialog');
 
 export interface ExplorerCreateElementDialogProps {
   schema?: FeatureDescription;
   open: boolean;
+  loading: boolean;
   onClose: () => void;
-  onCreate: (formValue: { [key: string]: unknown }) => void;
+  onCreate: (formValue: LibraryItem) => void;
 }
 
 @observer
 export class CreateLibraryElementDialog extends React.Component<ExplorerCreateElementDialogProps> {
-  @observable private formValue: { [key: string]: unknown };
-  @observable private loading = false;
+  @observable private formValue: Partial<LibraryItem> = {};
 
-  componentDidUpdate() {
-    this.setLoading(false);
+  componentDidMount() {
+    this.setFormValue(this.initialFormValue);
   }
 
   render() {
-    const { open, schema } = this.props;
+    const { open, loading, schema } = this.props;
 
     return (
       <>
         {schema && (
-          <Dialog
-            className={cnAddDocumentDialog()}
-            disableEscapeKeyDown={true}
-            disableBackdropClick={true}
-            maxWidth={'md'}
-            open={open}
-            onClose={this.closeDialog}
-          >
+          <Dialog disableBackdropClick={true} maxWidth={'md'} open={open} onClose={this.closeDialog}>
             <DialogTitle>Созание нового элемента</DialogTitle>
 
-            <DialogContent className={cnAddDocumentDialog('Content')}>
+            <DialogContent className={cnCreateLibraryElementDialog()}>
               <Form
-                id='addDocumentForm'
+                id='createLibraryElementForm'
                 schema={schema}
-                formValue={this.initialFormValue}
+                formValue={this.formValue}
                 onFormChange={this.formChanged}
                 onFormSubmit={this.formSubmitHandler}
               />
-              <Loading visible={this.loading} />
+              <Loading visible={loading} />
             </DialogContent>
 
             <DialogActions>
-              <Button form='addDocumentForm' type='submit' color='primary' disabled={false}>
+              <Button form='createLibraryElementForm' type='submit' color='primary' disabled={false}>
                 Создать
               </Button>
               <Button onClick={this.closeDialog}>Отмена</Button>
@@ -70,53 +63,46 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
     );
   }
 
+  // TODO: убрать эту наркоманию
   @computed
-  private get initialFormValue(): {} {
-    if (this.formValue) {
-      return this.formValue;
-    } else {
-      const initialFormValue = {};
-      this.props.schema.properties.forEach(property => {
-        if (property.valueType === FieldType.STRING) {
-          initialFormValue[property.name] = '';
-        } else if (property.valueType === FieldType.INT) {
-          initialFormValue[property.name] = '';
-        } else if (property.valueType === FieldType.CHOICE) {
-          initialFormValue[property.name] = property.enumerations[0].value;
-        } else {
-          initialFormValue[property.name] = '';
-          services.logger.warn('Unsupported valueType: ' + property.valueType);
-        }
-      });
+  private get initialFormValue(): Partial<LibraryItem> {
+    const initialFormValue = {};
+    (this.props.schema?.properties || []).forEach(property => {
+      if (property.valueType === FieldType.STRING) {
+        initialFormValue[property.name] = '';
+      } else if (property.valueType === FieldType.INT) {
+        initialFormValue[property.name] = '';
+      } else if (property.valueType === FieldType.CHOICE) {
+        initialFormValue[property.name] = property.enumerations[0].value;
+      } else {
+        initialFormValue[property.name] = '';
+        services.logger.warn('Unsupported valueType: ' + property.valueType);
+      }
+    });
 
-      return initialFormValue;
-    }
+    return initialFormValue;
   }
 
   @boundMethod
-  private async formSubmitHandler(formValue: { [key: string]: unknown }) {
-    this.setLoading(true);
+  private async formSubmitHandler(formValue: LibraryItem) {
     this.props.onCreate(formValue);
+    await sleep(0);
+    this.setFormValue(this.initialFormValue);
   }
 
   @boundMethod
-  private formChanged(formValue: { [key: string]: unknown }) {
+  private formChanged(formValue: LibraryItem) {
     this.setFormValue(formValue);
   }
 
-  @action.bound
+  @boundMethod
   private closeDialog() {
     this.props.onClose();
-    this.setFormValue({});
+    this.setFormValue(this.initialFormValue);
   }
 
   @action
-  private setLoading(value: boolean) {
-    this.loading = value;
-  }
-
-  @action
-  private setFormValue(formValue: { [key: string]: unknown }) {
+  private setFormValue(formValue: Partial<LibraryItem>) {
     this.formValue = formValue;
   }
 }

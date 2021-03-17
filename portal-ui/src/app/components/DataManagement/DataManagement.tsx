@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Explorer } from '../Explorer/Explorer';
 import { flags } from '../../services/feature-flags';
 import { ExplorerItemType } from '../Explorer/Explorer.models';
+import { Explorer } from '../Explorer/Explorer';
 
 import '!style-loader!css-loader!sass-loader!./DataManagement.scss';
 

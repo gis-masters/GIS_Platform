@@ -1,0 +1,13 @@
+body .MenuIconButton {
+  position: relative;
+
+  &-Icon {
+    transform: translateX(-4px);
+  }
+
+  &-Arrow {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: calc(50% + 0px);
+  }
+}
