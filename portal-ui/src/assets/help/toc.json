@@ -236,6 +236,23 @@
         ]
       },
       {
+        "id": "ruler",
+        "title": "Измерение длины и площади на карте",
+        "contentUrl": "/assets/help/map/ruler/01areaMeasurement.html",
+        "children": [
+          {
+            "id": "areaMeasurement",
+            "title": "Измерение площади",
+            "contentUrl": "/assets/help/map/ruler/01areaMeasurement.html"
+          },
+          {
+            "id": "lengthMeasurement",
+            "title": "Измерение длины",
+            "contentUrl": "/assets/help/map/ruler/02lengthMeasurement.html"
+          }
+        ]
+      },
+      {
         "id": "print",
         "title": "Печать фрагмента карты",
         "contentUrl": "/assets/help/map/print/00print.html"
