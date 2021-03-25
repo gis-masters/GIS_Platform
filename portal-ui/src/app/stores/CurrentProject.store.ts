@@ -399,7 +399,7 @@ class CurrentProject implements CrgProjectData {
 
     const { minZoom, maxZoom } = treeItem.payload as CrgLayer;
 
-    return this.viewZoom < minZoom || this.viewZoom > maxZoom;
+    return this.viewZoom < minZoom || (Boolean(maxZoom) && this.viewZoom > maxZoom);
   }
 
   private hasCollapsedParent(item: TreeItem): boolean {

@@ -38,7 +38,6 @@ import { ErrorsBadgeComponent } from './components/errors-badge/errors-badge.com
 import { InfoSidebarComponent } from './components/info-sidebar/info-sidebar.component';
 import { LayersSidebarComponent } from './components/layers-sidebar/layers-sidebar.component';
 import { ProgressItemComponent } from './components/progress-item/progress-item.component';
-import { JwtInterceptorService } from './services/interceptors/jwt-interceptor.service';
 import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
@@ -145,11 +144,6 @@ import { LogoComponent } from './components/logo/logo.component';
   ],
   entryComponents: [AlertDialogComponent, ConfirmDialogComponent, CopyFeaturesDialogComponent],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptorService,
-      multi: true
-    },
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler

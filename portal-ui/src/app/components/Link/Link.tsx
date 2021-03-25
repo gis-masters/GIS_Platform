@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { HttpErrorResponse } from '@angular/common/http';
+import { AxiosError } from 'axios';
 import { OpenInNew } from '@material-ui/icons';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -78,14 +78,14 @@ export class Link extends Component<LinkProps> {
             a.download = download === true ? new URL(url, baseUrl).pathname.split('/').pop() : download;
             a.click();
           })
-          .catch((eResponse: HttpErrorResponse) => {
-            if (eResponse.status === 404) {
+          .catch((err: AxiosError) => {
+            if (err.response?.status === 404) {
               Toast.error('Файл отсутствует, обратитиесь к администратору.');
-            } else if (eResponse.status === 403) {
+            } else if (err.response?.status === 403) {
               Toast.error('Нет доступа к файлу, обратитиесь к администратору.');
             } else {
               Toast.error('Возникла ошибка при получении файла');
-              services.logger.error('Возникла ошибка при получении файла: ', eResponse.message);
+              services.logger.error('Возникла ошибка при получении файла: ', err.message);
             }
           });
       }

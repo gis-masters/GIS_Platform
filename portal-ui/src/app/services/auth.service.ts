@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 import { getAuthUrl, getLogoutUrl, getOrganizationsUrl, getUserUrl } from './server-urls.service';
 import { usersService } from './crg/users.service';
+import { getEnvironment } from './environment';
 import { services } from './services';
 import { http } from './http.service';
 
@@ -60,7 +61,7 @@ class AuthService {
     return this._instance || (this._instance = new this());
   }
 
-  token: string;
+  token?: string;
 
   private constructor() {
     this.token = localStorage.getItem(TOKEN_KEY);
@@ -77,10 +78,24 @@ class AuthService {
     };
 
     const options = { withCredentials: true, headers };
-    const url = await getAuthUrl();
+    const authUrl = await getAuthUrl();
     try {
-      this.token = await http.post(url, params.toString(), options);
-      localStorage.setItem(TOKEN_KEY, this.token);
+      const environment = await getEnvironment();
+      const sameOrigin =
+        (!environment.server.host || environment.server.host === location.hostname) &&
+        (!environment.server.port || environment.server.port === location.port) &&
+        (!environment.server.wsPort || environment.server.wsPort === location.port);
+
+      const token = await http.post<string>(authUrl, params.toString(), options);
+
+      if (!sameOrigin) {
+        this.token = token;
+        localStorage.setItem(TOKEN_KEY, token);
+      } else {
+        delete this.token;
+        localStorage.removeItem(TOKEN_KEY);
+      }
+
       await usersService.fetchCurrentUser();
 
       return { ok: true };
