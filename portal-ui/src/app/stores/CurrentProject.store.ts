@@ -233,11 +233,11 @@ class CurrentProject implements CrgProjectData {
         .filter(([, patch]) => Object.keys(patch).length),
 
       layersToDelete: this.primalLayers
-        .filter(primalLayer => !this.layers.some(layer => primalLayer.id === layer.id))
+        .filter(primalLayer => this.isLayerDeleted(primalLayer) || this.hasDeletedAncestor(primalLayer))
         .map(({ id }) => id),
 
       groupsToDelete: this.primalGroups
-        .filter(primalGroup => !this.groups.some(group => primalGroup.id === group.id))
+        .filter(primalGroup => this.isGroupDeleted(primalGroup) || this.hasDeletedAncestor(primalGroup))
         .sort(
           (a, b) =>
             this.tree.findIndex(({ isGroup, id }) => isGroup && id === b.id) -
@@ -245,6 +245,24 @@ class CurrentProject implements CrgProjectData {
         )
         .map(({ id }) => id)
     };
+  }
+
+  private hasDeletedAncestor(entity: CrgLayer | CrgLayersGroup): boolean {
+    if (!entity.parentId) {
+      return false;
+    }
+
+    const parentGroup = this.groups.find(({ id }) => entity.parentId === id);
+
+    return !parentGroup || this.hasDeletedAncestor(parentGroup);
+  }
+
+  private isLayerDeleted(layer: CrgLayer): boolean {
+    return !this.layers.some(({ id }) => id === layer.id);
+  }
+
+  private isGroupDeleted(group: CrgLayersGroup): boolean {
+    return !this.groups.some(({ id }) => id === group.id);
   }
 
   @action

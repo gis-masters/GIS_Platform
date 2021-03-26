@@ -38,7 +38,7 @@ export class CreateLibraryElementDialog extends React.Component<ExplorerCreateEl
       <>
         {schema && (
           <Dialog disableBackdropClick={true} maxWidth={'md'} open={open} onClose={this.closeDialog}>
-            <DialogTitle>Созание нового элемента</DialogTitle>
+            <DialogTitle>Создание нового элемента</DialogTitle>
 
             <DialogContent className={cnCreateLibraryElementDialog()}>
               <Form

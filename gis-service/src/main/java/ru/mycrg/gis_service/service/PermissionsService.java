@@ -17,9 +17,7 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,7 +46,7 @@ public class PermissionsService {
         Map<Long, List<PermissionProjection>> allPermissions = new HashMap<>();
         projectService.getAll(authentication)
                       .forEach(project -> {
-                          List<PermissionProjection> projectPermissions = getProjectPermission(project);
+                          List<PermissionProjection> projectPermissions = getProjectPermissions(project);
                           if (!projectPermissions.isEmpty()) {
                               allPermissions.put(project.getId(), projectPermissions);
                           }
@@ -59,8 +57,9 @@ public class PermissionsService {
 
     public List<PermissionProjection> getAll(long projectId, Authentication authentication) {
         return Stream.of(projectService.getById(projectId, authentication))
-                     .map(this::getProjectPermission)
-                     .findFirst().get();
+                     .map(this::getProjectPermissions)
+                     .findFirst()
+                     .orElseGet(ArrayList::new);
     }
 
     public PermissionProjection getById(long projectId, long permissionId, Authentication authentication) {
@@ -134,7 +133,7 @@ public class PermissionsService {
                              .orElseThrow(() -> new NotFoundException(permissionId));
     }
 
-    private List<PermissionProjection> getProjectPermission(Project project) {
+    private List<PermissionProjection> getProjectPermissions(Project project) {
         return project.getPermissions().stream()
                       .map(this::mapToProjection)
                       .collect(Collectors.toList());

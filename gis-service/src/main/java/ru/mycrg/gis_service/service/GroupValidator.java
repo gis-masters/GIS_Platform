@@ -12,7 +12,7 @@ public class GroupValidator {
         throw new IllegalStateException("Utility class");
     }
 
-    @Contract(pure = false, mutates = "groups")
+    @Contract(pure = false, mutates = "param2")
     public static boolean isInvalidGroupRelation(@NotNull Group group, List<Group> groups) {
         if (group.getId() != null && group.getId().equals(group.getParentId())) {
             return true;

@@ -57,9 +57,9 @@ public class Group implements Identifiable<Long> {
         this.parentId = dto.getParentId();
         this.position = dto.getPosition();
 
-        this.enabled = true;
-        this.expanded = true;
-        this.transparency = 100;
+        this.enabled = Boolean.parseBoolean(dto.getEnabled());
+        this.expanded = Boolean.parseBoolean(dto.getExpanded());
+        this.transparency = dto.getTransparency();
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
     }

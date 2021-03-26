@@ -79,14 +79,14 @@ public class LayerService {
 
         layerMapper.update(layerForUpdate, patchedLayer);
 
-        updateGroup(layerForUpdate, patchedLayer, project.getGroups());
+        updateGroup(layerForUpdate, patchedLayer.getParentId(), project.getGroups());
 
         layerForUpdate.setLastModified(LocalDateTime.now());
 
         layerRepository.save(layerForUpdate);
     }
 
-    public void delete(Layer layer, Authentication authentication) {
+    public void delete(Layer layer) {
         layerRepository.deleteLayerById(layer.getId());
     }
 
@@ -116,13 +116,13 @@ public class LayerService {
                 .collect(Collectors.toList());
     }
 
-    private void updateGroup(Layer layer, LayerUpdateDto dto, List<Group> groups) {
-        if (dto.getParentId() != null) {
-            Group parentGroup = groups.stream()
-                                      .filter(group -> group.getId().equals(dto.getParentId()))
-                                      .findFirst()
-                                      .orElseThrow(() -> new BadRequestException(
-                                              "parentId: Родительская группа задана неверно"));
+    private void updateGroup(Layer layer, Long parentId, List<Group> groups) {
+        if (parentId != null) {
+            Group parentGroup = groups
+                    .stream()
+                    .filter(group -> group.getId().equals(parentId))
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException("parentId: Родительская группа задана неверно"));
 
             layer.setParent(parentGroup);
         } else {
@@ -137,7 +137,6 @@ public class LayerService {
         }
 
         Layer newLayer = new Layer(dto);
-
         if ("vector".equals(dto.getType())) {
             String dataSourceUri = DATA_SERVICE_API_PREFIX + "/datasets/" + dto.getDataset() + "/tables/" + dto.getTableName();
             newLayer.setDataSourceUri(dataSourceUri);
@@ -145,7 +144,11 @@ public class LayerService {
 
         newLayer.setProject(project);
 
-        return layerRepository.save(newLayer);
+        final Layer savedLayer = layerRepository.save(newLayer);
+
+        updateGroup(savedLayer, dto.getParentId(), project.getGroups());
+
+        return savedLayer;
     }
 
     private Layer findLayerById(List<Layer> layers, Long layerId) {

@@ -114,7 +114,7 @@ public class LayerController {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException(layerId));
 
-        layerService.delete(layer, authentication);
+        layerService.delete(layer);
 
         return ResponseEntity.noContent().build();
     }

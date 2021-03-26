@@ -86,11 +86,11 @@ public class Layer implements Identifiable<Long> {
         nativeCRS = dto.getNativeCRS();
         dataSourceUri = dto.getDataSourceUri();
 
-        enabled = false;
-        position = 0;
-        transparency = 70;
-        minZoom = 0;
-        maxZoom = 40;
+        enabled = Boolean.parseBoolean(dto.getEnabled());
+        position = dto.getPosition();
+        transparency = dto.getTransparency();
+        minZoom = dto.getMinZoom();
+        maxZoom = dto.getMaxZoom();
 
         createdAt = LocalDateTime.now();
         lastModified = LocalDateTime.now();

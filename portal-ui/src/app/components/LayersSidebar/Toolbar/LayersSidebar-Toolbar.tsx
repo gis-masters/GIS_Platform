@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@material-ui/core';
@@ -9,8 +9,8 @@ import { cloneDeep } from 'lodash';
 
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { generateNextGroupId } from '../../../services/geoserver/layers.service';
 import { NewCrgLayer, NewCrgLayersGroup } from '../../../services/crg/projects.models';
+import { generateNextGroupId } from '../../../services/geoserver/layers.service';
 import { usersService } from '../../../services/crg/users.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
@@ -38,7 +38,6 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   @observable private createGroupDialogOpen = false;
   @observable private addLayerDialogOpen = false;
   @observable private projectContributionAllowed = false;
-
 
   async componentDidMount() {
     // this.setProjectContributionAllowness(await isLayersManagementAllowed(currentProject));

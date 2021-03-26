@@ -1,7 +1,5 @@
 package ru.mycrg.gis_service.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -28,23 +26,18 @@ import static ru.mycrg.gis_service.service.GroupValidator.isInvalidGroupRelation
 @Transactional
 public class GroupService {
 
-    private static final Logger log = LoggerFactory.getLogger(GroupService.class);
-
-    private final ProjectionFactory projectionFactory;
     private final ProjectService projectService;
     private final GroupRepository groupRepository;
-    private final LayerService layerService;
     private final JsonPatcher jsonPatcher;
+    private final ProjectionFactory projectionFactory;
 
     public GroupService(GroupRepository groupRepository,
                         ProjectService projectService,
-                        LayerService layerService,
                         JsonPatcher jsonPatcher,
                         ProjectionFactory projectionFactory) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.groupRepository = groupRepository;
-        this.layerService = layerService;
         this.projectionFactory = projectionFactory;
     }
 
