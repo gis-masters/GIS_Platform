@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { sidebars } from '../../stores/Sidebars.store';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 
@@ -22,7 +22,7 @@ export class FeaturesList extends Component {
 
   componentDidMount() {
     if (this.features.length > 1) {
-      openLayersService.highlightFeatures(this.features);
+      mapService.highlightFeatures(this.features);
     }
     if (this.features.length === 1) {
       sidebars.openEdit({ features: sidebars.viewFeatures, mode: EditFeatureMode.single });
@@ -36,7 +36,7 @@ export class FeaturesList extends Component {
   }
 
   componentWillUnmount() {
-    openLayersService.clearDraft();
+    mapService.clearDraft();
   }
 
   render() {
@@ -68,9 +68,9 @@ export class FeaturesList extends Component {
   private handleItemHighlight(feature: WfsFeature | null) {
     if (feature) {
       clearTimeout(this.highlightAllFeaturesTimeout);
-      openLayersService.highlightFeatures([feature]);
+      mapService.highlightFeatures([feature]);
     } else {
-      openLayersService.highlightFeatures(this.features);
+      mapService.highlightFeatures(this.features);
     }
     this.highlightedFeatureId = feature && feature.id;
   }

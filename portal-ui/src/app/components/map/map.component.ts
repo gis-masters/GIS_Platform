@@ -8,9 +8,9 @@ import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
 import { CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
-import { makeXmlPolygonIntersect } from '../../services/open-layer/WfsUtil';
+import { makeXmlPolygonIntersect } from '../../services/util/wfs.util';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { fetchProjectBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -42,30 +42,30 @@ export class MapComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await fetchProjectBasemaps(currentProject.baseMaps);
 
-    openLayersService.createMap();
+    mapService.createMap();
 
     // Позиционируемся по BBOX проекта
     if (currentProject.bbox) {
-      openLayersService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
+      mapService.fitToBbox(JSON.parse(currentProject.bbox), [0, 0, 0, 0]);
     }
 
     this.reactionDisposer = reaction(
       () => currentProject.visibleLayersBatched,
       visibleBatches => {
-        openLayersService.hideUserLayers();
+        mapService.hideUserLayers();
 
         visibleBatches.forEach((batch, i) => {
           const { actualTransparency } = batch[0];
 
           const layers = batch.map(item => item.payload).reverse();
 
-          openLayersService.addLayers(
+          mapService.addLayers(
             layers.filter(l => l.type !== CrgLayerType.EXTERNAL),
             visibleBatches.length - i,
             actualTransparency / 100
           );
 
-          openLayersService.addExternalLayers(
+          mapService.addExternalLayers(
             layers.filter(l => l.type === CrgLayerType.EXTERNAL),
             visibleBatches.length - i
           );
@@ -118,12 +118,12 @@ export class MapComponent implements OnInit, OnDestroy {
         }, 0);
       });
 
-    openLayersService.mapClick.on(coordinate => this.showFeaturesInfo(coordinate), this);
-    openLayersService.zoomChanged.on(value => currentProject.changeZoom(value), this);
+    mapService.mapClick.on(coordinate => this.showFeaturesInfo(coordinate), this);
+    mapService.zoomChanged.on(value => currentProject.changeZoom(value), this);
   }
 
   ngOnDestroy(): void {
-    openLayersService.destroyMap();
+    mapService.destroyMap();
     this.reactionDisposer();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -153,9 +153,9 @@ export class MapComponent implements OnInit, OnDestroy {
       return acc;
     }, {});
 
-    const buffer = openLayersService.getBufferByCoordinates(coordinate);
+    const buffer = mapService.getBufferByCoordinates(coordinate);
 
-    openLayersService.showSelectionMarker(buffer.getCoordinates());
+    mapService.showSelectionMarker(buffer.getCoordinates());
 
     const collections = await Promise.all(
       Object.entries(visibleLayersComplexNames).map(([srsName, complexNames]) => {

@@ -10,7 +10,7 @@ import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { olProjection, transform } from '../../../services/geoserver/projections.service';
-import { openLayersService } from '../../../services/open-layer/open-layers.service';
+import { mapService } from '../../../services/map/map.service';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordPick.scss';
 
@@ -66,7 +66,7 @@ export class EditFeatureGeometryCoordPick extends Component<EditFeatureGeometryC
     if (this.btnRef.current) {
       this.btnRef.current.blur();
     }
-    openLayersService.pickingOff();
+    mapService.pickingOff();
 
     if (this.props.onPickEnd) {
       this.props.onPickEnd();
@@ -76,7 +76,7 @@ export class EditFeatureGeometryCoordPick extends Component<EditFeatureGeometryC
   @action
   private pick() {
     this.picking = true;
-    openLayersService.pickPoint(this.pickHandler);
+    mapService.pickPoint(this.pickHandler);
     document.body.classList.add('global-crosshair-cursor');
     if (this.props.onPickStart) {
       this.props.onPickStart();

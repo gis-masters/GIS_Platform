@@ -6,7 +6,7 @@ import { MyLocation } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs.models';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 
 const cnZoomToFeature = cn('ZoomToFeature');
 
@@ -34,7 +34,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   private clickHandler () {
     const { feature, onClick } = this.props;
 
-    openLayersService.positionToFeature(feature);
+    mapService.positionToFeature(feature);
     this.btnRef.current.blur();
     if (onClick) {
       onClick(feature);

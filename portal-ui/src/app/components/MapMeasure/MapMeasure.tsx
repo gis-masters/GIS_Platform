@@ -1,0 +1,72 @@
+import React, { Component } from 'react';
+import { observer } from 'mobx-react';
+import { IconButton, Tooltip } from '@material-ui/core';
+import { DeleteSweepOutlined, SquareFoot } from '@material-ui/icons';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+
+import { mapStore } from '../../stores/Map.store';
+import { mapMeasureService, MeasureMode } from '../../services/map/map-measure.service';
+import { Ruler } from '../Icons/Ruler';
+
+import '!style-loader!css-loader!sass-loader!./MapMeasure.scss';
+
+const cnMapMeasure = cn('MapMeasure');
+
+@observer
+export class MapMeasure extends Component {
+  render() {
+    return (
+      <div className={cnMapMeasure()}>
+        <Tooltip title='Измерить длину'>
+          <IconButton
+            onClick={this.handleLengthClick}
+            size='small'
+            color={mapStore.measureMode === 'length' ? 'secondary' : 'default'}
+          >
+            <Ruler />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title='Измерить площадь'>
+          <IconButton
+            onClick={this.handleAreraClick}
+            size='small'
+            color={mapStore.measureMode === 'area' ? 'secondary' : 'default'}
+          >
+            <SquareFoot />
+          </IconButton>
+        </Tooltip>
+        {Boolean(mapStore.measureItems.length) && (
+          <Tooltip title='Удалить все измерения'>
+            <IconButton onClick={this.clearAll} size='small'>
+              <DeleteSweepOutlined />
+            </IconButton>
+          </Tooltip>
+        )}
+      </div>
+    );
+  }
+
+  @boundMethod
+  private handleLengthClick() {
+    this.selectMode('length');
+  }
+
+  @boundMethod
+  private handleAreraClick() {
+    this.selectMode('area');
+  }
+
+  private selectMode(mode?: MeasureMode) {
+    if (mode && mapStore.measureMode === mode) {
+      mapMeasureService.measureOff();
+    } else {
+      mapMeasureService.measureOn(mode);
+    }
+  }
+
+  @boundMethod
+  private clearAll() {
+    mapMeasureService.clearAll();
+  }
+}

@@ -18,7 +18,7 @@ import { projectsService } from '../../services/crg/projects.service';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
 import { AttributeTableViewSettings, ViewMode } from './attribute.settings';
 import { communicationService } from '../../services/communication.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CrgModels, FilterEvent, Pageable, Sortable } from '../../services/models';
 import { WfsFeature, WfsFeatureCollection } from '../../services/geoserver/wfs.models';
@@ -99,7 +99,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.requestModel$.next({ page: { pageSize: 25, offset: 0 } });
 
           this.attributeTable.selected = [];
-          openLayersService.clearDraft();
+          mapService.clearDraft();
           this.updateTable({ page: { pageSize: 25, offset: 0 } });
           await this.checkPermissions();
         }
@@ -123,7 +123,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    openLayersService.clearDraft();
+    mapService.clearDraft();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     communicationService.off(this);
@@ -162,7 +162,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   showSelectedFeatures() {
     // Подсвечиваем выделенные если есть
     if (this.attributeTable.selected.length > 0) {
-      openLayersService.highlightFeatures(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
+      mapService.highlightFeatures(this.attributeTable.selected, getProjection(this.layer.nativeCRS));
     }
 
     window.dispatchEvent(new Event('resize'));
@@ -213,7 +213,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   closeMe() {
-    openLayersService.clearDraft();
+    mapService.clearDraft();
     sidebars.closeAttributes();
   }
 
@@ -254,8 +254,8 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       if (feature.geometry) {
         this.currentPositionFeature = feature;
         const projection = getProjection(this.layer.nativeCRS);
-        openLayersService.highlightFeatures([feature], projection);
-        openLayersService.positionToFeature(feature, projection);
+        mapService.highlightFeatures([feature], projection);
+        mapService.positionToFeature(feature, projection);
       } else {
         Toast.info(`У объекта [id:${feature.id}] отсутствует геометрия`);
       }
@@ -286,7 +286,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
       this.showSelectedFeatures();
     } else {
       this.attributeTable.selected = [];
-      openLayersService.clearDraft();
+      mapService.clearDraft();
     }
   }
 
@@ -435,7 +435,7 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           Toast.info('Объекты скопированы');
           this.attributeTable.selected = [];
           this.updateTable(this.requestModel$.getValue());
-          openLayersService.clearDraft();
+          mapService.clearDraft();
         } else {
           this.loadPercent = percent > 100 ? 100 : percent;
         }
@@ -493,8 +493,8 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
 
           Toast.info('Объекты удалены');
-          openLayersService.clearDraft();
-          openLayersService.refreshLayers();
+          mapService.clearDraft();
+          mapService.refreshLayers();
 
           this.updateTable(this.requestModel$.getValue());
         } else {

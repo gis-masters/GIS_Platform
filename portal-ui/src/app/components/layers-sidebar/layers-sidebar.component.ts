@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
@@ -19,19 +12,19 @@ import { LayersSidebar } from '../LayersSidebar/LayersSidebar';
 export class LayersSidebarComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
-  ngOnInit () {
+  ngOnInit() {
     this.renderReactElement();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     unmountComponentAtNode(this.ref.nativeElement);
   }
 
-  ngOnChanges () {
+  ngOnChanges() {
     this.renderReactElement();
   }
 
-    private renderReactElement() {
+  private renderReactElement() {
     const reactElement = createElement(LayersSidebar, {});
 
     render(reactElement, this.ref.nativeElement);

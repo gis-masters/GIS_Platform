@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, Input }
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 
-import { Search } from '../Search/Search';
+import { MapToolbar } from '../MapToolbar/MapToolbar';
 
 @Component({
-  selector: 'crg-search',
-  template: '<div class="search" #react></div>',
-  styleUrls: ['./search.component.scss']
+  selector: 'crg-map-toolbar',
+  template: '<div class="map-toolbar" #react></div>',
+  styleUrls: ['./map-toolbar.component.scss']
 })
-export class SearchComponent implements OnInit, OnDestroy, OnChanges {
+export class MapToolbarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() hidden: boolean;
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
 
@@ -26,7 +26,7 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(Search);
+    const reactElement = createElement(MapToolbar);
 
     render(reactElement, this.ref.nativeElement);
   }

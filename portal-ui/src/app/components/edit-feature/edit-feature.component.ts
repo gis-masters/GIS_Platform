@@ -13,7 +13,7 @@ import { getFeaturesById } from '../../services/geoserver/wfs.service';
 import { getFeatureLayer } from '../../services/geoserver/layers.service';
 import { communicationService } from '../../services/communication.service';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs.models';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { schemaService } from '../../services/crg/schema.service';
 import { PropertySchema } from '../../services/crg/schema.models';
 import { getFeatureProjection } from '../../services/geoserver/projections.service';
@@ -83,7 +83,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isNew = data.isNew;
 
         if (!this.isNew) {
-          openLayersService.highlightFeatures(this.features);
+          mapService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
         }
 
@@ -180,7 +180,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                     geometry: changedGeometry
                   };
 
-                  openLayersService.highlightFeatures([feature]);
+                  mapService.highlightFeatures([feature]);
                 });
 
               fromMobx(() => this.editGeometryStore.isValid)
@@ -225,7 +225,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.layer.nativeCRS
       );
 
-      openLayersService.refreshLayers();
+      mapService.refreshLayers();
       communicationService.featuresUpdated.emit();
     } else {
       await this.batchUpdateFeatures(
@@ -266,7 +266,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .pipe(filter(value => !!value))
       .subscribe(() => {
         transformFeature.deleteFeatures([newId], layerName).then(() => {
-          openLayersService.refreshLayers();
+          mapService.refreshLayers();
           communicationService.featuresUpdated.emit();
           sidebars.setFeaturesEdited(false);
           if (this.viewFeatures) {
@@ -346,8 +346,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.loadPercent = percent > 100 ? 100 : percent;
     this.isSaveInProgress = false;
-    openLayersService.refreshLayers();
-    openLayersService.clearDraft();
+    mapService.refreshLayers();
+    mapService.clearDraft();
 
     Toast.success('Сохранено');
 

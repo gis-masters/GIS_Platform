@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs/operators';
 import { BaseEdit } from './base-edit';
 import { WfsFeature } from '../../services/geoserver/wfs.models';
 import { getFeatureById } from '../../services/geoserver/wfs.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { communicationService, ObjectDto } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
@@ -68,7 +68,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.closeMe.emit(true);
         Toast.success('Сохранено');
 
-        openLayersService.refreshLayers();
+        mapService.refreshLayers();
         await validationService.initValidation([crgLayer]);
         communicationService.needUpdateValidationResults.emit();
       } else {
@@ -81,7 +81,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   close() {
     this.closeMe.emit(true);
 
-    openLayersService.clearDraft();
+    mapService.clearDraft();
   }
 
   private async handleObject(objectDto: ObjectDto) {
@@ -99,7 +99,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
       }
 
-      openLayersService.highlightFeatures([wfsFeature]);
+      mapService.highlightFeatures([wfsFeature]);
     } catch (err) {
       this.isFeatureTypeLoaded = true;
     }

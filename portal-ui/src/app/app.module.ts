@@ -64,10 +64,10 @@ import { ReValidateButtonComponent } from './components/reValidateButton/reValid
 import { ZoomToFeatureComponent } from './components/zoom-to-feature/zoom-to-feature.component';
 import { OrgAdminComponent } from './components/org-admin/org-admin.component';
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
-import { SearchComponent } from './components/search/search.component';
 import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-select.component';
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { LogoComponent } from './components/logo/logo.component';
+import { MapToolbarComponent } from './components/map-toolbar/map-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -113,10 +113,10 @@ import { LogoComponent } from './components/logo/logo.component';
     ZoomToFeatureComponent,
     OrgAdminComponent,
     EditFeatureConfirmComponent,
-    SearchComponent,
     BasemapsSelectComponent,
     DataManagementComponent,
-    LogoComponent
+    LogoComponent,
+    MapToolbarComponent
   ],
   imports: [
     HttpClientModule,

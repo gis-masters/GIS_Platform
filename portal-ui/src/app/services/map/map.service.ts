@@ -23,15 +23,17 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import ImageLayer from 'ol/layer/Image';
 import { boundMethod } from 'autobind-decorator';
 
+import { mapStore } from '../../stores/Map.store';
 import { currentMap } from '../../stores/CurrentMap.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
+import { communicationService } from '../communication.service';
+import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../crg/basemaps.models';
-import { CrgLayer } from '../../services/crg/projects.models';
+import { CrgLayer } from '../crg/projects.models';
 import { WfsFeature } from '../geoserver/wfs.models';
 import { getWmsUrl } from '../server-urls.service';
 import { Emitter } from '../util/Emitter';
-import { MapperUtil } from './MapperUtil';
 import { services } from '../services';
 import { http } from '../http.service';
 import {
@@ -49,17 +51,17 @@ declare module '../../../../node_modules/@types/ol/Geolocation' {
 }
 
 // WMS request parameters. At least a LAYERS param is required.
-export interface CrgWmsParams {
+interface CrgWmsParams {
   LAYERS: string;
   FORMAT?: string;
 }
 
-export interface CrgAdditionalLayerInfo {
+interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
 }
 
-class OpenLayersService {
-  private static _instance: OpenLayersService;
+class MapService {
+  private static _instance: MapService;
 
   private CRG_INFO_PROP_NAME = 'crgInfo';
   private readonly isTiledWms: boolean;
@@ -79,14 +81,16 @@ class OpenLayersService {
   // Подлдожка
   private basemapLayer = new TileLayer();
 
-  private _map: Map;
+  map: Map;
   private view: View;
-  private draftStyle: Style;
   private markersSource: VectorSource;
+
+  private draftStyle: Style;
   private draftSource: VectorSource;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
   private drawHandler: (e: DrawEvent) => void;
+
   private isModifying = false;
   private pickHandler: (e: MapBrowserEvent) => void;
 
@@ -97,8 +101,9 @@ class OpenLayersService {
   private HIT_TOLERANCE = 10;
 
   // ZIndex чернового слоя который используется для подсвечивания объектов
-  private DRAFT_LAYER_ZINDEX = 10000;
-  private MARKERS_LAYER_ZINDEX = 10100;
+  readonly DRAFT_LAYER_ZINDEX = 10000;
+  readonly MEASURE_LAYER_ZINDEX = 10100;
+  readonly MARKERS_LAYER_ZINDEX = 10200;
 
   // Default view options
   private defaultZoomValue = 9;
@@ -163,25 +168,25 @@ class OpenLayersService {
       })
     });
 
-    this._map = new Map({
+    this.map = new Map({
       target: 'fiz-openLayer-map',
       view: this.view,
       controls: defaultControls().extend([new ScaleLine()]),
       layers: [
         this.basemapLayer,
         new VectorLayer({
-          source: this.markersSource,
-          zIndex: this.MARKERS_LAYER_ZINDEX
-        }),
-        new VectorLayer({
           source: this.draftSource,
           zIndex: this.DRAFT_LAYER_ZINDEX,
           style: this.draftStyle
+        }),
+        new VectorLayer({
+          source: this.markersSource,
+          zIndex: this.MARKERS_LAYER_ZINDEX
         })
       ]
     });
 
-    this._map.on('singleclick', e => {
+    this.map.on('singleclick', e => {
       if (this.pickHandler) {
         this.pickHandler(e);
         delete this.pickHandler;
@@ -190,7 +195,7 @@ class OpenLayersService {
       }
 
       if (e.coordinate) {
-        if (!this.isModifying && !this.draftSourceDraw) {
+        if (!this.isModifying && !this.draftSourceDraw && !mapStore.measureMode) {
           this.mapClick.emit(e.coordinate);
         }
       } else {
@@ -203,10 +208,11 @@ class OpenLayersService {
   }
 
   destroyMap() {
+    communicationService.beforeMapDestroy.emit();
     this.drawOff();
     this.pickingOff();
-    this._map.unset('target');
-    delete this._map;
+    this.map.unset('target');
+    delete this.map;
     delete this.view;
   }
 
@@ -243,7 +249,7 @@ class OpenLayersService {
 
         tileLayer.setProperties(props);
 
-        this._map.addLayer(tileLayer);
+        this.map.addLayer(tileLayer);
       }
     });
   }
@@ -298,7 +304,7 @@ class OpenLayersService {
 
       layer.setProperties(props);
 
-      this._map.addLayer(layer);
+      this.map.addLayer(layer);
     }
   }
 
@@ -309,7 +315,7 @@ class OpenLayersService {
   async deleteLayerFromMap(complexLayerName: string) {
     const layerByName = this.getLayerByName(complexLayerName);
 
-    this._map.removeLayer(layerByName);
+    this.map.removeLayer(layerByName);
   }
 
   /**
@@ -349,17 +355,10 @@ class OpenLayersService {
     }
   }
 
-  set_ZIndex(complexLayerName: string, index: number) {
-    const layerByName = this.getLayerByName(complexLayerName);
-    if (layerByName) {
-      layerByName.setZIndex(index);
-    }
-  }
-
   /**
    * @param complexLayerName Название слоя в формате 'workspace:layerName'
    */
-  getLayerByName(complexLayerName: string): ImageLayer | TileLayer | undefined {
+  private getLayerByName(complexLayerName: string): ImageLayer | TileLayer | undefined {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
 
@@ -381,7 +380,7 @@ class OpenLayersService {
 
   // Очистить карту от всех слоёв.
   clearMap() {
-    this.getUserLayers().forEach(layer => this._map.removeLayer(layer));
+    this.getUserLayers().forEach(layer => this.map.removeLayer(layer));
   }
 
   /**
@@ -398,7 +397,7 @@ class OpenLayersService {
 
     this.clearDraft();
 
-    const olFeatures = featuresInOlProjection.map(feature => MapperUtil.mapWfsFeatureToFeature(feature));
+    const olFeatures = featuresInOlProjection.map(feature => wfsFeatureToFeature(feature));
     this.draftSource.addFeatures(olFeatures);
   }
 
@@ -414,7 +413,7 @@ class OpenLayersService {
       properties: ''
     };
 
-    const olFeature = MapperUtil.mapWfsFeatureToFeature(feature);
+    const olFeature = wfsFeatureToFeature(feature);
     if (olFeature) {
       this.draftSource.addFeature(olFeature);
 
@@ -427,7 +426,7 @@ class OpenLayersService {
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number]) {
-    this._map.getView().fit(bbox, { padding }); // constrainResolution Ломает view на слоях с геометрией Point
+    this.map.getView().fit(bbox, { padding }); // constrainResolution Ломает view на слоях с геометрией Point
   }
 
   getResolution() {
@@ -467,7 +466,7 @@ class OpenLayersService {
     this.isModifying = true;
     this.selectDraftColor();
     this.draftSourceModify.on('modifyend', this.modificationHandler);
-    this._map.addInteraction(this.draftSourceModify);
+    this.map.addInteraction(this.draftSourceModify);
     this.modificationEnabled.emit();
   }
 
@@ -475,7 +474,7 @@ class OpenLayersService {
     this.isModifying = false;
     this.selectDraftColor();
     this.draftSourceModify.un('modifyend', this.modificationHandler);
-    this._map.removeInteraction(this.draftSourceModify);
+    this.map.removeInteraction(this.draftSourceModify);
     this.modificationDisabled.emit();
   }
 
@@ -496,14 +495,14 @@ class OpenLayersService {
     this.drawHandler = handler;
 
     this.draftSourceDraw.on('drawend', this.drawHandler);
-    this._map.addInteraction(this.draftSourceDraw);
+    this.map.addInteraction(this.draftSourceDraw);
   }
 
   drawOff() {
     document.body.classList.remove('global-crosshair-cursor');
     if (this.draftSourceDraw) {
       this.draftSourceDraw.un('drawend', this.drawHandler);
-      this._map.removeInteraction(this.draftSourceDraw);
+      this.map.removeInteraction(this.draftSourceDraw);
       delete this.draftSourceDraw;
     }
   }
@@ -518,14 +517,14 @@ class OpenLayersService {
 
   positionToFeature(wfsFeature: WfsFeature, projection?: CrgProjection) {
     projection = projection || getFeatureProjection(wfsFeature);
-    const olFeature: Feature = MapperUtil.mapWfsFeatureToFeature(wfsFeature, true);
+    const olFeature: Feature = wfsFeatureToFeature(wfsFeature, true);
     if (!olFeature) {
       services.logger.warn('Incorrect feature: ', wfsFeature);
       return;
     }
 
-    const view = this._map.getView();
-    const size = this._map.getSize();
+    const view = this.map.getView();
+    const size = this.map.getSize();
 
     const geometry = olFeature.getGeometry();
     const extent = chunk(geometry.getExtent(), 2)
@@ -548,15 +547,15 @@ class OpenLayersService {
   }
 
   print() {
-    const size = this._map.getSize();
-    const viewResolution = this._map.getView().getResolution();
+    const size = this.map.getSize();
+    const viewResolution = this.map.getView().getResolution();
     const { pageWidth, pageHeight, resolution, pageFormat } = printSettings;
     const width = Math.round((pageWidth * resolution) / 25.4);
     const height = Math.round((pageHeight * resolution) / 25.4);
 
     printSettings.setPrintingStatus(true);
 
-    this._map.once('rendercomplete', () => {
+    this.map.once('rendercomplete', () => {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
       mapCanvas.height = height;
@@ -582,16 +581,16 @@ class OpenLayersService {
       pdf.addImage(mapCanvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, pageWidth, pageHeight);
       pdf.save('map.pdf');
       // Reset original map size
-      this._map.setSize(size);
-      this._map.getView().setResolution(viewResolution);
+      this.map.setSize(size);
+      this.map.getView().setResolution(viewResolution);
 
       printSettings.setPrintingStatus(false);
     });
 
     // Set print size
-    this._map.setSize([width, height]);
+    this.map.setSize([width, height]);
     const scaling = Math.min(width / size[0], height / size[1]);
-    this._map.getView().setResolution(viewResolution / scaling);
+    this.map.getView().setResolution(viewResolution / scaling);
   }
 
   drawMarkers(features: Feature[]) {
@@ -643,7 +642,7 @@ class OpenLayersService {
    * Все слои которые являются пользовательскими
    */
   private getUserLayers(): TileLayer[] {
-    return this._map
+    return this.map
       .getLayers()
       .getArray()
       .filter(layer => this.isUserLayer(layer)) as TileLayer[];
@@ -730,4 +729,4 @@ class OpenLayersService {
   }
 }
 
-export const openLayersService = OpenLayersService.instance;
+export const mapService = MapService.instance;

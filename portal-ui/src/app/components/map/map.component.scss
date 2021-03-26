@@ -9,20 +9,19 @@
   align-content: stretch;
   align-items: stretch;
   justify-content: stretch;
-
-  justify-items: stretch;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   grid-template-areas: 'bar-left map bar-right'
   'bar-bottom bar-bottom bar-bottom';
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: 1fr auto;
+
+  justify-items: stretch;
   grid-gap: 0 0;
 
   &__map {
     position: relative;
+    grid-area: map;
 
     overflow: hidden;
-
-    grid-area: map;
 
     ::ng-deep .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible {
       display: none;

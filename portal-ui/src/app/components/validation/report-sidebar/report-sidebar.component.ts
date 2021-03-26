@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 
-import { openLayersService } from '../../../services/open-layer/open-layers.service';
+import { mapService } from '../../../services/map/map.service';
 import { communicationService, ObjectDto } from '../../../services/communication.service';
 import { ValidationBrieflyInfo, validationService } from '../../../services/crg/validation.service';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
@@ -87,7 +87,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   closeMe() {
-    openLayersService.clearDraft();
+    mapService.clearDraft();
     sidebars.closeBugReport();
   }
 

@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { supportedGeometryTypes } from '../../services/geoserver/wfs.models';
 import { Emitter } from '../../services/util/Emitter';
 
@@ -28,7 +28,7 @@ interface EditFeatureGeometryProps {
 @observer
 export class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
   componentDidMount() {
-    openLayersService.modificationDone.on(this.modifyHandler, this);
+    mapService.modificationDone.on(this.modifyHandler, this);
   }
 
   componentWillUnmount()  {

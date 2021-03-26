@@ -1,0 +1,13 @@
+.MapToolbar {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 336px;
+  max-width: calc(100% - 55px);
+}

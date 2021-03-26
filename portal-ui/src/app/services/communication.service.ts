@@ -25,6 +25,7 @@ class CommunicationService {
   allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
   libraryItemsUpdated = new Emitter();
+  beforeMapDestroy = new Emitter();
 
   off(scope: any) {
     Emitter.scopeOff(scope);

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 
 import { EditedField, FeatureDescription } from '../../services/crg/schema.models';
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { FeaturePropertyValidators, ValidationError } from '../../services/util/FeaturePropertyValidators';
 
 type Properties = { [key: string]: string };
@@ -19,7 +19,7 @@ export class BaseEdit implements OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    openLayersService.clearDraft();
+    mapService.clearDraft();
   }
 
   getActualValuesFromForm(): Properties {

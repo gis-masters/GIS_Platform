@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { SearchOutlined } from '@material-ui/icons';
 import { IconButton, InputBase, Popover, Paper, CircularProgress } from '@material-ui/core';
 
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { geocodeService, YaGeoObjectCollection } from '../../services/yandex-geocode.service';
 
 import { SearchResultList } from './ResultList/Search-ResultList';
@@ -62,7 +62,7 @@ export class Search extends Component {
   private handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.searchValue = e.target.value;
     if (!this.searchValue) {
-      openLayersService.clearMarkers();
+      mapService.clearMarkers();
     }
   }
 
@@ -95,7 +95,7 @@ export class Search extends Component {
   @action.bound
   private closeResultList() {
     this.resultListOpen = false;
-    openLayersService.clearMarkers();
+    mapService.clearMarkers();
   }
 
   @action

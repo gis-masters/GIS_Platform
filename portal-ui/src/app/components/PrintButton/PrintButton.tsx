@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogActions, IconButton, Tooltip } from '@mate
 import { Print, PrintOutlined } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
 
-import { openLayersService } from '../../services/open-layer/open-layers.service';
+import { mapService } from '../../services/map/map.service';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { PrintDialog } from '../PrintDialog/PrintDialog';
@@ -46,7 +46,7 @@ export class PrintButton extends Component {
 
   @boundMethod
   private print() {
-    openLayersService.print();
+    mapService.print();
     this.closeDialog();
   }
 

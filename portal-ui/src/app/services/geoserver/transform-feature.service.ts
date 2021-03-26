@@ -5,10 +5,10 @@ import GeometryType from 'ol/geom/GeometryType';
 import { Coordinate } from 'ol/coordinate';
 
 import { currentUser } from '../../stores/CurrentUser.store';
+import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { getFeatureProjection } from './projections.service';
 import { FeatureDescription } from '../crg/schema.models';
 import { WfsFeature, WfsGeometry } from './wfs.models';
-import { MapperUtil } from '../open-layer/MapperUtil';
 import { usersService } from '../crg/users.service';
 import { getWfsUrl } from '../server-urls.service';
 import { FeatureUtil } from '../util/FeatureUtil';
@@ -135,7 +135,7 @@ export class TransformFeatureService {
 
       // TODO: брать поле с геометрией из схемы
       if (featureData.geometry) {
-        feature.set('shape', MapperUtil.mapFwsGeometryToGeometry(featureData.geometry as WfsGeometry<Coordinate>));
+        feature.set('shape', wfsGeometryToGeometry(featureData.geometry as WfsGeometry<Coordinate>));
       }
 
       return feature;

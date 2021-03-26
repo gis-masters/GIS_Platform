@@ -2,23 +2,28 @@ body .PseudoLink {
   cursor: pointer;
   transition: border-bottom-color 0.3s;
 
+  --PseudoLinkColor: #3f51b5;
+
+  &_color {
+    &_inherit {
+      --PseudoLinkColor: inherit;
+    }
+  }
+
+  &_disabled {
+    cursor: default;
+
+    --PseudoLinkColor: var(--gray);
+  }
+
   &-Inner {
-    color: #3f51b5;
-    border-bottom: 1px #3f51b5 dashed;
+    color: var(--PseudoLinkColor);
+    border-bottom: 1px currentcolor dashed;
   }
 
   &:hover {
     .PseudoLink-Inner {
       border-bottom-color: var(--red);
     }
-  }
-
-  &_disabled {
-    cursor: default;
-  }
-
-  &_disabled &-Inner {
-    color: var(--gray);
-    border-bottom: 1px var(--gray) dashed;
   }
 }

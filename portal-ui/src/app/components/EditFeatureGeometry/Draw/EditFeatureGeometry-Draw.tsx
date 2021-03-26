@@ -10,7 +10,7 @@ import { cn } from '@bem-react/classname';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { transform, olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
-import { openLayersService } from '../../../services/open-layer/open-layers.service';
+import { mapService } from '../../../services/map/map.service';
 import { CoordinateEdited } from '../../../services/geoserver/wfs.models';
 import { Emitter } from '../../../services/util/Emitter';
 import { boundMethod } from 'autobind-decorator';
@@ -31,13 +31,13 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @observable private active = false;
 
   componentDidMount() {
-    openLayersService.modificationDisabled.on(this.disactivate);
+    mapService.modificationDisabled.on(this.disactivate);
   }
 
   componentWillUnmount() {
     if (this.active) {
-      openLayersService.drawOff();
-      openLayersService.disableDraftModification();
+      mapService.drawOff();
+      mapService.disableDraftModification();
     }
 
     Emitter.scopeOff(this);
@@ -87,13 +87,13 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @boundMethod
   private clickHandler() {
     if (!this.active) {
-      openLayersService.draw(this.drawingGeometryType, this.handleDraw);
-      openLayersService.disableDraftModification();
-      openLayersService.enableDraftModification();
+      mapService.draw(this.drawingGeometryType, this.handleDraw);
+      mapService.disableDraftModification();
+      mapService.enableDraftModification();
       this.activate();
     } else {
-      openLayersService.drawOff();
-      openLayersService.disableDraftModification();
+      mapService.drawOff();
+      mapService.disableDraftModification();
       this.disactivate();
     }
   }

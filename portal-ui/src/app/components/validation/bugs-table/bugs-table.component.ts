@@ -14,7 +14,7 @@ import { schemaService } from '../../../services/crg/schema.service';
 import { getProjection } from '../../../services/geoserver/projections.service';
 import { getFeatureById } from '../../../services/geoserver/wfs.service';
 import { WfsFeature } from '../../../services/geoserver/wfs.models';
-import { openLayersService } from '../../../services/open-layer/open-layers.service';
+import { mapService } from '../../../services/map/map.service';
 import { ValidationResultsResponse, validationService } from '../../../services/crg/validation.service';
 import { ProcessStatus } from '../../../services/models';
 import { CrgLayer } from '../../../services/crg/projects.models';
@@ -137,8 +137,8 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     const wfsFeature: WfsFeature = await getFeatureById(this.crgLayer.complexName, objectId);
 
     const projection = getProjection(this.crgLayer.nativeCRS);
-    openLayersService.highlightFeatures([wfsFeature], projection);
-    openLayersService.positionToFeature(wfsFeature, projection);
+    mapService.highlightFeatures([wfsFeature], projection);
+    mapService.positionToFeature(wfsFeature, projection);
   }
 
   editObject(event: Event, objectId: string) {

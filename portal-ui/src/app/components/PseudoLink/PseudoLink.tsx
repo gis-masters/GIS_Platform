@@ -10,14 +10,15 @@ interface PseudoLinkProps extends React.DetailedHTMLProps<React.HTMLAttributes<H
   onClick: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
   className?: string;
   disabled?: boolean;
+  color?: 'inherit';
 }
 
 export class PseudoLink extends Component<PseudoLinkProps> {
   render() {
-    const { disabled, className, children } = this.props;
+    const { disabled, className, children, color } = this.props;
 
     return (
-      <span {...this.props} className={cnPseudoLink({ disabled }, [className])} onClick={this.clickHandler}>
+      <span {...this.props} className={cnPseudoLink({ disabled, color }, [className])} onClick={this.clickHandler}>
         <span className={cnPseudoLink('Inner')}>{children}</span>
       </span>
     );
