@@ -7,8 +7,8 @@ import ru.mycrg.geoserver_client.services.user_role.UsersAndRolesService;
 
 import java.util.List;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 @Service("deleteUserAndRole")
 public class DeleteUserAndRole implements JavaDelegate {
@@ -21,7 +21,7 @@ public class DeleteUserAndRole implements JavaDelegate {
 
         UsersAndRolesService usersAndRolesService = new UsersAndRolesService(accessToken);
 
-        String roleName = DEFAULT_ROLE_NAME + orgId;
+        String roleName = getDefaultRoleName(orgId);
 
         for (String userName: users) {
             usersAndRolesService.deleteUser(userName);

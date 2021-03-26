@@ -4,35 +4,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.wrapper.dao.CrgDaoGeometryHelper;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.queue.MqSender;
 
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
 public class GeometryHandler extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(GeometryHandler.class);
 
-    private final MqSender mqSender;
+    private final IMessageBusProducer messageBus;
     private final CrgDaoGeometryHelper geometryHelper;
     private final DatasourceFactory datasourceFactory;
 
     public GeometryHandler(CrgDaoGeometryHelper geometryHelper,
-                           MqSender mqSender,
+                           IMessageBusProducer messageBus,
                            DatasourceFactory datasourceFactory) {
-        this.mqSender = mqSender;
+        this.messageBus = messageBus;
         this.geometryHelper = geometryHelper;
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
+    public void handle(ImportRequestEvent event, ImportMqTask importTask) {
         log.debug("Validate / fix geometry");
 
         final ResourceProjection target = importTask.getTargetResource();
@@ -51,16 +51,15 @@ public class GeometryHandler extends AbstractImportChainItem {
             }
 
             if (nextImporter != null) {
-                nextImporter.handle(mqRequest, importTask);
+                nextImporter.handle(event, importTask);
             }
         } catch (Exception e) {
             String msg = String.format("Не удалось выполнить исправление геометрии для: %s", target.toString());
 
             log.error(msg, e);
 
-            mqSender.send(
-                    new BaseMqProcessResponse(mqRequest,
-                            new ImportMqResponse(importTask), TASK_ERROR, "Error", msg));
+            messageBus.produce(
+                    new ImportResponseEvent(event, TASK_ERROR, "Error", msg, new ImportMqResponse(importTask)));
 
             rollback(importTask);
         }

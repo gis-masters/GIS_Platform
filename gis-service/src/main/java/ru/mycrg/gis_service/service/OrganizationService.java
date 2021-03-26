@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_utils.CrgGlobalProperties;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.repository.ProjectRepository;
@@ -15,12 +16,10 @@ import ru.mycrg.gis_service.repository.ProjectRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.CREATE_ORGANIZATION;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessKey.REMOVE_ORGANIZATION;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
-import static ru.mycrg.gis_service.service.ProjectService.DEFAULT_PROJECT_NAME;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
-import static ru.mycrg.mq_queue_contract.CrgConstants.SCRATCH_DB_PREFIX;
 
 @Service
 public class OrganizationService {
@@ -48,15 +47,12 @@ public class OrganizationService {
     public ProcessInstance delete(Long id, List<String> users, Authentication authentication) {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
 
-        String dbName = DEFAULT_DB_NAME + id;
-        String scratchWorkspaceName = SCRATCH_DB_PREFIX + dbName;
-
         List<String> workspaces = projectRepository
                 .findAllByOrganizationId(id).stream()
                 .map(Project::getId)
-                .map(projectId -> DEFAULT_PROJECT_NAME + "_" + projectId)
+                .map(CrgGlobalProperties::getDefaultProjectName)
                 .collect(Collectors.toList());
-        workspaces.add(scratchWorkspaceName);
+        workspaces.add(getScratchWorkspaceName(id));
 
         VariableMap variables = Variables
                 .createVariables()

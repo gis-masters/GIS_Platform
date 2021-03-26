@@ -1,6 +1,6 @@
 package ru.mycrg.wrapper.service;
 
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
 
 public interface CrgChainable<T> {
 
@@ -12,8 +12,7 @@ public interface CrgChainable<T> {
      */
     void setHandlers(CrgChainable<T> nextHandler, CrgChainable<T> previousHandler);
 
-    void handle(BaseMqProcessRequest mqRequest, T request);
+    void handle(ImportRequestEvent event, T request);
 
     void rollback(T request);
-
 }

@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.postgresql.util.PGobject;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.wrapper.service.import_.DataHandler;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 

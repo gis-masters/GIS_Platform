@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.gis_service.security.CrgClaimsParser.*;
 
 @Service
@@ -36,8 +37,6 @@ public class ProjectService {
 
     private final ProjectionFactory projectionFactory;
     private final ProjectRepository projectRepository;
-
-    public static final String DEFAULT_PROJECT_NAME = "workspace";
 
     public ProjectService(ProjectionFactory projectionFactory,
                           ProjectRepository projectRepository) {
@@ -155,7 +154,7 @@ public class ProjectService {
         Project newProject = new Project(dto.getProjectName(), orgId);
         Project savedProject = projectRepository.save(newProject);
 
-        savedProject.setInternalName(DEFAULT_PROJECT_NAME + "_" + savedProject.getId());
+        savedProject.setInternalName(getDefaultProjectName(savedProject.getId()));
 
         projectRepository.save(savedProject);
 

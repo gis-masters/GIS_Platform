@@ -10,7 +10,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.io.IOException;
 import java.util.List;

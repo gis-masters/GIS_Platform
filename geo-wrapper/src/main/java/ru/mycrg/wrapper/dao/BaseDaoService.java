@@ -9,11 +9,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.mq_queue_contract.ObjectValidationResult;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
-import ru.mycrg.mq_queue_contract.import_.MatchingPair;
-import ru.mycrg.mq_queue_contract.import_.TargetAttribute;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
+import ru.mycrg.data_service_contract.dto.import_.TargetAttribute;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import java.util.List;

@@ -20,8 +20,9 @@ public class CrgScriptEngine {
     /**
      * Вызов функции с обьектом в качестве параметра.
      *
-     * @param data Параметр для функции
+     * @param data     Параметр для функции
      * @param function Функция
+     *
      * @return Результат выполнения функции.
      */
     public Object invokeFunction(Map<String, Object> data, String function) {
@@ -41,5 +42,4 @@ public class CrgScriptEngine {
             return new HashMap<>();
         }
     }
-
 }

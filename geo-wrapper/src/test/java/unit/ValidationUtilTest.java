@@ -3,9 +3,9 @@ package unit;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
-import ru.mycrg.mq_queue_contract.ErrorDescription;
-import ru.mycrg.mq_queue_contract.ObjectValidationResult;
-import ru.mycrg.mq_queue_contract.PropertyViolation;
+import ru.mycrg.data_service_contract.dto.ErrorDescription;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
+import ru.mycrg.data_service_contract.dto.PropertyViolation;
 import ru.mycrg.wrapper.service.validation.Util;
 
 import static org.junit.Assert.assertEquals;

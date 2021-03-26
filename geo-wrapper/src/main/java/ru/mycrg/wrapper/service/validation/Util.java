@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public class Util {
 
     private static final Logger log = LoggerFactory.getLogger(Util.class);
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private Util() {
         throw new IllegalStateException("Utility class");
@@ -37,9 +37,9 @@ public class Util {
 
     public static JsonNode convertToJson(ObjectValidationResult object) {
         try {
-            String asString = mapper.writer()
-                                    .withDefaultPrettyPrinter()
-                                    .writeValueAsString(object);
+            String asString = objectMapper.writer()
+                                          .withDefaultPrettyPrinter()
+                                          .writeValueAsString(object);
             return JacksonUtil.toJsonNode(asString);
         } catch (JsonProcessingException e) {
             log.error("Failed convert to json: {}", e.getMessage());

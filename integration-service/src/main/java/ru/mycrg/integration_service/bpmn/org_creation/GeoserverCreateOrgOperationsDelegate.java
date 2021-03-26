@@ -7,7 +7,7 @@ import okhttp3.Response;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 
 import java.net.URL;
 

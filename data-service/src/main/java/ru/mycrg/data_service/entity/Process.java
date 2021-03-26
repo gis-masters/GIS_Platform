@@ -6,8 +6,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.hateoas.Identifiable;
-import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
-import ru.mycrg.mq_queue_contract.enums.ProcessType;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.persistence.*;
 import java.util.Objects;

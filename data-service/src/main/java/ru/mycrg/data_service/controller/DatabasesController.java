@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,7 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.DatabaseCreateDto;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service_contract.queue.request.DeleteGisReferencesEvent;
 import ru.mycrg.data_service.service.DatabaseService;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
 
@@ -16,6 +19,9 @@ import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_
 
 @RestController
 public class DatabasesController {
+
+    @Autowired
+    private IMessageBusProducer messageBus;
 
     private final DatabaseService databaseService;
 
@@ -49,4 +55,15 @@ public class DatabasesController {
 
         return ResponseEntity.noContent().build();
     }
+
+
+
+
+    @GetMapping("/testMq/{some}")
+    public ResponseEntity<String> testMq(@PathVariable String some) {
+        messageBus.produce(new DeleteGisReferencesEvent(some));
+
+        return ResponseEntity.ok("OK");
+    }
+
 }

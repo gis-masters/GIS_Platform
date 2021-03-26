@@ -7,8 +7,8 @@ import ru.mycrg.geoserver_client.services.rule.RulesService;
 
 import java.util.List;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.*;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 @Service("deleteRules")
 public class DeleteRules implements JavaDelegate {
@@ -24,7 +24,7 @@ public class DeleteRules implements JavaDelegate {
             rulesService.deleteResourceRule(workspaceName);
         }
 
-        rulesService.deleteRestRule(DEFAULT_ROLE_NAME + orgId);
-        rulesService.deleteServiceRule(DEFAULT_ROLE_NAME + orgId);
+        rulesService.deleteRestRule(getDefaultRoleName(orgId));
+        rulesService.deleteServiceRule(getDefaultRoleName(orgId));
     }
 }

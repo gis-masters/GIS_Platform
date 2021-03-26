@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.SimplePropertyDto;
-import ru.mycrg.mq_queue_contract.enums.ValueType;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
-import ru.mycrg.mq_queue_contract.import_.MatchingPair;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.wrapper.dao.SqlGenerator;
 
 import java.io.IOException;

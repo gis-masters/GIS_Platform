@@ -1,26 +1,19 @@
 package ru.mycrg.data_service.service.import_;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.ProcessDao;
-import ru.mycrg.data_service.dto.TaskModel;
 import ru.mycrg.data_service.dto.WorkImport;
-import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.queue.MqSender;
-import ru.mycrg.data_service.service.BaseProcessService;
+import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.WsNotificationService;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import java.net.URL;
@@ -30,43 +23,38 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
-import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.mq_queue_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Service
-public class ImportService extends BaseProcessService {
+public class ImportService {
 
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final Environment environment;
     private final SchemaService schemaService;
-    private final MqSender mqSender;
-    private final WsNotificationService wsNotificationService;
+    private final IMessageBusProducer messageBus;
+    private final ProcessService processService;
 
-    public ImportService(MqSender mqSender,
+    public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
                          SchemaService schemaService,
-                         ProcessDao processDao,
-                         WsNotificationService wsNotificationService) {
-        super(processDao);
-
-        this.mqSender = mqSender;
+                         ProcessService processService) {
+        this.messageBus = messageBus;
         this.environment = environment;
         this.schemaService = schemaService;
-        this.wsNotificationService = wsNotificationService;
+        this.processService = processService;
     }
 
     public Process initProcess(long projectId, String datasetName, WorkImport workImport, Principal principal) {
         long orgId = getOrganizationId(principal);
-        String dbName = DEFAULT_DB_NAME + orgId;
+        String dbName = getDefaultDatabaseName(orgId);
 
-        Process process = create(principal.getName(),
-                                 String.format("Импорт %d слоя(ёв) в dataset: %s", workImport.getImportTasks().size(),
-                                               datasetName),
-                                 IMPORT, workImport.getWsUiId());
+        final String title = String.format("Импорт %d слоя(ёв) в dataset: %s",
+                                         workImport.getImportTasks().size(), datasetName);
+        Process process = processService.create(principal.getName(), title, IMPORT, workImport.getWsUiId());
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
         workImport.getImportTasks().forEach(uiTask -> {
@@ -105,59 +93,9 @@ public class ImportService extends BaseProcessService {
             importMqRequest.add(importMqTask);
         });
 
-        mqSender.send(new BaseMqProcessRequest(dbName, process.getId(), IMPORT, importMqRequest));
+        messageBus.produce(new ImportRequestEvent(process.getId(), dbName, importMqRequest));
 
         return process;
-    }
-
-    @Override
-    public void handleMqResponse(BaseMqProcessResponse mqResponse) {
-        if (mqResponse.getId() == null) {
-            log.warn("Return invalid mqResponse");
-        }
-
-        Process process = getProcessById(mqResponse.getId(), mqResponse.getDbName());
-        log.info("catch import response event: {} / {}", mqResponse.getId(), mqResponse.getStatus());
-        switch (mqResponse.getStatus()) {
-            case TASK_ERROR:
-            case TASK_DONE:
-                addSubStep(process, mqResponse);
-                break;
-            case ERROR:
-                error(mqResponse.getDbName(), process);
-                break;
-            case DONE:
-                complete(mqResponse.getDbName(), process);
-                break;
-            default:
-                log.warn("Not supported process status. {}", process);
-        }
-
-        JsonNode extraInfo = process.getExtra();
-        String wsUiId = "null";
-        if (extraInfo != null) {
-            wsUiId = extraInfo.asText();
-        }
-
-        wsNotificationService.send(new WsMessageDto<>(mqResponse.getType(), mqResponse), wsUiId);
-    }
-
-    private void addSubStep(Process process, BaseMqProcessResponse mqResponse) {
-        try {
-            TaskModel subProcess = new TaskModel();
-            if (!mqResponse.getPayload().equals("")) {
-                ImportMqResponse rPayload = mapper.convertValue(mqResponse.getPayload(), ImportMqResponse.class);
-                subProcess = new TaskModel(rPayload.getTargetLayer(), mqResponse.getStatus(), mqResponse.getError());
-            } else if (mqResponse.getDescription() != null) {
-                subProcess = new TaskModel(mqResponse.getStatus(), mqResponse.getError());
-            } else {
-                log.warn("Task for processId: {} not have any description/payload?", process.getId());
-            }
-
-            addTask(process, subProcess);
-        } catch (Exception e) {
-            log.error("Failed add subStep to process / Error: {}", e.getMessage());
-        }
     }
 
     private String getRootAccessToken() {

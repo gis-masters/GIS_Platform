@@ -68,9 +68,13 @@
         <module>clients/oauth-client</module>
 		<module>clients/geoserver-client</module>
 
+		<module>contracts/messagebus-contract</module>
 		<module>contracts/auth-service-contract</module>
-		<module>contracts/mq-queue-contract</module>
 		<module>contracts/integration-service-contract</module>
+		<module>contracts/data-service-contract</module>
+
+		<module>contracts/common-utils</module>
+		<module>contracts/messagebus-starter</module>
 
 		<module>tests/acceptance-tests</module>
     </modules>

@@ -7,14 +7,13 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
-
-import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static java.lang.Thread.sleep;
+import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 

@@ -20,10 +20,13 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.*;
+import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.FileStorageService;
+import ru.mycrg.data_service.service.RecordsService;
+import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -34,10 +37,10 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.PARENT;
-import static ru.mycrg.data_service.util.filter.FilterCondition.*;
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.INNER_PATH;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PARENT;
+import static ru.mycrg.data_service.util.filter.FilterCondition.*;
 
 @RestController
 public class DocumentLibraryRecordsController {

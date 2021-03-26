@@ -71,7 +71,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>auth-service-contract</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

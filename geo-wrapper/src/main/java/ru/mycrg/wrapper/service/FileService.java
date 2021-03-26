@@ -1,8 +1,6 @@
 package ru.mycrg.wrapper.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.wrapper.config.CrgProperties;
 
@@ -14,8 +12,6 @@ import static java.io.File.separator;
 
 @Service
 public class FileService {
-
-    private static final Logger log = LoggerFactory.getLogger(FileService.class);
 
     private final Path exportStoragePath;
 

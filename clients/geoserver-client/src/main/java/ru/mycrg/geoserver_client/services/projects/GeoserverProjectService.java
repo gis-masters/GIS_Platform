@@ -5,9 +5,9 @@ import ru.mycrg.geoserver_client.services.rule.RulesService;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;
 import static ru.mycrg.geoserver_client.services.rule.RulesUtil.buildRule;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 public class GeoserverProjectService implements IProject {
 
@@ -31,13 +31,15 @@ public class GeoserverProjectService implements IProject {
             // На геосервере создаем рабочую область и хранилище.
             workspacesService.createWorkspace(projectName);
 
+            String roleName = getDefaultRoleName(orgId);
+
             // Задаем правила доступа к рабочей области проекта
-            rulesService.addLayersRule(buildRule(projectName, ADMIN), DEFAULT_ROLE_NAME + orgId);
+            rulesService.addLayersRule(buildRule(projectName, ADMIN), roleName);
             // Задаю правило WRITE потому как не давало менять фичу через wfs
-            rulesService.addLayersRule(buildRule(projectName, WRITE), DEFAULT_ROLE_NAME + orgId);
+            rulesService.addLayersRule(buildRule(projectName, WRITE), roleName);
             // Если не задано правило на чтение, то, по-умолчанию, рабочая область видна всем.
             // Azure workItem: 777 Add roles with anonymous
-            rulesService.addLayersRule(buildRule(projectName, READ), DEFAULT_ROLE_NAME + orgId + ",ROLE_ANONYMOUS");
+            rulesService.addLayersRule(buildRule(projectName, READ), roleName + ",ROLE_ANONYMOUS");
         } catch (Exception e) {
             throw new HttpClientException(e.getMessage(), e);
         }

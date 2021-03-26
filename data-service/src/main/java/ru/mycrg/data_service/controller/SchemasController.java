@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 

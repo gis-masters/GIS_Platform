@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto;
 
-import ru.mycrg.mq_queue_contract.enums.ProcessType;
+import ru.mycrg.data_service_contract.enums.ProcessType;
 
 public class WsMessageDto<T> {
 

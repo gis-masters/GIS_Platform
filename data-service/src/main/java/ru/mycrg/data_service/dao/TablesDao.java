@@ -22,7 +22,7 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service.util.filter.FilterItem;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

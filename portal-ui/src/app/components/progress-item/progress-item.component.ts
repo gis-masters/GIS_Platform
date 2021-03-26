@@ -32,7 +32,7 @@ export class ProgressItemComponent implements OnDestroy {
     } else if (this.event.payload.payload.status === ProcessStatus.DONE) {
       if (this.event.payload.type === ProcessType.EXPORT) {
         // @ts-ignore @FIXME
-        const layerName = this.event.payload.payload.layerName;
+        const layerName = this.event.payload.payload.description;
         return layerName ? layerName : 'Готово';
       }
     } else if (this.event.payload.payload.status === ProcessStatus.ERROR) {

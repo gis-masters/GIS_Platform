@@ -5,9 +5,9 @@ import org.w3c.dom.Element;
 
 public class GmlDocumentHolder {
 
-    private Document gmlDocument;
-    private Element gmlFeatureCollection;
-    private Element objectCollection;
+    private final Document gmlDocument;
+    private final Element gmlFeatureCollection;
+    private final Element objectCollection;
 
     public GmlDocumentHolder(Document mainDoc, Element gmlFeatureCollection, Element objectCollection) {
         this.gmlDocument = mainDoc;

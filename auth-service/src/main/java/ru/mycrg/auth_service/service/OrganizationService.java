@@ -10,15 +10,15 @@ import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.*;
-import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service_contract.AESCryptor;
-import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
-import ru.mycrg.auth_service_contract.OrganizationRemovedEvent;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
+import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.transaction.Transactional;
@@ -39,7 +39,7 @@ public class OrganizationService {
     private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
     private final AESCryptor aesCryptor;
-    private final MessageBus messageBus;
+    private final IMessageBusProducer messageBus;
     private final Environment environment;
     private final OAuthClient oAuthClient;
     private final UserRepository userRepository;
@@ -49,7 +49,7 @@ public class OrganizationService {
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
                                UserRepository userRepository,
-                               MessageBus messageBus,
+                               IMessageBusProducer messageBus,
                                Environment environment,
                                ProjectionFactory projectionFactory,
                                OAuthClient oAuthClient,
@@ -91,7 +91,7 @@ public class OrganizationService {
         newUser.setLogin(owner.getEmail());
         newUser.addAuthority(ORG_ADMIN);
 
-        messageBus.sendOrgEvent(
+        messageBus.produce(
                 new OrganizationInitializedEvent(newOrganization.getId(),
                                                  getRootAccessToken(),
                                                  aesCryptor.encrypt(owner.getPassword()),
@@ -120,7 +120,7 @@ public class OrganizationService {
                                                 .map(User::getLogin)
                                                 .collect(Collectors.toList());
 
-        messageBus.sendOrgEvent(
+        messageBus.produce(
                 new OrganizationRemovedEvent(orgId, getToken(authentication), owners));
     }
 

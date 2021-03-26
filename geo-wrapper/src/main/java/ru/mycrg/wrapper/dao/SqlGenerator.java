@@ -3,11 +3,11 @@ package ru.mycrg.wrapper.dao;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.SimplePropertyDto;
-import ru.mycrg.mq_queue_contract.enums.ForeignKeyType;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.enums.ForeignKeyType;
 
 import java.util.List;
 import java.util.Map;

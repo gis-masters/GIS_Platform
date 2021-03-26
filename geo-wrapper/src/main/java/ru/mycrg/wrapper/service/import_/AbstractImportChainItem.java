@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.service.import_;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
 import ru.mycrg.wrapper.service.CrgChainable;
 
 public abstract class AbstractImportChainItem implements CrgChainable<ImportMqTask> {

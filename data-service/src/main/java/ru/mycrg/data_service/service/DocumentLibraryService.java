@@ -17,7 +17,7 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceManager;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
-import ru.mycrg.mq_queue_contract.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
 import java.util.List;

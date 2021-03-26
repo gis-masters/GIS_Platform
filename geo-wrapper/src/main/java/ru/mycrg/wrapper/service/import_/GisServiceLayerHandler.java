@@ -9,20 +9,20 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ImportException;
-import ru.mycrg.wrapper.queue.MqSender;
 
 import java.net.URL;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultStoreName;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_STORE_POSTFIX;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
 public class GisServiceLayerHandler extends AbstractImportChainItem {
@@ -31,17 +31,17 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
     private final JSONObject json = new JSONObject();
 
-    private final MqSender mqSender;
+    private final IMessageBusProducer messageBus;
     protected final OkHttpClient httpClient;
     private final CrgProperties properties;
 
-    public GisServiceLayerHandler(MqSender mqSender, CrgProperties properties) {
-        this.mqSender = mqSender;
+    public GisServiceLayerHandler(IMessageBusProducer messageBus, CrgProperties properties) {
+        this.messageBus = messageBus;
         this.properties = properties;
         this.httpClient = new OkHttpClient();
     }
 
-    public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
+    public void handle(ImportRequestEvent event, @NotNull ImportMqTask importTask) {
         SchemaDto schemaDto = importTask.getFeatureDescription();
         String layerName = importTask.getLayerName();
         String styleName = importTask.getStyleName();
@@ -52,7 +52,7 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
 
         String databaseName = importTask.getTargetResource().getDbName();
         String datasetName = importTask.getTargetResource().getSchemaName();
-        String storeName = databaseName + DEFAULT_STORE_POSTFIX;
+        String storeName = getDefaultStoreName(databaseName);
 
         json.put("title", title);
         json.put("dataset", datasetName);
@@ -77,15 +77,14 @@ public class GisServiceLayerHandler extends AbstractImportChainItem {
             }
 
             if (nextImporter != null) {
-                nextImporter.handle(mqRequest, importTask);
+                nextImporter.handle(event, importTask);
             }
         } catch (Exception e) {
             String msg = "Не удалось создать слой на gis_service: " + layerName;
             log.error(msg, e);
 
-            mqSender.send(
-                    new BaseMqProcessResponse(mqRequest,
-                                              new ImportMqResponse(importTask), TASK_ERROR, "", msg));
+            messageBus.produce(
+                    new ImportResponseEvent(event, TASK_ERROR, "", msg, new ImportMqResponse(importTask)));
 
             if (previousImporter != null) {
                 previousImporter.rollback(importTask);

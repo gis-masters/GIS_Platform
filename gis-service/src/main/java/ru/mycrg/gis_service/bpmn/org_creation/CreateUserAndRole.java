@@ -8,10 +8,10 @@ import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.geoserver_client.services.user_role.UsersAndRolesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.CREATE_DTO_VAR_NAME;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_ROLE_NAME;
 
 @Service("createUserAndRole")
 public class CreateUserAndRole implements JavaDelegate {
@@ -27,7 +27,7 @@ public class CreateUserAndRole implements JavaDelegate {
 
         UsersAndRolesService usersAndRolesService = new UsersAndRolesService(accessToken);
 
-        String roleName = DEFAULT_ROLE_NAME + dto.getOrgId();
+        String roleName = getDefaultRoleName(dto.getOrgId());
         String rawPassword = aesCryptor.decrypt(dto.getOwnerRawPassword());
 
         usersAndRolesService.createUser(dto.getOwnerEmail(), rawPassword);

@@ -46,7 +46,7 @@ public class ProcessesController {
     @GetMapping("/{processId}")
     @PreAuthorize("isAuthenticated()")
     public Resource<Process> getProcessesById(@PathVariable Long processId) {
-        Process process = processService.findById(processId);
+        Process process = processService.getById(processId);
 
         Resource<Process> resource = new Resource<>(process);
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withSelfRel());

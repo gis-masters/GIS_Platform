@@ -10,7 +10,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static ru.mycrg.mq_queue_contract.config.MqProperties.*;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Configuration
 public class RabbitConfiguration {
@@ -43,26 +43,22 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueValidationResult()).to(fanoutExchangeValidationResult());
     }
 
-    // Config "crg postgres" exchange/queue
-    @Bean public Queue queuePostgreValidation() { return new Queue(QUEUE_POSTGRE_VALIDATION, false);}
-    @Bean public FanoutExchange fanoutExchangePostgreValidation() { return new FanoutExchange(FANOUT_POSTGRE_VALIDATION);}
-    @Bean public Binding bindingPostgreValidation() {
-        return BindingBuilder.bind(queuePostgreValidation()).to(fanoutExchangePostgreValidation());
+    // Config "export init generation" exchange/queue
+    @Bean public Queue queueExportInit() { return new Queue(QUEUE_EXPORT_INIT, false);}
+    @Bean public FanoutExchange fanoutExchangeExportInit() { return new FanoutExchange(FANOUT_EXPORT_INIT);}
+    @Bean public Binding bindingExportInit() {
+        return BindingBuilder.bind(queueExportInit()).to(fanoutExchangeExportInit());
     }
 
-    // Config "gml init generation" exchange/queue
-    @Bean public Queue queueGmlInit() { return new Queue(QUEUE_GML_INIT, false);}
-    @Bean public FanoutExchange fanoutExchangeGmlInit() { return new FanoutExchange(FANOUT_GML_INIT);}
-    @Bean public Binding bindingGmlInit() {
-        return BindingBuilder.bind(queueGmlInit()).to(fanoutExchangeGmlInit());
+    // Config "export response"
+    @Bean public Queue queueExportResponse() { return new Queue(QUEUE_EXPORT_RESPONSE, false);}
+    @Bean public FanoutExchange fanoutExchangeExportResponse() { return new FanoutExchange(FANOUT_EXPORT_RESPONSE);}
+    @Bean public Binding bindingExportResponse() {
+        return BindingBuilder.bind(queueExportResponse()).to(fanoutExchangeExportResponse());
     }
 
-    // Config "gml response"
-    @Bean public Queue queueGmlResponse() { return new Queue(QUEUE_GML_RESPONSE, false);}
-    @Bean public FanoutExchange fanoutExchangeGmlResponse() { return new FanoutExchange(FANOUT_GML_RESPONSE);}
-    @Bean public Binding bindingGmlResponse() {
-        return BindingBuilder.bind(queueGmlResponse()).to(fanoutExchangeGmlResponse());
-    }
+    @Bean public Queue deleteGisReferencesRequestQueue() { return new Queue(DELETE_GIS_REFERENCES_REQ_QUEUE);}
+    @Bean public Queue deleteGisReferencesResponseQueue() { return new Queue(DELETE_GIS_REFERENCES_RES_QUEUE);}
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

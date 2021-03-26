@@ -15,9 +15,9 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.gis_service.security.CrgAuthHelper.getToken;
 import static ru.mycrg.gis_service.security.CrgClaimsParser.getOrganizationId;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class DataStoreService {
@@ -76,7 +76,7 @@ public class DataStoreService {
                 .split("//")[1]
                 .split("/")[0];
 
-        String dbName = DEFAULT_DB_NAME + orgId;
+        String dbName = getDefaultDatabaseName(orgId);
         String dbHost = postGis.split(":")[0];
         int dbPort = Integer.parseInt(postGis.split(":")[1]);
         String dbOwner = environment.getRequiredProperty("spring.datasource.username");

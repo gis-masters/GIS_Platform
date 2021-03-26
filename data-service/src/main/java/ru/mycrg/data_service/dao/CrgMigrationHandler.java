@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
 
 @Service
 public class CrgMigrationHandler {
@@ -35,7 +35,7 @@ public class CrgMigrationHandler {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(crgDataSourcesPool.getInitialDataSource());
 
             String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" +
-                    DEFAULT_DB_NAME + "%'";
+                    getDefaultDatabaseName() + "%'";
 
             jdbcTemplate
                     .queryForList(selectAllOrganizationsDb, String.class)

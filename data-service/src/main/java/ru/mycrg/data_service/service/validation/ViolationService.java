@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dto.ValidationResponseDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.mq_queue_contract.ObjectValidationResult;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.service.JsonConverter.mapper;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.DONE;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.ERROR;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 
 @Service
 public class ViolationService {

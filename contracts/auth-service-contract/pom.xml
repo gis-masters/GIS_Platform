@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>auth-service-contract</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
 
     <name>auth-service-contract</name>
     <description>Contract of auth-service</description>
@@ -30,6 +30,12 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>2.0.2</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>messagebus-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

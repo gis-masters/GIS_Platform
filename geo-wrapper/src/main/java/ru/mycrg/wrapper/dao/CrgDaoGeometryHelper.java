@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.GeometryType;
+import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.wrapper.exceptions.DaoException;
 
 import static ru.mycrg.wrapper.dao.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;

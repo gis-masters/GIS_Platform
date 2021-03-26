@@ -2,8 +2,8 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
-import ru.mycrg.mq_queue_contract.SimplePropertyDto;
-import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

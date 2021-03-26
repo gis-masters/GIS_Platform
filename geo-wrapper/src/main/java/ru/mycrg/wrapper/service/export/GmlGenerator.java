@@ -12,12 +12,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import ru.mycrg.mq_queue_contract.*;
+import ru.mycrg.data_service_contract.dto.ExportProcessModel;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
-import ru.mycrg.wrapper.queue.MqSender;
-import ru.mycrg.wrapper.service.BaseRequestHandler;
 import ru.mycrg.wrapper.service.FileService;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -34,13 +38,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.io.File.separator;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.*;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.BATCH_SIZE;
 import static ru.mycrg.wrapper.dao.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.wrapper.service.export.GmlUtil.*;
 
 @Service
-public class GmlGenerator extends BaseRequestHandler implements IExporter {
+public class GmlGenerator implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GmlGenerator.class);
 
@@ -51,7 +55,7 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     private long totalRows = 0;
     private long processedRows = 0;
 
-    private final MqSender mqSender;
+    private final IMessageBusProducer messageBus;
     private final FileService fileService;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
@@ -60,10 +64,10 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     public GmlGenerator(FileService fileService,
-                        MqSender mqSender,
+                        IMessageBusProducer messageBus,
                         DatasourceFactory datasourceFactory,
                         BaseDaoService baseDaoService) {
-        this.mqSender = mqSender;
+        this.messageBus = messageBus;
         this.fileService = fileService;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
@@ -72,16 +76,16 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     /**
      * Генерируем GML.
      *
-     * @param mqRequest Запрос с данными
+     * @param event Запрос с данными
      *
      * @return Ссылку на сгенерированный файл
      */
-    public String generate(BaseMqProcessRequest mqRequest) {
+    public String generate(ExportRequestEvent event) {
         idCounter = 1;
         log.debug("Start gml generation");
 
         String path;
-        GmlDocumentHolder documentHolder = createDomDocuments(mqRequest);
+        GmlDocumentHolder documentHolder = createDomDocuments(event);
 
         String randomFileName = UUID.randomUUID().toString().substring(0, 8);
         path = saveXml(documentHolder.getGmlDocument(), randomFileName + ".gml");
@@ -93,29 +97,26 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
     /**
      * Сгенерируем dom модели основного файла с данными и лога с ошибками, предварительно проведя валидацию.
      *
-     * @param mqRequest Запрос
+     * @param event Запрос
      *
      * @return Обертка содержащая основной файл и лог файл.
      */
     @NotNull
-    public GmlDocumentHolder createDomDocuments(BaseMqProcessRequest mqRequest) {
+    public GmlDocumentHolder createDomDocuments(ExportRequestEvent event) {
         try {
-            MqExportProcessRequest request = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
+            ExportProcessModel request = event.getPayload();
 
             GmlDocumentHolder docHolder = createXmlDocument(request.getDocSchema());
 
-            BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest);
-            mqResponse.setDescription("Инициализация");
-            mqResponse.setProgress(2);
-            mqResponse.setStatus(PENDING);
+            ExportResponseEvent mqResponse = new ExportResponseEvent(event, PENDING, "Инициализация", 2);
+            messageBus.produce(mqResponse);
 
-            mqSender.send(mqResponse);
             log.debug("Handle {} sources", request.getResourceProjections().size());
 
             processedRows = 0;
             totalRows = calculateTotalRows(request);
             request.getResourceProjections()
-                   .forEach(resource -> handleResource(mqRequest, docHolder, resource));
+                   .forEach(resource -> handleResource(event, docHolder, resource));
 
             return docHolder;
         } catch (ParserConfigurationException e) {
@@ -123,13 +124,13 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
         }
     }
 
-    private long calculateTotalRows(MqExportProcessRequest request) {
+    private long calculateTotalRows(ExportProcessModel request) {
         return request.getResourceProjections().stream()
                       .mapToLong(baseDaoService::countTotalRows)
                       .sum();
     }
 
-    private void handleResource(BaseMqProcessRequest mqRequest,
+    private void handleResource(ExportRequestEvent event,
                                 GmlDocumentHolder docHolder,
                                 ResourceProjection resource) {
         log.debug("Handle source: {}", resource);
@@ -174,25 +175,23 @@ public class GmlGenerator extends BaseRequestHandler implements IExporter {
 
                 processedRows += batch.size();
 
-                BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
-                mqResponse.setProgress(calculatePercent(processedRows, totalRows));
-                mqResponse.setDescription("Обработка " + schema.getTitle());
-                mqResponse.setStatus(TASK_DONE);
-
-                mqSender.send(mqResponse);
+                ExportResponseEvent mqResponse = new ExportResponseEvent(event, TASK_DONE,
+                                                                         "Обработка " + schema.getTitle(),
+                                                                         calculatePercent(processedRows, totalRows),
+                                                                         resource.getTableName());
+                messageBus.produce(mqResponse);
 
                 offset++;
             }
         } catch (Exception e) {
             log.error("Ошибка при обработке ресурса: {} / {}", resource, e.getMessage());
 
-            BaseMqProcessResponse mqResponse = new BaseMqProcessResponse(mqRequest, resource.getTableName());
-            mqResponse.setProgress(calculatePercent(processedRows, totalRows));
-            mqResponse.setDescription("Не удалось обработать слой: " + resource.getTableName());
-            mqResponse.setStatus(TASK_ERROR);
-            mqResponse.setError(e.getMessage());
-
-            mqSender.send(mqResponse);
+            final String description = "Не удалось обработать слой: " + resource.getTableName();
+            ExportResponseEvent mqResponse = new ExportResponseEvent(event, TASK_ERROR, description,
+                                                                     calculatePercent(processedRows, totalRows),
+                                                                     resource.getTableName(),
+                                                                     e.getMessage());
+            messageBus.produce(mqResponse);
         }
     }
 

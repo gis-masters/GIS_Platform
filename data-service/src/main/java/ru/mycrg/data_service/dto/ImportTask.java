@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto;
 
-import ru.mycrg.mq_queue_contract.import_.MatchingPair;
+import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;

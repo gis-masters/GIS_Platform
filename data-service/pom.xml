@@ -56,10 +56,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -158,6 +154,12 @@
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>
+            <artifactId>messagebus-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.mycrg</groupId>
             <artifactId>oauth-client</artifactId>
             <version>1.4-SNAPSHOT</version>
         </dependency>
@@ -170,11 +172,16 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>auth-service-contract</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
-            <artifactId>mq-queue-contract</artifactId>
+            <artifactId>common-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>data-service-contract</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

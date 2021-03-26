@@ -7,16 +7,16 @@ import okhttp3.Response;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 
 import java.net.URL;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.dataServiceUrl;
 import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_CREATED_VAR_NAME;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class CreateDbDelegate implements JavaDelegate {
@@ -27,7 +27,7 @@ public class CreateDbDelegate implements JavaDelegate {
         OrganizationInitializedEvent event =
                 objectMapper.readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        final String dbName = DEFAULT_DB_NAME + event.getOrgId();
+        final String dbName = getDefaultDatabaseName(event.getOrgId());
         final RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 "{\"name\":\"" + dbName + "\"}");

@@ -4,14 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
 import ru.mycrg.geoserver_client.services.layers.LayersService;
 import ru.mycrg.http_client.exceptions.HttpClientException;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
+
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultStoreName;
 
 @Service
 public class ScratchImportCleaner extends AbstractImportChainItem {
@@ -28,7 +30,7 @@ public class ScratchImportCleaner extends AbstractImportChainItem {
     }
 
     @Override
-    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
+    public void handle(ImportRequestEvent event, ImportMqTask importTask) {
         log.debug("Try cleanUp after import");
 
         String dbName = importTask.getSourceResource().getDbName();
@@ -46,7 +48,7 @@ public class ScratchImportCleaner extends AbstractImportChainItem {
 
         try {
             final String workspaceName = importTask.getWorkspaceName();
-            final String dataStoreName = workspaceName + "_store";
+            final String dataStoreName = getDefaultStoreName(workspaceName);
 
             new LayersService(importTask.getRootToken()).delete(workspaceName, sourceTableName);
             new FeatureTypeService(importTask.getRootToken()).delete(workspaceName, dataStoreName, sourceTableName);

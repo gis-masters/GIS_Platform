@@ -16,7 +16,7 @@ import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.CREATE_DTO_VAR_NAME;
 import static ru.mycrg.gis_service.bpmn.BPMNProcessVar.TOKEN_VAR_NAME;
-import static ru.mycrg.mq_queue_contract.CrgConstants.*;
+import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 
 @Service("createWorkspaceAndStorage")
 public class CreateWorkspaceAndStorage implements JavaDelegate {
@@ -32,8 +32,8 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
         final String jsonString = (String) execution.getVariable(CREATE_DTO_VAR_NAME.getValue());
         OrgCreateDto dto = objectMapper.readValue(jsonString, OrgCreateDto.class);
 
-        String dbName = DEFAULT_DB_NAME + dto.getOrgId();
-        String scratchWorkspaceName = SCRATCH_DB_PREFIX + dbName;
+        String dbName = getDefaultDatabaseName(dto.getOrgId());
+        String scratchWorkspaceName = getScratchWorkspaceName(dbName);
 
         // На геосервере создаем рабочую область и хранилище для временного импорта: "scratch"
         new WorkspacesService(accessToken).createWorkspace(scratchWorkspaceName);
@@ -53,7 +53,7 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
         ConnectionParameters connParams = new ConnectionParameters(dbHost, String.valueOf(dbPort), dbName, "public",
                                                                    dbOwner, dbPass, "postgis");
 
-        DataStore dataStore = new DataStore(scratchWorkspaceName + DEFAULT_STORE_POSTFIX, connParams);
+        DataStore dataStore = new DataStore(getDefaultStoreName(scratchWorkspaceName), connParams);
 
         new VectorStorage(accessToken).create(scratchWorkspaceName, dataStore);
     }

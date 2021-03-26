@@ -1,8 +1,8 @@
 package ru.mycrg.wrapper.service.export;
 
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
+import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 
 public interface IExporter {
 
-    String generate(BaseMqProcessRequest request);
+    String generate(ExportRequestEvent event);
 }

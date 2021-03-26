@@ -9,19 +9,19 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.import_.ImportMqResponse;
-import ru.mycrg.mq_queue_contract.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqResponse;
+import ru.mycrg.data_service_contract.dto.import_.ImportMqTask;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ImportException;
-import ru.mycrg.wrapper.queue.MqSender;
 
 import java.net.URL;
 
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
 
 @Service
 public class DataServiceHandler extends AbstractImportChainItem {
@@ -29,16 +29,16 @@ public class DataServiceHandler extends AbstractImportChainItem {
     private static final Logger log = LoggerFactory.getLogger(DataServiceHandler.class);
 
     private final OkHttpClient httpClient;
-    private final MqSender mqSender;
+    private final IMessageBusProducer messageBus;
     private final CrgProperties properties;
 
-    public DataServiceHandler(MqSender mqSender, CrgProperties properties) {
-        this.mqSender = mqSender;
+    public DataServiceHandler(IMessageBusProducer messageBus, CrgProperties properties) {
+        this.messageBus = messageBus;
         this.properties = properties;
         this.httpClient = new OkHttpClient();
     }
 
-    public void handle(BaseMqProcessRequest mqRequest, @NotNull ImportMqTask importTask) {
+    public void handle(ImportRequestEvent event, @NotNull ImportMqTask importTask) {
         final String tableName = importTask.getTargetResource().getTableName();
         final String datasetName = importTask.getTargetResource().getSchemaName();
 
@@ -73,14 +73,15 @@ public class DataServiceHandler extends AbstractImportChainItem {
             }
 
             if (nextImporter != null) {
-                nextImporter.handle(mqRequest, importTask);
+                nextImporter.handle(event, importTask);
             }
         } catch (Exception e) {
             String msg = String.format("Не удалось создать таблицу: %s Reason: %s",
                                        importTask.getTargetResource().getTableName(), e.getMessage());
             log.error(msg);
 
-            mqSender.send(new BaseMqProcessResponse(mqRequest, new ImportMqResponse(importTask), TASK_ERROR, "", msg));
+            messageBus.produce(
+                    new ImportResponseEvent(event, TASK_ERROR, "", msg, new ImportMqResponse(importTask)));
 
             if (previousImporter != null) {
                 previousImporter.rollback(importTask);

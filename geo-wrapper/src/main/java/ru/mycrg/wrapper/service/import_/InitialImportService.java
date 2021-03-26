@@ -4,17 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.BaseMqProcessResponse;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
-import ru.mycrg.mq_queue_contract.import_.*;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.import_.*;
+import ru.mycrg.data_service_contract.queue.request.ImportRequestEvent;
+import ru.mycrg.data_service_contract.queue.response.ImportResponseEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
-import ru.mycrg.wrapper.queue.MqSender;
 
 import java.util.List;
 
-import static ru.mycrg.mq_queue_contract.enums.ProcessStatus.TASK_ERROR;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
 
 /**
@@ -26,14 +26,14 @@ public class InitialImportService extends AbstractImportChainItem {
 
     private static final Logger log = LoggerFactory.getLogger(InitialImportService.class);
 
-    private final MqSender mqSender;
+    private final IMessageBusProducer messageBus;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
 
     public InitialImportService(BaseDaoService baseDaoService,
-                                MqSender mqSender,
+                                IMessageBusProducer messageBus,
                                 DatasourceFactory datasourceFactory) {
-        this.mqSender = mqSender;
+        this.messageBus = messageBus;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
     }
@@ -43,7 +43,7 @@ public class InitialImportService extends AbstractImportChainItem {
      * - Генерирование новой таблицы
      * - Сам импорт: перенос данных из источника в новую таблицу.
      */
-    public void handle(BaseMqProcessRequest mqRequest, ImportMqTask importTask) {
+    public void handle(ImportRequestEvent event, ImportMqTask importTask) {
         final String resource = importTask.getSourceResource().getResourceId();
         final String target = importTask.getTargetResource().getResourceId();
         log.debug("=== Start first stage. Import. From: {} to: {}", resource, target);
@@ -69,15 +69,14 @@ public class InitialImportService extends AbstractImportChainItem {
             baseDaoService.copy(jdbcTemplate, importTask);
 
             if (nextImporter != null) {
-                nextImporter.handle(mqRequest, importTask);
+                nextImporter.handle(event, importTask);
             }
         } catch (Exception e) {
             String msg = String.format("Не удалось перенести данные из: %s в: %s", resource, target);
             log.error(msg, e);
 
-            mqSender.send(
-                    new BaseMqProcessResponse(mqRequest,
-                            new ImportMqResponse(importTask), TASK_ERROR, "Error", msg));
+            messageBus.produce(
+                    new ImportResponseEvent(event, TASK_ERROR, "Error", msg, new ImportMqResponse(importTask)));
 
             rollback(importTask);
         }

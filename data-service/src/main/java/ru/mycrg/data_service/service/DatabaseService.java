@@ -10,7 +10,10 @@ import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 
-import static ru.mycrg.data_service.dao.CrgDataSourcesPool.DEFAULT_DB_NAME;
+import java.util.Objects;
+
+import static ru.mycrg.common_utils.CrgGlobalProperties.extractIdFromDbName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.data_service.security.CrgClaimsParser.isRoot;
 
@@ -45,7 +48,7 @@ public class DatabaseService {
             databaseDDL.delete(dbName);
         } else {
             Long orgId = getOrganizationId(authentication);
-            String calcName = DEFAULT_DB_NAME + orgId;
+            String calcName = getDefaultDatabaseName(orgId);
 
             if (calcName.equalsIgnoreCase(dbName)) {
                 databaseDDL.delete(dbName);
@@ -60,20 +63,13 @@ public class DatabaseService {
             return databaseDDL.isDatabaseExist(dbName);
         }
 
-        if (getIdFromDbName(dbName) == getOrganizationId(authentication)) {
+        Long dbId = extractIdFromDbName(dbName)
+                .orElseThrow(() -> new BadRequestException("Invalid db name: " + dbName));
+
+        if (Objects.equals(dbId, getOrganizationId(authentication))) {
             return databaseDDL.isDatabaseExist(dbName);
         } else {
             throw new ForbiddenException("Not allowed");
-        }
-    }
-
-    private int getIdFromDbName(String dbName) {
-        try {
-            final String postfix = dbName.split("_")[1];
-
-            return Integer.parseInt(postfix);
-        } catch (Exception e) {
-            throw new BadRequestException("Invalid db name: " + dbName);
         }
     }
 }

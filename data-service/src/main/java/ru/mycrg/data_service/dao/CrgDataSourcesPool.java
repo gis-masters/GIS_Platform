@@ -16,7 +16,6 @@ public class CrgDataSourcesPool {
 
     public static final Logger log = LoggerFactory.getLogger(CrgDataSourcesPool.class);
 
-    public static final String DEFAULT_DB_NAME = "database_";
     public static final String SYSTEM_SCHEMA_NAME = "data";
     public static final String INITIAL_SCHEMA_NAME = "public";
     public static final String INITIAL_DB_NAME = "crg_data_service";

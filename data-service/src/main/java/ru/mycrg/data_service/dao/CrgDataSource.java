@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
 
 /**
@@ -36,7 +37,7 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
             dbName = INITIAL_DB_NAME;
             log.info("Selected initial db: {}", dbName);
         } else {
-            dbName = DEFAULT_DB_NAME + orgId;
+            dbName = getDefaultDatabaseName(orgId);
         }
 
         return getDataSource(dbName).getConnection();

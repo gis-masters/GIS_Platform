@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.dto;
 
-import ru.mycrg.mq_queue_contract.ObjectValidationResult;
-import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;

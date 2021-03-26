@@ -17,14 +17,14 @@ import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.ConflictException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
-import ru.mycrg.auth_service.queue.MessageBus;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.auth_service_contract.UserCreatedEvent;
-import ru.mycrg.auth_service_contract.UserDeletedEvent;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
+import ru.mycrg.auth_service_contract.events.request.UserCreatedEvent;
+import ru.mycrg.auth_service_contract.events.request.UserDeletedEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,13 +43,13 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
-    private final MessageBus messageBus;
+    private final IMessageBusProducer messageBus;
     private final ProjectionFactory projectionFactory;
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
 
     public UserService(UserRepository userRepository,
-                       MessageBus messageBus,
+                       IMessageBusProducer messageBus,
                        OrganizationRepository orgRepository,
                        ProjectionFactory projectionFactory) {
         this.messageBus = messageBus;
@@ -119,7 +119,7 @@ public class UserService {
 
         organization.addUser(savedUser);
 
-        messageBus.sendUserEvent(
+        messageBus.produce(
                 new UserCreatedEvent(savedUser.getLogin(),
                                      getToken(authentication),
                                      dto.getPassword(),
@@ -185,7 +185,7 @@ public class UserService {
         log.debug("Try delete user: {}", userProjection.getEmail());
 
         userRepository.findById(id).ifPresent(user -> {
-            messageBus.sendUserEvent(
+            messageBus.produce(
                     new UserDeletedEvent(user.getLogin(), getToken(authentication)));
 
             user.getOrganizations().forEach(org -> org.getUsers().remove(user));

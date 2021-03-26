@@ -10,73 +10,72 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
+
 @Configuration
 public class RabbitConfiguration {
 
-    public static final String ORG_REQUEST_QUEUE = "org.request.queue";
-    public static final String ORG_REQUEST_FANOUT = "org.request.fanout";
-    public static final String ORG_REQUEST_KEY = "org.request.key";
-
-    public static final String ORG_RESPONSE_QUEUE = "org.response.queue";
-    public static final String ORG_RESPONSE_FANOUT = "org.response.fanout";
-
-    public static final String USER_REQUEST_QUEUE = "user.request.queue";
-    public static final String USER_REQUEST_FANOUT = "user.request.fanout";
-    public static final String USER_REQUEST_KEY = "user.request.key";
-
-    public static final String USER_RESPONSE_QUEUE = "user.response.queue";
-    public static final String USER_RESPONSE_FANOUT = "user.response.fanout";
-
     // Config "org request" exchange/queue
-    @Bean public Queue queueOrgCreated() {
+    @Bean
+    public Queue queueOrgCreated() {
         return new Queue(ORG_REQUEST_QUEUE);
     }
 
-    @Bean public FanoutExchange fanoutExchangeOrgCreated() {
+    @Bean
+    public FanoutExchange fanoutExchangeOrgCreated() {
         return new FanoutExchange(ORG_REQUEST_FANOUT);
     }
 
-    @Bean public Binding bindingOrgCreated() {
+    @Bean
+    public Binding bindingOrgCreated() {
         return BindingBuilder.bind(queueOrgCreated()).to(fanoutExchangeOrgCreated());
     }
 
     // Config "org response" exchange/queue
-    @Bean public Queue queueOrgInit() {
+    @Bean
+    public Queue queueOrgInit() {
         return new Queue(ORG_RESPONSE_QUEUE, false);
     }
 
-    @Bean public FanoutExchange fanoutExchangeOrgInit() {
+    @Bean
+    public FanoutExchange fanoutExchangeOrgInit() {
         return new FanoutExchange(ORG_RESPONSE_FANOUT);
     }
 
-    @Bean public Binding bindingOrgInit() {
+    @Bean
+    public Binding bindingOrgInit() {
         return BindingBuilder.bind(queueOrgInit()).to(fanoutExchangeOrgInit());
     }
 
-
     // Config "user request" exchange/queue
-    @Bean public Queue queueUserCreated() {
+    @Bean
+    public Queue queueUserCreated() {
         return new Queue(USER_REQUEST_QUEUE);
     }
 
-    @Bean public FanoutExchange fanoutExchangeUserCreated() {
+    @Bean
+    public FanoutExchange fanoutExchangeUserCreated() {
         return new FanoutExchange(USER_REQUEST_FANOUT);
     }
 
-    @Bean public Binding bindingUserCreated() {
+    @Bean
+    public Binding bindingUserCreated() {
         return BindingBuilder.bind(queueUserCreated()).to(fanoutExchangeUserCreated());
     }
 
     // Config "user response" exchange/queue
-    @Bean public Queue queueUserInit() {
+    @Bean
+    public Queue queueUserInit() {
         return new Queue(USER_RESPONSE_QUEUE, false);
     }
 
-    @Bean public FanoutExchange fanoutExchangeUserInit() {
+    @Bean
+    public FanoutExchange fanoutExchangeUserInit() {
         return new FanoutExchange(USER_RESPONSE_FANOUT);
     }
 
-    @Bean public Binding bindingUserInit() {
+    @Bean
+    public Binding bindingUserInit() {
         return BindingBuilder.bind(queueUserInit()).to(fanoutExchangeUserInit());
     }
 
@@ -93,5 +92,4 @@ public class RabbitConfiguration {
 
         return rabbitTemplate;
     }
-
 }

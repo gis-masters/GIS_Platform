@@ -4,12 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.BaseMqProcessRequest;
-import ru.mycrg.mq_queue_contract.MqExportProcessRequest;
-import ru.mycrg.mq_queue_contract.ResourceProjection;
+import ru.mycrg.data_service_contract.dto.ExportProcessModel;
+import ru.mycrg.data_service_contract.dto.ResourceProjection;
+import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
-import ru.mycrg.wrapper.service.BaseRequestHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GDALService extends BaseRequestHandler implements IExporter {
+public class GDALService implements IExporter {
 
     private static final Logger log = LoggerFactory.getLogger(GDALService.class);
 
@@ -34,8 +33,8 @@ public class GDALService extends BaseRequestHandler implements IExporter {
     }
 
     @Override
-    public String generate(BaseMqProcessRequest mqRequest) {
-        MqExportProcessRequest payload = mapper.convertValue(mqRequest.getPayload(), MqExportProcessRequest.class);
+    public String generate(ExportRequestEvent event) {
+        ExportProcessModel payload = event.getPayload();
 
         String pathToZip;
 

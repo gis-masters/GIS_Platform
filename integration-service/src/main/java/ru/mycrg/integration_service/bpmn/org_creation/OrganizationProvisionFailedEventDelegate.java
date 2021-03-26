@@ -3,9 +3,9 @@ package ru.mycrg.integration_service.bpmn.org_creation;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.auth_service_contract.OrganizationDependencyProvisionFailedEvent;
-import ru.mycrg.auth_service_contract.OrganizationInitializedEvent;
-import ru.mycrg.integration_service.queue.MessageBusSender;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
+import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyProvisionFailedEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
@@ -13,10 +13,10 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VA
 @Service
 public class OrganizationProvisionFailedEventDelegate implements JavaDelegate {
 
-    private final MessageBusSender messageBusSender;
+    private final IMessageBusProducer messageBus;
 
-    public OrganizationProvisionFailedEventDelegate(MessageBusSender messageBusSender) {
-        this.messageBusSender = messageBusSender;
+    public OrganizationProvisionFailedEventDelegate(IMessageBusProducer messageBus) {
+        this.messageBus = messageBus;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class OrganizationProvisionFailedEventDelegate implements JavaDelegate {
         OrganizationInitializedEvent event =
                 objectMapper.readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        messageBusSender.sendOrgEvent(new OrganizationDependencyProvisionFailedEvent(event));
+        messageBus.produce(new OrganizationDependencyProvisionFailedEvent(event));
     }
 }

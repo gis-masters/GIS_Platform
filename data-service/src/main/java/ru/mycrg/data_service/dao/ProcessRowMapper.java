@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.JsonConverter;
-import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
-import ru.mycrg.mq_queue_contract.enums.ProcessType;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

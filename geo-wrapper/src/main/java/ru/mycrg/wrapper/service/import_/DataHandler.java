@@ -2,10 +2,10 @@ package ru.mycrg.wrapper.service.import_;
 
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.SchemaDto;
-import ru.mycrg.mq_queue_contract.SimplePropertyDto;
-import ru.mycrg.mq_queue_contract.ValueTitleProjection;
-import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.util.StringDecoder;
 

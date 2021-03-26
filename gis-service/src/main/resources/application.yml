@@ -24,6 +24,11 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
     user: fiz
     password: 314
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: fiz
+    password: 314
 
 crg-options:
   auth-service-url: http://127.0.0.1:9000

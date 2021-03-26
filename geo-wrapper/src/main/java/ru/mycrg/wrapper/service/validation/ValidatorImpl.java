@@ -1,8 +1,12 @@
 package ru.mycrg.wrapper.service.validation;
 
 import org.springframework.stereotype.Service;
-import ru.mycrg.mq_queue_contract.*;
-import ru.mycrg.mq_queue_contract.enums.ValueType;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
+import ru.mycrg.data_service_contract.dto.ErrorDescription;
+import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
+import ru.mycrg.data_service_contract.dto.PropertyViolation;
 import ru.mycrg.wrapper.service.util.CrgScriptEngine;
 import ru.mycrg.wrapper.service.validation.constraints.*;
 

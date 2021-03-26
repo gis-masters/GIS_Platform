@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.net.URL;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.dataServiceUrl;
 import static ru.mycrg.integration_service.bpmn.BaseHttpDelegate.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
-import static ru.mycrg.mq_queue_contract.CrgConstants.DEFAULT_DB_NAME;
 
 @Service
 public class DeleteDbDelegate implements JavaDelegate {
@@ -25,7 +25,7 @@ public class DeleteDbDelegate implements JavaDelegate {
         final Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
         final Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
 
-        final String dbName = DEFAULT_DB_NAME + orgId.toString();
+        final String dbName = getDefaultDatabaseName(orgId.toString());
         Request request = new Request.Builder()
                 .url(new URL(dataServiceUrl, "/databases/" + dbName))
                 .addHeader("Authorization", "Bearer " + accessToken)

@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.repository.ProcessRepository;
-import ru.mycrg.mq_queue_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
 import java.util.Optional;
 
