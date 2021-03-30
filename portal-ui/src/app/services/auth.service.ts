@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 import { getAuthUrl, getLogoutUrl, getOrganizationsUrl, getUserUrl } from './server-urls.service';
+import { communicationService } from './communication.service';
 import { usersService } from './crg/users.service';
 import { getEnvironment } from './environment';
 import { services } from './services';
@@ -112,10 +113,10 @@ class AuthService {
     await http.post(await getLogoutUrl(), {}, { withCredentials: true });
     this.token = '';
     localStorage.removeItem(TOKEN_KEY);
-    usersService.dropCurrent();
     services.ngZone.run(() => {
       services.router.navigate(['/']);
     });
+    communicationService.logout.emit();
   }
 
   // TODO: Создание новой орг в модуле аутентификации???

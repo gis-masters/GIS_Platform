@@ -44,7 +44,7 @@ class CurrentUser implements OrgInfo {
   }
 
   @action
-  drop() {
+  reset() {
     Object.assign(this, emptyOrgInfo);
   }
 

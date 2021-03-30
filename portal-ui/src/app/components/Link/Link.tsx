@@ -80,9 +80,9 @@ export class Link extends Component<LinkProps> {
           })
           .catch((err: AxiosError) => {
             if (err.response?.status === 404) {
-              Toast.error('Файл отсутствует, обратитиесь к администратору.');
+              Toast.error('Файл отсутствует, обратитесь к администратору.');
             } else if (err.response?.status === 403) {
-              Toast.error('Нет доступа к файлу, обратитиесь к администратору.');
+              Toast.error('Нет доступа к файлу, обратитесь к администратору.');
             } else {
               Toast.error('Возникла ошибка при получении файла');
               services.logger.error('Возникла ошибка при получении файла: ', err.message);

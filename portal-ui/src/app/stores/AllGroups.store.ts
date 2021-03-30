@@ -10,12 +10,19 @@ class AllGroups {
 
   private constructor() {}
 
-  @action setList(list: CrgGroup[]) {
+  @action
+  setList(list: CrgGroup[]) {
     this.list = list;
   }
 
-  @action setFetching(fetching: boolean) {
+  @action
+  setFetching(fetching: boolean) {
     this.fetching = fetching;
+  }
+
+  reset() {
+    this.setList([]);
+    this.setFetching(false);
   }
 
   static get instance() {

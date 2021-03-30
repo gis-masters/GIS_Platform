@@ -1,8 +1,9 @@
 import { debounce } from 'lodash';
 
-import { currentUser } from '../../stores/CurrentUser.store';
 import { allUsers } from '../../stores/AllUsers.store';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { getUsersUrl, getUserUrl } from '../server-urls.service';
+import { communicationService } from '../communication.service';
 import { BuildInRole } from './permissions.models';
 import { PageableResponse } from '../models';
 import { http } from '../http.service';
@@ -38,10 +39,18 @@ class UsersService {
   private usersListStoreInited = false;
   private debouncedFetchUsersListStore: () => Promise<void>;
   private currentUserInfoRequest?: Promise<void> | null;
-  private usersListRequest?: Promise<void> | null;
+  private allUsersRequest?: Promise<void> | null;
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
+
+    communicationService.logout.on(() => {
+      allUsers.reset();
+      currentUser.reset();
+      this.usersListStoreInited = false;
+      delete this.currentUserInfoRequest;
+      delete this.allUsersRequest;
+    });
   }
 
   static get instance() {
@@ -59,11 +68,6 @@ class UsersService {
 
     await this.currentUserInfoRequest;
     this.currentUserInfoRequest = null;
-  }
-
-  dropCurrent() {
-    this.currentUserInfoRequest = null;
-    currentUser.drop();
   }
 
   async getAll(): Promise<CrgUser[]> {
@@ -86,11 +90,11 @@ class UsersService {
     if (this.usersListStoreInited) {
       return;
     }
-    if (!this.usersListRequest) {
-      this.usersListRequest = this.fetchUsersListStore();
+    if (!this.allUsersRequest) {
+      this.allUsersRequest = this.fetchUsersListStore();
     }
-    await this.usersListRequest;
-    this.usersListRequest = null;
+    await this.allUsersRequest;
+    this.allUsersRequest = null;
     this.usersListStoreInited = true;
   }
 

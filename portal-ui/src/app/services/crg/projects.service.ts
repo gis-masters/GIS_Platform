@@ -42,6 +42,12 @@ class ProjectsService {
     communicationService.projectsUpdated.on(() => {
       this.debouncedFetchAllProjects();
     });
+
+    communicationService.logout.on(() => {
+      allProjects.reset();
+      delete this.fetchingCurrentProject;
+      delete this.fetchingAllProjectsRequest;
+    });
   }
 
   static get instance() {
@@ -81,7 +87,7 @@ class ProjectsService {
   }
 
   clearCurrent() {
-    currentProject.dropProject();
+    currentProject.clearProject();
     delete this.fetchingCurrentProject;
   }
 

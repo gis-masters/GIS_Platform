@@ -9,6 +9,10 @@ class AllPermissions {
 
   private static _instance: AllPermissions;
 
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private constructor() {}
 
   @action setList(list: PermissionsListItem[]) {
@@ -23,8 +27,10 @@ class AllPermissions {
     this.fetchingProgress = fetching;
   }
 
-  static get instance() {
-    return this._instance || (this._instance = new this());
+  reset() {
+    this.setList([]);
+    this.setFetching(false);
+    this.setFetchingProgress();
   }
 }
 

@@ -10,6 +10,10 @@ class AllUsers {
 
   private static _instance: AllUsers;
 
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private constructor() {}
 
   @action
@@ -17,13 +21,15 @@ class AllUsers {
     this.fullList = list;
     this.list = list.filter(user => user.login !== currentUser.login);
   }
+
   @action
   setFetching(fetching: boolean) {
     this.fetching = fetching;
   }
 
-  static get instance() {
-    return this._instance || (this._instance = new this());
+  reset() {
+    this.setList([]);
+    this.setFetching(false);
   }
 }
 

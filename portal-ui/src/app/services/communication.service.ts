@@ -26,6 +26,7 @@ class CommunicationService {
   editBugObject = new Emitter<ObjectDto[]>();
   libraryItemsUpdated = new Emitter();
   beforeMapDestroy = new Emitter();
+  logout = new Emitter();
 
   off(scope: any) {
     Emitter.scopeOff(scope);

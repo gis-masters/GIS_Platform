@@ -37,7 +37,7 @@ class AllProjects {
   }
 
   @action
-  setList(list: CrgProject[]) {
+  setList(list?: CrgProject[]) {
     this._list = list;
   }
 
@@ -61,6 +61,11 @@ class AllProjects {
   @action
   setSortAsc(isAsc: boolean) {
     this.sortAsc = isAsc;
+  }
+
+  reset() {
+    this.setList(null);
+    this.setNameFilter('');
   }
 }
 

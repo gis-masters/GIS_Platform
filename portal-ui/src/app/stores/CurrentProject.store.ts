@@ -277,7 +277,7 @@ class CurrentProject implements CrgProjectData {
   }
 
   @action
-  dropProject() {
+  clearProject() {
     Object.assign(this, emptyProject);
   }
 
