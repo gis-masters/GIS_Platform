@@ -173,7 +173,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     // 500
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
-        final ApiErrorModel errorModel = new ApiErrorModel(INTERNAL_SERVER_ERROR, "Something went wrong");
+        final ApiErrorModel errorModel = new ApiErrorModel(INTERNAL_SERVER_ERROR,
+                                                           "Shit happens: " + ex.getMessage());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }

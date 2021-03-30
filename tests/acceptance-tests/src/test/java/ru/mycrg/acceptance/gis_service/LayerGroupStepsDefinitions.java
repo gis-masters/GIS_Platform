@@ -87,6 +87,11 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("В проекте существует группа {string}")
+    public void initLayerGroup(String key) {
+        initLayerGroup(generateString(key), "1");
+    }
+
     @When("Пользователь делает запрос на создание группы слоев проекта c указанием родителя {string}, {string}")
     public void createLayerGroupWithParent(String title, String position) {
         layerGroupDto = new LayerGroupCreateDto(generateString(title),
@@ -164,7 +169,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление полей групп слоев проекта {string}, {string}")
     public void updateLayerGroup(String newTitle, String newPosition) {
-        layerGroupDto = mapToLayerGroupDto(newTitle, newPosition);
+        layerGroupDto = new LayerGroupCreateDto(newTitle, Integer.parseInt(newPosition));
 
         String payload = gson.toJson(layerGroupDto);
 
@@ -187,10 +192,6 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
     @And("В ответе на удаление родительской группы слоев проекта есть упоминание ID")
     public void checkIdInResponseInParentLayerGroup() {
         super.checkPassedIdInResponse(parentLayerGroupId);
-    }
-
-    private LayerGroupCreateDto mapToLayerGroupDto(String title, String position) {
-        return new LayerGroupCreateDto(generateString(title), Integer.parseInt(generateString(position)));
     }
 
     private void makeLastAvailableLayerGroupAsCurrent() {

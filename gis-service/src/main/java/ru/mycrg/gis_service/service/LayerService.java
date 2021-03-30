@@ -86,10 +86,6 @@ public class LayerService {
         layerRepository.save(layerForUpdate);
     }
 
-    public void delete(Layer layer) {
-        layerRepository.deleteLayerById(layer.getId());
-    }
-
     public List<RelatedLayersModel> findRelatedLayers(String field, String value,
                                                       Authentication authentication) {
         Set<Long> projectIds = projectService.getAll(authentication).stream()
@@ -114,6 +110,10 @@ public class LayerService {
                     return new RelatedLayersModel(lProjection, pProjection);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public void delete(Layer layer) {
+        layerRepository.deleteLayerById(layer.getId());
     }
 
     private void updateGroup(Layer layer, Long parentId, List<Group> groups) {

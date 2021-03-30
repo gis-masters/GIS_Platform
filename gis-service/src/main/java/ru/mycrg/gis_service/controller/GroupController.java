@@ -76,9 +76,8 @@ public class GroupController {
     @DeleteMapping("/groups/{group_id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteGroup(@PathVariable(name = "project_id") long projectId,
-                                              @PathVariable(name = "group_id") long groupId,
-                                              Authentication authentication) {
-        groupService.delete(projectId, groupId, authentication);
+                                              @PathVariable(name = "group_id") long groupId) {
+        groupService.delete(projectId, groupId);
 
         return ResponseEntity.noContent().build();
     }

@@ -28,3 +28,17 @@ Feature: Удаление групп слоев проектов
     Examples:
       | title     | position |
       | STRING_10 | NUMBER_2 |
+
+  Scenario Outline: При удалении группы, у всех слоёв входящих в эту группу должна обнулиться отсылка к этой группе. (parent_id)
+    Given Существует проект "STRING_7"
+    Given В проекте существует группа "STRING_7"
+    Given Существует слой проекта
+      | <title> | <dataset> | <tableName> | <styleName> | <type> | <schemaId> | <dataStoreName> | <nativeCRS> | <dataSourceUri> |
+    Given Пользователь делает запрос на добавление слоя в папку-родитель
+    When Пользователь делает запрос на удаление текущей группы слоев текущего проекта
+    Then Сервер отвечает со статус-кодом 204
+    When Пользователь делает запрос на текущий слой
+    Then У текущего слоя должно отсутствовать упоминание родительской группы
+    Examples:
+      | title    | dataset  | tableName | styleName | type   | schemaId | dataStoreName | nativeCRS  | dataSourceUri |
+      | STRING_5 | STRING_5 | STRING_5  | STRING_5  | vector | STRING_5 | STRING_5      | EPSG:28406 | STRING_6      |

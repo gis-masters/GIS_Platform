@@ -17,8 +17,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
@@ -62,7 +61,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.createEntity(layerCreateDto);
     }
 
-    @And("Сервер передает ID слоя проекта в ответе")
+    @And("Сервер передаёт ID слоя проекта в ответе")
     public void extractAndSetLayerIdFromBody() {
         super.extractAndSetEntityIdFromBody();
 
@@ -200,6 +199,18 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         getMap("");
 
         assertThat(presentedData.get("parentId"), is(layerGroupId));
+    }
+
+    @Then("У текущего слоя должно отсутствовать упоминание родительской группы")
+    public void checkLayerIsNotInLayerGroup() {
+        Map<String, Object> presentedData = response
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        extract().jsonPath().
+                        getMap("");
+
+        assertNull(presentedData.get("parentId"));
     }
 
     @When("Пользователь делает запрос на удаление слоя")

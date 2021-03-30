@@ -17,13 +17,13 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
 
     Optional<Layer> findByTableNameAndProject(String tableName, Project project);
 
-    @Modifying
-    @Query("DELETE FROM Layer l where l.id = :layerId")
-    void deleteLayerById(@Param("layerId") Long layerId);
-
     @Query("FROM Layer l WHERE l.tableName = :tableName AND l.project.id IN :projectIds")
     List<Layer> findRelatedByTableName(@Param("tableName") String tableName, Set<Long> projectIds);
 
     @Query("FROM Layer l WHERE l.dataset = :datasetId AND l.project.id IN :projectIds")
     List<Layer> findRelatedByDataset(@Param("datasetId") String datasetId, Set<Long> projectIds);
+
+    @Modifying
+    @Query("DELETE FROM Layer l where l.id = :layerId")
+    void deleteLayerById(@Param("layerId") Long layerId);
 }

@@ -13,6 +13,7 @@ import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.GroupRepository;
+import ru.mycrg.gis_service.security.IAuthenticationFacade;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -30,15 +31,18 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final JsonPatcher jsonPatcher;
     private final ProjectionFactory projectionFactory;
+    private final IAuthenticationFacade authenticationFacade;
 
     public GroupService(GroupRepository groupRepository,
                         ProjectService projectService,
                         JsonPatcher jsonPatcher,
+                        IAuthenticationFacade authenticationFacade,
                         ProjectionFactory projectionFactory) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public List<GroupProjection> getAll(long projectId, Authentication authentication) {
@@ -87,7 +91,9 @@ public class GroupService {
         groupRepository.save(groupForUpdate);
     }
 
-    public void delete(long projectId, long groupId, Authentication authentication) {
+    public void delete(long projectId, long groupId) {
+        final Authentication authentication = authenticationFacade.getAuthentication();
+
         List<Group> groups = getProjectGroups(projectId, authentication);
         Group group = getGroupById(groups, groupId);
 
