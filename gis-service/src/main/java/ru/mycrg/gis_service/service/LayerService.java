@@ -19,6 +19,7 @@ import ru.mycrg.gis_service.repository.LayerRepository;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,11 +33,11 @@ public class LayerService {
 
     public static final Logger log = LoggerFactory.getLogger(LayerService.class);
 
+    public static final String DATA_SERVICE_API_PREFIX = "/api/data";
+
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
     private final LayerRepository layerRepository;
-
-    public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     public LayerService(JsonPatcher jsonPatcher,
                         LayerRepository layerRepository,
@@ -52,6 +53,20 @@ public class LayerService {
                 .getLayers().stream()
                 .map(layer -> new LayerProjection(layer, getOrgWorkspaceName(authentication)))
                 .collect(Collectors.toList());
+    }
+
+    public LayerProjection findByTableName(String tableName, Authentication authentication) {
+        List<Layer> layers = new ArrayList<>();
+        projectService.getAll(authentication).stream()
+                      .map(Project::getLayers)
+                      .forEach(layers::addAll);
+
+        Layer foundLayer = layers.stream()
+                                 .filter(layer -> layer.getTableName().equals(tableName))
+                                 .findFirst()
+                                 .orElseThrow(() -> new NotFoundException(tableName));
+
+        return new LayerProjection(foundLayer, getOrgWorkspaceName(authentication));
     }
 
     public LayerProjection findById(long projectId, long layerId, Authentication authentication) {
@@ -102,14 +117,15 @@ public class LayerService {
         }
 
         return relatedLayers.stream()
-                .map(layer -> {
-                    LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName(authentication));
-                    ProjectProjection pProjection = projectService
-                            .getProjectionById(layer.getProject().getId(), authentication);
+                            .map(layer -> {
+                                LayerProjection lProjection = new LayerProjection(layer,
+                                                                                  getOrgWorkspaceName(authentication));
+                                ProjectProjection pProjection = projectService
+                                        .getProjectionById(layer.getProject().getId(), authentication);
 
-                    return new RelatedLayersModel(lProjection, pProjection);
-                })
-                .collect(Collectors.toList());
+                                return new RelatedLayersModel(lProjection, pProjection);
+                            })
+                            .collect(Collectors.toList());
     }
 
     public void delete(Layer layer) {
