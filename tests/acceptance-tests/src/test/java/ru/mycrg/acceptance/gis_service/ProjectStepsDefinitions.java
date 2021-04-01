@@ -256,7 +256,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает постраничный запрос на проекты {string}")
     public void getProjectCount(String entity) {
-        getEntityCount(entity);
+        getAllAndFillEntityCount(entity);
     }
 
     private boolean isProjectExistInPool(String projectName) {

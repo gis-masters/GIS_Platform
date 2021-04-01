@@ -138,10 +138,8 @@ public class BaseStepsDefinitions {
         }
     }
 
-    public void checkPagesCount(String checkType, String entitiesPerPage) {
-        getAllEntities();
-        jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList(String.format("_embedded.%s.id", checkType)).size();
+    public void checkPagesCount(String entityType, String entitiesPerPage) {
+        getAllAndFillEntityCount(entityType);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -249,10 +247,16 @@ public class BaseStepsDefinitions {
                         get(String.format("/?sort=%s,%s&%s", sortingType, sortingDirection, "size=1000"));
     }
 
-    public void getEntityCount(String entity) {
+    public void getAllAndFillEntityCount(String entity) {
         getAllEntities();
+        entityCount = getEntitiesCount(entity);
+    }
+
+    public int getEntitiesCount(String entity) {
         jsonPath = response.jsonPath();
-        entityCount = jsonPath.getList(String.format("_embedded.%s.id", entity)).size();
+
+        return jsonPath.getList(String.format("_embedded.%s.id", entity))
+                       .size();
     }
 
     public void checkCurrentIdInResponse() {

@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
@@ -12,6 +13,7 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -104,9 +106,30 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_NOT_FOUND);
     }
 
+    @Given("Существуют {int} наборов данных")
+    public void initializeDatasets(int count) {
+        for (int i = 0; i < count; i++) {
+            createDatasetRequest("STRING_5", "STRING_10");
+        }
+    }
+
     @When("Администратор делает запрос на выборку наборов с фильтрацией по полю {string} и значению: {string}")
     public void getDatasetsByFilter(String field, String value) {
         super.getCurrentEntityByFilter(field, value);
+    }
+
+    @When("Текущий пользователь отправляет запрос на наборы с размером страницы: {string}")
+    public void makePageableRequest(String pageSize) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/?size=" + pageSize);
+    }
+
+    @And("Количество страниц в ответе соответствует заданному размеру страницы: {string}")
+    public void checkPageSize(String pageSize) {
+        int realCount = getEntitiesCount("datasets");
+
+        assertEquals(Integer.parseInt(pageSize), realCount);
     }
 
     private String extractDatasetName() {

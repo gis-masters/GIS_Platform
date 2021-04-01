@@ -94,7 +94,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает постраничный запрос на группы {string}")
     public void getUsersGroupCount(String entity) {
-        super.getEntityCount(entity);
+        super.getAllAndFillEntityCount(entity);
     }
 
     @When("Администратор изменяет поля группы {string}, {string}")

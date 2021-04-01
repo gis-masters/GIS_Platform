@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,10 +31,9 @@ public class DocumentLibraryController {
     @GetMapping("/document-libraries")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getPagedWithFilter(@RequestParam(required = false, defaultValue = "") String title,
-                                                     Authentication authentication,
                                                      Pageable pageable,
                                                      PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> libraries = librariesService.getPaged(title, pageable, authentication);
+        final Page<IResourceModel> libraries = librariesService.getPaged(title, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 libraries,

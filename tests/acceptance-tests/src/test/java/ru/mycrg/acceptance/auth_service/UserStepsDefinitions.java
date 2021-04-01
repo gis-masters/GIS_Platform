@@ -167,7 +167,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает постраничный запрос на пользователей {string}")
     public void getUsersCount(String entity) {
-        getEntityCount(entity);
+        getAllAndFillEntityCount(entity);
     }
 
     @When("Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление")
