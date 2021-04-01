@@ -1,30 +1,18 @@
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { getGeoServerUrl } from '../server-urls.service';
-import { usersService } from '../crg/users.service';
+import { getGeoserverFeatureTypeInfoUrl } from '../server-urls.service';
 import { CrgLayer } from '../crg/projects.models';
-import { getEnvironment } from '../environment';
 import { http } from '../http.service';
 
-async function buildUrl(targetName: string): Promise<string> {
-  await usersService.fetchCurrentUser();
-  const { scratchWorkspaceName } = await getEnvironment();
-  const workspace = `${scratchWorkspaceName}_${currentUser.orgId}`;
-  const storeName = `database_${currentUser.orgId}_store`;
+export async function getFeatureType({ complexName, dataset, tableName }: CrgLayer): Promise<FeatureType> {
+  const workspace = complexName.split(':')[0];
+  const url = await getGeoserverFeatureTypeInfoUrl(workspace, dataset, tableName);
+  let result = await http.get<{ featureType: FeatureType }>(url);
 
-  return `${await getGeoServerUrl()}/${workspace}/datastores/${storeName}/featuretypes/${targetName}`;
-}
+  try {
+    await http.put(url, result, { params: { recalculate: 'nativebbox' } });
+    result = await http.get<{ featureType: FeatureType }>(url, {});
+  } catch (e) {}
 
-export async function getFeatureTypeByLayer(layer: CrgLayer): Promise<FeatureType> {
-  const url = await buildUrl(layer.tableName);
-  const { featureType } = await http.get<{ featureType: FeatureType }>(url);
-
-  return featureType;
-}
-
-export async function deleteFeatureType(featureType: FeatureType): Promise<Object> {
-  const url = await buildUrl(featureType.name);
-
-  return http.delete(url);
+  return result.featureType;
 }

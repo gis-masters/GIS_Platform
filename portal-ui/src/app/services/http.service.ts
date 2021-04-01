@@ -52,9 +52,15 @@ class Http {
   }
 
   async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const responce = await axios.post(url, data, config);
+    const response = await axios.post(url, data, config);
 
-    return responce.data;
+    return response.data;
+  }
+
+  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response = await axios.put(url, data, config);
+
+    return response.data;
   }
 
   async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {

@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem } from '@material-ui/core';
-import { AddCircle, Delete, DeleteOutline, Edit, ListAlt, Unarchive } from '@material-ui/icons';
+import { AddCircle, CropFree, Delete, DeleteOutline, Edit, ListAlt, Unarchive } from '@material-ui/icons';
 import { boundMethod } from 'autobind-decorator';
+import { BBOX } from '@fiz/geoserver-types/BBOX';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, TreeItemPayload } from '../../../services/crg/projects.models';
+import { getProjection, olProjection, transform } from '../../../services/geoserver/projections.service';
+import { getFeatureType } from '../../../services/geoserver/featuretypes.service';
+import { getLayerCoverage } from '../../../services/geoserver/layers.service';
 import { schemaService } from '../../../services/crg/schema.service';
 import { exportService } from '../../../services/crg/export.service';
+import { mapService } from '../../../services/map/map.service';
 import {
   isFeaturesCreateAllowed,
   isLayerExportAllowed,
@@ -44,7 +49,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   render() {
     const { open, x, y, onClose, anchor, entity, isGroup, editMode } = this.props;
-    const isVectorLayer = !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR;
 
     return (
       <>
@@ -59,7 +63,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!editMode && isVectorLayer && (
+          {!editMode && this.isVectorLayer && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -68,7 +72,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && isVectorLayer && this.featuresCreateAllowed && (
+          {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
             <MenuItem onClick={this.addFeature}>
               <ListItemIcon>
                 <AddCircle />
@@ -77,7 +81,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && isVectorLayer && this.layerExportAllowed && (
+          {!editMode && (this.isVectorLayer || this.isRasterLayer) && (
+            <MenuItem onClick={this.goToLayer}>
+              <ListItemIcon>
+                <CropFree />
+              </ListItemIcon>
+              Перейти к слою
+            </MenuItem>
+          )}
+
+          {!editMode && this.isVectorLayer && this.layerExportAllowed && (
             <MenuItem onClick={this.export}>
               <ListItemIcon>
                 <Unarchive />
@@ -122,6 +135,20 @@ export class LayerMenu extends Component<LayerMenuProps> {
         />
       </>
     );
+  }
+
+  @computed
+  private get isVectorLayer(): boolean {
+    const { entity, isGroup } = this.props;
+
+    return !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR;
+  }
+
+  @computed
+  private get isRasterLayer(): boolean {
+    const { entity, isGroup } = this.props;
+
+    return !isGroup && (entity as CrgLayer).type === CrgLayerType.RASTER;
   }
 
   private async fetchPermissions() {
@@ -169,6 +196,40 @@ export class LayerMenu extends Component<LayerMenuProps> {
     });
 
     onClose();
+  }
+
+  @boundMethod
+  private async goToLayer() {
+    if (this.isVectorLayer) {
+      await this.goToVectorLayer();
+    }
+    if (this.isRasterLayer) {
+      await this.goToRasterLayer();
+    }
+    this.props.onClose();
+  }
+
+  private async goToVectorLayer() {
+    const { entity } = this.props;
+    const { nativeBoundingBox } = await getFeatureType(entity as CrgLayer);
+
+    this.goToBoundingBox(nativeBoundingBox);
+  }
+
+  private async goToRasterLayer() {
+    const { entity } = this.props;
+    const { nativeBoundingBox } = await getLayerCoverage(entity as CrgLayer);
+    this.goToBoundingBox(nativeBoundingBox);
+  }
+
+  private goToBoundingBox({ maxx, maxy, minx, miny, crs }: BBOX) {
+    // https://github.com/FanaticFiz/geoserver-types/pull/1
+    // @ts-ignore
+    const crsStr = typeof crs === 'string' ? crs : (crs.$ as string);
+    const projection = getProjection(crsStr);
+    const [x1, y1] = transform(projection, olProjection, [minx, miny]);
+    const [x2, y2] = transform(projection, olProjection, [maxx, maxy]);
+    mapService.fitToBbox([x1, y1, x2, y2], [50, 50, 50, 50]);
   }
 
   @boundMethod

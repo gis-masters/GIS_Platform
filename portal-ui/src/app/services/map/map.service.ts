@@ -78,7 +78,7 @@ class MapService {
   modificationDisabled = new Emitter();
   modificationDone = new Emitter<Geometry>();
 
-  // Подлдожка
+  // Подложка
   private basemapLayer = new TileLayer();
 
   map: Map;
@@ -384,7 +384,7 @@ class MapService {
   }
 
   /**
-   * Подсвечивает обьект. (очищает черновой слой)
+   * Подсвечивает объект. (очищает черновой слой)
    */
   highlightFeatures(features: WfsFeature[], projection?: CrgProjection) {
     const featuresInOlProjection: WfsFeature[] = []

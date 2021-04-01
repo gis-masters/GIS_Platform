@@ -103,11 +103,20 @@ export const projections: CrgProjection[] = [
   }
 ];
 
-export function getProjection(projectionId: string): CrgProjection {
-  const projection = projections.find(({ id }) => id === projectionId);
+export function getProjection(projectionStr: string): CrgProjection {
+  // мы ожидаем, что запрашивается одна из зарегистрированных проекций по id
+  const projection = projections.find(({ id }) => id === projectionStr);
 
   if (!projection) {
-    throw new Error('Неподдерживаемая проекция ' + projectionId);
+    try {
+      // но с API может прийти PROJCS строка, proj4 строка или ещё что-нибудь неожиданное
+      // если proj4 смог это понять, то и пусть, с этим можно работать дальше
+      proj4(projectionStr);
+
+      return { id: projectionStr, title: 'unknown' };
+    } catch (e) {
+      throw new Error('Неподдерживаемая проекция ' + projectionStr);
+    }
   }
 
   return projection;

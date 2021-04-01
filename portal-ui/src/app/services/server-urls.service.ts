@@ -56,6 +56,14 @@ export async function getGeoserverImportsUrl(): Promise<string> {
   return (await getGeoServerUrl()) + '/rest/imports';
 }
 
+export async function getGeoserverFeatureTypeInfoUrl(
+  workspace: string,
+  dataset: string,
+  tableName: string
+): Promise<string> {
+  return `${await getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${dataset}/featuretypes/${tableName}.json`;
+}
+
 export async function getGeoserverImportUrl(importId: number | string): Promise<string> {
   return `${await getGeoserverImportsUrl()}/${importId}`;
 }

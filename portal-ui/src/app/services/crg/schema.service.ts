@@ -182,7 +182,7 @@ class SchemaService {
       } else if (error.toLowerCase().includes('maxInclusive'.toLowerCase())) {
         return 'Значение превышает допустимый максимум';
       } else if (error.toLowerCase().includes('maxLength'.toLowerCase())) {
-        return 'Строка превышает допустимую длинну';
+        return 'Строка превышает допустимую длину';
       } else if (error.toLowerCase().includes('minInclusive'.toLowerCase())) {
         return 'Значение менее допустимого';
       } else if (error.toLowerCase().includes('minLength'.toLowerCase())) {

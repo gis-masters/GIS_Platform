@@ -1,9 +1,19 @@
+import { BBOX } from '@fiz/geoserver-types/BBOX';
+
 import { sidebars } from '../../stores/Sidebars.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { WfsFeature } from './wfs.models';
-import { CrgLayer, CrgLayersGroup, CrgProject, NewCrgLayer, NewCrgLayersGroup, Rule } from '../crg/projects.models';
-import { patch } from '../util/patch';
 import { http } from '../http.service';
+import { patch } from '../util/patch';
+import {
+  CrgLayer,
+  CrgLayersGroup,
+  CrgLayerType,
+  CrgProject,
+  NewCrgLayer,
+  NewCrgLayersGroup,
+  Rule
+} from '../crg/projects.models';
 import {
   getGeoServerUrl,
   getProjectGroupsUrl,
@@ -12,6 +22,65 @@ import {
   getProjectLayerUrl,
   getWmsUrl
 } from '../server-urls.service';
+
+interface GeoserverLayerInfo {
+  name: string;
+  type: CrgLayerType;
+  defaultStyle: {
+    name: string;
+    href: string;
+  };
+  resource: {
+    '@class': string;
+    name: string;
+    href: string;
+  };
+  attribution: {
+    logoWidth: number;
+    logoHeight: number;
+  };
+}
+
+interface GeoserverCoverage {
+  name: string;
+  nativeName: string;
+  namespace: {
+    name: string;
+    href: string;
+  };
+  title: string;
+  nativeCRS: {
+    '@class': string;
+    $: string;
+  };
+  srs: string;
+  nativeBoundingBox: BBOX;
+  latLonBoundingBox: BBOX;
+  projectionPolicy: string;
+  enabled: boolean;
+  store: {
+    '@class': string;
+    name: string;
+    href: string;
+  };
+  serviceConfiguration: boolean;
+  grid: {
+    '@dimension': string;
+    range: {
+      low: string;
+      high: string;
+    };
+    transform: {
+      scaleX: number;
+      scaleY: number;
+      shearX: number;
+      shearY: number;
+      translateX: number;
+      translateY: number;
+    };
+    crs: string;
+  };
+}
 
 export async function deleteLayer(layerId: number) {
   await http.delete(await getProjectLayerUrl(currentProject.id, layerId));
@@ -156,4 +225,21 @@ export async function updateLayersGroup(
 
 export async function deleteLayersGroup(groupId: number, project: CrgProject = currentProject): Promise<void> {
   return await http.delete(await getProjectGroupUrl(project.id, groupId));
+}
+
+async function getGeoserverLayerInfo({ complexName, tableName }: CrgLayer): Promise<GeoserverLayerInfo> {
+  const workspace = complexName.split(':')[0];
+
+  const result = await http.get<{ layer: GeoserverLayerInfo }>(
+    `${await getGeoServerUrl()}/rest/workspaces/${workspace}/layers/${tableName}`
+  );
+
+  return result.layer;
+}
+
+export async function getLayerCoverage(layer: CrgLayer): Promise<GeoserverCoverage> {
+  const geoserverLayerInfo = await getGeoserverLayerInfo(layer);
+  const result = await http.get<{ coverage: GeoserverCoverage }>(geoserverLayerInfo.resource.href);
+
+  return result.coverage;
 }
