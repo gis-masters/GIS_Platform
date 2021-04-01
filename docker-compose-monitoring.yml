@@ -1,12 +1,12 @@
 version: '3.7'
 
 services:
- metricbeat_gis_portal:
+  metricbeat_gis_portal:
     container_name: metricbeat_gis_portal
-    image: docker.elastic.co/beats/metricbeat:${ELK_IMAGE_TAG}
+    image: elastic/metricbeat:${ELK_IMAGE_TAG}
     restart: always
     user: root
-    environment: 
+    environment:
       system.hostfs: "/hostfs"
       ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
       ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME}
@@ -18,6 +18,6 @@ services:
       - /:/hostfs:ro
     network_mode: host
     extra_hosts:
-     - "elasticsearch:${ELASTICSEARCH_HOST}"
-     - "kibana:${KIBANA_HOST}"
+      - "elasticsearch:${ELASTICSEARCH_HOST}"
+      - "kibana:${KIBANA_HOST}"
     command:  metricbeat -e -strict.perms=false
