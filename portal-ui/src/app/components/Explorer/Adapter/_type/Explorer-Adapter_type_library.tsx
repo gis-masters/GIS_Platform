@@ -29,7 +29,7 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
   static getId(item: ExplorerItemData<LibraryItem>) {
-    return `${item.type}:${item.payload.id}`;
+    return `${item.type}:${item.payload.identifier}`;
   }
 
   static getTitle(item: ExplorerItemData<LibraryItem>) {
