@@ -60,7 +60,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getIcon() {
-    return <LocalLibrary htmlColor='#196b39' />;
+    return <LocalLibrary color='primary' />;
   }
 
   static isFolder() {

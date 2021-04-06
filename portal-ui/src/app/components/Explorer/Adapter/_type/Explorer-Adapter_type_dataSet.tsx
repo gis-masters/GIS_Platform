@@ -55,7 +55,7 @@ export class ExplorerAdapterTypeDataSet {
   }
 
   static getIcon() {
-    return <Storage htmlColor='#16237f' />;
+    return <Storage color='primary' />;
   }
 
   static isFolder() {

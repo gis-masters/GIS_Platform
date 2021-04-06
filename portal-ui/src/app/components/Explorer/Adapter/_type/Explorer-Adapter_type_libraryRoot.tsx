@@ -30,7 +30,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static getIcon() {
-    return <Library htmlColor='#196b39' />;
+    return <Library color='primary' />;
   }
 
   static isFolder() {

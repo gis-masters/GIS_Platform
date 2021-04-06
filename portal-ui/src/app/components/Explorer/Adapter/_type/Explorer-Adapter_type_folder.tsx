@@ -55,7 +55,7 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static getIcon() {
-    return <FolderOutlined htmlColor='#3b6bd2' />;
+    return <FolderOutlined color='primary' />;
   }
 
   static isFolder() {

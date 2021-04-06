@@ -30,7 +30,7 @@ export class ExplorerAdapterTypeProjectsRoot {
   }
 
   static getIcon() {
-    return <MapOutlined htmlColor='#00993a' />;
+    return <MapOutlined color='primary' />;
   }
 
   static isFolder() {

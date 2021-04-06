@@ -49,7 +49,7 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static getIcon() {
-    return <InsertDriveFile htmlColor='#796a50' />;
+    return <InsertDriveFile color='primary' />;
   }
 
   static isFolder() {
