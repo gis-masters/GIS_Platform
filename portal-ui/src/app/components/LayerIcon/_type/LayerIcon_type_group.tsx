@@ -12,9 +12,9 @@ interface LayerIconTypeGroupProps {
 export const withTypeGroup = withBemMod<LayerIconTypeGroupProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'group' },
-  () => ({ expanded, className }) => {
+  () => ({ expanded, className, colorized }) => {
     const Icon = expanded ? FolderOpen : Folder;
 
-    return <Icon className={cnLayerIcon(null, [className])} />;
+    return <Icon className={cnLayerIcon(null, [className])} htmlColor={colorized ? '#3b6bd2' : null} />;
   }
 );

@@ -35,7 +35,7 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getIcon(item: ExplorerItemData<DataTable>) {
-    return <LayerIcon type='vector' schemaId={item.payload.schemaId} />;
+    return <LayerIcon type='vector' schemaId={item.payload.schemaId} colorized />;
   }
 
   static isFolder() {

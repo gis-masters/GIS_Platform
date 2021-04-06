@@ -8,6 +8,7 @@ export type LayerIconType = 'vector' | 'raster' | 'group' | 'error' | 'unknown';
 
 export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;
+  colorized?: boolean;
 }
 
 export const LayerIcon: FC<LayerIconProps> = () => null;

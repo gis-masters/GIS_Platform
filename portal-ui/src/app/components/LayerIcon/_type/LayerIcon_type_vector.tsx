@@ -13,6 +13,7 @@ import { Shape } from '../../Icons/Shape';
 interface LayerIconTypeVectorProps extends IClassNameProps {
   type: 'vector';
   schemaId?: string;
+  colorized?: boolean;
 }
 
 @observer
@@ -28,19 +29,25 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
   }
 
   render() {
-    const { className } = this.props;
+    const { className, colorized } = this.props;
     let Icon: SvgIconComponent;
+    let color: string;
+
     if (this.geometryType === GeometryType.MULTI_POLYGON) {
       Icon = Shape;
+      color = '#529d3d';
     } else if (this.geometryType === GeometryType.MULTI_LINE_STRING) {
       Icon = Timeline;
+      color = '#3f77bf';
     } else if (this.geometryType === GeometryType.POINT) {
       Icon = Adjust;
+      color = '#ac54ac';
     } else {
       Icon = ReportProblemOutlined;
+      color = '#ffc107';
     }
 
-    return <Icon className={className} />;
+    return <Icon className={className} htmlColor={colorized ? color : null} />;
   }
 
   @action

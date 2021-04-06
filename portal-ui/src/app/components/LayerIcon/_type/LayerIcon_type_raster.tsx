@@ -7,5 +7,7 @@ import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
 export const withTypeRaster = withBemMod<{}, LayerIconProps>(
   cnLayerIcon(),
   { type: 'raster' },
-  () => ({ className }) => <Texture className={cnLayerIcon(null, [className])} />
+  () => ({ className, colorized }) => (
+    <Texture className={cnLayerIcon(null, [className])} htmlColor={colorized ? '#2a9278' : null} />
+  )
 );

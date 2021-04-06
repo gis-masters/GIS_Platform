@@ -1,3 +1,6 @@
+import React from 'react';
+import { MapOutlined } from '@material-ui/icons';
+
 import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { projectsService } from '../../../../services/crg/projects.service';
@@ -24,6 +27,10 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static getMeta(item: ExplorerItemData<CrgProject>) {
     return '';
+  }
+
+  static getIcon() {
+    return <MapOutlined htmlColor='#00993a' />;
   }
 
   static isFolder() {

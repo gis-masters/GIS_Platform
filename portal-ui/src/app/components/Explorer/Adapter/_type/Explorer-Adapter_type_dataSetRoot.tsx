@@ -29,7 +29,7 @@ export class ExplorerAdapterTypeDataSetRoot {
   }
 
   static getIcon() {
-    return <Database />;
+    return <Database htmlColor='#16237f' />;
   }
 
   static isFolder() {

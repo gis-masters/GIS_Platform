@@ -32,7 +32,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
   }
 
   static getIcon() {
-    return <BasemapIcon />;
+    return <BasemapIcon color='primary' />;
   }
 
   static isFolder() {
