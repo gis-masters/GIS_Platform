@@ -19,6 +19,7 @@ import { TableManagementWidgetItem } from './Item/ConnectionsToProjectsWidget-It
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss';
 import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
+import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWidget-Explorer.scss';
 
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 
@@ -59,7 +60,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
               >
                 <DialogTitle>Проекты</DialogTitle>
                 <DialogContent>
-                  {connectedProjects.map(project => (
+                  {connectedProjects?.map(project => (
                     <TableManagementWidgetItem project={project} key={project.id} />
                   ))}
                 </DialogContent>
@@ -71,13 +72,17 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 <DialogTitle>Выбор проекта</DialogTitle>
                 <DialogContent>
                   <Explorer
+                    className={cnConnectionsToProjectsWidget('Explorer')}
+                    appRole='ConnectionsToProjectsWidget'
                     preset={ExplorerItemType.PROJECTS_ROOT}
                     onSelect={this.handleSelect}
                     onOpen={this.handleOpen}
-                    disabledItems={connectedProjects.map(project => ({
-                      type: ExplorerItemType.PROJECT,
-                      payload: project
-                    }))}
+                    disabledItems={
+                      connectedProjects?.map(project => ({
+                        type: ExplorerItemType.PROJECT,
+                        payload: project
+                      })) || []
+                    }
                     withoutTitle
                   />
                 </DialogContent>

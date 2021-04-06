@@ -7,12 +7,12 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { DataSet, DataTable } from '../../services/data.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { BreadcrumbItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
+import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./SelectDataTable.scss';
-import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { BreadcrumbItemData } from '../Breadcrumbs/Item/Breadcrumbs-Item';
 
 const cnSelectDataTable = cn('SelectDataTable');
 
@@ -47,6 +47,8 @@ export class SelectDataTable extends Component<SelectDataTableProps> {
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer
+              appRole='SelectDataTable'
+              className={cnSelectDataTable('Explorer')}
               preset={ExplorerItemType.DATA_SET_ROOT}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}

@@ -128,7 +128,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         nativeCRS: this.dataTable.crs,
         schemaId: this.dataTable.schemaId,
         position: -42,
-        transparency: 70,
+        transparency: 75,
         styleName: this.dataTable.schemaId,
         type: CrgLayerType.VECTOR
       });

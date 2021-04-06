@@ -18,6 +18,7 @@ import {
 } from '../../../../services/crg/doc-library.service';
 
 import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
@@ -36,19 +37,26 @@ export class ExplorerAdapterTypeLibrary {
     return item.payload.title;
   }
 
-  static getDetails(item: ExplorerItemData<LibraryItem>) {
-    return String(item.payload.details);
+  static getDescription(item: ExplorerItemData<LibraryItem>) {
+    const { details, createdAt } = item.payload;
+    moment.locale('ru');
+
+    return (
+      <>
+        {details && <p>{details}</p>}
+
+        {createdAt ? (
+          <p>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {moment(createdAt).format('LL')}
+          </p>
+        ) : null}
+      </>
+    );
   }
 
   static getMeta(item: ExplorerItemData<LibraryItem>) {
-    const { itemsCount, createdAt, identifier } = item.payload;
-    moment.locale('ru');
-    const date = createdAt ? `${moment(createdAt).format('LL')}` : '';
-    const counter = itemsCount
-      ? `${itemsCount} ${pluralize(Number(itemsCount), 'элемент', 'элемента', 'элементов')}, `
-      : '';
-
-    return `${counter} ${date} (${identifier})`;
+    return String(item.payload.identifier);
   }
 
   static getIcon() {

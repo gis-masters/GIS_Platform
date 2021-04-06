@@ -1,0 +1,11 @@
+.Explorer-ToolbarDivider {
+  align-self: stretch;
+
+  width: 1px;
+
+  background: lightgray;
+
+  &:last-child {
+    display: none;
+  }
+}

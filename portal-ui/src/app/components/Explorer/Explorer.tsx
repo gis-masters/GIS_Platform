@@ -3,12 +3,14 @@ import { action, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { Loading } from '../Loading/Loading';
 import { Emitter } from '../../services/util/Emitter';
 
-import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
+import { ExplorerStore } from './Explorer.store';
+import { emptyItem, ExplorerItemData, ExplorerItemType, KeyAction, keyActions } from './Explorer.models';
 import {
   getChildren,
   getChildrenSortDefaultDirection,
@@ -23,29 +25,10 @@ import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
 import { ExplorerInfo } from './Info/Explorer-Info.composed';
 import { ExplorerTitle } from './Title/Explorer-Title';
 import { ExplorerList } from './List/Explorer-List';
-import { ExplorerStore } from './Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 
 const cnExplorer = cn('Explorer');
-
-enum KeyAction {
-  NEXT = 'next',
-  PREV = 'prev',
-  OPEN = 'open',
-  BACK = 'back',
-  PAGE_PREV = 'pagePrev',
-  PAGE_NEXT = 'pageNext'
-}
-
-const keyActions: { [key in KeyAction]: string[] } = {
-  [KeyAction.PREV]: ['ArrowUp'],
-  [KeyAction.NEXT]: ['ArrowDown'],
-  [KeyAction.OPEN]: ['Enter'],
-  [KeyAction.BACK]: ['Backspace'],
-  [KeyAction.PAGE_PREV]: ['ArrowLeft'],
-  [KeyAction.PAGE_NEXT]: ['ArrowRight']
-};
 
 const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
   [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT },
@@ -55,7 +38,8 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData }> = {
   [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT }
 };
 
-export interface ExplorerProps {
+export interface ExplorerProps extends IClassNameProps {
+  appRole: string;
   title?: string;
   items?: ExplorerItemData[];
   preset?: keyof typeof presets;
@@ -72,11 +56,13 @@ export class Explorer extends Component<ExplorerProps> {
   @observable private busy = false;
 
   private onSelectReactionDispose: IReactionDisposer;
-  private store: ExplorerStore = new ExplorerStore();
+  private store: ExplorerStore;
   private subscribedRefreshEmitterTypes: ExplorerItemType[] = [];
 
   constructor(props: ExplorerProps) {
     super(props);
+
+    this.store = new ExplorerStore(props.appRole);
     this.init(props);
   }
 
@@ -103,11 +89,11 @@ export class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, className } = this.props;
 
     return (
       <div
-        className={cnExplorer({ withInfoPanel })}
+        className={cnExplorer({ withInfoPanel }, [className])}
         onKeyDown={this.keyDownHandler}
         tabIndex={0}
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
@@ -187,7 +173,7 @@ export class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    const { path, selectedItem, currentItem, page, totalPages } = this.store;
+    const { path, selectedItem, openedItem: currentItem, page, totalPages } = this.store;
     const action = (Object.keys(keyActions) as (keyof typeof keyActions)[]).find(key =>
       keyActions[key].includes(e.key)
     );
@@ -222,13 +208,13 @@ export class Explorer extends Component<ExplorerProps> {
 
   @boundMethod
   private paginate(page: number) {
-    const { path, currentItem } = this.store;
+    const { path, openedItem: currentItem } = this.store;
     this.openItem(currentItem, page, path.length - 2);
   }
 
   @boundMethod
   private handleQueryChange() {
-    const { path, currentItem } = this.store;
+    const { path, openedItem: currentItem } = this.store;
     this.openItem(currentItem, 0, path.length - 2);
   }
 
@@ -252,6 +238,6 @@ export class Explorer extends Component<ExplorerProps> {
   private refresh() {
     const { store } = this;
 
-    this.openItem(store.currentItem, 0, store.path.length - 2);
+    this.openItem(store.openedItem, 0, store.path.length - 2);
   }
 }

@@ -30,3 +30,23 @@ export interface SortItem {
   label: string;
   value: string;
 }
+
+export enum KeyAction {
+  NEXT = 'next',
+  PREV = 'prev',
+  OPEN = 'open',
+  BACK = 'back',
+  PAGE_PREV = 'pagePrev',
+  PAGE_NEXT = 'pageNext'
+}
+
+export const keyActions: { [key in KeyAction]: string[] } = {
+  [KeyAction.PREV]: ['ArrowUp'],
+  [KeyAction.NEXT]: ['ArrowDown'],
+  [KeyAction.OPEN]: ['Enter'],
+  [KeyAction.BACK]: ['Backspace'],
+  [KeyAction.PAGE_PREV]: ['ArrowLeft'],
+  [KeyAction.PAGE_NEXT]: ['ArrowRight']
+};
+
+export const pageSizeVariants = [5, 10, 20, 50, 100];

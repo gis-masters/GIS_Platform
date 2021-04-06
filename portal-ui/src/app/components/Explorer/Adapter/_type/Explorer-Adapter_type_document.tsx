@@ -6,6 +6,7 @@ import { InsertDriveFile } from '@material-ui/icons';
 import { LibraryItem } from '../../../../services/crg/doc-library.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerItemData } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
 
@@ -25,15 +26,26 @@ export class ExplorerAdapterTypeDocument {
     return item.payload.title;
   }
 
-  static getMeta(item: ExplorerItemData<LibraryItem>) {
-    const { itemsCount, created_at, id } = item.payload;
+  static getDescription(item: ExplorerItemData<LibraryItem>) {
+    const { details, created_at } = item.payload;
     moment.locale('ru');
-    const date = created_at ? `${moment(created_at).format('LL')}` : '';
-    const counter = itemsCount
-      ? `${itemsCount} ${pluralize(Number(itemsCount), 'элемент', 'элемента', 'элементов')}, `
-      : '';
 
-    return `${counter} ${date} (${id})`;
+    return (
+      <>
+        {details && <p>{details}</p>}
+
+        {created_at ? (
+          <p>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {moment(created_at).format('LL')}
+          </p>
+        ) : null}
+      </>
+    );
+  }
+
+  static getMeta(item: ExplorerItemData<LibraryItem>) {
+    return String(item.payload.id);
   }
 
   static getIcon() {

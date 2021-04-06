@@ -7,6 +7,7 @@ import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 
 import { ExplorerItemData } from '../../Explorer.models';
 import { Adapter } from '../Explorer-Adapter';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -24,14 +25,26 @@ export class ExplorerAdapterTypeTable {
     return item.payload.title;
   }
 
-  static getDetails(item: ExplorerItemData<DataTable>) {
-    return item.payload.details;
+  static getDescription(item: ExplorerItemData<DataTable>) {
+    const { details, createdAt } = item.payload;
+    moment.locale('ru');
+
+    return (
+      <>
+        {details && <p>{details}</p>}
+
+        {createdAt ? (
+          <p>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {moment(createdAt).format('LL')}
+          </p>
+        ) : null}
+      </>
+    );
   }
 
   static getMeta(item: ExplorerItemData<DataTable>) {
-    const { createdAt, identifier } = item.payload;
-
-    return `${createdAt ? moment(createdAt).format('LL') : ''} (${identifier})`;
+    return item.payload.identifier;
   }
 
   static getIcon(item: ExplorerItemData<DataTable>) {

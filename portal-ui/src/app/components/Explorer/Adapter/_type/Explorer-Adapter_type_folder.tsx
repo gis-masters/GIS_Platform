@@ -13,6 +13,7 @@ import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibrar
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 
 import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
@@ -31,15 +32,26 @@ export class ExplorerAdapterTypeFolder {
     return item.payload.title;
   }
 
-  static getMeta(item: ExplorerItemData<LibraryItem>) {
-    const { itemsCount, created_at, id } = item.payload;
+  static getDescription(item: ExplorerItemData<LibraryItem>) {
+    const { details, created_at } = item.payload;
     moment.locale('ru');
-    const date = created_at ? `${moment(created_at).format('LL')}` : '';
-    const counter = itemsCount
-      ? `${itemsCount} ${pluralize(Number(itemsCount), 'элемент', 'элемента', 'элементов')}, `
-      : '';
 
-    return `${counter} ${date} (${id})`;
+    return (
+      <>
+        {details && <p>{details}</p>}
+
+        {created_at ? (
+          <p>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {moment(created_at).format('LL')}
+          </p>
+        ) : null}
+      </>
+    );
+  }
+
+  static getMeta(item: ExplorerItemData<LibraryItem>) {
+    return String(item.payload.id);
   }
 
   static getIcon() {

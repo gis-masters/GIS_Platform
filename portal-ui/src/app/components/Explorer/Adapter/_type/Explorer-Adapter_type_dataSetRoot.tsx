@@ -24,6 +24,10 @@ export class ExplorerAdapterTypeDataSetRoot {
     return 'Наборы данных';
   }
 
+  static getDescription(item: ExplorerItemData<DataSet>) {
+    return 'Данные для векторных слоёв';
+  }
+
   static getMeta(item: ExplorerItemData<DataSet>) {
     return '';
   }

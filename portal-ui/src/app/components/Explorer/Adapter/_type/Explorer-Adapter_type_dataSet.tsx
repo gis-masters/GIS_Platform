@@ -8,6 +8,7 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { SortDir } from '../../../../services/models';
 
 import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
@@ -26,16 +27,31 @@ export class ExplorerAdapterTypeDataSet {
     return item.payload.title;
   }
 
-  static getDetails(item: ExplorerItemData<DataSet>) {
-    return item.payload.details;
+  static getDescription(item: ExplorerItemData<DataSet>) {
+    const { details, itemsCount, createdAt } = item.payload;
+    moment.locale('ru');
+
+    return (
+      <>
+        {details && <p>{details}</p>}
+
+        {createdAt ? (
+          <p>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {moment(createdAt).format('LL')}
+          </p>
+        ) : null}
+
+        <p>
+          <ExplorerInfoDescTitle>Таблиц:</ExplorerInfoDescTitle>
+          {itemsCount}
+        </p>
+      </>
+    );
   }
 
   static getMeta(item: ExplorerItemData<DataSet>) {
-    const { itemsCount, createdAt, identifier } = item.payload;
-    moment.locale('ru');
-    const date = createdAt ? `, ${moment(createdAt).format('LL')}` : '';
-
-    return `${itemsCount} ${pluralize(itemsCount, 'таблица', 'таблицы', 'таблиц')}${date} (${identifier})`;
+    return item.payload.identifier;
   }
 
   static getIcon() {

@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 
 import { ExplorerProps } from '../Explorer';
 import { ExplorerStore } from '../Explorer.store';
-import { getDetails, getTitle } from '../Adapter/Explorer-Adapter';
 import { ExplorerInfoTitle } from '../InfoTitle/Explorer-InfoTitle';
+import { getDescription, getTitle } from '../Adapter/Explorer-Adapter';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Info.scss';
 
@@ -38,8 +38,8 @@ export class ExplorerInfo extends Component<ExplorerInfoProps> {
   }
 
   private renderContent() {
-    const details = getDetails(this.props.store.selectedItem);
+    const description = getDescription(this.props.store.selectedItem);
 
-    return <>{details && <p>{details}</p>}</>;
+    return <>{description}</>;
   }
 }

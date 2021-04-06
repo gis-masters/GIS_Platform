@@ -1,5 +1,7 @@
-.Explorer-List {
+body .Explorer-List {
   grid-area: list;
 
-  min-height: calc(var(--ExplorerPageSize) * 72px);
+  overflow: auto;
+
+  height: 100%;
 }

@@ -65,7 +65,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
             {editMode && (
               <Tooltip title='Отменить изменения'>
                 <span>
-                  <IconButton onClick={this.cansel} color='secondary'>
+                  <IconButton onClick={this.cancel} color='secondary'>
                     <CancelOutlined />
                   </IconButton>
                 </span>
@@ -167,7 +167,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   }
 
   @action.bound
-  private cansel() {
+  private cancel() {
     if (currentProject.queriesQueueLength) {
       currentProject.groups = cloneDeep(currentProject.primalGroups);
       currentProject.layers = cloneDeep(currentProject.primalLayers);

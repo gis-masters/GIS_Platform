@@ -1,0 +1,49 @@
+import React, { Component } from 'react';
+import { observer } from 'mobx-react';
+import { MenuItem, TextField } from '@material-ui/core';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+
+import { ExplorerStore } from '../Explorer.store';
+import { pageSizeVariants } from '../Explorer.models';
+
+import '!style-loader!css-loader!sass-loader!./Explorer-PageSize.scss';
+
+const cnExplorerPageSize = cn('Explorer', 'PageSize');
+
+interface ExplorerPageSizeProps {
+  store: ExplorerStore;
+  onChange: () => void;
+}
+
+@observer
+export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
+  render() {
+    const { store } = this.props;
+    const { pageSize } = store;
+
+    return (
+      <div className={cnExplorerPageSize()}>
+        <TextField label='На&nbsp;странице' value={pageSize} select fullWidth onChange={this.changeHandler}>
+          {pageSizeVariants.map(size => (
+            <MenuItem value={size} key={size}>
+              {size}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
+    );
+  }
+
+  @boundMethod
+  private changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setSize(Number(e.target.value));
+  }
+
+  private setSize(size: number) {
+    const { store, onChange } = this.props;
+    store.setPageSize(size);
+    localStorage.setItem(store.pageSizeStorageKey, String(size));
+    onChange();
+  }
+}

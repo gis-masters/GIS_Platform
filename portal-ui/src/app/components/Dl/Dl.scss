@@ -1,0 +1,6 @@
+.Dl {
+  display: grid;
+  align-items: flex-start;
+  gap: 5px;
+  grid-template-areas: 'dt dd';
+}

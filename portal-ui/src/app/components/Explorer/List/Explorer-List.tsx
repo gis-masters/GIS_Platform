@@ -35,7 +35,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
     const emptyListView = path.length > 1 ? getEmptyListView(path[path.length - 2]) : null;
 
     return (
-      <List className={cnExplorerList()} disablePadding>
+      <List className={cnExplorerList(null, ['scroll'])} disablePadding>
         {Boolean(this.currentList?.length) &&
           this.currentList.map(this.getItemProps).map(props => <ExplorerItem {...props} key={getId(props.item)} />)}
 
@@ -48,9 +48,9 @@ export class ExplorerList extends Component<ExplorerListProps> {
 
   @computed
   private get currentList(): ExplorerItemData[] {
-    const { path, currentItem } = this.props.store;
+    const { path, openedItem } = this.props.store;
 
-    return path.length >= 2 && currentItem.children ? currentItem.children : [];
+    return path.length >= 2 && openedItem.children ? openedItem.children : [];
   }
 
   @boundMethod
