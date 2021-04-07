@@ -57,7 +57,9 @@ public class Project implements Identifiable<Long> {
     )
     private Set<BaseMap> baseMaps = new HashSet<>();
 
-    public Project() {}
+    public Project() {
+        // Required
+    }
 
     public Project(String name, long organizationId) {
         this.name = name;

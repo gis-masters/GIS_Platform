@@ -89,13 +89,13 @@ public class ProjectService {
         if (isRoot(authentication)) {
             return projectRepository
                     .findById(id)
-                    .orElseThrow(() -> new NotFoundException(id));
+                    .orElseThrow(() -> new NotFoundException(Project.class, id));
         }
 
         Long orgId = getFirstOrganizationId(userDetails);
         Project project = projectRepository
                 .findByIdAndOrganizationId(id, orgId)
-                .orElseThrow(() -> new NotFoundException(id));
+                .orElseThrow(() -> new NotFoundException(Project.class, id));
 
         if (isOrganizationAdmin(authentication)) {
             return project;

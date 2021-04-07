@@ -6,12 +6,12 @@ Feature: Обновление подложек
     When Авторизируемся владельцем организации
 
   Scenario Outline: Обновление полей подложки
-    When Существует подложка
+    When Существует подложка источник
       | <name> | <title> | <thumbnailUrn> | <type> |
     When Пользователь делает запрос на обновление полей подложки
       | <newName> | <newTitle> | <newThumbnailUrn> | <newType> |
     Then Сервер отвечает со статус-кодом 200
-    When Пользователь делает запрос на указанную подложку
+    When Пользователь делает запрос на указанную подложку источник
     And Поля подложки совпадают с переданными "<newName>", "<newTitle>", "<newThumbnailUrn>", "<newType>"
     Examples:
       | name | title     | thumbnailUrn                     | type | newName | newTitle  | newThumbnailUrn           | newType |

@@ -48,6 +48,6 @@ public class MessageBusProperties {
     public static final String USER_RESPONSE_KEY = "user.response.key";
 
     // deleteRemoteReferences
-    public static final String DELETE_GIS_REFERENCES_REQ_QUEUE = "deleteGisRemoteReferences.RequestQueue";
-    public static final String DELETE_GIS_REFERENCES_RES_QUEUE = "deleteGisRemoteReferences.ResponseQueue";
+    public static final String COMMON_REQUEST_QUEUE = "commonRequestQueue";
+    public static final String COMMON_RESPONSE_QUEUE = "commonResponseQueue";
 }

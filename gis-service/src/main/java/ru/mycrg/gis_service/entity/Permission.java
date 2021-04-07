@@ -37,6 +37,7 @@ public class Permission {
     LocalDateTime lastModified;
 
     public Permission() {
+        // Required
     }
 
     public Permission(PermissionCreateDto dto, Project project) {

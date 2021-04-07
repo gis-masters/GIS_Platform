@@ -7,13 +7,12 @@ import ru.mycrg.data_service.dto.BaseMapCreateDto;
 import ru.mycrg.data_service.entity.BaseMap;
 
 @Mapper
-public interface BaseMapMapper {
+public interface BasemapMapper {
 
-    BaseMapMapper baseMapMapper = Mappers.getMapper(BaseMapMapper.class);
+    BasemapMapper basemapMapper = Mappers.getMapper(BasemapMapper.class);
 
     @Mapping(source = "dto.type", target = "type")
     BaseMap toEntity(BaseMapCreateDto dto);
 
     BaseMapCreateDto toDto(BaseMap dto);
-
 }

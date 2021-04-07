@@ -26,4 +26,6 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     @Modifying
     @Query("DELETE FROM Layer l where l.id = :layerId")
     void deleteLayerById(@Param("layerId") Long layerId);
+
+    void deleteByTableName(String tableName);
 }

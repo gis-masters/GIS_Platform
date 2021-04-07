@@ -47,7 +47,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(baseMapDto);
     }
 
-    @When("Пользователь делает запрос на указанную подложку")
+    @When("Пользователь делает запрос на указанную подложку источник")
     public void getBaseMap() {
         super.getCurrentEntity();
     }
@@ -77,7 +77,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         super.getAllEntities();
     }
 
-    @Given("Существует подложка")
+    @Given("Существует подложка источник")
     public void initBaseMap(DataTable dataTable) {
         String name = generateString(dataTable.asList().get(0));
 
@@ -116,7 +116,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.get("type"), newType);
     }
 
-    @When("Пользователь делает запрос на удаление подложки")
+    @When("Пользователь делает запрос на удаление подложки источника")
     public void deleteBaseMap() {
         super.deleteCurrentEntity();
 

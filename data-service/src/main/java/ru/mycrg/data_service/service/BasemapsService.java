@@ -1,0 +1,69 @@
+package ru.mycrg.data_service.service;
+
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.core.annotation.HandleAfterDelete;
+import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
+import org.springframework.data.rest.core.annotation.HandleBeforeSave;
+import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.entity.BaseMap;
+import ru.mycrg.data_service.exceptions.CrgValidationException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service_contract.queue.request.BasemapReferencesDeletionEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
+
+import static ru.mycrg.data_service.mappers.BasemapMapper.basemapMapper;
+
+@Service
+@RepositoryEventHandler
+public class BasemapsService {
+
+    public static final Logger log = LoggerFactory.getLogger(BasemapsService.class);
+
+    private final Validator validator;
+    private final IMessageBusProducer messageBus;
+    private final IAuthenticationFacade authenticationFacade;
+
+    public BasemapsService(Validator validator,
+                           IMessageBusProducer messageBus,
+                           IAuthenticationFacade authenticationFacade) {
+        this.validator = validator;
+        this.messageBus = messageBus;
+        this.authenticationFacade = authenticationFacade;
+    }
+
+    @Transactional
+    @HandleBeforeCreate
+    public void beforeCreate(BaseMap baseMap) {
+        validate(basemapMapper.toDto(baseMap));
+    }
+
+    @Transactional
+    @HandleBeforeSave
+    public void beforeSave(BaseMap baseMap) {
+        validate(basemapMapper.toDto(baseMap));
+    }
+
+    @Transactional
+    @HandleAfterDelete
+    public void afterDelete(@NotNull BaseMap baseMap) {
+        messageBus.produce(
+                new BasemapReferencesDeletionEvent(baseMap.getId(),
+                                                   baseMap.getLayerName(),
+                                                   authenticationFacade.getAccessToken()));
+    }
+
+    private <T> void validate(T bean) {
+        Set<ConstraintViolation<T>> violations = validator.validate(bean);
+        if (!violations.isEmpty()) {
+            throw new CrgValidationException(violations);
+        }
+    }
+}

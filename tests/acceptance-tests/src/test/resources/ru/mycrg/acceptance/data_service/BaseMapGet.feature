@@ -10,17 +10,17 @@ Feature: Выборка подложек
     Then Ответ имеет стандартное тело с паджинацией
 
   Scenario Outline: Проверка представления созданной подложки
-    When Существует подложка
+    When Существует подложка источник
       | <name> | <title> | <thumbnailUrn> | <type> |
     Then Сервер передает ID созданной подложки
-    When Пользователь делает запрос на указанную подложку
+    When Пользователь делает запрос на указанную подложку источник
     And Представление подложки корректно
     Examples:
       | name | title     | thumbnailUrn                     | type |
       | wmts | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS |
 
   Scenario Outline: Выборка всех подложек c сортировкой (<sorting factor>|<sorting direction>)
-    When Существует подложка
+    When Существует подложка источник
       | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все подложки
     Then Сервер отвечает со статус-кодом 200
@@ -56,7 +56,7 @@ Feature: Выборка подложек
       | wmts26 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | lastModified   | desc              |
 
   Scenario Outline: Выборка всех подложек постранично (<baseMapsPerPage> page/pages)
-    When Существует подложка
+    When Существует подложка источник
       | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
     And Количество страниц подложек "basemaps" пропорционально "<baseMapsPerPage>"
     And На всех страницах подложек "basemaps" есть "<baseMapsPerPage>"

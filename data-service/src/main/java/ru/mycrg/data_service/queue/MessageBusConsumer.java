@@ -10,7 +10,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import java.util.List;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.DELETE_GIS_REFERENCES_RES_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.COMMON_RESPONSE_QUEUE;
 
 @Service
 public class MessageBusConsumer implements IMessageBusConsumer {
@@ -26,7 +26,7 @@ public class MessageBusConsumer implements IMessageBusConsumer {
             QUEUE_VALIDATION_RESULT,
             QUEUE_IMPORT_RESPONSE,
             QUEUE_EXPORT_RESPONSE,
-            DELETE_GIS_REFERENCES_RES_QUEUE
+            COMMON_RESPONSE_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

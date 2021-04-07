@@ -50,6 +50,7 @@ public class Group implements Identifiable<Long> {
     private Project project;
 
     public Group() {
+        // Required
     }
 
     public Group(GroupCreateDto dto) {

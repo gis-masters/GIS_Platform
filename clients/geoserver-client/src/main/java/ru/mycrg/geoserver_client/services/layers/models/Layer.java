@@ -1,15 +1,24 @@
 package ru.mycrg.geoserver_client.services.layers.models;
 
+import ru.mycrg.geoserver_client.services.storage.vector.NameHrefProjection;
+
 public class Layer {
 
     private String name;
     private String type;
     private Style defaultStyle;
+    private NameHrefProjection resource;
 
-    public Layer(String name, String type, Style defaultStyle) {
+    public Layer() {
+        // Required
+    }
+
+    public Layer(String name, String type, Style defaultStyle,
+                 NameHrefProjection resource) {
         this.name = name;
         this.type = type;
         this.defaultStyle = defaultStyle;
+        this.resource = resource;
     }
 
     public String getName() {
@@ -34,5 +43,13 @@ public class Layer {
 
     public void setDefaultStyle(Style defaultStyle) {
         this.defaultStyle = defaultStyle;
+    }
+
+    public NameHrefProjection getResource() {
+        return resource;
+    }
+
+    public void setResource(NameHrefProjection resource) {
+        this.resource = resource;
     }
 }

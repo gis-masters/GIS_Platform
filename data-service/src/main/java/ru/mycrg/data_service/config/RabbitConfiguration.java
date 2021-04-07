@@ -57,8 +57,8 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueExportResponse()).to(fanoutExchangeExportResponse());
     }
 
-    @Bean public Queue deleteGisReferencesRequestQueue() { return new Queue(DELETE_GIS_REFERENCES_REQ_QUEUE);}
-    @Bean public Queue deleteGisReferencesResponseQueue() { return new Queue(DELETE_GIS_REFERENCES_RES_QUEUE);}
+    @Bean public Queue deleteGisReferencesRequestQueue() { return new Queue(COMMON_REQUEST_QUEUE);}
+    @Bean public Queue deleteGisReferencesResponseQueue() { return new Queue(COMMON_RESPONSE_QUEUE);}
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

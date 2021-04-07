@@ -21,7 +21,6 @@ public class LayerCreateDto {
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
     private String enabled;
 
-    @Min(message = "Минимальное допустимое значение -1", value = -1)
     @Max(Integer.MAX_VALUE)
     private int position = -1;
 

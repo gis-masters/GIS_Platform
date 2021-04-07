@@ -22,12 +22,15 @@ import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
+import ru.mycrg.data_service_contract.queue.request.LayerReferencesDeletionEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.Paginator.getPage;
 import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -39,6 +42,7 @@ public class TableService implements ITableService {
 
     public static final Logger log = LoggerFactory.getLogger(TableService.class);
 
+    private final IMessageBusProducer messageBus;
     private final TablesManager tablesManager;
     private final ResourcesService resourcesService;
     private final ResourceProtector resourceProtector;
@@ -47,9 +51,11 @@ public class TableService implements ITableService {
 
     public TableService(ResourcesService resourcesService,
                         TablesManager tablesManager,
+                        IMessageBusProducer messageBus,
                         PermissionsService permissionsService,
                         IAuthenticationFacade authenticationFacade,
                         ResourceProtector resourceProtector) {
+        this.messageBus = messageBus;
         this.tablesManager = tablesManager;
         this.resourcesService = resourcesService;
         this.resourceProtector = resourceProtector;
@@ -63,7 +69,7 @@ public class TableService implements ITableService {
 
         final Optional<Resource> oResource = resourcesService.get(rIdentifier);
         if (oResource.isPresent()) {
-            throw new ConflictException("Table already exist: " + rIdentifier.toString());
+            throw new ConflictException("Table already exist: " + rIdentifier);
         }
 
         // Add resource description record
@@ -107,6 +113,12 @@ public class TableService implements ITableService {
         resourcesService.delete(resource);
         tablesManager.delete(rIdentifier);
         tablesManager.delete(extTable);
+
+        messageBus.produce(
+                new LayerReferencesDeletionEvent(getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
+                                                 rIdentifier.getParent().getId(),
+                                                 rIdentifier.getId(),
+                                                 authenticationFacade.getAccessToken()));
     }
 
     @NotNull

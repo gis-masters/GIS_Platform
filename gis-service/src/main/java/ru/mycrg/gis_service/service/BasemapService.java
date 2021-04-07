@@ -8,7 +8,6 @@ import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Project;
-import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ConflictException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
@@ -24,14 +23,14 @@ import static ru.mycrg.gis_service.mappers.BaseMapMapper.baseMapMapper;
 
 @Service
 @Transactional
-public class BaseMapService {
+public class BasemapService {
 
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
     private final BaseMapRepository baseMapRepository;
     private final ProjectionFactory projectionFactory;
 
-    public BaseMapService(JsonPatcher jsonPatcher,
+    public BasemapService(JsonPatcher jsonPatcher,
                           ProjectService projectService,
                           ProjectionFactory projectionFactory,
                           BaseMapRepository baseMapRepository) {
@@ -66,13 +65,24 @@ public class BaseMapService {
         return projectionFactory.createProjection(BaseMapProjection.class, newBaseMap);
     }
 
-    public void delete(long projectId, Long baseMapId, Authentication authentication) {
+    public void delete(long projectId, Long id, Authentication authentication) {
         Project project = projectService.getById(projectId, authentication);
 
-        BaseMap baseMap = baseMapRepository.findByBaseMapId(baseMapId)
-                                           .orElseThrow(() -> new BadRequestException("Id of basemap incorrect"));
+        BaseMap baseMap = baseMapRepository.findById(id)
+                                           .orElseThrow(() -> new NotFoundException(BaseMap.class, id));
 
         project.getBaseMaps().remove(baseMap);
+        baseMapRepository.delete(baseMap);
+    }
+
+    public void deleteByBasemapId(Long sourceBasemapId) {
+        baseMapRepository.findAllByBaseMapId(sourceBasemapId)
+                         .forEach(basemap -> {
+                             basemap.getProjects()
+                                    .forEach(project -> project.getBaseMaps().remove(basemap));
+
+                             baseMapRepository.delete(basemap);
+                         });
     }
 
     public void update(long projectId, long baseMapId, JsonMergePatch patchDto, Authentication authentication) {

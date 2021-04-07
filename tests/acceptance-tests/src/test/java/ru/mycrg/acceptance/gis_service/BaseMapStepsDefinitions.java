@@ -18,12 +18,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.data_service.InitialBaseMapsStepsDefinitions.baseMapId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
-    public static BaseMapCreateDto baseMapDto;
-    public static Integer baseMapId;
+    public static BaseMapCreateDto projectBasemapDto;
+    public static Integer projectBasemapId;
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -37,22 +38,22 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @Override
     public Integer getCurrentId() {
-        return baseMapId;
+        return projectBasemapId;
     }
 
     @Override
     public void setCurrentId(Integer id) {
-        baseMapId = id;
+        projectBasemapId = id;
     }
 
     @And("Сервер передает ID подложки проекта в ответе")
     public void extractAndSetProjectBaseMapIdFromBody() {
         super.extractAndSetEntityIdFromBody();
 
-        projectBaseMapsPool.put(baseMapId, baseMapDto);
+        projectBaseMapsPool.put(projectBasemapId, projectBasemapDto);
     }
 
-    @When("Пользователь делает запрос на текущую подложку")
+    @When("Пользователь делает запрос на текущую подложку проекта")
     public void getCurrentProjectBaseMapInfoById() {
         super.getCurrentEntity();
     }
@@ -61,22 +62,22 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
     public void checkProjectBaseMapData() {
         jsonPath = response.jsonPath();
 
-        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(baseMapDto.getBaseMapId())));
-        assertThat(jsonPath.get("title"), equalTo(baseMapDto.getTitle()));
-        assertThat(jsonPath.get("position"), is(baseMapDto.getPosition()));
+        assertThat(jsonPath.get("baseMapId"), is(Math.toIntExact(projectBasemapDto.getBaseMapId())));
+        assertThat(jsonPath.get("title"), equalTo(projectBasemapDto.getTitle()));
+        assertThat(jsonPath.get("position"), is(projectBasemapDto.getPosition()));
     }
 
     @When("Пользователь делает запрос на создание подложки проекта {string}, {string}, {string}")
     public void createProjectBaseMap(String baseMapId, String title, String position) {
-        baseMapDto = new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)),
-                                          generateString(title),
-                                          Integer.parseInt(generateString(position)));
+        projectBasemapDto = new BaseMapCreateDto(Long.parseLong(generateString(baseMapId)),
+                                                 generateString(title),
+                                                 Integer.parseInt(generateString(position)));
 
-        super.createEntity(baseMapDto);
+        super.createEntity(projectBasemapDto);
     }
 
     @Given("Существует подложкa проекта {string}, {string}, {string}")
-    public void isProjectBaseMapExist(String baseMapId, String title, String position) {
+    public void initProjectBasemap(String baseMapId, String title, String position) {
         if (isProjectBaseMapExistInPool(title)) {
             makeExactProjectBaseMapAsCurrent(title);
         } else if (!projectBaseMapsPool.isEmpty()) {
@@ -88,16 +89,21 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("Существует подложкa ссылающаяся на подложку источник {string}")
+    public void initBasemapLinkedToCurrentSourceSubstrate(String title) {
+        initProjectBasemap(baseMapId.toString(), title, "10");
+    }
+
     @When("Пользователь делает повторный запрос на создание подложки проекта")
     public void createProjectBaseMapAgain() {
-        super.createEntity(baseMapDto);
+        super.createEntity(projectBasemapDto);
     }
 
     @When("Пользователь делает запрос на удаление текущей подложки текущего проекта")
     public void deleteProjectBaseMap() {
-        super.deleteEntityById((int) baseMapDto.getBaseMapId());
+        super.deleteEntityById(projectBasemapId);
 
-        projectBaseMapsPool.remove(baseMapId);
+        projectBaseMapsPool.remove(projectBasemapId);
     }
 
     @And("Представление подложки проекта корректно")
@@ -128,16 +134,16 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление полей подложки проекта {string}, {string}, {string}")
     public void updateProjectBaseMap(String newBaseMapId, String newTitle, String newPosition) {
-        baseMapDto = mapToProjectBaseMapDto(newBaseMapId, newTitle, newPosition);
+        projectBasemapDto = mapToProjectBaseMapDto(newBaseMapId, newTitle, newPosition);
 
-        String payload = gson.toJson(baseMapDto);
+        String payload = gson.toJson(projectBasemapDto);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(payload).
                         contentType("application/merge-patch+json")
                 .when().
-                        patch("" + baseMapId);
+                        patch("" + projectBasemapId);
     }
 
     @And("Поля подложки проекта совпадают с переданными {int}, {string}, {int}")
@@ -174,8 +180,8 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                            .filter(entry -> entry.getValue().getTitle().equals(title))
                            .findFirst()
                            .ifPresent(entry -> {
-                               baseMapId = entry.getKey();
-                               baseMapDto = entry.getValue();
+                               projectBasemapId = entry.getKey();
+                               projectBasemapDto = entry.getValue();
                            });
     }
 
@@ -184,8 +190,8 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
                            .skip(projectBaseMapsPool.size() - 1)
                            .findFirst()
                            .ifPresent(entry -> {
-                               baseMapId = entry.getKey();
-                               baseMapDto = entry.getValue();
+                               projectBasemapId = entry.getKey();
+                               projectBasemapDto = entry.getValue();
                            });
     }
 }

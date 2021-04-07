@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
-import ru.mycrg.gis_service.service.BaseMapService;
+import ru.mycrg.gis_service.service.BasemapService;
 
 import javax.json.JsonMergePatch;
 import javax.validation.Valid;
@@ -25,9 +25,9 @@ public class BaseMapController {
 
     private static final Logger log = LoggerFactory.getLogger(BaseMapController.class);
 
-    private final BaseMapService baseMapService;
+    private final BasemapService baseMapService;
 
-    public BaseMapController(BaseMapService baseMapService) {
+    public BaseMapController(BasemapService baseMapService) {
         this.baseMapService = baseMapService;
     }
 
@@ -73,12 +73,12 @@ public class BaseMapController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/basemaps/{base_map_id}")
+    @DeleteMapping("/basemaps/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteBaseMap(@PathVariable(name = "project_id") long projectId,
-                                                @PathVariable(name = "base_map_id") long baseMapId,
+                                                @PathVariable(name = "id") long id,
                                                 Authentication authentication) {
-        baseMapService.delete(projectId, baseMapId, authentication);
+        baseMapService.delete(projectId, id, authentication);
 
         return ResponseEntity.noContent().build();
     }

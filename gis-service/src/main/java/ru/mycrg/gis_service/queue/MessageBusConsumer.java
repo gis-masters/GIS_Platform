@@ -23,7 +23,7 @@ public class MessageBusConsumer implements IMessageBusConsumer {
     @Override
     @RabbitListener(queues = {
             USER_REQUEST_QUEUE,
-            DELETE_GIS_REFERENCES_REQ_QUEUE
+            COMMON_REQUEST_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

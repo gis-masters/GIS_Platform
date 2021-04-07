@@ -10,7 +10,7 @@ Feature: Обновление подложек
     Given Существует подложкa проекта "<baseMapId>", "<title>", "<position>"
     When Пользователь делает запрос на обновление полей подложки проекта "<newBaseMapId>", "<newTitle>", "<newPosition>"
     Then Сервер отвечает со статус-кодом 204
-    When Пользователь делает запрос на текущую подложку
+    When Пользователь делает запрос на текущую подложку проекта
     And Поля подложки проекта совпадают с переданными <newBaseMapId>, "<newTitle>", <newPosition>
     Examples:
       | baseMapId | title    | position | newBaseMapId | newTitle | newPosition |

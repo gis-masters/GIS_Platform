@@ -72,7 +72,7 @@ public class Layer implements Identifiable<Long> {
     private Group parent;
 
     public Layer() {
-        //Required by framework
+        // Required
     }
 
     public Layer(LayerCreateDto dto) {
