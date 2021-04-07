@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.IResourceModel;
@@ -37,10 +36,9 @@ public class DatasetsController {
     @GetMapping("/datasets")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getDatasets(@RequestParam(required = false, defaultValue = "") String title,
-                                              Authentication authentication,
                                               Pageable pageable,
                                               PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> datasets = datasetService.getPaged(title, pageable, authentication);
+        final Page<IResourceModel> datasets = datasetService.getPaged(title, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 datasets,
@@ -53,19 +51,17 @@ public class DatasetsController {
 
     @GetMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<IResourceModel> getDataset(@PathVariable String datasetId,
-                                                     Authentication authentication) {
+    public ResponseEntity<IResourceModel> getDataset(@PathVariable String datasetId) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(datasetId, SCHEMA);
-        final IResourceModel dto = datasetService.getInfo(rIdentifier, authentication);
+        final IResourceModel dto = datasetService.getInfo(rIdentifier);
 
         return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/datasets")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto,
-                                                Authentication authentication) {
-        IResourceModel newDataset = datasetService.create(dto, authentication);
+    public ResponseEntity<Object> createDataset(@Valid @RequestBody ResourceCreateDto dto) {
+        IResourceModel newDataset = datasetService.create(dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -78,8 +74,8 @@ public class DatasetsController {
 
     @DeleteMapping("/datasets/{datasetId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId, Authentication authentication) {
-        datasetService.delete(new ResourceIdentifier(datasetId, SCHEMA), authentication);
+    public ResponseEntity<Object> deleteDataset(@PathVariable String datasetId) {
+        datasetService.delete(new ResourceIdentifier(datasetId, SCHEMA));
 
         return ResponseEntity.noContent().build();
     }

@@ -190,8 +190,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         get(String.format("/%d/permissions/%d", projectId, permId));
-
-        jsonPath = response.jsonPath();
     }
 
     @And("Сервер передает ID правила в ответе")

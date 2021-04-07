@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -19,6 +20,7 @@ import ru.mycrg.data_service.service.resources.ResourcesService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Set;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -42,14 +44,13 @@ public class TablesPermissionsController {
     public ResponseEntity<PermissionProjection> addPermissionToTable(@PathVariable String datasetId,
                                                                      @PathVariable String tableId,
                                                                      @Valid @RequestBody PermissionCreateDto dto,
-                                                                     BindingResult bindingResult,
-                                                                     Authentication authentication) {
+                                                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
         final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier, authentication)
+        final Resource resource = resourcesService.get(rIdentifier)
                                                   .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
         final PermissionProjection permission = permissionsService.create(resource, dto);
@@ -68,10 +69,9 @@ public class TablesPermissionsController {
     public ResponseEntity<Object> getTablePermissions(@PathVariable String datasetId,
                                                       @PathVariable String tableId,
                                                       Pageable pageable,
-                                                      PagedResourcesAssembler<PermissionProjection> pageAssembler,
-                                                      Authentication authentication) {
+                                                      PagedResourcesAssembler<PermissionProjection> pageAssembler) {
         final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier, authentication)
+        final Resource resource = resourcesService.get(rIdentifier)
                                                   .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
         final var permissions = permissionsService.getPaged(resource, pageable);
@@ -89,10 +89,9 @@ public class TablesPermissionsController {
     @DeleteMapping("/datasets/{datasetId}/tables/{tableId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> deleteTablePermission(@PathVariable String datasetId,
                                                         @PathVariable String tableId,
-                                                        @PathVariable Long permissionId,
-                                                        Authentication authentication) {
+                                                        @PathVariable Long permissionId) {
         final ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
-        final Resource resource = resourcesService.get(rIdentifier, authentication)
+        final Resource resource = resourcesService.get(rIdentifier)
                                                   .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
 
         permissionsService.deleteById(resource, permissionId);

@@ -1,13 +1,16 @@
 package ru.mycrg.data_service.entity;
 
 import org.hibernate.annotations.OnDelete;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.Authentication;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
@@ -69,6 +72,10 @@ public class Resource {
         this.createdBy = createdBy;
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
+    }
+
+    public boolean isUserOwnMe(@NotNull String login) {
+        return Objects.equals(this.createdBy, login);
     }
 
     public long getId() {

@@ -2,6 +2,8 @@ package ru.mycrg.data_service.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -11,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
 
 /**
  * Наш декоратор над DataSource.
@@ -23,15 +24,19 @@ public class CrgDataSource extends CrgDataSourcesPool implements DataSource {
 
     private final DataSource dataSource;
     private final HttpServletRequest httpServletRequest;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public CrgDataSource(DataSource dataSource, HttpServletRequest httpServletRequest) {
+    public CrgDataSource(DataSource dataSource,
+                         HttpServletRequest httpServletRequest,
+                         IAuthenticationFacade authenticationFacade) {
         this.dataSource = dataSource;
         this.httpServletRequest = httpServletRequest;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        Long orgId = getOrganizationId(httpServletRequest.getUserPrincipal());
+        Long orgId = authenticationFacade.getOrganizationId((Authentication) httpServletRequest.getUserPrincipal());
         String dbName;
         if (orgId < 1) {
             dbName = INITIAL_DB_NAME;

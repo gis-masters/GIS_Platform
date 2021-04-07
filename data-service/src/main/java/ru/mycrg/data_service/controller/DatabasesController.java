@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.DatabaseCreateDto;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service_contract.queue.request.DeleteGisReferencesEvent;
 import ru.mycrg.data_service.service.DatabaseService;
+import ru.mycrg.data_service_contract.queue.request.DeleteGisReferencesEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
@@ -31,9 +30,8 @@ public class DatabasesController {
 
     @GetMapping("/databases/{dbName}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<DatabaseCreateDto> getDb(@PathVariable String dbName,
-                                                   Authentication authentication) {
-        if (databaseService.isExist(dbName, authentication)) {
+    public ResponseEntity<DatabaseCreateDto> getDb(@PathVariable String dbName) {
+        if (databaseService.isExist(dbName)) {
             return ResponseEntity.status(OK).body(new DatabaseCreateDto(dbName));
         }
 
@@ -50,8 +48,8 @@ public class DatabasesController {
 
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     @DeleteMapping("/databases/{dbName}")
-    public ResponseEntity<Object> deleteDb(@PathVariable String dbName, Authentication authentication) {
-        databaseService.delete(dbName, authentication);
+    public ResponseEntity<Object> deleteDb(@PathVariable String dbName) {
+        databaseService.delete(dbName);
 
         return ResponseEntity.noContent().build();
     }

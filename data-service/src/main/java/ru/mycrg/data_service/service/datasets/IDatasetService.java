@@ -9,11 +9,11 @@ import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 
 public interface IDatasetService {
 
-    Page<IResourceModel> getPaged(String title, Pageable pageable, Authentication authentication);
+    Page<IResourceModel> getPaged(String title, Pageable pageable);
 
-    IResourceModel getInfo(ResourceIdentifier rIdentifier, Authentication authentication);
+    IResourceModel getInfo(ResourceIdentifier rIdentifier);
 
-    IResourceModel create(ResourceCreateDto dto, Authentication authentication);
+    IResourceModel create(ResourceCreateDto dto);
 
-    void delete(ResourceIdentifier rIdentifier, Authentication authentication);
+    void delete(ResourceIdentifier rIdentifier);
 }

@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.DatabaseDDL;
@@ -9,24 +8,26 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 
 import java.util.Objects;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.extractIdFromDbName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
-import static ru.mycrg.data_service.security.CrgClaimsParser.isRoot;
 
 @Service
 public class DatabaseService {
 
     private final DatabaseDDL databaseDDL;
     private final CrgMigrationHandler migrationHandler;
+    private final IAuthenticationFacade authenticationFacade;
 
     public DatabaseService(DatabaseDDL databaseDDL,
-                           CrgMigrationHandler migrationHandler) {
+                           CrgMigrationHandler migrationHandler,
+                           IAuthenticationFacade authenticationFacade) {
         this.databaseDDL = databaseDDL;
         this.migrationHandler = migrationHandler;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public void create(final String dbName) {
@@ -39,15 +40,15 @@ public class DatabaseService {
         migrationHandler.initMigration(dbName);
     }
 
-    public void delete(String dbName, Authentication authentication) {
+    public void delete(String dbName) {
         if (!databaseDDL.isDatabaseExist(dbName)) {
             throw new NotFoundException(dbName);
         }
 
-        if (isRoot(authentication)) {
+        if (authenticationFacade.isRoot()) {
             databaseDDL.delete(dbName);
         } else {
-            Long orgId = getOrganizationId(authentication);
+            Long orgId = authenticationFacade.getOrganizationId();
             String calcName = getDefaultDatabaseName(orgId);
 
             if (calcName.equalsIgnoreCase(dbName)) {
@@ -58,15 +59,15 @@ public class DatabaseService {
         }
     }
 
-    public boolean isExist(@NotNull String dbName, Authentication authentication) {
-        if (isRoot(authentication)) {
+    public boolean isExist(@NotNull String dbName) {
+        if (authenticationFacade.isRoot()) {
             return databaseDDL.isDatabaseExist(dbName);
         }
 
         Long dbId = extractIdFromDbName(dbName)
                 .orElseThrow(() -> new BadRequestException("Invalid db name: " + dbName));
 
-        if (Objects.equals(dbId, getOrganizationId(authentication))) {
+        if (Objects.equals(dbId, authenticationFacade.getOrganizationId())) {
             return databaseDDL.isDatabaseExist(dbName);
         } else {
             throw new ForbiddenException("Not allowed");

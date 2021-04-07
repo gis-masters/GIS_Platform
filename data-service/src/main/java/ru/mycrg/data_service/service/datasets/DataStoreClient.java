@@ -7,9 +7,9 @@ import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -18,29 +18,32 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static ru.mycrg.data_service.security.CrgAuthHelper.getToken;
-
 @Service
 public class DataStoreClient {
 
     public static final Logger log = LoggerFactory.getLogger(DataStoreClient.class);
 
     private final HttpClient httpClient;
+    private final IAuthenticationFacade authenticationFacade;
 
     private final URL baseUrl;
 
-    public DataStoreClient(Environment environment) throws MalformedURLException {
+    public DataStoreClient(Environment environment,
+                           IAuthenticationFacade authenticationFacade) throws MalformedURLException {
+        this.authenticationFacade = authenticationFacade;
+
         httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
 
         baseUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
     }
 
-    public ResponseModel<Object> create(String dataStoreName, Authentication authentication) {
+    public ResponseModel<Object> create(String dataStoreName) {
         try {
             log.debug("Try create dataStore {} via gis-service on geoserver", dataStoreName);
 
+            // TODO: user geoserver client
             Request request = new Request.Builder()
-                    .addHeader("Authorization", "Bearer " + getToken(authentication))
+                    .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
                     .url(new URL(baseUrl, "/geoserver/datastores/" + dataStoreName))
                     .post(RequestBody.create(MediaType.parse("application/json"), ""))
                     .build();
@@ -51,12 +54,12 @@ public class DataStoreClient {
         }
     }
 
-    public ResponseModel<Object> delete(String dataStoreName, Authentication authentication) {
+    public ResponseModel<Object> delete(String dataStoreName) {
         try {
             log.debug("Try delete schema {} on data-service", dataStoreName);
 
             Request request = new Request.Builder()
-                    .addHeader("Authorization", "Bearer " + getToken(authentication))
+                    .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
                     .url(new URL(baseUrl, "/geoserver/datastores/" + dataStoreName))
                     .delete().build();
 

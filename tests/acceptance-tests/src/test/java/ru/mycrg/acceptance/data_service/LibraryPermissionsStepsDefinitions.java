@@ -56,7 +56,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         post("/" + libraryName + "/roleAssignment");
     }
 
-    @And("Сервер передает Location созданного правила библиотеки: {string}")
+    @And("Сервер передаёт Location созданного правила библиотеки: {string}")
     public void shouldReturnCorrectLibraryPermissionLocation(String libraryName) {
         String url = response.getHeader("Location");
 

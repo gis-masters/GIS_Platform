@@ -23,4 +23,13 @@ public class PermissionCreateDto {
     public String getRole() {
         return role;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "principalType='" + principalType + '\'' +
+                ", principalId=" + principalId +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

@@ -36,11 +36,10 @@ public class TablesController {
 
     @PostMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
-                                                      @Valid @RequestBody TableCreateDto dto,
-                                                      Authentication authentication) {
+                                                      @Valid @RequestBody TableCreateDto dto) {
         ResourceIdentifier tableId = new ResourceIdentifier(dto.getName(), TABLE, datasetId, SCHEMA);
 
-        IResourceModel resourceModel = tableService.create(tableId, dto, authentication);
+        IResourceModel resourceModel = tableService.create(tableId, dto);
 
         return new ResponseEntity<>(resourceModel, CREATED);
     }
@@ -48,10 +47,9 @@ public class TablesController {
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<Object> getTables(@PathVariable String datasetId,
                                             @RequestParam(required = false, defaultValue = "") String title,
-                                            Authentication authentication,
                                             Pageable pageable,
                                             PagedResourcesAssembler<IResourceModel> pageAssembler) {
-        final Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable, authentication);
+        final Page<IResourceModel> tables = tableService.getPaged(datasetId, title, pageable);
 
         var pagedResources = pageAssembler.toResource(
                 tables,
@@ -64,11 +62,10 @@ public class TablesController {
 
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<Object> getTable(@PathVariable String datasetId,
-                                           @PathVariable String tableId,
-                                           Authentication authentication) {
+                                           @PathVariable String tableId) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
-        final IResourceModel dto = tableService.getByIdentifier(rIdentifier, authentication);
+        final IResourceModel dto = tableService.getByIdentifier(rIdentifier);
 
         return ResponseEntity.ok(dto);
     }
@@ -76,11 +73,10 @@ public class TablesController {
     @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> deleteTable(@PathVariable String datasetId,
-                                              @PathVariable String tableId,
-                                              Authentication authentication) {
+                                              @PathVariable String tableId) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(tableId, TABLE, datasetId, SCHEMA);
 
-        tableService.delete(rIdentifier, authentication);
+        tableService.delete(rIdentifier);
 
         return ResponseEntity.noContent().build();
     }

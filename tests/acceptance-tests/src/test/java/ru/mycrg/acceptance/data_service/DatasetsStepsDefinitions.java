@@ -9,6 +9,8 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 
+import java.util.Map;
+
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,12 +35,32 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
-    @When("Владелец организации делает запрос на выборку набора данных {string}")
+    @When("Пользователь делает запрос на несуществующий набор данных {string}")
     public void getNotExistDataset(String datasetKey) {
         String datasetName = generateString(datasetKey);
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + datasetName);
+    }
+
+    @When("Пользователь делает запрос на набор данных {string}")
+    public void getDataset(String datasetTitle) {
+        String foundedDatasetName = null;
+        for (Map.Entry<String, DatasetCreateDto> entry: datasetsPool.entrySet()) {
+            String datasetName = entry.getKey();
+            DatasetCreateDto datasetDto = entry.getValue();
+            if (datasetTitle.equals(datasetDto.getTitle())) {
+                foundedDatasetName = datasetName;
+            }
+        }
+
+        if (foundedDatasetName != null) {
+            response = getBaseRequestWithCurrentCookie()
+                    .when().
+                            get("/" + foundedDatasetName);
+        } else {
+            throw new RuntimeException("Not found dataset by title: " + datasetTitle);
+        }
     }
 
     @When("Владелец организации делает запрос на выборку таблицы {string} {string}")
@@ -68,7 +90,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         datasetsPool.put(currentDatasetName, currentDatasetDto);
     }
 
-    @And("Сервер передает Location созданного набора")
+    @And("Сервер передаёт Location созданного набора")
     public void shouldReturnCorrectDatasetLocation() {
         String url = response.getHeader("Location");
 
@@ -106,7 +128,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_NOT_FOUND);
     }
 
-    @Given("Существуют {int} наборов данных")
+    @Given("Существуют заданное кол-во наборов: {int}")
     public void initializeDatasets(int count) {
         for (int i = 0; i < count; i++) {
             createDatasetRequest("STRING_5", "STRING_10");
@@ -125,11 +147,11 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/?size=" + pageSize);
     }
 
-    @And("Количество страниц в ответе соответствует заданному размеру страницы: {string}")
-    public void checkPageSize(String pageSize) {
+    @And("Количество наборов данных соответствует ожидаемому: {string}")
+    public void checkDatasetsSize(String datasetsSize) {
         int realCount = getEntitiesCount("datasets");
 
-        assertEquals(Integer.parseInt(pageSize), realCount);
+        assertEquals(Integer.parseInt(datasetsSize), realCount);
     }
 
     private String extractDatasetName() {

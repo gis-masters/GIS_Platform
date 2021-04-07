@@ -114,6 +114,6 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
 
     @Then("В ответе пункт {string} имеет значение {string}")
     public void checkValueInTheField(String field, String value) {
-        assertEquals(value, jsonPath.get(field));
+        assertEquals(value, response.jsonPath().get(field));
     }
 }

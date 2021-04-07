@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -17,11 +17,14 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 public class SystemAttributeHandler {
 
     private final SchemaService schemaService;
+    private final IAuthenticationFacade authenticationFacade;
 
     private SchemaDto schema;
 
-    public SystemAttributeHandler(SchemaService schemaService) {
+    public SystemAttributeHandler(SchemaService schemaService,
+                                  IAuthenticationFacade authenticationFacade) {
         this.schemaService = schemaService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public SystemAttributeHandler fetchSchema(@NotNull String schemaName) {
@@ -42,10 +45,9 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler fillCreator(@NotNull Map<String, Object> body,
-                                              @NotNull Authentication authentication) {
+    public SystemAttributeHandler fillCreator(@NotNull Map<String, Object> body) {
         if (attributeDefined(CREATED_BY)) {
-            body.put(CREATED_BY.getName(), authentication.getName());
+            body.put(CREATED_BY.getName(), authenticationFacade.getLogin());
         }
 
         return this;

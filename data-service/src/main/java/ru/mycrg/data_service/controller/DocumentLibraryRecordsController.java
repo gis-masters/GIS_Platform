@@ -13,26 +13,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.ITableObject;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.FileStorageService;
 import ru.mycrg.data_service.service.RecordsService;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.dao.CrgDataSourcesPool.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
@@ -47,61 +47,31 @@ public class DocumentLibraryRecordsController {
 
     public static final Logger log = LoggerFactory.getLogger(DocumentLibraryRecordsController.class);
 
-    private final DocumentLibraryService libraryService;
     private final RecordsService recordsService;
     private final FileStorageService fileStorageService;
-    private final SystemAttributeHandler systemAttributeHandler;
+    private final DocumentLibraryService libraryService;
 
     public DocumentLibraryRecordsController(RecordsService recordsService,
-                                            DocumentLibraryService libraryService,
-                                            SystemAttributeHandler systemAttributeHandler,
-                                            FileStorageService fileStorageService) {
+                                            FileStorageService fileStorageService,
+                                            DocumentLibraryService libraryService) {
         this.libraryService = libraryService;
         this.recordsService = recordsService;
         this.fileStorageService = fileStorageService;
-        this.systemAttributeHandler = systemAttributeHandler;
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/document-libraries/{docLibId}/records")
     public Object createObject(@PathVariable String docLibId,
                                @RequestParam(value = "file", required = false) MultipartFile file,
-                               @RequestParam(value = "body") String jsonBody,
-                               Authentication authentication) {
-        try {
-            List<ITableObject> objects = new ArrayList<>();
-            String innerFileName = UUID.randomUUID().toString();
+                               @RequestParam(value = "body") String jsonBody) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
 
-            ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+        Map<String, Object> body = deserializeBody(jsonBody);
+        libraryService.checkObjectBySchema(body, rIdentifier.getId());
 
-            Map<String, Object> body = deserializeBody(jsonBody);
-            libraryService.checkObjectBySchema(body, docLibId);
-            systemAttributeHandler.fetchSchema(docLibId)
-                                  .fillCreator(body, authentication)
-                                  .fillTimes(body)
-                                  .fillFileInfo(body, file)
-                                  .fillFileInnerName(body, innerFileName);
+        final ITableObject record = recordsService.createRecord(rIdentifier, body, file);
 
-            if (file != null) {
-                if (file.isEmpty()) {
-                    throw new BadRequestException("File is empty");
-                }
-
-                ITableObject tableObject = recordsService.createRecord(rIdentifier, body, authentication);
-
-                fileStorageService.storeFile(file, innerFileName);
-
-                objects.add(tableObject);
-            } else {
-                ITableObject tableObject = recordsService.createRecord(rIdentifier, body, authentication);
-
-                objects.add(tableObject);
-            }
-
-            return objects;
-        } catch (CrgDaoException e) {
-            throw new DataServiceException(e.getMessage(), e.getCause());
-        }
+        return new ResponseEntity<>(record, CREATED);
     }
 
     @GetMapping("/document-libraries/{docLibId}/records")
@@ -109,7 +79,6 @@ public class DocumentLibraryRecordsController {
                                          @RequestParam(required = false, defaultValue = "") String parent,
                                          @RequestParam(required = false, defaultValue = "") String title,
                                          Pageable pageable,
-                                         Authentication authentication,
                                          PagedResourcesAssembler<Map<String, Object>> pageAssembler) {
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
 
@@ -128,6 +97,49 @@ public class DocumentLibraryRecordsController {
         return ResponseEntity.ok(pagedResources);
     }
 
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}")
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
+                                                       @PathVariable UUID recId) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+
+        Map<String, Object> entity = recordsService.getById(rIdentifier, recId);
+
+        return ResponseEntity.ok(entity);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
+    public ResponseEntity<Object> delete(@PathVariable String docLibId,
+                                         @PathVariable UUID recId) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+        final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
+        final String innerFileName = (String) record.get(INNER_PATH.getName());
+
+        fileStorageService.removeFile(innerFileName);
+        recordsService.deleteRecord(rIdentifier, recId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}/{field}/download")
+    public ResponseEntity<Resource> downloadBinary(@PathVariable String docLibId,
+                                                   @PathVariable String field,
+                                                   @PathVariable UUID recId,
+                                                   HttpServletRequest request) {
+        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
+        final Map<String, Object> record = recordsService.getById(rIdentifier, recId);
+        final String innerFileName = (String) record.get(field);
+
+        Resource resource = fileStorageService.loadFileAsResource(innerFileName);
+
+        return ResponseEntity.ok()
+                             .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
+                             .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"",
+                                                                                    resource.getFilename()))
+                             .body(resource);
+    }
+
     @NotNull
     private CrgFilter prepareFilter(String parent, String title) {
         final CrgFilter filter = new CrgFilter();
@@ -142,52 +154,6 @@ public class DocumentLibraryRecordsController {
         }
 
         return filter;
-    }
-
-    @GetMapping("/document-libraries/{docLibId}/records/{recId}")
-    public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
-                                                       @PathVariable UUID recId,
-                                                       Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
-
-        Map<String, Object> entity = recordsService.getById(rIdentifier, recId, authentication);
-
-        return ResponseEntity.ok(entity);
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
-    public ResponseEntity<Object> delete(@PathVariable String docLibId,
-                                         @PathVariable UUID recId,
-                                         Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
-        final Map<String, Object> record = recordsService.getById(rIdentifier, recId, authentication);
-        final String innerFileName = (String) record.get(INNER_PATH.getName());
-
-        fileStorageService.removeFile(innerFileName);
-        recordsService.deleteRecord(rIdentifier, recId, authentication);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @GetMapping("/document-libraries/{docLibId}/records/{recId}/{field}/download")
-    public ResponseEntity<Resource> downloadBinary(@PathVariable String docLibId,
-                                                   @PathVariable String field,
-                                                   @PathVariable UUID recId,
-                                                   HttpServletRequest request,
-                                                   Authentication authentication) {
-        ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, TABLE, SYSTEM_SCHEMA_NAME, SCHEMA);
-        final Map<String, Object> record = recordsService.getById(rIdentifier, recId, authentication);
-        final String innerFileName = (String) record.get(field);
-
-        Resource resource = fileStorageService.loadFileAsResource(innerFileName);
-
-        return ResponseEntity.ok()
-                             .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))
-                             .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"",
-                                                                                    resource.getFilename()))
-                             .body(resource);
     }
 
     @NotNull

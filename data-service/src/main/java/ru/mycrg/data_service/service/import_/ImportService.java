@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.ProcessService;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
@@ -17,15 +18,12 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import java.net.URL;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.security.CrgAuthHelper.getToken;
-import static ru.mycrg.data_service.security.CrgClaimsParser.getOrganizationId;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Service
@@ -37,24 +35,26 @@ public class ImportService {
     private final SchemaService schemaService;
     private final IMessageBusProducer messageBus;
     private final ProcessService processService;
+    private final IAuthenticationFacade authenticationFacade;
 
     public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
                          SchemaService schemaService,
-                         ProcessService processService) {
+                         ProcessService processService, IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;
         this.environment = environment;
         this.schemaService = schemaService;
         this.processService = processService;
+        this.authenticationFacade = authenticationFacade;
     }
 
-    public Process initProcess(long projectId, String datasetName, WorkImport workImport, Principal principal) {
-        long orgId = getOrganizationId(principal);
+    public Process initProcess(long projectId, String datasetName, WorkImport workImport) {
+        long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
 
         final String title = String.format("Импорт %d слоя(ёв) в dataset: %s",
                                          workImport.getImportTasks().size(), datasetName);
-        Process process = processService.create(principal.getName(), title, IMPORT, workImport.getWsUiId());
+        Process process = processService.create(authenticationFacade.getLogin(), title, IMPORT, workImport.getWsUiId());
 
         List<ImportMqTask> importMqRequest = new ArrayList<>();
         workImport.getImportTasks().forEach(uiTask -> {
@@ -87,7 +87,7 @@ public class ImportService {
                     uiTask.getPairs(),
                     uiTask.getSrs(),
                     getRootAccessToken(),
-                    getToken(principal)
+                    authenticationFacade.getAccessToken()
             );
 
             importMqRequest.add(importMqTask);

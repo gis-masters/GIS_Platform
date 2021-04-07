@@ -8,10 +8,8 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 
 import java.io.File;
 
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -46,9 +44,9 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
                         post("/documents/records");
     }
 
-    @And("Сервер передает ID файла в ответе")
+    @And("Сервер передаёт ID файла в ответе")
     public void extractDocumentIdFromResponse() {
-        documentId = response.jsonPath().get("id").toString().substring(1, 37);
+        documentId = response.jsonPath().get("id");
         assertThat(documentId, is(not(equalTo(null))));
         filesPool.put(fileName, documentId);
     }
@@ -61,7 +59,7 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
             makeExactDocumentAsCurrent(fileName);
         } else {
             createDocument(dataTable);
-            assertEquals(SC_OK, response.getStatusCode());
+
             extractDocumentIdFromResponse();
         }
     }
@@ -78,7 +76,7 @@ public class DocumentsStepsDefinitions extends BaseStepsDefinitions {
                         get(url);
     }
 
-    @And("В ответе передается содержимое файла")
+    @And("В ответе передаётся содержимое файла")
     public void checkFileLength() {
         assertThat((long) response.getBody().asByteArray().length, equalTo(file.length()));
     }

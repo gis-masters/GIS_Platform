@@ -4,26 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.entity.DocumentLibrary;
+import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.security.IAuthenticationFacade;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceManager;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static ru.mycrg.common_utils.Paginator.getPage;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
@@ -36,11 +32,11 @@ public class DocumentLibraryService implements ResourceManager {
     private final SchemaService schemaService;
     private final ResourcesService resourcesService;
     private final ResourceProtector resourceProtector;
-    private final IAuthenticationFacade authenticationFacade;
+    private final PermissionsService permissionsService;
     private final DocumentLibraryRepository libraryRepository;
 
     public DocumentLibraryService(DocumentLibraryRepository libraryRepository,
-                                  IAuthenticationFacade authenticationFacade,
+                                  PermissionsService permissionsService,
                                   ResourceProtector resourceProtector,
                                   ResourcesService resourcesService,
                                   SchemaService schemaService) {
@@ -48,7 +44,7 @@ public class DocumentLibraryService implements ResourceManager {
         this.resourcesService = resourcesService;
         this.resourceProtector = resourceProtector;
         this.libraryRepository = libraryRepository;
-        this.authenticationFacade = authenticationFacade;
+        this.permissionsService = permissionsService;
     }
 
     public Page<IResourceModel> getPaged(String title, Pageable pageable) {
@@ -94,12 +90,12 @@ public class DocumentLibraryService implements ResourceManager {
 
     private Optional<Roles> defineRole(DocumentLibrary library) {
         try {
-            final Authentication authentication = authenticationFacade.getAuthentication();
             final ResourceIdentifier rIdentifier = new ResourceIdentifier(library.getTableName(), LIBRARY);
 
-            final Optional<Resource> oResource = resourcesService.get(rIdentifier, authentication);
+            final Optional<Resource> oResource = resourcesService.get(rIdentifier);
             if (oResource.isPresent()) {
-                return resourceProtector.defineRole(oResource.get(), authentication);
+                Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(oResource.get());
+                return resourceProtector.defineRole(oResource.get(), allPermissions);
             }
 
             return Optional.empty();

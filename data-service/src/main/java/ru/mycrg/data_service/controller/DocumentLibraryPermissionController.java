@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,14 +40,13 @@ public class DocumentLibraryPermissionController {
     @PostMapping("/document-libraries/{docLibId}/roleAssignment")
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @Valid @RequestBody PermissionCreateDto dto,
-                                                                       BindingResult bindingResult,
-                                                                       Authentication authentication) {
+                                                                       BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
         ResourceIdentifier rIdentifier = new ResourceIdentifier(docLibId, LIBRARY);
-        final Resource resource = resourcesService.get(rIdentifier, authentication)
+        final Resource resource = resourcesService.get(rIdentifier)
                                                   .orElseThrow(() -> new NotFoundException(docLibId));
         final PermissionProjection permission = permissionsService.create(resource, dto);
 
@@ -65,9 +63,8 @@ public class DocumentLibraryPermissionController {
     @GetMapping("/document-libraries/{docLibId}/roleAssignment")
     public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
                                                         Pageable pageable,
-                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler,
-                                                        Authentication authentication) {
-        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY), authentication)
+                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY))
                                                   .orElseThrow(() -> new NotFoundException(docLibId));
         final Page<PermissionProjection> permissions = permissionsService.getPaged(resource, pageable);
 
@@ -83,9 +80,8 @@ public class DocumentLibraryPermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @DeleteMapping("/document-libraries/{docLibId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
-                                         @PathVariable Long permissionId,
-                                         Authentication authentication) {
-        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY), authentication)
+                                         @PathVariable Long permissionId) {
+        final Resource resource = resourcesService.get(new ResourceIdentifier(docLibId, LIBRARY))
                                                   .orElseThrow(() -> new NotFoundException(docLibId));
         permissionsService.deleteById(resource, permissionId);
 

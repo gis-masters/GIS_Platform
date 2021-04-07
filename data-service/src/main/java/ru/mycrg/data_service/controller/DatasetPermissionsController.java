@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,13 +40,12 @@ public class DatasetPermissionsController {
     @PostMapping("/datasets/{datasetId}/roleAssignment")
     public ResponseEntity<PermissionProjection> addPermissionToDataset(@PathVariable String datasetId,
                                                                        @Valid @RequestBody PermissionCreateDto dto,
-                                                                       BindingResult bindingResult,
-                                                                       Authentication authentication) {
+                                                                       BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
+        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA))
                                             .orElseThrow(() -> new NotFoundException(datasetId));
         PermissionProjection permission = permissionsService.create(resource, dto);
 
@@ -64,9 +62,8 @@ public class DatasetPermissionsController {
     @GetMapping("/datasets/{datasetId}/roleAssignment")
     public ResponseEntity<Object> getDatasetPermissions(@PathVariable String datasetId,
                                                         Pageable pageable,
-                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler,
-                                                        Authentication authentication) {
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
+                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA))
                                             .orElseThrow(() -> new NotFoundException(datasetId));
         final Page<PermissionProjection> permissions = permissionsService.getPaged(resource, pageable);
 
@@ -82,9 +79,8 @@ public class DatasetPermissionsController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @DeleteMapping("/datasets/{datasetId}/roleAssignment/{permissionId}")
     public ResponseEntity<Object> deleteDatasetPermission(@PathVariable String datasetId,
-                                                          @PathVariable Long permissionId,
-                                                          Authentication authentication) {
-        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA), authentication)
+                                                          @PathVariable Long permissionId) {
+        Resource resource = resourcesService.get(new ResourceIdentifier(datasetId, SCHEMA))
                                             .orElseThrow(() -> new NotFoundException(datasetId));
         permissionsService.deleteById(resource, permissionId);
 

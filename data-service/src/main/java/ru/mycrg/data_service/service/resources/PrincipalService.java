@@ -6,6 +6,7 @@ import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.repository.PrincipalRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,6 +29,16 @@ public class PrincipalService {
         return principalRepository
                 .findByIdentifierAndAndType(identifier, type)
                 .orElseGet(() -> principalRepository.save(new Principal(identifier, type)));
+    }
+
+    /**
+     * Return exist Principal.
+     *
+     * @param identifier Principal identifier
+     * @param type       Principal type
+     */
+    public Optional<Principal> get(Long identifier, String type) {
+        return principalRepository.findByIdentifierAndAndType(identifier, type);
     }
 
     /**

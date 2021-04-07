@@ -22,6 +22,7 @@ import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ import static org.junit.Assert.*;
 
 public class BaseStepsDefinitions {
 
+    public static Random random = new Random();
     public static String testServerHost;
     public static int testServerPort;
     public static String rootUserName;
@@ -59,7 +61,6 @@ public class BaseStepsDefinitions {
     public static Map<String, String> filesPool = new LinkedHashMap<>();
 
     public static Integer currentId;
-    public static Object currentDto;
 
     public Integer getCurrentId() {
         return currentId;

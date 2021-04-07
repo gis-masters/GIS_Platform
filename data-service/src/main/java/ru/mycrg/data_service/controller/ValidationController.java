@@ -36,11 +36,10 @@ public class ValidationController extends BaseController {
     }
 
     @PostMapping("/validation")
-    public ResponseEntity<Process> initValidation(@Valid @RequestBody ValidationRequestDto dto,
-                                                  Principal principal) {
+    public ResponseEntity<Process> initValidation(@Valid @RequestBody ValidationRequestDto dto) {
         log.debug("Init validation for: {} resources", dto.getResources().size());
 
-        Process process = validationService.validate(dto, principal);
+        Process process = validationService.validate(dto);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }

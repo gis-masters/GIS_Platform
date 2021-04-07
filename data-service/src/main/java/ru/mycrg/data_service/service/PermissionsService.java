@@ -2,48 +2,128 @@ package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common_utils.security.RoleHierarchy;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
+import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.PermissionsRepository;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service.security.UserDetails;
 import ru.mycrg.data_service.service.resources.PrincipalService;
+import ru.mycrg.data_service.service.resources.ResourceProtector;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static ru.mycrg.common_utils.Paginator.getPage;
 
 @Service
 @Transactional
 public class PermissionsService {
 
-    private final ProjectionFactory projectionFactory;
-    private final PermissionsRepository permissionsRepository;
+    private final RoleHierarchy roleHierarchy;
     private final PrincipalService principalService;
+    private final ResourceProtector resourceProtector;
+    private final ProjectionFactory projectionFactory;
+    private final IAuthenticationFacade authenticationFacade;
+    private final PermissionsRepository permissionsRepository;
 
     public PermissionsService(PermissionsRepository permissionsRepository,
+                              IAuthenticationFacade authenticationFacade,
                               PrincipalService principalService,
+                              RoleHierarchy roleHierarchy,
+                              ResourceProtector resourceProtector,
                               ProjectionFactory projectionFactory) {
-        this.projectionFactory = projectionFactory;
+        this.roleHierarchy = roleHierarchy;
         this.principalService = principalService;
+        this.resourceProtector = resourceProtector;
+        this.projectionFactory = projectionFactory;
         this.permissionsRepository = permissionsRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
-    // TODO: Продолжить закрывать дыры, список всех выставленных прав могут видеть только владелец и рут.
-    // Что может видеть пользователь с другими правами?
+    /**
+     * Возвращает выборку согласно {@link Pageable} запросу.
+     * <p>
+     * Если пользователь является владельцем ресурса или имеет роли GLOBAL_ADMIN, ORG_ADMIN или OWNER, возвращаются все
+     * разрешения.
+     * <p>
+     * Если у пользователя нет особых прав, возвращаются только его собственные разрешения выданные на данный ресурс.
+     *
+     * @param resource Ресурс
+     * @param pageable Pagination information
+     */
     public Page<PermissionProjection> getPaged(Resource resource, Pageable pageable) {
-        // У самого ресурса мы можем спросить все его разрешения (resource.getPermissions()), но делаем это через
-        // базу чтобы иметь pageable ответ из коробки.
-        return permissionsRepository.getAllByResource(resource, pageable);
+        if (resourceProtector.isAbsoluteOwner(resource)) {
+            return permissionsRepository.getAllByResource(resource, pageable);
+        } else {
+            final Set<Permission> allRelatedPermissions = getAllRelatedPermissions(resource);
+            final List<String> relatedRoles = allRelatedPermissions.stream()
+                                                                   .map(Permission::getRole)
+                                                                   .collect(Collectors.toList());
+
+            final Optional<String> oRole = roleHierarchy.defineBest(relatedRoles);
+            if (oRole.isEmpty()) {
+                return new PageImpl<>(new ArrayList<>());
+            }
+
+            if (oRole.get().equals(Roles.OWNER.name())) {
+                return permissionsRepository.getAllByResource(resource, pageable);
+            } else {
+                final List<PermissionProjection> relatedPermissions = allRelatedPermissions
+                        .stream()
+                        .map(permission -> projectionFactory.createProjection(PermissionProjection.class, permission))
+                        .collect(Collectors.toList());
+
+                return getPage(relatedPermissions, pageable);
+            }
+        }
+    }
+
+    /**
+     * Возвращает все разрешения выданные на данный ресурс, имеющие отношение к пользователю, т.е. заданные либо
+     * непосредственно для пользователя либо заданные на группу в которой пользователь состоит.
+     *
+     * @param resource Ресурс
+     */
+    public Set<Permission> getAllRelatedPermissions(Resource resource) {
+        final Set<Permission> allPermissions = new HashSet<>();
+        final UserDetails userDetails = authenticationFacade.getUserDetails();
+
+        // User
+        final Set<Permission> permissions = getPermissions(userDetails.getUserId(), "user");
+        allPermissions.addAll(permissions);
+
+        // User groups
+        userDetails.getGroups()
+                   .forEach(groupId -> {
+                       final Set<Permission> groupPermissions = getPermissions(userDetails.getUserId(), "group");
+                       allPermissions.addAll(groupPermissions);
+                   });
+
+        return allPermissions.stream()
+                             .filter(permission -> permission.getResource().getId() == resource.getId())
+                             .collect(Collectors.toSet());
     }
 
     public PermissionProjection create(@NotNull Resource resource,
                                        @NotNull PermissionCreateDto dto) {
+        Set<Permission> relatedPermissions = getAllRelatedPermissions(resource);
+        if (!resourceProtector.isCreatePermissionAllowed(resource, relatedPermissions)) {
+            throw new ForbiddenException("Not allowed create permission for this resource");
+        }
+
         final Principal principal = principalService.getOrCreate(dto.getPrincipalId(), dto.getPrincipalType());
 
         throwIfExist(resource, principal, dto.getRole());
@@ -83,5 +163,11 @@ public class PermissionsService {
                 .ifPresent(permission -> {
                     throw new ConflictException("Already joined");
                 });
+    }
+
+    private Set<Permission> getPermissions(Long id, String type) {
+        return principalService.get(id, type)
+                               .map(Principal::getPermissions)
+                               .orElseGet(HashSet::new);
     }
 }

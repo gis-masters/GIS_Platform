@@ -24,6 +24,7 @@ spring:
     show-sql: false
     properties:
       hibernate.format_sql: true
+      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 200
   servlet:
     multipart:
       max-file-size: 50MB

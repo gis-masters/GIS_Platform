@@ -9,13 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.ExportRequestModel;
+import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.StorageService;
 import ru.mycrg.data_service.service.export.ExportService;
-import ru.mycrg.data_service.entity.Process;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -36,9 +36,8 @@ public class ExportController extends BaseController {
     }
 
     @PostMapping("/export")
-    public ResponseEntity<Process> exportProjectLayers(@Valid @RequestBody ExportRequestModel dto,
-                                                       Authentication authentication) {
-        Process process = exportService.export(dto, authentication);
+    public ResponseEntity<Process> exportProjectLayers(@Valid @RequestBody ExportRequestModel dto) {
+        Process process = exportService.export(dto);
 
         return new ResponseEntity<>(process, createHeadersWithLinkToProcess(process), HttpStatus.ACCEPTED);
     }

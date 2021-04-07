@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.TablesManager;
@@ -13,16 +12,20 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.Roles;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
+import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Resource;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.security.IAuthenticationFacade;
+import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.resources.ResourceIdentifier;
 import ru.mycrg.data_service.service.resources.ResourceProtector;
 import ru.mycrg.data_service.service.resources.ResourcesService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.Paginator.getPage;
@@ -39,26 +42,32 @@ public class TableService implements ITableService {
     private final TablesManager tablesManager;
     private final ResourcesService resourcesService;
     private final ResourceProtector resourceProtector;
+    private final PermissionsService permissionsService;
+    private final IAuthenticationFacade authenticationFacade;
 
     public TableService(ResourcesService resourcesService,
                         TablesManager tablesManager,
+                        PermissionsService permissionsService,
+                        IAuthenticationFacade authenticationFacade,
                         ResourceProtector resourceProtector) {
         this.tablesManager = tablesManager;
         this.resourcesService = resourcesService;
         this.resourceProtector = resourceProtector;
+        this.permissionsService = permissionsService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
-    public IResourceModel create(ResourceIdentifier rIdentifier, TableCreateDto dto, Authentication authentication) {
+    public IResourceModel create(ResourceIdentifier rIdentifier, TableCreateDto dto) {
         log.warn("ATTENTION. NOT CREATE REAL TABLE YET. Just write info to the resource description table");
 
-        final Optional<Resource> oResource = resourcesService.get(rIdentifier, authentication);
+        final Optional<Resource> oResource = resourcesService.get(rIdentifier);
         if (oResource.isPresent()) {
             throw new ConflictException("Table already exist: " + rIdentifier.toString());
         }
 
         // Add resource description record
-        Resource entity = new Resource(TABLE, dto, rIdentifier.toString(), authentication.getName());
+        Resource entity = new Resource(TABLE, dto, rIdentifier.toString(), authenticationFacade.getLogin());
         entity.setCrs(dto.getCrs());
         entity.setSchemaId(dto.getSchemaId());
 
@@ -71,27 +80,26 @@ public class TableService implements ITableService {
     @Override
     public Page<IResourceModel> getPaged(String datasetId,
                                          String title,
-                                         Pageable pageable,
-                                         Authentication authentication) {
+                                         Pageable pageable) {
         List<IResourceModel> tables = resourcesService
-                .getDatasetTablesFilteredByTitle(datasetId, title, authentication).stream()
-                .map(resource -> mapToModelWithDefineRole(resource, authentication))
+                .getDatasetTablesFilteredByTitle(datasetId, title).stream()
+                .map(this::mapToModelWithDefineRole)
                 .collect(Collectors.toList());
 
         return getPage(tables, pageable);
     }
 
     @Override
-    public IResourceModel getByIdentifier(ResourceIdentifier rIdentifier, Authentication authentication) {
-        return resourcesService.get(rIdentifier, authentication)
-                               .map(resource -> mapToModelWithDefineRole(resource, authentication))
+    public IResourceModel getByIdentifier(ResourceIdentifier rIdentifier) {
+        return resourcesService.get(rIdentifier)
+                               .map(this::mapToModelWithDefineRole)
                                .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
     }
 
     @Override
     @Transactional
-    public void delete(ResourceIdentifier rIdentifier, Authentication authentication) {
-        Resource resource = resourcesService.get(rIdentifier, authentication)
+    public void delete(ResourceIdentifier rIdentifier) {
+        Resource resource = resourcesService.get(rIdentifier)
                                             .orElseThrow(() -> new NotFoundException(rIdentifier.toString()));
         String extTableName = rIdentifier.getId() + EXTENSION_POSTFIX;
         ResourceIdentifier extTable = new ResourceIdentifier(extTableName, TABLE, rIdentifier.getParent());
@@ -102,8 +110,9 @@ public class TableService implements ITableService {
     }
 
     @NotNull
-    private IResourceModel mapToModelWithDefineRole(Resource resource, Authentication authentication) {
-        Roles role = resourceProtector.defineRole(resource, authentication)
+    private IResourceModel mapToModelWithDefineRole(Resource resource) {
+        Set<Permission> allPermissions = permissionsService.getAllRelatedPermissions(resource);
+        Roles role = resourceProtector.defineRole(resource, allPermissions)
                                       .orElseThrow(() -> new ForbiddenException("Can't define role"));
 
         final IResourceModel resourceModel = new TableModel(resource, role);
