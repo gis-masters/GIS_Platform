@@ -3,7 +3,8 @@ package ru.mycrg.gis_service.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis_service.service.analyzer.ResourceAnalyzerService;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
+import ru.mycrg.gis_service.service.analyzers.ResourceAnalyzerService;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzer;
 import ru.mycrg.resource_analyzer_contract.IResourceAnalyzerResult;
 import ru.mycrg.resource_analyzer_contract.ResourceImpl;
@@ -39,12 +40,26 @@ public class ResourceAnalyzerController {
 
     @PostMapping("/{analyzerId}/analyze")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<List<IResourceAnalyzerResult>> getAnalyzerResults(@PathVariable String analyzerId,
-                                                                            @RequestBody List<ResourceImpl> resources) {
+    public ResponseEntity<List<IResourceAnalyzerResult>> analyze(@PathVariable String analyzerId,
+                                                                 @RequestBody List<ResourceImpl> resources) {
+        checkForIllegalObjects(resources);
+
         List<IResourceAnalyzerResult> analyzeResults = resourceAnalyzerService
                 .getById(analyzerId)
                 .analyze(resources);
 
         return ResponseEntity.ok(analyzeResults);
+    }
+
+    private void checkForIllegalObjects(List<ResourceImpl> resources) {
+        resources.forEach(resource -> {
+            if (resource.getId() == null) {
+                throw new BadRequestException("Expected objects with id");
+            }
+
+            if (resource.getResourceDefinition() == null || resource.getResourceDefinition().getType() == null) {
+                throw new BadRequestException("Expected object with type");
+            }
+        });
     }
 }

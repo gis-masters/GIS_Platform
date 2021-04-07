@@ -1,4 +1,4 @@
-package ru.mycrg.gis_service.service.analyzer;
+package ru.mycrg.gis_service.service.analyzers;
 
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis_service.exceptions.NotFoundException;

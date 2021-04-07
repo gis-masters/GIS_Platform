@@ -19,7 +19,7 @@ public class LayersService extends GeoServerBaseService {
         super(accessToken);
     }
 
-    public Optional<Layer> getByLayerName(String layerName) throws HttpClientException {
+    public Optional<Layer> getByName(String layerName) throws HttpClientException {
         log.info("get layer: {} ", layerName);
         String url = getGeoserverRestUrl().append("/layers/")
                                           .append(layerName)
