@@ -44,7 +44,13 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
       htmlColor = '#ffc107';
     }
 
-    return <Icon className={className} color={colorized ? 'primary' : null} htmlColor={colorized ? htmlColor : null} />;
+    return (
+      <Icon
+        className={className}
+        color={colorized && !htmlColor ? 'primary' : 'inherit'}
+        htmlColor={colorized && htmlColor ? htmlColor : ''}
+      />
+    );
   }
 
   @action
