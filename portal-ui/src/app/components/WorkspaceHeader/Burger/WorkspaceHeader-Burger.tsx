@@ -59,7 +59,7 @@ export class WorkspaceHeaderBurger extends Component {
             </MenuItem>
           </Link>
 
-          {currentUser.isAdmin && flags.dataManagement && (
+          {flags.dataManagement && (
             <Link url='/data-management' theme='none' delay={300}>
               <MenuItem onClick={this.close}>
                 <ListItemIcon>

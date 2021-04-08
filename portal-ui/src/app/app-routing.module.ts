@@ -156,7 +156,7 @@ const routes: AppRoutes = [
   {
     path: 'data-management',
     component: DataManagementPageComponent,
-    canActivate: [OrgAdminGuardService],
+    canActivate: [AuthGuardService],
     resolve: {
       user: CurrentUserResolver
     },
