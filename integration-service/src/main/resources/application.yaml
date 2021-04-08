@@ -38,10 +38,12 @@ management:
   endpoint:
     loggers:
       enabled: true
+    health:
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: loggers
+        include: loggers, health
 
 crg-options:
   gis_service_url: http://127.0.0.1:8082
