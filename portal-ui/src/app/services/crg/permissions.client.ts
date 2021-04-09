@@ -7,25 +7,30 @@ import {
 } from '../server-urls.service';
 import { ResourcePermissions, RoleAssignmentBody } from './permissions.models';
 import { CrgProject } from './projects.models';
-import { PageableResponse } from '../models';
 import { services } from '../services';
 import { http } from '../http.service';
 import { Toast } from '../../components/Toast/Toast';
 import { DataEntityType } from '../data.service';
 
 export async function getTablePermissions(datasetId: string, tableId: string): Promise<RoleAssignmentBody[]> {
-  const url = await getTableRoleAssignmentUrl(datasetId, tableId);
-  const response = await http.get<PageableResponse<{ permissions: RoleAssignmentBody[] }>>(url, {
-    params: { size: '10000' }
-  });
-
-  return response._embedded?.permissions || [];
+  try {
+    return await http.getPaged<RoleAssignmentBody>(await getTableRoleAssignmentUrl(datasetId, tableId));
+  } catch (e) {
+    Toast.error(`Ошибка получения прав для таблицы ${tableId} в наборе ${datasetId}`);
+    return [];
+  }
 }
 
 export async function getAllTablesPermissions(): Promise<ResourcePermissions[]> {
-  const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
+  try {
+    const response = await http.getPaged<ResourcePermissions>(await getAllPermissionsUrl());
 
-  return response.filter(({ type, permissions }) => type === DataEntityType.TABLE && permissions?.length);
+    return response.filter(({ type, permissions }) => type === DataEntityType.TABLE && permissions?.length);
+  } catch (e) {
+    Toast.error(`Ошибка получения прав для списка таблиц`);
+
+    return [];
+  }
 }
 
 export async function addTablePermission(payload: RoleAssignmentBody, datasetId: string, tableId: string) {
@@ -49,13 +54,25 @@ export async function removeTablePermission(payload: RoleAssignmentBody, dataset
 }
 
 export async function getProjectPermissions(project: CrgProject): Promise<RoleAssignmentBody[]> {
-  const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
+  try {
+    const list = await http.get<RoleAssignmentBody[]>(await getProjectPermissionsUrl(project.id));
 
-  return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
+    return list.map(item => ({ ...item, principalId: Number(item.principalId) }));
+  } catch (e) {
+    Toast.error(`Ошибка получения прав для проекта ${project.id}`);
+
+    return [];
+  }
 }
 
 export async function getAllProjectsPermissions(): Promise<{ [projectId: string]: RoleAssignmentBody[] }> {
-  return await http.get<{ [projectId: string]: RoleAssignmentBody[] }>(await getAllProjectsPermissionsUrl());
+  try {
+    return await http.get<{ [projectId: string]: RoleAssignmentBody[] }>(await getAllProjectsPermissionsUrl());
+  } catch (e) {
+    Toast.error(`Ошибка получения прав для списка проектов`);
+
+    return {};
+  }
 }
 
 export async function addProjectPermission(payload: RoleAssignmentBody, project: CrgProject) {
