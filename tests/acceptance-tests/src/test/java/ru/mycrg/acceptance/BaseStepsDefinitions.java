@@ -31,6 +31,7 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.AuthorizationStepDefinitions.AUTH_COOKIE_VALUE_SEPARATOR;
 
 public class BaseStepsDefinitions {
 
@@ -92,8 +93,23 @@ public class BaseStepsDefinitions {
                         basePath("");
     }
 
+    public RequestSpecification getBaseRequest(int port) {
+        String accessToken = cookie.getValue().split(AUTH_COOKIE_VALUE_SEPARATOR)[0];
+        return RestAssured
+                .given().
+                        log().ifValidationFails().
+                        baseUri(testServerHost).
+                        port(port).
+                        headers("Authorization", "Bearer " + accessToken).
+                        basePath("");
+    }
+
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         return getBaseRequest().cookie(cookie);
+    }
+
+    public RequestSpecification getBaseRequestWithCurrentTokenAndPort(int port) {
+        return getBaseRequest(port);
     }
 
     public Integer extractIdFromLocation() {

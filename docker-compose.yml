@@ -172,6 +172,8 @@ services:
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
     volumes:
       - /opt/logs:/opt/logs
+    ports:
+      - 8082:8082
     logging:
       options:
         max-size: "10m"
