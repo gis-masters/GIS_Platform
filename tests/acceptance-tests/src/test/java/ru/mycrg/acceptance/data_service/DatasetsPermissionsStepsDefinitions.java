@@ -12,6 +12,7 @@ import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.DatasetsStepsDefinitions.currentDatasetName;
 
@@ -47,6 +48,11 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий набор данных")
     public void createPermissionForCurrentUserForCurrentDataset(String role) {
         createPermissionForCurrentDataset(new PermissionCreateDto("user", userId, role));
+    }
+
+    @When("Администратор даёт доступ: {string} для текущей группы на текущий набор данных")
+    public void createPermissionForCurrentGroupForCurrentDataset(String role) {
+        createPermissionForCurrentDataset(new PermissionCreateDto("group", usersGroupId, role));
     }
 
     @Given("Текущему набору задаётся некое кол-во правил: {int}")

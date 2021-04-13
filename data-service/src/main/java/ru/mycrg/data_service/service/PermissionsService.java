@@ -108,7 +108,7 @@ public class PermissionsService {
         // User groups
         userDetails.getGroups()
                    .forEach(groupId -> {
-                       final Set<Permission> groupPermissions = getPermissions(userDetails.getUserId(), "group");
+                       final Set<Permission> groupPermissions = getPermissions(groupId, "group");
                        allPermissions.addAll(groupPermissions);
                    });
 

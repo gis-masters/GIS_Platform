@@ -272,8 +272,14 @@ public class BaseStepsDefinitions {
     public int getEntitiesCount(String entity) {
         jsonPath = response.jsonPath();
 
-        return jsonPath.getList(String.format("_embedded.%s.id", entity))
-                       .size();
+        final List<Object> list = jsonPath.getList(String.format("_embedded.%s.id", entity));
+        if (list == null) { // Вложенных сущностей("_embedded") может и не быть
+            System.out.println(jsonPath.prettify());
+
+            return 0;
+        }
+
+        return list.size();
     }
 
     public void checkCurrentIdInResponse() {
@@ -290,8 +296,10 @@ public class BaseStepsDefinitions {
                         body(gson.toJson(dto)).
                         contentType(ContentType.JSON)
                 .when().
-                        log().ifValidationFails().
-                        post("");
+                        post()
+                .then().
+                        log().ifError().
+                        extract().response();
     }
 
     public void deleteCurrentEntity() {
