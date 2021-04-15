@@ -62,7 +62,7 @@ export class Projects extends Component {
   @boundMethod
   private async scrollTo(project: CrgProject) {
     this.setNewProjectId(project.id);
-    
+
     await sleep(200);
 
     const containerElem = this.thisRef.current;

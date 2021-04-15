@@ -7,6 +7,7 @@ import ru.mycrg.gis_service.dto.GroupCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "groups")
@@ -152,5 +153,31 @@ public class Group implements Identifiable<Long> {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Group group = (Group) o;
+        return isEnabled() == group.isEnabled() &&
+                isExpanded() == group.isExpanded() &&
+                getPosition() == group.getPosition() &&
+                getTransparency() == group.getTransparency() &&
+                getId().equals(group.getId()) &&
+                Objects.equals(getParentId(), group.getParentId()) &&
+                getTitle().equals(group.getTitle()) &&
+                getInternalName().equals(group.getInternalName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getParentId(), getTitle(), getInternalName(), isEnabled(), isExpanded(),
+                            getPosition(),
+                            getTransparency());
     }
 }

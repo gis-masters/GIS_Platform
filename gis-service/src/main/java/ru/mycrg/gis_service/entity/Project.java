@@ -1,14 +1,13 @@
 package ru.mycrg.gis_service.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name="projects")
@@ -40,16 +39,17 @@ public class Project implements Identifiable<Long> {
     @Column(name = "last_modified")
     private @LastModifiedDate LocalDateTime lastModified;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     private List<Layer> layers = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     private List<Group> groups = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
-    private List<Permission> permissions = new ArrayList<>();
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
+    private Set<Permission> permissions = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "projects_basemaps",
             joinColumns = {@JoinColumn(name = "project_id")},
@@ -170,11 +170,33 @@ public class Project implements Identifiable<Long> {
         this.baseMaps.add(baseMap);
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Project project = (Project) o;
+        return getId() == project.getId() &&
+                getOrganizationId() == project.getOrganizationId() &&
+                isDefault() == project.isDefault() &&
+                getName().equals(project.getName()) &&
+                getInternalName().equals(project.getInternalName()) &&
+                Objects.equals(getBbox(), project.getBbox());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getInternalName(), getOrganizationId(), getBbox(), isDefault());
     }
 }

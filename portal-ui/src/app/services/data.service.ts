@@ -83,7 +83,7 @@ export async function getDataTableConnections(dataTableId: string): Promise<Data
     value: dataTableId
   };
 
-  return await http.get<DataTableConnection[]>(await getTableConnectionsUrl(dataTableId), { params });
+  return await http.get<DataTableConnection[]>(await getTableConnectionsUrl(), { params });
 }
 
 export async function createDataset(title: string, details: string) {

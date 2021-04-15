@@ -2,7 +2,6 @@ import { action, computed, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { ProjectBasemap } from '../services/crg/basemaps.models';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -24,7 +23,6 @@ interface CrgProjectData extends CrgProject {
 
 const emptyProject: CrgProjectData = {
   id: 0,
-  baseMaps: [],
   bbox: '',
   createdAt: '',
   default: false,
@@ -32,7 +30,6 @@ const emptyProject: CrgProjectData = {
   order: 0,
   organizationId: 0,
   internalName: '',
-  layersCount: 0,
   layers: [],
   layersErrors: {},
   groups: []
@@ -48,13 +45,11 @@ class CurrentProject implements CrgProjectData {
   @observable name: string;
   @observable order: number;
   @observable organizationId: number;
-  @observable baseMaps: ProjectBasemap[];
   @observable default: boolean;
   @observable layers: (CrgLayer | NewCrgLayer)[];
   @observable groups: (CrgLayersGroup | NewCrgLayersGroup)[];
   @observable primalLayers: CrgLayer[];
   @observable primalGroups: (CrgLayersGroup | NewCrgLayersGroup)[];
-  @observable layersCount: number;
   @observable _maxLayersInBatch?: number;
   @observable layersErrors: { [key: string]: string[] };
 

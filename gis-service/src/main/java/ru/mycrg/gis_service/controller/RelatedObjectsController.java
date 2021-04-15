@@ -1,0 +1,51 @@
+package ru.mycrg.gis_service.controller;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.gis_service.dto.ProjectProjection;
+import ru.mycrg.gis_service.dto.RelatedLayersModel;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
+import ru.mycrg.gis_service.exceptions.ErrorInfo;
+import ru.mycrg.gis_service.service.BasemapService;
+import ru.mycrg.gis_service.service.LayerService;
+
+import java.util.List;
+
+import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+
+@RestController
+@RequestMapping(value = "/projects")
+public class RelatedObjectsController {
+
+    private final LayerService layerService;
+    private final BasemapService basemapService;
+
+    public RelatedObjectsController(LayerService layerService,
+                                    BasemapService basemapService) {
+        this.layerService = layerService;
+        this.basemapService = basemapService;
+    }
+
+    @GetMapping("/find-related-layers")
+    // Не даём пользователям у которых нет полного доступа к проектам и слоям, т.к. они не могут увидеть полную картину.
+    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
+    public List<RelatedLayersModel> findRelatedLayers(@RequestParam("field") String field,
+                                                      @RequestParam("value") String value,
+                                                      Authentication authentication) {
+        if (value.isEmpty()) {
+            throw new BadRequestException("Required String parameter 'value' is not present",
+                                          new ErrorInfo("value", "value parameter is empty"));
+        }
+
+
+        return layerService.findRelatedLayers(field, value, authentication);
+    }
+
+    @GetMapping("/find-related-by-basemap/{sourceBasemapId}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public List<ProjectProjection> findRelatedProjects(@PathVariable(name = "sourceBasemapId") long sourceBasemapId) {
+        return basemapService.findRelatedProjects(sourceBasemapId);
+    }
+}

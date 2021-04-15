@@ -19,6 +19,8 @@ spring:
   jpa:
     properties:
       hibernate.temp.use_jdbc_metadata_defaults: false
+      hibernate.format_sql: false
+    show-sql: false
   flyway:
     enabled: true
     url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service

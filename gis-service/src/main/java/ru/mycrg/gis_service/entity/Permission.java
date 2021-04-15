@@ -6,6 +6,7 @@ import ru.mycrg.gis_service.dto.PermissionCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "permissions")
@@ -25,7 +26,7 @@ public class Permission {
     @Column
     private String role;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Project project;
 
@@ -104,6 +105,26 @@ public class Permission {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Permission that = (Permission) o;
+        return getId().equals(that.getId()) &&
+                getPrincipalType().equals(that.getPrincipalType()) &&
+                getPrincipalId().equals(that.getPrincipalId()) &&
+                getRole().equals(that.getRole());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getPrincipalType(), getPrincipalId(), getRole());
     }
 
     @Override

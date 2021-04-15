@@ -6,6 +6,7 @@ import ru.mycrg.gis_service.dto.LayerCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "layers")
@@ -65,7 +66,7 @@ public class Layer implements Identifiable<Long> {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -247,5 +248,38 @@ public class Layer implements Identifiable<Long> {
 
     public void setDataset(String datasets) {
         this.dataset = datasets;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Layer layer = (Layer) o;
+        return getId() == layer.getId() &&
+                isEnabled() == layer.isEnabled() &&
+                getPosition() == layer.getPosition() &&
+                getTransparency() == layer.getTransparency() &&
+                getMaxZoom() == layer.getMaxZoom() &&
+                getMinZoom() == layer.getMinZoom() &&
+                Objects.equals(getTitle(), layer.getTitle()) &&
+                Objects.equals(getDataset(), layer.getDataset()) &&
+                getTableName().equals(layer.getTableName()) &&
+                getType().equals(layer.getType()) &&
+                Objects.equals(getStyleName(), layer.getStyleName()) &&
+                Objects.equals(getNativeCRS(), layer.getNativeCRS()) &&
+                Objects.equals(getDataStoreName(), layer.getDataStoreName()) &&
+                getSchemaId().equals(layer.getSchemaId()) &&
+                Objects.equals(getDataSourceUri(), layer.getDataSourceUri());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTitle(), getDataset(), getTableName(), getType(), isEnabled(), getPosition(),
+                            getTransparency(), getMaxZoom(), getMinZoom(), getStyleName(), getNativeCRS(),
+                            getDataStoreName(), getSchemaId(), getDataSourceUri());
     }
 }

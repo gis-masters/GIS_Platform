@@ -7,12 +7,12 @@ import { Coordinate } from 'ol/coordinate';
 import '!style-loader!css-loader!sass-loader!ol/ol.css';
 
 import { cn } from '../../services/util/cn';
-import { CrgLayer, CrgLayerType } from '../../services/crg/projects.models';
+import { CrgLayerType } from '../../services/crg/projects.models';
 import { mapService } from '../../services/map/map.service';
 import { getFeaturesByXmlFilter } from '../../services/geoserver/wfs.service';
 import { makeXmlPolygonIntersect } from '../../services/util/wfs.util';
 import { EditFeatureMode } from '../edit-feature/edit-feature.component';
-import { fetchProjectBasemaps } from '../../services/crg/basemaps.service';
+import { fetchBasemaps } from '../../services/crg/basemaps.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/util/Emitter';
@@ -31,7 +31,6 @@ export class MapComponent implements OnInit, OnDestroy {
   isFeaturesSidebarActive = false;
   isEditSidebarActive = false;
 
-  selectedLayer: CrgLayer;
   cn = cn('map');
 
   private reactionDisposer: IReactionDisposer;
@@ -40,9 +39,9 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(private logger: NGXLogger) {}
 
   async ngOnInit() {
-    await fetchProjectBasemaps(currentProject.baseMaps);
+    await fetchBasemaps();
 
-    mapService.createMap();
+    await mapService.createMap();
 
     // Позиционируемся по BBOX проекта
     if (currentProject.bbox) {

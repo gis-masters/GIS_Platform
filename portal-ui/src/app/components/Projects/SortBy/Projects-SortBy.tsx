@@ -27,7 +27,6 @@ export class ProjectsSortBy extends Component {
       >
         <MenuItem value='createdAt'>По-умолчанию</MenuItem>
         <MenuItem value='name'>Названию</MenuItem>
-        <MenuItem value='layersCount'>Количеству слоёв</MenuItem>
       </TextField>
     );
   }

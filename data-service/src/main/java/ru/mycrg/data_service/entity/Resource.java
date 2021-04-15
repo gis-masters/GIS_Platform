@@ -1,9 +1,10 @@
 package ru.mycrg.data_service.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.core.Authentication;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
 
@@ -55,6 +56,7 @@ public class Resource {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "resource")
     @OnDelete(action = CASCADE) // Поскольку таблицы создаются вручную, добавляю это сюда только чтобы отразить action
     private Set<Permission> permissions = new HashSet<>();

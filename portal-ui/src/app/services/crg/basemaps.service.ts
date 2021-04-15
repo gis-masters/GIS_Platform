@@ -1,10 +1,25 @@
+import { getTitle } from '../../components/Explorer/Adapter/Explorer-Adapter';
+import { Toast } from '../../components/Toast/Toast';
 import { basemapsStore } from '../../stores/Basemaps.store';
-import { Basemap, ProjectBasemap } from './basemaps.models';
-import { getBasemapsByIdsUrl, getBasemapsUrl, getProjectBasemapsUrl } from '../server-urls.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { Basemap } from './basemaps.models';
+import {
+  getBasemapsByIdsUrl,
+  getBasemapsUrl,
+  getProjectBasemapsUrl,
+  getBasemapConnectionsUrl
+} from '../server-urls.service';
 import { PageableResponse, SortDir } from '../models';
 import { CrgProject } from './projects.models';
 import { services } from '../services';
 import { http } from '../http.service';
+
+interface ProjectBasemap {
+  id: number;
+  title: string;
+  position: number;
+  baseMapId: number;
+}
 
 export async function getBasemaps(
   page: number,
@@ -22,15 +37,23 @@ export async function getBasemaps(
 /**
  * Fetch all basemaps for project
  */
-export async function fetchProjectBasemaps(basemaps: ProjectBasemap[]) {
+export async function fetchBasemaps() {
   await services.provided;
-  const params = { ids: basemaps.map(value => String(value.baseMapId)).join(', ') };
-  const url = await getBasemapsByIdsUrl();
+
+  let projectBasemaps = await fetchProjectBasemaps(currentProject.id);
+  if (!projectBasemaps.length) {
+    basemapsStore.clear();
+
+    return;
+  }
 
   try {
+    const params = { ids: projectBasemaps.map(item => String(item.baseMapId)).join(', ') };
+    const url = await getBasemapsByIdsUrl();
+
     const response = await http.get<PageableResponse<{ basemaps: Basemap[] }>>(url, { params });
     if (response._embedded) {
-      const crgBaseMaps = handleBasemaps(basemaps, response._embedded.basemaps);
+      const crgBaseMaps = handleBasemaps(projectBasemaps, response._embedded.basemaps);
       basemapsStore.initBaseMaps(crgBaseMaps);
     }
   } catch (e) {
@@ -43,6 +66,16 @@ export async function connectBasemapToProject(project: CrgProject, basemap: Base
     baseMapId: basemap.id,
     title: basemap.title
   });
+}
+
+export async function getBasemapConnections(sourceBasemapId: number): Promise<CrgProject[]> {
+  try {
+    return await http.get<CrgProject[]>(await getBasemapConnectionsUrl(sourceBasemapId));
+  } catch (e) {
+    const message = `Ошибка получения проектов относящихся к подложке: "${sourceBasemapId}"`;
+    services.logger.error(message, e);
+    Toast.error({ message, details: e.message });
+  }
 }
 
 // К подложкам применяются кастомизации указанные для них в проекте: сортируем по position, меняем title
@@ -65,4 +98,15 @@ function handleBasemaps(projectBaseMaps: ProjectBasemap[], basemaps: Basemap[]):
     });
 
   return result;
+}
+
+/**
+ * Fetch all project basemaps
+ */
+async function fetchProjectBasemaps(projectId: number): Promise<ProjectBasemap[]> {
+  try {
+    return await http.get<ProjectBasemap[]>(await getProjectBasemapsUrl(projectId));
+  } catch (e) {
+    services.logger.error('Не удалось получить подложки проекта.', e);
+  }
 }

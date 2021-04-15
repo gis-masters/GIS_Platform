@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
+import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
@@ -15,6 +16,7 @@ import ru.mycrg.gis_service.repository.BaseMapRepository;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -104,6 +106,25 @@ public class BasemapService {
         BaseMap baseMapById = getBaseMapById(baseMaps, baseMapId);
 
         return projectionFactory.createProjection(BaseMapProjection.class, baseMapById);
+    }
+
+    /**
+     * Return all projects related to the specific "source basemap".
+     *
+     * @param sourceBasemapId Id of source basemap
+     *
+     * @return list of related projects to the "source basemap"
+     */
+    public List<ProjectProjection> findRelatedProjects(long sourceBasemapId) {
+        final List<Project> projects = new ArrayList<>();
+
+        baseMapRepository
+                .findAllByBaseMapId(sourceBasemapId)
+                .forEach(basemap -> projects.addAll(basemap.getProjects()));
+
+        return projects.stream()
+                       .map(baseMap -> projectionFactory.createProjection(ProjectProjection.class, baseMap))
+                       .collect(Collectors.toList());
     }
 
     private Set<BaseMap> getBaseMaps(long projectId, Authentication authentication) {

@@ -1,5 +1,8 @@
 package ru.mycrg.data_service.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +22,7 @@ public class Principal {
     @Column(length = 20, nullable = false)
     private String type;
 
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "principal")
     private Set<Permission> permissions = new HashSet<>();
 

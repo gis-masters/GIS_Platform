@@ -11,14 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.ProjectProjection;
 import ru.mycrg.gis_service.dto.ProjectRequestDto;
-import ru.mycrg.gis_service.dto.RelatedLayersModel;
-import ru.mycrg.gis_service.exceptions.BadRequestException;
-import ru.mycrg.gis_service.exceptions.ErrorInfo;
-import ru.mycrg.gis_service.service.LayerService;
 import ru.mycrg.gis_service.service.ProjectService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -28,14 +23,11 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final LayerService layerService;
     private final PagedResourcesAssembler<ProjectProjection> assembler;
 
     public ProjectController(ProjectService projectService,
-                             LayerService layerService,
                              PagedResourcesAssembler<ProjectProjection> assembler) {
         this.assembler = assembler;
-        this.layerService = layerService;
         this.projectService = projectService;
     }
 
@@ -83,20 +75,5 @@ public class ProjectController {
         projectService.delete(projectId, authentication);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/find-related-layers")
-    // Не даём пользователям у которых нет полного доступа к проектам и слоям, т.к. они не могут увидеть полную картину.
-    @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public List<RelatedLayersModel> findRelatedLayers(@RequestParam("field") String field,
-                                                      @RequestParam("value") String value,
-                                                      Authentication authentication) {
-        if (value.isEmpty()) {
-            throw new BadRequestException("Required String parameter 'value' is not present",
-                                          new ErrorInfo("value", "value parameter is empty"));
-        }
-
-
-        return layerService.findRelatedLayers(field, value, authentication);
     }
 }

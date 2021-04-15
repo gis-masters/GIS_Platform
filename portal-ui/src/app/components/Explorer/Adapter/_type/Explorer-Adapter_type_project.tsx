@@ -26,11 +26,11 @@ export class ExplorerAdapterTypeProject {
   }
 
   static getMeta(item: ExplorerItemData<CrgProject>) {
-    const { layersCount, createdAt, id } = item.payload;
+    const { createdAt, id } = item.payload;
     moment.locale('ru');
-    const date = createdAt ? `, ${moment(createdAt).format('LL')}` : '';
+    const date = createdAt ? `${moment(createdAt).format('LL')}` : '';
 
-    return `${layersCount} ${pluralize(layersCount, 'слой', 'слоя', 'слоёв')}${date} (id: ${id})`;
+    return `${date} (id: ${id})`;
   }
 
   static getIcon() {

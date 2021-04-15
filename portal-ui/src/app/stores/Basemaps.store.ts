@@ -5,14 +5,14 @@ import { Basemap, SourceType } from '../services/crg/basemaps.models';
 const osmBasemap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM, id: 666 };
 
 class Basemaps {
-  @observable basemaps: Basemap[];
-  @observable currentBasemap: Basemap;
-
-  private static _instance: Basemaps;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  private static _instance: Basemaps;
+
+  @observable basemaps: Basemap[];
+  @observable currentBasemap: Basemap;
 
   private constructor() {
     this.initBaseMaps([osmBasemap]);
@@ -24,6 +24,11 @@ class Basemaps {
       this.basemaps = basemaps;
       this.currentBasemap = basemaps[0];
     }
+  }
+
+  @action
+  clear() {
+    this.initBaseMaps([osmBasemap]);
   }
 
   @action

@@ -83,9 +83,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         getMap("");
 
         assertTrue(presentedData.containsKey("internalName"));
-        assertTrue(presentedData.containsKey("baseMaps"));
         assertTrue(presentedData.containsKey("organizationId"));
-        assertTrue(presentedData.containsKey("layersCount"));
         assertTrue(presentedData.containsKey("createdAt"));
         assertTrue(presentedData.containsKey("name"));
         assertTrue(presentedData.containsKey("default"));

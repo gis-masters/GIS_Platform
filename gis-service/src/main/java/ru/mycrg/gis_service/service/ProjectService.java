@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
@@ -179,7 +180,7 @@ public class ProjectService {
         return projects
                 .stream()
                 .filter(project -> {
-                    final List<Permission> permissions = project.getPermissions();
+                    final Set<Permission> permissions = project.getPermissions();
                     boolean isExist = false;
                     for (Permission permission: permissions) {
                         if (permission.getPrincipalType().equals("user")) {

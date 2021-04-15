@@ -22,6 +22,7 @@ interface ConnectionsTableToProjectsWidgetProps {
 @observer
 export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTableToProjectsWidgetProps> {
   private currentDataTableId = '';
+
   @observable private connections?: CrgProject[] = [];
   @observable private loading = true;
 
@@ -29,10 +30,10 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     await this.fetchConnections();
   }
 
-  componentDidUpdate(prevProps: ConnectionsTableToProjectsWidgetProps) {
+  async componentDidUpdate(prevProps: ConnectionsTableToProjectsWidgetProps) {
     if (this.props.dataTable.identifier !== prevProps.dataTable.identifier) {
       this.dropConnections();
-      this.fetchConnections();
+      await this.fetchConnections();
     }
   }
 

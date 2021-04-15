@@ -14,10 +14,10 @@ public class Permission {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Resource resource;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Principal principal;
 
     @Column(length = 20, nullable = false)

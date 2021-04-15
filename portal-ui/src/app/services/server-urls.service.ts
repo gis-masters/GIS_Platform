@@ -204,8 +204,12 @@ export async function getTableRoleAssignmentUrl(datasetId: string, tableId: stri
   return `${await getDatasetTableUrl(datasetId, tableId)}/roleAssignment`;
 }
 
-export async function getTableConnectionsUrl(tableId: string): Promise<string> {
+export async function getTableConnectionsUrl(): Promise<string> {
   return `${await getProjectsUrl()}/find-related-layers`;
+}
+
+export async function getBasemapConnectionsUrl(sourceBasemapId: number): Promise<string> {
+  return `${await getProjectsUrl()}/find-related-by-basemap/${sourceBasemapId}`;
 }
 
 export async function getBasemapsUrl(): Promise<string> {

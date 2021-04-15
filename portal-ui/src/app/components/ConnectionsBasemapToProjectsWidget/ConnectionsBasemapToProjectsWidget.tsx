@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
+import { action, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { allProjects } from '../../stores/AllProjects.store';
+import { ExplorerProps } from '../Explorer/Explorer';
 import { Basemap } from '../../services/crg/basemaps.models';
 import { CrgProject } from '../../services/crg/projects.models';
-import { projectsService } from '../../services/crg/projects.service';
-import { communicationService } from '../../services/communication.service';
-import { connectBasemapToProject } from '../../services/crg/basemaps.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
-import { ExplorerProps } from '../Explorer/Explorer';
+import { connectBasemapToProject, getBasemapConnections } from '../../services/crg/basemaps.service';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');
 
@@ -22,21 +19,20 @@ interface ConnectionsBasemapToProjectsWidgetProps {
 
 @observer
 export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBasemapToProjectsWidgetProps> {
+  private currentBasemapId = -1;
+
+  @observable private connections?: CrgProject[] = [];
   @observable private loading = true;
 
   async componentDidMount() {
-    await projectsService.initAllProjectsStore();
-    this.setLoading(false);
-    communicationService.projectsUpdated.on(() => {
-      this.setLoading(true);
-    }, this);
-    communicationService.allProjectsFetched.on(() => {
-      this.setLoading(false);
-    }, this);
+    await this.fetchConnections();
   }
 
-  componentWillUnmount() {
-    communicationService.off(this);
+  async componentDidUpdate(prevProps: ConnectionsBasemapToProjectsWidgetProps) {
+    if (this.props.basemap.id !== prevProps.basemap.id) {
+      this.dropConnections();
+      await this.fetchConnections();
+    }
   }
 
   render() {
@@ -53,13 +49,16 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
     );
   }
 
-  @computed
-  private get connections(): CrgProject[] {
+  private async fetchConnections() {
     const { basemap } = this.props;
 
-    return allProjects.list.filter(({ baseMaps }) =>
-      (baseMaps || []).some(({ baseMapId }) => baseMapId === basemap.id)
-    );
+    this.setLoading(true);
+    this.currentBasemapId = basemap.id;
+    const basemapsConnections = await getBasemapConnections(basemap.id);
+    if (this.currentBasemapId === basemap.id) {
+      this.setConnections(basemapsConnections);
+    }
+    this.setLoading(false);
   }
 
   @action
@@ -71,6 +70,16 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
   private async connectHandler(project: CrgProject) {
     const { basemap } = this.props;
     await connectBasemapToProject(project, basemap);
-    communicationService.projectsUpdated.emit();
+    await this.fetchConnections();
+  }
+
+  @action
+  private setConnections(connections: CrgProject[]) {
+    this.connections = connections;
+  }
+
+  @action
+  private dropConnections() {
+    this.connections = null;
   }
 }

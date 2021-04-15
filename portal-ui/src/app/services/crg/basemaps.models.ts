@@ -1,10 +1,3 @@
-export interface ProjectBasemap {
-  id: number;
-  title: string;
-  position: number;
-  baseMapId: number;
-}
-
 export enum SourceType {
   OSM = 'OSM',
   XYZ = 'XYZ',
