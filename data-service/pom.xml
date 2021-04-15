@@ -9,6 +9,7 @@
     <packaging>jar</packaging>
 
     <name>data-service</name>
+    <description>Wrapper for our data</description>
 
     <parent>
         <artifactId>gis-portal</artifactId>

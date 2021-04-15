@@ -20,14 +20,13 @@ public class BaseHttpDelegate {
             .readTimeout(120, SECONDS)
             .build();
 
-    public static URL dataServiceUrl;
     public static URL gisServiceUrl;
+    public static URL dataServiceUrl;
 
     public BaseHttpDelegate(Environment environment) throws MalformedURLException {
         this.environment = environment;
 
-        dataServiceUrl = new URL(environment.getRequiredProperty("crg-options.data_service_url"));
         gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis_service_url"));
+        dataServiceUrl = new URL(environment.getRequiredProperty("crg-options.data_service_url"));
     }
-
 }

@@ -3,8 +3,7 @@ spring:
     active: fiz-dev
 
 logging:
-  file:
-    name: /opt/logs/integration-service.log
+  file: /opt/logs/integration-service.log
   level:
     ru.mycrg: DEBUG
 
@@ -30,9 +29,10 @@ spring:
     username: fiz
     password: 314
 
-camunda.bpm.admin-user:
-  id: demo
-  password: demo
+camunda.bpm:
+  admin-user:
+    id: demo
+    password: demo
 
 management:
   endpoint:

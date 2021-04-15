@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM azul/zulu-openjdk-alpine:11-jre
 LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>" 
 
 RUN apk --no-cache add curl
