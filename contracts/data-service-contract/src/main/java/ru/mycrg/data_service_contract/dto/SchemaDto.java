@@ -15,6 +15,7 @@ public class SchemaDto {
     private String customRuleFunction = "";
     private String calcFiledFunction = "";
     private String originName;
+    private String type;
     private boolean readOnly;
     private GeometryType geometryType;
     private List<ContentTypes> contentTypes = new ArrayList<>();
@@ -109,5 +110,13 @@ public class SchemaDto {
 
     public void setContentTypes(List<ContentTypes> contentTypes) {
         this.contentTypes = contentTypes;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

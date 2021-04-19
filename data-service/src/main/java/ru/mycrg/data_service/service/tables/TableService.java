@@ -35,7 +35,7 @@ import static ru.mycrg.common_utils.Paginator.getPage;
 import static ru.mycrg.data_service.dao.TablesManager.EXTENSION_POSTFIX;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
-import static ru.mycrg.data_service.service.resources.ResourceIdentifier.SEPARATOR;
+import static ru.mycrg.data_service.service.resources.ResourceIdentifier.extractTableName;
 
 @Service
 public class TableService implements ITableService {
@@ -132,13 +132,5 @@ public class TableService implements ITableService {
         resourceModel.setIdentifier(tableName);
 
         return resourceModel;
-    }
-
-    private String extractTableName(String resourceIdentifier) {
-        try {
-            return resourceIdentifier.split(SEPARATOR)[1];
-        } catch (IndexOutOfBoundsException e) {
-            return "";
-        }
     }
 }

@@ -58,4 +58,20 @@ public class ResourceIdentifier {
     public String toString() {
         return parent == null ? id : parent.toString() + SEPARATOR.charAt(1) + id;
     }
+
+    public static String extractTableName(String resourceIdentifier) {
+        try {
+            return resourceIdentifier.split(SEPARATOR)[1];
+        } catch (IndexOutOfBoundsException e) {
+            return "";
+        }
+    }
+
+    public static String extractParentTableName(String resourceIdentifier) {
+        try {
+            return resourceIdentifier.split(SEPARATOR)[0];
+        } catch (IndexOutOfBoundsException e) {
+            return "";
+        }
+    }
 }
