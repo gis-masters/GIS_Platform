@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { pluralize } from 'numeralize-ru';
 import { FolderOutlined } from '@material-ui/icons';
 import { communicationService } from '../../../../services/communication.service';
 import { schemaService } from '../../../../services/crg/schema.service';
@@ -12,9 +11,8 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateLibraryElement } from '../../../CreateLibraryElement/CreateLibraryElement';
 import { EmptyListView } from '../../../EmptyListView/EmptyListView';
 
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

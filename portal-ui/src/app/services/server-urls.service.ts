@@ -216,6 +216,10 @@ export async function getBasemapsUrl(): Promise<string> {
   return (await getDataUrl()) + '/basemaps';
 }
 
+export async function getBasemapUrl(basemapId: number): Promise<string> {
+  return `${await getBasemapsUrl()}/${basemapId}`;
+}
+
 export async function getBasemapsByIdsUrl(): Promise<string> {
   return (await getBasemapsUrl()) + '/search/findByIdIn';
 }

@@ -319,8 +319,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private async checkPermissions() {
-    this.updatingAllowed = await isFeaturesUpdateAllowed(this.layer);
-    this.deletingAllowed = await isFeaturesDeleteAllowed(this.layer);
+    const { dataset, tableName, schemaId } = this.layer;
+
+    this.updatingAllowed = await isFeaturesUpdateAllowed(dataset, tableName, schemaId);
+    this.deletingAllowed = await isFeaturesDeleteAllowed(dataset, tableName, schemaId);
   }
 
   private async batchUpdateFeatures(

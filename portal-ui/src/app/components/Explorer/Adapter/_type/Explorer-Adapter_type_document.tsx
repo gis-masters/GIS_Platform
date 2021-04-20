@@ -1,14 +1,12 @@
 import React from 'react';
 import moment from 'moment';
-import { pluralize } from 'numeralize-ru';
 import { InsertDriveFile } from '@material-ui/icons';
 
 import { LibraryItem } from '../../../../services/crg/doc-library.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerItemData } from '../../Explorer.models';
-import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

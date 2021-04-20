@@ -6,8 +6,7 @@ import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { docLibraryService, DocumentLibrary } from '../../../../services/crg/doc-library.service';
 
-import { Adapter } from '../Explorer-Adapter';
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

@@ -365,8 +365,10 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private async checkPermissions() {
-    this.updatingAllowed = await isFeaturesUpdateAllowed(this.layer);
-    this.deletingAllowed = await isFeaturesDeleteAllowed(this.layer);
+    const { dataset, tableName, schemaId } = this.layer;
+
+    this.updatingAllowed = await isFeaturesUpdateAllowed(dataset, tableName, schemaId);
+    this.deletingAllowed = await isFeaturesDeleteAllowed(dataset, tableName, schemaId);
   }
 
   private checkSelectionEmptiness(selected: any[]) {
@@ -381,7 +383,9 @@ export class AttributesBarComponent implements AfterViewInit, OnInit, OnDestroy 
   private async getSuitableLayers(currentLayer: CrgLayer, layers: CrgLayer[]): Promise<CrgLayer[]> {
     const schemas = await Promise.all(layers.map(({ schemaId }) => schemaService.getSchema(schemaId)));
     const currentSchema = await schemaService.getSchema(currentLayer.schemaId);
-    const layersUpdatePermissions = await Promise.all(layers.map(isFeaturesUpdateAllowed));
+    const layersUpdatePermissions = await Promise.all(
+      layers.map(({ dataset, tableName, schemaId }) => isFeaturesUpdateAllowed(dataset, tableName, schemaId))
+    );
 
     return layers.filter((layer, i) => {
       if (!schemas[i]) {

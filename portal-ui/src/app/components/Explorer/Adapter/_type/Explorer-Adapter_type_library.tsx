@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import moment from 'moment';
-import { pluralize } from 'numeralize-ru';
 import { LocalLibrary } from '@material-ui/icons';
 
 import { SortDir } from '../../../../services/models';
@@ -17,9 +16,8 @@ import {
   LibraryItem
 } from '../../../../services/crg/doc-library.service';
 
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

@@ -6,8 +6,7 @@ import { MapOutlined } from '@material-ui/icons';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CrgProject } from '../../../../services/crg/projects.models';
 
-import { ExplorerItemData } from '../../Explorer.models';
-import { Adapter } from '../Explorer-Adapter';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

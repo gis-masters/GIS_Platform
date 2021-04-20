@@ -3,6 +3,7 @@ import { CrgLayer, CrgProject } from './crg/projects.models';
 import { PageableResponse, SortDir } from './models';
 import { Role } from './crg/permissions.models';
 import { http } from './http.service';
+import { communicationService } from './communication.service';
 
 export enum DataEntityType {
   SCHEMA = 'SCHEMA',
@@ -75,6 +76,11 @@ export async function getDataTable(datasetId: string, dataTableId: string): Prom
   const response = await http.get<Omit<DataTable, 'dataset'>>(await getDatasetTableUrl(datasetId, dataTableId));
 
   return { ...response, dataset: datasetId };
+}
+
+export async function deleteDataTable(datasetId: string, dataTableId: string): Promise<void> {
+  await http.delete(await getDatasetTableUrl(datasetId, dataTableId));
+  communicationService.dataTablesUpdated.emit();
 }
 
 export async function getDataTableConnections(dataTableId: string): Promise<DataTableConnection[]> {

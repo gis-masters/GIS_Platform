@@ -13,35 +13,37 @@ export enum BuildInRole {
   USER = 'USER'
 }
 
-enum LayerPermissionPoint {
+enum TablePermissionPoint {
   CREATE_FEATURE,
   READ_FEATURES,
   UPDATE_FEATURES,
   DELETE_FEATURES,
-  EXPORT
+  EXPORT,
+  DELETE
 }
 
-const layerRolesPermissionPoints = new Map<Role, LayerPermissionPoint[]>([
+const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
   [
     Role.OWNER,
     [
-      LayerPermissionPoint.CREATE_FEATURE,
-      LayerPermissionPoint.READ_FEATURES,
-      LayerPermissionPoint.UPDATE_FEATURES,
-      LayerPermissionPoint.DELETE_FEATURES,
-      LayerPermissionPoint.EXPORT
+      TablePermissionPoint.CREATE_FEATURE,
+      TablePermissionPoint.READ_FEATURES,
+      TablePermissionPoint.UPDATE_FEATURES,
+      TablePermissionPoint.DELETE_FEATURES,
+      TablePermissionPoint.EXPORT,
+      TablePermissionPoint.DELETE
     ]
   ],
   [
     Role.CONTRIBUTOR,
     [
-      LayerPermissionPoint.CREATE_FEATURE,
-      LayerPermissionPoint.READ_FEATURES,
-      LayerPermissionPoint.UPDATE_FEATURES,
-      LayerPermissionPoint.DELETE_FEATURES
+      TablePermissionPoint.CREATE_FEATURE,
+      TablePermissionPoint.READ_FEATURES,
+      TablePermissionPoint.UPDATE_FEATURES,
+      TablePermissionPoint.DELETE_FEATURES
     ]
   ],
-  [Role.VIEWER, [LayerPermissionPoint.READ_FEATURES]]
+  [Role.VIEWER, [TablePermissionPoint.READ_FEATURES]]
 ]);
 
 enum ProjectPermissionPoint {
@@ -65,19 +67,15 @@ const projectRolesPermissionPoints = new Map<Role, ProjectPermissionPoint[]>([
   [Role.VIEWER, [ProjectPermissionPoint.READ]]
 ]);
 
-async function isAllowedWithLayer(layer: CrgLayer, targetPoint: LayerPermissionPoint): Promise<boolean> {
-  if (layer.type !== 'vector') {
-    return true;
-  }
+async function isAllowedWithTable(
+  datasetIdentifier: string,
+  tableIdentifier: string,
+  targetPoint: TablePermissionPoint,
+  schemaIdForReadonlyCheck?: string
+): Promise<boolean> {
+  const readOnly = schemaIdForReadonlyCheck && (await schemaService.isReadOnly(schemaIdForReadonlyCheck));
 
-  let readOnly: boolean;
-  try {
-    readOnly = (await schemaService.getSchema(layer.schemaId)).readOnly;
-  } catch (e) {
-    readOnly = true;
-  }
-
-  let role = await getActualRoleInTable(layer.dataset, layer.tableName);
+  let role = await getActualRoleInTable(datasetIdentifier, tableIdentifier);
   if (currentUser.isAdmin) {
     role = Role.OWNER;
   }
@@ -85,7 +83,7 @@ async function isAllowedWithLayer(layer: CrgLayer, targetPoint: LayerPermissionP
     role = Role.VIEWER;
   }
 
-  return Boolean(role) && layerRolesPermissionPoints.get(role).includes(targetPoint);
+  return Boolean(role) && tableRolesPermissionPoints.get(role).includes(targetPoint);
 }
 
 async function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): Promise<boolean> {
@@ -94,24 +92,40 @@ async function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPer
   return Boolean(role) && projectRolesPermissionPoints.get(role).includes(targetPoint);
 }
 
-export function isFeaturesReadAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowedWithLayer(layer, LayerPermissionPoint.READ_FEATURES);
+export function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
 }
 
-export function isFeaturesCreateAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowedWithLayer(layer, LayerPermissionPoint.CREATE_FEATURE);
+export function isFeaturesCreateAllowed(
+  datasetIdentifier: string,
+  tableIdentifier: string,
+  schemaId: string
+): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.CREATE_FEATURE, schemaId);
 }
 
-export function isFeaturesUpdateAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowedWithLayer(layer, LayerPermissionPoint.UPDATE_FEATURES);
+export function isFeaturesUpdateAllowed(
+  datasetIdentifier: string,
+  tableIdentifier: string,
+  schemaId: string
+): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.UPDATE_FEATURES, schemaId);
 }
 
-export function isFeaturesDeleteAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowedWithLayer(layer, LayerPermissionPoint.DELETE_FEATURES);
+export function isFeaturesDeleteAllowed(
+  datasetIdentifier: string,
+  tableIdentifier: string,
+  schemaId: string
+): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE_FEATURES, schemaId);
 }
 
-export function isLayerExportAllowed(layer: CrgLayer): Promise<boolean> {
-  return isAllowedWithLayer(layer, LayerPermissionPoint.EXPORT);
+export function isTableExportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.EXPORT);
+}
+
+export function isTableDeletionAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
+  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE);
 }
 
 export function isLayersManagementAllowed(project: CrgProject = currentProject): Promise<boolean> {

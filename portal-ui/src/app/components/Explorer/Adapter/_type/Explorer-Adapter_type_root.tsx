@@ -5,8 +5,7 @@ import { DataSet } from '../../../../services/data.service';
 import { SortDir } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { Adapter } from '../Explorer-Adapter';
+import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

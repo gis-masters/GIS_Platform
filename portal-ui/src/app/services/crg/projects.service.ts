@@ -4,7 +4,7 @@ import { debounce } from 'lodash';
 import { route } from '../../stores/Route.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup, CrgProject } from './projects.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgProject } from './projects.models';
 import { PageableResponse, Process, SortDir } from '../models';
 import { isFeaturesReadAllowed } from './permissions.service';
 import { TaskImport } from '../geoserver/import/taskImport';
@@ -55,14 +55,14 @@ class ProjectsService {
   }
 
   async initAllProjectsStore() {
-    if (allProjects.inited) {
-      return;
-    }
-
     if (this.fetchingAllProjectsRequest) {
       await this.fetchingAllProjectsRequest;
       await sleep(0);
 
+      return;
+    }
+
+    if (allProjects.inited) {
       return;
     }
 
@@ -118,7 +118,11 @@ class ProjectsService {
     }
 
     const layers = await this.getProjectLayers(project.id);
-    const layersPermissions = await Promise.all(layers.map(isFeaturesReadAllowed));
+    const layersPermissions = await Promise.all(
+      layers.map(
+        ({ dataset, tableName, type }) => type !== CrgLayerType.VECTOR || isFeaturesReadAllowed(dataset, tableName)
+      )
+    );
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
 
     if (project.id === id) {

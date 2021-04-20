@@ -6,7 +6,7 @@ import { SortDir } from '../../../services/models';
 import { Emitter } from '../../../services/util/Emitter';
 import { Toast } from '../../Toast/Toast';
 
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
+import { Adapter, AllowedActions, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDataSetRoot } from './_type/Explorer-Adapter_type_dataSetRoot';
 import { ExplorerAdapterTypeDataSet } from './_type/Explorer-Adapter_type_dataSet';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
@@ -20,31 +20,6 @@ import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_projec
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
-
-export interface Adapter {
-  getId: (item: ExplorerItemData) => string;
-  getTitle: (item: ExplorerItemData) => ReactNode;
-  getDescription?: (item: ExplorerItemData) => ReactNode;
-  getMeta: (item: ExplorerItemData) => string;
-  getIcon?: (item: ExplorerItemData) => ReactNode;
-  isFolder: (item: ExplorerItemData) => boolean;
-  getChildren?: (
-    item: ExplorerItemData,
-    page: number,
-    pageSize: number,
-    sort?: string,
-    sortDir?: SortDir,
-    filter?: { [key: string]: string }
-  ) => Promise<[ExplorerItemData[], number]>;
-  getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
-  getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
-  getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
-  getChildrenFilterField?: (item: ExplorerItemData) => string;
-  getChildrenFilterLabel?: (item: ExplorerItemData) => string;
-  getToolbarActions?: (item: ExplorerItemData) => ReactNode;
-  getEmptyListView?: (item: ExplorerItemData) => ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
-}
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.EMPTY]: ExplorerAdapterTypeEmpty,
@@ -139,4 +114,14 @@ export function getEmptyListView(item: ExplorerItemData): ReactNode | undefined 
 
 export function getRefreshEmitters(item: ExplorerItemData): Emitter[] {
   return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
+}
+
+export async function getAllowedActions(item: ExplorerItemData): Promise<AllowedActions> {
+  return (adapters[item.type].getAllowedActions && (await adapters[item.type].getAllowedActions(item))) || {};
+}
+
+export async function deleteItem(item: ExplorerItemData): Promise<void> {
+  if (adapters[item.type].deleteItem) {
+    await adapters[item.type].deleteItem(item);
+  }
 }

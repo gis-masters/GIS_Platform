@@ -17,7 +17,7 @@ import { exportService } from '../../../services/crg/export.service';
 import { mapService } from '../../../services/map/map.service';
 import {
   isFeaturesCreateAllowed,
-  isLayerExportAllowed,
+  isTableExportAllowed,
   isLayersManagementAllowed
 } from '../../../services/crg/permissions.service';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
@@ -158,9 +158,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
       return;
     }
 
+    const { dataset, tableName, schemaId, type } = entity as CrgLayer;
+
+    if (type !== CrgLayerType.VECTOR) {
+      return;
+    }
+
     const allowed = await Promise.all([
-      isFeaturesCreateAllowed(entity as CrgLayer),
-      isLayerExportAllowed(entity as CrgLayer),
+      isFeaturesCreateAllowed(dataset, tableName, schemaId),
+      isTableExportAllowed(dataset, tableName),
       isLayersManagementAllowed()
     ]);
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 

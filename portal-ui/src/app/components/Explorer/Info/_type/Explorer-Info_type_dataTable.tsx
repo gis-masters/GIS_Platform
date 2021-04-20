@@ -3,10 +3,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { DataSet, DataTable } from '../../../../services/data.service';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 
 import { ExplorerItemType } from '../../Explorer.models';
 import { cnExplorerInfo, ExplorerInfoProps } from '../Explorer-Info';
-import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { getDescription } from '../../Adapter/Explorer-Adapter';
 
 interface ExplorerInfoTypeDataTableProps {

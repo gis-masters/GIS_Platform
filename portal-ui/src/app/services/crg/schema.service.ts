@@ -199,6 +199,14 @@ class SchemaService {
     });
   }
 
+  async isReadOnly(schemaId: string): Promise<boolean> {
+    try {
+      return (await this.getSchema(schemaId)).readOnly;
+    } catch (e) {
+      return true;
+    }
+  }
+
   private async fetch(fetchAll?: boolean): Promise<void> {
     this.fetchingNow++;
     await services.provided;

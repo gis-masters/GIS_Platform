@@ -1,15 +1,13 @@
 import React from 'react';
 import moment from 'moment';
-import { pluralize } from 'numeralize-ru';
 import { Storage } from '@material-ui/icons';
 
 import { DataSet, DataTable, getDataSetTables } from '../../../../services/data.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { SortDir } from '../../../../services/models';
 
-import { ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { Adapter } from '../Explorer-Adapter';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {

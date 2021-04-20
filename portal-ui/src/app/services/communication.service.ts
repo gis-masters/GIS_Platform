@@ -20,6 +20,7 @@ class CommunicationService {
   featuresUpdated = new Emitter();
   permissionsUpdated = new Emitter();
   datasetsUpdated = new Emitter();
+  dataTablesUpdated = new Emitter();
   projectCreated = new Emitter<CrgProject>();
   projectsUpdated = new Emitter();
   allProjectsFetched = new Emitter();
@@ -27,6 +28,7 @@ class CommunicationService {
   libraryItemsUpdated = new Emitter();
   beforeMapDestroy = new Emitter();
   logout = new Emitter();
+  basemapsUpdated = new Emitter();
 
   off(scope: any) {
     Emitter.scopeOff(scope);

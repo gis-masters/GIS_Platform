@@ -1,3 +1,8 @@
+import { ReactNode } from 'react';
+
+import { SortDir } from '../../services/models';
+import { Emitter } from '../../services/util/Emitter';
+
 export enum ExplorerItemType {
   EMPTY = 'empty',
 
@@ -50,3 +55,44 @@ export const keyActions: { [key in KeyAction]: string[] } = {
 };
 
 export const pageSizeVariants = [5, 10, 20, 50, 100];
+
+export interface Adapter {
+  getId: (item: ExplorerItemData) => string;
+  getTitle: (item: ExplorerItemData) => ReactNode;
+  getMeta: (item: ExplorerItemData) => string;
+  getDescription?: (item: ExplorerItemData) => ReactNode;
+  getIcon?: (item: ExplorerItemData) => ReactNode;
+  isFolder: (item: ExplorerItemData) => boolean;
+  getChildren?: (
+    item: ExplorerItemData,
+    page: number,
+    pageSize: number,
+    sort?: string,
+    sortDir?: SortDir,
+    filter?: { [key: string]: string }
+  ) => Promise<[ExplorerItemData[], number]>;
+  getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
+  getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
+  getChildrenSortDefaultDirection?: (item: ExplorerItemData) => SortDir;
+  getChildrenFilterField?: (item: ExplorerItemData) => string;
+  getChildrenFilterLabel?: (item: ExplorerItemData) => string;
+  getToolbarActions?: (item: ExplorerItemData) => ReactNode;
+  getEmptyListView?: (item: ExplorerItemData) => ReactNode;
+  getRefreshEmitters?: (item: ExplorerItemData) => Emitter[];
+  getAllowedActions?: (item: ExplorerItemData) => Promise<AllowedActions>;
+  deleteItem?: (item: ExplorerItemData) => Promise<void>;
+}
+
+enum ActionType {
+  DELETE = 'delete'
+}
+
+export type AllowedActions = { [key in ActionType]?: ActionDetails };
+
+export interface ActionDetails {
+  visible?: boolean;
+  disabled?: boolean;
+  needConfirmation?: boolean;
+  confirmationText?: string;
+  confirmationMood?: 'normal' | 'warning';
+}

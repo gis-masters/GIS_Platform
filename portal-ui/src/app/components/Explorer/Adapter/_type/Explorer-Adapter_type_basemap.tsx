@@ -1,11 +1,15 @@
 import React from 'react';
+import { pluralize } from 'numeralize-ru';
 
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { deleteBasemap, getBasemapConnections } from '../../../../services/crg/basemaps.service';
+import { communicationService } from '../../../../services/communication.service';
 import { Basemap } from '../../../../services/crg/basemaps.models';
+import { Emitter } from '../../../../services/util/Emitter';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 
-import { ExplorerItemData } from '../../Explorer.models';
-import { Adapter } from '../Explorer-Adapter';
+import { Adapter, AllowedActions, ExplorerItemData } from '../../Explorer.models';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -39,5 +43,28 @@ export class ExplorerAdapterTypeBasemap {
 
   static isFolder() {
     return false;
+  }
+
+  static async getAllowedActions(item: ExplorerItemData<Basemap>): Promise<AllowedActions> {
+    const deletionAllowed = currentUser.isAdmin;
+    const count = (await getBasemapConnections(item.payload.id)).length;
+    const textProjects = pluralize(count, 'проекте', 'проектах', 'проектах');
+
+    return {
+      delete: {
+        visible: true,
+        disabled: !deletionAllowed,
+        needConfirmation: true,
+        confirmationText: count ? `Используется в ${count} ${textProjects}.` : 'Не используется в проектах.'
+      }
+    };
+  }
+
+  static async deleteItem(item: ExplorerItemData<Basemap>) {
+    await deleteBasemap(item.payload.id);
+  }
+
+  static getRefreshEmitters(item: ExplorerItemData): Emitter[] {
+    return [communicationService.basemapsUpdated];
   }
 }

@@ -1,18 +1,19 @@
-import { getTitle } from '../../components/Explorer/Adapter/Explorer-Adapter';
-import { Toast } from '../../components/Toast/Toast';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { communicationService } from '../communication.service';
+import { PageableResponse, SortDir } from '../models';
+import { CrgProject } from './projects.models';
 import { Basemap } from './basemaps.models';
+import { services } from '../services';
+import { http } from '../http.service';
 import {
   getBasemapsByIdsUrl,
   getBasemapsUrl,
   getProjectBasemapsUrl,
-  getBasemapConnectionsUrl
+  getBasemapConnectionsUrl,
+  getBasemapUrl
 } from '../server-urls.service';
-import { PageableResponse, SortDir } from '../models';
-import { CrgProject } from './projects.models';
-import { services } from '../services';
-import { http } from '../http.service';
+import { Toast } from '../../components/Toast/Toast';
 
 interface ProjectBasemap {
   id: number;
@@ -32,6 +33,11 @@ export async function getBasemaps(
   const response = await http.get<PageableResponse<{ basemaps: Basemap[] }>>(await getBasemapsUrl(), { params });
 
   return [(response._embedded && response._embedded.basemaps) || [], response.page.totalPages];
+}
+
+export async function deleteBasemap(basemapId: number) {
+  await http.delete(await getBasemapUrl(basemapId));
+  communicationService.basemapsUpdated.emit();
 }
 
 /**
@@ -68,11 +74,11 @@ export async function connectBasemapToProject(project: CrgProject, basemap: Base
   });
 }
 
-export async function getBasemapConnections(sourceBasemapId: number): Promise<CrgProject[]> {
+export async function getBasemapConnections(basemapId: number): Promise<CrgProject[]> {
   try {
-    return await http.get<CrgProject[]>(await getBasemapConnectionsUrl(sourceBasemapId));
+    return await http.get<CrgProject[]>(await getBasemapConnectionsUrl(basemapId));
   } catch (e) {
-    const message = `Ошибка получения проектов относящихся к подложке: "${sourceBasemapId}"`;
+    const message = `Ошибка получения проектов относящихся к подложке: "${basemapId}"`;
     services.logger.error(message, e);
     Toast.error({ message, details: e.message });
   }
