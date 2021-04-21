@@ -131,7 +131,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntity();
     }
 
-    @When("Администратор делает запрос на всех пользователей")
+    @When("Отправляется запрос на выборку всех пользователей")
     public void getAllUsers() {
         super.getAllEntities();
     }

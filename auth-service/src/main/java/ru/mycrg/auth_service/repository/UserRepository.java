@@ -26,7 +26,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     int activateUserByLogin(@Param("login") String login);
 
     @RestResource(exported = false)
-    Page<User> findByOrganizations(Set<Organization> organizations, Pageable p);
+    Page<User> findByOrganizations(Set<Organization> organizations, Pageable pageable);
 
     @RestResource(exported = false)
     void deleteByLogin(@Param("login") String login);

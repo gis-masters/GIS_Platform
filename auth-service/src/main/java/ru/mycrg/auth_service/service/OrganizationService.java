@@ -3,7 +3,6 @@ package ru.mycrg.auth_service.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
@@ -12,12 +11,13 @@ import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.*;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
+import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
-import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
+import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.oauth_client.OAuthClient;
 
@@ -27,10 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.auth_service.security.CrgClaimsParser.*;
-import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
 import static ru.mycrg.auth_service.service.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 
 @Service
 @Transactional
@@ -45,6 +44,7 @@ public class OrganizationService {
     private final UserRepository userRepository;
     private final ProjectionFactory projectionFactory;
     private final OrganizationRepository organizationRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
@@ -52,9 +52,11 @@ public class OrganizationService {
                                IMessageBusProducer messageBus,
                                Environment environment,
                                ProjectionFactory projectionFactory,
+                               IAuthenticationFacade authenticationFacade,
                                OAuthClient oAuthClient,
                                AESCryptor aesCryptor) {
         this.organizationRepository = organizationRepository;
+        this.authenticationFacade = authenticationFacade;
         this.projectionFactory = projectionFactory;
         this.userRepository = userRepository;
         this.messageBus = messageBus;
@@ -101,13 +103,12 @@ public class OrganizationService {
         return newOrganization;
     }
 
-    public OrganizationFullProjection findById(Long orgId, Authentication authentication) {
-        return projectionFactory
-                .createProjection(OrganizationFullProjection.class, getById(orgId, authentication));
+    public OrganizationFullProjection findById(Long orgId) {
+        return projectionFactory.createProjection(OrganizationFullProjection.class, getById(orgId));
     }
 
-    public void delete(Long orgId, Authentication authentication) {
-        final Organization organization = getById(orgId, authentication);
+    public void delete(Long orgId) {
+        final Organization organization = getById(orgId);
         if (!PROVISIONED.toString().equals(organization.getStatus())) {
             throw new BadRequestException("The organization: " + orgId + ", is being processed");
         }
@@ -121,14 +122,13 @@ public class OrganizationService {
                                                 .collect(Collectors.toList());
 
         messageBus.produce(
-                new OrganizationRemovedEvent(orgId, getToken(authentication), owners));
+                new OrganizationRemovedEvent(orgId, authenticationFacade.getAccessToken(), owners));
     }
 
-    private Organization getById(Long id, Authentication authentication) {
-        if (isRoot(authentication) || id.equals(getOrganizationId(authentication))) {
-            return organizationRepository
-                    .findById(id)
-                    .orElseThrow(() -> new NotFoundException(id));
+    private Organization getById(Long id) {
+        if (authenticationFacade.isRoot() || id.equals(authenticationFacade.getOrganizationId())) {
+            return organizationRepository.findById(id)
+                                         .orElseThrow(() -> new NotFoundException(id));
         } else {
             throw new ForbiddenException("Not allowed");
         }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
@@ -50,19 +49,18 @@ public class OrganizationController {
 
     @GetMapping("/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<OrganizationFullProjection> getOrganization(@PathVariable Long id,
-                                                                      Authentication authentication) {
-        OrganizationFullProjection projection = organizationService.findById(id, authentication);
+    public ResponseEntity<OrganizationFullProjection> getOrganization(@PathVariable Long id) {
+        OrganizationFullProjection projection = organizationService.findById(id);
 
         return ResponseEntity.ok(projection);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> deleteOrganization(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<Object> deleteOrganization(@PathVariable Long id) {
         log.debug("Request delete organization: {}", id);
 
-        organizationService.delete(id, authentication);
+        organizationService.delete(id);
 
         return ResponseEntity.status(NO_CONTENT).build();
     }

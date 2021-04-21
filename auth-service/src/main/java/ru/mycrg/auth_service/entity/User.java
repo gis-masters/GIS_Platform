@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.auth_service.service.AuthorityService.ORG_ADMIN;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"login"})})

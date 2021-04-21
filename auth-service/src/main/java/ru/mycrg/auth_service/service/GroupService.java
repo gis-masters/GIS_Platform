@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_service.dto.GroupProjection;
@@ -18,14 +17,13 @@ import ru.mycrg.auth_service.exceptions.CrgValidationException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.GroupRepository;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
+import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.Set;
-
-import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
 
 @Service
 @Transactional
@@ -38,15 +36,18 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final ProjectionFactory projectionFactory;
     private final OrganizationRepository orgRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     public GroupService(Validator validator,
                         GroupRepository groupRepository,
                         ProjectionFactory projectionFactory,
+                        IAuthenticationFacade authenticationFacade,
                         OrganizationRepository orgRepository) {
         this.validator = validator;
+        this.orgRepository = orgRepository;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
-        this.orgRepository = orgRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @HandleBeforeSave
@@ -54,10 +55,11 @@ public class GroupService {
         validate(new GroupCreateDto(group.getName(), group.getDescription()));
     }
 
-    public GroupProjection create(GroupCreateDto dto, long orgId) {
-        Organization organization = orgRepository
-                .findById(orgId)
-                .orElseThrow(() -> new NotFoundException(orgId));
+    public GroupProjection create(GroupCreateDto dto) {
+        final Long orgId = authenticationFacade.getOrganizationId();
+
+        Organization organization = orgRepository.findById(orgId)
+                                                 .orElseThrow(() -> new NotFoundException(orgId));
 
         Group newGroup = new Group();
         newGroup.setName(dto.getName());
@@ -71,8 +73,8 @@ public class GroupService {
         return projectionFactory.createProjection(GroupProjection.class, savedGroup);
     }
 
-    public GroupProjection findById(Long id, Authentication authentication) {
-        Long orgId = getOrganizationId(authentication);
+    public GroupProjection findById(Long id) {
+        Long orgId = authenticationFacade.getOrganizationId();
         Group byId = groupRepository
                 .findByIdAndOrganizationId(id, orgId)
                 .orElseThrow(() -> new NotFoundException(id));
@@ -80,16 +82,16 @@ public class GroupService {
         return projectionFactory.createProjection(GroupProjection.class, byId);
     }
 
-    public Page<GroupProjection> findAll(Pageable p, Authentication authentication) {
-        Long orgId = getOrganizationId(authentication);
+    public Page<GroupProjection> findAll(Pageable pageable) {
+        Long orgId = authenticationFacade.getOrganizationId();
 
-        return groupRepository.findByOrganizationId(orgId, p);
+        return groupRepository.findByOrganizationId(orgId, pageable);
     }
 
-    public void addUser(Long groupId, Long userId, Authentication authentication) {
+    public void addUser(Long groupId, Long userId) {
         log.debug("Try add user: {} to group: {}", userId, groupId);
 
-        Long orgId = getOrganizationId(authentication);
+        Long orgId = authenticationFacade.getOrganizationId();
         Group group = groupRepository
                 .findByIdAndOrganizationId(groupId, orgId)
                 .orElseThrow(() -> new NotFoundException(groupId));
@@ -99,19 +101,19 @@ public class GroupService {
                 .orElseThrow(() -> new NotFoundException(orgId));
 
         User user = organization.getUsers().stream()
-                .filter(u -> u.getId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(userId));
+                                .filter(u -> u.getId().equals(userId))
+                                .findFirst()
+                                .orElseThrow(() -> new NotFoundException(userId));
 
         group.addUser(user);
 
         groupRepository.save(group);
     }
 
-    public void removeUser(Long groupId, Long userId, Authentication authentication) {
+    public void removeUser(Long groupId, Long userId) {
         log.debug("Try delete user: {} from group: {}", userId, groupId);
 
-        Long orgId = getOrganizationId(authentication);
+        Long orgId = authenticationFacade.getOrganizationId();
         Group group = groupRepository
                 .findByIdAndOrganizationId(groupId, orgId)
                 .orElseThrow(() -> new NotFoundException(groupId));

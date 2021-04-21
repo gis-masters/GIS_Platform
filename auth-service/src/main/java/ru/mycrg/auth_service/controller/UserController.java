@@ -8,13 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.UserProjection;
-import ru.mycrg.auth_service.service.AuthorityService;
+import ru.mycrg.auth_service.security.IAuthenticationFacade;
 import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
@@ -25,10 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-import static ru.mycrg.auth_service.security.CrgClaimsParser.getOrganizationId;
-import static ru.mycrg.auth_service.security.CrgClaimsParser.isRoot;
-import static ru.mycrg.auth_service_contract.Authorities.GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY;
-import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.*;
 
 @RepositoryRestController
 public class UserController {
@@ -42,15 +38,15 @@ public class UserController {
     }
 
     private final UserService userService;
-    private final AuthorityService authorityService;
     private final PagedResourcesAssembler<UserProjection> assembler;
+    private final IAuthenticationFacade authenticationFacade;
 
     public UserController(UserService userService,
-                          AuthorityService authorityService,
+                          IAuthenticationFacade authenticationFacade,
                           PagedResourcesAssembler<UserProjection> assembler) {
         this.assembler = assembler;
         this.userService = userService;
-        this.authorityService = authorityService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @GetMapping("/users/current")
@@ -62,8 +58,8 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getUsers(Pageable p, Authentication authentication) {
-        Page<UserProjection> users = userService.findAll(p, authentication);
+    public ResponseEntity<Object> getUsers(Pageable pageable) {
+        Page<UserProjection> users = userService.findAll(pageable);
 
         return ResponseEntity.ok(assembler.toResource(users));
     }
@@ -71,20 +67,19 @@ public class UserController {
     @PostMapping("/users")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateDto userCreateDto,
-                                             @RequestParam(name = "orgId", required = false) Long orgId,
-                                             Authentication authentication) {
+                                             @RequestParam(name = "orgId", required = false) Long orgId) {
         Long organizationId;
-        if (isRoot(authentication)) {
+        if (authenticationFacade.isRoot()) {
             if (orgId == null) {
                 return new ResponseEntity<>("Provide organization identifier as 'orgId'", HttpStatus.BAD_REQUEST);
             } else {
                 organizationId = orgId;
             }
         } else { // Ignore request orgId in this case
-            organizationId = getOrganizationId(authentication);
+            organizationId = authenticationFacade.getOrganizationId();
         }
 
-        UserProjection user = userService.create(userCreateDto, organizationId, authentication);
+        UserProjection user = userService.create(userCreateDto, organizationId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -100,8 +95,8 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<UserProjection> getUserById(@PathVariable Long id, Authentication authentication) {
-        UserProjection userProjection = userService.findProjectionById(id, authentication);
+    public ResponseEntity<UserProjection> getUserById(@PathVariable Long id) {
+        UserProjection userProjection = userService.findProjectionById(id);
 
         return ResponseEntity.ok(userProjection);
     }
@@ -109,17 +104,16 @@ public class UserController {
     @PatchMapping("/users/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<UserProjection> updateUser(@Valid @RequestBody UserUpdateDto dto,
-                                                     @PathVariable Long id,
-                                                     Authentication authentication) {
-        userService.update(id, dto, authentication);
+                                                     @PathVariable Long id) {
+        userService.update(id, dto);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/{id}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id, Authentication authentication) {
-        userService.delete(id, authentication);
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
+        userService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -127,13 +121,12 @@ public class UserController {
     @PostMapping("/users/{id}/roles/{authority}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> addAuthority(@PathVariable Long id,
-                                               @PathVariable String authority,
-                                               Authentication authentication) {
-        if (!authorityService.isAuthorityExist(authority)) {
+                                               @PathVariable String authority) {
+        if (!isAuthorityExist(authority)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authority not exist: " + authority);
         }
 
-        userService.addAuthority(id, authority, authentication);
+        userService.addAuthority(id, authority);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -141,9 +134,8 @@ public class UserController {
     @DeleteMapping("/users/{id}/roles/{authority}")
     @PreAuthorize(GLOBAL_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> removeAuthority(@PathVariable Long id,
-                                                  @PathVariable String authority,
-                                                  Authentication authentication) {
-        userService.removeAuthority(id, authority, authentication);
+                                                  @PathVariable String authority) {
+        userService.removeAuthority(id, authority);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

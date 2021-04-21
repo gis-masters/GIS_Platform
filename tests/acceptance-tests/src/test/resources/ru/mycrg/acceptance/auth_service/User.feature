@@ -69,10 +69,11 @@ Feature: Действия с пользователями
       | userName | userSurname | userEmail | userPassword |
       | fizname  | fizsurname  | EMAIL_10  | aA111111     |
 
-  Scenario Outline: Выборка всех пользователей
+  Scenario Outline: Выборка всех пользователей доступна авторизованным пользователям с любыми ролями
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
-    When Администратор делает запрос на всех пользователей
+    Given Авторизируемся пользователем
+    When Отправляется запрос на выборку всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And В ответе есть пункт "users"
     Examples:
